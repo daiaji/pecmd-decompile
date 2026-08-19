@@ -311,6 +311,11 @@ extern void FUN_1400056bc(void);                                 /* @0x1400056bc
 extern void FUN_140008d9c(uint16_t *param_1);                    /* @0x140008d9c */
 extern DWORD FUN_14000a584(LPCWSTR param_1, int param_2);        /* @0x14000a584 */
 extern void FUN_1400185c8(char param_1, int64_t *param_2);       /* @0x1400185c8 */
+extern void *TlsGetValue(DWORD dwTlsIndex);                      /* Win32 TLS */
+extern BOOL WriteConsoleW(HANDLE hConsoleOutput, const void *lpBuffer, DWORD nNumberOfCharsToWrite,
+                          LPDWORD lpNumberOfCharsWritten, LPVOID lpReserved);
+extern HANDLE g_hMainMutex;                                      /* DAT_14013cb18 主互斥体句柄 */
+extern int64_t FUN_140103020(const uint16_t *p);                 /* @0x140103020 WCHAR 串长 */
 extern void *g_pFreeLibrary;                                      /* FreeLibrary 槽 */
 extern void *PTR_DAT_14013a040;                                  /* 主窗口指针槽 */
 extern void *g_pSvStatus;                                      /* service 状态句柄 */
@@ -5392,9 +5397,42 @@ bool PECMD_InitTlsBuffer(uint64_t *param_1)
 
 void FUN_1400185c8(char param_1, int64_t *param_2)
 {
+    uint16_t *psVar1;
+    int64_t *plVar2;
+    int64_t lVar3;
+    int64_t *plVar4;
+    DWORD local_res10[2];
+    DWORD local_res18[4];
+
     /* @0x1400185c8 size=225 */
-    (void)param_1;
-    (void)param_2;
+    plVar4 = (int64_t *)&g_hMainMutex;
+    if (param_2 == (int64_t *)0x0) {
+        plVar2 = (int64_t *)TlsGetValue(g_dwC934);
+        if ((plVar2 != (int64_t *)0x0) && (*plVar2 != 0)) {
+            plVar4 = plVar2;
+        }
+    }
+    else if (param_2 != (int64_t *)0xffffffffffffffff) {
+        plVar4 = param_2;
+    }
+    if ((((*plVar4 != 0) && (param_1 != '\0')) && (0 < plVar4[2])) &&
+        (psVar1 = (uint16_t *)plVar4[1], *psVar1 != 0)) {
+        if ((g_flagD6F6 & 2) == 0) {
+            lVar3 = FUN_140103020(psVar1);
+            local_res10[0] = 0;
+            WriteFile((HANDLE)*plVar4, (LPCVOID)plVar4[1], (DWORD)((int)lVar3 * 2), local_res10, (void *)0x0);
+        }
+        else {
+            lVar3 = FUN_140103020(psVar1);
+            WriteConsoleW((HANDLE)*plVar4, (void *)plVar4[1], (DWORD)lVar3, local_res18, (LPVOID)0x0);
+        }
+    }
+    if (0x1fffe < (int)plVar4[3] - 1U) {
+        plVar4[3] = 0x10000;
+        PECMD_AllocString((WCHAR **)(plVar4 + 1), 0x10002);
+    }
+    *(uint16_t *)plVar4[1] = 0;
+    plVar4[2] = 0;
 }
 
 void PECMD_InitListHead(int64_t obj)
