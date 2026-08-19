@@ -3355,3 +3355,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 ## 77. Item2 还原 FUN_14001ed5c（文本框回写+CRLF归一化）
 - 真 365B body 移植（含 goto CR/LF 归一化循环）；leaf helper(063344/1ebdc/063694/SetWindowTextW) 先补桩、
   DAT_14013ca68 作数据全局；build/link 全绿。累计还原真 body：07fcd4、01ed5c。
+## 78. Item2 还原批全落地（b1/helpers/b3 三组子代理, 单文件独占+全链接绿）
+- 按文件分组派单子代理(无同文件并发): b3(05e61c/05efac等) + helpers(069314/075148) + b1(0048c4/0091e0 +已还原0185c8/01ed5c)。
+- 跳过(缺符号): helpers 075c7c(缺 FUN_14001b4f8/05dff4)、b1 00c764(缺 PTR_PTR数据)/00cedc(缺thunk)。
+- 每批补 leaf 桩到 link_stubs、逐个全链接校验、build/link 全绿后提交(git 52)。
+- 结论: 还原范式"分组→单代理单文件→补桩→全链接绿→提交"稳定可用; 已落地 ~9 个真实现。
