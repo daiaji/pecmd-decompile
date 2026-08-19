@@ -239,7 +239,7 @@ uint64_t FUN_1400e8574(void) { return 0; }
 uint64_t FUN_1400e91f0(void) { return 0; }
 uint64_t FUN_1400e95f4(void) { return 0; }
 uint64_t FUN_1400f21a8(void) { return 0; }
-uint64_t FUN_140101e70(void) { return 0; }
+uint64_t FUN_140101e70(void) { return 0; }	/* CRT 标准库内联 */
 uint64_t FillRect(void) { return 0; }
 uint64_t FindClose(void) { return 0; }
 uint64_t FindNextFileW(void) { return 0; }
@@ -790,7 +790,7 @@ void FUN_1400e8940(uint64_t *a){ (void)a; }
 void *FUN_14005b888(void *a, unsigned int b){ (void)a;(void)b; return a; }
 
 /* ---- 新增辅助桩 (core_b3 12 函数依赖; 签名与 decompiled 一致, 基类型等价) ---- */
-void FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n){ (void)dst;(void)v;(void)n; }
+void FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n){ (void)dst;(void)v;(void)n; }	/* CRT 标准库内联 */
 uint16_t *FUN_14005ff30(int i, uint16_t *out, int max){ (void)i;(void)max; return out; }
 int FUN_1400690c0(uintptr_t root, const uint16_t *a, const uint16_t *b, int64_t *c, uint32_t *d, void *e){ (void)root;(void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
 uint64_t FUN_140080b0c(int64_t *a, uintptr_t b, uintptr_t c, const uint16_t *d, uintptr_t e, int64_t f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
