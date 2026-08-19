@@ -373,6 +373,12 @@ int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_
             local_60 = local_res10;
         }
         local_b8 = param_4;
+        /* silence unused-but-set (decompiled dead stack slots) */
+        (void)local_58; (void)local_60; (void)local_64; (void)local_68;
+        (void)local_70; (void)local_80; (void)uStack_78;
+        (void)local_b4; (void)local_b0; (void)local_ae;
+        (void)local_ac; (void)local_ab; (void)local_aa; (void)local_a9;
+        (void)local_a8; (void)local_a7; (void)local_a6; (void)local_a5;
         iVar2 = (*pcVar1)(&local_b8, param_1, 0x100000, 0, param_3, 0,
                           local_88, 0, &local_a0);
         if ((iVar2 == 0) && (local_a0 != (HANDLE)0xffffffffffffffff)) {

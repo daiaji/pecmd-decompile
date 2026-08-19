@@ -125,8 +125,10 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
     }
     FUN_140063620(&local_58);
     local_48 = 0;
+    (void)local_48;
     local_70 = (WCHAR *)g_szEmpty;
     local_50 = param_1;
+    (void)local_50;
     FUN_1400702b0(local_a0, g_szEmpty);
     FUN_140063620(&local_80);
     FUN_140063620(&local_78);
@@ -138,6 +140,7 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
     pWVar3 = local_res10;
     local_res10 = (WCHAR *)local_88;
     local_res22 = 9;
+    (void)local_res22;
     local_a8[0] = 0;
     local_98 = 0;
     local_94 = 0;
@@ -355,7 +358,9 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
     pWVar13 = (LPCWSTR)0;
     uVar5 = 0;
     local_118 = 0;
+    (void)local_118;
     local_120 = param_1;
+    (void)local_120;
     FUN_14005b154(&local_res10);
     if (param_3 == 0) {
         FUN_14001b3a0((int64_t *)param_1, 0);
@@ -398,7 +403,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                         lVar18 = FUN_14005c72c("-left", (const WCHAR *)pWVar20, 5);
                         if ((char)lVar18 == '\0') {  /* -left 未命中 */
                             lVar18 = FUN_14005c72c("-bupdate", (const WCHAR *)pWVar20, 8);
-                            uVar16 = (uint)pWVar19;
+                            uVar16 = (uint)(uintptr_t)pWVar19;
                             if ((char)lVar18 == '\0') { /* -bupdate 未命中 */
                                 lVar18 = FUN_14005c72c("-real", (const WCHAR *)pWVar20, 5);
                                 if ((char)lVar18 == '\0') { /* -real 未命中 */
@@ -407,7 +412,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                                         lVar18 = FUN_14005c72c("-tab", (const WCHAR *)pWVar20, 4);
                                         if ((char)lVar18 == '\0') { /* -tab 未命中 */
                                             lVar18 = FUN_14005c72c("-numicong", (const WCHAR *)pWVar20, 9);
-                                            uVar16 = (uint)pWVar14;
+                                            uVar16 = (uint)(uintptr_t)pWVar14;
                                             if ((char)lVar18 == '\0') { /* -numicong 未命中 */
                                                 lVar18 = FUN_14005c72c("-numicon", (const WCHAR *)pWVar20, 8);
                                                 if ((char)lVar18 == '\0') { /* -numicon 未命中 */
@@ -451,9 +456,9 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 }
                 /* 跳过本项到空白/结尾 */
                 for (;;) {
-                    uVar6 = (uint)pWVar14;
-                    uVar17 = (uint)pWVar19;
-                    uVar16 = (uint)pWVar13;
+                    uVar6 = (uint)(uintptr_t)pWVar14;
+                    uVar17 = (uint)(uintptr_t)pWVar19;
+                    uVar16 = (uint)(uintptr_t)pWVar13;
                     WVar1 = *pWVar20;
                     if ((WVar1 == L'\0') ||
                         (((8 < (ushort)WVar1 && ((ushort)WVar1 < 0xe)) || (WVar1 == L' '))))
@@ -562,15 +567,17 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 local_108 = 0;
                 local_f8 = 0;
                 local_f0 = 0;
+                (void)local_f0;
                 local_100 = 0x7fffffff;
+                (void)local_100;
                 if (uVar6 == 1) {
-                    pWVar15 = (LPCWSTR)0x3;
+                    pWVar15 = (WCHAR *)0x3;
                 } else if (uVar6 == 2) {
-                    pWVar15 = (LPCWSTR)0x2;
+                    pWVar15 = (WCHAR *)0x2;
                 } else {
-                    pWVar15 = (LPCWSTR)0xe;
+                    pWVar15 = (WCHAR *)0xe;
                     if (uVar6 == 0) {
-                        pWVar15 = pWVar2;
+                        pWVar15 = (WCHAR *)pWVar2;
                     }
                 }
                 hModule = LoadLibraryExW(pWVar13, (HANDLE)0, 2);
@@ -636,6 +643,7 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
     FUN_140063620(&local_58);
     uVar7 = 0;
     local_48 = 0;
+    (void)local_48;
     bVar2 = false;
     cVar8 = '\0';
     local_res8 = (WCHAR *)param_2;
@@ -648,6 +656,7 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
          local_res8 = local_res8 + 1) {
     }
     local_50 = param_1;
+    (void)local_50;
     FUN_14005b154(&local_res8);
     pWVar3 = local_res8;
     iVar4 = StrCmpNIW(local_res8, WSTR("-u"), 2);

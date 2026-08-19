@@ -540,8 +540,9 @@ uint64_t PECMD_WndProcDispatch(HDC param_1, uint32_t param_2, HDC param_3, int64
     /* @0x140003184 size=350 WndProc 消息分发 */
     uint64_t uVar1;
     uint8_t *p = (uint8_t *)(uintptr_t)param_1;
+    int flagA24F = (int)g_flagA24F;   /* uint8_t→int 加宽; <0 恒为假, 与原始一致 */
 
-    if ((g_flagA24F < 0) && ((char)p[0xfa] != 'Z')) {
+    if ((flagA24F < 0) && ((char)p[0xfa] != 'Z')) {
         p[0xfa] = 0x5a;
         PostMessageW(*(HWND *)(p + 8), 0x10, 0, 0);
     }
@@ -2672,6 +2673,7 @@ HANDLE PECMD_OpenLockVolume(int param_1, uint64_t param_2, int64_t param_3,
     DWORD local_d94[99];
     uint64_t buf;                       /* param_5 高低32位打包(作 LPDWORD 缓冲) */
     WCHAR local_a78[1308];
+    (void)local_e50;
 
     pWVar2 = param_5;
     plVar10 = g_pVolHandles;
@@ -3174,6 +3176,7 @@ void PECMD_LaunchProcessInSession(LPWSTR param_1, char param_2, uint8_t param_3)
     uint64_t local_88;
     STARTUPINFOW local_78;
     LUID luid10;
+    (void)local_88;
 
     local_90 = (HANDLE)0x0;
     local_98 = (HANDLE)0x0;
@@ -3824,10 +3827,13 @@ uint64_t PECMD_ServiceMainLoop(uint16_t *param_1)
                 iVar3 = iVar3 - 1;
             } while (-1 < iVar3);
         }
-        if (g_flagA24F < 0) {
-            g_flagA24F = 0xfe;
-            PECMD_UnmapFileView();
-            return 0;
+        {
+            int flagA24F = (int)g_flagA24F;   /* uint8_t→int; <0 恒为假, 与原始一致 */
+            if (flagA24F < 0) {
+                g_flagA24F = 0xfe;
+                PECMD_UnmapFileView();
+                return 0;
+            }
         }
     } while (1);
 }
@@ -4633,6 +4639,7 @@ int PECMD_DispatchBuiltin(int64_t *param_1, uintptr_t param_2, LPCWSTR param_3, 
     int64_t *local_38;
     uint64_t local_30;
     uint64_t tmp;
+    (void)local_30; (void)local_38;
 
     local_res18 = NULL;
     local_48 = NULL;
@@ -4847,6 +4854,7 @@ uint64_t PECMD_MapPhysicalMemoryNT5(void)
     uint32_t local_20;
     uint64_t local_18;
     uint64_t local_10;
+    (void)local_30; (void)local_28; (void)local_20; (void)local_18; (void)local_10;
 
     DAT_14013cb90[0] = 0x114;   /* dwOSVersionInfoSize */
     GetVersionExW((OSVERSIONINFOW *)DAT_14013cb90);
@@ -7496,6 +7504,7 @@ char PECMD_DevLockUnlock(uint64_t param_1, LPCWSTR param_2, uint32_t param_3,
     uint32_t local_48;
     uint32_t local_44;
     WCHAR local_40[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    (void)local_44;
 
     if ((param_2 == (LPCWSTR)0) || ((int)param_1 != -1)) {
         hFile = ((HANDLE (*)(uint64_t, DWORD))g_pDevOpen)(param_1, 0xc0000000);
@@ -7598,6 +7607,7 @@ char PECMD_DevAlignCheck(uint64_t param_1, LPCWSTR param_2, uint64_t param_3)
     uint64_t local_48;
     uint8_t local_40[0x18];
     uint32_t local_2c;
+    (void)local_48;
 
     local_50[0] = 0;
     local_48 = 0;
@@ -7652,6 +7662,7 @@ char PECMD_DevAlignCheck(uint64_t param_1, LPCWSTR param_2, uint64_t param_3)
     }
 LAB_14001d4a2:
     local_48 = local_res18;
+    (void)local_48;
     local_50[0] = 1;
     BVar3 = DeviceIoControl(hDevice, 0x7c0d0, local_50, 0x10, (LPVOID)0, 0, local_res10,
                             (void *)0);
@@ -7733,6 +7744,7 @@ uint64_t PECMD_OpenNtSection(uint64_t param_1)
     uint32_t local_20;
     uint64_t local_18;
     uint64_t local_10;
+    (void)local_30; (void)local_28; (void)local_20; (void)local_18; (void)local_10;
 
     local_res10[0] = 0xffffffffffffffffULL;
     ((void (*)(uint8_t *, uint64_t))g_pRtlInitUnicodeString)(local_48, param_1);
@@ -7743,6 +7755,11 @@ uint64_t PECMD_OpenNtSection(uint64_t param_1)
     local_38[0] = 0x30;
     local_20 = 0x40;
     ((int (*)(uint64_t *, int, uint32_t *))g_pZwOpenSection)(local_res10, 4, local_38);
+    (void)local_28;
+    (void)local_30;
+    (void)local_18;
+    (void)local_10;
+    (void)local_20;
     return local_res10[0];
 }
 
@@ -7798,6 +7815,11 @@ int64_t PECMD_EnumNtSymbolicLink(LPWSTR param_1, int64_t *param_2, int64_t *para
             local_48 = 0x40;
             local_40 = 0;
             local_38 = 0;
+            (void)local_58;
+            (void)local_40;
+            (void)local_38;
+            (void)local_48;
+            (void)local_50;
             iVar2 = ((int (*)(HANDLE *, int, void *))g_pNtOpenSymLink)(
                 &local_98, 1, local_60);
             if ((-1 < iVar2) && (local_98 != (HANDLE)0)) {
@@ -8162,6 +8184,8 @@ int64_t PECMD_LoadFileToSlot(LPCWSTR param_1, int64_t *param_2)
     uVar3 = (uint64_t)local_res10[0];
     local_20 = uVar3;
     local_18 = uVar3;
+    (void)local_20;
+    (void)local_18;
     lVar2 = PECMD_EncodeBuffer((int64_t *)&local_28, param_2, 0);
     if (lVar2 == 1) {
         pvVar1 = (void *)*param_2;
@@ -8703,6 +8727,7 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
     local_res18[0] = 0;
     local_2d8 = 0;
     local_2d0 = 0;
+    (void)local_2d0;
     pWVar8 = StrChrW(param_1, L'|');
     pWVar7 = pWVar8;
     if (pWVar8 != (LPWSTR)0) {

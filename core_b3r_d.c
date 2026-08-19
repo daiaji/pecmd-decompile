@@ -377,7 +377,7 @@ ushort *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2, longlong *par
         }
         puVar6 = puVar3 + 1;
         FUN_14001d744((void *)puVar6, (const void *)puVar3,
-                      (int)((longlong)psVar1 - (longlong)puVar3 >> 1) * 2);
+                      (int)(((longlong)psVar1 - (longlong)puVar3) >> 1) * 2);
         puVar3 = (ushort *)*param_2;
         puVar4 = puVar3;
         puVar7 = puVar3;
@@ -489,7 +489,9 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     local_588 = (WCHAR *)0x0;
     FUN_140063620((WCHAR **)&local_558);
     local_548 = 0;
+    (void)local_548;
     local_550 = param_1;
+    (void)local_550;
     FUN_14005b154(&local_res10);
     cVar5 = FUN_1400660ac("-fix", &local_res10, 4);
     FUN_1400702b0(&local_590, (const WCHAR *)g_szEmpty);
@@ -686,21 +688,29 @@ LAB_14008822a:
         pBVar20 = (BFFCALLBACK)local_5a8;
         local_508 = (BFFCALLBACK)local_580;
         local_4e0 = -(ulonglong)(*local_578 != L'\0') & (ulonglong)local_578;
+        (void)local_4e0;
         local_50c = 0;
+        (void)local_50c;
         local_4f8 = 0;
+        (void)local_4f8;
         local_4f0 = 0;
+        (void)local_4f0;
         local_4e8 = 0;
+        (void)local_4e8;
         local_598[0] = 0;
         local_4d8 = local_4d8 | uVar25;
         if (local_5a8 != (WCHAR *)0x0) {
             local_4d8 = local_4d8 | 0x20;
             local_4c0 = (BFFCALLBACK)local_5a8;
+            (void)local_4c0;
         }
         if ((local_4d8 >> 0x12 & 1) == 0) {
             local_4d8 = local_4d8 | 0x200000;
         }
         local_530 = pHVar13;
+        (void)local_530;
         local_520 = pWVar11;
+        (void)local_520;
         FUN_14005C904();
         if (bVar3) {
             local_598[0] = (uint)((int (*)(void))DAT_14013d430)();
@@ -945,6 +955,7 @@ LAB_14008aeda:
                     }
                     local_278 = g_u32127750;
                     local_274 = g_u1627754;
+                    (void)local_274;
                     memset(local_272, 0, 0x9e);
                     iVar16 = (int)*puVar15;
                     puVar7 = &DAT_140127740;
@@ -952,8 +963,10 @@ LAB_14008aeda:
                         puVar7 = &g_b127748;
                     }
                     local_2b0 = &DAT_140127738;
+                    (void)local_2b0;
                     if (iVar16 != 1) {
                         local_2b0 = puVar7;
+                        (void)local_2b0;
                     }
                     if (iVar16 == 0) {
                         wsprintfW((LPWSTR)&local_278, WSTR("%08lX"),
