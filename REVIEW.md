@@ -3289,3 +3289,18 @@ Wlan10 + 5 GDI+void* + 4 标量 + 5 GDI+ + 22 fn-ptr(WTS/WIM/Reg/Setup+等) + 18
 AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag）·无大小数组/.rdata 串
 （d770/cb90/d8a0/127738/127740/1210f8/1214d8/12944c）·BOM 常量（124128/12c/130 已 static）——
 均需运行时/逆汇编深挖，或大小推断有越界语义风险，按"行为不变"保留。
+
+---
+
+## 70. 阶段4深挖 + 阶段7 启动（round 25）
+- **阶段4深处**：6 子代理对最后 226 个未命名函数体做决定性分类（CRT/STUB/DECOMPILE_FAILED/AMBIGUOUS/THUNK），
+  从"未分类"挖出 **12 个真业务可命名**：RegexReplace(05182c, 7900B 正则替换引擎)、DescribePartitionInfo(08bcd4,
+  4.9KB 磁盘分区)、CreateStaticControl(102778)、ControlHoverWndProc(102928)、ReallocBuffer(063224)、
+  FindFirstFileW(101db8)、ParseControlCenterArgs(0abc74)、CreateProcessW(101e04)、ParseTokenResolve(0846a4)、
+  ConstructObject(102184)、ParseRegexCloseBrace(0510e8)、CreateButtonCtl(102848)。rename_map 790→**802**；FUN_ 563→551。
+  其余按类登记（tools/residue_classification.json）。
+- **阶段6 继续**：从 decompiled.c 权威定义深挖 DAT_：cb90=OSVERSIONINFOW(GetVersionExW)、d770=int32[2] 已迁；
+  补 pecmd_defs.h include-guard（修 OSVERSIONINFOW 重定义）；真实 DAT_ 19→**17**。
+- **阶段7 子任务3（去解译残留）启动**：b3i/b3k/b3_remaining/b1/b2f 已清 CONCAT artefact/死代码/冗余cast，
+  0 错误、警告不增。子任务2/4/5 待做。
+- 校验：全程 build/link 绿；git 35 提交。
