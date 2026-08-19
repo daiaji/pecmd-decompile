@@ -2979,3 +2979,100 @@ PECMD_ReadPelogonReg / PECMD_DerefVarName ...（共 115 条，详见 FUNC_NAMES.
 ### 校验（最终状态）
 - `./build.sh core_*.c` → exit 0（无 FAIL）
 - 完整链接 → exit 0（无 undefined、无 multiple-definition）
+
+---
+
+## 57. 阶段5a-1：DAT_→g_ 迁移（12 符号）
+
+### 概述
+- 用户要求的 DAT_→g_ 第二块落地。派 2 子代理为高引用符号定真实类型（均非 AMBIGUOUS），
+  逐符号看使用方式（赋值/比较/强转/解引用）定类型 + 提 g_ 名；GDI+ 槽沿用代码库 void*/fn-ptr 惯例。
+- 迁移 = core_globals.c 定义 + include/pecmd_defs.h extern + 各 core 文件 token 替换 + 删 link_stubs 假桩。
+
+### 迁移清单（12，类型依次）
+| 地址 | 类型 | g_名 |
+|---|---|---|
+| 14013cf60 | HWND | g_hPelogonWnd |
+| 14013cfb8 | HWND | g_hTooltipParent |
+| 14013e160 | int64_t（地址整数，异构） | g_pCacheBlock |
+| 14013cd90 | int(*)() 无原型 | g_pGdipDisposeImage |
+| 14013ce08 | int(*)() | g_pGdipGetImageWidth |
+| 14013ce10 | int(*)() | g_pGdipGetImageHeight |
+| 14013ce30 | int(*)() | g_pGdipDeleteGraphics |
+| 14013ce28 | int(*)() | g_pGdipCreateFromHDC |
+| 14013d3b8 | int64_t（init 标志；另有调用点强转） | g_pComWrite |
+| 14013d3ec | uint32_t[2]（b3e 数组视图 + g1 整字） | g_msgWndState |
+| 14013d5c8 | char* | g_timeServer |
+| 14013d868 | uint32_t（统一既有 g_dpi 孤儿 extern） | g_dpi |
+
+### 中途修正（异构符号教训）
+- 这些符号多为"多角色":同地址在不同文件既当整数又当指针/数组/函数指针（decompile 产物）。
+  单一定型必冲突，修正策略：
+  - GDI+/COM 槽签名/参数异构（0参/1参/传 int/HDC）→ 用**无原型 `int(*)()`**，任意参合法。
+  - g_pCacheBlock 既 int 又 int64_t* 数组 → 定 `int64_t`，指针用处分 `(int64_t*)`/`[i]` 强转。
+  - g_msgWndState b3e `[0]/[1]` 数组视图 vs b3r_g1 整字 → `uint32_t[2]`，整字处改 `[0]`。
+  - b1_remaining 的 GetProcAddress 赋值点补 `(int(*)())` 强转（void*→fn-ptr）。
+- 教训：此类异构符号应逐调用点核对签名后再定单一类型；复杂者可 DECOMPILE 回归。
+
+### 校验
+- 12 符号真实(去注释)残留 **0**；真实 DAT_ 标识符 112→**100**。
+- link_stubs 删 11+2 个假桩；`./build.sh core_*.c` exit 0；完整链接 exit 0。
+- 首次 `git init` + baseline 提交 + 本批提交（合约 144 files）。
+
+### 待办
+- link_stubs 剩余 ~80 个 `uint64_t DAT_xxx` 假桩 + 真实 DAT_ 100 个，按 6 子代理×~17≈100/批 继续；
+  优先干净标量/句柄；异构/fn-ptr 复杂者逐点核实或登记 SKIP。
+
+---
+
+## 58. 阶段5a-2：DAT_ 100 符号全量定类型分析 + 干净子集迁移
+
+### 概述
+- 派 6 子代理对剩余全部 100 个真实 DAT_ 标识符逐一读用法定类型+提 g_ 名。
+- 结论：剩余 DAT_ 以**惰性 fn-ptr 槽**为主（SetupApi/GDI+/WIMGAPI/winmm/Kernel32/COM/Wlan/WTS 等
+  ~60 个，多已在各文件用带类型 extern 正常工作，link_stubs 的 uint64_t 仅是定义）；
+  另有 ~10 个 .rdata 常量/BOM/串/GUID（部分已是 static 局部）、~5 个已登记 AMBIGUOUS/字节重叠、少量干净标量。
+
+### 本批复①（干净标量/句柄，已迁移并全绿）
+| 地址 | 类型 | g_名 |
+|---|---|---|
+| 14013d870 | DWORD | g_imgBufLen |
+| 14014700c | COLORREF | g_dwTipsTextColor |
+| 140147008 | COLORREF | g_dwTipBkColor |
+| 14013dd00 | HWND | g_hwndTray |
+真实 DAT_ 100→**96**；build/link 绿。
+
+### 登记待合并的 fn-ptr 槽（工作正常，合并为可选打磨，含建议类型/名）
+SetupDiDestroyDeviceInfoList(cf10,BOOL(*)(HDEVINFO))、WIMCloseHandle(d488)、CM_Get_DevNode_Status(cf48)、
+CreateStreamOnHGlobal(d838)、GdipPrivateAddMemoryFont(cee0)、SetDeviceGammaRamp(cff0)、WimLoadImage(d478)、
+GdipCloneBitmapAreaI(cea0)、UiCallback(d810)、WlanOpenHandle(d788)、WlanGetAvailableNetworkList(d7b8)、
+WTSGetActiveConsoleSessionId(c998)、DhcpNotifyConfigChange(d4d0)、RegDeleteKeyExW(d408,=g_pRegDeleteKeyExW 已迁)、
+GetDeviceGammaRamp(cff8)、WIMCloseHandle(d490)、GdipGetFontCollectionFamilyList(cee8)、
+WlanEnumInterfaces(d790)、WlanDisconnect(d7c0)、GdipCreateBitmapFromHBITMAP(cde8)、
+GdipCreateHBITMAPFromBitmap(cdf0)、GetSaveFileNameW(d430)、GdipGetImageEncodersSize(cdb8)、
+GdipGetFamilyName(cef0)、GetVolumeInformationByHandleW(d358)、WIMGetMountedImageHandle(d498)、
+WTSQueryUserToken(c988)、WIMCommitImageHandle(d4a8)、WlanSetProfile(d798)、WlanFreeMemory(d7c8)、
+SetupDiGetINFClassW(cef8)、GdipCreateBitmapFromHICON(ce70)、WIMGetMountedImages(d460)、
+GdipGetImageEncoders(cdc0)、SetupDiCallClassInstaller(cf20)、GetStorageDependencyInformation(d3b0)、
+WIMGetMountedImageHandle(d4a0)、CreateEnvironmentBlock(c9a0)、WIMCommitImageHandle(d4b0)、
+DestroyEnvironmentBlock(c9a8)、WlanCloseHandle(d7a0)、WlanConnect(d7d0)、GdipDrawImageRectI(cd98)、
+WIMCreateFile(d468)、SetupDiEnumDeviceInfo(cf28)、WTSSendMessageW(c990)、GetAdaptersInfo(d4d8)、
+GdipNewPrivateFontCollection(ced0)、SetupIterateCabinetW(cf30)、WIMGetMountedImages(d458)、
+CoTaskMemFree(d728)、GdipCreateHICONFromBitmap(ce60)、WIMUnmountImageHandle(d4b8)、
+SetupDiGetClassDevsW(cf00)、MciSendStringW(d050)、SetupDiDestroyDeviceInfoList(cf08)、
+GdipSetInterpolationMode(ce38)、GetFinalPathNameByHandleW(d780)、GdipDeletePrivateFontCollection(ced8)、
+SetDisplayConfig(cfe8)、WIMSetTemporaryPath(d470)、GdipCreateBitmapFromScan0(ce90)、
+WIMUnmountImageHandle(d4c0)、ComLoad(d860)、WlanScan(d7b0)、WlanRegisterNotification(d7a8)
+
+### 登记待深挖（AMBIGUOUS/字节重叠/多角色）
+d738(int 标志 vs fn-ptr)、d5c0(uint8[] 收包缓冲 vs int64 指针槽)、d480(uint32 vs fnptr，已登记)、
+d47010(double vs uint32，§41 已登记)、147001/147002/147003(与 g_runFlag 字节重叠，`g_b140147002` 暂缓)、
+d124e48/d12d060/d12d058(仅 extern 无用法，弱证据)
+
+### 待并入的干净数组/串（大小需定）
+d770 diskType(int32_t[])、127740/127738/d8a0(byte[])、1214d8/1210f8(WCHAR[] 串)、
+11e890/12d1e8/12d1f8(GUID)、cb90(OSVERSIONINFOW)、d660(sentinel uint8)、e110(config字符串 void*)、
+124128/12c/130(BOM，已 static 局部，无需迁)
+
+### 校验
+- 本批复①：build/link 绿；真实 DAT_ 100→96。git 提交。

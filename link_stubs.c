@@ -626,13 +626,11 @@ uint64_t DAT_14013d480;
 uint64_t DAT_14013d4d8;
 uint64_t DAT_14013d660;
 uint64_t DAT_14013d738;
-uint64_t DAT_14013dd00;
 /* 本批(B1)新增定义 */
 void FUN_14007724c(uint16_t *param_1) { (void)param_1; }   /* @0x14007724c 自删除/延迟执行桩 */
 uint64_t DAT_140147001;
 uint64_t DAT_140147002;
 uint64_t DAT_140147003;
-uint64_t DAT_140147008;
 uint64_t DAT_140147010;
 uint64_t PTR_DAT_14013a250;
 uint64_t PTR_FUN_1401234f0;
@@ -788,7 +786,6 @@ uint64_t DAT_14013cf30;
 uint64_t DAT_14013cf48;
 uint64_t DAT_14013d838;
 uint64_t DAT_14013d860;
-uint64_t DAT_14014700c;
 uint64_t PTR_FUN_14011fb08[128];
 uint64_t PTR_FUN_140120a50[128];
 uint64_t PTR_FUN_140120a60[128];

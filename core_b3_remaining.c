@@ -324,7 +324,7 @@ extern void   PECMD_CreateMutexSlot(uint64_t *obj, LPCWSTR name);/* @0x140017770
 extern void   FUN_14007bf44(int64_t *, LPCWSTR, int64_t *, int, int); /* @0x14007bf44 */
 extern int64_t PECMD_ParseNumber(int64_t *pp, int *out);    /* @0x14007486c */
 extern void   PECMD_ReleaseMutex(uint64_t *obj);              /* @0x1400177b8 */
-extern uint64_t DAT_14014700c;                           /* @0x14014700c */
+extern COLORREF g_dwTipsTextColor;                           /* @0x14014700c */
 extern uint32_t DAT_140147010;                           /* @0x140147010 */
 extern int    g_intA238;                             /* @0x14013a238 */
 extern int    g_intA23C;                             /* @0x14013a23c */
@@ -1340,7 +1340,7 @@ uint64_t PECMD_ShowScreenText(int64_t *param_1, WCHAR *param_2)
                 local_208 = local_208 + 1;
                 bVar2 = PECMD_ParseNumber((int64_t *)&local_208, local_res20);
                 if (0 < (int)(uint64_t)bVar2) {
-                    DAT_14014700c = local_res20[0];
+                    g_dwTipsTextColor = local_res20[0];
                 }
             }
             local_208 = StrChrW(lpStart, L'L');

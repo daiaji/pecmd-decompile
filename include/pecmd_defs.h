@@ -553,3 +553,7 @@ extern int (*g_pGdipGetImageHeight)();
 extern int (*g_pGdipDeleteGraphics)();
 extern int (*g_pGdipCreateFromHDC)();
 extern uint32_t g_msgWndState[2];
+extern DWORD g_imgBufLen;   /* DAT_14013d870 */
+extern COLORREF g_dwTipsTextColor;   /* DAT_14014700c */
+extern COLORREF g_dwTipBkColor;   /* DAT_140147008 */
+extern HWND g_hwndTray;   /* DAT_14013dd00 */

@@ -173,7 +173,7 @@ extern uint8_t g_topiconFlag;                /* TOPICON 标志 */
 extern uint8_t DAT_140147002;
 extern uint8_t DAT_140147003;
 extern HWND g_hwndCF78;
-extern HWND DAT_14013dd00;
+extern HWND g_hwndTray;
 extern WCHAR *g_pwszD250;
 extern uint8_t g_answerFlag;
 extern void *g_pSetSuspendState;                  /* SetSuspendState 函数指针 */
@@ -2561,7 +2561,7 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
         if ((g_pwszD250 == NULL) || (*g_pwszD250 == L'\0')) {
             FUN_1400195F0(script.QuadPart, 100, 0, NULL);
         }
-        if ((g_topiconFlag != 0) && (DAT_14013dd00 == 0)) {
+        if ((g_topiconFlag != 0) && (g_hwndTray == 0)) {
             SendMessageW(g_hwndCF78, 1099, 0, 0);
         }
     }
@@ -2600,7 +2600,7 @@ loop_retry:
         if (g_u8CCB1 != 0) {
             FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26eb, 0);
         }
-        if ((g_topiconFlag != 0) && (DAT_14013dd00 == 0)) {
+        if ((g_topiconFlag != 0) && (g_hwndTray == 0)) {
             SendMessageW(g_hwndCF78, 1099, 0, 0);
         }
         if (*shellCmd == 0) {

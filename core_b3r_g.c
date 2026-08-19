@@ -47,7 +47,7 @@ typedef uint64_t            ulonglong;
 /* ================================================================
  * Global data references used by this group
  * ================================================================ */
-extern DWORD       DAT_14013d870;        /* pending image-buffer length */
+extern DWORD g_imgBufLen;        /* pending image-buffer length */
 extern WCHAR g_szEmpty[];      /* empty string (.rdata)       */
 extern int64_t g_pCacheBlock;        /* cached COM enumeration      */
 extern int64_t     DAT_14012d1e8;        /* CLSID slot (CoCreateInstance) */
@@ -136,7 +136,7 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
         if (param_2 == (LPCWSTR)0) {
             return 0x80070057;
         }
-        if (DAT_14013d870 < 1) {
+        if (g_imgBufLen < 1) {
             return 0;
         }
         local_res8[0] = 0;
@@ -149,17 +149,17 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
             }
             return DVar1;
         }
-        WriteFile(hFile, g_pImageBuf, (DWORD)DAT_14013d870, local_res8,
+        WriteFile(hFile, g_pImageBuf, (DWORD)g_imgBufLen, local_res8,
                   (void *)0);
         CloseHandle(hFile);
-        DAT_14013d870 = 0;
+        g_imgBufLen = 0;
         if (g_pImageBuf != (LPCVOID)0) {
             HeapFree(g_hHeap, 0,
                      (LPVOID)((int64_t)(intptr_t)g_pImageBuf - 8));
             g_pImageBuf = (LPCVOID)0;
             return 0;
         }
-        DAT_14013d870 = 0;
+        g_imgBufLen = 0;
         return 0;
     }
     if (param_3 == (LPCWSTR)0) {

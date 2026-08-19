@@ -61,7 +61,7 @@ typedef struct _APPBARDATA {
 
 /* ---- 本文件引用的全局 DATA ---- */
 extern uint8_t    g_u8CCB1;          /* MAIN_DBG 日志标志      */
-extern int64_t    DAT_14013d870;          /* 位图数据大小           */
+extern DWORD g_imgBufLen;          /* 位图数据大小           */
 extern WCHAR g_szEmpty[];       /* "" (空串)              */
 extern const WCHAR DAT_1401210f8[];       /* 关键字串 .rdata         */
 extern const WCHAR g_wsz28038[];       /* 关键字串 .rdata         */
@@ -1034,7 +1034,7 @@ LAB_140097f33:
                 local_b0.right = 0;
             }
             if (WVar2 != L'#') {
-                if ((bVar27 != 0) || (DAT_14013d870 < 1)) {
+                if ((bVar27 != 0) || (g_imgBufLen < 1)) {
                     ptVar20 = &local_b0;
                 }
             }

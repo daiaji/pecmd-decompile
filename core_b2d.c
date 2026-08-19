@@ -196,10 +196,10 @@ extern HWND g_hTooltipParent;
 extern WCHAR *g_pwszD220;
 extern WCHAR *g_pwszD250;
 extern WCHAR *g_pwszD258;
-extern HWND DAT_14013dd00;
+extern HWND g_hwndTray;
 extern HFONT g_hFontE2B0;
 extern uint8_t DAT_140147003;
-extern uint32_t DAT_140147008;
+extern COLORREF g_dwTipBkColor;
 extern double DAT_140147010;
 extern const WCHAR *PTR_u_Shell_14011ddb8_2_14013a290;
 
@@ -1339,7 +1339,7 @@ int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
     if ((g_WM_TaskbarRestart != 0) && (g_topiconFlag != 0) &&
         (g_WM_TaskbarRestart == msg)) {
         ptVar5 = NULL;
-        FUN_14005B900(&DAT_14013dd00, (uint64_t)(uintptr_t)hwnd, WSTR("PECMD2012"),
+        FUN_14005B900(&g_hwndTray, (uint64_t)(uintptr_t)hwnd, WSTR("PECMD2012"),
                       (HICON)0, 0x456);
     }
     iVar1 = (int)(intptr_t)wParam;
@@ -1380,15 +1380,15 @@ int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
             FUN_140022A70((uint64_t)script.QuadPart, 0);
         } else if (msg != 0x44a) {
             if (msg == 1099) {
-                if (DAT_14013dd00 != 0) {
+                if (g_hwndTray != 0) {
                     return 0;
                 }
-                FUN_14005B900(&DAT_14013dd00, (uint64_t)(uintptr_t)hwnd, WSTR("PECMD2012"),
+                FUN_14005B900(&g_hwndTray, (uint64_t)(uintptr_t)hwnd, WSTR("PECMD2012"),
                               (HICON)0, 0x456);
                 return 0;
             }
             if (msg == 0x456) {
-                if (DAT_14013dd00 == 0) {
+                if (g_hwndTray == 0) {
                     return 0;
                 }
                 if ((lParam != 0x203) && (lParam != 0x202) &&
@@ -1510,11 +1510,11 @@ uint64_t FUN_1400389C4(uint64_t ctx, LPCWSTR text)
         local_258[0] = 0;
         bVar3 = PECMD_ParseNumber((int64_t *)&local_250, (int *)local_258);
         if (bVar3 > 0) {
-            DAT_140147008 = local_258[0];
+            g_dwTipBkColor = local_258[0];
         }
     }
-    if (DAT_140147008 == 0x80000000) {
-        DAT_140147008 = FUN_140018e6c();
+    if (g_dwTipBkColor == 0x80000000) {
+        g_dwTipBkColor = FUN_140018e6c();
     }
     uVar4 = (uint32_t)(uint8_t)local_268;
     uVar6 = (uint32_t)(uint16_t)*local_res10;

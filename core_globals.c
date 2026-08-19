@@ -1088,3 +1088,8 @@ int (*g_pGdipGetImageHeight)();
 int (*g_pGdipDeleteGraphics)();
 int (*g_pGdipCreateFromHDC)();
 uint32_t g_msgWndState[2];
+/* ---- 阶段5a-2 DAT_→g_ (干净子集) ---- */
+DWORD g_imgBufLen;   /* DAT_14013d870 位图数据大小 */
+COLORREF g_dwTipsTextColor;   /* DAT_14014700c 提示文本颜色 */
+COLORREF g_dwTipBkColor;   /* DAT_140147008 提示背景色 */
+HWND g_hwndTray;   /* DAT_14013dd00 托盘窗口句柄 */

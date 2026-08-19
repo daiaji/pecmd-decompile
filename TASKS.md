@@ -331,8 +331,11 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
       SKIP(CRT/thunk/stub/decompile-failed)；g0-g5 共 137 命名，替换 1030+131=1161 处，
       rename_map 464→601；build/link 绿（REVIEW §56）。剩余唯一 FUN_ 地址 ~752
       （余者多为 CRT/空桩/巨型函数等 SKIP 风险项，命名收尾）。
-- [ ] 阶段5a 起：DAT_→g_ 迁移分批（先处理高引用 DAT_14013cd90/14013e160/14013cf60 等，按真实类型
-      迁 core_globals 删 link_stubs 假桩）；FUN_ 仅剩巨型/风险项按需处理。
+- [x] **阶段5a-1（DAT_→g_ 批1，12 符号）完成**：HWND cf60/cfb8、e160 cacheBlock、GDI+ fn-ptr 槽x5、
+      d3ec state 数组、timeServer、dpi 统一（g_dpi）；异构符号逐类型/强转修正；build/link 绿
+      （REVIEW 57）。真实 DAT_ 112→100；首次 git init+双提交。
+- [ ] 阶段5a-2 起：继续 DAT_→g_ 迁移（6 子代理x~17≈100/批）；优先干净标量/句柄，异构/fn-ptr 逐点核实；
+      FUN_ 仅剩巨型/风险项按需处理。
 
 ## 3. 全阶段实施方案（阶段 0-5，自动循环）
 

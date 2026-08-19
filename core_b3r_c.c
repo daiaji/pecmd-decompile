@@ -41,7 +41,7 @@ typedef size_t SIZE_T;
 
 /* globals (DAT_*) */
 extern uint8_t g_u8CCB1;   /* MAIN_DBG 日志标志 */
-extern int64_t DAT_14013d870;   /* 位图数据大小 */
+extern DWORD g_imgBufLen;   /* 位图数据大小 */
 extern void *g_pGdipLoadImageFromStream;     /* GdipLoadImageFromStream */
 
 /* GDI+ function-pointer slots */
@@ -740,8 +740,8 @@ L14007d646:
     bfh.bfReserved2 = 0;
     bfh.bfOffBits = (int)pHVar7 + 0x36;
     if (lpFileName == (LPCWSTR)0) {
-        DAT_14013d870 = (int64_t)(int)(uVar5 + 0x36);
-        PECMD_GrowByteBuffer((void **)&g_pImageBuf, DAT_14013d870 + 8);
+        g_imgBufLen = (int64_t)(int)(uVar5 + 0x36);
+        PECMD_GrowByteBuffer((void **)&g_pImageBuf, g_imgBufLen + 8);
         puVar1 = g_pImageBuf;
         FUN_14001d78c(g_pImageBuf, &bfh, 0xe);
         FUN_14001d78c(puVar1 + 0xe, lpbmi, uVar5 + 0x28);

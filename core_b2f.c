@@ -3772,7 +3772,7 @@ extern HWND g_hTooltipParent;
 extern WCHAR *g_pwszD220;
 extern WCHAR *g_pwszD258;
 
-extern COLORREF DAT_140147008;
+extern COLORREF g_dwTipBkColor;
 extern uint8_t g_u8D6F7;
 
 #endif /* B2F_PART3_LOCAL */
@@ -4723,7 +4723,7 @@ LAB_14003858a:
         if (-1 < g_transState) {
             bAlpha = 0xff - (char)g_transState;
         }
-        SetLayeredWindowAttributes(local_res10, DAT_140147008, bAlpha, uVar1 | 2);
+        SetLayeredWindowAttributes(local_res10, g_dwTipBkColor, bAlpha, uVar1 | 2);
         iVar5 = g_tipOffX;
         iVar8 = g_tipOffY;
         if ((g_u8CF85 & 0x40) != 0) {
@@ -4877,7 +4877,7 @@ LAB_14003808f:
         iVar6 = g_pCurRect->top;
         cx = g_pCurRect->right - local_res18[0];
         iVar5 = g_pCurRect->bottom - iVar6;
-        hbr = CreateSolidBrush(DAT_140147008);
+        hbr = CreateSolidBrush(g_dwTipBkColor);
         FillRect(hDC, g_pCurRect, hbr);
         DeleteObject(hbr);
     } else {

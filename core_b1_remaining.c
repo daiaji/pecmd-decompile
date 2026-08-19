@@ -51,7 +51,7 @@ extern uint64_t g_u64CA50;                             /* 释放回调 */
 extern uint64_t g_u64C9E8;                             /* GetModuleFileNameExW 槽 */
 extern uint64_t g_u64C9F0;                             /* EnumProcessModules 槽 */
 extern HWND g_hwndCF78;                                 /* PELogon 回调窗口 */
-extern uint64_t DAT_14013dd00;                             /* 托盘数据块 */
+extern HWND g_hwndTray;                             /* 托盘数据块 */
 extern uint64_t g_u64CD00;                             /* 物理内存映射基址 */
 extern uint64_t g_u64cd08;                             /* 物理内存映射句柄 */
 extern void *PTR_u_CallBackhWnd_14011e668_2_14013a288;    /* 回调窗口名数据 */
@@ -244,7 +244,7 @@ extern int g_intA238;            /* 提示区 left */
 extern int g_intA23C;            /* 提示区 top */
 extern int g_intA240;            /* 提示区 right */
 extern int g_intA244;            /* 提示区 bottom */
-extern uint32_t DAT_14014700c;       /* 提示文本颜色 */
+extern COLORREF g_dwTipsTextColor;       /* 提示文本颜色 */
 extern HMODULE g_hGdiPlus;        /* GdiPlus.dll 句柄 */
 extern void *g_gdiplusToken;          /* Gdiplus token */
 
@@ -5890,7 +5890,7 @@ uint64_t PECMD_DrawTooltipText(uint64_t param_1, HDC param_2, HWND param_3)
             }
         }
         SetBkMode(hdc, 1);
-        SetTextColor(hdc, DAT_14014700c);
+        SetTextColor(hdc, g_dwTipsTextColor);
         DrawTextW(hdc, g_pwszD258, -1, &local_58, dflags & 3 | 0x40);
     }
     if (param_2 == (HDC)0) {
@@ -6600,7 +6600,7 @@ void PECMD_AddTrayIcon(int64_t param)
     /* @0x14001aae8 size=87 非运行模式添加托盘图标，否则通知回调窗口 */
     if (g_runFlag == 0) {
         if (param != 0) {
-            FUN_14005B900((char *)&DAT_14013dd00, (uint64_t)param,
+            FUN_14005B900((char *)&g_hwndTray, (uint64_t)param,
                           WSTR("PECMD2012"), (HICON)0, 0x457);
         }
     } else if (g_hwndCF78 != (HWND)0) {
