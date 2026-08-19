@@ -3209,3 +3209,22 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
 项目骨架+可读化主体已实质完成并全绿；残余为"工作正常但待合并/待深挖"的低价值项，已全部登记。
 如需"100% 合并/命名"需要对 fn-ptr 槽做带风险的单一定型与 AMBIGUOUS 深挖（可能引入语义改动），
 在"行为不变"前提下不强行推进。此评估供人类复核后在"接受逐点打磨"与"记为已知限制收口"间定夺。
+
+---
+
+## 65. 阶段5c/d：DAT_ fn-ptr 槽批量迁移（真实 DAT_ 93→60）
+
+### 概述
+- 放弃"全量强迁"，改**按 extern 一致性分簇批量迁移**：只有唯一 extern 形式的槽（签名一致）走
+  "core_globals 定义 + pecmd_defs 声明 + token 替换 + 删 link_stubs 桩"安全路径。
+- 迁移 33 个：Wlan 簇 10（OpenHandle/Connect/Scan/Disconnect/SetProfile/FreeMemory/...）+
+  WTS 簇 5 + WIM 簇 7 + 其它（SetDisplayConfig/Get|SetDeviceGammaRamp/GetVolumeInfoByHandle/
+  CoTaskMemFree/GetFinalPathName/CreateStreamOnHGlobal/ComLoad/UiCallback/Ole32Slot828）。令 d408 统一为
+  RegDeleteKeyExW 带签名（int64_t(*)(HKEY,LPCWSTR,uint32,uint32)）。
+- 修复：pecmd_defs 补 `typedef DWORD *LPDWORD`；link_stubs 12 个带类型 fn-ptr 孤儿桩删除；g_pRegDeleteKeyExW 全文件统一签名。
+
+### 现状
+- 真实 DAT_ 113→**60**。剩余 60 全为**异构 extern（2+ 形式）/ AMBIGUOUS（d738/d5c0/d480/d47010）/
+  字节重叠（147002/003 与 g_runFlag）/ 无大小数组（d770/d8a0 等）** ——强迁需逐调用点定类型，有改坏风险，
+  按"行为不变"政策登记待深挖。
+- 校验：build/link 全程绿；打桩删净；每簇提交。
