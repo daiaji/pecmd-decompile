@@ -155,7 +155,8 @@ void PECMD_ParseNtpSetSystemTime(uint64_t param_1, uint32_t *param_2)
     iVar1 = (int)(*g_pntohl)(param_2[10]);
     uVar2 = (*g_pntohl)(param_2[0xb]);
     local_res10 = iVar1 + 0x7c558180;
-    local_res14 = (int)((uVar2 >> 0xc) + ((uVar2 >> 10) + 0x8000 >> 0x10) * -0x2f7);
+    local_res14 = (int)((uVar2 >> 0xc) + (((uVar2 >> 10) + 0x8000) >> 0x10) * -0x2f7);
+    (void)local_res14;
     PECMD_SetSystemTimeFromUnix(&local_res10);
     return;
 }
@@ -188,6 +189,7 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
     local_246 = 0;
     local_23e = 0;
     local_23a = 0;
+    (void)local_246; (void)local_23e; (void)local_23a;
     if (param_1 == (uint32_t *)0) {
         param_1 = (uint32_t *)g_timeServer;
     }
@@ -223,6 +225,7 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
                 local_228[0] = 1;
                 local_res10 = 1;
                 local_220 = uVar5;
+                (void)local_220; (void)local_22e; (void)local_22a; (void)local_res14;
                 iVar4 = (*g_pselect)(iVar3 + 1, local_228, 0, 0, &local_res10);
                 if (iVar4 == 1) {
                     SetLastError(0);

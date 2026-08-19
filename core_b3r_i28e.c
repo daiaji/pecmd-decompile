@@ -293,16 +293,19 @@ HICON FUN_1400ba35c(int64_t *param_1, LPCWSTR param_2, int64_t param_3)
     WCHAR WVar15;
     HICON pHVar20;
 
+    (void)pWVar2; (void)lpString;
     local_res10 = (WCHAR *)param_2;
     local_res18 = param_3;
     FUN_140063620(&local_68);
     uVar18 = 0;
     local_58 = 0;
+    (void)local_58;
     local_res8 = 0;
     bVar22 = false;
     pHVar17 = 0;
     cVar21 = '\0';
     local_60 = param_1;
+    (void)local_60;
     FUN_1400702b0(&local_a0, g_szEmpty);
     FUN_1400702b0(&local_a8, g_szEmpty);
     FUN_1400702b0(&local_90, g_szEmpty);
@@ -983,6 +986,7 @@ bd_option_done:
     FUN_1400702b0(&local_c0_hwnd, g_szEmpty);
     FUN_1400702b0(&local_50, g_szEmpty);
     local_48 = local_res20;
+    (void)local_48; (void)local_58; (void)local_60;
     local_a8 = 0;                 /* TODO(verify): 寄存器低 32 位清零 */
     local_88 = 0;                 /* TODO(verify): 寄存器低 32 位清零 */
     local_b0[0] = 0;
@@ -998,7 +1002,7 @@ bd_option_done:
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-        PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_88, local_b0, local_res18);
+        PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_88, local_b0, (uint32_t *)local_res18);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
             plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
@@ -1012,7 +1016,7 @@ bd_option_done:
                     FUN_1400675b8(plVar7, (int64_t *)&local_c0_hwnd, 0);
                     if (*local_res10 == 0x2c) {
                         local_res10 = local_res10 + 1;
-                        puVar8 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
+                        puVar8 = (uint64_t *)FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
                         uVar9 = PECMD_ParseSignedNumber((short *)*puVar8);
                         uVar16 = (uint32_t)uVar9;
                     }
@@ -1023,8 +1027,8 @@ bd_option_done:
     if (uVar2 != 0x2a) {
         param_1 = *(int64_t **)((char *)(uintptr_t)param_3 + 0x290);
     }
-    PECMD_ConstructControlObjectEx(param_3, (int64_t)param_1, &local_90, (int)local_a8, (int)local_88,
-                  local_b0[0], local_res18[0], &local_c8, &local_50,
+    PECMD_ConstructControlObjectEx(param_3, (int64_t)param_1, (uint64_t *)&local_90, (int)local_a8, (int)local_88,
+                  local_b0[0], local_res18[0], (uint64_t *)&local_c8, (uint64_t *)&local_50,
                   (uint64_t *)&local_c0_hwnd, (uVar16 & 0xffff) | uVar14 | uVar11,
                   (LPCWSTR)pHVar12, pHVar18, (int *)&local_a0);
     FUN_14005b104(&local_50);

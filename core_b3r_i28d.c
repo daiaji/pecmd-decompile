@@ -103,6 +103,7 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
     uVar5 = 0;
     local_48 = 0;
     local_50 = param_1;
+    (void)local_48; (void)local_50;
     FUN_1400702b0(&local_70, g_szEmpty);
     FUN_140063620(&local_68);
     FUN_140063620(&local_60);
@@ -196,6 +197,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     uVar15 = 0;
     local_50 = 0;
     local_58 = param_1;
+    (void)local_50; (void)local_58;
     local_70 = param_4;
     FUN_140063620(&local_60);
     if (param_3 == 0) {
@@ -358,6 +360,7 @@ uint64_t PECMD_AddControlVariantB(longlong *param_1, WCHAR *param_2, longlong pa
     local_48 = 0;
     local_40 = NULL;
     local_38 = param_4;
+    (void)local_38;
     if (*param_2 == L'*') {
         cVar6 = '\0';
     } else {
@@ -569,9 +572,11 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     uVar16 = uVar17;
     local_b0 = NULL;
     local_48 = param_1;
+    (void)local_48;
     FUN_14005b154(&local_res10);
     puVar20 = local_res10;
     puVar5 = puVar20;
+    (void)puVar5;
     /* 选项区（以 '-' 开头） */
     {
         uVar13 = 0;
@@ -672,6 +677,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     iVar14 = -0x80000000;
     local_9c = -0x80000000;
     local_40 = param_4;
+    (void)local_40;
     FUN_1400675b8(&local_res10, &local_78, 0x2c);
     FUN_140003a20(param_1, &local_78, 1);
     iVar12 = -0x80000000;

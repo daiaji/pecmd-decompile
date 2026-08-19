@@ -156,7 +156,7 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
         if (g_pImageBuf != (LPCVOID)0) {
             HeapFree(g_hHeap, 0,
                      (LPVOID)((int64_t)(intptr_t)g_pImageBuf - 8));
-            g_pImageBuf = (LPCVOID)0;
+            g_pImageBuf = (void *)(LPCVOID)0;
             return 0;
         }
         g_imgBufLen = 0;
@@ -361,7 +361,7 @@ LAB_14007f219:
     local_res10 = (char *)((((uint64_t)(uint32_t)((uint64_t)local_res10 >> 32)) << 32)
                            | (uint32_t)iVar4);
     puVar16 = puVar11;
-    if (g_pCacheBlock == (int64_t *)0) {
+    if (g_pCacheBlock == (int64_t)(intptr_t)(int64_t *)0) {
 LAB_14007f319:
         local_80 = (int64_t *)0;
         local_88 = (int64_t *)0;
@@ -630,6 +630,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     FUN_140063620(&local_60);
     local_50 = 0;
     local_58 = param_1;
+    (void)local_50; (void)local_58;
     if (param_3 == 0) {
         FUN_14001b3a0(param_1, (int64_t *)0);
         param_3 = (WPARAM)param_1[8];
@@ -773,6 +774,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     FUN_1400702b0(&local_88, (const WCHAR *)g_szEmpty);
     uVar5 = 0;
     local_80 = local_res20;
+    (void)local_80;
     local_78[0] = -0x80000000;
     local_78[1] = 0x80000000;
     local_78[2] = 0x80000000;
@@ -826,7 +828,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
         }
         pWVar16 = local_88;
         uVar12 = (uint32_t)uVar8;
-        if ((char)local_res8 != '\0') {
+        if ((char)(uintptr_t)local_res8 != '\0') {
             local_88 = (WCHAR *)0;
             local_res8 = pWVar16;
             FUN_14007bf44(param_1, pWVar16, (WCHAR **)&local_88, 0, 1);
@@ -836,7 +838,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
             PECMD_ExpandBackslashNewline(local_b8, '\0');
         }
         if (bVar3) {
-            PECMD_ReadFileToWide(local_b8, (int64_t *)&local_b8);
+            PECMD_ReadFileToWide((WCHAR *)local_b8, (int64_t *)&local_b8);
         }
         if ((short)uVar8 == 2) {
             uVar12 = 0x8000;
@@ -850,7 +852,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
         PECMD_DispatchCreateControl(param_3, (int64_t)param_1, (WCHAR **)&local_a8,
                       (int)(int32_t)(uint64_t)local_90, local_b0[0], local_c4,
                       (int)(int32_t)local_res18, (WCHAR **)&local_b8,
-                      (WCHAR **)&local_88, uVar12 & 0xffff | uVar10 | uVar11,
+                      (WCHAR **)&local_88, (uVar12 & 0xffff) | uVar10 | uVar11,
                       local_78, local_c0, local_98);
         FUN_14005b104((int64_t *)&local_88);
         FUN_14005b104((int64_t *)&local_c0);

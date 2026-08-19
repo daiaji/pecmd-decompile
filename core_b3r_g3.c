@@ -329,6 +329,8 @@ LAB_14006bb78:
     local_58 = param_3;
     local_50 = param_4;
     local_30 = param_1;
+    (void)local_30; (void)local_38; (void)local_40;
+    (void)local_48; (void)local_50; (void)local_58;
 LAB_14006bbcd:
     SendMessageW(hWnd, Msg, (WPARAM)wParam, (LPARAM)lParam);
     return 0;

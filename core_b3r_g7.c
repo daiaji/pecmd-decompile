@@ -104,6 +104,7 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
             FUN_14007026c(&local_20, (LPCSTR)0);
             PECMD_AllocSmallObject((undefined8 *)local_38);
             local_18 = (ulonglong)local_res10[0];
+            (void)local_18;
             local_38[1] = 0;
             local_38[2] = 0;
             PECMD_EncodeBuffer((longlong *)&local_20, local_38, 0);
@@ -192,6 +193,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
     local_60 = g_u32126e80;
     local_80 = g_u64ee90;
     local_78 = g_u3211ee98;
+    (void)local_60; (void)local_78;
     if (local_res18[0] < 0) {
         if (WVar9 != L'\0') {
             /* TODO(verify): CONCAT62 仅替换低位 WCHAR(盘符) */
@@ -233,6 +235,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
             /* TODO(verify): CONCAT62 仅替换低位 WCHAR(盘符) */
             local_50 = (g_u646e78 & 0xFFFFFFFFFFFF0000ULL)
                        | (uint64_t)(uint8_t)(cVar6 + 0x41);
+            (void)local_48; (void)local_88; (void)local_50;
             local_90 = (g_u64ee90 & 0xFFFFFFFFFFFF0000ULL)
                        | (uint64_t)(uint8_t)(cVar6 + 0x41);
             UVar3 = GetDriveTypeW((LPCWSTR)&local_90);

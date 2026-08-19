@@ -280,7 +280,7 @@ LAB_14006d_common:
                 }
                 uVar11 = (uint64_t)(((int64_t)uVar11 / 2 + 0x1ffU) & 0xfffffffffffffe00LL);
             } while (lpBuffer == (uint8_t *)0);
-            if ((int64_t)(lVar25 + 0x1ffU & 0xfffffffffffffe00LL) <= (int64_t)uVar11) {
+            if ((int64_t)((lVar25 + 0x1ffU) & 0xfffffffffffffe00LL) <= (int64_t)uVar11) {
                 uVar27 = 0;
                 SetLastError(0);
                 param_11 = (LPCVOID)0x3e8;
@@ -292,7 +292,7 @@ LAB_14006d_common:
                     /* -------- 前向搜索 -------- */
                     while (LVar15.QuadPart <= (int64_t)(uVar21 - lVar25)) {
                         uVar28 = uVar11 - uVar27;
-                        uVar7 = (uVar21 - LVar15.QuadPart) + 0x1ff & 0xfffffffffffffe00ULL;
+                        uVar7 = ((uVar21 - LVar15.QuadPart) + 0x1ff) & 0xfffffffffffffe00ULL;
                         if ((int64_t)uVar28 < (int64_t)uVar7) {
                             uVar7 = uVar28;
                         }
@@ -351,8 +351,8 @@ LAB_14006d_common:
                             uVar7 = uVar28;
                         }
                         if ((int64_t)uVar7 < 1) break;
-                        LVar6.QuadPart = (uVar21 - uVar7) - local_d8 + 0x1ff & 0xfffffffffffffe00ULL;
-                        uVar9 = (-local_d8 - LVar6.QuadPart) + 0x1ff + uVar21 & 0xfffffffffffffe00ULL;
+                        LVar6.QuadPart = ((uVar21 - uVar7) - local_d8 + 0x1ff) & 0xfffffffffffffe00ULL;
+                        uVar9 = ((-local_d8 - LVar6.QuadPart) + 0x1ff + uVar21) & 0xfffffffffffffe00ULL;
                         if ((int64_t)uVar28 < (int64_t)uVar9) {
                             uVar9 = uVar28;
                         }

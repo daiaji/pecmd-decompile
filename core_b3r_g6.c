@@ -114,10 +114,10 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
 
     if (WVar11 == L'*') {
         FUN_14006375c(&local_80, local_res10);
-        if ((!bVar2) && ((pWVar5 = (LPWSTR)StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0))) {
+        if ((!bVar2) && ((pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0))) {
             FUN_14006375c(&local_80, WSTR(" /Y "));
         }
-        pWVar5 = (LPWSTR)StrStrIW(pWVar6, WSTR("/X"));
+        pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/X"));
         if (pWVar5 == (LPWSTR)0) {
             FUN_14006375c(&local_80, WSTR(" /X "));
         }
@@ -363,6 +363,8 @@ LAB_140079792:
                     local_58 = pWVar7;
                 }
                 local_48 = 0;
+                (void)local_48; (void)local_50; (void)local_58; (void)local_60;
+                (void)local_68; (void)local_70;
                 SendMessageW(hWnd, Msg, (WPARAM)param_1[7], (LPARAM)&local_78);
             }
         }

@@ -7,6 +7,7 @@
  *   PECMD_PcipDispatch @0x1400b4600  PCIP 命令分派 (SET/DHCP 等)
  */
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "win32_stub.h"
 #include "pecmd_defs.h"
@@ -640,7 +641,7 @@ LAB_1400afff3:
                     if (local_150 == 8) {
                         uVar19 = 0xffffffff;
                     }
-                    iVar8 = (int)FUN_140078c68(local_b8, (int64_t)uVar19, uVar23 & 0xff | (uint64_t)(uint8_t)local_187);
+                    iVar8 = (int)FUN_140078c68(local_b8, (int64_t)uVar19, (uVar23 & 0xff) | (uint64_t)(uint8_t)local_187);
                     if (iVar8 == 0) {
                         DVar26 = GetLastError();
                     }
@@ -794,7 +795,7 @@ void PECMD_CreateTimerObject(WPARAM param_1, uint64_t param_2, uint64_t *param_3
         puVar3 = (uint64_t *)operator_new(0x88);
         if (puVar3 != (uint64_t *)0) {
             puVar4 = PECMD_InitTimerObject(puVar3, param_2,
-                                   (uint32_t)((int64_t)((uintptr_t)puVar2 - (uint64_t)lVar1 >> 3)
+                                   (uint32_t)((int64_t)(((uintptr_t)puVar2 - (uint64_t)lVar1) >> 3)
                                               + 0x1000),
                                    param_3, param_4, param_5,
                                    *(uint64_t *)(uintptr_t)(base + 0x20), param_6);
@@ -889,7 +890,7 @@ int64_t FUN_1400b0bf8(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
     pWVar17 = pWVar14;
     pWVar26 = pWVar14;
     while ((WVar2 != L'\0' &&
-            (((local_res20 = (uint)pWVar12, (ushort)*local_100 < 9 || (0xd < (ushort)*local_100)) &&
+            (((local_res20 = (uint)(uintptr_t)pWVar12, (ushort)*local_100 < 9 || (0xd < (ushort)*local_100)) &&
               (*local_100 != L' '))))) {
         pWVar25 = pWVar15;
         if (*local_100 != L'$') {
@@ -913,7 +914,7 @@ int64_t FUN_1400b0bf8(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
                 local_c0 = (int)(char)*local_100;
             }
         }
-        local_res20 = (uint)pWVar12;
+        local_res20 = (uint)(uintptr_t)pWVar12;
         local_100 = local_100 + 1;
         WVar2 = *local_100;
         pWVar26 = pWVar25;
@@ -992,11 +993,11 @@ int64_t FUN_1400b0bf8(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
                 pWVar12 = (WCHAR *)0x0;
                 if (cVar4 == '\0') {
                     uVar6 = FUN_14005c788("tid:", (const WCHAR *)(local_100 + 1), 4);
-                    if ((char)uVar6 == (char)pWVar12) {
+                    if ((char)uVar6 == (char)(uintptr_t)pWVar12) {
                         uVar6 = FUN_14005c788("htid:", (const WCHAR *)(pWVar15 + 1), 5);
-                        if ((char)uVar6 == (char)pWVar12) {
+                        if ((char)uVar6 == (char)(uintptr_t)pWVar12) {
                             WVar2 = *pWVar15;
-                            while (((WVar2 != (WCHAR)pWVar12 &&
+                            while (((WVar2 != (WCHAR)(uintptr_t)pWVar12 &&
                                     (((ushort)WVar2 < 9 || (0xd < (ushort)WVar2)))) &&
                                    (WVar2 != L' '))) {
                                 pWVar15 = pWVar15 + 1;
@@ -1009,26 +1010,26 @@ int64_t FUN_1400b0bf8(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
                         }
                         pWVar13 = pWVar15 + 6;
                         WVar2 = *pWVar13;
-                        pWVar14 = pWVar13;
-                        while (((WVar2 != (WCHAR)pWVar12 && (((ushort)WVar2 < 9 || (0xd < (ushort)WVar2)))) &&
+                        pWVar14 = (WCHAR *)pWVar13;
+                        while (((WVar2 != (WCHAR)(uintptr_t)pWVar12 && (((ushort)WVar2 < 9 || (0xd < (ushort)WVar2)))) &&
                                (WVar2 != L' '))) {
                             pWVar14 = pWVar14 + 1;
                             WVar2 = *pWVar14;
                         }
                         local_100 = pWVar14;
-                        PECMD_StrCopyW((WCHAR **)&local_c8, pWVar13, (int64_t)pWVar14 - (int64_t)pWVar13 >> 1);
+                        PECMD_StrCopyW((WCHAR **)&local_c8, pWVar13, ((int64_t)pWVar14 - (int64_t)pWVar13) >> 1);
                         local_a0 = local_c8;
                     } else {
                         pWVar13 = pWVar15 + 5;
                         WVar2 = *pWVar13;
-                        pWVar14 = pWVar13;
-                        while ((WVar2 != (WCHAR)pWVar12 &&
+                        pWVar14 = (WCHAR *)pWVar13;
+                        while ((WVar2 != (WCHAR)(uintptr_t)pWVar12 &&
                                ((((ushort)WVar2 < 9 || (0xd < (ushort)WVar2)) && (WVar2 != L' '))))) {
                             pWVar14 = pWVar14 + 1;
                             WVar2 = *pWVar14;
                         }
                         local_100 = pWVar14;
-                        PECMD_StrCopyW((WCHAR **)&local_e0, pWVar13, (int64_t)pWVar14 - (int64_t)pWVar13 >> 1);
+                        PECMD_StrCopyW((WCHAR **)&local_e0, pWVar13, ((int64_t)pWVar14 - (int64_t)pWVar13) >> 1);
                         local_a8 = (wchar_t *)(uintptr_t)local_e0;
                     }
                     bVar22 = 1;
@@ -1075,7 +1076,7 @@ LAB_1400b10dd:
     }
     local_bc = (uint)(int)sVar27 | uVar21 | uVar10 | (uint)local_e8;
     FUN_14005b154((WCHAR **)&local_100);
-    if (*local_100 != (WCHAR)pWVar12) {
+    if (*local_100 != (WCHAR)(uintptr_t)pWVar12) {
         local_d8 = pWVar12;
         if (iVar9 != (int)(uintptr_t)pWVar12) {
             FUN_14007a224(param_1, pWVar25, &local_d8, 0, bVar22);
@@ -1086,11 +1087,11 @@ LAB_1400b10dd:
         pWVar17 = local_res10;
         WVar2 = *local_res10;
         local_100 = local_res10;
-        if (WVar2 != (WCHAR)pWVar12) {
+        if (WVar2 != (WCHAR)(uintptr_t)pWVar12) {
             if (WVar24 == WVar2) {
                 if ((WVar24 == local_res10[1]) &&
                     (uVar6 = FUN_14005c788("st:", (const WCHAR *)(local_res10 + 2), 3),
-                     (char)uVar6 != (char)pWVar12)) {
+                     (char)uVar6 != (char)(uintptr_t)pWVar12)) {
                     local_100 = pWVar17 + 5;
                     FUN_14006a7f4((int64_t *)&local_100, &local_b8);
                     local_b8 = (local_b8 + 0x1fff) & 0xffffffffffffe000ULL;
@@ -1098,7 +1099,7 @@ LAB_1400b10dd:
                     local_b0 = local_b8;
                 }
                 while (WVar24 == WVar2) {
-                    while ((WVar2 != (WCHAR)pWVar12 &&
+                    while ((WVar2 != (WCHAR)(uintptr_t)pWVar12 &&
                             (((local_res10 = pWVar17, (ushort)WVar2 < 9 || (0xd < (ushort)WVar2)) &&
                               (WVar2 != L' '))))) {
                         pWVar17 = pWVar17 + 1;
@@ -1111,7 +1112,7 @@ LAB_1400b10dd:
                 }
             }
             pWVar26 = pWVar12;
-            if ((char)local_f8 != (char)pWVar12) {
+            if ((char)local_f8 != (char)(uintptr_t)pWVar12) {
                 pWVar26 = (WCHAR *)(uintptr_t)param_1[8];
             }
             uVar10 = (uint)(uintptr_t)pWVar12;
@@ -1239,7 +1240,7 @@ LAB_1400b10dd:
                         g_foregroundFlag = '\x01';
                     }
                     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-                    if (local_d0 != -0x80000000) {
+                    if ((unsigned int)local_d0 != 0x80000000u) {
                         SetThreadPriority(hThread, local_d0);
                     }
                     ResumeThread(hThread);
@@ -1338,6 +1339,9 @@ uint64_t PECMD_PcipDispatch(int64_t *param_1, ushort *param_2, WPARAM param_3,
     local_res8[0] = 0;
     puVar10 = local_res10;
     local_60 = param_4;
+    (void)local_48;
+    (void)local_50;
+    (void)local_60;
     uVar5 = FUN_14005c788("-t:", (const WCHAR *)local_res10, 3);
     if ((char)uVar5 == '\0') {
 LAB_1400b47a6:
@@ -1349,7 +1353,7 @@ LAB_1400b47a6:
         FUN_1400547bc(param_1, (int64_t *)&local_res10, &local_78, 0x2c, 0);
         uVar5 = 1;
         if (*local_res10 == 0) goto LAB_1400b48af;
-        puVar7 = FUN_14007f6e4(&local_58, (WCHAR **)&local_res10, 0x2c, 1);
+        puVar7 = (uint64_t *)FUN_14007f6e4(&local_58, (WCHAR **)&local_res10, 0x2c, 1);
         FUN_1400679b0(puVar7, local_res18, 0x2c);
         iVar4 = (local_res18[0] != 0);   /* TODO(verify): 原函数返回字段计数, void 签名归一 */
         iVar2 = local_res18[0];
@@ -1365,7 +1369,7 @@ LAB_1400b47a6:
             if (uVar1 != 0x2a) {
                 param_1 = *(int64_t **)(param_3 + 0x290);
             }
-            PECMD_CreateTimerObject(param_3, (uint64_t)param_1, &local_78, &local_68, iVar2, uVar9);
+            PECMD_CreateTimerObject(param_3, (uint64_t)param_1, (uint64_t *)&local_78, (uint64_t *)&local_68, iVar2, uVar9);
             uVar5 = 0;
             goto LAB_1400b48af;
         }
