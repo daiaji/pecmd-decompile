@@ -3148,3 +3148,25 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
 
 ### 校验
 - 全库 `./build.sh core_*.c` exit 0；`--Wall -Wextra -fsyntax-only` 警告 781→**316**。git 已提交多里程碑。
+
+---
+
+## 62. 阶段5-零警告：多波清除至 126（781→126）
+
+### 历程
+- 分批（每次单个子代理、顺序、不并发）清 `core_b3_remaining.c` 怪物：
+  327→218(第1波)→214回滚基线→145→84→66→57，全程 err=0、build/link 绿。
+- 其余文件：h2/h4/i28b/g5/d/i28c 及散尾全部清零；b1 57→9、h1 62→5、h3 38→4（其余文件基本只剩行为相关）。
+- link_stubs 孤儿的 `FUN_` 桩清理 499→383。
+
+### 现状（~126 警告）
+- b3_remaining 57：~24 discarded-qualifiers（硬 cast 尾）+ 13 cast-function-type + 9 sign-compare + type-limits/shift 等行为相关。
+- 其余文件：多为行为相关 (cast-function-type / sign-compare / type-limits) 已知遗留。
+
+### 原则
+- 机械安全项（unused→(void)、括号、cast）已基本清完；行为相关项（cast-function-type、sign-compare、
+  type-limits、shift-count-overflow）按"不改行为"正确保留并登记为已知限制。
+
+### 校验
+- `./build.sh core_*.c` 持续 exit 0；完整链接 exit 0；git 多里程碑（8 次零警告提交）。
+- 教训：子代理编辑大文件有改坏风险，坚持"每次先 commit 绿基线、子代理改坏即 git checkout 重做、同一文件只允许一个子代理顺序编辑"。
