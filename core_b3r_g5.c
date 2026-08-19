@@ -10,6 +10,7 @@
  * ==================================================================== */
 
 #include <stdbool.h>
+#include <string.h>
 
 #include "win32_stub.h"
 #include "pecmd_defs.h"
@@ -22,7 +23,6 @@ extern DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
 /* ------------------------------------------------------------------
  * 本文件引用的辅助函数 (均为 extern, 正文不在此定义)
  * ------------------------------------------------------------------ */
-extern void   *FUN_14001d744(void *dst, const void *src, int len);      /* @0x14001d744 重叠搬移(memmove) */
 extern void    PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);                /* @0x140063694 分配 */
 extern void    FUN_14005b104(void *ps);                                 /* @0x14005b104 释放字符串槽 */
 extern void    FUN_140063620(WCHAR **out);                              /* @0x140063620 初始化串缓冲 */
@@ -115,7 +115,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                             sVar3 = *psVar6;
                         }
                         /* 折叠整行注释: 搬移尾部 */
-                        FUN_14001d744((void *)psVar5, (const void *)psVar6,
+                        memmove((void *)psVar5, (const void *)psVar6,
                                       ((char *)psVar7 - (char *)psVar6) + 2);
                         psVar7 -= (psVar6 - psVar5);
                         psVar6 = psVar5;
@@ -151,7 +151,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                 sVar3 = *psVar5;
             }
             if (bVar1) {
-                FUN_14001d744((void *)psVar6, (const void *)psVar5,
+                memmove((void *)psVar6, (const void *)psVar5,
                               ((char *)psVar7 - (char *)psVar5) + 2);
                 psVar7 -= (psVar5 - psVar6);
                 psVar5 = psVar6;
@@ -175,7 +175,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
             while (psVar4 < psVar7) {
                 psVar5 = psVar4 + 1;
                 if ((*psVar4 == 0xd) && (*psVar4 = 10, *psVar5 == 10)) {
-                    FUN_14001d744((void *)psVar4, (const void *)psVar5,
+                    memmove((void *)psVar4, (const void *)psVar5,
                                   ((char *)psVar7 - (char *)psVar5) + 2);
                     psVar7 = psVar7 - 1;
                 }
@@ -194,7 +194,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                 for (; (*psVar4 == 10 || (*psVar4 == 0xd)); psVar4 = psVar4 + 1) {
                 }
                 if (psVar5 != psVar4) {
-                    FUN_14001d744((void *)psVar5, (const void *)psVar4,
+                    memmove((void *)psVar5, (const void *)psVar4,
                                   ((char *)psVar7 - (char *)psVar4) + 2);
                     psVar7 -= (psVar4 - psVar5);
                     psVar4 = psVar5;

@@ -87,8 +87,6 @@ extern void FUN_14001b850(void);
 extern uint32_t PECMD_DeviceIoControlQuery(WCHAR *a1);
 extern char PECMD_DevLockUnlock(uint64_t a1, LPCWSTR a2, uint32_t a3,
                           uint32_t a4);
-extern void *FUN_14001d744(void *dst, const void *src, int len);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void PECMD_ParseNumberWs(int64_t *a1, double *a2);
 extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);
 extern uint64_t PECMD_ExecLoadCommand(LPCWSTR a1, LPCWSTR a2);
@@ -1163,7 +1161,7 @@ char FUN_14002C048(int64_t *ctx, int mode, void *fileInfo,
         if (pWVar10 < (WCHAR *)ctx[0x25]) {
             do {
                 if (pWVar7 < *(WCHAR **)pWVar10) {
-                    FUN_14001d744((uint8_t *)(pWVar10 + (int)(iVar3 + 8 + (uint16_t)WVar1)),
+                    memmove((uint8_t *)(pWVar10 + (int)(iVar3 + 8 + (uint16_t)WVar1)),
                                   (void *)pWVar10,
                                   (int)ctx[0x25] - (int)(intptr_t)pWVar10);
                     pWVar11 = pWVar10;
@@ -1637,7 +1635,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
     local_60 = pWVar7 + local_78 + 0x27;
     pWVar6 = pWVar7 + local_78;
     local_68 = (int)((uint16_t)pWVar6[1] + 1) * 2;
-    FUN_14001d78c((uint8_t *)pWVar6, (uint8_t *)local_60, local_68);
+    memcpy((uint8_t *)pWVar6, (uint8_t *)local_60, local_68);
     if ((((int)plVar5[0x34] < 0) ||
          (((pwVar16 != NULL &&
             (bVar9 = PECMD_MatchDeviceClass((int64_t)plVar5, pwVar16, (uint64_t)(uintptr_t)pWVar7),
@@ -1660,7 +1658,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
             iVar10 = 0;
             if ((char)plVar5[0x32] == '@') {
                 iVar11 = lstrlenW((WCHAR *)plVar5[0x1f]);
-                FUN_14001d78c((uint8_t *)pWVar6, (uint8_t *)WSTR("!!!PECMD_SUB_OK"), 0x20);
+                memcpy((uint8_t *)pWVar6, (uint8_t *)WSTR("!!!PECMD_SUB_OK"), 0x20);
                 PECMD_AllocWStringBuffer(&local_res20, (int64_t)local_78 + 0x113);
                 local_78 = (uint64_t)(uintptr_t)(pWVar7 + iVar11);
                 wsprintfW(local_res20, WSTR("Local\\pecmd2012.lock.%s"), pWVar7);
@@ -1696,7 +1694,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
                 PECMD_ReleaseMutex(&local_70);
                 FUN_14005B104(&local_res20);
                 pWVar14 = (WCHAR *)(uintptr_t)local_68;
-                FUN_14001d78c((uint8_t *)pWVar6, (uint8_t *)local_60, local_68);
+                memcpy((uint8_t *)pWVar6, (uint8_t *)local_60, local_68);
             }
             if ((char)plVar5[0x2b] == '\0') {
                 if (((*(char *)((uint8_t *)plVar5 + 0x154) == 3) ||
@@ -1831,7 +1829,7 @@ uint64_t FUN_14003B010(uint64_t *tasks)
         iVar2 = lstrlenW((WCHAR *)plVar11[0x1f]);
         local_100 = (int64_t)iVar2 - 1;
         PECMD_AllocString(&local_res20, (int64_t)iVar2 + 0x270);
-        FUN_14001d78c((uint8_t *)local_res20, (uint8_t *)plVar11[0x1f],
+        memcpy((uint8_t *)local_res20, (uint8_t *)plVar11[0x1f],
                       (int)(local_100 + 2) * 2);
         local_res18 = local_res20;
         local_108 = lVar16;
@@ -1919,7 +1917,7 @@ label_03b225:
             FUN_14005B104(&local_res10);
             continue;
         }
-        FUN_14001d78c((uint8_t *)(pWVar5 + local_100 + 1), (uint8_t *)local_res10,
+        memcpy((uint8_t *)(pWVar5 + local_100 + 1), (uint8_t *)local_res10,
                       (iVar2 + 1) * 2);
         lpString = (WCHAR *)FUN_14002B2EC(plVar11, (uint64_t)(uintptr_t)pWVar5, (LPCSTR)lpFirst);
         uVar7 = 0;
@@ -1959,7 +1957,7 @@ label_03b225:
                 FUN_1400703E4((WCHAR **)&local_c8[lVar3 * 6 + 3], local_res18);
                 iVar2 = lstrlenW(lpString);
                 PECMD_AllocString(&local_d8[lVar3 * 6 + 1], iVar2 + 4);
-                FUN_14001d78c((uint8_t *)local_d8[lVar3 * 6 + 1],
+                memcpy((uint8_t *)local_d8[lVar3 * 6 + 1],
                               (uint8_t *)(lpString - 3), (iVar2 + 4) * 2);
                 pWVar5 = NULL;
                 local_c8[lVar3 * 6 + 2] = 1;

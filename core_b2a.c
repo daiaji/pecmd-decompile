@@ -56,7 +56,6 @@ extern int64_t PECMD_WideStrLen(void *p);
 extern uint64_t PECMD_SetDesktopWallpaper(void *p, int mode);
 extern void FUN_14001b888(int n);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
-extern uint8_t *FUN_14001d744(void *dst, void *src, int len);
 extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);
 extern void FUN_140017F54(int *p);
 extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
@@ -357,8 +356,8 @@ int64_t PECMD_CollapseRepeatedChars(LPCWSTR s, WCHAR ch)
     while (*s != 0) {
         if (*s == ch && s[1] == ch) {
             LPCWSTR q = s + 1;
-            FUN_14001d744((void *)s, (void *)q,
-                          (int)((end - s) / 2) * 2);
+            memmove((void *)s, (void *)q,
+                    (int)((end - s) / 2) * 2);
             end--;
             while (*q == ch) {
                 s = q;

@@ -2,6 +2,7 @@
  * Functions: PECMD_SubCommand, PECMD_ParseControlCenterArgs, PECMD_ForCommand, PECMD_AssignDriveLetter
  */
 #include <stdbool.h>
+#include <string.h>
 
 #include "win32_stub.h"
 #include "pecmd_defs.h"
@@ -47,7 +48,6 @@ extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   FUN_14005c788(const char *a, const WCHAR *w, int n);
 extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
 extern void      PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
-extern uint8_t  *FUN_14001d78c(void *dst, const void *src, int len); /* memcpy */
 extern void      FUN_140063b64(void *out);                  /* @0x140063b64 array init */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 */
 extern void      FUN_14007bf44(int64_t *, LPCWSTR, int64_t *, int, int);
@@ -231,20 +231,20 @@ longlong PECMD_SubCommand(longlong *param_1, WCHAR *param_2, longlong *param_3)
             pWVar10 = local_70;
             local_res8[0] = lstrlenW(local_80);
             PECMD_AllocWStringBuffer(&local_70, (longlong)(iVar5 + iVar4 + 100 + iVar3));
-            FUN_14001d78c((void *)local_70, (const void *)WSTR("-sub@"), 0xc);
-            FUN_14001d78c((void *)(local_70 + 5), (const void *)local_68, (iVar3 + 1) * 2);
+            memcpy((void *)local_70, (const void *)WSTR("-sub@"), 0xc);
+            memcpy((void *)(local_70 + 5), (const void *)local_68, (iVar3 + 1) * 2);
             pWVar10 = local_70 + (longlong)iVar3 + 5;
             if (*local_res20 != L'\0') {
                 *pWVar10 = L':';
-                FUN_14001d78c((void *)(pWVar10 + 1), (const void *)local_res20, (iVar4 + 1) * 2);
+                memcpy((void *)(pWVar10 + 1), (const void *)local_res20, (iVar4 + 1) * 2);
                 pWVar10 = pWVar10 + (longlong)iVar4 + 1;
             }
             lVar12 = (longlong)iVar5;   /* CONCAT44 register-splice folded to low word */
             *pWVar10 = L' ';
             pWVar10[1] = L'-';
-            FUN_14001d78c((void *)(pWVar10 + 2), (const void *)lpString, (iVar5 + 1) * 2);
+            memcpy((void *)(pWVar10 + 2), (const void *)lpString, (iVar5 + 1) * 2);
             pWVar10[lVar12 + 2] = L' ';
-            FUN_14001d78c((void *)(pWVar10 + lVar12 + 3), (const void *)local_58,
+            memcpy((void *)(pWVar10 + lVar12 + 3), (const void *)local_58,
                           (local_res8[0] + 1) * 2);
             lVar12 = PECMD_ExecSubCommand(param_1, local_70, param_3, (LPCWSTR)0x0, 0);
             FUN_14005b104(&local_70);

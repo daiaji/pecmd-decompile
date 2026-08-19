@@ -50,7 +50,6 @@ extern void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3,
                           uint32_t *param_4);             /* @0x14005e3ac */
 extern uint32_t FUN_1400e91f0(int64_t *param_1, uint64_t param_2); /* @0x1400e91f0 */
 extern int64_t  FUN_1400e95f4(int64_t *param_1, uint64_t param_2); /* @0x1400e95f4 */
-extern uint8_t *FUN_14001d78c(uint8_t *dst, const uint8_t *src, int len); /* memcpy 类 */
 extern void *operator_new(size_t size);                   /* 全局 new 包装 */
 
 /* ================================================================
@@ -291,7 +290,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         *(uint32_t *)(lpParameter + 0x28) = param_11;
         *(uint8_t *)(lpParameter + 0x61) = bVar11;
         lpParameter[0xd] = local_48;
-        FUN_14001d78c((uint8_t *)((char *)lpParameter + 0x164),
+        memcpy((uint8_t *)((char *)lpParameter + 0x164),
                       (const uint8_t *)param_4, DVar2 * 2);
         *(uint16_t *)((char *)lpParameter + (int64_t)(int)DVar2 * 2 + 0x164) = 0;
         lpParameter[0x7b] = param_12;
@@ -347,7 +346,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         *(uint32_t *)(plVar6 + 0x28) = param_11;
         *(uint8_t *)(plVar6 + 0x61) = bVar11;
         plVar6[0xd] = local_48;
-        FUN_14001d78c((uint8_t *)((char *)plVar6 + 0x164),
+        memcpy((uint8_t *)((char *)plVar6 + 0x164),
                       (const uint8_t *)param_4, param_7 * 2);
         *(uint16_t *)((char *)plVar6 + lVar8 * 2 + 0x164) = 0;
         pHVar7 = (HWND)FUN_14005b77c((int64_t)param_2);

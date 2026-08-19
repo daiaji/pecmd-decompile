@@ -107,8 +107,6 @@ extern int64_t FUN_140060a94(int64_t a);                              /* __chkst
 extern WCHAR  *FUN_14001be14(WCHAR *s);                              /* 串标签查找 */
 extern void    FUN_14006caf0(LPCWSTR s);
 extern uint32_t FUN_140063060(uint32_t *buf);                         /* 取 BUFFER 大小 */
-extern uint8_t *FUN_14001d78c(void *dst, const void *src, int len);   /* memcpy 类 */
-extern void   *FUN_14001d744(void *dst, const void *src, int len);    /* memmove 类 */
 extern WCHAR  *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out,
                              int16_t c1, int16_t c2);
 extern void    FUN_140003a20(int64_t *ctx, void *key, int mode);      /* 变量取值 */
@@ -2219,7 +2217,7 @@ LAB_14009fe41:
                         lVar17 = (int64_t)(uintptr_t)*(WCHAR **)(void *)&local_res20 + LVar25.QuadPart * 2;
                         if ((((uint64_t)LVar24.QuadPart <= (uint64_t)local_res10.QuadPart) &&
                              (LVar34.QuadPart != 0))){
-                            FUN_14001d744((uint8_t *)(uintptr_t)(lVar17 + ((int64_t)(uintptr_t)puVar22) * 2),
+                            memmove((uint8_t *)(uintptr_t)(lVar17 + ((int64_t)(uintptr_t)puVar22) * 2),
                                           (void *)(uintptr_t)(lVar17 + (LVar31.QuadPart - LVar25.QuadPart) * 2),
                                           LVar34.LowPart * 2);
                         }
@@ -2227,7 +2225,7 @@ LAB_14009fe41:
                         puVar19 = (uint16_t *)(uintptr_t)((int64_t)(uintptr_t)*(WCHAR **)(void *)&local_res20 + LVar25.QuadPart * 2);
                         if ((((uint64_t)local_res10.QuadPart < (uint64_t)LVar24.QuadPart) &&
                              (LVar34.QuadPart != 0))){
-                            FUN_14001d744((uint8_t *)(uintptr_t)((int64_t)(uintptr_t)puVar19 + (int64_t)(uintptr_t)puVar22),
+                            memmove((uint8_t *)(uintptr_t)((int64_t)(uintptr_t)puVar19 + (int64_t)(uintptr_t)puVar22),
                                           (void *)(uintptr_t)((int64_t)(uintptr_t)puVar19 + (LVar31.QuadPart - LVar25.QuadPart)),
                                           LVar34.LowPart * 2);
                         }
@@ -2238,7 +2236,7 @@ LAB_14009fe41:
                             puVar19 = puVar19 + 2;
                         }
                         if (local_88.QuadPart != 0) {
-                            FUN_14001d78c((void *)puVar19, (const void *)(uintptr_t)local_b8.QuadPart,
+                            memcpy((void *)puVar19, (const void *)(uintptr_t)local_b8.QuadPart,
                                           local_88.LowPart * 2);
                             puVar19 = puVar19 + (int64_t)LVar31.QuadPart;
                         }

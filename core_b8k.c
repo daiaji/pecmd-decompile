@@ -102,7 +102,6 @@ extern void FUN_1400E5730(HWND hwnd, int64_t *out);
 extern void FUN_140063620(uint64_t *ps);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
-extern uint8_t *FUN_14001d78c(uint8_t *dst, uint8_t *src, int n);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
@@ -444,7 +443,7 @@ uint64_t FUN_1400E8748(uint16_t *text, uint64_t p2)
         mem = HeapAlloc(GetProcessHeap(), 0, (uint64_t)(int64_t)i);
         if (mem == NULL)
             return 0xfffffffe;
-        FUN_14001d78c(mem, (uint8_t *)buf, i);
+        memcpy(mem, (uint8_t *)buf, i);
     }
 
     EnterCriticalSection(&g_csInit);
@@ -769,7 +768,7 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
     FUN_1400EFFF8((int64_t *)child, (LPCWSTR)local_res8, uVar5 | 0x40000020,
                                rcPack, *(HWND *)((uint8_t *)obj + OBJ_HWND), 0x7d2);
     if ((flags & 2) != 0)
-        FUN_14001d78c((uint8_t *)(child + 0x12), (uint8_t *)((uint8_t *)obj + 0x90), 0x10);
+        memcpy((uint8_t *)(child + 0x12), (uint8_t *)((uint8_t *)obj + 0x90), 0x10);
     SetWindowPos((HWND)child[4], 0, 0, 0, 0, 0, 3);
     font = FUN_1400E5890((int64_t)obj);
     ((void (*)(uint64_t *, LRESULT, int))((void **)*child)[0x21])(child, font, 1);

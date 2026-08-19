@@ -102,8 +102,6 @@ extern WCHAR    *PECMD_EnumerateVolume(longlong *a, longlong b, ulonglong c, LPC
 extern void      PECMD_CreateTempMutexDir(void *a, void *b, undefined8 *c, LPCWSTR d); /* @0x140008110   */
 extern void      PECMD_ScheduleSelfDelete(void *a, int b);                     /* @0x14000481c             */
 extern WCHAR    *FUN_14001be14(WCHAR *s);                           /* @0x14001be14 前缀/标签查询 */
-extern undefined1 *FUN_14001d744(undefined1 *dst, longlong src, int len); /* @0x14001d744 搬移 */
-extern undefined1 *FUN_14001d78c(undefined1 *dst, undefined1 *src, int len); /* @0x14001d78c memcpy */
 extern longlong  PECMD_EnumNtSymbolicLink(LPWSTR a, longlong *b, longlong *c, longlong *d); /* @0x14001d8c8 */
 extern WCHAR    *FUN_140024c48(longlong *a, longlong *b, uint32_t c); /* @0x140024c48           */
 extern longlong  PECMD_RunCommand(longlong *a, pthreadmbcinfo b);      /* @0x140031454 执行命令    */
@@ -442,12 +440,12 @@ LAB_140096b4b:
                                 }
                                 iVar4 = lstrlenW(local_res10);
                                 if (iVar4 != 0) {
-                                    FUN_14001d744((undefined1 *)(lpString + iVar4),
-                                                  (longlong)(uintptr_t)local_res20,
-                                                  ((iVar3 - (int)(((uintptr_t)local_res20 -
-                                                    (uintptr_t)lpString) >> 1)) + 1) * 2);
-                                    FUN_14001d78c((undefined1 *)lpString,
-                                                  (undefined1 *)local_res10, iVar4 * 2);
+                                    memmove((uint8_t *)(lpString + iVar4),
+                                            (uint8_t *)(uintptr_t)local_res20,
+                                            ((iVar3 - (int)(((uintptr_t)local_res20 -
+                                              (uintptr_t)lpString) >> 1)) + 1) * 2);
+                                    memcpy((uint8_t *)lpString,
+                                           (uint8_t *)local_res10, iVar4 * 2);
                                 }
                                 FUN_14005b104((longlong *)&local_res10);
                             }

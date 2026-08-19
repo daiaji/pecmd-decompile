@@ -67,7 +67,6 @@ extern uint64_t PECMD_QueryFileAttributes(LPCWSTR a1, uint32_t *a2, int *a3);
 extern void FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
 extern uint64_t *FUN_14007DE70(uint64_t *a1, int64_t *a2, LPCWSTR a3);
 extern void FUN_1400F1490(int64_t a1);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern DWORD PECMD_CreateDirectory(uint64_t a1, WCHAR *a2);
 extern void *PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
 extern int64_t *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
@@ -404,7 +403,7 @@ void PECMD_SetClipboardUnicode(LPCWSTR name)
         size_t dwBytes = (size_t)iVar2 * 2 + 2;
         HGLOBAL hMem = GlobalAlloc(0x2000, dwBytes);
         void *puVar3 = GlobalLock(hMem);
-        FUN_14001d78c(puVar3, (const void *)name, (int)dwBytes);
+        memcpy(puVar3, (const void *)name, (int)dwBytes);
         GlobalUnlock(hMem);
         SetClipboardData(0xd, hMem);
         CloseClipboard();
@@ -495,7 +494,7 @@ int64_t *FUN_1400634D4(int64_t *ps, LPCSTR src, int64_t len)
     void *puVar1 = (void *)*ps;
     plVar3 = (int64_t *)(uintptr_t)FUN_140063118(puVar1, (size_t)(len + 1));
     *ps = (int64_t)plVar3;
-    FUN_14001d78c((void *)plVar3, (const void *)src, (int)len);
+    memcpy((void *)plVar3, (const void *)src, (int)len);
     if (puVar1 != NULL) {
         HeapFree(g_hHeap, 0, (uint8_t *)puVar1 - 8);
     }
@@ -519,7 +518,7 @@ int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
         plVar3 = (int64_t *)(uintptr_t)FUN_140063118((void *)*arr, (size_t)((uint64_t)esize * lVar1));
         *arr = (int64_t)plVar3;
     }
-    FUN_14001d78c((void *)(*cnt * (uint64_t)esize + *arr), data, esize);
+    memcpy((void *)(*cnt * (uint64_t)esize + *arr), data, esize);
     lVar1 = *cnt;
     lVar2 = *arr;
     *cnt = lVar1 + 1;

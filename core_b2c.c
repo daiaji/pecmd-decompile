@@ -102,7 +102,6 @@ extern void PECMD_BubbleSort(uint8_t *arr, int64_t count, int64_t elem_size,
                           void *cmp);                   /* @0x140023268 排序 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void FUN_14001bbac(void *script, int a, HANDLE *b, DWORD c, DWORD ms,
                           DWORD d);
 extern LRESULT PECMD_KeyboardHookProc(int a1, WPARAM a2, char *a3);
@@ -206,8 +205,8 @@ void FUN_1400229F8(HANDLE hProcess)
 
     local_res10[0] = (int)(uintptr_t)WinExec_exref -
                      (int)(uintptr_t)ExitWindowsEx_exref + -0x38;
-    FUN_14001d78c(local_108, (const void *)(uintptr_t)0x14001a7fc, 0x3d);
-    FUN_14001d78c(local_d4, local_res10, (int)nSize + -0x39);
+    memcpy(local_108, (const void *)(uintptr_t)0x14001a7fc, 0x3d);
+    memcpy(local_d4, local_res10, (int)nSize + -0x39);
     WriteProcessMemory(hProcess, (LPVOID)(uintptr_t)ExitWindowsEx_exref,
                        local_108, nSize, (size_t *)0);
 }
@@ -1176,7 +1175,7 @@ uint64_t FUN_14003A810(int64_t *task)
     pWVar13 = (LPCWSTR)(task[1] + 6);
     iVar12 = 0;
     if (*(char *)(lVar6 + 400) == '@') {
-        FUN_14001d78c((void *)pWVar2, (const void *)WSTR("!!!PECMD_SUB_OK"), 0x20);
+        memcpy((void *)pWVar2, (const void *)WSTR("!!!PECMD_SUB_OK"), 0x20);
         bVar8 = FUN_140101E70(pWVar7);
         if (bVar8 == 0) {
             iVar9 = lstrlenW(*(LPCWSTR *)(lVar6 + 0xf8));
@@ -1199,8 +1198,8 @@ uint64_t FUN_14003A810(int64_t *task)
             }
             local_res10 = (HANDLE)0;
         }
-        FUN_14001d78c((void *)pWVar2, (const void *)local_res18,
-                      ((uint16_t)WVar4 + 1) * 2);
+        memcpy((void *)pWVar2, (const void *)local_res18,
+               ((uint16_t)WVar4 + 1) * 2);
     }
     if (-1 < *(int *)(lVar6 + 0x1a0)) {
         if (*(char *)(lVar6 + 0x158) == '\0') {

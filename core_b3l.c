@@ -136,7 +136,6 @@ extern void *PECMD_CreateDialogControl(void *a1, LPCWSTR a2, int a3,
                            int64_t a11);
 extern void FUN_1400bb718(void *script, LPCWSTR text, int64_t *a3);
 extern void Beep(uint32_t, uint32_t);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 
 /* ---- 本批引用的全局数据 ---- */
 extern uint8_t DAT_14013d660;        /* 数组释放哨兵 */
@@ -808,7 +807,7 @@ uint32_t FUN_140072D8C(uint8_t *mac, int64_t *out, int mode)
                 bool bVar1 = PECMD_PrefixMatchNoCase((uint16_t *)*out,
                                            (char *)((uint8_t *)plVar4 + 0xc));
                 if (bVar1) {
-                    FUN_14001d78c(mac, (void *)(plVar4 + 0x33), (int)lVar5);
+                    memcpy(mac, (void *)(plVar4 + 0x33), (int)lVar5);
                     uVar2 = *(uint32_t *)((uint8_t *)plVar4 + 0x1a4);
                     goto done;
                 }
@@ -1196,9 +1195,9 @@ void FUN_14009CFBC(int64_t obj, int mode)
     int iVar2 = lstrlenW(*(LPCWSTR *)((uint8_t *)obj + 0x10));
     LPCWSTR local_res8 = NULL;
     PECMD_AllocWStringBuffer((WCHAR **)&local_res8, (int64_t)(iVar2 + 8));
-    FUN_14001d78c((void *)local_res8, *(void **)((uint8_t *)obj + 0x10),
-                  iVar2 * 2);
-    FUN_14001d78c((void *)(local_res8 + iVar2), (void *)WSTR(".isel"), 0xc);
+    memcpy((void *)local_res8, *(void **)((uint8_t *)obj + 0x10),
+           iVar2 * 2);
+    memcpy((void *)(local_res8 + iVar2), (void *)WSTR(".isel"), 0xc);
 
     WCHAR local_48[24];
     wsprintfW(local_48, WSTR("%d"), (int)LVar3);

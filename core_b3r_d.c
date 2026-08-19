@@ -69,7 +69,6 @@ extern int       FUN_1400e5960(HWND a, uint32_t b, uint64_t c);
 /* PECMD_ParseQuotedArg helpers */
 extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);
 extern WCHAR    *FUN_14005b154(WCHAR **pp);
-extern void     *FUN_14001d744(void *dst, const void *src, int len);
 extern WCHAR    *FUN_140024c48(int64_t *a, int64_t *b, uint32_t c);
 extern int64_t   FUN_14007bda8(void *script, WCHAR *line, WCHAR **out,
                                int mode, uint8_t opt);
@@ -96,7 +95,6 @@ extern void      FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern void      FUN_14005b104(void *ps);
 extern HWND      PECMD_QueryState_f414(int64_t a);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
-extern void     *FUN_14001d78c(void *dst, const void *src, int len);
 extern void      FUN_1400702f0(void *out, const char *src, uint64_t len);
 extern void      FUN_14001e2cc(void);
 extern void      FUN_14005C904(void);                    /* @0x14005c904 (core_b3f.c) */
@@ -376,7 +374,7 @@ ushort *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2, longlong *par
             goto LAB_140083b8f;
         }
         puVar6 = puVar3 + 1;
-        FUN_14001d744((void *)puVar6, (const void *)puVar3,
+        memmove((void *)puVar6, (const void *)puVar3,
                       (int)(((longlong)psVar1 - (longlong)puVar3) >> 1) * 2);
         puVar3 = (ushort *)*param_2;
         puVar4 = puVar3;
@@ -402,7 +400,7 @@ LAB_140083b58:
     puVar5 = FUN_140024c48(param_2, (int64_t *)0x0, 0x2cd);
     if (puVar6 != (ushort *)0x0) {
         iVar2 = lstrlenW((LPCWSTR)*param_2);
-        FUN_14001d744((void *)puVar3, (const void *)*param_2, iVar2 * 2 + 2);
+        memmove((void *)puVar3, (const void *)*param_2, iVar2 * 2 + 2);
         *param_2 = (longlong)puVar6;
     }
 LAB_140083b8f:
@@ -578,7 +576,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
        (((pBVar17[1] == L':' && (pBVar17[2] == L'\\')) && (pBVar17[3] != L'.')))) {
         PECMD_AllocString(&local_580, (longlong)(iVar6 + 8));
         pBVar17 = local_580;
-        FUN_14001d744((void *)(local_580 + 4), (const void *)(local_580 + 2),
+        memmove((void *)(local_580 + 4), (const void *)(local_580 + 2),
                       (iVar6 + 2) * 2);
         pBVar17[3] = L'.';
         pBVar21 = pBVar17;
@@ -658,7 +656,7 @@ LAB_14008822a:
                 iVar6 = lstrlenW(local_5a0);
                 PECMD_AllocString(&local_5a0, (longlong)(iVar6 * 2 + 6));
                 pWVar11 = local_5a0;
-                FUN_14001d78c((void *)(local_5a0 + (iVar6 + 1)),
+                memcpy((void *)(local_5a0 + (iVar6 + 1)),
                               (const void *)local_5a0, (iVar6 + 1) * 2);
                 pWVar11[(longlong)iVar6 * 2 + 2] = L'\0';
             } else {

@@ -62,8 +62,6 @@ extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern void FUN_1400F0ABC(HDC hdcDst, int x0, int y0, int w, int h, HDC hdcSrc,
                           int sx, int sy, uint64_t p9, uint64_t p10, COLORREF color);
 extern void FUN_14005B0D4(int64_t *ps);
-extern uint8_t *FUN_14001d78c(uint8_t *dst, uint8_t *src, int n);
-extern uint8_t *FUN_14001d744(uint8_t *dst, int64_t src, int n);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 extern void *operator_new(size_t size);   /* 全局 new 包装 */
 
@@ -177,7 +175,7 @@ int64_t FUN_1400E7840(int64_t *out, int flag)
             dst = (uint16_t *)(*out + total * 2);
             dst[0] = 0xd;
             dst[1] = 10;
-            FUN_14001d78c((uint8_t *)(dst + 2),
+            memcpy((uint8_t *)(dst + 2),
                           (uint8_t *)(blk + (int64_t)i * 0x106 + 1),
                           (len + 1) * 2);
             i++;
@@ -783,8 +781,8 @@ int64_t FUN_1400FF2BC(int64_t obj, LRESULT first, int64_t *out)
             }
             dst = (uint8_t *)(*out + off * 2);
             if (written != 0)
-                FUN_14001d744(dst + len * 2, (int64_t)(intptr_t)dst, (int)written * 2 + 2);
-            FUN_14001d744(dst, (int64_t)(intptr_t)buf, ((uint32_t)(written == 0) + len) * 2);
+                memmove(dst + len * 2, dst, (int)written * 2 + 2);
+            memmove(dst, buf, ((uint32_t)(written == 0) + len) * 2);
             out[1] += len;
             written += len;
         } while (first != 0);

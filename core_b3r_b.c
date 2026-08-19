@@ -41,9 +41,6 @@ extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);
 /* overallocate / allocate a buffer through *ps (allocation helper). */
 extern void    FUN_1400633a8(void **ps, int64_t len);
 
-/* MSVC-inline memcpy replacement. */
-extern uint8_t *FUN_14001d78c(uint8_t *dst, const uint8_t *src, int len);
-
 /* free a string buffer through *ps. */
 extern void    FUN_14005b104(WCHAR **ps);
 
@@ -320,8 +317,8 @@ int64_t *PECMD_CacheLookupInsert(LPCWSTR param_1, int64_t param_2, uint64_t para
         puVar3[2] = (uint64_t)(puVar3 + 8);
         puVar3[0] = 0;
         puVar3[1] = 1;
-        FUN_14001d78c((uint8_t *)(puVar3 + 8), (const uint8_t *)param_1,
-                      (int)((int64_t)iVar5 * 2) + 2);
+        memcpy((uint8_t *)(puVar3 + 8), (const uint8_t *)param_1,
+               (int)((int64_t)iVar5 * 2) + 2);
         if (uVar4 == 0) {
             lVar7 = (int64_t)(puVar3[2] + uVar13);
         }

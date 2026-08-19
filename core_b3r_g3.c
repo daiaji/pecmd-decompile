@@ -34,7 +34,6 @@ extern void FUN_14005b104(void *ps);
 /* 匹配/比较字节串 @0x14005b184 */
 extern int FUN_14005b184(char *buf, int64_t a, int64_t b);
 /* memmove 类 @0x14001d744 */
-extern void *FUN_14001d744(void *dst, const void *src, int len);
 /* 转换/规范化小写 @0x140060a74 */
 extern void FUN_140060a74(uint8_t *param_1, int param_2);
 /* 编码转换函数指针 (DAT_14013c970 == g_pConvFunc, MultiByteToWideChar 类) */
@@ -99,7 +98,7 @@ uint64_t PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t p
                 iVar3 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_140124128, 2);
                 bVar9 = iVar3 == 0;
                 if ((*lpBuffer != '\0') && (lpBuffer[1] == '\0')) {
-                    FUN_14001d744(lpBuffer + 2, (void *)lpBuffer, iVar8);
+                    memmove(lpBuffer + 2, (void *)lpBuffer, iVar8);
                     uVar6 = (uint64_t)((int)uVar6 + 2);
                     iVar8 = iVar8 + 2;
                     bVar9 = true;
@@ -140,7 +139,7 @@ LAB_1400687a7:
                     }
                     return (uint64_t)(iVar8 + 1);
                 }
-                FUN_14001d744(lpBuffer + 2, (void *)lpBuffer, iVar8);
+                memmove(lpBuffer + 2, (void *)lpBuffer, iVar8);
                 uVar6 = (uint64_t)(iVar3 + 2);
                 lpBuffer[0] = (char)-2;
                 lpBuffer[1] = (char)-1;

@@ -47,7 +47,6 @@ extern void PECMD_PatchInfDirectives(LPCWSTR path);                 /* @0x140021
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_140063620(void *ps);
 extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern int FUN_14001708c(WCHAR *out, uint64_t fmt, void *ctx, void *name);
 extern void PECMD_CreateMutexSlot(void *out, LPCWSTR name);
 extern void PECMD_ReleaseMutex(void *out);
@@ -635,7 +634,7 @@ uint16_t *FUN_1400240C0(int64_t ctx, uint16_t *key, uint16_t *text,
                         (*(uint16_t *)((uint8_t *)ctx + 0x90) == uVar1))));
                      puVar8 = puVar8 + 1) {
                 }
-                FUN_14001d78c(local_48, (const void *)puVar8, 8);
+                memcpy(local_48, (const void *)puVar8, 8);
                 uVar6 = PECMD_MatchPattern((int16_t *)puVar8, lVar9);
                 if (uVar6 == 0) {
                     uVar1 = puVar8[4];
@@ -958,7 +957,7 @@ after_reg:
 append_entry:
                                     i18 = (int)uVar7;
                                     PECMD_AllocString(&entryList, i + i6 + 2);
-                                    FUN_14001d78c(entryList + i6 * 2, newEntry, i * 2);
+                                    memcpy(entryList + i6 * 2, newEntry, i * 2);
                                     result = (uint64_t)(uint32_t)(i + i6);
                                     pCur = regEnd;
                                     nChar = nCharLen;
@@ -1258,7 +1257,7 @@ DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR srcPath, uint32_t flags)
     srcDir = buf + 0x528;
     {
         int lenBytes = (int)(fileName - buf) * 2;
-        FUN_14001d78c(srcDir, buf, lenBytes);
+        memcpy(srcDir, buf, lenBytes);
         *(uint16_t *)((uint8_t *)srcDir + lenBytes) = 0;
     }
     infDir = buf + 0xa50;
@@ -1277,12 +1276,12 @@ DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR srcPath, uint32_t flags)
         }
         {
             int lenBytes = baseLen * 2;
-            FUN_14001d78c(infDir, base, lenBytes);
-            FUN_14001d78c((uint8_t *)infDir + lenBytes, WSTR("\\INF\\"), 0xc);
-            FUN_14001d78c(buf + 0xf78, base, lenBytes);
-            FUN_14001d78c((uint8_t *)(buf + 0x14a0) + lenBytes, WSTR("\\SYSTEM32\\DRIVERS\\"), 0x26);
-            FUN_14001d78c(buf + 0x14a0, base, lenBytes);
-            FUN_14001d78c((uint8_t *)(buf + 0x14a0) + lenBytes, WSTR("\\SYSTEM32\\"), 0x16);
+            memcpy(infDir, base, lenBytes);
+            memcpy((uint8_t *)infDir + lenBytes, WSTR("\\INF\\"), 0xc);
+            memcpy(buf + 0xf78, base, lenBytes);
+            memcpy((uint8_t *)(buf + 0x14a0) + lenBytes, WSTR("\\SYSTEM32\\DRIVERS\\"), 0x26);
+            memcpy(buf + 0x14a0, base, lenBytes);
+            memcpy((uint8_t *)(buf + 0x14a0) + lenBytes, WSTR("\\SYSTEM32\\"), 0x16);
         }
     }
 
@@ -1309,7 +1308,7 @@ DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR srcPath, uint32_t flags)
     FUN_140025f10(ctx + 8, logBuf, 0, (void *)0x11, NULL, NULL);
     FUN_14005B104(&logBuf);
 
-    FUN_14001d78c(fileName, (const void *)0x140120dd8, 8);
+    memcpy(fileName, (const void *)0x140120dd8, 8);
     memset(&fd, 0, sizeof(fd));
     PECMD_FindFirstFileW(&hFind, buf, &fd);
     if (hFind != (HANDLE)0) {
@@ -1321,7 +1320,7 @@ DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR srcPath, uint32_t flags)
                 int nameLen = lstrlenW(fd.cFileName);
                 WCHAR *dstDir;
                 int dstBaseLen;
-                FUN_14001d78c(srcDir, fd.cFileName, (nameLen + 1) * 2);
+                memcpy(srcDir, fd.cFileName, (nameLen + 1) * 2);
                 {
                     int64_t lv = PECMD_WideStrLen(fd.cFileName);
                     int extStart = (int)lv;

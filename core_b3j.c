@@ -61,8 +61,6 @@ extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3,
                               int64_t *a7);
 extern int64_t FUN_1400E5B0C(int64_t a1, uint64_t a2, HDC a3,
                              int64_t *a4);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
-extern void *FUN_14001d744(void *dst, const void *src, int len);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern uint64_t FUN_1400745c8(int64_t *a1, uint64_t *a2);
 extern uint8_t PECMD_EjectDrive(WCHAR a1, int a2);
@@ -404,7 +402,7 @@ void PECMD_SetWindowProcHook(uint64_t *obj, uint64_t value,
     local_res8[0] = 0;
     VirtualProtect((LPVOID)(uintptr_t)*obj, 0x18, 0x40, local_res8);
     VirtualProtect(obj + 1, 0x18, 0x40, local_res8);
-    FUN_14001d78c((void *)(obj + 1), g_b24e10, 0x18);
+    memcpy((void *)(obj + 1), g_b24e10, 0x18);
     *(uint64_t *)((uint8_t *)obj + 0x15) = value;
     if ((HWND)(uintptr_t)obj[4] != (HWND)0) {
         LVar1 = SetWindowLongPtrW((HWND)(uintptr_t)obj[4], -4,
@@ -593,7 +591,7 @@ void FUN_140067F90(int64_t *ps)
                 PECMD_AllocString((WCHAR **)ps, (int64_t)iVar7);
                 iVar2++;
                 iVar7++;
-                FUN_14001d744((void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar5 * 2),
+                memmove((void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar5 * 2),
                               (void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar3 * 2),
                               ((iVar2 - iVar3) + 1) * 2);
                 iVar3++;

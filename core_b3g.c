@@ -64,7 +64,6 @@ extern void PECMD_ArrayGrowRaw(uint64_t *a1, int64_t *a2, uint32_t a3,
 extern void *PECMD_AllocSmallObject(void *a1);
 extern int64_t *PECMD_WideToAnsiStr(int64_t *a1, LPCWSTR a2, int64_t a3,
                               uint64_t a4);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void AtlThrowImpl(long a1);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -458,7 +457,7 @@ void FUN_14006B684(int64_t *pp, uint8_t *text, int len)
 {
     *(uint16_t *)*pp = 0x22;
     *pp += 2;
-    FUN_14001d78c((void *)*pp, text, (int)((int64_t)len * 2));
+    memcpy((void *)*pp, text, (int)((int64_t)len * 2));
     *pp += (int64_t)len * 2;
     *(uint16_t *)*pp = 0x22;
     *pp += 2;

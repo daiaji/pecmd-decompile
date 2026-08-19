@@ -134,8 +134,6 @@ extern void      PECMD_DigestUpdate(uint32_t *param_1, uint64_t param_2); /* 摘
 extern void      FUN_14005c260(int64_t param_1, uint64_t param_2);   /* 摘要收尾 */
 
 /* ---- 内存搬移 (memcpy/memmove 类) ---- */
-extern void *FUN_14001d78c(void *dst, const void *src, int len);  /* memcpy */
-extern void *FUN_14001d744(void *dst, const void *src, int len);  /* memmove */
 
 /* ---- 文本渲染 (PECMD_GenerateTextContent) ---- */
 extern bool      FUN_1400c1194(WCHAR **pp, uint64_t *size);   /* 解析十六进制大小 */
@@ -1050,13 +1048,13 @@ LAB_1400861bf:
         iVar7 = lstrlenW(local_180);
         PECMD_AllocWStringBuffer(&local_128, (int64_t)(iVar7 + 0x11));
         pWVar13 = local_128;
-        FUN_14001d78c((void *)local_128, (const void *)local_180, (iVar7 + 1) * 2);
+        memcpy((void *)local_128, (const void *)local_180, (iVar7 + 1) * 2);
         memset((uint64_t *)(pWVar13 + (iVar7 + 1)), 0, 0x20);
         local_180 = pWVar13;
         iVar7 = lstrlenW(local_190);
         PECMD_AllocWStringBuffer((WCHAR **)&local_120, (int64_t)(iVar7 + 0x11));
         pWVar23 = (WCHAR *)local_120;
-        FUN_14001d78c((void *)local_120, (const void *)local_190, (iVar7 + 1) * 2);
+        memcpy((void *)local_120, (const void *)local_190, (iVar7 + 1) * 2);
         memset((uint64_t *)(pWVar23 + (iVar7 + 1)), 0, 0x20);
         local_1a8 = (WCHAR *)pWVar23;
         local_190 = (WCHAR *)pWVar23;
@@ -1139,7 +1137,7 @@ LAB_14008638a:
                 local_b8 = local_190;
                 pWVar13 = local_158 + (int)(uVar26 + uVar6);
                 local_140 = pWVar13;
-                FUN_14001d78c((void *)pWVar13, (const void *)local_188, (int)lVar17 * 2);
+                memcpy((void *)pWVar13, (const void *)local_188, (int)lVar17 * 2);
                 pWVar13 = pWVar13 + lVar17;
                 pWVar19 = pWVar13 + (int64_t)iVar7 + 0x641;
                 local_d8 = pWVar13;
@@ -1147,9 +1145,9 @@ LAB_14008638a:
                 do {
                     local_198 = local_198 + -1;
                     local_180 = pWVar16;
-                    FUN_14001d78c((void *)pWVar16, (const void *)local_c8, (int)(uintptr_t)pWVar25 * 2);
+                    memcpy((void *)pWVar16, (const void *)local_c8, (int)(uintptr_t)pWVar25 * 2);
                     local_190 = pWVar16 + (int)(uintptr_t)pWVar25;
-                    FUN_14001d78c((void *)local_190, (const void *)local_b8, (int)(uintptr_t)pWVar27 * 2);
+                    memcpy((void *)local_190, (const void *)local_b8, (int)(uintptr_t)pWVar27 * 2);
                     local_e0 = pWVar13;
                     FUN_14005eefc(pWVar13, (WCHAR *)local_d0);
                     pWVar3 = local_e8;
@@ -1721,7 +1719,7 @@ LAB_140087639:
         if (0 < iVar22) {
             if ((((bVar29) && (1 < iVar22)) && ((uint16_t)((short *)local_d560[0])[1] < 0x80)) &&
                 ((cVar28 == ' ' || (cVar28 == '@')))) {
-                FUN_14001d744((void *)local_d560[0], (void *)(local_d560[0] + 1), iVar22 * 2);
+                memmove((void *)local_d560[0], (void *)(local_d560[0] + 1), iVar22 * 2);
                 iVar22 = iVar22 + -1;
             }
             if ((int)uVar16 < 0) {
@@ -1742,7 +1740,7 @@ LAB_140087639:
             iVar22 = (int)(*(uint64_t *)(lVar11 + 0x18) >> 1);
             PECMD_AllocString((WCHAR **)local_d560, (int64_t)(iVar22 + 0xc));
             psVar1 = (short *)local_d560[0];
-            FUN_14001d78c((void *)local_d560[0], *(const void **)(lVar11 + 8), iVar22 * 2);
+            memcpy((void *)local_d560[0], *(const void **)(lVar11 + 8), iVar22 * 2);
             memset((uint64_t *)((int64_t)(iVar22 * 2) + (int64_t)psVar1), 0, 10);
             local_d550 = (int64_t)iVar22 * 2;
             goto LAB_14008702a;

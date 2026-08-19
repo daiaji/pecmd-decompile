@@ -16,7 +16,6 @@ extern void FUN_1400633a8(void **ps, int64_t len);          /* @0x1400633a8 allo
 extern void FUN_140102a90(void *buf, int val, uint64_t cnt); /* @0x140102a90 memset (use memset directly) */
 extern void FUN_14005b104(void *ps);                         /* @0x14005b104 free */
 extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
-extern void FUN_14001d78c(void *dst, const void *src, int len); /* @0x14001d78c memcpy */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
 extern void FUN_140018d8c(uint64_t ctx, const WCHAR *fmt, uint64_t a, uint64_t b); /* @0x140018d8c debug */
@@ -373,7 +372,7 @@ int64_t PECMD_ReadModifyWrite(HANDLE param_1, uint8_t *param_2, int64_t param_3,
             ReadFile(param_1, lpBuffer, local_res20, local_res18, 0);
             {
                 uint8_t *local_48 = lpBuffer;
-                FUN_14001d78c(lpBuffer + iVar4, param_2, uVar6);
+                memcpy(lpBuffer + iVar4, param_2, uVar6);
                 PECMD_SetFilePointer(param_1, LVar3, 0);
                 lpBuffer_00 = local_48;
                 nNumberOfBytesToWrite = local_res20;
@@ -449,8 +448,8 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
         lpParameter[3] = (uint64_t)((char *)lpParameter + (int64_t)iVar2 * 2 + 0x42);
         lpParameter[2] = (uint64_t)(lpParameter + 8);
         *(uint32_t *)((char *)lpParameter + 0x34) = 1;
-        FUN_14001d78c((uint8_t *)(lpParameter + 8), (uint8_t *)param_2, (int)lVar1);
-        FUN_14001d78c((uint8_t *)lpParameter[3], (uint8_t *)param_3, ((int64_t)iVar3 * 2) + 2);
+        memcpy((uint8_t *)(lpParameter + 8), (uint8_t *)param_2, (int)lVar1);
+        memcpy((uint8_t *)lpParameter[3], (uint8_t *)param_3, ((int64_t)iVar3 * 2) + 2);
         pvVar6 = CreateEventW(0, 1, 0, 0);
         lpParameter[7] = (uint64_t)pvVar6;
         ResumeThread(local_50);
@@ -743,8 +742,8 @@ L14007d646:
         g_imgBufLen = (int64_t)(int)(uVar5 + 0x36);
         PECMD_GrowByteBuffer((void **)&g_pImageBuf, g_imgBufLen + 8);
         puVar1 = g_pImageBuf;
-        FUN_14001d78c(g_pImageBuf, &bfh, 0xe);
-        FUN_14001d78c(puVar1 + 0xe, lpbmi, uVar5 + 0x28);
+        memcpy(g_pImageBuf, &bfh, 0xe);
+        memcpy(puVar1 + 0xe, lpbmi, uVar5 + 0x28);
     } else {
         hFile = CreateFileW(lpFileName, 0x40000000, 0, 0, 2, 0x8000080, (HANDLE)0);
         if (hFile == (HANDLE)-1) {

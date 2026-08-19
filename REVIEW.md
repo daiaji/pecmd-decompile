@@ -3374,3 +3374,10 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 797B 混淆例程：XOR ^、SUB168/164 寄存器拼接宏、LCMapStringW、LCG 随机、模运算、多个未映射 helper ——
   移植必引语义风险。按目标"不强推不虚构语义"登记为需进一步深挖/反汇编，保持绿里程碑。
 - 同理其依赖 01b4f8(字符索引扫描)/05dff4(48位LCG种子，依赖 DAT_14013a360) 一并登记。
+## 82. Item1 内嵌 CRT 迁移：memcpy/memmove 全库真库化（完成）
+- 6 子代理(不相交文件)+ b8i：删除各文件 extern、把 ~90 个调用点 `FUN_14001d78c/1d744(...)` 全部换成
+  真 `memcpy/memmove(...)`（含 b8j 等 int64 地址参直接传指针、b3r_g5/b3r_i28b 补 #include <string.h>）。
+- 长难 b3_remaining 的 int 参 memmove 站点也处理/标注。最后删除 core_b1_remaining 里 2 个死定义 + link_stubs 桩。
+- 结果：业务代码不再内嵌 memcpy/memmove 重实现，只调用 libc；build/link 全绿。
+- 示意 == 用户架构要求"业务代码只 import/call，不内嵌/重实现 CRT"的 memc 部分完成；
+  剩余 005390(memset 字/字节歧义)与 CRT 数学/字符串(未调用死桩)登记待办或删。

@@ -73,7 +73,6 @@ extern void FUN_14006E6C8(uint64_t *a1);
 extern void FUN_14005e7dc(uint64_t *a1);
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR a1, int64_t *a2, int64_t *a3,
                              int64_t *a4);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void PECMD_FillSpaces(int64_t *a1, int a2);
 extern uint64_t FUN_14004FDD0(int64_t *a1, uint64_t a2, int a3);
 extern void AtlThrowImpl(long a1);
@@ -435,7 +434,7 @@ int64_t *FUN_14006345C(int64_t *ps, LPCSTR src)
         int64_t *plVar3 = (int64_t *)(uintptr_t)FUN_140063118((void *)*ps,
                                                        (size_t)(iVar2 + 1 + iVar1));
         *ps = (int64_t)plVar3;
-        FUN_14001d78c((void *)((int64_t)iVar1 + (int64_t)plVar3), src, iVar2 + 1);
+        memcpy((void *)((int64_t)iVar1 + (int64_t)plVar3), src, iVar2 + 1);
     }
     return ps;
 }

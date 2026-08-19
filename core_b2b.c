@@ -42,7 +42,6 @@ extern int64_t PECMD_GetAvailPhysMemoryMB(void);
 extern int64_t PECMD_GetPhysicalMemoryMb(void);
 extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out,
                          DWORD *type, LONG *status);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
 extern BOOL FUN_140101E70(LPCWSTR s);
 extern uint64_t PECMD_IsDirectory(LPCWSTR s);
@@ -77,7 +76,6 @@ extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
 extern void PECMD_RunCommand(void *script, WCHAR *cmd);
 extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);
 extern uint16_t *FUN_140024C48(int64_t *pp, int64_t *len, uint32_t flags);
-extern void *FUN_14001d744(void *dst, const void *src, int len);
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
@@ -256,17 +254,17 @@ void PECMD_WriteParamRecord(int64_t ctx, char type, LPCWSTR a, LPCWSTR b)
         *psVar5 = (uint16_t)type;
         psVar5[1] = 9;
         psVar5 += 2;
-        FUN_14001d78c(psVar5, a, iVar2 * 2);
+        memcpy(psVar5, a, iVar2 * 2);
         psVar5 += iVar2;
         *psVar5 = sVar7;
         psVar5[1] = sVar7 + 0x19;
         psVar5 += 2;
-        FUN_14001d78c(psVar5, b, iVar3 * 2);
+        memcpy(psVar5, b, iVar3 * 2);
         psVar5 += iVar3;
         *psVar5 = sVar7 + 0x19;
         psVar5[1] = sVar7;
         psVar5 += 2;
-        FUN_14001d78c(psVar5, local_78, iVar4 * 2);
+        memcpy(psVar5, local_78, iVar4 * 2);
         psVar5 += iVar4;
         *psVar5 = sVar7 + 4;
         psVar5[1] = sVar7 + 1;
@@ -311,7 +309,7 @@ void PECMD_AppendParamToken(int64_t *list, LPCWSTR token, char filter)
             lVar1 = list[1] + 2 + iVar3;
             list[2] = lVar1;
             PECMD_AllocString(list, lVar1);
-            FUN_14001d78c((uint8_t *)(*list + list[1] * 2),
+            memcpy((uint8_t *)(*list + list[1] * 2),
                           local_res20, iVar3 * 2);
             list[1] += iVar3;
         }
@@ -524,7 +522,7 @@ WCHAR *PECMD_RemoveDuplicateChar(LPCWSTR s, WCHAR allowChar)
                 if (allowChar != *pWVar3) {
                     return pWVar2;
                 }
-                FUN_14001d744(pWVar2, pWVar3,
+                memmove(pWVar2, pWVar3,
                               (int)((int64_t)pWVar4 - (int64_t)pWVar2) / 2 * 2);
                 pWVar4--;
                 for (; *pWVar3 == allowChar; pWVar3++) {
@@ -581,7 +579,7 @@ LPCWSTR PECMD_TrimTrailingSeparator(int64_t *list, LPCWSTR s, WCHAR sep)
             }
             return s;
         }
-        FUN_14001d744((void *)pWVar4, (void *)pWVar1,
+        memmove((void *)pWVar4, (void *)pWVar1,
                       (int)((int64_t)pWVar5 - (int64_t)pWVar4) / 2 * 2);
         pWVar5--;
         do {
@@ -824,9 +822,9 @@ void PECMD_BubbleSort(uint8_t *base, int64_t count, int64_t width, void *cmp)
                     iVar1 = ((int (*)(const void *, const void *))cmp)(base, puVar4);
                     if (0 < iVar1) {
                         iVar1 = (int)width;
-                        FUN_14001d78c(local_res8, base, iVar1);
-                        FUN_14001d78c(base, puVar4, iVar1);
-                        FUN_14001d78c(puVar4, local_res8, iVar1);
+                        memcpy(local_res8, base, iVar1);
+                        memcpy(base, puVar4, iVar1);
+                        memcpy(puVar4, local_res8, iVar1);
                     }
                     lVar3--;
                     count = local_res10;
@@ -924,10 +922,10 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     }
     PECMD_AllocWStringBuffer((WCHAR **)&local_d0, (int64_t)(iVar5 + 0x416 + iVar6 * 2 + iVar4 + local_res20));
     puVar7 = local_d0;
-    FUN_14001d78c(local_d0, WSTR("    *="), 0xc);
+    memcpy(local_d0, WSTR("    *="), 0xc);
     lVar10 = (int64_t)local_res20 * 2;
     puVar7 += 0xc;
-    FUN_14001d78c(puVar7, cmd, (int)lVar10);
+    memcpy(puVar7, cmd, (int)lVar10);
     sVar3 = 0x20;
     psVar8 = (uint16_t *)(puVar7 + lVar10);
     lVar10 = 2;
@@ -940,7 +938,7 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
         psVar8[3] = 0x22;
         lVar11 = (int64_t)iVar5 * 2;
         psVar8 += 4;
-        FUN_14001d78c(psVar8, lpString, (int)lVar11);
+        memcpy(psVar8, lpString, (int)lVar11);
         sVar12 = (uint16_t)lVar10 + 0x20;
         *(uint16_t *)((uint8_t *)psVar8 + lVar11) = sVar12;
         psVar8 = (uint16_t *)((uint8_t *)psVar8 + lVar11 + lVar10);
@@ -950,7 +948,7 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     *(uint16_t *)((uint8_t *)psVar8 + lVar10) = sVar12;
     lVar11 = (int64_t)iVar4 * 2;
     puVar7 = (uint8_t *)psVar8 + lVar10 + lVar10;
-    FUN_14001d78c(puVar7, (const void *)(arg1 & 0xfffffffffffffffeULL), (int)lVar11);
+    memcpy(puVar7, (const void *)(arg1 & 0xfffffffffffffffeULL), (int)lVar11);
     *(uint16_t *)(puVar7 + lVar11) = sVar12;
     puVar9 = (uint16_t *)(puVar7 + lVar11 + lVar10);
     if (iVar6 != 0) {
@@ -958,7 +956,7 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
         lVar11 = (int64_t)iVar6 * 2;
         *(uint16_t *)((uint8_t *)puVar9 + lVar10) = sVar12;
         puVar7 = (uint8_t *)puVar9 + lVar10 + lVar10;
-        FUN_14001d78c(puVar7, lpString_00, (int)lVar11);
+        memcpy(puVar7, lpString_00, (int)lVar11);
         *(uint16_t *)(puVar7 + lVar11) = sVar12;
         puVar9 = (uint16_t *)(puVar7 + lVar11 + lVar10);
     }

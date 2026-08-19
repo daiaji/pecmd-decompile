@@ -38,8 +38,6 @@ extern LONG RegOpenKeyExA(HKEY, LPCSTR, DWORD, DWORD, HKEY *);
 extern char *lstrcpynA(char *, const char *, int);
 
 /* ---- FUN_ helper 声明 ---- */
-extern void *FUN_14001d78c(void *dst, const void *src, int len);   /* 小写 memcpy 类 @0x14001d78c */
-extern void *FUN_14001d744(void *dst, const void *src, int len);   /* 小写 memmove 类 @0x14001d744 */
 extern void  PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
 extern LPCVOID FUN_1400e3f80(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
@@ -84,9 +82,9 @@ int64_t PECMD_GetDirectorySize(LPCWSTR param_1)
     }
     if (iVar1 + 4 < 0x212) {
         if (0 < iVar1) {
-            FUN_14001d78c((void *)(lpFindFileData + 1), param_1, iVar1 * 2);
+            memcpy((void *)(lpFindFileData + 1), param_1, iVar1 * 2);
         }
-        FUN_14001d78c((uint8_t *)lpFindFileData[1].cFileName + (iVar1 * 2 - 0x2c),
+        memcpy((uint8_t *)lpFindFileData[1].cFileName + (iVar1 * 2 - 0x2c),
                       WSTR("\\*.*"), 10);
         lpFindFileData[2].cFileName[0xd3] = L'\0';
         local_res18 = (HANDLE)0;
@@ -334,7 +332,7 @@ LAB_14006d_common:
                             lVar14 = lVar14 + lVar24;
                             uVar27 = uVar27 - lVar14;
                             if (0 < (int64_t)uVar27) {
-                                FUN_14001d744(lpBuffer, (void *)(lpBuffer + lVar14),
+                                memmove(lpBuffer, (void *)(lpBuffer + lVar14),
                                               (int)uVar27);
                             }
                         }
@@ -374,7 +372,7 @@ LAB_14006d_common:
                             param_12 = uVar7;
                         }
                         if (0 < (int64_t)uVar27) {
-                            FUN_14001d744(lpBuffer + param_12,
+                            memmove(lpBuffer + param_12,
                                           (void *)(lpBuffer + lVar24), (int)uVar27);
                         }
                         local_d8 = local_d8 + param_12;
@@ -410,7 +408,7 @@ LAB_14006d_common:
                             uVar27 = uVar27 - lVar13;
                             LVar15.QuadPart = LVar15.QuadPart + lVar13;
                             if (0 < (int64_t)uVar27) {
-                                FUN_14001d744(lpBuffer + lVar24, (void *)lpBuffer,
+                                memmove(lpBuffer + lVar24, (void *)lpBuffer,
                                               (int)uVar27);
                             }
                         }
@@ -659,7 +657,7 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
             RegCloseKey(local_4d0);
             DVar5 = local_4c0[0];
             if ((*param_3 == '\0') && (local_1f8[0] != '\0')) {
-                FUN_14001d78c((void *)param_3, &local_1f8, local_4c0[0]);
+                memcpy((void *)param_3, &local_1f8, local_4c0[0]);
                 uVar11 = uVar9;
                 if (0 < (int)(DVar5 - 2)) {
                     do {
@@ -672,7 +670,7 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
             }
             DVar5 = local_4a0[0];
             if ((*param_2 == '\0') && (local_118[0] != '\0')) {
-                FUN_14001d78c((void *)param_2, &local_118, local_4a0[0]);
+                memcpy((void *)param_2, &local_118, local_4a0[0]);
                 if (0 < (int)(DVar5 - 2)) {
                     do {
                         if (((char *)param_2)[uVar9] == '\0') {

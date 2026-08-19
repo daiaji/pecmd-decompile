@@ -64,8 +64,6 @@ extern void FUN_140063A6C(uint64_t *arr, int64_t *end, uint64_t *flags,
 extern uint64_t PECMD_ParseExpression(int *ctx, LPWSTR path);
 extern int64_t FUN_1400a9a84(int64_t *pp, uint64_t *out);
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name);
-extern void *FUN_14001d78c(void *dst, const void *src, int len);
-extern void *FUN_14001d744(void *dst, const void *src, int len);
 extern void PECMD_FlushFileThrice(HANDLE hFile);
 extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
 extern void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end,
@@ -255,9 +253,9 @@ uint64_t FUN_14005F158(uint64_t *stream, uint8_t *data)
 void FUN_14005F3BC(uint8_t *a, uint8_t *b)
 {
     uint8_t local_28[32];
-    FUN_14001d78c(local_28, a, 0x18);
-    FUN_14001d78c(a, b, 0x18);
-    FUN_14001d78c(b, local_28, 0x18);
+    memcpy(local_28, a, 0x18);
+    memcpy(a, b, 0x18);
+    memcpy(b, local_28, 0x18);
 }
 
 /* ========== PECMD_FlushDeviceIoctl @0x140060120 ==========
@@ -288,7 +286,7 @@ void PECMD_RemoveFirstMatchChar(uint16_t ch, char *s)
         }
         if (0x19 < sVar2) break;
         if ((uint32_t)ch == (uint32_t)(int)s[sVar2]) {
-            FUN_14001d744(s + sVar2, s + sVar2 + 1, 0x1a - sVar2);
+            memmove(s + sVar2, s + sVar2 + 1, 0x1a - sVar2);
             return;
         }
         sVar2++;
@@ -489,7 +487,7 @@ void FUN_14006D788(int64_t *out, uint64_t *src)
     *(uint32_t *)(*out + 0x3c) = 0;
     int64_t lVar2 = *out;
     *src = (uint64_t)(lVar2 + 0x40);
-    FUN_14001d78c((void *)(lVar2 + 0x40), puVar1, (iVar3 + 1) * 2);
+    memcpy((void *)(lVar2 + 0x40), puVar1, (iVar3 + 1) * 2);
 }
 
 /* ========== FUN_1400706B4 @0x1400706b4 ==========
