@@ -560,3 +560,13 @@ extern HWND g_hwndTray;   /* DAT_14013dd00 */
 extern GUID g_guidDevInstance;   /* DAT_14011e890 */
 extern GUID g_clsidCoCreate;   /* DAT_14012d1e8 */
 extern GUID g_iidCoCreate;   /* DAT_14012d1f8 */
+extern DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);   /* DAT_14013d788 */
+extern DWORD (*g_pWlanGetAvailableNetworkList)(HANDLE, LPCWSTR, LPCWSTR, void *);   /* DAT_14013d7b8 */
+extern DWORD (*g_pWlanCloseHandle)(HANDLE, void *);   /* DAT_14013d7a0 */
+extern DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);   /* DAT_14013d7d0 */
+extern DWORD (*g_pWlanScan)(HANDLE, LPCWSTR);   /* DAT_14013d7b0 */
+extern DWORD (*g_pWlanRegisterNotification)(void);   /* DAT_14013d7a8 */
+extern DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);   /* DAT_14013d790 */
+extern DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);   /* DAT_14013d7c0 */
+extern DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);   /* DAT_14013d798 */
+extern void (*g_pWlanFreeMemory)(void);   /* DAT_14013d7c8 */

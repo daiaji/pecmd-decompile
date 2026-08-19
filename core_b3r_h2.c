@@ -71,16 +71,16 @@ extern const WCHAR g_wsz27fd0[];       /* 关键字串 .rdata         */
 /* ---- 惰性加载函数指针槽 (DAT_14013xxx) ---- */
 extern DWORD (*DAT_14013d358)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* GetVolumeInformationByHandleW */
 extern DWORD (*DAT_14013d780)(HANDLE, LPWSTR, DWORD, DWORD);     /* GetFinalPathNameByHandleW    */
-extern DWORD (*DAT_14013d788)(DWORD, void *, DWORD *);           /* WlanOpenHandle               */
-extern DWORD (*DAT_14013d790)(HANDLE, void *, void **);          /* WlanEnumInterfaces           */
-extern DWORD (*DAT_14013d798)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);/* WlanSetProfile               */
-extern DWORD (*DAT_14013d7a0)(HANDLE, void *);                   /* WlanCloseHandle              */
-extern DWORD (*DAT_14013d7a8)(void);                             /* WlanRegisterNotification     */
-extern DWORD (*DAT_14013d7b0)(HANDLE, LPCWSTR);                  /* WlanScan                     */
-extern DWORD (*DAT_14013d7b8)(HANDLE, LPCWSTR, LPCWSTR, void *); /* WlanGetAvailableNetworkList  */
-extern DWORD (*DAT_14013d7c0)(HANDLE, LPCWSTR, LPCWSTR);         /* WlanDisconnect               */
-extern void   (*DAT_14013d7c8)(void);                            /* WlanFreeMemory               */
-extern DWORD (*DAT_14013d7d0)(HANDLE, LPCWSTR, void *, void *);  /* WlanConnect                  */
+extern DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);           /* WlanOpenHandle               */
+extern DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);          /* WlanEnumInterfaces           */
+extern DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);/* WlanSetProfile               */
+extern DWORD (*g_pWlanCloseHandle)(HANDLE, void *);                   /* WlanCloseHandle              */
+extern DWORD (*g_pWlanRegisterNotification)(void);                             /* WlanRegisterNotification     */
+extern DWORD (*g_pWlanScan)(HANDLE, LPCWSTR);                  /* WlanScan                     */
+extern DWORD (*g_pWlanGetAvailableNetworkList)(HANDLE, LPCWSTR, LPCWSTR, void *); /* WlanGetAvailableNetworkList  */
+extern DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);         /* WlanDisconnect               */
+extern void   (*g_pWlanFreeMemory)(void);                            /* WlanFreeMemory               */
+extern DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);  /* WlanConnect                  */
 
 /* ---- 本文件引用的辅助函数 (仅 extern) ---- */
 extern void      FUN_14005b104(void *ps);                           /* @0x14005b104 释放串槽     */
@@ -1900,7 +1900,7 @@ LAB_140095d85:
 /* ================================================================
  * @0x140099f18  (ulonglong PECMD_WlanManage(longlong*, LPCWSTR))
  * WLAN 管理命令 (-wlan): 枚举/扫描/连接/断开/设置配置文件/查询。
- * 依赖惰性加载 wlanapi 函数指针槽 (DAT_14013d788..7d0)。
+ * 依赖惰性加载 wlanapi 函数指针槽 (g_pWlanOpenHandle..7d0)。
  * ================================================================ */
 ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
 {

@@ -1097,3 +1097,15 @@ HWND g_hwndTray;   /* DAT_14013dd00 托盘窗口句柄 */
 GUID g_guidDevInstance;   /* DAT_14011e890 */
 GUID g_clsidCoCreate;   /* DAT_14012d1e8 */
 GUID g_iidCoCreate;   /* DAT_14012d1f8 */
+
+/* ---- 阶段5c WLAN 槽迁移 ---- */
+DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);   /* DAT_14013d788 */
+DWORD (*g_pWlanGetAvailableNetworkList)(HANDLE, LPCWSTR, LPCWSTR, void *);   /* DAT_14013d7b8 */
+DWORD (*g_pWlanCloseHandle)(HANDLE, void *);   /* DAT_14013d7a0 */
+DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);   /* DAT_14013d7d0 */
+DWORD (*g_pWlanScan)(HANDLE, LPCWSTR);   /* DAT_14013d7b0 */
+DWORD (*g_pWlanRegisterNotification)(void);   /* DAT_14013d7a8 */
+DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);   /* DAT_14013d790 */
+DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);   /* DAT_14013d7c0 */
+DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);   /* DAT_14013d798 */
+void (*g_pWlanFreeMemory)(void);   /* DAT_14013d7c8 */
