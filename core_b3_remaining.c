@@ -58,6 +58,7 @@ extern int FUN_140067B78(WCHAR **pp, uint64_t *out);       /* @0x140067b78 */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                           LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                           HANDLE tmpl);                    /* @0x140003864 */
+extern DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);   /* Win32 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len); /* @0x14005f33c */
 extern void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam); /* @0x140060834 */
 extern uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
@@ -12508,9 +12509,65 @@ bool PECMD_CreateAnimateCtrl(uint64_t *obj, DWORD style, int *rect,
 
 uint64_t *FUN_14006e238(LPCWSTR param_1, HANDLE *param_2, uint64_t *param_3)
 {
+    HANDLE hFile;
+    DWORD DVar1;
+    int iVar2;
+    HGLOBAL hMem;
+    uint64_t *puVar3;
+    HANDLE dwBytes;
+    HANDLE *ppvVar4;
+    HANDLE local_res20;
+    DWORD local_38[4];
+
     /* @0x14006e238 size=361 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0;
+    local_38[0] = 0;
+    local_38[1] = 0;
+    local_res20 = (HANDLE)0x0;
+    PECMD_OpenFileHandle(&local_res20, param_1, 0x80000000, 1, (LPSECURITY_ATTRIBUTES)0x0, 3, 0x80, (HANDLE)0x0);
+    hFile = local_res20;
+    if (local_res20 == (HANDLE)0x0) {
+        return (uint64_t *)0x0;
+    }
+    local_res20 = (HANDLE)0x0;
+    ppvVar4 = &local_res20;
+    if (param_2 != (HANDLE *)0x0) {
+        ppvVar4 = param_2;
+    }
+    DVar1 = GetFileSize(hFile, (LPDWORD)0x0);
+    dwBytes = (HANDLE)(uint64_t)DVar1;
+    *ppvVar4 = dwBytes;
+    if (param_3 == (uint64_t *)0x0) {
+        do {
+            puVar3 = HeapAlloc(g_hHeap, 0, (size_t)((int64_t)dwBytes + 8));
+            if (puVar3 != (uint64_t *)0x0) break;
+            iVar2 = FUN_1400630d0(2);
+        } while (iVar2 == 4);
+        *(uint32_t *)((int64_t)puVar3 + 4) = 0xaa55;
+        *puVar3 = dwBytes;
+        puVar3 = puVar3 + 1;
+    }
+    else {
+        hMem = GlobalAlloc(2, (size_t)dwBytes);
+        *param_3 = hMem;
+        if (hMem == (HGLOBAL)0x0) goto LAB_14006e2f2;
+        puVar3 = GlobalLock(hMem);
+    }
+    if (puVar3 != (uint64_t *)0x0) {
+        ReadFile(hFile, puVar3, *(DWORD *)ppvVar4, local_38, (void *)0x0);
+        if (param_3 != (uint64_t *)0x0) {
+            GlobalUnlock((HGLOBAL)*param_3);
+        }
+        if (hFile != (HANDLE)0xffffffffffffffff) {
+            CloseHandle(hFile);
+            return puVar3;
+        }
+        return puVar3;
+    }
+LAB_14006e2f2:
+    if (hFile != (HANDLE)0xffffffffffffffff) {
+        CloseHandle(hFile);
+    }
+    return (uint64_t *)0x0;
 }
 
 /* @0x14006e3a4 size=336 GDI+ 流图像载入（OLE/CreateStreamOnHGlobal 搅拌） */
