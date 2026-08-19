@@ -14259,9 +14259,80 @@ int64_t PECMD_LockVolumeByDevice(int param_1, uint param_2)
 
 int64_t FUN_140078514(HANDLE param_1, int *param_2, int64_t *param_3)
 {
+    uint64_t *lpBuffer;
+    uint32_t uVar1;
+    uint32_t uVar2;
+    BOOL BVar3;
+    int iVar4;
+    LARGE_INTEGER LVar5;
+    int64_t lVar6;
+    uint uVar7;
+    int64_t *plVar8;
+    char cVar9;
+    DWORD local_res10[4];
+    LPVOID local_res20;
+
     /* @0x140078514 size=669 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0;
+    *param_2 = 0;
+    FUN_1400633a8(&local_res20, 0x4008);
+    lpBuffer = (uint64_t *)((int64_t)local_res20 + 0x800);
+    local_res10[0] = 0;
+    FUN_140102a90(lpBuffer, 0, 0x800);
+    BVar3 = ReadFile(param_1, local_res20, 0x1000, local_res10, (void *)0x0);
+    if (BVar3 == 0) goto LAB_14007874b;
+    iVar4 = *(int *)((int64_t)local_res20 + 0x1b4);
+    cVar9 = '\0';
+    if ((iVar4 == 0x46424246) || (iVar4 == 0x534c5055)) {
+        cVar9 = '\x01';
+        FUN_140102a90(lpBuffer, 0, 0x200);
+        PECMD_SetFilePointer(param_1, (LARGE_INTEGER){ .QuadPart = 0x8600 }, 0);
+        BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
+        if ((BVar3 == 0) || ((*(uint8_t *)((int64_t)local_res20 + 0x9f8) & 0xc0) != 0x40))
+            goto LAB_14007874b;
+        lVar6 = *(int64_t *)((int64_t)local_res20 + 0x9f0) + 1;
+    }
+    else {
+        if (((iVar4 != 0x5352424d) || (*(short *)((int64_t)local_res20 + 0x1fe) != -0x55ab)) ||
+           (*(int *)((int64_t)local_res20 + 0x1c) != 0)) goto LAB_14007874b;
+        FUN_140102a90(lpBuffer, 0, 0x200);
+        PECMD_SetFilePointer(param_1, (LARGE_INTEGER){ .QuadPart = 0x4a00 }, 0);
+        BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
+        if (((BVar3 == 0) || (*(int *)((int64_t)local_res20 + 0x9b4) != 0x5352424d)) ||
+            ((*(short *)((int64_t)local_res20 + 0x9fe) != -0x55ab) ||
+             (*(int *)((int64_t)local_res20 + 0x81c) != 0x25))) goto LAB_14007874b;
+        uVar7 = (uint)*(uint8_t *)((int64_t)local_res20 + 0x867);
+        if (*(uint8_t *)((int64_t)local_res20 + 0x867) == 0) {
+            uVar7 = 1;
+        }
+        lVar6 = CONCAT44(*(uint32_t *)((int64_t)local_res20 + 0x860),
+                         *(int *)((int64_t)local_res20 + 0x85c) + uVar7);
+    }
+    FUN_140102a90(lpBuffer, 0, 0x200);
+    LVar5.QuadPart = lVar6 << 9;
+    while (1) {
+        PECMD_SetFilePointer(param_1, LVar5, 0);
+        BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
+        plVar8 = (int64_t *)0x0;
+        if (BVar3 == 0) break;
+        iVar4 = FUN_14005b184((char *)((int64_t)local_res20 + 0x803), 0x1401270b0, 10);
+        if (iVar4 == (int)(intptr_t)plVar8) {
+            uVar1 = *(uint32_t *)((int64_t)local_res20 + 0x868);
+            uVar2 = *(uint32_t *)((int64_t)local_res20 + 0x828);
+            *param_2 = (*(uint *)((int64_t)local_res20 + 0x82c) & 0xffffffc0) << 9;
+            if (param_3 != plVar8) {
+                *param_3 = *(int64_t *)((int64_t)local_res20 + 0x874) << 9;
+            }
+            FUN_14005B104((WCHAR **)&local_res20);
+            return CONCAT44(uVar1, uVar2) << 9;
+        }
+        if ((lVar6 == 0x41) || (cVar9 != (char)(intptr_t)plVar8)) break;
+        lVar6 = 0x41;
+        FUN_140102a90(lpBuffer, 0, 0x200);
+        LVar5.QuadPart = 0x8200;
+    }
+LAB_14007874b:
+    FUN_14005B104((WCHAR **)&local_res20);
+    return -1;
 }
 
 /* @0x1400787b4 */
