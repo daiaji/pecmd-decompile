@@ -119,7 +119,7 @@ extern void  PECMD_TrimOuterQuotes(WCHAR **pp, uint8_t flags, uint16_t ch);
 extern uint16_t **PECMD_SkipRepeatedDelimiter(uint16_t **pp, uint16_t ch);
 extern char  FUN_140062fc4(LPCWSTR param_1, void *param_2, int param_3);
 extern void  PECMD_ForwardCall_6838(int64_t obj, int64_t key);
-extern void  FUN_140066f64(int64_t param_1, int64_t param_2);
+extern void  PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2);
 extern char  PECMD_MatchAndPad(const void *key, WCHAR **pp, int len);
 extern uint32_t FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void  FUN_140079c80(void *ctx, void *pp, void *out);
@@ -839,7 +839,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         if (lVar9 != 0) {
           PECMD_ForwardCall_6838(lVar9, LVar5.QuadPart);
-          FUN_140066f64(lVar9, LVar5.QuadPart);
+          PECMD_ReleaseObjectSlots(lVar9, LVar5.QuadPart);
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         FUN_14004eaa8(LVar5.QuadPart, 0);

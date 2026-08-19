@@ -261,7 +261,7 @@ extern uint8_t PTR_FUN_140120a70[];         /* 对象 vtable 0x140120a70 */
 
 /* ---- extern 由 PECMD_CreateWindow/140082448/140083bf4/1400846a4/14009d4b8 所需 ---- */
 extern void     FUN_14001b3a0(int64_t *param_1, int64_t *param_2);   /* @0x14001b3a0 */
-extern uint8_t  FUN_14007fcd4(int64_t *param_1, uint32_t *param_2);  /* @0x14007fcd4 */
+extern uint8_t  PECMD_ParseSubWindowFlags(int64_t *param_1, uint32_t *param_2);  /* @0x14007fcd4 */
 extern uint32_t FUN_140081238(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4); /* @0x140081238 */
 extern uint64_t *FUN_1400731d8(uint64_t *param_1, uint64_t param_2, uint32_t param_3, uint64_t *param_4); /* @0x1400731d8 */
 extern uint64_t *FUN_140017cdc(uint64_t *param_1, uint64_t *param_2);/* @0x140017cdc */
@@ -9511,7 +9511,7 @@ void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_
 
 /* 注册全局热键: 生成 PECMD_HotKEY_[修饰]_键 原子名并注册, 冲突时递增后缀重试 */
 /* @0x14005e61c size=446 */
-uint16_t FUN_14005e61c(int64_t param_1, char param_2, uint param_3)
+uint16_t PECMD_RegisterHotkeyCmd(int64_t param_1, char param_2, uint param_3)
 {
     ATOM label;
     int len;
@@ -9740,7 +9740,7 @@ void PECMD_InstallWindowsHook(int64_t param_1, int64_t param_2)
     return;
 }
 
-LPWSTR FUN_14005efac(WCHAR *param_1, WCHAR *param_2)
+LPWSTR PECMD_ExpandStringMarkers(WCHAR *param_1, WCHAR *param_2)
 {
     /* UNIMPLEMENTED @0xFUN_14005efac — decompile-failed, body 未还原 */
 /* @0x14005efac size=426 拷贝并展开 %%d 占位/通配符 */
@@ -11559,7 +11559,7 @@ void PECMD_ReleaseObjectListTail(int64_t param_1, int param_2)
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
 }
 
-void FUN_140066f64(int64_t param_1, int64_t param_2)
+void PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2)
 {
     /* UNIMPLEMENTED @0xFUN_140066f64 — decompile-failed, body 未还原 */
 /* @0x140066f64 size=214 */
@@ -16444,7 +16444,7 @@ void PECMD_ReleaseControlObject(uint64_t *param_1)
 
 
 
-uint8_t FUN_14007fcd4(int64_t *param_1, uint32_t *param_2)
+uint8_t PECMD_ParseSubWindowFlags(int64_t *param_1, uint32_t *param_2)
 {
     /* UNIMPLEMENTED @0xFUN_14007fcd4 — decompile-failed, body 未还原 */
 /* @0x14007fcd4 size=357 — 解析 "-sub L..T..H..W..<flags>" 窗口子命令参数 */
@@ -16798,7 +16798,7 @@ int64_t PECMD_ExecWindowThread(int64_t *param_1, uint64_t param_2, int64_t *para
     local_58 = (LPCWSTR)0x0;
     local_res10[0] = param_2;
     local_res20 = param_4;
-    cVar3 = (char)FUN_14007fcd4((int64_t *)&local_res20, &local_70);
+    cVar3 = (char)PECMD_ParseSubWindowFlags((int64_t *)&local_res20, &local_70);
     iVar15 = (int)cVar3;
     WVar12 = *local_res20;
     local_60 = (uint32_t)iVar15;
@@ -17112,7 +17112,7 @@ uint64_t PECMD_CreatePopupMenu(uint64_t *param_1, LPCWSTR param_2, uint64_t para
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     if (lVar1 != 0) {
         PECMD_ForwardCall_6838(lVar1, _Memory.QuadPart);
-        FUN_140066f64(lVar1, _Memory.QuadPart);
+        PECMD_ReleaseObjectSlots(lVar1, _Memory.QuadPart);
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     if ((HWND)LVar3.QuadPart != (HWND)0x0) {
@@ -17187,7 +17187,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     (void)local_150;
     (void)local_14c;
     (void)local_140;
-    cVar3 = FUN_14007fcd4((int64_t *)&local_res20, &local_158);
+    cVar3 = PECMD_ParseSubWindowFlags((int64_t *)&local_res20, &local_158);
     local_res10 = 0;
     if (*local_res20 == L'^') {
         local_res20 = local_res20 + 1;
@@ -19628,7 +19628,7 @@ LAB_1400a4faa:
             EnterCriticalSection(&g_csInit);
             if (lVar3 != 0) {
                 PECMD_ForwardCall_6838(lVar3, _Memory.QuadPart);
-                FUN_140066f64(lVar3, _Memory.QuadPart);
+                PECMD_ReleaseObjectSlots(lVar3, _Memory.QuadPart);
             }
             LeaveCriticalSection(&g_csInit);
             FUN_14004eaa8(_Memory.QuadPart, 0);
@@ -20076,7 +20076,7 @@ LAB_1400a598c:
         lVar6 = local_20;
         if (local_20 != 0) {
             PECMD_ForwardCall_6838(local_20, LVar9.QuadPart);
-            FUN_140066f64(lVar6, LVar9.QuadPart);
+            PECMD_ReleaseObjectSlots(lVar6, LVar9.QuadPart);
         }
         LeaveCriticalSection(&g_csInit);
     }
@@ -20233,7 +20233,7 @@ uint64_t *PECMD_ConstructCheckbox(uint64_t *param_1, int64_t param_2, uint64_t p
     param_1[0x10] = *(uint64_t *)(param_2 + 0x40);
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     if (param_8 != 0) {
-        uVar1 = FUN_14005e61c(param_1[0x10], (char)param_6, param_7);
+        uVar1 = PECMD_RegisterHotkeyCmd(param_1[0x10], (char)param_6, param_7);
         *(uint32_t *)(param_1 + 0xe) = 0xffffffff;
         *(uint16_t *)((int64_t)param_1 + 0x7e) = uVar1;
         *(uint16_t *)((int64_t)param_1 + 0x7c) = uVar1;
@@ -20578,7 +20578,7 @@ uint64_t PECMD_ScriptThreadProc(int64_t *param_1)
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         if (lVar2 != 0) {
             PECMD_ForwardCall_6838(lVar2, _Memory.QuadPart);
-            FUN_140066f64(lVar2, _Memory.QuadPart);
+            PECMD_ReleaseObjectSlots(lVar2, _Memory.QuadPart);
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         FUN_14005B104((WCHAR **)&local_res18.QuadPart);

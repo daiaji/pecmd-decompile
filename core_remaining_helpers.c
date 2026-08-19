@@ -74,7 +74,7 @@ uint64_t FUN_1400692d8(void)
 }
 
 /* @0x140069314 WCHAR串→字节缓冲(仅保留十进制数字, 每数字1字节), 返回字节数 */
-int FUN_140069314(void *out, LPCWSTR src)
+int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
 {
     uint8_t *dst;
     WCHAR *p;
@@ -116,7 +116,7 @@ uint64_t FUN_1400693c0(void)
 }
 
 /* @0x140075148 按行写变量 (查表/建新项 + 写值/截断 + 关键段保护) */
-void FUN_140075148(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
+void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
                    int64_t *pkey, char mode)
 {
     int64_t *plVar3;

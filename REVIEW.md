@@ -3360,3 +3360,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 跳过(缺符号): helpers 075c7c(缺 FUN_14001b4f8/05dff4)、b1 00c764(缺 PTR_PTR数据)/00cedc(缺thunk)。
 - 每批补 leaf 桩到 link_stubs、逐个全链接校验、build/link 全绿后提交(git 52)。
 - 结论: 还原范式"分组→单代理单文件→补桩→全链接绿→提交"稳定可用; 已落地 ~9 个真实现。
+## 79. Item3 命名：9 个还原函数 PECMD 化
+- apply_rename: 07fcd4→ParseSubWindowFlags, 01ed5c→WriteBackTextCRLF, 066f64→ReleaseObjectSlots,
+  069314→WcharToByteDigits, 075148→VarWriteLine, 0048c4→EnsureTempDirPath, 0091e0→LoadFileMappingExec,
+  05e61c→RegisterHotkeyCmd, 05efac→ExpandStringMarkers。rename_map 802→811；build/link 绿。
+- 命名基本到可行尽头：余者为 CRT/桩/不可还原（登记）。

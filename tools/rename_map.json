@@ -800,5 +800,14 @@
   "FUN_140101db8": "PECMD_FindFirstFileW",
   "FUN_140102184": "PECMD_ConstructObject",
   "FUN_1400510e8": "PECMD_ParseRegexCloseBrace",
-  "FUN_140102848": "PECMD_CreateButtonCtl"
+  "FUN_140102848": "PECMD_CreateButtonCtl",
+  "FUN_14007fcd4": "PECMD_ParseSubWindowFlags",
+  "FUN_14001ed5c": "PECMD_WriteBackTextCRLF",
+  "FUN_140066f64": "PECMD_ReleaseObjectSlots",
+  "FUN_140069314": "PECMD_WcharToByteDigits",
+  "FUN_140075148": "PECMD_VarWriteLine",
+  "FUN_1400048c4": "PECMD_EnsureTempDirPath",
+  "FUN_1400091e0": "PECMD_LoadFileMappingExec",
+  "FUN_14005e61c": "PECMD_RegisterHotkeyCmd",
+  "FUN_14005efac": "PECMD_ExpandStringMarkers"
 }

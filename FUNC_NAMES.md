@@ -4,6 +4,15 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14007fcd4 | FUN_14007fcd4 | PECMD_ParseSubWindowFlags |
+| 0x14001ed5c | FUN_14001ed5c | PECMD_WriteBackTextCRLF |
+| 0x140066f64 | FUN_140066f64 | PECMD_ReleaseObjectSlots |
+| 0x140069314 | FUN_140069314 | PECMD_WcharToByteDigits |
+| 0x140075148 | FUN_140075148 | PECMD_VarWriteLine |
+| 0x1400048c4 | FUN_1400048c4 | PECMD_EnsureTempDirPath |
+| 0x1400091e0 | FUN_1400091e0 | PECMD_LoadFileMappingExec |
+| 0x14005e61c | FUN_14005e61c | PECMD_RegisterHotkeyCmd |
+| 0x14005efac | FUN_14005efac | PECMD_ExpandStringMarkers |
 | 0x14005182c | FUN_14005182c | PECMD_RegexReplace |
 | 0x140102778 | FUN_140102778 | PECMD_CreateStaticControl |
 | 0x14008bcd4 | FUN_14008bcd4 | PECMD_DescribePartitionInfo |

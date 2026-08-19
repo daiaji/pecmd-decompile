@@ -112,7 +112,7 @@ extern uint32_t        *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2,
                                       LPWSTR param_9);
 extern uint8_t         *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                                       int64_t len, void **out);
-extern void             FUN_140075148(int64_t *script, LPCWSTR name, LPCWSTR v,
+extern void             PECMD_VarWriteLine(int64_t *script, LPCWSTR name, LPCWSTR v,
                                       int64_t len, int64_t *out, char flag);
 extern void             PECMD_AllocSmallObject(void *arr);          /* 小对象分配 */
 extern void             FUN_140102a90(void *buf, int val, uint64_t cnt); /* == memset */
@@ -733,7 +733,7 @@ LAB_1400afff3:
             local_70 = (LPWSTR)0xa55aaa55;
             local_68 = g_pCacheBlock;
             (void)local_68;
-            FUN_140075148(param_1, local_a0, (LPCWSTR)&local_70, 0x10, (int64_t *)0, '\0');
+            PECMD_VarWriteLine(param_1, local_a0, (LPCWSTR)&local_70, 0x10, (int64_t *)0, '\0');
             local_188 = '\x01';
             lVar14 = (int64_t)PECMD_VarLookup(param_1, local_a0, (void *)0, -1, (void **)0);
             FUN_1400703e4((int64_t *)(lVar14 + 0x10), WSTR("*PCIP *freecah"));

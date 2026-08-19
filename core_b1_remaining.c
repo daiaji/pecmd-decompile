@@ -406,7 +406,7 @@ extern HANDLE FUN_1400060b8(HANDLE param_1);                                  /*
 extern uint8_t *FUN_14001d744(uint8_t *dst, uint8_t *src, int len);       /* @0x14001d744 重叠搬移 (本文件定义) */
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR param_1, int64_t *param_2, int64_t *param_3,
                              int64_t *param_4);                            /* @0x14001d8c8 (本文件定义) */
-extern uint64_t FUN_1400048c4(int64_t *param_1);                              /* @0x1400048c4 取串长度 */
+extern uint64_t PECMD_EnsureTempDirPath(int64_t *param_1);                              /* @0x1400048c4 取串长度 */
 extern void *operator_new(uint64_t n);                                        /* C++ new (link_stubs.c) */
 extern uint64_t FUN_14005e04c(void);                                          /* @0x14005e04c */
 extern uint64_t FUN_1400195f0(uint64_t param_1, int64_t param_2, int param_3,
@@ -1228,7 +1228,7 @@ void PECMD_ScheduleSelfDelete(LARGE_INTEGER param_1, int param_2)
     }
 }
 
-uint64_t FUN_1400048c4(int64_t *param_1)
+uint64_t PECMD_EnsureTempDirPath(int64_t *param_1)
 {
     /* @0x1400048c4 size=322 取串长度并扩充临时路径缓冲 (TMP/TEMP), 确保目录存在 */
     uint32_t uVar1;
@@ -3147,7 +3147,7 @@ HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *pa
         lstrcpyW((LPWSTR)*plVar6, (LPCWSTR)*plVar8);
     }
     PECMD_AllocString((WCHAR **)plVar8, 0x26c);
-    uVar5 = FUN_1400048c4(plVar6);
+    uVar5 = PECMD_EnsureTempDirPath(plVar6);
     local_res8 = 0;
     local_res8 = (local_res8 & 0xffffffff00000000ULL) | (uint64_t)(uint32_t)uVar5;
     FUN_14001d78c((uint8_t *)*plVar8, (uint8_t *)*plVar6, ((int)uVar5 + 1) * 2);
@@ -3393,7 +3393,7 @@ void PECMD_ScanDirectory(uint64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, in
     }
 }
 
-uint64_t FUN_1400091e0(LPCWSTR param_1, int64_t *param_2, int64_t *param_3,
+uint64_t PECMD_LoadFileMappingExec(LPCWSTR param_1, int64_t *param_2, int64_t *param_3,
                        HANDLE *param_4, LPCWSTR param_5)
 {
     /* @0x1400091e0 size=833 构造 PECMD LOAD 映射命令并启动子进程(或回填 param_2) */
@@ -8624,7 +8624,7 @@ uint32_t PECMD_ReadFileStr(LPCWSTR param_1, int64_t *param_2)
 }
 
 extern void *DAT_14013ca68;   /* HINSTANCE 资源句柄 */
-uint8_t FUN_14001ed5c(int64_t param_1, LPCWSTR param_2)
+uint8_t PECMD_WriteBackTextCRLF(int64_t param_1, LPCWSTR param_2)
 {
     /* @0x14001ed5c size=365 — 把文本框内容回写主窗口(处理 CR/LF 归一化到 CRLF) */
     WCHAR WVar1;
@@ -8709,7 +8709,7 @@ uint64_t PECMD_ExecLoadCommand(LPCWSTR param_1, LPCWSTR param_2)
     FUN_140063620(&local_res20);
     if (param_1 == (LPCWSTR)0) {
         if (param_2 != (LPCWSTR)0) {
-            uVar2 = FUN_1400091e0(param_2, (int64_t *)0, (int64_t *)0,
+            uVar2 = PECMD_LoadFileMappingExec(param_2, (int64_t *)0, (int64_t *)0,
                                   (HANDLE *)0, g_szEmpty);
             uVar2 = uVar2 & 0xffffffff;
             goto LAB_14001f038;
@@ -8760,7 +8760,7 @@ void PECMD_HandleDropFile(int64_t param_1, void *param_2, char param_3)
 
     FUN_140063620((WCHAR **)&local_res20);
     FUN_140006554(param_2, (int64_t *)&local_res20, (int64_t *)0);
-    FUN_14001ed5c(param_1, (LPCWSTR)local_res20);
+    PECMD_WriteBackTextCRLF(param_1, (LPCWSTR)local_res20);
     if (param_3 != '\0') {
         PECMD_ExecLoadCommand((LPCWSTR)local_res20, (LPCWSTR)0);
     }

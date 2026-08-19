@@ -66,13 +66,13 @@ extern int64_t FUN_1400745c8(WCHAR **pp, int64_t *out);
     /* @0x1400745c8 数字解析 (core_scriptdep.c 同签名) */
 extern int64_t PECMD_SetFilePointer(HANDLE h, int64_t offset, DWORD method);
     /* @0x14005c674 SetFilePointer 包装, 返回新位置 */
-extern int FUN_140069314(void *out, LPCWSTR src);
+extern int PECMD_WcharToByteDigits(void *out, LPCWSTR src);
     /* @0x140069314 WCHAR 串→字节缓冲, 返回字节数 */
 extern void FUN_1400692d8(WCHAR **ps, LPCWSTR src, int len);
     /* @0x1400692d8 追加 len 字节到串 */
 extern void FUN_14006923c(WCHAR **ps, LPCSTR src, int len);
     /* @0x14006923c 追加 len 字节 (字节→WCHAR) 到串 */
-extern void FUN_140075148(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
+extern void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
                           int64_t *pkey, char mode);
     /* @0x140075148 按行写变量 */
 extern void FUN_1400693c0(LPCSTR src, WCHAR **out, uint32_t isBIG5);
@@ -423,7 +423,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
         } else if (skipCount == 0) {
             /* 源编码 * : sArg2 为字面量数据 */
             if (specEmpty == 0) {
-                datalen = FUN_140069314(&data, sArg2);   /* WCHAR→字节 */
+                datalen = PECMD_WcharToByteDigits(&data, sArg2);   /* WCHAR→字节 */
             } else {
                 FUN_1400703E4((WCHAR **)&data, sArg2);
                 datalen = (int64_t)lstrlenW(sArg2) * 2;
@@ -446,7 +446,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                         datalen = (int64_t)(*(uint64_t *)((uint8_t *)node + 0x18) &
                                             0x3fffffffffffffff);
                         if (skipCount == 3) {
-                            datalen = FUN_140069314(&data, *(LPCWSTR *)((uint8_t *)node + 8));
+                            datalen = PECMD_WcharToByteDigits(&data, *(LPCWSTR *)((uint8_t *)node + 8));
                             dataMode = 2;
                             goto L_data_ok;
                         }
@@ -528,7 +528,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                         FUN_1400629B8(script, sArg4, v);
                     }
                 } else {
-                    FUN_140075148(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
+                    PECMD_VarWriteLine(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
                                   (int64_t *)&sArg4, '\0');
                 }
                 FUN_14005B104(&sStr);
@@ -613,7 +613,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                                 goto L_ab5e;
                             }
                             if (dstStar != 0) {
-                                FUN_140075148(script, sArg4, (LPCWSTR)mb,
+                                PECMD_VarWriteLine(script, sArg4, (LPCWSTR)mb,
                                               (int64_t)lstrlenA((LPCSTR)mb),
                                               (int64_t *)&sArg4, '\0');
                                 goto L_ab5e;
@@ -626,7 +626,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 } else {
                     /* 目标 UNICODE */
                     if (dstStar != 0) {
-                        FUN_140075148(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
+                        PECMD_VarWriteLine(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
                                       (int64_t *)&sArg4, '\0');
                         FUN_14005B104(&sStr2);
                         FUN_14005B104(&sStr);
