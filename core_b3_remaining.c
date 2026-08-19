@@ -4939,6 +4939,7 @@ LPCWSTR FUN_14005182c(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3, WCHAR *
     WCHAR WVar5;
     int16_t *psVar6;
     uint8_t auVar7[16];
+    (void)auVar7;
     int iVar8;
     int iVar9;
     WCHAR *pwVar10;
@@ -15381,6 +15382,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         FUN_14005B104((WCHAR **)&local_148);
         uVar9 = 0;
     }
+    (void)local_170; (void)local_f8; (void)local_e8; (void)local_c0; (void)local_b8; (void)local_5f; (void)local_5e; (void)local_12b; (void)local_114;
     return uVar9;
 }
 
@@ -15882,6 +15884,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     local_f8 = plVar9;
     FUN_140073ccc(&local_138, local_res20, 0);
     local_5f = 3;
+    (void)local_5f;
     plVar9[0x54] = (int64_t)(uintptr_t)param_2;
     plVar9[0x52] = (int64_t)(uintptr_t)&local_138;
     if (!bVar16) {
@@ -15913,6 +15916,7 @@ LAB_140082261:
         (*(char *)(param_3 + 0x121) != '\0')) {
         local_129 = *(char *)((int64_t)param_1 + 0xf);
     }
+    (void)local_129;
     *(uint8_t *)(plVar9 + 0x24) = 0x10;
     pHVar14 = pHVar7;
     if (((param_3 != 0) && (bVar1)) && (*(char *)(param_3 + 0x121) == '\0')) {
@@ -15933,6 +15937,7 @@ LAB_140082261:
     }
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     local_f8 = (int64_t *)0;
+    (void)local_f8;
     *(uint16_t *)(param_1 + 0x19) = *(uint16_t *)(param_1 + 0x19) | (local_70 & 2);
     param_1[0x1a] = local_68;
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -15943,6 +15948,7 @@ LAB_140082261:
     if (pHVar11 != (HWND)0) {
         SendMessageW(pHVar11, 0x451, (uint64_t)uVar15 | 1, 0);
     }
+    (void)local_f8; (void)local_129;
     return lVar12;
 }
 
@@ -16023,6 +16029,8 @@ uint64_t PECMD_ParseHotkeyCode(int64_t *param_1, uint32_t *param_2, uint64_t par
     FUN_140063620(&local_40);
     local_30 = 0;
     local_38 = param_3;
+    (void)local_30;
+    (void)local_38;
     plVar4 = FUN_14007f6e4(&local_40, param_1, 0x2c, 1);
     FUN_1400676e4(plVar4, (int64_t *)&local_48, 0);
     WVar2 = *local_48;
@@ -16148,6 +16156,7 @@ LAB_140083eb6:
 LAB_140083f44:
     FUN_14005B104((WCHAR **)&local_40);
     FUN_14005B104((WCHAR **)&local_48);
+    (void)local_38; (void)local_30;
     return uVar8 & 0xffffffff;
 }
 
@@ -16827,6 +16836,8 @@ LAB_14008c016:
     }
     local_4c4 = 0;
     local_4c0 = 0;
+    (void)local_4c4;
+    (void)local_4c0;
     local_4d0[0] = 0x28;
     local_4c8 = 0;
     BVar6 = DeviceIoControl((HANDLE)local_530, 0x2d1400, (LPVOID)&local_4c8, 0xc,
@@ -16834,6 +16845,7 @@ LAB_14008c016:
     if (BVar6 == 0) {
         local_418 = 0x85;
     }
+    (void)local_418;
     DVar7 = FUN_14005f96c((HANDLE)hObject, 0x200);
     local_508 = DVar7;
     if (g_u8CCB1 != '\0') {
@@ -17113,6 +17125,7 @@ LAB_14008c94f:
                 if (local_4f4 != 0) {
                     local_496[2] = 0;
                     local_498 = 0x20;
+                    (void)local_498;
                     local_496[1] = 0x20;
                     local_496[0] = L'*';
                     if ((param_4 & 0x40) == 0) {
@@ -17125,6 +17138,7 @@ LAB_14008c94f:
                     FUN_140063620(&local_500);
                     local_4b0 = pLVar22[6];
                     LStack_4a8 = pLVar22[7];
+                    (void)LStack_4a8;
                     PECMD_FindVolumeByDeviceId((uint32_t *)&local_4b0.QuadPart, (int64_t *)&local_500,
                                   (LPWSTR)0x2);
                     iVar9 = FUN_14005b184((char *)&local_4b0.QuadPart,
@@ -19285,6 +19299,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     local_b0.bottom = 0;
     local_a0 = 0;
     local_9c = 0;
+    (void)local_9c;
     local_98 = 0;
     local_94 = 0;
     GetClientRect((HWND)plVar7[4], &local_b0);
@@ -19381,6 +19396,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
             pWVar3 = local_res10;
             local_c8 = 0;
             uStack_c0 = 0;
+            (void)uStack_c0;
             SendMessageW((HWND)plVar7[4], 0x130a, WVar16, (LPARAM)&local_c8);
             FUN_1400ec6a8((int64_t)plVar10, (int64_t)plVar7, (uint64_t)(uintptr_t)pWVar3,
                           (uint8_t *)&local_c8, WVar16 + 3000);
@@ -19398,6 +19414,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     if (lpCriticalSection != (LPCRITICAL_SECTION)0x0) {
         LeaveCriticalSection(lpCriticalSection);
     }
+    (void)uStack_c0; (void)local_9c;
     return param_1;
 }
 
@@ -20897,6 +20914,7 @@ uint64_t *PECMD_CreateControlObject(uint64_t *param_1, int64_t param_2, uint32_t
     uint32_t uVar15;
     LPCWSTR pWVar16;
     uint64_t local_58;
+    (void)uVar12;
 
     puVar8 = param_10;
     PECMD_ConstructControlObjectB(param_1, 1, (uint64_t)param_2, (LPCWSTR)*param_4, param_10,
@@ -21884,6 +21902,7 @@ LPWSTR PECMD_CalcExpression(int64_t *param_1, WCHAR *param_2, uint64_t *param_3)
                 if (isNeg) a = -a;
                 value = a;
                 uvalue = (uint64_t)a;
+                (void)uvalue;
                 done = true;
             }
         }
