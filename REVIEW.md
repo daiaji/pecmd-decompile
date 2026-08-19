@@ -3273,3 +3273,19 @@ Wlan10 + 5 GDI+void* + 4 标量 + 5 GDI+ + 22 fn-ptr(WTS/WIM/Reg/Setup+等) + 18
   pointer-sign/comment` 等机械安全项 0。
 - 结论：阶段3（零警告）达到"行为不变前提下的机械零残留"完成态；其余为需变语义的登记已知限制。
 - build/link 绿；git 28 提交。
+
+---
+
+## 69. DAT_ 深挖 I-III（真实 DAT_ 33→19，累计 113→19）
+- 深挖I：cd98(GdipDrawImageRectI)/ce38/cef8/cf10/d050(Mci)/d4d0(Dhcp)/e110 —— 用"主导签名 + extern 归一 +
+  GetProcAddress/FUN_14005C828 装载强转 + 异构调用点兼容"模式，7 槽迁成。
+- 深挖II：7 槽迁成（同上）。深挖III：FN_ typedef 槽 6 个（d468 WIMCreateFile/d470 WIMSetTemporaryPath/
+  d478 WimLoadImage/d480 HandleOp/d488 WIMCloseHandleSlot(无原型兼容 0/1 参)/d3b0 GetStorageDependency）+ d430 GetSaveFileNameW。
+- 教训：同名函数两个独立槽（d488/d490 都 WIMCloseHandle）必须从一开始给不同名，否则 token 替换导致混乱；
+  中途混淆已通过"回滚到 clean commit 重做"恢复（全程 build/link 绿）。异构 0/1 参用无原型 `void(*)()` 兼容。
+- 结果：真实 DAT_ 113→**19**；git 32 提交。
+
+### 剩余 19（静态不可安全迁，登记）
+AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag）·无大小数组/.rdata 串
+（d770/cb90/d8a0/127738/127740/1210f8/1214d8/12944c）·BOM 常量（124128/12c/130 已 static）——
+均需运行时/逆汇编深挖，或大小推断有越界语义风险，按"行为不变"保留。
