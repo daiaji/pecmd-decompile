@@ -27,7 +27,7 @@ extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern void FUN_14005B0B8(void *p, size_t len);         /* @0x14005b0b8 */
 extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
 extern int64_t *PECMD_StrDupAlloc(LPCWSTR src);             /* @0x1400700c4 */
-extern void *FUN_140070044(const char *src);            /* @0x140070044 */
+extern void *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
 extern uint8_t *FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern void FUN_14006159C(void *script, uint64_t seed); /* @0x14006159c */
 extern int64_t *FUN_14005B154(WCHAR **ps);           /* @0x14005b154 */
@@ -349,7 +349,7 @@ int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp)
     int64_t len;
 
     if ((uint8_t)enc == 0) return 1;
-    data = (uint8_t *)FUN_140070044((const char *)*in);
+    data = (uint8_t *)PECMD_AllocAnsiString((const char *)*in);
     len = in[1];
     out[0] = (int64_t)data;
     out[1] = len;

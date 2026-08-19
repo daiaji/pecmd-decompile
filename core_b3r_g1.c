@@ -1,7 +1,7 @@
 /*
  * core_b3r_g1.c — Restored batch28 business functions (group g1)
  *
- *   FUN_1400644c8 @0x1400644c8  通过 COM/OLE 全局槽执行一次"写入"操作 (带临界区)
+ *   PECMD_ComWriteSlot @0x1400644c8  通过 COM/OLE 全局槽执行一次"写入"操作 (带临界区)
  *   PECMD_PositionMessageWindow @0x140064c38  消息/工具提示窗口定位与前台窗口恢复
  *
  * 说明:
@@ -32,11 +32,11 @@ extern DWORD  FUN_1400195f0(uint64_t param_1, int64_t param_2, int param_3,
                             uint64_t *param_4);               /* @0x1400195f0 消息泵/等待 */
 
 /* ================================================================
- * @0x1400644c8  (undefined4 FUN_1400644c8(longlong, undefined8))
+ * @0x1400644c8  (undefined4 PECMD_ComWriteSlot(longlong, undefined8))
  * 通过全局 COM 槽 (g_pComWrite) 执行一次写入操作; 槽未初始化 (<2) 或
  * 目标对象 (param_1+0xd0) 为空时直接返回 1。
  * ================================================================ */
-uint32_t FUN_1400644c8(int64_t param_1, uint64_t param_2)
+uint32_t PECMD_ComWriteSlot(int64_t param_1, uint64_t param_2)
 {
     int iVar1;
     uint32_t uVar2;

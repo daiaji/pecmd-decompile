@@ -52,14 +52,14 @@ extern uint64_t FUN_14005F158(uint64_t *obj, uint8_t *data);
 extern uint64_t PECMD_ParseNumberToDouble(int64_t *pp, double *out);
 extern uint32_t PECMD_EnumDeviceInterfaces(int dev, uint32_t flags, void *ctx);
 extern int FUN_14005B184(char *a, int64_t b, int64_t n);
-extern void FUN_140060870(uint64_t *arr, uint64_t value,
+extern void PECMD_SetWindowProcHook(uint64_t *arr, uint64_t value,
                                     LONG_PTR *slot);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos, DWORD method);
-extern uint64_t FUN_140067ee8(void *pp, int *out);
+extern uint64_t PECMD_ParseIntWithSign(void *pp, int *out);
 extern bool PECMD_ParseUIntValue(int64_t *pp, int *out);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
 extern uint64_t PECMD_ParseInt64Round(int64_t *pp, int64_t *out);
-extern uint64_t FUN_140067d54(int64_t *pp, double *out);
+extern uint64_t PECMD_EvalExpressionTree(int64_t *pp, double *out);
 extern uint32_t PECMD_EnumDevices(LPCWSTR path, LPWSTR buf, uint32_t flags,
                               void *guid);
 extern uint64_t PECMD_ParseSizeWithUnit(int64_t *pp, double *out);
@@ -330,7 +330,7 @@ int64_t PECMD_StripDevicePrefix(int64_t path)
  */
 int64_t PECMD_ContainerAppend(int64_t *container)
 {
-    FUN_140060870((uint64_t *)container, (uint64_t)*container, (int64_t *)((uint8_t *)*container + 8));
+    PECMD_SetWindowProcHook((uint64_t *)container, (uint64_t)*container, (int64_t *)((uint8_t *)*container + 8));
     return *container + 8;
 }
 
@@ -348,7 +348,7 @@ void PECMD_SetEndOfFileWrap(uint64_t *file, LARGE_INTEGER pos)
  */
 void PECMD_ParseNumSkipChar_01d4(uint64_t *pp, int *out)
 {
-    FUN_140067ee8(pp, out);
+    PECMD_ParseIntWithSign(pp, out);
     if (*(uint16_t *)*pp != 0) {
         *pp = (uint64_t)((uint16_t *)*pp + 1);
     }
@@ -414,7 +414,7 @@ uint64_t PECMD_ParseAndSkipSpace_7f90(int64_t *pp, double *out)
  */
 void PECMD_ParseNumSkipChar_de4c(int64_t *pp, double *out)
 {
-    FUN_140067d54(pp, out);
+    PECMD_EvalExpressionTree(pp, out);
     if (*(uint16_t *)*pp != 0) {
         *pp = (int64_t)((uint16_t *)*pp + 1);
     }

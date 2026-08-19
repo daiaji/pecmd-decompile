@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   PATH 命令         FUN_140040350 @0x140040350
+ *   PATH 命令         PECMD_DispatchSpecialDirective @0x140040350
  *   解析范围说明       FUN_14004FAA8 @0x14004faa8
  *   解析字符类         FUN_1400513B8 @0x1400513b8
  *   设置 Enable 状态   FUN_140053C5C @0x140053c5c
@@ -20,17 +20,17 @@
  *   设置剪贴板文本     PECMD_SetClipboardUnicode @0x140060718
  *   去除引号           PECMD_TrimOuterQuotes @0x140060d7c
  *   计算条目行数       FUN_140060EE0 @0x140060ee0
- *   释放对象数组       FUN_140061704 @0x140061704
+ *   释放对象数组       PECMD_TruncateObjectArray @0x140061704
  *   设置 ANSI 串       FUN_1400634D4 @0x1400634d4
  *   数组追加元素       FUN_1400639F0 @0x1400639f0
  *   初始化数组         FUN_140063B64 @0x140063b64
  *   转发自定义消息     PECMD_ForwardCustomMessage @0x140066e20
- *   分离虚拟磁盘       FUN_140069044 @0x140069044
+ *   分离虚拟磁盘       PECMD_DetachVirtualDisk @0x140069044
  *   释放控件对象       FUN_14006C648 @0x14006c648
  *   释放句柄串对象     FUN_14006E6C8 @0x14006e6c8
  *   获取完整路径       FUN_140078BE8 @0x140078be8
  *   设置 Check 状态    FUN_14007DF90 @0x14007df90
- *   解析单词 token     FUN_140085844 @0x140085844
+ *   解析单词 token     PECMD_ParseFirstWordToken @0x140085844
  *   释放热键对象       FUN_1400AA484 @0x1400aa484
  *   从对象创建字体     FUN_1400B8960 @0x1400b8960
  *   释放位图控件对象   FUN_1400BCBE0 @0x1400bcbe0
@@ -60,7 +60,7 @@ extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
 extern int PECMD_CalcDayOfYear(uint16_t *a1);
-extern void FUN_140061b28(int64_t a1);
+extern void PECMD_ReleaseImageHandle(int64_t a1);
 extern DWORD FUN_14006459C(LPCWSTR a1, uint32_t a2, LPWSTR a3,
                            LPWSTR *a4);
 extern uint64_t PECMD_QueryFileAttributes(LPCWSTR a1, uint32_t *a2, int *a3);
@@ -97,10 +97,10 @@ extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
 extern int64_t *g_pi64e118;
 extern int64_t g_i64E120;
 
-/* ========== FUN_140040350 @0x140040350 ==========
+/* ========== PECMD_DispatchSpecialDirective @0x140040350 ==========
  * PATH 命令处理：@ 恢复当前目录，# 执行脚本，空串写默认 PATH。
  */
-uint32_t FUN_140040350(int64_t *pp, uint16_t *s)
+uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
 {
     if (*s == 0x40) {
         WCHAR *pWVar2 = FUN_14001BE14((WCHAR *)(s + 1));
@@ -459,10 +459,10 @@ int FUN_140060EE0(uint16_t *s, int mode)
     return iVar1;
 }
 
-/* ========== FUN_140061704 @0x140061704 ==========
+/* ========== PECMD_TruncateObjectArray @0x140061704 ==========
  * 释放动态对象数组中 [start, 原计数) 范围内的对象。
  */
-void FUN_140061704(int64_t *arr, int *count, int start)
+void PECMD_TruncateObjectArray(int64_t *arr, int *count, int start)
 {
     EnterCriticalSection(&g_csInit);
     while (start < *count) {
@@ -577,10 +577,10 @@ void PECMD_ForwardCustomMessage(int64_t *obj, WPARAM wParam, LPARAM lParam)
                                                                   wParam, lParam);
 }
 
-/* ========== FUN_140069044 @0x140069044 ==========
+/* ========== PECMD_DetachVirtualDisk @0x140069044 ==========
  * 分离/卸载虚拟磁盘；优先 DetachVirtualDisk，其次 UnmountVHD。
  */
-uint64_t FUN_140069044(LPCWSTR name, uint32_t flags)
+uint64_t PECMD_DetachVirtualDisk(LPCWSTR name, uint32_t flags)
 {
     uint32_t local_res10[6];
     local_res10[0] = flags;
@@ -659,7 +659,7 @@ int64_t FUN_140078BE8(LPCWSTR name, int64_t *out)
     LPWSTR local_res10 = NULL;
     LPWSTR local_res18 = NULL;
 
-    FUN_140063694(&local_res10, 0x2411);
+    PECMD_AllocWStringBuffer(&local_res10, 0x2411);
     FUN_14006459C(name, 0x2410, local_res10, &local_res18);
     if (local_res18 != NULL) {
         local_res18[-1] = L'\0';
@@ -692,10 +692,10 @@ void FUN_14007DF90(int64_t ctx, int mode)
     }
 }
 
-/* ========== FUN_140085844 @0x140085844 ==========
+/* ========== PECMD_ParseFirstWordToken @0x140085844 ==========
  * 取首个非空白单词并交给解析器，随后跳过空白。
  */
-uint64_t FUN_140085844(int64_t *a, int64_t *b, uint64_t *c)
+uint64_t PECMD_ParseFirstWordToken(int64_t *a, int64_t *b, uint64_t *c)
 {
     WCHAR *pWVar2 = (WCHAR *)*b;
     WCHAR WVar1 = *pWVar2;
@@ -759,7 +759,7 @@ void FUN_1400B8960(HANDLE hFont, int *size, LPCWSTR name)
 uint64_t *FUN_1400BCBE0(uint64_t *obj, uint32_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401296e8;
-    FUN_140061b28((int64_t)obj);
+    PECMD_ReleaseImageHandle((int64_t)obj);
     FUN_14005B104((WCHAR **)(obj + 0x11));
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));

@@ -49,7 +49,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint64_t PECMD_ReserveVec8(int64_t *a1, uint64_t a2);
-extern uint64_t FUN_14004fc58(int64_t *a1, uint64_t a2);
+extern uint64_t PECMD_ReserveObjectArray(int64_t *a1, uint64_t a2);
 extern void FUN_1400F1490(int64_t a1);
 extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
@@ -62,7 +62,7 @@ extern LPCWSTR FUN_1400E6D38(LPCWSTR a1, uint64_t a2, LPCWSTR a3);
 extern void PECMD_ArrayGrowRaw(uint64_t *a1, int64_t *a2, uint32_t a3,
                           int64_t a4);
 extern void *PECMD_AllocSmallObject(void *a1);
-extern int64_t *FUN_14006355c(int64_t *a1, LPCWSTR a2, int64_t a3,
+extern int64_t *PECMD_WideToAnsiStr(int64_t *a1, LPCWSTR a2, int64_t a3,
                               uint64_t a4);
 extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void AtlThrowImpl(long a1);
@@ -135,7 +135,7 @@ uint64_t FUN_14004FDD0(int64_t *buf, uint64_t size, int mode)
         buf[1] = 0;
         buf[2] = 0;
     } else if ((uint64_t)buf[2] < size) {
-        in_RAX = FUN_14004fc58(buf, size);
+        in_RAX = PECMD_ReserveObjectArray(buf, size);
         if ((char)in_RAX == '\0') {
             return in_RAX;
         }
@@ -445,7 +445,7 @@ uint16_t *FUN_14006B1E8(LPCWSTR name, uint64_t *out, char mode)
 {
     uint64_t *local_res20 = NULL;
     PECMD_AllocSmallObject(&local_res20);
-    FUN_14006355c((int64_t *)&local_res20, name, -1, 0xfde9);
+    PECMD_WideToAnsiStr((int64_t *)&local_res20, name, -1, 0xfde9);
     uint16_t *puVar1 = PECMD_Base64Encode(local_res20, out, mode);
     FUN_14005B104((WCHAR **)&local_res20);
     return puVar1;

@@ -37,7 +37,7 @@ extern void      FUN_1400676e4(void *src, void *dst, int mode);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern int16_t   FUN_1400677B0(int64_t *pp, int64_t out);  /* 解析最多4个 # 分隔值 */
 extern uint64_t  PECMD_ParseSignedNumber(short *);
-extern void      FUN_1400744d4(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
+extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);   /* delimiter scan (thunk) */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   FUN_14005c788(const char *a, const WCHAR *w, int n);
@@ -52,7 +52,7 @@ extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符�
 extern uint32_t  FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
 extern void      FUN_1400BEF64(LPCWSTR cmd);              /* 蜂鸣 + 执行脚本 */
-extern void      FUN_14001dd04(const WCHAR *p, char c);   /* 清空串 */
+extern void      PECMD_ExpandBackslashNewline(const WCHAR *p, char c);   /* 清空串 */
 extern void      FUN_140067F90(int64_t *ps);              /* '&' -> '&&' 转义 */
 extern void      FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,
                                int a4, int a5);
@@ -71,7 +71,7 @@ extern void FUN_1400B9204(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                           int y, int w, int h, int64_t *p8,
                           int64_t *p9, int64_t *p10, LPCWSTR text,
                           uint32_t flags);
-extern void FUN_140061828(int64_t mgr, int p2, int p3, int p4); /* 删除动作 */
+extern void PECMD_RemoveObjectByType(int64_t mgr, int p2, int p3, int p4); /* 删除动作 */
 
 /* ========== PECMD_AddControlStar @ 1400b48e0 ==========
  * signature: ulonglong __fastcall PECMD_AddControlStar(LPCWSTR param_1,
@@ -130,7 +130,7 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar2 = FUN_14007f6e4(&local_58, &local_res10, 0x2c, 1);
-        FUN_1400744d4(plVar2, (uint32_t *)&local_74, &local_78, &local_res20,
+        PECMD_ParseLtwhParams(plVar2, (uint32_t *)&local_74, &local_78, &local_res20,
                       (uint32_t *)&local_res8);
         uVar4 = (int)uVar5;
         if (*local_res10 == 0x2c) {
@@ -289,7 +289,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;
         plVar5 = FUN_14007f6e4(&local_60, &local_res10, 0x2c, bVar11);
-        FUN_1400744d4(plVar5, (uint32_t *)&local_80, &local_88, &local_a8,
+        PECMD_ParseLtwhParams(plVar5, (uint32_t *)&local_80, &local_88, &local_a8,
                       (uint32_t *)&local_res8);
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
@@ -401,7 +401,7 @@ LAB_1400b5137:
         iVar5 = (int)uVar3;
         if (((WVar9 == *pWVar2) && (pWVar2[1] != L'\0')) &&
             (FUN_14005c7c4("del", pWVar2 + 2) != iVar8)) {
-            FUN_140061828(param_3, iVar5, local_48, (int)cVar6);
+            PECMD_RemoveObjectByType(param_3, iVar5, local_48, (int)cVar6);
         } else if ((*pWVar2 != (WCHAR)iVar8) && (iVar8 < iVar5)) {
             if (bVar10 == false) {
                 param_1 = *(longlong **)(param_3 + 0x290);
@@ -681,7 +681,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar8 = FUN_14007f6e4(&local_50, &local_res10, 0x2c, 1);
-        FUN_1400744d4(plVar8, (uint32_t *)&local_98, &local_84, &local_88,
+        PECMD_ParseLtwhParams(plVar8, (uint32_t *)&local_98, &local_84, &local_88,
                       (uint32_t *)&local_80);
         iVar12 = iVar11;
         iVar25 = iVar24;
@@ -729,7 +729,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
         FUN_14005b104(&local_b0);
     }
     if (!bVar2) {
-        FUN_14001dd04(local_90, '\0');
+        PECMD_ExpandBackslashNewline(local_90, '\0');
     }
     if (bVar3) {
         uVar16 = uVar16 | 0x1000000;

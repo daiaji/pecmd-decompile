@@ -15,7 +15,7 @@
  *   创建注册表键     FUN_14005F750 @0x14005f750
  *   查找空闲字母     FUN_14005F868 @0x14005f868
  *   链接或复制文件   FUN_1400607A4 @0x1400607a4
- *   安装窗口过程     FUN_140060870 @0x140060870
+ *   安装窗口过程     PECMD_SetWindowProcHook @0x140060870
  *   分配控制台       FUN_140060A94 @0x140060a94
  *   匹配关键字前缀   FUN_140062FC4 @0x140062fc4
  *   分配缓冲重试     FUN_140063A6C @0x140063a6c
@@ -50,7 +50,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern LRESULT FUN_1400E5890(int64_t a1);
 extern void FUN_140053C5C(int64_t a1, uint32_t a2);
-extern void FUN_140053cec(int64_t a1, uint32_t a2);
+extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
 extern void FUN_140053DC8(uint64_t *a1, uint32_t a2, uint64_t a3,
                           LPCWSTR a4, LPCWSTR a5, LPCWSTR a6,
@@ -144,7 +144,7 @@ void FUN_1400549BC(int64_t obj, uint32_t flags, int64_t fontObj)
         (*fn)(pObj, LVar1, 1);
     }
     FUN_140053C5C(obj, ~(flags >> 0x1b) & 1);
-    FUN_140053cec(obj, flags & 0x10000000);
+    PECMD_SetObjectVisibleVar(obj, flags & 0x10000000);
     DragAcceptFiles(*(HWND *)(*(int64_t *)(obj + 0x38) + OBJ_HWND), 1);
     if (**(LPCWSTR *)(obj + 0x10) != L'\0') {
         FUN_14007D0AC(*(int64_t **)(obj + 0x50),
@@ -392,10 +392,10 @@ link_or_copy:
     CopyFileW(src, dst, 1);
 }
 
-/* ========== FUN_140060870 @0x140060870 ==========
+/* ========== PECMD_SetWindowProcHook @0x140060870 ==========
  * 安装窗口过程钩子（修改代码页权限并替换窗口过程）。
  */
-void FUN_140060870(uint64_t *obj, uint64_t value,
+void PECMD_SetWindowProcHook(uint64_t *obj, uint64_t value,
                              LONG_PTR *outOld)
 {
     LONG_PTR LVar1;
@@ -804,7 +804,7 @@ uint64_t FUN_1400799F0(uint64_t src, uint64_t len)
     int iVar3;
     int64_t local_res10 = 0;
 
-    FUN_140063694((WCHAR **)&local_res10, (int64_t)(len * 2 + 0x20));
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res10, (int64_t)(len * 2 + 0x20));
     iVar3 = (int)len + 1;
     iVar1 = g_pConvFunc(0, 8, (LPCSTR)(uintptr_t)src,
                         (DWORD)(len & 0xffffffff),

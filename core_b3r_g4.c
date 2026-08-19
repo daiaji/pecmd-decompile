@@ -31,10 +31,10 @@ extern void   *DAT_14013e110;      /* config string pointer */
  * ===================================================================== */
 extern LPWSTR  lstrcatW(LPWSTR, LPCWSTR);
 
-extern void    FUN_14005cfd0(void *p);                 /* 懒加载 WS2_32 指针 */
+extern void    PECMD_InitWinsock(void *p);                 /* 懒加载 WS2_32 指针 */
 extern int32_t PECMD_QueryState_cfc0(void);                    /* 初始化成功? */
 extern void    FUN_14005d2a4(void *p);                 /* 附加初始化 */
-extern void    FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len,
+extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                              uint64_t cap);            /* 复制/解析串 */
 extern void    FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
 extern void    FUN_1400633a8(void **ps, int64_t len);  /* 分配缓冲 */
@@ -44,7 +44,7 @@ extern void    FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
 extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
                              DWORD share, LPSECURITY_ATTRIBUTES sa,
                              DWORD disp, DWORD flags, HANDLE tmpl); /* CreateFile 包装 */
-extern void    FUN_140074e58(WCHAR *param_1, int param_2); /* config string store */
+extern void    PECMD_SetConfigString(WCHAR *param_1, int param_2); /* config string store */
 
 /* ===================================================================== */
 /* @0x140071ae8                                                        */
@@ -150,7 +150,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     int64_t local_48[2];
 
     local_res10 = param_2;
-    FUN_14005cfd0(&local_res18);
+    PECMD_InitWinsock(&local_res18);
     if (PECMD_QueryState_cfc0() == 0) {
         return 0x80004005;
     }
@@ -195,7 +195,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     FUN_1400633a8(&local_50, 0x14a);
     PECMD_SkipSpace((WCHAR **)&local_res10);
     local_res20 = (WCHAR *)0;
-    FUN_14006355c((int64_t *)&local_res20, local_res10, -1, 0xffffffffffffffffULL);
+    PECMD_WideToAnsiStr((int64_t *)&local_res20, local_res10, -1, 0xffffffffffffffffULL);
 
     /* 归一化: 下面把复制出的串当作 ASCII 字节串扫描 (源码用 byte 指针) --- TODO(verify) */
     {
@@ -332,7 +332,7 @@ uint64_t PECMD_ReadTipDummyConfig(void)
                 CloseHandle(hObject);
             }
         }
-        FUN_140074e58(pwVar4, (int)(uint32_t)bVar5);
+        PECMD_SetConfigString(pwVar4, (int)(uint32_t)bVar5);
         PECMD_StrFree(&local_30);
     }
     return (uint64_t)(uintptr_t)DAT_14013e110;

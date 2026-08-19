@@ -50,18 +50,18 @@ extern void FUN_14004F788(int64_t obj);
 extern void FUN_140054B18(void *obj);
 extern void FUN_140054A50(void *obj);
 extern void FUN_140054AB4(void *obj);
-extern void FUN_1400553f8(void *obj);
+extern void PECMD_DestroyMappedObject(void *obj);
 extern void FUN_1400E8940(void *obj);
 extern void FUN_14006C648(void *obj);
 extern void FUN_14006BF8C(void *obj);
 extern void FUN_14006C3CC(void *obj);
-extern void FUN_1400643d4(void *obj);
-extern void FUN_14006b924(void *obj);
+extern void PECMD_ReleaseComObject(void *obj);
+extern void PECMD_ReleaseDeviceObj(void *obj);
 extern void FUN_14006C430(void *obj);
 extern void FUN_14006FC4C(void *obj);
 extern void FUN_14006FCB4(void *obj);
-extern void FUN_14006fe3c(void *obj);
-extern void FUN_14007cfb4(void *obj);
+extern void PECMD_ReleaseCtrlObject(void *obj);
+extern void PECMD_DestroyWindowObject(void *obj);
 extern void FUN_1400A9C40(void *obj);
 extern void FUN_1400AA094(void *obj);
 extern void FUN_1400AA2FC(void *obj);
@@ -128,7 +128,7 @@ uint64_t *PECMD_ReleaseWrap_7910(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_86fc(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400553f8(obj);
+    PECMD_DestroyMappedObject(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -279,7 +279,7 @@ uint64_t *PECMD_ReleaseWrap_0420(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_057c(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400643d4(obj);
+    PECMD_ReleaseComObject(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -291,7 +291,7 @@ uint64_t *PECMD_ReleaseWrap_057c(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_94f4(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006b924(obj);
+    PECMD_ReleaseDeviceObj(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -339,7 +339,7 @@ uint64_t *PECMD_ReleaseWrap_cf54(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_cf84(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006fe3c(obj);
+    PECMD_ReleaseCtrlObject(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -363,7 +363,7 @@ void PECMD_ReleaseWrap_4320(uint64_t *obj)
  */
 uint64_t *PECMD_ReleaseWrap_9620(uint64_t *obj, uint32_t flags)
 {
-    FUN_14007cfb4(obj);
+    PECMD_DestroyWindowObject(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

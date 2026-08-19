@@ -39,7 +39,7 @@ extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);         /* @0x140
 extern int64_t   FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                                uint32_t flag, void *p6, void *s7, void *p8); /* @0x14000e26c 脚本执行 */
 extern int       FUN_14005b2c0(void *arg, LPCWSTR w, HWND hwnd);       /* @0x14005b2c0 */
-extern int       FUN_140057b80(void *a, LPCWSTR b, WPARAM c, HWND d,
+extern int       PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d,
                                LPCWSTR e, void *f, int64_t *g, HWND h,
                                int64_t i);                              /* @0x140057b80 */
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);                  /* @0x140074838 解析整数 token */
@@ -304,7 +304,7 @@ LAB_140079792:
             *param_6 = 0;
             LeaveCriticalSection(lpCriticalSection);
         }
-        uVar5 = FUN_140057b80((void *)(intptr_t)param_1[7], param_4, param_5, hWnd, param_3,
+        uVar5 = PECMD_DispatchControlCommand((void *)(intptr_t)param_1[7], param_4, param_5, hWnd, param_3,
                               (void *)(intptr_t)param_1[10], param_2, pHVar1, (int64_t)param_1);
         if ((int)uVar5 == 0) {
             iVar4 = lstrcmpW(WSTR("color"), param_4);

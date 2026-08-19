@@ -99,7 +99,7 @@ int (*g_pOleInit)(int);     /* DAT_14013d800 OleInitialize */
 void (*g_pOleUninit)(void); /* DAT_14013d808 OleUninitialize */
 int32_t g_taskCount;        /* DAT_14013d7e8 活动任务计数 */
 
-/* ---- WS2_32 延迟加载函数指针槽 (FUN_14005cfd0 经 FUN_14005c828 填充) ---- */
+/* ---- WS2_32 延迟加载函数指针槽 (PECMD_InitWinsock 经 FUN_14005c828 填充) ---- */
 int   (*g_pWSAStartup)(int, void *);          /* DAT_14013d4e8 WSAStartup */
 uintptr_t (*g_psock)(int, int, int);          /* DAT_14013d4f0 socket */
 int   (*g_pshutdown)(uintptr_t, int);         /* DAT_14013d4f8 shutdown */

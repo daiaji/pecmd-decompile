@@ -23,7 +23,7 @@ extern uint8_t PTR_FUN_140129060[];            /* 窗口对象虚表 */
 extern WCHAR g_szEmpty[];                /* .rdata 空串/虚表基址 */
 
 /* ---- 本文件引用的辅助函数 (均为 extern, 不在此定义) ---- */
-extern uint64_t *FUN_140053e7c(uint64_t *obj, uint32_t type, uint64_t data,
+extern uint64_t *PECMD_ConstructControlObjectB(uint64_t *obj, uint32_t type, uint64_t data,
                                LPCWSTR text, uint64_t *src, LPCWSTR subText,
                                uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10);
 extern void FUN_140079524(WCHAR *param_1, int64_t *param_2, int *param_3,
@@ -36,8 +36,8 @@ extern LRESULT FUN_1400e5890(int64_t param_1);       /* @0x1400e5890 取对象�
 extern void FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern void FUN_14007df90(int64_t param_1, int param_2);   /* @0x14007df90 */
 extern void FUN_140053c5c(int64_t param_1, int param_2);   /* @0x140053c5c */
-extern void FUN_140053cec(int64_t a1, uint32_t a2);        /* @0x140053cec */
-extern void FUN_140063694(WCHAR **ps, int64_t count);      /* @0x140063694 */
+extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);        /* @0x140053cec */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x140063694 */
 extern void FUN_14005b0b8(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
 extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);            /* @0x1400b568c 线程过程 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
@@ -64,7 +64,7 @@ uint64_t *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_2, uint32_t pa
     uint32_t uVar2;
     WCHAR local_48[32];
 
-    FUN_140053e7c(param_1, 4, param_2, (LPCWSTR)(uintptr_t)*param_4, param_5,
+    PECMD_ConstructControlObjectB(param_1, 4, param_2, (LPCWSTR)(uintptr_t)*param_4, param_5,
                   (LPCWSTR)(uintptr_t)g_szEmpty, 0, 0, 0, 0);
     *(uint32_t *)(param_1 + 0xe) = param_3;
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_140129040;
@@ -131,7 +131,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     int local_40;
     uint64_t local_38;
 
-    FUN_140053e7c(param_1, 6, param_2, (LPCWSTR)(uintptr_t)*param_4, param_10,
+    PECMD_ConstructControlObjectB(param_1, 6, param_2, (LPCWSTR)(uintptr_t)*param_4, param_10,
                   (LPCWSTR)(uintptr_t)*param_9, param_5, param_6, param_7, param_8);
     uVar2 = param_11;
     *(uint32_t *)(param_1 + 0xe) = param_11;
@@ -217,7 +217,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     ((void (*)(int64_t *, int))*(uint64_t *)(*plVar5 + 0x118))(plVar5, (int)(int16_t)uVar8);
     FUN_14007df90((int64_t)param_1, (int)(int16_t)uVar8);
     FUN_140053c5c((int64_t)param_1, (uint32_t)((int16_t)param_11 == 0));
-    FUN_140053cec((int64_t)param_1, (uVar9 >> 0x1c) & 1);
+    PECMD_SetObjectVisibleVar((int64_t)param_1, (uVar9 >> 0x1c) & 1);
     DragAcceptFiles((HWND)plVar5[4], 1);
     LeaveCriticalSection(&g_csInit);
     return param_1;
@@ -277,7 +277,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         iVar3 = lstrlenW(param_3);
         hHandle = (HANDLE)0;
         param_7 = 0;
-        FUN_140063694((WCHAR **)&param_14, (int64_t)iVar3 + 0x201);
+        PECMD_AllocWStringBuffer((WCHAR **)&param_14, (int64_t)iVar3 + 0x201);
         lpParameter = param_14;
         FUN_14005b0b8((void *)param_14);
         *(DWORD *)((char *)lpParameter + 0x2f4) = DVar2;

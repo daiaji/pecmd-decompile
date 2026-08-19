@@ -334,8 +334,12 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - [x] **阶段5a-1（DAT_→g_ 批1，12 符号）完成**：HWND cf60/cfb8、e160 cacheBlock、GDI+ fn-ptr 槽x5、
       d3ec state 数组、timeServer、dpi 统一（g_dpi）；异构符号逐类型/强转修正；build/link 绿
       （REVIEW 57）。真实 DAT_ 112→100；首次 git init+双提交。
-- [ ] 阶段5a-2 起：继续 DAT_→g_ 迁移（6 子代理x~17≈100/批）；优先干净标量/句柄，异构/fn-ptr 逐点核实；
-      FUN_ 仅剩巨型/风险项按需处理。
+- [x] **阶段5a-2（DAT_ 100 符号全量定类型 + 4 干净标量迁移）完成**：6 子代理分析全部 100 真实 DAT_；
+      迁 DWORD/COLORREF/HWND 4 个（imgBufLen/tipsTextColor/tipBkColor/hwndTray）；真实 DAT_ 100→96；
+      build/link 绿；git 提交（REVIEW 58）。余下 ~60 fn-ptr 槽（已正常工作，合并为可选打磨）
+      与 ~5 AMBIGUOUS/字节重叠、~10 数组/串大小待定，已全量登记。
+- [ ] 阶段5a-3 起：按需合并 fn-ptr 槽（低优先，已工作正常）；定数组/串/GUID 大小并入；
+      深挖 AMBIGUOUS；之后阶段5 零警告。FUN_ 仅剩巨型/风险项。
 
 ## 3. 全阶段实施方案（阶段 0-5，自动循环）
 

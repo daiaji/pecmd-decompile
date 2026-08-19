@@ -43,7 +43,7 @@ extern bool FUN_1400C1194(int64_t *obj, uint64_t *a2);
 extern bool FUN_1400C11C0(int64_t *obj, int *a2);
 extern uint64_t *PECMD_GrowByteBuffer(uint64_t *obj, int64_t a2);
 extern void FUN_14005B0B8(uint64_t *p);
-extern uint64_t FUN_140064ab8(int64_t *obj, int64_t *a2, int *a3);
+extern uint64_t PECMD_ScanHexNumber(int64_t *obj, int64_t *a2, int *a3);
 extern void *PECMD_SendCtrlMessage_0834(WPARAM obj, uint64_t a2);
 extern void FUN_14005DAF8(int64_t obj, int *a2, int *a3,
                           int *a4, int *a5);
@@ -230,7 +230,7 @@ uint64_t FUN_1400C12FC(LPCWSTR str, int64_t *outBuf, int mode)
                     s = p + 2;
                 }
                 int base[4] = {2, 0, 0, 0};
-                FUN_140064ab8((int64_t *)&s, (int64_t *)&value, base);
+                PECMD_ScanHexNumber((int64_t *)&s, (int64_t *)&value, base);
                 FUN_14005B154((WCHAR **)&s);
             }
             count = (uint64_t)((int)count + 1);

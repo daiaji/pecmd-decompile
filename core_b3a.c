@@ -50,9 +50,9 @@ extern void PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
 extern void FUN_14005B0B8(uint64_t *p);
 extern WCHAR **FUN_14005B154(WCHAR **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
-extern void FUN_140061704(int64_t *arr, int *count, int value);
-extern void FUN_140061780(int64_t *arr, int *count, int64_t key);
-extern void FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+extern void PECMD_TruncateObjectArray(int64_t *arr, int *count, int value);
+extern void PECMD_RemoveObjectByKey(int64_t *arr, int *count, int64_t key);
+extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void *FUN_140070154(LPCWSTR src);
 extern void FUN_14007DF90(int64_t ctx, int mode);
 
@@ -329,29 +329,29 @@ void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end,
 }
 
 /* ========== PECMD_ForwardCall_6820 @0x140066820 ==========
- * 转发到 FUN_140061704。
+ * 转发到 PECMD_TruncateObjectArray。
  */
 void PECMD_ForwardCall_6820(int64_t obj, int value)
 {
-    FUN_140061704(*(int64_t **)(obj + 0x1b8), *(int **)(obj + 0x1c0), value);
+    PECMD_TruncateObjectArray(*(int64_t **)(obj + 0x1b8), *(int **)(obj + 0x1c0), value);
 }
 
 /* ========== PECMD_ForwardCall_6838 @0x140066838 ==========
- * 转发到 FUN_140061780。
+ * 转发到 PECMD_RemoveObjectByKey。
  */
 void PECMD_ForwardCall_6838(int64_t obj, int64_t key)
 {
-    FUN_140061780(*(int64_t **)(obj + 0x1b8), *(int **)(obj + 0x1c0), key);
+    PECMD_RemoveObjectByKey(*(int64_t **)(obj + 0x1b8), *(int **)(obj + 0x1c0), key);
 }
 
 /* ========== PECMD_InitStrContainer @0x140070294 ==========
- * 串容器初始化并调用 FUN_14006355c。
+ * 串容器初始化并调用 PECMD_WideToAnsiStr。
  */
 int64_t *PECMD_InitStrContainer(int64_t *ps, LPCWSTR src, int64_t len,
                        uint64_t cap)
 {
     *ps = 0;
-    FUN_14006355c(ps, src, len, cap);
+    PECMD_WideToAnsiStr(ps, src, len, cap);
     return ps;
 }
 

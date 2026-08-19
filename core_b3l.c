@@ -6,19 +6,19 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   解析字符类主体    FUN_140050F58 @0x140050f58
  *   初始化控件标志    PECMD_InitControlFlags @0x140054380
- *   绘制控件重绘      FUN_140061914 @0x140061914
+ *   绘制控件重绘      PECMD_DispatchControlMessage @0x140061914
  *   插入控件对象 A    FUN_140063ED4 @0x140063ed4
  *   插入控件对象 B    FUN_140063FF0 @0x140063ff0
  *   更新滑块变量      FUN_140066D18 @0x140066d18
- *   读文本文件为宽串  FUN_140068034 @0x140068034
- *   查询磁盘几何      FUN_140069464 @0x140069464
+ *   读文本文件为宽串  PECMD_ReadFileToWide @0x140068034
+ *   查询磁盘几何      PECMD_QueryDeviceInfo @0x140069464
  *   查找分区布局      FUN_140069BD8 @0x140069bd8
  *   展开盘符字母      PECMD_ExpandDriveList @0x14006aa9c
  *   查询设备布局      FUN_14006ABB8 @0x14006abb8
  *   查找或追加对象槽  FUN_14006B6E8 @0x14006b6e8
  *   应用控件属性      FUN_1400FE4A4 @0x14006b7f0
  *   调用 COM 方法     FUN_1400705AC @0x1400705ac
- *   获取网络连接名    FUN_140072814 @0x140072814
+ *   获取网络连接名    PECMD_ReadConnectionRegistryValue @0x140072814
  *   查找网卡信息      FUN_140072D8C @0x140072d8c
  *   用参数重启自身    FUN_14007724C @0x14007724c
  *   关闭设备句柄扩展  PECMD_CloseDeviceHandle @0x140078408
@@ -101,9 +101,9 @@ extern int FUN_1400F2384(int64_t a1, LPCWSTR a2, int64_t *a3,
                          int64_t a4, int a5, int a6);
 extern void FUN_140061C44(void);
 extern void PECMD_ContainerAppend(int64_t *a1);
-extern int64_t FUN_140072cc0(void);
+extern int64_t PECMD_GetCachedBlock(void);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *a1, char *a2);
-extern void FUN_140078334(int a1, int a2);
+extern void PECMD_LockVolumeByDevice(int a1, int a2);
 extern void PECMD_ErrorHandlerWrap(uint8_t *a1, int a2, uint64_t a3,
                           int64_t a4, int a5, WCHAR *a6);
 extern void PECMD_ClearFlagAndError(uint8_t *a1);
@@ -112,7 +112,7 @@ extern void FUN_14005D534(void *a1, LPCWSTR a2, LPCWSTR a3);
 extern void FUN_14001E6BC(void *a1, LPCWSTR a2, LPCWSTR a3,
                           int a4);
 extern void *PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
-extern int64_t FUN_14007d27c(LPCWSTR a1, uint64_t *a2);
+extern int64_t PECMD_GetConfigEntryByName(LPCWSTR a1, uint64_t *a2);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
@@ -122,7 +122,7 @@ extern void FUN_14007BDA8(void *script, LPCWSTR text, WCHAR **out, int c,
 extern void FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c,
                           int d);
 extern void PECMD_ParseNumSkipChar_0248(int64_t *a1, int64_t *a2);
-extern void *FUN_1400aa144(void *a1, int64_t a2, int a3,
+extern void *PECMD_ConstructTreeView(void *a1, int64_t a2, int a3,
                            uint64_t *a4, int a5, int a6, int a7,
                            int a8, uint32_t a9, LPWSTR a10,
                            uint8_t a11);
@@ -269,10 +269,10 @@ void PECMD_InitControlFlags(int64_t obj, uint32_t *spec, int height,
     }
 }
 
-/* ========== FUN_140061914 @0x140061914 ==========
+/* ========== PECMD_DispatchControlMessage @0x140061914 ==========
  * 绘制控件，并在需要时发送前后台重绘消息。
  */
-int64_t FUN_140061914(HDC obj, uint32_t msg, HDC hdc, uint64_t *lParam)
+int64_t PECMD_DispatchControlMessage(HDC obj, uint32_t msg, HDC hdc, uint64_t *lParam)
 {
     int64_t local_res8 = 0;
     uint16_t uVar2 = FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg,
@@ -408,10 +408,10 @@ void FUN_140066D18(int64_t obj, int64_t info)
     SendMessageW((HWND)plVar3[4], 0x46a, 0, 0);
 }
 
-/* ========== FUN_140068034 @0x140068034 ==========
+/* ========== PECMD_ReadFileToWide @0x140068034 ==========
  * 读取整个文件并转换为宽字符串。
  */
-void FUN_140068034(LPCWSTR path, int64_t *out)
+void PECMD_ReadFileToWide(LPCWSTR path, int64_t *out)
 {
     HANDLE hFile = (HANDLE)0;
     PECMD_OpenFileHandle(&hFile, path, 0x80000000, 7, NULL, 3, 0x80, (HANDLE)0);
@@ -445,10 +445,10 @@ void FUN_140068034(LPCWSTR path, int64_t *out)
     }
 }
 
-/* ========== FUN_140069464 @0x140069464 ==========
+/* ========== PECMD_QueryDeviceInfo @0x140069464 ==========
  * 查询磁盘几何/分区格式信息。
  */
-uint32_t FUN_140069464(LPCWSTR path, uint32_t *outType, uint64_t *outSize)
+uint32_t PECMD_QueryDeviceInfo(LPCWSTR path, uint32_t *outType, uint64_t *outSize)
 {
     HANDLE hDevice = (HANDLE)0;
     if (outSize != NULL) {
@@ -745,10 +745,10 @@ int64_t FUN_1400705AC(int64_t *obj, uint64_t a2, uint32_t a3,
     return lVar2;
 }
 
-/* ========== FUN_140072814 @0x140072814 ==========
+/* ========== PECMD_ReadConnectionRegistryValue @0x140072814 ==========
  * 读取网卡 Connection 注册表值。
  */
-void FUN_140072814(LPCSTR name, int64_t *out, LPCSTR value)
+void PECMD_ReadConnectionRegistryValue(LPCSTR name, int64_t *out, LPCSTR value)
 {
     LPCSTR local_38 = NULL;
     FUN_14007026C((void **)&local_38,
@@ -789,7 +789,7 @@ uint32_t FUN_140072D8C(uint8_t *mac, int64_t *out, int mode)
 
     int64_t local_res20 = 0;
     uint32_t uVar2 = 0xffffffff;
-    int64_t *plVar4 = (int64_t *)FUN_140072cc0();
+    int64_t *plVar4 = (int64_t *)PECMD_GetCachedBlock();
     if (plVar4 != NULL) {
         int64_t lVar5 = 6;
         do {
@@ -831,7 +831,7 @@ done:
 void FUN_14007724C(LPWSTR cmdline)
 {
     WCHAR *local_res10[3] = {NULL, NULL, NULL};
-    FUN_140063694((WCHAR **)local_res10, 0x1cc);
+    PECMD_AllocWStringBuffer((WCHAR **)local_res10, 0x1cc);
     GetModuleFileNameW((HMODULE)0, local_res10[0], 0x104);
 
     PROCESS_INFORMATION local_98;
@@ -867,7 +867,7 @@ int64_t PECMD_CloseDeviceHandle(int64_t *handle, int dev, uint8_t flags,
 
     if ((flags & 0x11) == 0x11) {
         if (((g_flagD6F5 & 0x20) == 0) && ((*state & 0x20) == 0)) {
-            FUN_140078334(dev, 1);
+            PECMD_LockVolumeByDevice(dev, 1);
         }
         *state = (uint8_t)(*state | 2);
         if ((g_flagD6F5 & 0x10) == 0) {
@@ -1102,7 +1102,7 @@ uint32_t FUN_14007D340(int64_t obj, uint64_t stream,
         local_68 = lVar1;
 
         uint64_t local_60[2] = {0, 0};
-        int64_t uVar3 = FUN_14007d27c(mime, local_60);
+        int64_t uVar3 = PECMD_GetConfigEntryByName(mime, local_60);
         uVar2 = 0x80004001;
         if (-1 < (int)uVar3) {
             uint32_t local_res18[4] = {0, 0, 0, 0};
@@ -1184,7 +1184,7 @@ void FUN_14009CFBC(int64_t obj, int mode)
 
     if ((mode != 0) && (-1 < (int)LVar3)) {
         LPCWSTR local_res8 = NULL;
-        FUN_140063694((WCHAR **)&local_res8, 0);
+        PECMD_AllocWStringBuffer((WCHAR **)&local_res8, 0);
         FUN_14006C4C8(lVar1, (int)LVar3, (LPARAM *)&local_res8);
         if (**(LPCWSTR *)((uint8_t *)obj + 0x10) != L'\0') {
             FUN_14007D0AC(*(int64_t **)((uint8_t *)obj + 0x50),
@@ -1195,7 +1195,7 @@ void FUN_14009CFBC(int64_t obj, int mode)
 
     int iVar2 = lstrlenW(*(LPCWSTR *)((uint8_t *)obj + 0x10));
     LPCWSTR local_res8 = NULL;
-    FUN_140063694((WCHAR **)&local_res8, (int64_t)(iVar2 + 8));
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res8, (int64_t)(iVar2 + 8));
     FUN_14001d78c((void *)local_res8, *(void **)((uint8_t *)obj + 0x10),
                   iVar2 * 2);
     FUN_14001d78c((void *)(local_res8 + iVar2), (void *)WSTR(".isel"), 0xc);
@@ -1234,7 +1234,7 @@ uint64_t FUN_1400A3F08(int64_t *script, WCHAR *text)
     }
 
     LPCWSTR local_res8 = NULL;
-    FUN_140063694((WCHAR **)&local_res8, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res8, 0);
     if ((*(char *)((uint8_t *)script + 0xda) == '\0') &&
         ((*(uint8_t *)((uint8_t *)script + 0xd) & 0xf) == 0)) {
         FUN_14007BDA8(script, pwVar4, (WCHAR **)&local_res8, 0, 1);
@@ -1323,7 +1323,7 @@ void FUN_1400AA7E4(WPARAM mgr, int64_t v2, uint64_t *p3,
         FUN_14005DAF8((int64_t)mgr, local_res20, &y, &w, &h);
         void *puVar3 = calloc(1, 0x78);
         if (puVar3 != NULL) {
-            puVar4 = (uint64_t *)FUN_1400aa144(puVar3, v2,
+            puVar4 = (uint64_t *)PECMD_ConstructTreeView(puVar3, v2,
                         (int)(((uint64_t)(uintptr_t)puVar2 - (uint64_t)lVar1) >> 3) + 0x1000,
                         p3, local_res20[0], y, w, h,
                         flags, text, (uint8_t)extra);

@@ -3076,3 +3076,28 @@ d770 diskType(int32_t[])、127740/127738/d8a0(byte[])、1214d8/1210f8(WCHAR[] �
 
 ### 校验
 - 本批复①：build/link 绿；真实 DAT_ 100→96。git 提交。
+
+---
+
+## 59. 阶段5-前置：classify 重生成 ground-truth + CRT 检查 + 未还原盘点
+
+### 概述
+- 重跑 `tools/classify_funcs.py`，得到 decompiled 全函数分类（DONE/BIZ/SMALL/BIG_UNKNOWN/CRT/THUNK）。
+- **结论（回应"标准库 FUN_ 无用"）**：CRT 区间(0x14010-0x14011)的函数在本重构 core 中**根本不作为 FUN_ 出现**
+  （或用标准库直调取代、或未被引用）→ 可读代码里没有"伪装的 CRT FUN_"污染，此担忧已天然达标。
+  link_stubs 中 `FUN_` 桩多为业务区地址占位，非 CRT。
+- **未还原（classify 口径）19 个**：BIZ 12+SMALL 1+BIG_UNKNOWN 6。其中若干其实已命名
+  （a8664→ParseFontOptions、9d1b0→ListControlCommand、96f84→SetRegistryKeySecurity 等），
+  属 classify 与按地址命名的口径差；**真正缺的是巨型未还原**：0474a8(19KB)/0a6874(7.6KB)/
+  58ae4(7.2KB)/57d64/6edf8/6bff0/6bbfc/b945c 等（在 core_b3_remaining 为简化桩）。
+
+### 可读性情况（实测）
+- 已命名 PECMD_ 601；真实 DAT_ 96；build/link 持续全绿。
+- CRT 标准名映射已提取 310 条存 /tmp/crtmap.json（供后续需要时标注/映射，当前无 core 内 CRT FUN_ 可标）。
+
+### 待办（按可读性排序）
+1. 巨型未还原业务函数（0474a8 等）逐块还原/命名（高价值高风险）。
+2. 剩余 ~407 个"已还原体但未命名"FUN_ defs 按置信度命名（多为小函数/异构，部分已 SKIP）。
+3. link_stubs 499 桩按需归并；DAT_ fn-ptr 槽合并（可选）；AMBIGUOUS 深挖。
+4. 阶段5 零警告 + 最终 REVIEW 复核。
+- 本表与 REVIEW §47(工期) 对齐：命名收尾 3-4 轮、零警告 2-3 轮、AMBIGUOUS/桩归并 2-3 轮。

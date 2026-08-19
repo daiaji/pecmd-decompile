@@ -2,7 +2,7 @@
  * core_b3r_g2.c — 还原 3 个设备/网络业务函数
  *
  *   PECMD_FormatDeviceStatus @0x1400662a4  设备信息列表细节获取并格式化状态串
- *   FUN_140066594 @0x140066594  解析接收缓冲(网络字节序)并设置本地时间
+ *   PECMD_ParseNtpSetSystemTime @0x140066594  解析接收缓冲(网络字节序)并设置本地时间
  *   PECMD_NtpSyncLoop @0x140066674  NTP/网络时间同步主循环 (socket 组包)
  *
  * 说明:
@@ -128,7 +128,7 @@ uint64_t PECMD_FormatDeviceStatus(int64_t param_1, void *param_2, int64_t *param
 /* ================================================================
  * @0x140066594  解析接收缓冲(网络字节序)并设置本地时间
  */
-void FUN_140066594(uint64_t param_1, uint32_t *param_2)
+void PECMD_ParseNtpSetSystemTime(uint64_t param_1, uint32_t *param_2)
 {
     int iVar1;
     uint32_t uVar2;
@@ -230,7 +230,7 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
                                              &local_238, local_res8);
                     GetLastError();
                     if (0xb < iVar4) {
-                        FUN_140066594(uVar5 & 0xffffffff, (uint32_t *)DAT_14013d5c0);
+                        PECMD_ParseNtpSetSystemTime(uVar5 & 0xffffffff, (uint32_t *)DAT_14013d5c0);
                         if (0 < iVar3) {
                             (*g_pclosesocket)(uVar5);
                         }

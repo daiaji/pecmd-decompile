@@ -17,7 +17,7 @@ extern void    FUN_1400f429c(void *, int);                   /* delimiter scan (
 extern int     PECMD_ParseNumSkipChar_0224(void *, int *);                 /* parse int field */
 extern int     PECMD_ParseNumSkipChar_de4c(void *, double *);              /* parse double field */
 extern int     FUN_14005b2c0(void *, LPCWSTR, HWND);         /* list-control accept check */
-extern int     FUN_140057b80(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
+extern int     PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
 extern int     PECMD_ParseUIntValue(LPCWSTR *, int *);              /* scan list token */
 extern void    FUN_140063620(void *);                        /* string release/cleanup */
 extern void    FUN_1400675b8(void *, void *, int);           /* split list string on delim */
@@ -114,7 +114,7 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
         *param_7 = 0;
         LeaveCriticalSection(lpCriticalSection);
     }
-    if (FUN_140057b80((void *)param_1[7], param_5, param_6, hWnd, param_4, (void *)param_1[10],
+    if (PECMD_DispatchControlCommand((void *)param_1[7], param_5, param_6, hWnd, param_4, (void *)param_1[10],
                       param_2, pHVar1, (int64_t)param_1) != 0) {
         return 0;
     }
@@ -324,10 +324,10 @@ void PECMD_ParseFontOptions(int64_t param_1, LPWSTR param_2, uint32_t *param_3)
     return;
 }
 
-/* ========== FUN_1400a96e4 @ 1400a96e4 ========== */
-/* signature: undefined __fastcall FUN_1400a96e4(longlong param_1, HWND param_2,
+/* ========== PECMD_SetControlTooltip @ 1400a96e4 ========== */
+/* signature: undefined __fastcall PECMD_SetControlTooltip(longlong param_1, HWND param_2,
  *   int param_3, LPCWSTR param_4, char param_5) */
-void FUN_1400a96e4(int64_t param_1, HWND param_2, int param_3, LPCWSTR param_4,
+void PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3, LPCWSTR param_4,
                    char param_5)
 {
     LPWSTR local_res8;

@@ -49,13 +49,13 @@ extern BOOL FUN_140101E70(LPCWSTR s);
 extern uint64_t PECMD_IsDirectory(LPCWSTR s);
 extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern LARGE_INTEGER PECMD_ExecDashCommand(LPCWSTR path);
-extern uint32_t FUN_140068134(LPCWSTR s, int len);
+extern uint32_t PECMD_ParseVirtualKeyCode(LPCWSTR s, int len);
 extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern uint64_t PECMD_MatchPattern(int16_t *s, int64_t ctx);
-extern int16_t FUN_14001b350(int64_t ctx, uint16_t *s, int16_t *key, int len);
+extern int16_t PECMD_XorStrNCaseCmp(int64_t ctx, uint16_t *s, int16_t *key, int len);
 extern uint64_t FUN_14001D628(void);
 extern uint64_t PECMD_MapPhysicalMemoryNT5(void);
 extern uint32_t PECMD_ReadPhysMemSlot(uint64_t a);
@@ -66,7 +66,7 @@ extern void FUN_14002286c(void);
 extern void FUN_1400DFB14(void *script, WCHAR *cmd, uintptr_t flag);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
-extern void FUN_140019da8(int64_t ctx, LPCWSTR path, int mode);
+extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
 extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
                               uint64_t e, uint32_t f, uint64_t g, int64_t h,
                               int i);
@@ -479,7 +479,7 @@ uint32_t PECMD_ParseVkKeyName(LPCWSTR s, char allowChar)
                     pWVar4--;
                 }
             }
-            uVar2 = FUN_140068134(s, (int)((int64_t)pWVar4 - (int64_t)s) / 2);
+            uVar2 = PECMD_ParseVirtualKeyCode(s, (int)((int64_t)pWVar4 - (int64_t)s) / 2);
             if (0 < (int)uVar2) {
                 return uVar2;
             }
@@ -926,7 +926,7 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     } else {
         iVar6 = lstrlenW(lpString_00);
     }
-    FUN_140063694((WCHAR **)&local_d0, (int64_t)(iVar5 + 0x416 + iVar6 * 2 + iVar4 + local_res20));
+    PECMD_AllocWStringBuffer((WCHAR **)&local_d0, (int64_t)(iVar5 + 0x416 + iVar6 * 2 + iVar4 + local_res20));
     puVar7 = local_d0;
     FUN_14001d78c(local_d0, WSTR("    *="), 0xc);
     lVar10 = (int64_t)local_res20 * 2;
@@ -1028,9 +1028,9 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
     local_38.dwHighDateTime = 0;
     FUN_14000e26c(g_Script, local_30, g_Script, NULL, 0, &local_38, NULL, NULL);
     if ((*(int64_t *)(ctx + 0x110) != 0) && (local_38.dwLowDateTime == 0)) {
-        FUN_140019da8(ctx, hwid, mode);
+        PECMD_AppendKeyIfMissing(ctx, hwid, mode);
     }
-    FUN_140063694(local_28, 0x2800);
+    PECMD_AllocWStringBuffer(local_28, 0x2800);
     _snwprintf(local_28[0], 0x27ff, WSTR("Devcon安装驱动【%s】[%s]"), hwid, inf);
     FUN_140025f10(ctx + 8, local_28[0], local_38.dwLowDateTime, (void *)0x1100,
                   NULL, NULL);
@@ -1051,7 +1051,7 @@ uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c,
 
     SetLastError(0);
     ((void (*)(void))g_pInstallHinfSectionW)();
-    FUN_140063694(local_18, 0x2800);
+    PECMD_AllocWStringBuffer(local_18, 0x2800);
     puVar1 = g_szEmpty;
     if ((flags & 0xffff0000) != 0) {
         puVar1 = g_wsz21014;
@@ -1106,7 +1106,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
     WIN32_FIND_DATAW local_268;
     WCHAR *pWVar3;
 
-    FUN_140063694(&local_res20, 0x208);
+    PECMD_AllocWStringBuffer(&local_res20, 0x208);
     iVar4 = 1;
     local_res18 = 0;
     FUN_140101db8(&local_res18, (LPCWSTR)dir, &local_268);
@@ -1165,7 +1165,7 @@ uint64_t PECMD_RunRamdriv(int64_t *ctx, LPCWSTR cmd)
             uVar3 = FUN_1400E9724(cmd, ctx);
             uVar3 = (uint64_t)(int)uVar3;
         } else {
-            FUN_140063694(&local_res18, 0x50);
+            PECMD_AllocWStringBuffer(&local_res18, 0x50);
             FUN_1400702B0(local_28, WSTR("%ramdrv%"));
             FUN_14007BF44(ctx, local_28[0], &local_res18, 0, 1);
             iVar1 = StrCmpNIW(cmd, WSTR("Ramdriv"), 7);
@@ -1205,7 +1205,7 @@ void PECMD_RunShutdownScript(LPCWSTR args, uint32_t flags)
     WCHAR *local_res8 = NULL;
     WCHAR *local_res18 = NULL;
 
-    FUN_140063694(&local_res8, 0x20a);
+    PECMD_AllocWStringBuffer(&local_res8, 0x20a);
     local_res8[0] = L' ';
     local_res8[1] = L'\0';
     GetEnvironmentVariableW(WSTR("SystemRoot"), local_res8 + 2, 0x208);

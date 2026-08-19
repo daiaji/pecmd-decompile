@@ -313,7 +313,7 @@ after_init:
     /* ---- 命令行非空: 加载脚本 ---- */
     if (p[0] != 0) {
         i = lstrlenW(p);
-        FUN_140063694(&pBuf, (int64_t)(i + 0x5c8));
+        PECMD_AllocWStringBuffer(&pBuf, (int64_t)(i + 0x5c8));
         pBuf[0] = 0;
         pExe = pBuf + 0x140;
         GetModuleFileNameW((HMODULE)0, pExe, 0x104);
@@ -329,7 +329,7 @@ after_init:
             pSaved = p;                 /* 命令行快照 */
             FUN_140063620(&pPath);
             FUN_1400545f8(script, &pSaved, &pPath, 0x1000, 0);
-            FUN_140063694(&pContent, 0x400);
+            PECMD_AllocWStringBuffer(&pContent, 0x400);
             pContent[0] = 0;
             pContent2 = pContent;
             nRead = 0;

@@ -131,14 +131,14 @@ int64_t FUN_140088300(void *script, WCHAR *args)
     uint8_t pFlags = 0;      /* local_res10 低字节 */
     (void)pFlags;
 
-    FUN_140063694(&bufScr, 0);
+    PECMD_AllocWStringBuffer(&bufScr, 0);
     err = 0;
     FUN_14005B154(&args);
     pTok = args;                 /* FUN_14005B154 */
-    FUN_140063694(&sTok, 0);
-    FUN_140063694(&sArg2, 0);
-    FUN_140063694(&sArg3, 0);
-    FUN_140063694(&sArg4, 0);
+    PECMD_AllocWStringBuffer(&sTok, 0);
+    PECMD_AllocWStringBuffer(&sArg2, 0);
+    PECMD_AllocWStringBuffer(&sArg3, 0);
+    PECMD_AllocWStringBuffer(&sArg4, 0);
     pTok = args;
     plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);   /* 切首 token */
     FUN_1400675b8(plVar9, &sTok, 0);
@@ -511,7 +511,7 @@ int64_t FUN_140088300(void *script, WCHAR *args)
             }
             srcCp = srcCp2;
             pSplit = (WCHAR *)data;
-            FUN_140063694(&sStr, 0);
+            PECMD_AllocWStringBuffer(&sStr, 0);
             if (dstCp == srcCp && dstType == srcType) {
                 /* ---- 无转换: 原样输出 ---- */
                 if (dstStar == 0) {
@@ -645,7 +645,7 @@ int64_t FUN_140088300(void *script, WCHAR *args)
                     }
                     if (dstFlag2 == 0) {
                         WCHAR *sv = NULL;
-                        FUN_140063694(&sv, 0);
+                        PECMD_AllocWStringBuffer(&sv, 0);
                         FUN_1400692d8(&sv, (LPCWSTR)data, nSmall);
                         FUN_1400629B8(script, sArg4, sv);
                         FUN_14005B104(&sv);

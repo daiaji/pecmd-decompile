@@ -38,7 +38,7 @@ extern void      FUN_1400676e4(void *src, void *dst, int mode);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void      FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
-extern void      FUN_1400744d4(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
+extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char      FUN_1400660ac(const char *tok, void *pp, int n);
 extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);   /* delimiter scan */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
@@ -47,11 +47,11 @@ extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
 
 /* list-control / dialog helpers */
 extern int       FUN_14005b2c0(void *p, LPCWSTR w, HWND hwnd);   /* accept check */
-extern int       FUN_140057b80(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
+extern int       PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
                                void *f, int64_t *g, HWND h, int64_t i);
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);           /* scan int token */
 extern void      FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value);
-extern void      FUN_1400a96e4(int64_t param_1, HWND param_2, int param_3,
+extern void      PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, char param_5);
 extern void      FUN_1400a9650(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, int param_5);
@@ -117,7 +117,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
             local_res8 = (uint64_t)(int32_t)-1;
             if (FUN_14005c7c4("Select", (const WCHAR *)param_4) == 0) {
                 /* "Select" query handler */
-                FUN_140057b80((void *)param_1[7], param_4, param_5, hWnd, param_3,
+                PECMD_DispatchControlCommand((void *)param_1[7], param_4, param_5, hWnd, param_3,
                               (void *)param_1[10], param_2, pHVar2, (int64_t)param_1);
                 return 0;
             }
@@ -148,7 +148,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
                 (iVar1 < (int)(uint32_t)local_res8)) {
                 return 0x80070057;
             }
-            FUN_1400a96e4((int64_t)param_1, hWnd, (int)(uint32_t)local_res8 + -1,
+            PECMD_SetControlTooltip((int64_t)param_1, hWnd, (int)(uint32_t)local_res8 + -1,
                           param_3, '\0');
         }
     } else {
@@ -347,7 +347,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-        FUN_1400744d4(plVar7, (uint32_t *)&local_a8, &local_a4, local_res18,
+        PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_a4, local_res18,
                       (uint32_t *)local_res8);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
@@ -471,7 +471,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
                 plVar6 = FUN_14007f6e4(&local_60, &local_res10, 0x2c, 1);
-                FUN_1400744d4(plVar6, (uint32_t *)&local_8c, &local_94, &local_98,
+                PECMD_ParseLtwhParams(plVar6, (uint32_t *)&local_8c, &local_94, &local_98,
                               (uint32_t *)&local_90);
                 uVar14 = 0;
                 if (*local_res10 == 0x2c) {
@@ -598,7 +598,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
     FUN_140003a20(param_1, &local_48, 1);
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;
-        FUN_1400744d4((int64_t *)&local_res10, (uint32_t *)local_50, &local_54,
+        PECMD_ParseLtwhParams((int64_t *)&local_res10, (uint32_t *)local_50, &local_54,
                       &local_58, (uint32_t *)local_res20);
         iVar5 = 0;
         if (*local_res10 == L',') {

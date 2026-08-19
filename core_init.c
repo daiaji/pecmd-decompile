@@ -30,7 +30,7 @@ void FUN_140062A2C(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变�
 void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置数值变量 */
 void FUN_1400668EC(void *s, uint64_t v, LPCWSTR k, LPCWSTR fmt); /* @0x1400668ec */
 uint64_t PECMD_GetParentProcessId(DWORD pid);   /* @0x140006988 父进程 PID */
-void FUN_140063694(WCHAR **ps, size_t n);  /* @0x140063694 分配 */
+void PECMD_AllocWStringBuffer(WCHAR **ps, size_t n);  /* @0x140063694 分配 */
 void FUN_14001C1D4(void);            /* @0x14001c1d4 */
 void FUN_14001C01C(void);            /* @0x14001c01c */
 void FUN_14005B9A0(void);            /* @0x14005b9a0 */
@@ -116,7 +116,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     pid = GetTickCount();
     /* thunk_PECMD_UpdateLcg(pid + 0x3a17) 计时忽略 */
     PECMD_VarSetUInt(&g_Script, g_SysCodePage, WSTR("&SYSCODEPAGE"));
-    FUN_140063694(&pBuf, 0x20a);
+    PECMD_AllocWStringBuffer(&pBuf, 0x20a);
     GetCurrentDirectoryW(0x208, pBuf);
     FUN_140062A2C(&g_Script, WSTR("&&CurDir"), pBuf);
     FUN_140062A2C(&g_Script, WSTR("&&_CD"), pBuf);

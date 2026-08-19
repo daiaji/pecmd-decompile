@@ -51,20 +51,20 @@ extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x14006
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint32_t FUN_1400E3288(uint32_t mode, uint32_t flags); /* @0x1400e3288 */
-extern void FUN_140019b74(int64_t *a1);
+extern void PECMD_ReleaseModuleAndVars(int64_t *a1);
 extern void FUN_14004EAA8(void *script, int mode);
 extern int64_t PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len,
                              void *p5);
 extern int64_t *FUN_1400702F0(int64_t *out, LPCSTR src, uint64_t len);
 extern int64_t PECMD_ParseHex_4a34(uint16_t *a1);
-extern LPCWSTR FUN_14001b23c(int64_t a1, int64_t *a2, uint16_t *a3,
+extern LPCWSTR PECMD_ExtractTableSegment(int64_t a1, int64_t *a2, uint16_t *a3,
                              int64_t *a4, char a5);
 extern void FUN_140061C44(void);
 extern int64_t *PECMD_LoadImageFromFile(LPCWSTR a1);
 extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern void FUN_140063620(void *ps);
-extern int64_t *FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
                                    DWORD a3);
@@ -82,7 +82,7 @@ extern int FUN_140072924(uint32_t state, LPCWSTR id, uint32_t flag, int64_t *p4,
                          uint16_t *p5);
 extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
                            uint64_t *a4);
-extern int FUN_1400664dc(int a1, int a2);
+extern int PECMD_EnumNetAdapters(int a1, int a2);
 extern void thunk_PECMD_GetNetworkConnectionName(LPCSTR a1, int64_t *a2, LPCSTR a3);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern WCHAR *FUN_14001BE14(WCHAR *s);
@@ -103,7 +103,7 @@ extern int64_t *PECMD_CreateEditControl(void *obj, int64_t a2, int a3, int64_t *
                               int a5, int a6, int a7, int a8,
                               int64_t *a9, int64_t *a10, uint32_t a11,
                               WCHAR *a12);
-extern int64_t *FUN_1400aa394(void *obj, int64_t a2, uint64_t a3,
+extern int64_t *PECMD_ConstructCheckbox(void *obj, int64_t a2, uint64_t a3,
                               int64_t *a4, int64_t *a5, uint32_t a6,
                               uint32_t a7, int a8);
 extern int64_t *PECMD_ConstructControlObject(void *obj, int64_t a2, int a3, int64_t *a4,
@@ -177,7 +177,7 @@ void FUN_14004F788(int64_t task)
     FUN_14005B104((WCHAR **)(task + 0x228));
     PECMD_StripTrailingSlash((int64_t *)(task + 0x220));
     FUN_14005B104((WCHAR **)(task + 0x220));
-    FUN_140019b74((int64_t *)(task + 0x200));
+    PECMD_ReleaseModuleAndVars((int64_t *)(task + 0x200));
     FUN_14005B104((WCHAR **)(task + 0x1e0));
     FUN_14005B104((WCHAR **)(task + 0x1d0));
     FUN_14005B104((WCHAR **)(task + 0x1c8));
@@ -641,7 +641,7 @@ LAB_14006e097:
             }
             local_res8 = 0;
             *pp = 0;
-            pWVar5 = FUN_14001b23c(script, &local_res8, puVar7, pp, '\0');
+            pWVar5 = PECMD_ExtractTableSegment(script, &local_res8, puVar7, pp, '\0');
             pWVar6 = pWVar5 + 1;
             if ((*(WCHAR *)(script + 0x92) == *pWVar6) ||
                 (*(WCHAR *)(script + 0x94) == *pWVar6)) {
@@ -959,7 +959,7 @@ int FUN_140078C68(LPCSTR deviceId, int action, uint32_t flags)
         if (*deviceId != '\0') {
             thunk_PECMD_GetNetworkConnectionName(deviceId, (int64_t *)local_28, "PnpInstanceID");
         }
-        FUN_14006355c((int64_t *)&local_res20, (LPCWSTR)local_28[0], -1, (uint64_t)-1);
+        PECMD_WideToAnsiStr((int64_t *)&local_res20, (LPCWSTR)local_28[0], -1, (uint64_t)-1);
         pWVar1 = local_res20;
         if ((char)*local_res20 != '\0') {
             iVar2 = FUN_140072924((uint32_t)(iVar2 != 0), local_res20, flags & 1,
@@ -971,9 +971,9 @@ int FUN_140078C68(LPCSTR deviceId, int action, uint32_t flags)
             goto LAB_140078d61;
         }
     }
-    iVar2 = FUN_1400664dc(0xffffffff, iVar2);
+    iVar2 = PECMD_EnumNetAdapters(0xffffffff, iVar2);
     if (action < 0) {
-        FUN_1400664dc(0xffffffff, 1);
+        PECMD_EnumNetAdapters(0xffffffff, 1);
     }
 LAB_140078d61:
     FUN_14005B104((WCHAR **)&local_res20);
@@ -1358,8 +1358,8 @@ int64_t PECMD_SetFileNameExtension(int64_t *script, uint16_t *spec)
     local_18 = NULL;
     local_10 = NULL;
     FUN_14005B154((WCHAR **)&local_res10);
-    FUN_140063694(&local_res20, 5);
-    FUN_140063694(&local_18, 0x14);
+    PECMD_AllocWStringBuffer(&local_res20, 5);
+    PECMD_AllocWStringBuffer(&local_18, 0x14);
     FUN_140063620(&local_10);
     FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d);
     FUN_140003A20(script, &local_res20, 0);
@@ -1520,7 +1520,7 @@ void FUN_1400B1DEC(int64_t mgr, int64_t v2, int64_t *p3,
     puVar5 = (int64_t *)calloc(1, 0x88);
     if (puVar5 != NULL) {
         FUN_1400702B0((WCHAR **)local_res8, g_szEmpty);
-        puVar6 = FUN_1400aa394(puVar5, v2, (uint64_t)(uVar1 + 0x1000),
+        puVar6 = PECMD_ConstructCheckbox(puVar5, v2, (uint64_t)(uVar1 + 0x1000),
                                (int64_t *)local_res8, p3, flags1, flags2,
                                mode);
     }

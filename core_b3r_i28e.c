@@ -3,7 +3,7 @@
  * Contains:
  *   PECMD_ParseWindowPosition @0x1400b9f1c  WINDOW/位置解析执行 (逗号分隔字段, -center/-right 对齐)
  *   FUN_1400ba35c @0x1400ba35c  图标/工具提示参数解析与图标装载
- *   FUN_1400bd338 @0x1400bd338  窗口/控件创建分派 (构造器调用)
+ *   PECMD_ConstructControlObjectEx @0x1400bd338  窗口/控件创建分派 (构造器调用)
  *   PECMD_CreateButtonControl @0x1400bd764  窗口解析执行 (选项标志 + 逗号字段)
  */
 #include <stdbool.h>
@@ -59,13 +59,13 @@ extern void     FUN_1400676e4(void *src, void *dst, int mode);
 extern void     PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void     FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern uint64_t PECMD_ParseSignedNumber(short *);
-extern void     FUN_1400744d4(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
+extern void     PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR   *FUN_1400f429c(WCHAR **pp, uint16_t ch);    /* delimiter scan */
 extern int64_t  FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t  FUN_14005c788(const char *a, const WCHAR *w, int n);
 extern int       FUN_1400677b0(int64_t *, int64_t);         /* 数值写, 返回写入个数 */
 extern WCHAR   *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
-extern void     FUN_14001dd04(const WCHAR *p, char c);     /* 清空串 */
+extern void     PECMD_ExpandBackslashNewline(const WCHAR *p, char c);     /* 清空串 */
 extern int64_t  FUN_14007bda8(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
                               uint8_t flag);
 extern int64_t  FUN_14007a224(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
@@ -75,7 +75,7 @@ extern void     FUN_14005b7e8(char *param_1);
 extern void     PECMD_DestroyWindowLocked(void);
 extern void     FUN_14005e9ac(void);
 extern void     PECMD_ReleaseResources(int64_t param_1);
-extern void     FUN_140074e58(LPCWSTR, int);
+extern void     PECMD_SetConfigString(LPCWSTR, int);
 extern DWORD    FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);     /* RegSetValue */
 extern int64_t  FUN_1400a9a84(int64_t *a, uint64_t *b);    /* 解析长度/句柄 */
@@ -194,7 +194,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
         uVar6 = 1;
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
-            FUN_1400744d4((int64_t *)&local_res10, (uint32_t *)&local_84,
+            PECMD_ParseLtwhParams((int64_t *)&local_res10, (uint32_t *)&local_84,
                           &local_88, local_80, (uint32_t *)local_res18);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
@@ -453,7 +453,7 @@ icon_parse_ba800:
     }
     if (local_res20 != '\0') {
         /* dummy 模式: 仅注册 TIPSDUMMY, 不装载图标 */
-        FUN_140074e58(local_68, 1);
+        PECMD_SetConfigString(local_68, 1);
         iVar4 = lstrlenW(lpStr2);
         FUN_14005c5a0((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), WSTR("TIPSDUMMY"),
                       1, (BYTE *)local_68, (DWORD)(iVar4 * 2));
@@ -461,7 +461,7 @@ icon_parse_ba800:
         goto icon_release_ba9ad;
     }
     if ((char)local_res8 == '\0') {
-        FUN_14001dd04(local_a8, '\0');
+        PECMD_ExpandBackslashNewline(local_a8, '\0');
     }
     if ((*local_68 == L',') || (*local_68 == L'#')) {
         local_res10 = local_68 + 1;
@@ -721,13 +721,13 @@ icon_error_baee4:
 
 /* ================================================================
  * @0x1400bd338  窗口/控件创建分派
- * signature: undefined __fastcall FUN_1400bd338(WPARAM param_1,
+ * signature: undefined __fastcall PECMD_ConstructControlObjectEx(WPARAM param_1,
  *   longlong param_2, undefined8 * param_3, int param_4, int param_5,
  *   int param_6, int param_7, undefined8 * param_8, undefined8 * param_9,
  *   undefined8 * param_10, uint param_11, LPCWSTR param_12, HWND param_13,
  *   int * param_14)
  */
-void FUN_1400bd338(WPARAM param_1, int64_t param_2, uint64_t *param_3, int param_4,
+void PECMD_ConstructControlObjectEx(WPARAM param_1, int64_t param_2, uint64_t *param_3, int param_4,
                    int param_5, int param_6, int param_7, uint64_t *param_8,
                    uint64_t *param_9, uint64_t *param_10, uint32_t param_11,
                    LPCWSTR param_12, HWND param_13, int *param_14)
@@ -766,7 +766,7 @@ void FUN_1400bd338(WPARAM param_1, int64_t param_2, uint64_t *param_3, int param
  *   ushort * param_2, WPARAM param_3, undefined8 param_4)
  *
  * 解析 "-center/-left/-pcenter/.../font:/color:/b:" 选项及逗号分隔字段,
- * 归一化寄存器拼接并调用 FUN_1400bd338 完成窗口构造。
+ * 归一化寄存器拼接并调用 PECMD_ConstructControlObjectEx 完成窗口构造。
  */
 uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint64_t param_4)
 {
@@ -998,7 +998,7 @@ bd_option_done:
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-        FUN_1400744d4(plVar7, (uint32_t *)&local_a8, &local_88, local_b0, local_res18);
+        PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_88, local_b0, local_res18);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
             plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
@@ -1023,7 +1023,7 @@ bd_option_done:
     if (uVar2 != 0x2a) {
         param_1 = *(int64_t **)((char *)(uintptr_t)param_3 + 0x290);
     }
-    FUN_1400bd338(param_3, (int64_t)param_1, &local_90, (int)local_a8, (int)local_88,
+    PECMD_ConstructControlObjectEx(param_3, (int64_t)param_1, &local_90, (int)local_a8, (int)local_88,
                   local_b0[0], local_res18[0], &local_c8, &local_50,
                   (uint64_t *)&local_c0_hwnd, (uVar16 & 0xffff) | uVar14 | uVar11,
                   (LPCWSTR)pHVar12, pHVar18, (int *)&local_a0);

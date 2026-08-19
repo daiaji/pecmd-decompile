@@ -55,7 +55,7 @@ extern void FUN_1400F1490(int64_t obj);
 extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *s, char *key);
 extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);
-extern uint64_t FUN_140067d54(int64_t *pp, double *out);
+extern uint64_t PECMD_EvalExpressionTree(int64_t *pp, double *out);
 extern uint64_t *PECMD_AllocSmallObject(uint64_t *arr);
 extern uint64_t *PECMD_GrowByteBuffer(uint64_t *arr, int64_t size);
 extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t srclen,
@@ -362,7 +362,7 @@ uint64_t PECMD_ParseIntRound(int64_t *pp, int *out)
 {
     double local_res10[3];
     local_res10[0] = (double)*out;
-    uint64_t uVar1 = FUN_140067d54(pp, local_res10);
+    uint64_t uVar1 = PECMD_EvalExpressionTree(pp, local_res10);
     if ((int)uVar1 < 1) {
         return 0;
     }
@@ -382,7 +382,7 @@ uint64_t PECMD_ParseInt64Round(int64_t *pp, int64_t *out)
 {
     double local_res10[3];
     local_res10[0] = (double)*out;
-    uint64_t uVar1 = FUN_140067d54(pp, local_res10);
+    uint64_t uVar1 = PECMD_EvalExpressionTree(pp, local_res10);
     if ((int)uVar1 < 1) {
         return 0;
     }

@@ -4,7 +4,7 @@
  * 来源: PECMD原始.EXE (x64)
  *   FUN_1400629B8     @0x1400629b8   (变量设置核心: & 前缀/脚本标志分支)
  *   FUN_140062A2C  @0x140062a2c   (SetVar + SetEnvironmentVariableW(key+2))
- *   FUN_140063694  @0x140063694   (缓冲分配变体, size=count*2+2, 分配+10)
+ *   PECMD_AllocWStringBuffer  @0x140063694   (缓冲分配变体, size=count*2+2, 分配+10)
  *   FUN_1400668EC  @0x1400668ec   (格式化设置: FUN_1400E6D38 + SetVar)
  *   PECMD_VarSetUInt    @0x140066978   (wsprintfW "%lu" + SetVar)
  *   FUN_1400669C4    @0x1400669c4   (wsprintfW "%ld" + SetVar)
@@ -50,7 +50,7 @@ void FUN_140062A2C(void *script, LPCWSTR key, LPCWSTR value)
 
 /* ========== 缓冲分配变体 @0x140063694 ========== */
 /* 分配 count*2+10 字节 (头 size 字段 = count*2+2), 数据起始处写 0 */
-void FUN_140063694(WCHAR **ps, int64_t count)
+void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count)
 {
     uint8_t *hdr;
 

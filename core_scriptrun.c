@@ -143,10 +143,10 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             }
             (void)q1;
         }
-        FUN_140063694(&local_250, 0);   /* 反编译 FUN_140063620(&local_278)? 实为 local_250 构造 */
+        PECMD_AllocWStringBuffer(&local_250, 0);   /* 反编译 FUN_140063620(&local_278)? 实为 local_250 构造 */
         /* 199-210：命令名拷贝（token 长度 lVar32） */
         if (lVar32 >= 0) {
-            FUN_140063694(&local_250, lVar32);
+            PECMD_AllocWStringBuffer(&local_250, lVar32);
             if (local_250 != NULL && lVar32 > 0) {
                 memcpy(local_250, pt2, (size_t)lVar32 * 2);
                 local_250[lVar32] = 0;
@@ -225,7 +225,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             WCHAR *resName = NULL;
             uint32_t resFlags = 0;
 
-            FUN_140063694(&local_260, 0);
+            PECMD_AllocWStringBuffer(&local_260, 0);
             FUN_1400702B0(&resName, resTok);
             /* 引号剥离 */
             if (*resName == L'"') resName++;
@@ -234,7 +234,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             hmod = LoadLibraryExW(resName, 0, 2);
             if (hmod != 0) {
                 uVar42 = FUN_14001B510();
-                FUN_140063694(&local_1e8, 0);
+                PECMD_AllocWStringBuffer(&local_1e8, 0);
                 {
                     WCHAR *rname = NULL;
                     FUN_1400702B0(&rname, resTok);
@@ -269,7 +269,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             WCHAR *varName = NULL;
             size_t tokLen4 = 0;
             WCHAR *vTok = FUN_140024C48(&p, &tokLen4, 0x20);
-            FUN_140063694(&local_1b8, 0);
+            PECMD_AllocWStringBuffer(&local_1b8, 0);
             FUN_1400702B0(&varName, vTok);
             if (*varName == L'&' || *(char *)((char *)script + 0xd) != '\0') {
                 /* 变量表查找 */
@@ -278,7 +278,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     uint8_t *node = PECMD_VarLookup(script, varName, NULL, -1, NULL);
                     if (node != NULL) {
                         int64_t vlen = *(int64_t *)((char *)node + 0x18);
-                        FUN_140063694(&local_210, vlen);
+                        PECMD_AllocWStringBuffer(&local_210, vlen);
                         memcpy(local_210, *(void **)((char *)node + 8), (size_t)vlen);
                         local_210[vlen] = 0;
                     }

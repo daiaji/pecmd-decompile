@@ -40,10 +40,10 @@ extern uint32_t PECMD_ParseSize(LPWSTR s, int a, int b, int c);
 extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);
 extern uint64_t PECMD_ServiceControl(void *script, LPCWSTR name);
-extern void FUN_14001995c(void);
+extern void PECMD_RunFbwfHookScript(void);
 extern void PECMD_TerminateJobObject(int64_t obj);
 extern uint32_t FUN_1400E3288(uint32_t mode, uint32_t flags); /* @0x1400e3288 */
-extern void FUN_140019a2c(int64_t obj);
+extern void PECMD_BuildExecCommand(int64_t obj);
 extern void FUN_14004F788(int64_t obj);
 extern void *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
 extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
@@ -58,9 +58,9 @@ extern uint64_t PECMD_SetDesktopWallpaper(void *p, int mode);
 extern void FUN_14001b888(int n);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
 extern uint8_t *FUN_14001d744(void *dst, void *src, int len);
-extern uint64_t FUN_14001e19c(LPCWSTR path);
+extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);
 extern void FUN_140017F54(int *p);
-extern int64_t FUN_1400175a0(LPCWSTR a, LPCWSTR b);
+extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
 extern void FUN_14006F884(LPCWSTR name, WCHAR **out);         /* @0x14006f884 已实现 */
 extern uint64_t *PECMD_SkipLeadingControls(WCHAR **pp);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
@@ -190,14 +190,14 @@ int64_t PECMD_SetFbwfThreshold(uint64_t unused, LPWSTR spec)
                   WSTR("SYSTEM\\ControlSet001\\Services\\FBWF"),
                   WSTR("WinPECacheThreshold"), 4, (BYTE *)val, 4);
     PECMD_ServiceControl(g_Script, WSTR("FBWF"));
-    FUN_14001995c();
+    PECMD_RunFbwfHookScript();
     return 0;
 }
 
-/* ========== FUN_140020eb4 @0x140020eb4 ==========
+/* ========== PECMD_CleanupTaskThread @0x140020eb4 ==========
  * 线程体: 等待标志归零后清理任务对象并递减任务计数。
  */
-int64_t FUN_140020eb4(void *task)
+int64_t PECMD_CleanupTaskThread(void *task)
 {
     uint8_t *p = (uint8_t *)task;
     while (*(int *)(p + 0x1a4) > 0) {
@@ -210,7 +210,7 @@ int64_t FUN_140020eb4(void *task)
         *(uint32_t *)(p + 0x230) = 0;
         LeaveCriticalSection(&g_csThreadTbl);
     }
-    FUN_140019a2c((int64_t)task);
+    PECMD_BuildExecCommand((int64_t)task);
     FUN_14004F788((int64_t)task);
     free(task);
     EnterCriticalSection(&g_csInit);
@@ -224,7 +224,7 @@ int64_t FUN_140020eb4(void *task)
  */
 void PECMD_CreateCleanupThread(void *task)
 {
-    HANDLE hThread = CreateThread(NULL, 0x10000, (void *)FUN_140020eb4,
+    HANDLE hThread = CreateThread(NULL, 0x10000, (void *)PECMD_CleanupTaskThread,
                                   task, 0x10004, &g_dwC96C);
     if (hThread != (HANDLE)0) {
         EnterCriticalSection(&g_csInit);
@@ -290,10 +290,10 @@ int32_t PECMD_IsSingleInstance(void)
     return 0;
 }
 
-/* ========== FUN_1400235b0 @0x1400235b0 ==========
+/* ========== PECMD_RunPecmdMain @0x1400235b0 ==========
  * 以 "--incmd PECMD MAIN" 参数执行脚本, 最多等待 2 秒。
  */
-int64_t FUN_1400235b0(void *script, uint32_t mode)
+int64_t PECMD_RunPecmdMain(void *script, uint32_t mode)
 {
     char local_38[48];
     int64_t r;
@@ -312,10 +312,10 @@ int64_t FUN_1400235b0(void *script, uint32_t mode)
     return 0;
 }
 
-/* ========== FUN_140023bc4 @0x140023bc4 ==========
+/* ========== PECMD_ApplyWallpaper @0x140023bc4 ==========
  * 设置 Wallpaper.PECMD 注册表值并应用壁纸。
  */
-uint64_t FUN_140023bc4(WCHAR *path)
+uint64_t PECMD_ApplyWallpaper(WCHAR *path)
 {
     WCHAR *local_res10 = NULL;
     WCHAR *ps;
@@ -346,10 +346,10 @@ int PECMD_IsSysStartuped(void)
     return (int)g_sysStartuped;
 }
 
-/* ========== FUN_140025404 @0x140025404 ==========
+/* ========== PECMD_CollapseRepeatedChars @0x140025404 ==========
  * 删除连续重复字符 ch (只保留一个)。
  */
-int64_t FUN_140025404(LPCWSTR s, WCHAR ch)
+int64_t PECMD_CollapseRepeatedChars(LPCWSTR s, WCHAR ch)
 {
     int len = lstrlenW(s);
     LPCWSTR end = s + len;
@@ -378,7 +378,7 @@ DWORD PECMD_CreateDirectory(uint64_t unused, WCHAR *path)
     DWORD err;
     (void)unused;
     p = FUN_14001BE14(path);
-    FUN_14001e19c(p);
+    PECMD_CreateDirectoryTree(p);
     ok = CreateDirectoryW(p, NULL);
     if (ok == 1) {
         return 0;
@@ -404,10 +404,10 @@ void *PECMD_ReleaseRefCounted(void *obj, uint32_t flags)
     return obj;
 }
 
-/* ========== FUN_1400281c8 @0x1400281c8 ==========
+/* ========== PECMD_MatchPatternWithQuotes @0x1400281c8 ==========
  * 带引号感知的匹配查找。
  */
-int64_t FUN_1400281c8(LPCWSTR text, LPCWSTR pattern)
+int64_t PECMD_MatchPatternWithQuotes(LPCWSTR text, LPCWSTR pattern)
 {
     int64_t r = 0;
     for (;;) {
@@ -423,7 +423,7 @@ int64_t FUN_1400281c8(LPCWSTR text, LPCWSTR pattern)
                 *(WCHAR *)quote_end = 0;
             }
         }
-        r = FUN_1400175a0(text, pattern);
+        r = PECMD_MatchPatternSwap(text, pattern);
         if (saved != 0) {
             *(WCHAR *)quote_end = saved;
             quote_end++;
@@ -436,10 +436,10 @@ int64_t FUN_1400281c8(LPCWSTR text, LPCWSTR pattern)
     return r;
 }
 
-/* ========== FUN_140028484 @0x140028484 ==========
+/* ========== PECMD_ResolveScriptVariable @0x140028484 ==========
  * 变量/环境取值: 非环境模式且非 '&' 开头查环境, 否则查变量表。
  */
-int64_t FUN_140028484(void *script, LPCWSTR name, void **out)
+int64_t PECMD_ResolveScriptVariable(void *script, LPCWSTR name, void **out)
 {
     void *node;
     int64_t v;
@@ -457,10 +457,10 @@ int64_t FUN_140028484(void *script, LPCWSTR name, void **out)
     return v;
 }
 
-/* ========== FUN_1400284d4 @0x1400284d4 ==========
+/* ========== PECMD_CreateVariableNode @0x1400284d4 ==========
  * 构造变量节点: 分配容器、类型=3、去引号并解析逗号分隔参数。
  */
-void *FUN_1400284d4(void *node, LPCWSTR text)
+void *PECMD_CreateVariableNode(void *node, LPCWSTR text)
 {
     WCHAR *local_res10 = (WCHAR *)text;
     WCHAR *local_res8;
@@ -511,10 +511,10 @@ void PECMD_SetPELogonParamText(uint64_t value, LPCWSTR text, HWND hwnd)
     }
 }
 
-/* ========== FUN_14003e190 @0x14003e190 ==========
+/* ========== PECMD_RegisterCallbackWindowClass @0x14003e190 ==========
  * 注册 PELogon 回调窗口类。
  */
-void FUN_14003e190(HINSTANCE hInstance)
+void PECMD_RegisterCallbackWindowClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wc;
     wc.cbSize = 0x50;

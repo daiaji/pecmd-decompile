@@ -107,18 +107,18 @@ extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern void FUN_14001bbac(void *script, int a, HANDLE *b, DWORD c, DWORD ms,
                           DWORD d);
 extern LRESULT PECMD_KeyboardHookProc(int a1, WPARAM a2, char *a3);
-extern char FUN_14001ddb0(LPCWSTR s, int64_t *pp, int len);
+extern char PECMD_AdvanceAfterPrefix(LPCWSTR s, int64_t *pp, int len);
 extern int64_t FUN_14005B1A8(void *ps, int64_t *pp, int mode);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
-extern int64_t FUN_1400183fc(int64_t ctx, short *path, uint64_t flags);
-extern uint64_t FUN_1400184ac(int64_t ctx);
+extern int64_t PECMD_ValidatePeHeader(int64_t ctx, short *path, uint64_t flags);
+extern uint64_t PECMD_ComputeSectionMapSize(int64_t ctx);
 extern void PECMD_CollectPESections(int64_t ctx, void *base, int64_t path);
-extern int64_t FUN_1400180b8(int64_t ctx, int64_t base);
+extern int64_t PECMD_RelocateImage(int64_t ctx, int64_t base);
 extern int64_t FUN_140018220(int64_t ctx, int64_t base);
 extern int64_t PECMD_FindResourceByNameOrId(int64_t ctx, LPCSTR name);
 extern void PECMD_HandleDropFile(void *ctx, HDROP drop, char flag);
 extern void PECMD_PatchInfDirectives(LPCWSTR path);
-extern void FUN_140019da8(int64_t ctx, LPCWSTR path, int mode);
+extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void PECMD_WriteParamRecord(int64_t ctx, char type, LPCWSTR a, LPCWSTR b);
@@ -133,7 +133,7 @@ extern void FUN_140063B64(int64_t *arr);
 extern void FUN_1400195F0(void *script, int a, int b, void *c);
 extern void FUN_14002CA30(void);
 extern void FUN_14001b3a0(void *script, void *a2);
-extern void FUN_14001b494(int64_t ctx);
+extern void PECMD_FreeRecordChain(int64_t ctx);
 extern LPCWSTR FUN_14002FD88(int64_t *script, WCHAR *s, uint32_t *flags,
                              int64_t *out);
 extern void FUN_1400e67e8(void);
@@ -161,7 +161,7 @@ extern uint32_t PECMD_RunProcessCommand(int64_t a1, LPCWSTR a2, uint64_t a3,
                               uint64_t a4, uint64_t a5);
 extern DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR path, uint32_t flags);
 extern uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR path, LPCWSTR name, int mode);
-extern uint32_t FUN_14001a5b0(LPCWSTR name);
+extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR name);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
 extern void FUN_14001b888(uint32_t mode);
 extern int64_t FUN_14003D608(uint32_t a, uint32_t b, LPCWSTR menu);
@@ -382,19 +382,19 @@ void FUN_140025CE0(int64_t *pp, uint8_t *outEnabled, uint8_t *style,
         *pp = *pp + 2;
         uVar3 = FUN_14005B1A8(&g_szEmpty, pp, 0);
         if ((int)uVar3 == 0) {
-            cVar1 = FUN_14001ddb0(WSTR("top"), pp, 3);
+            cVar1 = PECMD_AdvanceAfterPrefix(WSTR("top"), pp, 3);
             if (cVar1 == '\0') {
-                cVar1 = FUN_14001ddb0(WSTR("top-"), pp, 4);
+                cVar1 = PECMD_AdvanceAfterPrefix(WSTR("top-"), pp, 4);
                 if (cVar1 == '\0') {
-                    cVar1 = FUN_14001ddb0(WSTR("bottom"), pp, 6);
+                    cVar1 = PECMD_AdvanceAfterPrefix(WSTR("bottom"), pp, 6);
                     if (cVar1 == '\0') {
-                        cVar1 = FUN_14001ddb0(WSTR("pic"), pp, 3);
+                        cVar1 = PECMD_AdvanceAfterPrefix(WSTR("pic"), pp, 3);
                         if (cVar1 == '\0') {
-                            cVar1 = FUN_14001ddb0(WSTR("enable"), pp, 6);
+                            cVar1 = PECMD_AdvanceAfterPrefix(WSTR("enable"), pp, 6);
                             if (cVar1 == '\0') {
-                                cVar1 = FUN_14001ddb0(WSTR("disable"), pp, 7);
+                                cVar1 = PECMD_AdvanceAfterPrefix(WSTR("disable"), pp, 7);
                                 if (cVar1 == '\0') {
-                                    cVar1 = FUN_14001ddb0(WSTR("wait"), pp, 4);
+                                    cVar1 = PECMD_AdvanceAfterPrefix(WSTR("wait"), pp, 4);
                                     if (cVar1 == '\0') {
                                         iVar2 = StrCmpNIW(WSTR("trans:"), (LPCWSTR)*pp, 6);
                                         if (iVar2 == 0) {
@@ -456,8 +456,8 @@ uint64_t FUN_1400282D4(int *pe, short *args, uint64_t flag)
     int64_t lVar4;
 
     if ((((*(int64_t *)((char *)pe + 24) == 0) &&
-          (FUN_1400183fc((int64_t)pe, args, flag) != 0)) &&
-         ((dwSize = FUN_1400184ac((int64_t)pe), dwSize != 0))) &&
+          (PECMD_ValidatePeHeader((int64_t)pe, args, flag) != 0)) &&
+         ((dwSize = PECMD_ComputeSectionMapSize((int64_t)pe), dwSize != 0))) &&
         ((lpAddress = VirtualAlloc(*(LPVOID *)(*(int64_t *)((char *)pe + 40) + 0x30),
                                    dwSize, 0x3000, 0x40),
           lpAddress != (void *)0) ||
@@ -466,7 +466,7 @@ uint64_t FUN_1400282D4(int *pe, short *args, uint64_t flag)
         PECMD_CollectPESections((int64_t)pe, lpAddress, (int64_t)args);
         if ((*(int *)(*(int64_t *)((char *)pe + 40) + 0xb0) == 0) ||
             (*(int *)(*(int64_t *)((char *)pe + 40) + 0xb4) == 0) ||
-            ((uVar3 = FUN_1400180b8((int64_t)pe, (int64_t)lpAddress), (int)uVar3 != 0))) {
+            ((uVar3 = PECMD_RelocateImage((int64_t)pe, (int64_t)lpAddress), (int)uVar3 != 0))) {
             uVar3 = FUN_140018220((int64_t)pe, (int64_t)lpAddress);
             if ((int)uVar3 == 0) {
                 VirtualFree(lpAddress, 0, 0x8000);
@@ -612,7 +612,7 @@ uint32_t FUN_14002B7F8(int64_t ctx, LPCWSTR hwid, LPCWSTR inf,
         if (*(int64_t *)(ctx + 0x110) != 0) {
             if (iVar1 == 0) goto fail;
             if (mode != -0x10) {
-                FUN_140019da8(ctx, hwid, mode);
+                PECMD_AppendKeyIfMissing(ctx, hwid, mode);
             }
         }
         if (iVar1 != 0) goto success;
@@ -629,7 +629,7 @@ success:
         if (hwid != (LPCWSTR)0) {
             pwVar6 = hwid;
         }
-        FUN_140063694(local_38, 0x2800);
+        PECMD_AllocWStringBuffer(local_38, 0x2800);
         pwVar5 = g_szEmpty;
         if (local_res8[0] != 0) {
             pwVar5 = WSTR("Reboot");
@@ -658,7 +658,7 @@ uint32_t FUN_14002C634(int64_t ctx, LPCWSTR inf, LPCWSTR hwid,
     uint16_t local_res8[4];
 
     if (*(char *)(ctx + 0x157) == '\0') {
-        FUN_140063694(&local_30, 0);
+        PECMD_AllocWStringBuffer(&local_30, 0);
         FUN_1400637DC((int64_t *)&local_30, "--wd:*\"", 0xffffffffffffffffULL,
                       0xffffffffffffffffULL);
         FUN_14006375C(&local_30, inf);
@@ -672,9 +672,9 @@ uint32_t FUN_14002C634(int64_t ctx, LPCWSTR inf, LPCWSTR hwid,
         memset(local_res8, 0, sizeof(local_res8));
         FUN_14000e26c(&g_Script, local_30, &g_Script, local_res8, 0, &local_38, 0, (void *)0);
         if ((*(int64_t *)(ctx + 0x110) != 0) && (local_38.dwLowDateTime == 0)) {
-            FUN_140019da8(ctx, hwid, mode);
+            PECMD_AppendKeyIfMissing(ctx, hwid, mode);
         }
-        FUN_140063694(local_28, 0x2800);
+        PECMD_AllocWStringBuffer(local_28, 0x2800);
         pWVar3 = g_szEmpty;
         if (hwid != (LPCWSTR)0) {
             pWVar3 = hwid;
@@ -872,7 +872,7 @@ int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
     pWVar5 = pWVar8;
     if ((*cmd == L'-') && (cmd[1] == L'-')) {
         if (cmd[2] == L'\0') {
-            FUN_14001b494((int64_t)script);
+            PECMD_FreeRecordChain((int64_t)script);
             return 0;
         }
         iVar2 = StrCmpNIW(cmd + 2, WSTR("popmenu"), 7);
@@ -1289,7 +1289,7 @@ int64_t FUN_14003D92C(void)
         uVar6 = 0x10;
     }
     if ((g_ShowWindow & 4) == 0) {
-        uVar8 = FUN_14001a5b0(WSTR("FORCESHUTDOWN"));
+        uVar8 = PECMD_ReadPelogonFlag(WSTR("FORCESHUTDOWN"));
     }
     if (uVar6 == 0) {
         uVar6 = (-(uint32_t)(uVar7 != 0) & 0xffffffd0U) + 0x40;

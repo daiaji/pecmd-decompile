@@ -109,7 +109,7 @@ void FUN_14001C01C(void)
     LPWSTR p;
 
     g_flag13f = 1;
-    FUN_140063694(&pBuf, 0x411);
+    PECMD_AllocWStringBuffer(&pBuf, 0x411);
     memset(pBuf, 0, 0x822);
     lpFilename = pBuf + 0x82;
     GetModuleFileNameW((HMODULE)0, lpFilename, 0x104);
@@ -183,7 +183,7 @@ void FUN_14001BF20(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
     DWORD size;
     DWORD r;
 
-    FUN_140063694(&pBuf, 0xc11);
+    PECMD_AllocWStringBuffer(&pBuf, 0xc11);
     memset(pBuf, 0, 0x822);
     buf = pBuf + 0x208;
     *buf = L'\0';

@@ -79,7 +79,7 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
     if (len < 1) return 0;
     data = (uint8_t *)(intptr_t)ps[0];
     pCur = data;
-    FUN_140063694(&pHead, 0x28);
+    PECMD_AllocWStringBuffer(&pHead, 0x28);
     work = len / 2;
     /* 前 3 个 WCHAR 按密钥试探解码 */
     pHead[0] = ((uint16_t *)data)[0] ^ key16;

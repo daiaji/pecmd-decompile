@@ -135,7 +135,7 @@ void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
     *(HMENU *)(item + 0x20) = menu;
     (*pId)++;
 
-    FUN_140063694(&tmp, 100);
+    PECMD_AllocWStringBuffer(&tmp, 100);
     wsprintfW(tmp, WSTR("&%s.id"), WSTR(""));            /* TODO(verify) 缺实参 */
     if (varTable != NULL)
         FUN_1400669C4(varTable, *(uint16_t *)(item + 2), tmp);

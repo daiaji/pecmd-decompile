@@ -31,19 +31,19 @@ extern void      FUN_14005b104(void *ps);                   /* free string slot 
 extern void      FUN_1400675b8(void *src, void *dst, int16_t delim); /* split list */
 extern void      FUN_140003a20(void *script, void *str, int mode);   /* expand */
 extern int64_t  *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void      FUN_1400744d4(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
+extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern void      PECMD_CopyUpToChar(int64_t *pp, int64_t *out, uint32_t sep);
 extern void      FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);    /* delimiter scan */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* string append */
-extern int64_t  *FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+extern int64_t  *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   FUN_14005c788(const char *a, const WCHAR *w, int n);
 extern char      FUN_1400660ac(const char *tok, void *pp, int n);
 extern bool      FUN_1400c1194(WCHAR **pp, uint64_t *size); /* parse numeric/expr */
 extern void      FUN_1400c11c0(LPWSTR *pp, int *out);        /* parse integer */
 extern uint64_t  FUN_1400745c8(int64_t *pp, uint64_t *out);  /* parse integer */
-extern uint64_t  FUN_1400bd4a4(WPARAM, uint64_t, int64_t, LPCWSTR, int, int, int, int,
+extern uint64_t  PECMD_DispatchControlConstruct(WPARAM, uint64_t, int64_t, LPCWSTR, int, int, int, int,
                                uint64_t *, int64_t *, LPCWSTR, uint64_t, double,
                                uint64_t, uint64_t);          /* 构造派发 */
 
@@ -69,7 +69,7 @@ extern int64_t   PECMD_RunCommand(int64_t *script, LPCWSTR cmd);  /* 执行脚�
  *   LPCWSTR param_2, WPARAM param_3)
  *
  * 解析 "<提示串>,x,y,w,h,dx,dy,.." 及 "-font:"/"-color:" 前缀选项,
- * 归一化寄存器拼接 (CONCAT/局部寄存器), 调用 FUN_1400bd4a4 完成构造。
+ * 归一化寄存器拼接 (CONCAT/局部寄存器), 调用 PECMD_DispatchControlConstruct 完成构造。
  */
 uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3)
 {
@@ -186,7 +186,7 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
             if (*pWVar3 == L',') {
                 local_res10 = (WCHAR *)pWVar3 + 1;
                 plVar8 = FUN_14007f6e4((WCHAR **)&local_58, &local_res10, 0x2c, 1);
-                FUN_1400744d4(plVar8, (uint32_t *)local_a8, &local_98, &local_94,
+                PECMD_ParseLtwhParams(plVar8, (uint32_t *)local_a8, &local_98, &local_94,
                               (uint32_t *)local_90);
                 if (*local_res10 == L',') {
                     local_res10 = local_res10 + 1;
@@ -225,7 +225,7 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
                     if ((WVar2 != L'*') && (WVar1 != L'*')) {
                         param_1 = *(int64_t **)((char *)(uintptr_t)param_3 + 0x290);
                     }
-                    FUN_1400bd4a4(param_3, (uint64_t)param_1, (int64_t)param_3,
+                    PECMD_DispatchControlConstruct(param_3, (uint64_t)param_1, (int64_t)param_3,
                                   (LPCWSTR)local_a0, local_a8[0], local_98, local_94,
                                   local_90[0], (uint64_t *)&local_80, (int64_t *)&local_78,
                                   local_70, (uint64_t)local_60,
@@ -493,7 +493,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
             plVar8 = FUN_14007f6e4((WCHAR **)&local_128, &local_res10, 0x2c, 1);
-            FUN_1400744d4(plVar8, (uint32_t *)&local_148, local_144, (int *)&local_res20,
+            PECMD_ParseLtwhParams(plVar8, (uint32_t *)&local_148, local_144, (int *)&local_res20,
                           (uint32_t *)local_res18);
             if (*local_res10 == L',') {
                 local_res10 = local_res10 + 1;
@@ -685,7 +685,7 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
             return 0xffffffff80070057ULL;
         }
         local_res8 = 0;
-        FUN_14006355c((int64_t *)&local_res8, (LPCWSTR)local_res20, -1, 0xffffffffffffffffULL);
+        PECMD_WideToAnsiStr((int64_t *)&local_res8, (LPCWSTR)local_res20, -1, 0xffffffffffffffffULL);
         puVar6 = (WCHAR *)FUN_140078d8c((byte *)local_res8, (ulonglong *)&local_res10);
         FUN_14005b104(&local_res8);
     } else {

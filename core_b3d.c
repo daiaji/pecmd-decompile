@@ -58,7 +58,7 @@ extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
                             uint32_t c, WCHAR *d);
 extern char FUN_1400660AC(char *key, int64_t *pp, int len);
 extern int64_t FUN_14005C72C(char *a, uint16_t *w, int n);
-extern int64_t FUN_140070450(void);
+extern int64_t PECMD_InitComState(void);
 extern uint64_t PECMD_EvalParenExpression(int64_t *pp, uint64_t *out);
 extern void FUN_14007D0AC(int64_t *ctx, LPCWSTR key, LPCWSTR value);
 extern void FUN_14007DF90(int64_t ctx, int mode);
@@ -476,7 +476,7 @@ uint64_t PECMD_OneTimeInit(void)
     int64_t lVar2 = g_pComWrite;
     if (g_pComWrite == 0) {
         g_pComWrite = 1;
-        lVar2 = FUN_140070450();
+        lVar2 = PECMD_InitComState();
         if (lVar2 == 0) {
             return 0xffffffff;
         }

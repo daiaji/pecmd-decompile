@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   显示关于对话框   FUN_1400458A8 @0x1400458a8
  *   数组前插         FUN_14004FE34 @0x14004fe34
- *   递归解析         FUN_140051070 @0x140051070
+ *   递归解析         PECMD_ParseRegexRecursive @0x140051070
  *   匹配关键字       FUN_140053BE8 @0x140053be8
  *   释放对象 K       FUN_140054B18 @0x140054b18
  *   释放资源对象     FUN_14005B888 @0x14005b888
@@ -28,7 +28,7 @@
  *   解析 token       FUN_140069B68 @0x140069b68
  *   清理解析器       FUN_140073C58 @0x140073c58
  *   读取剪贴板文本   FUN_140078E90 @0x140078e90
- *   解析数字字段     FUN_140079980 @0x140079980
+ *   解析数字字段     PECMD_ParseNumericField @0x140079980
  *   连接 tokens      FUN_140079C80 @0x140079c80
  *   解析路径记录2    FUN_14007EFA4 @0x14007efa4
  *   释放互斥体对象   FUN_1400A4350 @0x1400a4350
@@ -48,7 +48,7 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int64_t *FUN_1400284d4(int64_t **a1, LPCWSTR a2);
+extern int64_t *PECMD_CreateVariableNode(int64_t **a1, LPCWSTR a2);
 extern void FUN_1400e67e8(void);
 extern intptr_t FUN_14003E220(HWND a1, int a2, int16_t a3);
 extern uint64_t PECMD_ParseRegexAlternation(int *a1, wchar_t **a2, uint8_t *a3);
@@ -58,7 +58,7 @@ extern bool FUN_14005F1B0(uint64_t *a1, uint8_t *a2, uint64_t a3,
 extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
                              int64_t *a4, uint32_t a5, uint16_t *a6);
 extern void FUN_14006703c(int64_t a1);
-extern void FUN_140066eac(int64_t a1, int a2);
+extern void PECMD_ReleaseObjectListTail(int64_t a1, int a2);
 extern int64_t *FUN_14007034C(int64_t *a1, LPCWSTR a2);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
 extern void FUN_140063620(WCHAR **ps);
@@ -103,7 +103,7 @@ extern int32_t g_i1255d0[];
 uint64_t FUN_1400458A8(LPCWSTR text)
 {
     int64_t *local_28[4] = {NULL, NULL, NULL, NULL};
-    FUN_1400284d4(local_28, text);
+    PECMD_CreateVariableNode(local_28, text);
     uint64_t uVar1 = 0;
     if (*local_28[0] != 0) {
         FUN_1400e67e8();
@@ -135,10 +135,10 @@ int FUN_14004FE34(uint32_t *arr, uint32_t value)
     return (int)(arr[4] - 1);
 }
 
-/* ========== FUN_140051070 @0x140051070 ==========
+/* ========== PECMD_ParseRegexRecursive @0x140051070 ==========
  * 递归解析。
  */
-uint64_t FUN_140051070(int *ctx, wchar_t **pp, uint8_t *out)
+uint64_t PECMD_ParseRegexRecursive(int *ctx, wchar_t **pp, uint8_t *out)
 {
     if (**pp != L'\0') {
         uint64_t uVar1 = PECMD_ParseRegexAlternation(ctx, pp, out);
@@ -147,7 +147,7 @@ uint64_t FUN_140051070(int *ctx, wchar_t **pp, uint8_t *out)
         }
         uint8_t bVar2 = 1;
         uint8_t local_res10[8] = {1, 0, 0, 0, 0, 0, 0, 0};
-        FUN_140051070(ctx, pp, local_res10);
+        PECMD_ParseRegexRecursive(ctx, pp, local_res10);
         if (*ctx == 0) {
             if ((*out == 0) || (local_res10[0] == 0)) {
                 bVar2 = 0;
@@ -522,7 +522,7 @@ void FUN_140073C58(int64_t parser)
     EnterCriticalSection(&g_csInit);
     FUN_14006703c(parser);
     if (*(int64_t *)(parser + 400) != 0) {
-        FUN_140066eac(parser, 0);
+        PECMD_ReleaseObjectListTail(parser, 0);
     }
     if (*(int64_t *)(parser + 400) != 0) {
         HeapFree(g_hHeap, 0, (void *)(*(int64_t *)(parser + 400) - 8));
@@ -550,10 +550,10 @@ int64_t *FUN_140078E90(int64_t *out)
     return out;
 }
 
-/* ========== FUN_140079980 @0x140079980 ==========
+/* ========== PECMD_ParseNumericField @0x140079980 ==========
  * 解析数字字段。
  */
-uint64_t FUN_140079980(int64_t obj, uint64_t unused, int16_t *start,
+uint64_t PECMD_ParseNumericField(int64_t obj, uint64_t unused, int16_t *start,
                                 int16_t *end)
 {
     (void)unused;

@@ -49,8 +49,8 @@ extern uint32_t g_u3211ee98;
 
 
 /* ---- Helper function externs (bodies are NOT defined here) ---- */
-extern ulonglong FUN_1400688e0(LPCWSTR param_1);              /* @0x1400688e0 */
-extern LPVOID   FUN_1400179f8(LPCWSTR, LPVOID, DWORD *);      /* @0x1400179f8 读文件 */
+extern ulonglong PECMD_DetectFileEncoding(LPCWSTR param_1);              /* @0x1400688e0 */
+extern LPVOID   PECMD_ReadFileToBuffer(LPCWSTR, LPVOID, DWORD *);      /* @0x1400179f8 读文件 */
 extern void    *FUN_14007026c(void *out, LPCSTR s);           /* @0x14007026c 串构造 */
 extern undefined8 *PECMD_AllocSmallObject(undefined8 *arr);            /* @0x140063344 小对象分配 */
 extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out,
@@ -63,8 +63,8 @@ extern void     FUN_140063620(WCHAR **out);                   /* @0x140063620 �
 extern WCHAR   *PECMD_AllocString(WCHAR **ps, int64_t count);     /* @0x140063720 串分配(计数) */
 extern WCHAR   *FUN_1400637dc(WCHAR **ps, LPCWSTR src,
                               int64_t a, int64_t b);          /* @0x1400637dc 串复制分配 */
-extern void     FUN_140063694(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
-extern void     FUN_140017b8c(void);                          /* @0x140017b8c 初始化 */
+extern void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
+extern void     PECMD_LoadSetupApiFunctions(void);                          /* @0x140017b8c 初始化 */
 extern bool     FUN_1400c11c0(WCHAR **pp, int *out);          /* @0x1400c11c0 */
 extern bool     FUN_1400c1194(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
 extern uint32_t FUN_140065efc(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
@@ -84,7 +84,7 @@ extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
  * @0x14007c730
  * 打开文件并返回句柄；失败返回 (HANDLE)0。把“是否可读”写入 *(bool*)param_2。
  */
-HANDLE FUN_14007c730(LPCWSTR param_1, uint64_t param_2)
+HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
 {
     ulonglong uVar1;
     HANDLE pvVar2;
@@ -94,12 +94,12 @@ HANDLE FUN_14007c730(LPCWSTR param_1, uint64_t param_2)
     LPVOID local_20;
     ulonglong local_18;
 
-    uVar1 = FUN_1400688e0(param_1);
+    uVar1 = PECMD_DetectFileEncoding(param_1);
     bVar3 = (char)uVar1 != '\0';
     *(bool *)param_2 = bVar3;
     if (bVar3) {
         local_res10[0] = 0;
-        local_20 = FUN_1400179f8(param_1, (LPVOID)0, local_res10);
+        local_20 = PECMD_ReadFileToBuffer(param_1, (LPVOID)0, local_res10);
         if (local_20 != (LPVOID)0) {
             FUN_14007026c(&local_20, (LPCSTR)0);
             PECMD_AllocSmallObject((undefined8 *)local_38);
@@ -153,7 +153,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
     uint32_t local_48;
 
     local_res10 = param_2;
-    FUN_140017b8c();
+    PECMD_LoadSetupApiFunctions();
     FUN_14005b154((WCHAR **)&local_res10);
     local_b8 = StrChrW(local_res10, L',');
     WVar9 = L'\0';
@@ -332,7 +332,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
         iVar4 = lstrlenW(local_58);
         PECMD_AllocString((WCHAR **)&local_58, (int64_t)iVar4 + 2);
         local_50 = (LPWSTR)0;
-        FUN_140063694(&local_40, 0x433);
+        PECMD_AllocWStringBuffer(&local_40, 0x433);
         lpBuffer = local_40 + 0x107;
         memset(local_40, 0, 0x42f * 2);
         lpRootPathName = local_58;
@@ -401,7 +401,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
  * @0x14007d1c4
  * 解析以 "$" 为前缀的 EXEC 描述串并交给脚本执行器运行。
  */
-uint64_t FUN_14007d1c4(LPCWSTR param_1)
+uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
 {
     uint64_t _Var1;
     LPCWSTR pWVar2;

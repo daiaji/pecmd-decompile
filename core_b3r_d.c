@@ -60,9 +60,9 @@ extern void      FUN_14005d558(void *param_1, HWND param_2);
 extern void      FUN_140067d20(void **pp, int *out);
 extern void      PECMD_ParseNumSkipChar_01f8(void **pp, int *out);
 extern void     *PECMD_GrowByteBuffer(void **ps, int64_t len);
-/* FUN_14007fc18 helper */
+/* PECMD_ParseLtwhFlags helper */
 extern uint64_t  PECMD_EvalParenExpression(int64_t *pp, uint64_t *out);
-/* FUN_140080c40 helpers */
+/* PECMD_ApplyWindowFlags helpers */
 extern void      FUN_1400a9a84(WCHAR **pp, uint64_t *out);
 extern int       FUN_1400e5900(int64_t a, uint32_t b, uint64_t c);
 extern int       FUN_1400e5960(HWND a, uint32_t b, uint64_t c);
@@ -76,7 +76,7 @@ extern int64_t   FUN_14007bda8(void *script, WCHAR *line, WCHAR **out,
 extern int64_t   FUN_14007a224(void *script, WCHAR *line, WCHAR **out,
                                int mode, uint8_t opt);
 /* PECMD_ShowBrowseFolder string/var helpers */
-extern void      FUN_140063694(WCHAR **ps, int64_t count);
+extern void      PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
 extern void      FUN_140063620(WCHAR **out);
 extern char      FUN_1400660ac(const char *tok, WCHAR **pp, int n);
 extern int64_t  *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -85,7 +85,7 @@ extern void      FUN_140003a20(void *script, WCHAR **str, int mode);
 extern void     *FUN_140063060(void *p);
 extern WCHAR    *FUN_14001be14(WCHAR *s);
 extern void      FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
-extern void      FUN_1400678f0(void **in, void *out, short delim);
+extern void      PECMD_ParseSignedNumberStr(void **in, void *out, short delim);
 extern void      FUN_1400702b0(WCHAR **ps, const WCHAR *src);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern WCHAR    *FUN_14007034c(WCHAR **ps, const WCHAR *src);
@@ -248,10 +248,10 @@ int64_t *PECMD_SetupRoundedRegion(int64_t *param_1, short *param_2, HWND param_3
 }
 
 /* ==========================================================================
- * FUN_14007fc18 @0x14007fc18
+ * PECMD_ParseLtwhFlags @0x14007fc18
  * Flag parser: consumes "l<num> t<num> w<num> h<num>" style tokens.
  * ========================================================================== */
-uint32_t FUN_14007fc18(int64_t *param_1, undefined4 *param_2)
+uint32_t PECMD_ParseLtwhFlags(int64_t *param_1, undefined4 *param_2)
 {
     uint64_t uVar1;
     uint32_t uVar2;
@@ -292,10 +292,10 @@ uint32_t FUN_14007fc18(int64_t *param_1, undefined4 *param_2)
 }
 
 /* ==========================================================================
- * FUN_140080c40 @0x140080c40
+ * PECMD_ApplyWindowFlags @0x140080c40
  * Parse & set window position / style.
  * ========================================================================== */
-uint64_t FUN_140080c40(HWND param_1, short *param_2)
+uint64_t PECMD_ApplyWindowFlags(HWND param_1, short *param_2)
 {
     short     sVar1;
     int       nIndex;
@@ -483,7 +483,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     WCHAR       local_248[264];
 
     local_res10 = (WCHAR *)param_2;
-    FUN_140063694(&local_568, 0x20a);
+    PECMD_AllocWStringBuffer(&local_568, 0x20a);
     GetCurrentDirectoryW(0x208, local_568);
     local_5a8 = (WCHAR *)0x0;
     local_588 = (WCHAR *)0x0;
@@ -559,14 +559,14 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     if (*psVar10 == 0x2c) {
         local_res10 = puVar19 + 1;
         puVar12 = FUN_14007f6e4((WCHAR **)&local_558, &local_res10, 0x2c, 1);
-        FUN_1400678f0((void **)puVar12, (void *)&local_5a8, 0x2c);
+        PECMD_ParseSignedNumberStr((void **)puVar12, (void *)&local_5a8, 0x2c);
         puVar19 = local_res10;
     }
     psVar10 = (short *)FUN_140063060(puVar19);
     if (*psVar10 == 0x2c) {
         local_res10 = puVar19 + 1;
         puVar12 = FUN_14007f6e4((WCHAR **)&local_558, &local_res10, 0x2c, 1);
-        FUN_1400678f0((void **)puVar12, (void *)&local_588, 0x2c);
+        PECMD_ParseSignedNumberStr((void **)puVar12, (void *)&local_588, 0x2c);
     }
     FUN_1400702b0(&local_580, pWVar11);
     pBVar17 = local_580;

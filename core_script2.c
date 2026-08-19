@@ -81,7 +81,7 @@ int64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
     g_scriptInitFlag = 0x41;
 
     /* SCRIPTINIT 资源 */
-    FUN_140063694(&initBuf, 0x10);
+    PECMD_AllocWStringBuffer(&initBuf, 0x10);
     {
         uint32_t f = 0;
         FUN_14001EA18(g_hInstance, (LPCWSTR)0x64, WSTR("SCRIPTINIT"), (void **)&initBuf, &f);

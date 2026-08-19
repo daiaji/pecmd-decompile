@@ -4,7 +4,7 @@
  *   PECMD_ReadFileToWideString @0x1400685f4  读取文本文件并识别 BOM/转换编码 (UTF-16LE/BE, UTF-8)
  *   PECMD_GetPathSizeToVar @0x14006b414  计算路径/目录大小并写回变量
  *   PECMD_DispatchListboxCommand @0x14006b9f0  列表控件 (ListBox) 命令分派 (Enable/颜色等)
- *   FUN_14006fef0 @0x14006fef0  列表/输出命令分派 (Write 类)
+ *   PECMD_DispatchListWriteCommand @0x14006fef0  列表/输出命令分派 (Write 类)
  *
  * 未定义任何 helper 体 (由 link_stubs.c / 相应 core 文件提供);
  * 只实现本文件列出的目标函数。
@@ -53,9 +53,9 @@ extern int64_t PECMD_GetDirectorySize(LPCWSTR param_1);                         
 extern void    FUN_1400e6d74(LPCWSTR param_1, uint64_t param_2);               /* %I64u 格式化 */
 extern void    FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value);     /* @0x1400629b8 SetVar */
 
-/* ---- PECMD_DispatchListboxCommand / FUN_14006fef0 的 helper ---- */
+/* ---- PECMD_DispatchListboxCommand / PECMD_DispatchListWriteCommand 的 helper ---- */
 extern int  FUN_14005b2c0(uint64_t *param_1, LPCWSTR param_2, HWND param_3); /* 列表接受检查 */
-extern int  FUN_140057b80(WPARAM a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
+extern int  PECMD_DispatchControlCommand(WPARAM a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
                           uint64_t f, int64_t *g, HWND h, int64_t i);
 extern void FUN_14006764c(int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* 按分隔符切分 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);        /* @0x140066978 SetVarD */
@@ -295,7 +295,7 @@ uint64_t PECMD_DispatchListboxCommand(uint64_t *param_1, int64_t *param_2, int64
         FUN_14005b104((int64_t *)&local_res8);
         return 0;
     }
-    uVar8 = (uint64_t)FUN_140057b80((WPARAM)param_1[7], param_4, param_5, hWnd,
+    uVar8 = (uint64_t)PECMD_DispatchControlCommand((WPARAM)param_1[7], param_4, param_5, hWnd,
                                     (LPCWSTR)param_3, param_1[10], param_2, pHVar5,
                                     (int64_t)param_1);
     if ((int)uVar8 != 0) {
@@ -338,7 +338,7 @@ LAB_14006bbcd:
  * @0x14006fef0  列表/输出命令分派 (Write 类)
  * 说明: CONCAT71(extraout_var,bVar3) 为 Ghidra 残留, 归一化为 bVar3 判断。
  */
-uint64_t FUN_14006fef0(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
+uint64_t PECMD_DispatchListWriteCommand(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
                        LPCWSTR param_4, WPARAM param_5, uint64_t *param_6)
 {
     HWND pHVar1;
@@ -375,7 +375,7 @@ uint64_t FUN_14006fef0(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
             return 0;
         }
     }
-    FUN_140057b80((WPARAM)param_1[7], param_4, param_5, pHVar1, param_3,
+    PECMD_DispatchControlCommand((WPARAM)param_1[7], param_4, param_5, pHVar1, param_3,
                   param_1[10], param_2, pHVar2, (int64_t)param_1);
     return 0;
 }

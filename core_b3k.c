@@ -12,7 +12,7 @@
  *   获取盘类型名     FUN_14005FF30 @0x14005ff30
  *   读取流字节       FUN_14005F1B0 @0x14005f1b0
  *   查找 token       FUN_140062EC8 @0x140062ec8
- *   移除数组对象     FUN_140061780 @0x140061780
+ *   移除数组对象     PECMD_RemoveObjectByKey @0x140061780
  *   加载图像列表 API PECMD_LoadImageListApi @0x140064278
  *
  * 约定:
@@ -28,7 +28,7 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int64_t *FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len,
+extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                               uint64_t cap);
 extern DWORD FUN_1400195F0(uint64_t ctx, int64_t timeout, int mode,
                            uint64_t *result);
@@ -41,7 +41,7 @@ extern void FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int64_t a,
 extern HWND PECMD_FindTrayWindow(void);
 extern void FUN_1400F172C(void *a, int b, int c, uint64_t *d, void *e, int f,
                           void *g);
-extern int64_t FUN_1400175a0(LPCWSTR a, LPCWSTR b);
+extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
 
 /* ---- 本批引用的全局数据 ---- */
 extern uint8_t PTR_FUN_1401234f0[];
@@ -64,7 +64,7 @@ uint64_t *FUN_140053DC8(uint64_t *obj, uint32_t id, uint64_t data,
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400702B0((WCHAR **)(obj + 2), name1);
     obj[3] = 0;
-    FUN_14006355c((int64_t *)(obj + 3), name1, -1, 0xffffffffffffffffULL);
+    PECMD_WideToAnsiStr((int64_t *)(obj + 3), name1, -1, 0xffffffffffffffffULL);
     FUN_1400702B0((WCHAR **)(obj + 4), name3);
     FUN_1400702B0((WCHAR **)(obj + 5), name2);
     obj[6] = 0;
@@ -281,7 +281,7 @@ LPCWSTR FUN_140062EC8(LPCWSTR text, LPCWSTR tokens, int len, uint32_t flags)
             }
             iVar1 = 0;
         } else {
-            iVar1 = (int)FUN_1400175a0(tokens, text);
+            iVar1 = (int)PECMD_MatchPatternSwap(tokens, text);
         }
         if (iVar1 != 0) {
             return tokens;
@@ -296,10 +296,10 @@ LPCWSTR FUN_140062EC8(LPCWSTR text, LPCWSTR tokens, int len, uint32_t flags)
     return NULL;
 }
 
-/* ========== FUN_140061780 @0x140061780 ==========
+/* ========== PECMD_RemoveObjectByKey @0x140061780 ==========
  * 移除数组中匹配对象。
  */
-void FUN_140061780(int64_t *arr, int *count, int64_t key)
+void PECMD_RemoveObjectByKey(int64_t *arr, int *count, int64_t key)
 {
     EnterCriticalSection(&g_csInit);
     int64_t lVar2 = (int64_t)(*count - 1);

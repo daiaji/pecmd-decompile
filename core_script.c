@@ -72,7 +72,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
     /* 跳过前导分隔符 */
     while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] || *p == script[0x48]) p++;
 
-    FUN_140063694(&tmp, 0x804);
+    PECMD_AllocWStringBuffer(&tmp, 0x804);
     if (p < end) {
         do {
             WCHAR *t = p;

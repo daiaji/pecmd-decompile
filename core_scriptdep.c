@@ -216,7 +216,7 @@ uint32_t FUN_140030DCC(void *script, void *tmpl, uint32_t flags)
 
     FUN_1400702B0(&nls, WSTR("\n"));
     pos = FUN_14001B4F8(*(const WCHAR **)script, (WCHAR)key);
-    FUN_140063694(&cwd, 0x20a);
+    PECMD_AllocWStringBuffer(&cwd, 0x20a);
     GetCurrentDirectoryW(0x208, cwd);
     FUN_140017CDC(sub, tmpl);
     FUN_1400186BC(sub, (int64_t)(intptr_t)tmpl);

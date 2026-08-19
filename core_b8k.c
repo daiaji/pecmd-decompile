@@ -99,7 +99,7 @@ extern void FUN_140025B10(uint64_t p1, uint64_t p2);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out);
 extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
-extern void FUN_1400a895c(HWND hwnd, int64_t p2, LPCWSTR p3, int p4);
+extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4);
 extern void FUN_1400EF654(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
 extern uint64_t *FUN_1400EFEC8(uint64_t *mem);
@@ -598,7 +598,7 @@ uint64_t FUN_1400EEC28(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
     uint64_t res;
 
     if (msg == 0x45a) {
-        FUN_1400a895c(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 1);
+        PECMD_SetControlText(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 1);
         res = 1;
         return res;
     }
@@ -672,7 +672,7 @@ uint64_t FUN_1400EF694(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
         }
     }
     if (msg == 0x45a) {
-        FUN_1400a895c(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 1);
+        PECMD_SetControlText(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 1);
         return 1;
     }
     if (msg == 0x113 && (int)wParam == 0x2715) {
@@ -860,7 +860,7 @@ uint64_t FUN_1400F0814(int64_t obj, uint32_t msg, int64_t wParam,
     uint64_t res = 0;
 
     if (msg == 0x45a) {
-        FUN_1400a895c(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 0);
+        PECMD_SetControlText(*(HWND *)((uint8_t *)obj + 8), wParam, lParam, 0);
         return 1;
     }
     if (msg == 0x2b) {

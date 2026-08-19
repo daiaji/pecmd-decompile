@@ -23,7 +23,7 @@ extern DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
  * 本文件引用的辅助函数 (均为 extern, 正文不在此定义)
  * ------------------------------------------------------------------ */
 extern void   *FUN_14001d744(void *dst, const void *src, int len);      /* @0x14001d744 重叠搬移(memmove) */
-extern void    FUN_140063694(WCHAR **ps, int64_t count);                /* @0x140063694 分配 */
+extern void    PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);                /* @0x140063694 分配 */
 extern void    FUN_14005b104(void *ps);                                 /* @0x14005b104 释放字符串槽 */
 extern void    FUN_140063620(WCHAR **out);                              /* @0x140063620 初始化串缓冲 */
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);                /* @0x140063720 分配串 */
@@ -231,7 +231,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
 
     DVar1 = 1;
     local_238[0] = L'\0';
-    FUN_140063694((WCHAR **)local_248, 0x100000);
+    PECMD_AllocWStringBuffer((WCHAR **)local_248, 0x100000);
     DVar7 = DVar1;
     if (param_4 == (WCHAR *)0x0) {
         DVar1 = GetTempPathW(0x104, local_238);

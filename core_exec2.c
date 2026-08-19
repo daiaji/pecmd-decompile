@@ -16,7 +16,7 @@
  *   PECMD_OpenFileHandle    @0x140003864   文件打开（包装 CreateFileW）
  *   FUN_140101E70   @0x140101e70   文件存在
  *   FUN_14007026C    @0x14007026c   多字节字符串分配
- *   FUN_140070044     @0x140070044   ANSI 字符串复制
+ *   PECMD_AllocAnsiString     @0x140070044   ANSI 字符串复制
  *   FUN_14006159C   @0x14006159c   脚本分隔符初始化（XOR 编码表）
  *   FUN_14002487C     @0x14002487c   行分割（_ENDFILE 处理）
  *   FUN_14005B21C    @0x14005b21c   退出进程
@@ -32,7 +32,7 @@
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                 /* @0x14005b154 见 core_string.c */
 extern void *PECMD_StrDupAlloc(LPCWSTR src);                /* @0x1400700c4 */
-extern char *FUN_140070044(const char *src);            /* @0x140070044 */
+extern char *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
 extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
 extern void FUN_14005B21C(UINT code);                  /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
@@ -82,15 +82,15 @@ void *FUN_14007026C(void **out, const char *src)
 {
     *out = NULL;
     if (src != NULL) {
-        *out = FUN_140070044(src);
+        *out = PECMD_AllocAnsiString(src);
     }
     return out;
 }
 
-/* ========== FUN_140070044 @0x140070044 ==========
+/* ========== PECMD_AllocAnsiString @0x140070044 ==========
  * ANSI 字符串复制到 0xaa55 头分配块。
  */
-char *FUN_140070044(const char *src)
+char *PECMD_AllocAnsiString(const char *src)
 {
     int n = lstrlenA(src);
     long l = (long)n + 1;
@@ -283,7 +283,7 @@ void FUN_14002487C(void *script, WCHAR *buf, bool stopMain)
     int64_t cap = 0xfff;
     WCHAR *tmp = NULL;
 
-    FUN_140063694(&tmp, 0x1000);
+    PECMD_AllocWStringBuffer(&tmp, 0x1000);
     if (*buf == sep) return;
     do {
         /* 跳过前导分隔符 */
@@ -359,7 +359,7 @@ uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32
         if ((f & 0x20) != 0 && (dec & 2) != 0) return NULL;
         /* TODO(verify): 原实现经 PECMD_ReadFile 解码填充 *out */
         {
-            uint8_t *t = (uint8_t *)FUN_140070044((const char *)data);
+            uint8_t *t = (uint8_t *)PECMD_AllocAnsiString((const char *)data);
             *out = t;
         }
         *flags = *flags | ((int)(uint8_t)dec & 2U);

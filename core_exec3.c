@@ -9,7 +9,7 @@
  *   FUN_14005B7E8  @0x14005b7e8   托盘图标清理
  *   FUN_14001BB30  @0x14001bb30   钩子/资源清理
  *   FUN_14001BBDC  @0x14001bbdc   等待条件 + 消息泵
- *   FUN_140064328  @0x140064328   退出清理（COM/回调）
+ *   PECMD_ShutdownCom  @0x140064328   退出清理（COM/回调）
  *   FUN_14006E8F4   @0x14006e8f4   脚本释放（引用计数）
  *   FUN_14004E2CC     @0x14004e2cc   任务释放
  *   FUN_14004EAA8    @0x14004eaa8   任务表清空
@@ -58,7 +58,7 @@ int32_t FUN_14002452C(void *script, LPCWSTR curfile, uint32_t flag)
 
     if (((flag >> 0x10 & 1) != 0) || ((flag & 0x40) == 0)) bSet = true;
 
-    FUN_140063694(&cur, 0x41c);
+    PECMD_AllocWStringBuffer(&cur, 0x41c);
     *cur = L'\0';
     GetCurrentDirectoryW(0x208, cur);
     FUN_1400629B8(script, WSTR("&&__OldDir"), cur);
@@ -230,10 +230,10 @@ void FUN_140017F54(int *blk)
     }
 }
 
-/* ========== FUN_140064328 @0x140064328 ==========
+/* ========== PECMD_ShutdownCom @0x140064328 ==========
  * 退出清理：COM 回调 + 任务释放 + 脚本清理。
  */
-void FUN_140064328(void)
+void PECMD_ShutdownCom(void)
 {
     int r;
     if (g_pComState != NULL) {
@@ -311,7 +311,7 @@ void FUN_14004E2CC(int64_t table, int64_t *task)
             }
         } else {
             /* 拼接 "prefix &cmd 回调" 并执行 */
-            FUN_140063694(&buf, (int64_t)i2 + i3 + i4 + 4);
+            PECMD_AllocWStringBuffer(&buf, (int64_t)i2 + i3 + i4 + 4);
             lstrcpyW(buf, lpString);
             buf[i2] = L' ';
             buf[i2+1] = L'&';

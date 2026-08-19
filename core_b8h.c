@@ -369,7 +369,7 @@ void FUN_1400E66D4(int64_t *pfont, UINT id, HANDLE base)
     if (*pfont == -1)
         return;
 
-    FUN_140063694(&tmp, 0x516);
+    PECMD_AllocWStringBuffer(&tmp, 0x516);
     tmp[0] = L'\0';
     face = FUN_1400169BC(id, NULL);
     if (face == NULL) {

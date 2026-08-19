@@ -5,7 +5,7 @@
  * Contains:
  *   PECMD_ParseWindowOptions @0x1400734e4  window option flag parser
  *   PECMD_CacheLookupInsert @0x140074c60  list/cache entry lookup + insert
- *   FUN_140074e58 @0x140074e58  config string store
+ *   PECMD_SetConfigString @0x140074e58  config string store
  *   PECMD_EnumDeviceList @0x140075848  enum / dev-list walk
  * ========================================================================== */
 
@@ -342,8 +342,8 @@ LAB_140074e2e:
 /* ========================================================================== */
 /* @0x140074e58                                                               */
 /* ========================================================================== */
-/* signature: undefined __fastcall FUN_140074e58(wchar_t * param_1, int param_2) */
-void FUN_140074e58(wchar_t *param_1, int param_2)
+/* signature: undefined __fastcall PECMD_SetConfigString(wchar_t * param_1, int param_2) */
+void PECMD_SetConfigString(wchar_t *param_1, int param_2)
 {
     uint32_t uVar1;
     uint64_t uVar2;

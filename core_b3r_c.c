@@ -21,7 +21,7 @@ extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
 extern void FUN_140018d8c(uint64_t ctx, const WCHAR *fmt, uint64_t a, uint64_t b); /* @0x140018d8c debug */
 extern void PECMD_AsciiTrimToWide(void **pp, const void *src, uint64_t len); /* @0x14005fe34 append bytes as wide */
-extern uint16_t *FUN_14005fd7c(int64_t data, int start, int end, uint16_t *out); /* @0x14005fd7c */
+extern uint16_t *PECMD_DataToWideString(int64_t data, int start, int end, uint16_t *out); /* @0x14005fd7c */
 extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);        /* @0x14001f1d4 */
 extern uint64_t PECMD_LoadImageStream(uint8_t *p, size_t n, uint64_t *p3); /* @0x140061e98 */
 extern int64_t FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
@@ -148,11 +148,11 @@ L1400779bd:
             if ((uVar8 != 0) && (*(uint16_t *)(buf + 0x424) > 0x1fff) &&
                 (*(uint16_t *)(buf + 0x446) > 0x1fff)) {
                 *param_3 = 0x22;
-                puVar11 = FUN_14005fd7c((int64_t)(buf + 0x410), 0x1b, 0x2e, param_3 + 1);
+                puVar11 = PECMD_DataToWideString((int64_t)(buf + 0x410), 0x1b, 0x2e, param_3 + 1);
                 *puVar11 = 0x22;
                 puVar11[1] = 0x20;
                 puVar11[2] = 0x22;
-                puVar12 = FUN_14005fd7c((int64_t)(buf + 0x410), 10, 0x13, puVar11 + 3);
+                puVar12 = PECMD_DataToWideString((int64_t)(buf + 0x410), 10, 0x13, puVar11 + 3);
                 uVar4 = puVar11[3];
                 *puVar12 = 0x22;
                 puVar12[1] = 0;

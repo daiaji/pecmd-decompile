@@ -109,12 +109,12 @@ extern WCHAR *FUN_14007034c(void *ps, const WCHAR *src);
 extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
                              int64_t *a4, uint32_t a5, uint16_t *a6);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
-extern uint64_t FUN_14006cba8(const WCHAR *p);
-extern void  FUN_14006ace4(WCHAR **pp, WCHAR **out, int len);
+extern uint64_t PECMD_IsNumericString(const WCHAR *p);
+extern void  PECMD_QuoteTokenString(WCHAR **pp, WCHAR **out, int len);
 extern void  FUN_140063b64(void *out);
 extern void  FUN_1400633a8(void **ps, int64_t len);
 extern void *PECMD_GrowByteBuffer(void *ps, int64_t len);
-extern void  FUN_140060ca8(WCHAR **pp, uint64_t flags, uint16_t ch);
+extern void  PECMD_TrimWs(WCHAR **pp, uint64_t flags, uint16_t ch);
 extern void  PECMD_TrimOuterQuotes(WCHAR **pp, uint8_t flags, uint16_t ch);
 extern uint16_t **PECMD_SkipRepeatedDelimiter(uint16_t **pp, uint16_t ch);
 extern char  FUN_140062fc4(LPCWSTR param_1, void *param_2, int param_3);

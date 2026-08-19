@@ -2,7 +2,7 @@
  *
  * Contains:
  *   FUN_1400aee2c @0x1400aee2c  PCIP 缓存/地址配置命令解析执行
- *   FUN_1400b02c4 @0x1400b02c4  对象构造派发 (被 PECMD_PcipDispatch 调用)
+ *   PECMD_CreateTimerObject @0x1400b02c4  对象构造派发 (被 PECMD_PcipDispatch 调用)
  *   FUN_1400b0bf8 @0x1400b0bf8  异步脚本/线程启动 (CreateThread 派发)
  *   PECMD_PcipDispatch @0x1400b4600  PCIP 命令分派 (SET/DHCP 等)
  */
@@ -78,7 +78,7 @@ extern WCHAR           *FUN_1400f429c(WCHAR **pp, uint16_t ch);  /* delimiter sc
 extern int64_t          FUN_14005c788(const char *a, const WCHAR *w, int n);
 extern WCHAR           *FUN_14007034c(WCHAR **ps, const WCHAR *src);
 extern WCHAR           *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
-extern void             FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len,
+extern void             PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                                       uint64_t cap);
 extern void             FUN_1400633a8(void **ps, int64_t len);   /* alloc */
 extern WCHAR           *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);   /* token 扫描 */
@@ -87,8 +87,8 @@ extern int64_t         *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len); /* 
 extern WCHAR           *FUN_1400637dc(WCHAR **ps, LPCSTR src, ulonglong a,
                                       ulonglong b);
 extern uint64_t         PECMD_GetPackedSystemVersion(void);               /* 版本号 */
-extern void             FUN_140017b8c(void);               /* 初始化 */
-extern void             FUN_14005cfd0(void *p);            /* 懒加载 WS2_32 */
+extern void             PECMD_LoadSetupApiFunctions(void);               /* 初始化 */
+extern void             PECMD_InitWinsock(void *p);            /* 懒加载 WS2_32 */
 extern int32_t          PECMD_QueryState_cfc0(void);
 extern void             FUN_14005cf3c(void);               /* 网络初始化失败 */
 extern void             FUN_14005c828(const char *func, const char *dll,
@@ -326,8 +326,8 @@ int64_t FUN_1400aee2c(int64_t *param_1, LPCWSTR param_2)
         pWVar18 = local_180;
         WVar17 = *local_180;
     }
-    FUN_140017b8c();
-    FUN_14005cfd0(&local_188);
+    PECMD_LoadSetupApiFunctions();
+    PECMD_InitWinsock(&local_188);
     bVar6 = PECMD_QueryState_cfc0();
     if (bVar6 == 0) goto LAB_1400b01d8;
     uVar19 = uVar23;
@@ -515,7 +515,7 @@ LAB_1400af515:
             }
         }
         local_e0 = (LPCSTR)0x0;
-        FUN_14006355c((int64_t *)&local_e0, local_c0, -1, 0xffffffffffffffffULL);
+        PECMD_WideToAnsiStr((int64_t *)&local_e0, local_c0, -1, 0xffffffffffffffffULL);
         local_a8 = (LPCWSTR)PECMD_CopyStrToSlot((WCHAR **)&local_a8, (WCHAR **)&local_f8);
         FUN_140063620(&local_98);
         local_160 = (LPWSTR)0;
@@ -544,7 +544,7 @@ LAB_1400af515:
                                                           local_58, local_60, (int64_t *)&local_98,
                                                           local_70);
         }
-        FUN_14006355c((int64_t *)&local_b8, local_170, -1, 0xffffffffffffffffULL);
+        PECMD_WideToAnsiStr((int64_t *)&local_b8, local_170, -1, 0xffffffffffffffffULL);
         lstrlenA(local_b8);
         if ((int)(uint32_t)local_148 == 0) {
             FUN_14005c828("DhcpNotifyConfigChange", "dhcpcsvc.DLL", (void **)&DAT_14013d4d0, (uintptr_t *)0);
@@ -570,13 +570,13 @@ LAB_1400af515:
                         DVar4 = 0;
                         if (bVar25 != 0) {
                             local_158 = 0;
-                            FUN_14006355c((int64_t *)&local_158, local_e8, -1, 0xffffffffffffffffULL);
+                            PECMD_WideToAnsiStr((int64_t *)&local_158, local_e8, -1, 0xffffffffffffffffULL);
                             local_180 = (LPWSTR)0;
-                            FUN_14006355c((int64_t *)&local_180, pWVar24, -1, 0xffffffffffffffffULL);
+                            PECMD_WideToAnsiStr((int64_t *)&local_180, pWVar24, -1, 0xffffffffffffffffULL);
                             local_148 = 0;
-                            FUN_14006355c((int64_t *)&local_148, local_f0, -1, 0xffffffffffffffffULL);
+                            PECMD_WideToAnsiStr((int64_t *)&local_148, local_f0, -1, 0xffffffffffffffffULL);
                             local_160 = (LPWSTR)0;
-                            FUN_14006355c((int64_t *)&local_160, local_d8, -1, 0xffffffffffffffffULL);
+                            PECMD_WideToAnsiStr((int64_t *)&local_160, local_d8, -1, 0xffffffffffffffffULL);
                             iVar8 = lstrlenA((LPCSTR)(intptr_t)local_180);
                             FUN_14006375c((WCHAR **)&local_180, (LPCWSTR)(intptr_t)(iVar8 + 0xdc));
                             iVar8 = lstrlenA((LPCSTR)(intptr_t)local_158);
@@ -768,12 +768,12 @@ LAB_1400b01d8:
 
 /* ================================================================
  * @0x1400b02c4  对象构造派发 (被 PECMD_PcipDispatch 调用)
- * signature: undefined __fastcall FUN_1400b02c4(WPARAM param_1,
+ * signature: undefined __fastcall PECMD_CreateTimerObject(WPARAM param_1,
  *   undefined8 param_2, undefined8 * param_3, undefined8 * param_4,
  *   int param_5, uint param_6)
  * param_1 为 WPARAM 型, 但按反汇编实为对象基址 (WPARAM+0x1a0 等)。
  */
-void FUN_1400b02c4(WPARAM param_1, uint64_t param_2, uint64_t *param_3,
+void PECMD_CreateTimerObject(WPARAM param_1, uint64_t param_2, uint64_t *param_3,
                    uint64_t *param_4, int param_5, uint32_t param_6)
 {
     longlong lVar1;
@@ -1359,7 +1359,7 @@ LAB_1400b47a6:
             if (uVar1 != 0x2a) {
                 param_1 = *(int64_t **)(param_3 + 0x290);
             }
-            FUN_1400b02c4(param_3, (uint64_t)param_1, &local_78, &local_68, iVar2, uVar9);
+            PECMD_CreateTimerObject(param_3, (uint64_t)param_1, &local_78, &local_68, iVar2, uVar9);
             uVar5 = 0;
             goto LAB_1400b48af;
         }

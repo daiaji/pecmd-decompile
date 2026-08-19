@@ -2070,7 +2070,7 @@ WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
     int i, len;
 
     (void)fmt;
-    FUN_140063694(out, 100);
+    PECMD_AllocWStringBuffer(out, 100);
     FUN_140063620(&tmp);
     FUN_140063620(&suffix);
     FUN_140063620(&expBuf);
@@ -3618,8 +3618,8 @@ start:
             FUN_14005B104(&allPath);
             return r;
         }
-        FUN_140063694(&nameBuf, (int64_t)(nameLen * 4 + 8));
-        FUN_140063694(&dataBuf, (int64_t)(dataLen * 4 + 8));
+        PECMD_AllocWStringBuffer(&nameBuf, (int64_t)(nameLen * 4 + 8));
+        PECMD_AllocWStringBuffer(&dataBuf, (int64_t)(dataLen * 4 + 8));
         for (i = 0; i < valueCount; i++) {
             DWORD nlen = nameLen << 2;
             DWORD dlen = dataLen << 2;

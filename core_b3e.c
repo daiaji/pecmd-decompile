@@ -59,7 +59,7 @@ extern void FUN_1400FD1A8(void *obj);
 extern void FUN_14005B7E8(char *s);
 extern void FUN_1400FD86C(int64_t *obj, uint32_t msg); /* @0x1400fd86c */
 extern uint64_t FUN_140063060(uint32_t *buf);
-extern bool FUN_1400726f0(LPCSTR cmd, uint32_t flags, char *state, char *out,
+extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char *out,
                           uint64_t ctx, int mode);
 extern void FUN_14005CC4C(void);
 extern uint64_t FUN_1400745c8(int64_t *pp, uint64_t *out);
@@ -524,7 +524,7 @@ uint64_t PECMD_ProcessCommandLine(LPCSTR cmd, uint32_t flags, char *state, char 
     if (*state == '*') {
         return 1;
     }
-    bool bVar1 = FUN_1400726f0(cmd, flags, state, out, ctx, mode);
+    bool bVar1 = PECMD_CheckNetAddress(cmd, flags, state, out, ctx, mode);
     uint64_t uVar2 = bVar1 ? 1 : 0;
     if (*state == '-') {
         FUN_14005CC4C();

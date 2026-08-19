@@ -68,7 +68,7 @@ extern int  (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **); /
 /* ================================================================
  * Helper-function externs (bodies provided elsewhere; NOT defined here)
  * ================================================================ */
-extern void      FUN_14006355c(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+extern void      PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void     *PECMD_GrowByteBuffer(void **ps, int64_t len);
 extern void      FUN_14005b104(void *ps);
 extern int       FUN_140072d8c(void *a, int64_t *b, int c);
@@ -89,7 +89,7 @@ extern int       PECMD_ParseUIntValue(LPCWSTR *, int *);
 extern void      FUN_14005e198(HWND, uint32_t *, int);
 extern void      FUN_14006764c(int64_t *, int64_t *, short, short);
 extern void      PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);
-extern HBITMAP   FUN_140062a5c(RECT *, HDC *, LPCWSTR);
+extern HBITMAP   PECMD_CaptureScreenRegion(RECT *, HDC *, LPCWSTR);
 extern DWORD     PECMD_SaveBitmap(HBITMAP, LPCWSTR, int, LPCWSTR);
 extern HICON     PECMD_LoadIcon(LPCWSTR, uint64_t *);
 extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);
@@ -98,15 +98,15 @@ extern void      FUN_14007bf44(int64_t *, WCHAR *, WCHAR **, int, int);
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);
 extern void      FUN_1400547bc(int64_t *, WCHAR **, WCHAR **, uint32_t, int);
 extern int64_t  *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void      FUN_1400744d4(int64_t *, uint32_t *, int *, int *, uint32_t *);
+extern void      PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);
 extern void      FUN_1400676e4(int64_t *, int64_t *, int);
 extern void      PECMD_CopyUpToChar(int64_t *, int64_t *, uint32_t);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      FUN_1400677b0(int64_t *, int64_t);
 extern void      FUN_1400675b8(int64_t *, int64_t *, short);
-extern void      FUN_14001dd04(const WCHAR *, char);
-extern void      FUN_140068034(WCHAR *, int64_t *);
-extern void      FUN_140063d7c(uint64_t, int64_t, WCHAR **, int, int, int, int,
+extern void      PECMD_ExpandBackslashNewline(const WCHAR *, char);
+extern void      PECMD_ReadFileToWide(WCHAR *, int64_t *);
+extern void      PECMD_DispatchCreateControl(uint64_t, int64_t, WCHAR **, int, int, int, int,
                                WCHAR **, WCHAR **, uint32_t, int *, LPCWSTR, uint64_t);
 
 /* ================================================================
@@ -163,7 +163,7 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
         return 0;
     }
     if (param_3 == (LPCWSTR)0) {
-        ho = FUN_140062a5c(param_1, (HDC *)0, WSTR("DISPLAY"));
+        ho = PECMD_CaptureScreenRegion(param_1, (HDC *)0, WSTR("DISPLAY"));
         if (ho == (HBITMAP)0) {
             return 1;
         }
@@ -185,7 +185,7 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
         {
             local_38 = (HDC)0;
             local_30 = (HGDIOBJ)0;
-            ho = FUN_140062a5c(param_1, &local_38, param_4);
+            ho = PECMD_CaptureScreenRegion(param_1, &local_38, param_4);
             hdc = local_38;
             if (ho == (HBITMAP)0) {
                 return 1;
@@ -265,7 +265,7 @@ uint32_t *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2, uint64_t *para
     local_90 = (LPCSTR)0;
     local_res18 = param_3;
     local_res20 = param_4;
-    FUN_14006355c((int64_t *)&local_90, (LPCWSTR)*param_2, -1, 0xffffffffffffffff);
+    PECMD_WideToAnsiStr((int64_t *)&local_90, (LPCWSTR)*param_2, -1, 0xffffffffffffffff);
     PECMD_GrowByteBuffer((void **)param_3, 0x32);
     *(uint8_t *)*param_3 = 0;
     *(uint16_t *)*param_4 = 0;
@@ -352,7 +352,7 @@ LAB_14007f219:
     FUN_14007034c((WCHAR **)param_2, pWVar10);
     pWVar10 = (LPCWSTR)*param_2;
     local_68 = pWVar10;
-    FUN_14006355c((int64_t *)&local_90, pWVar10, -1, 0xffffffffffffffff);
+    PECMD_WideToAnsiStr((int64_t *)&local_90, pWVar10, -1, 0xffffffffffffffff);
     iVar4 = lstrlenA(local_90);
     plVar13 = (int64_t *)g_pCacheBlock;
     local_a8 = (uint32_t *)0;
@@ -798,7 +798,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     }
     else {
         plVar6 = FUN_14007f6e4((WCHAR **)&local_60, (WCHAR **)&local_res10, 0x2c, 1);
-        FUN_1400744d4(plVar6, (uint32_t *)&local_90, local_b0, &local_c4,
+        PECMD_ParseLtwhParams(plVar6, (uint32_t *)&local_90, local_b0, &local_c4,
                       (uint32_t *)&local_res18);
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
@@ -833,10 +833,10 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
             FUN_14005b104((int64_t *)&local_res8);
         }
         if ((!bVar2) && ((uVar8 & 4) != 0)) {
-            FUN_14001dd04(local_b8, '\0');
+            PECMD_ExpandBackslashNewline(local_b8, '\0');
         }
         if (bVar3) {
-            FUN_140068034(local_b8, (int64_t *)&local_b8);
+            PECMD_ReadFileToWide(local_b8, (int64_t *)&local_b8);
         }
         if ((short)uVar8 == 2) {
             uVar12 = 0x8000;
@@ -847,7 +847,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
         if (WVar15 != L'*') {
             param_1 = *(int64_t **)((uintptr_t)param_3 + 0x290);
         }
-        FUN_140063d7c(param_3, (int64_t)param_1, (WCHAR **)&local_a8,
+        PECMD_DispatchCreateControl(param_3, (int64_t)param_1, (WCHAR **)&local_a8,
                       (int)(int32_t)(uint64_t)local_90, local_b0[0], local_c4,
                       (int)(int32_t)local_res18, (WCHAR **)&local_b8,
                       (WCHAR **)&local_88, uVar12 & 0xffff | uVar10 | uVar11,

@@ -53,7 +53,7 @@ extern void FUN_14005B0B8(void *p);                /* FUN_14005B0B8 core_thread.
 /* 待实现 (B7 后续/声明) */
 extern uint64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmd);   /* FUN_14004EB34 */
 extern int PECMD_ReadFileStr(const WCHAR *path, void **pbuf);                          /* PECMD_ReadFileStr */
-extern int PECMD_EvalExpr(WCHAR **pp, double *out);                                    /* FUN_140082448 */
+extern int PECMD_EvalExpr(WCHAR **pp, double *out);                                    /* PECMD_ParseParenthesizedExpression */
 
 /* ========== 控件子类化 @0x1400011d4 ========== */
 /* Enter 键 → 向父窗发 WM_COMMAND(id); 其余转发原 WndProc */
