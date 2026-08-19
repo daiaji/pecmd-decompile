@@ -50,8 +50,8 @@ typedef uint64_t            ulonglong;
 extern DWORD g_imgBufLen;        /* pending image-buffer length */
 extern WCHAR g_szEmpty[];      /* empty string (.rdata)       */
 extern int64_t g_pCacheBlock;        /* cached COM enumeration      */
-extern int64_t     DAT_14012d1e8;        /* CLSID slot (CoCreateInstance) */
-extern int64_t     DAT_14012d1f8;        /* IID   slot (CoCreateInstance) */
+extern GUID g_clsidCoCreate;        /* CLSID slot (CoCreateInstance) */
+extern GUID g_iidCoCreate;        /* IID   slot (CoCreateInstance) */
 
 /* GDI+ lazily-loaded function-pointer slots (typed) */
 extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth    */
@@ -374,7 +374,7 @@ LAB_14007f319:
         {
             (*g_pOleUninit)();
         }
-        (*g_pCoCreateInstance)(&DAT_14012d1e8, (void *)0, 0x15, &DAT_14012d1f8,
+        (*g_pCoCreateInstance)(&g_clsidCoCreate, (void *)0, 0x15, &g_iidCoCreate,
                          (void **)&local_80);
         if (local_80 == (int64_t *)0) {
             if ((g_pOleUninit != (void (*)(void))0) && (iVar4 == 0)) {

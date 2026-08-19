@@ -672,7 +672,6 @@ uint64_t SetupDiEnumDeviceInterfaces(void) { return 0; }
 uint64_t SetupDiGetDeviceInstanceIdW(void) { return 0; }
 uint64_t SetupDiGetDeviceInterfaceDetailW(void) { return 0; }
 
-uint64_t DAT_14011e890;
 uint64_t DAT_14013cdb8;
 uint64_t DAT_14013cdc0;
 uint64_t DAT_14013ce38;
@@ -1006,9 +1005,6 @@ uint8_t  DAT_14013d5c0[8] = {0};
 uint8_t  DAT_1401210f8[8] = {0};
 uint64_t DAT_14013d3b0 = 0;
 uint64_t _UNK_14012d1d0 = 0;
-int64_t  DAT_14012d1f8 = 0;
-int64_t  DAT_14012d1e8 = 0;
-
 /* Win32 / SetupAPI */
 uint64_t SetVolumeLabelW(void){ return 0; }
 uint64_t SetupDiGetDeviceInfoListDetailW(void){ return 0; }

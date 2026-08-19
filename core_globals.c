@@ -1093,3 +1093,7 @@ DWORD g_imgBufLen;   /* DAT_14013d870 位图数据大小 */
 COLORREF g_dwTipsTextColor;   /* DAT_14014700c 提示文本颜色 */
 COLORREF g_dwTipBkColor;   /* DAT_140147008 提示背景色 */
 HWND g_hwndTray;   /* DAT_14013dd00 托盘窗口句柄 */
+/* ---- 阶段5b GUID 迁移 ---- */
+GUID g_guidDevInstance;   /* DAT_14011e890 */
+GUID g_clsidCoCreate;   /* DAT_14012d1e8 */
+GUID g_iidCoCreate;   /* DAT_14012d1f8 */

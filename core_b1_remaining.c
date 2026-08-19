@@ -414,7 +414,7 @@ extern BOOL DuplicateTokenEx(HANDLE, DWORD, LPSECURITY_ATTRIBUTES, int, int, HAN
 extern BOOL SetTokenInformation(HANDLE, int, void *, DWORD);                    /* Win32 API */
 extern BOOL CreateProcessWithLogonW(LPCWSTR, LPCWSTR, LPCWSTR, DWORD, LPCWSTR, LPWSTR,
                                     DWORD, LPVOID, LPCWSTR, LPSTARTUPINFOW, LPPROCESS_INFORMATION); /* Win32 API */
-extern GUID DAT_14011e890;                                          /* @0x14011e890 (GUID 数据) */
+extern GUID g_guidDevInstance;                                          /* @0x14011e890 (GUID 数据) */
 /* ImDisk.cpl 动态装载的函数指针槽 (PECMD_LoadUnloadImdisk) */
 extern HMODULE g_hImdiskCpl;                                       /* Imdisk.cpl 模块句柄 */
 /* 会话/进程创建用延迟加载函数指针槽 (PECMD_CreateProcessAsUser) */
@@ -2491,7 +2491,7 @@ LAB_1400070f7:
                             pWVar15 = (WCHAR *)param_4;
                         }
                         local_110[1] = L'\0';
-                        PECMD_EnumDevices(pWVar15, local_110 + 1, 0x13, &DAT_14011e890);
+                        PECMD_EnumDevices(pWVar15, local_110 + 1, 0x13, &g_guidDevInstance);
                     }
                     pWVar12 = local_120;
                     iVar2 = *(int *)lpOutBuffer;

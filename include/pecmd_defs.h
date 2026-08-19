@@ -557,3 +557,6 @@ extern DWORD g_imgBufLen;   /* DAT_14013d870 */
 extern COLORREF g_dwTipsTextColor;   /* DAT_14014700c */
 extern COLORREF g_dwTipBkColor;   /* DAT_140147008 */
 extern HWND g_hwndTray;   /* DAT_14013dd00 */
+extern GUID g_guidDevInstance;   /* DAT_14011e890 */
+extern GUID g_clsidCoCreate;   /* DAT_14012d1e8 */
+extern GUID g_iidCoCreate;   /* DAT_14012d1f8 */

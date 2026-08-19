@@ -114,7 +114,7 @@ LPWSTR PECMD_CalcExpression(int64_t *param_1, WCHAR *param_2, uint64_t *param_3)
 
 /* ---- PECMD_EnumDevices 需要 ---- */
 extern uint8_t g_bE870[];   /* GUID (设备类) */
-extern uint8_t DAT_14011e890[];   /* GUID (设备实例) */
+extern GUID g_guidDevInstance;   /* GUID (设备实例) */
 extern uint8_t g_bE8a0[];   /* GUID */
 extern void PECMD_LoadSetupApiFunctions(void);  /* 初始化 */
 extern DWORD PECMD_QueryDeviceInfo(LPCWSTR path, DWORD *out1, int64_t *out2);
@@ -13891,7 +13891,7 @@ DWORD PECMD_EnumDevices(LPCWSTR param_1, LPWSTR param_2, uint32_t param_3, void 
     }
     cVar9 = (param_4 == (void *)&g_bE8a0);
     local_4b8 = (uint32_t)(uint8_t)cVar9;
-    bVar10 = (param_4 == (void *)&DAT_14011e890);
+    bVar10 = (param_4 == (void *)&g_guidDevInstance);
     local_4b4 = iVar4;
     if ((uint64_t)(uintptr_t)param_1 - 0x10001U < 0xfffffffffffaffffULL) {
         PECMD_QueryDeviceInfo(param_1, local_res20, &local_4a0);
