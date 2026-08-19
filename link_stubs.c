@@ -1062,3 +1062,9 @@ double   DAT_140123800;
    ============================================================ */
 int SetupDiSetClassInstallParamsW(void *a, void *b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
 int SetupDiChangeState(void *a, void *b) { (void)a;(void)b; return 1; }
+
+/* ============================================================
+   ---- 新增叶依赖桩 (FUN_14005e254/FUN_14005e3ac 恢复所需) ----
+   ============================================================ */
+int64_t FUN_140018978(int64_t *a, const uint16_t *b, int64_t *c, int64_t d, void *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return (int64_t)0; }
+void    FUN_14005e36c(int64_t a, uint32_t *b) { (void)a;(void)b; }

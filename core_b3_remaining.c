@@ -568,6 +568,10 @@ extern int      SetupDiGetDeviceInstallParamsW(void *a, void *b, void *c);
 typedef struct _SP_CLASSINSTALL_HEADER_l { DWORD cbSize; DWORD InstallFunction; DWORD dummy[3]; } _SP_CLASSINSTALL_HEADER_l;
 typedef struct _SP_DEVINSTALL_PARAMS_W_l   { DWORD cbSize; DWORD Flags; uint8_t dummy[0x248-8]; } _SP_DEVINSTALL_PARAMS_W_l;
 
+/* ---- 恢复 FUN_14005e254/FUN_14005e3ac 所需的辅助 extern ---- */
+extern int64_t  FUN_140018978(int64_t *a, LPCWSTR b, int64_t *c, int64_t d, void *e); /* @0x140018978 环境展开 */
+extern void     FUN_14005e36c(int64_t a, uint32_t *b);                                   /* @0x14005e36c 控件消息 */
+
 /* ---- 恢复 PECMD_SetDHCPSettings/0b6018/0b6e24/0baef4/0bcc5c/0bd4a4 所需的辅助 extern (精确拼写) ---- */
 extern void     FUN_14005b0b8(void *p);                          /* @0x14005b0b8 对象初始化 */
 extern uint64_t FUN_1400a40e8(uint64_t *param_1, int64_t *param_2, int64_t *param_3,
@@ -9418,24 +9422,97 @@ void PECMD_BindForegroundInput(HWND hwnd)
     }
 }
 
+/* 遍历键/值链: 对每个条目展开环境变量并登记到脚本结构, 用于环境块注册 */
+/* @0x14005e254 size=188 */
 void FUN_14005e254(int64_t *param_1, int64_t *param_2, int64_t *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14005e254 — decompile-failed, body 未还原 */
-/* @0x14005e254 size=188 */
-    (void)param_1; (void)param_2; (void)param_3;
+    int64_t lVar1;
+    int64_t *plVar2;
+    int64_t lVar3;
+    int iVar4;
+
+    if (param_2 != (int64_t *)0x0) {
+        plVar2 = (int64_t *)&g_Script;
+        if (param_3 != (int64_t *)0x0) {
+            plVar2 = param_3;
+        }
+        while (param_2 != plVar2) {
+            iVar4 = 0;
+            if (0 < (int)param_2[1]) {
+                lVar3 = 0;
+                do {
+                    lVar1 = FUN_140018978(param_1, (LPCWSTR) * *(int64_t **)(lVar3 + *param_2),
+                                          param_1, -1, (void *)0x0);
+                    if (lVar1 == 0) {
+                        FUN_14001e5b0(param_1, (LPCWSTR) * *(int64_t **)(lVar3 + *param_2),
+                                      (LPCWSTR)(*(int64_t **)(lVar3 + *param_2))[1], -1, -1);
+                    }
+                    iVar4 = iVar4 + 1;
+                    lVar3 = lVar3 + 8;
+                } while (iVar4 < (int)param_2[1]);
+            }
+            if (param_2 == (int64_t *)&g_Script) {
+                return;
+            }
+            param_2 = (int64_t *)param_2[7];
+            if (param_2 == (int64_t *)0x0) {
+                return;
+            }
+        }
+    }
+    return;
 }
 
+/* 注入左/中键点击消息: 依据 bVar 位标志设置点击类型并调用对象虚表分发 */
+/* @0x14005e3ac size=253 */
 void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_t *param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_14005e3ac — decompile-failed, body 未还原 */
-/* @0x14005e3ac size=253 */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4;
+    uint8_t bVar1;
+    POINT local_res8;
+    int64_t local_28;
+    int64_t *local_20;
+    int local_18;
+    int local_14;
+
+    bVar1 = *(uint8_t *)(param_4 + 4);
+    if (param_1[0x2a] != 0) {
+        FUN_14005e36c((int64_t)param_1, param_4);
+    }
+    if ((bVar1 & 4) != 0) {
+        *(uint8_t *)((int64_t)param_1 + 0x159) = 1;
+        param_2 = 0x271c;
+    }
+    if ((bVar1 & 8) != 0) {
+        *(uint8_t *)((int64_t)param_1 + 0x15a) = 1;
+        param_2 = 0x271d;
+    }
+    local_res8.x = 0;
+    local_res8.y = 0;
+    ClientToScreen((HWND)param_1[0x2a], &local_res8);
+    local_18 = *(int *)((int64_t)param_1 + 0x13c);
+    local_14 = (int)param_1[0x28];
+    local_28 = 0;
+    if (bVar1 != 0) {
+        *(int *)((int64_t)param_1 + 0x13c) = local_18 + local_res8.x;
+        *(int *)(param_1 + 0x28) = local_14 + local_res8.y;
+    }
+    local_20 = param_1;
+    {
+        void (**fnptr)(int64_t *, uint32_t, uint64_t) =
+            (void (**)(int64_t *, uint32_t, uint64_t))(*param_1 + 0x10);
+        (*fnptr)(param_1, param_2, param_3);
+    }
+    if ((HWND)param_1[0x2a] != (HWND)0x0) {
+        local_28 = param_1[4];
+        SendMessageW((HWND)param_1[0x2a], 0x466, 1, (LPARAM)&local_28);
+    }
+    return;
 }
 
+/* 注册全局热键: 生成 PECMD_HotKEY_[修饰]_键 原子名并注册, 冲突时递增后缀重试 */
+/* @0x14005e61c size=446 */
 uint16_t FUN_14005e61c(int64_t param_1, char param_2, uint param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14005e61c — decompile-failed, body 未还原 */
-/* @0x14005e61c size=446 注册热键(带 ALT/CTRL/SHIFT/WIN 前缀与冲突重试) */
     ATOM label;
     int len;
     LPSTR pStr;
