@@ -4,8 +4,8 @@
  *   PECMD_MsgCommand @0x140083274  MSG 参数解析 + 写控件 (对话框) 分发
  *   PECMD_ParseMsgDispatch @0x140083f74  MSG 参数解析 + 控件分发 (变体 1)
  *   PECMD_MsgDispatch @0x14008430c  MSG 参数解析 + 控件分发 (变体 2)
- *   FUN_1400858c4 @0x1400858c4  文本/文件内容生成循环 (含 -format/row/col 处理)
- *   FUN_140086944 @0x140086944  加解密/文件流处理主入口
+ *   PECMD_GenerateTextContent @0x1400858c4  文本/文件内容生成循环 (含 -format/row/col 处理)
+ *   PECMD_ProcessEncodedFile @0x140086944  加解密/文件流处理主入口
  *   PECMD_GetDiskFreeSpace @0x1400944c4  磁盘/卷信息查询命令 (临界区保护)
  *   PECMD_NormalizePath @0x140094c04  路径规范化 (full/short/volume) 命令
  *
@@ -137,7 +137,7 @@ extern void      FUN_14005c260(int64_t param_1, uint64_t param_2);   /* 摘要�
 extern void *FUN_14001d78c(void *dst, const void *src, int len);  /* memcpy */
 extern void *FUN_14001d744(void *dst, const void *src, int len);  /* memmove */
 
-/* ---- 文本渲染 (FUN_1400858c4) ---- */
+/* ---- 文本渲染 (PECMD_GenerateTextContent) ---- */
 extern bool      FUN_1400c1194(WCHAR **pp, uint64_t *size);   /* 解析十六进制大小 */
 extern uint64_t  PECMD_ParseFirstWordToken(int64_t *a, int64_t *b, uint64_t *c); /* 取单词 */
 extern LPCWSTR   FUN_14005182c(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3,
@@ -646,10 +646,10 @@ LAB_140084678:
 }
 
 /* ==================================================================
- * @0x1400858c4  (uint64_t FUN_1400858c4(longlong*, longlong))
+ * @0x1400858c4  (uint64_t PECMD_GenerateTextContent(longlong*, longlong))
  * 文本/文件内容生成循环: 解析格式化选项, 生成多行/多块输出。
  * ================================================================== */
-uint64_t FUN_1400858c4(int64_t *param_1, int64_t param_2)
+uint64_t PECMD_GenerateTextContent(int64_t *param_1, int64_t param_2)
 {
     uint64_t uVar1;
     WCHAR *pWVar2;
@@ -1258,11 +1258,11 @@ LAB_1400859c1:
 
 /* ==================================================================
  * ==================================================================
- * @0x140086944  (uint64_t FUN_140086944(longlong*, WCHAR*))
+ * @0x140086944  (uint64_t PECMD_ProcessEncodedFile(longlong*, WCHAR*))
  * 加解密/文件流主入口: 解析开关 (-f/-m/-udm/-o/-u/-bin/-src/-utf8),
  * 打开输入输出流, 处理后写回变量。
  * ================================================================== */
-uint64_t FUN_140086944(int64_t *param_1, WCHAR *param_2)
+uint64_t PECMD_ProcessEncodedFile(int64_t *param_1, WCHAR *param_2)
 {
     uint32_t uVar16;
     uint32_t uVar17;

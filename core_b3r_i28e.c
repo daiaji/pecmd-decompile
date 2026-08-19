@@ -2,7 +2,7 @@
  *
  * Contains:
  *   PECMD_ParseWindowPosition @0x1400b9f1c  WINDOW/位置解析执行 (逗号分隔字段, -center/-right 对齐)
- *   FUN_1400ba35c @0x1400ba35c  图标/工具提示参数解析与图标装载
+ *   PECMD_LoadIconAndTooltip @0x1400ba35c  图标/工具提示参数解析与图标装载
  *   PECMD_ConstructControlObjectEx @0x1400bd338  窗口/控件创建分派 (构造器调用)
  *   PECMD_CreateButtonControl @0x1400bd764  窗口解析执行 (选项标志 + 逗号字段)
  */
@@ -242,14 +242,14 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
 
 /* ================================================================
  * @0x1400ba35c  图标/工具提示参数解析与图标装载
- * signature: HICON __fastcall FUN_1400ba35c(longlong * param_1,
+ * signature: HICON __fastcall PECMD_LoadIconAndTooltip(longlong * param_1,
  *   LPCWSTR param_2, longlong param_3)
  *
  * 解析选项前缀 (. # *), -w/-f/--/dummy 选项, 以及逗号分隔的字段,
  * 依据是否需要工作线程装载图标并注册到 PELOGON。寄存器拼接
  * (CONCAT71 等) 已归一化为普通 uint64 位操作。
  */
-HICON FUN_1400ba35c(int64_t *param_1, LPCWSTR param_2, int64_t param_3)
+HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_3)
 {
     HMODULE hLibModule;
     bool bVar1;

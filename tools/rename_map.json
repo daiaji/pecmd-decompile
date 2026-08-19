@@ -772,5 +772,21 @@
   "FUN_14009d9e8": "PECMD_DestroyObject",
   "FUN_14003e190": "PECMD_RegisterCallbackWindowClass",
   "FUN_140023bc4": "PECMD_ApplyWallpaper",
-  "FUN_14004fc58": "PECMD_ReserveObjectArray"
+  "FUN_14004fc58": "PECMD_ReserveObjectArray",
+  "FUN_140075f9c": "PECMD_DosDeviceMount",
+  "FUN_140006aa0": "PECMD_EnumerateVolume",
+  "FUN_140019e34": "PECMD_MatchDeviceClass",
+  "FUN_1400474a8": "PECMD_DriverInstall",
+  "FUN_1400b6e24": "PECMD_LoadObjectIcon",
+  "FUN_14009da54": "PECMD_ReadTextLine",
+  "FUN_140088300": "PECMD_CodeConvertCommand",
+  "FUN_14009f070": "PECMD_WriteFileEncoded",
+  "FUN_140095178": "PECMD_VolumeDeviceCommand",
+  "FUN_1400aee2c": "PECMD_PcipCommand",
+  "FUN_1400554dc": "PECMD_GenerateTimeText",
+  "FUN_1400858c4": "PECMD_GenerateTextContent",
+  "FUN_140086944": "PECMD_ProcessEncodedFile",
+  "FUN_1400a0d38": "PECMD_SearchStringAndLocate",
+  "FUN_1400b0bf8": "PECMD_LaunchAsyncScriptThread",
+  "FUN_1400ba35c": "PECMD_LoadIconAndTooltip"
 }

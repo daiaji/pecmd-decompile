@@ -1,9 +1,9 @@
 /* Restored batch28 B3 business functions (part i28c)
  *
  * Contains:
- *   FUN_1400aee2c @0x1400aee2c  PCIP 缓存/地址配置命令解析执行
+ *   PECMD_PcipCommand @0x1400aee2c  PCIP 缓存/地址配置命令解析执行
  *   PECMD_CreateTimerObject @0x1400b02c4  对象构造派发 (被 PECMD_PcipDispatch 调用)
- *   FUN_1400b0bf8 @0x1400b0bf8  异步脚本/线程启动 (CreateThread 派发)
+ *   PECMD_LaunchAsyncScriptThread @0x1400b0bf8  异步脚本/线程启动 (CreateThread 派发)
  *   PECMD_PcipDispatch @0x1400b4600  PCIP 命令分派 (SET/DHCP 等)
  */
 #include <stdbool.h>
@@ -124,13 +124,13 @@ extern char             PECMD_MatchAndPad(const void *key, WCHAR **pp, int len);
 
 /* ================================================================
  * @0x1400aee2c  PCIP 缓存/地址配置命令解析执行
- * signature: longlong __fastcall FUN_1400aee2c(longlong * param_1, LPCWSTR param_2)
+ * signature: longlong __fastcall PECMD_PcipCommand(longlong * param_1, LPCWSTR param_2)
  * 解析 "PCIP" 命令 (fresh/nfresh/many/safe/qkos/qk/sfsw/all/freecah/cah: 前缀,
  * 逗号分隔字段), 并执行注册表/DHCP/缓存读写。
  * 注: 原始寄存器拼接 (CONCAT71/CONCAT44) 已按项目规范归一化为普通整数/指针;
  * 命令分发/网络配置主体保留, 深层驱动字节布局部分用 TODO(verify) 标注。
  */
-int64_t FUN_1400aee2c(int64_t *param_1, LPCWSTR param_2)
+int64_t PECMD_PcipCommand(int64_t *param_1, LPCWSTR param_2)
 {
     BYTE *pBVar1;
     BYTE BVar2;
@@ -807,12 +807,12 @@ void PECMD_CreateTimerObject(WPARAM param_1, uint64_t param_2, uint64_t *param_3
 
 /* ================================================================
  * @0x1400b0bf8  异步脚本/线程启动 (CreateThread 派发)
- * signature: longlong __fastcall FUN_1400b0bf8(longlong * param_1,
+ * signature: longlong __fastcall PECMD_LaunchAsyncScriptThread(longlong * param_1,
  *   WCHAR * param_2, ulonglong param_3)
  * 解析 "$"/"*"/"+"... 前缀与开关参数, 构造执行对象并用 CreateThread
  * 异步启动 PECMD_ScriptThreadProc。
  */
-int64_t FUN_1400b0bf8(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
+int64_t PECMD_LaunchAsyncScriptThread(int64_t *param_1, WCHAR *param_2, uint64_t param_3)
 {
     int *piVar1;
     WCHAR WVar2;

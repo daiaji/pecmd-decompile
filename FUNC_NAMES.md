@@ -4,6 +4,22 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140075f9c | FUN_140075f9c | PECMD_DosDeviceMount |
+| 0x140006aa0 | FUN_140006aa0 | PECMD_EnumerateVolume |
+| 0x140019e34 | FUN_140019e34 | PECMD_MatchDeviceClass |
+| 0x1400474a8 | FUN_1400474a8 | PECMD_DriverInstall |
+| 0x1400b6e24 | FUN_1400b6e24 | PECMD_LoadObjectIcon |
+| 0x14009da54 | FUN_14009da54 | PECMD_ReadTextLine |
+| 0x140088300 | FUN_140088300 | PECMD_CodeConvertCommand |
+| 0x14009f070 | FUN_14009f070 | PECMD_WriteFileEncoded |
+| 0x140095178 | FUN_140095178 | PECMD_VolumeDeviceCommand |
+| 0x1400aee2c | FUN_1400aee2c | PECMD_PcipCommand |
+| 0x1400554dc | FUN_1400554dc | PECMD_GenerateTimeText |
+| 0x1400858c4 | FUN_1400858c4 | PECMD_GenerateTextContent |
+| 0x140086944 | FUN_140086944 | PECMD_ProcessEncodedFile |
+| 0x1400a0d38 | FUN_1400a0d38 | PECMD_SearchStringAndLocate |
+| 0x1400b0bf8 | FUN_1400b0bf8 | PECMD_LaunchAsyncScriptThread |
+| 0x1400ba35c | FUN_1400ba35c | PECMD_LoadIconAndTooltip |
 | 0x140070450 | FUN_140070450 | PECMD_InitComState |
 | 0x14006112c | FUN_14006112c | PECMD_WriteFileChunked |
 | 0x14001a9fc | FUN_14001a9fc | PECMD_ApplyDesktopWallpaper |

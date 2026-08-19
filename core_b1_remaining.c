@@ -2237,7 +2237,7 @@ uint64_t dllMain_Name(void)
     return 0;
 }
 
-WCHAR *FUN_140006aa0(int64_t *param_1, int64_t param_2, uint64_t param_3, LPCWSTR param_4)
+WCHAR *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2, uint64_t param_3, LPCWSTR param_4)
 {
     /* @0x140006aa0 size=3024 卷信息枚举/格式化 */
     LPWSTR lpOutBuffer;
@@ -6173,7 +6173,7 @@ void PECMD_AppendKeyIfMissing(int64_t obj, LPCWSTR key, int len)
     }
 }
 
-bool FUN_140019e34(int64_t param_1, WCHAR *param_2, uint64_t param_3)
+bool PECMD_MatchDeviceClass(int64_t param_1, WCHAR *param_2, uint64_t param_3)
 {
     /* @0x140019e34 size=242 判断设备实例是否匹配指定 DevClass */
     int iVar1;

@@ -2,12 +2,12 @@
  * core_b3r_h3.c — 还原 gh3 的 7 个业务函数
  *
  *   PECMD_HandleControlCommand @0x14009ce20  控件/列表命令处理 (Check 特殊分支)
- *   FUN_14009da54 @0x14009da54  READLINE/文件读行（编码识别/BOM/行扫描）
- *   FUN_14009f070 @0x14009f070  写文件（编码转换/定位/追加）
+ *   PECMD_ReadTextLine @0x14009da54  READLINE/文件读行（编码识别/BOM/行扫描）
+ *   PECMD_WriteFileEncoded @0x14009f070  写文件（编码转换/定位/追加）
  *   PECMD_WriteVarEncoded @0x1400a03ac  写变量/输出（-m/-bin/-8 编码分支）
  *   PECMD_WriteVarTruncated @0x1400a0644  字符串按长度截断写变量
  *   PECMD_SetVarRange @0x1400a0844  字符串按长度截断写变量(尾部)
- *   FUN_1400a0d38 @0x1400a0d38  字符串/列表查找与位置计算
+ *   PECMD_SearchStringAndLocate @0x1400a0d38  字符串/列表查找与位置计算
  *
  * 说明:
  *   - 仅实现本文件列出的目标函数; 所有辅助函数/全局仅 extern, 不定义。
@@ -62,7 +62,7 @@ extern void    PECMD_ParseSignedNumberStr(void *pp, void *out, int16_t sep);    
 extern int64_t *FUN_14007f6e4(WCHAR **src, WCHAR **pp, uint16_t sep, int mode);
 extern void    PECMD_AllocSmallObject(void *pp);                               /* 小对象分配 */
 extern WCHAR  *FUN_1400f429c(WCHAR **pp, uint16_t ch);                /* 分隔符扫描 */
-extern void    FUN_1400554dc(LPCWSTR a, int64_t *out, LPCWSTR b,
+extern void    PECMD_GenerateTimeText(LPCWSTR a, int64_t *out, LPCWSTR b,
                              int64_t c, FILETIME d);
 extern uint32_t FUN_1400799f0(LPCWSTR p, int64_t len);                /* 编码识别 → codepage */
 extern void   *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* 分配清零槽数组 */
@@ -423,11 +423,11 @@ LAB_0a0a21:
 }
 
 /* ==========================================================================
- * @0x1400a0d38  (LPCWSTR* FUN_1400a0d38(longlong*, WCHAR*, undefined8, byte))
+ * @0x1400a0d38  (LPCWSTR* PECMD_SearchStringAndLocate(longlong*, WCHAR*, undefined8, byte))
  * 字符串/列表查找: 解析分隔符/大小写/星号等修饰, 计算命中位置并写回变量。
  * 返回错误码 (0xffffffff80070057) 或命中指针, 以 LPCWSTR* 位模式承载。
  * ========================================================================== */
-LPCWSTR *FUN_1400a0d38(int64_t *param_1, WCHAR *param_2, uint64_t param_3, uint8_t param_4)
+LPCWSTR *PECMD_SearchStringAndLocate(int64_t *param_1, WCHAR *param_2, uint64_t param_3, uint8_t param_4)
 {
     WCHAR WVar1;
     bool bVar2;
@@ -907,13 +907,13 @@ LAB_0a18da:
 }
 
 /* ==========================================================================
- * @0x14009da54  (LARGE_INTEGER FUN_14009da54(longlong*, _FILETIME))
+ * @0x14009da54  (LARGE_INTEGER PECMD_ReadTextLine(longlong*, _FILETIME))
  * READLINE/读文件行: BOM/编码识别、行扫描、*fix *nl *left 修饰。
  * 注意: Ghidra 将大量局部量类型化为 _FILETIME 但实际是"编码标志寄存器 +
  * FILETIME 计数 + WCHAR 指针"的多态栈槽, 此处以 uint64_t 承载并用位运算
  * 访问字段 (TODO(verify))。
  * ========================================================================== */
-LARGE_INTEGER FUN_14009da54(int64_t *param_1, FILETIME param_2)
+LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
 {
   CHAR CVar1;
   uint16_t uVar2;
@@ -1210,7 +1210,7 @@ LAB_14009dd92:
           }
         } while (*(WCHAR *)(uintptr_t)local_res20 != L'\0');
       }
-      FUN_1400554dc((LPCWSTR)(uintptr_t)_Var24, (int64_t *)&local_80,
+      PECMD_GenerateTimeText((LPCWSTR)(uintptr_t)_Var24, (int64_t *)&local_80,
                     (LPCWSTR)(uintptr_t)_Var15, 0x10000, (FILETIME){0, 0});
       if (0 < (int)local_78) {
         local_res10 = (uint64_t)((int64_t)local_80 + local_70);
@@ -1779,11 +1779,11 @@ LAB_14009f024:
 
 
 /* ==========================================================================
- * @0x14009f070  (LARGE_INTEGER FUN_14009f070(longlong*, LARGE_INTEGER))
+ * @0x14009f070  (LARGE_INTEGER PECMD_WriteFileEncoded(longlong*, LARGE_INTEGER))
  * 写文件: 编码 codepage 判定、*fix *v *fv *c *sparse *nobom 修饰、文件定位/
  * 追加/截断、BOM 写入。local_res20 为字节标志寄存器 (bWriteMode 等)。
  * ========================================================================== */
-LARGE_INTEGER FUN_14009f070(int64_t *param_1, LARGE_INTEGER param_2)
+LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
 {
     bool bVar1;
     bool bVar2;

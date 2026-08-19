@@ -499,7 +499,7 @@ extern double g_dbl27088;
 extern void (*DAT_14013cdb8)(uint *, uint *);
 extern void (*DAT_14013cdc0)(uint, uint, int64_t);
 extern uint8_t PTR_FUN_140126b20[];
-/* ---- batch b3 恢复函数所需辅助/data extern (FUN_1400554dc/08bcd4 等) ---- */
+/* ---- batch b3 恢复函数所需辅助/data extern (PECMD_GenerateTimeText/08bcd4 等) ---- */
 extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int); /* MultiByteToWideChar-ish @0x14013c970 */
 extern int32_t DAT_14013d770[];                               /* @0x14013d770 磁盘类型缓存 */
 extern uint32_t g_u32127758;                                /* GUID 组合数据 @0x140127758 */
@@ -1509,7 +1509,7 @@ uint64_t *PECMD_InitDrvInstallCtx(uint64_t *param_1, LPCWSTR param_2)
     return param_1;
 }
 
-/* ---- FUN_1400474a8 用到的 SetupAPI 局部结构体（仅供本文件编译使用）---- */
+/* ---- PECMD_DriverInstall 用到的 SetupAPI 局部结构体（仅供本文件编译使用）---- */
 typedef struct tagSP_DEVINFO_DATA {
     DWORD cbSize;
     GUID  ClassGuid;
@@ -1562,7 +1562,7 @@ static void skip_to(WCHAR **pp, WCHAR c)
     *pp = p;
 }
 
-/* ---- globals referenced by FUN_1400474a8 (declared here; not defined) ---- */
+/* ---- globals referenced by PECMD_DriverInstall (declared here; not defined) ---- */
 extern int  DAT_14013cef8;
 extern CRITICAL_SECTION g_csThreadTbl;
 extern WCHAR u__SystemRoot___140123190[];
@@ -1578,7 +1578,7 @@ extern void (*DAT_14013cf10)(void *);
 extern int64_t (*DAT_14013cf30)(void *, int);
 extern void (*DAT_14013cf48)(void *, void *, DWORD);
 
-void *FUN_1400474a8(int64_t *param_1, LPCWSTR param_2)
+void *PECMD_DriverInstall(int64_t *param_1, LPCWSTR param_2)
 {
     WCHAR *pWVar1;
     short sVar2;
@@ -6838,7 +6838,7 @@ void PECMD_DestroyMappedObject(uint64_t *obj)
     FUN_14005B104((WCHAR **)(obj + 2));
 }
 
-uint64_t FUN_1400554dc(LPCWSTR param_1, int64_t *param_2, uint64_t param_3, uint64_t param_4, uint64_t param_5)
+uint64_t PECMD_GenerateTimeText(LPCWSTR param_1, int64_t *param_2, uint64_t param_3, uint64_t param_4, uint64_t param_5)
 {
     /* @0x1400554dc size=4927 */
     uint32_t *lpBuffer;
@@ -13607,7 +13607,7 @@ LAB_140074bce:
  * 把 param_1 设备路径经 param_2 DOS 名建立挂载/卷名关联,
  * param_3 为挂载点缓冲(可空, 空则用 param_2 天然串), param_4 为设备定义标志,
  * param_5 控制重试/卷名取回, 返回 DefineDosDeviceW/SetVolumeMountPointW 结果. */
-BOOL FUN_140075f9c(LPCWSTR param_1, LPCWSTR param_2, WCHAR *param_3,
+BOOL PECMD_DosDeviceMount(LPCWSTR param_1, LPCWSTR param_2, WCHAR *param_3,
                    uint32_t param_4, char param_5)
 {
     BOOL BVar2;
@@ -13809,7 +13809,7 @@ int64_t PECMD_DefineDosDevice(int64_t *param_1, WCHAR *param_2)
                 FUN_140035b40((uint32_t)(uint16_t)*local_40, 0, 0x32);
             }
         } else {
-            BVar6 = FUN_140075f9c(local_48, local_res20, local_40, uVar11, cVar14);
+            BVar6 = PECMD_DosDeviceMount(local_48, local_res20, local_40, uVar11, cVar14);
             if (bVar1) {
                 FUN_140035b40((uint32_t)(uint16_t)*local_40, 2, 0x32);
             }
@@ -19851,7 +19851,7 @@ uint8_t PECMD_DhcpWriteAndWait(LPCWSTR param_1, LPCWSTR param_2, uint64_t param_
 
 
 
-void FUN_1400b6e24(int64_t param_1, HBITMAP param_2, uint32_t param_3, uint32_t param_4)
+void PECMD_LoadObjectIcon(int64_t param_1, HBITMAP param_2, uint32_t param_3, uint32_t param_4)
 {
     /* @0x1400b6e24 size=6970 */
     uint8_t uVar1;
@@ -21538,7 +21538,7 @@ uint64_t *PECMD_CreateControlBody(uint64_t *param_1, uint64_t param_2, uint32_t 
         uVar4 = uVar4 | 0x40000;
     }
     *(uint32_t *)((intptr_t)param_1 + 0xa4) = uVar4;
-    ((void (*)(int64_t, HBITMAP, uint32_t, uint32_t))FUN_1400b6e24)(
+    ((void (*)(int64_t, HBITMAP, uint32_t, uint32_t))PECMD_LoadObjectIcon)(
         (int64_t)param_1, pHVar2, uVar4, param_3);
     return param_1;
 }

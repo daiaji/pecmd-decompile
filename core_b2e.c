@@ -117,7 +117,7 @@ extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *slot, int64_t *a);
 extern bool PECMD_QueryDeviceControlState(HANDLE h);
 extern void FUN_14001c82c(void);
 extern void FUN_140103a20(void);
-extern BOOL FUN_140075f9c(LPCWSTR a, LPCWSTR b, WCHAR *c, uint32_t d,
+extern BOOL PECMD_DosDeviceMount(LPCWSTR a, LPCWSTR b, WCHAR *c, uint32_t d,
                           char e);
 extern void FUN_1400279D8(uint32_t dev, LPCWSTR a, LPCWSTR b);
 extern void FUN_140035B40(uint32_t a, int b, int c);
@@ -2091,7 +2091,7 @@ io_ready:
                 *drive = L'\0';
             }
         } else {
-            FUN_140075f9c(devName, drive, NULL, 1, '\0');
+            PECMD_DosDeviceMount(devName, drive, NULL, 1, '\0');
         }
     }
     if (mountPoint != NULL) {

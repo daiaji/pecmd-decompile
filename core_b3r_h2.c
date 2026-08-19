@@ -1,7 +1,7 @@
 /*
  * core_b3r_h2.c — Restored batch28 business functions (group h2)
  *
- *   FUN_140095178 @0x140095178  卷/设备信息命令 (Volume Label / DosDevice / FS info)
+ *   PECMD_VolumeDeviceCommand @0x140095178  卷/设备信息命令 (Volume Label / DosDevice / FS info)
  *   PECMD_ParseExtPathArg @0x140096880  -ext 扩展名辅助
  *   PECMD_LinkFile @0x1400969d4  硬链接/符号链接/文件操作 (-j)
  *   PECMD_ScreenAreaCommand @0x140097c70  屏幕/窗口区域命令 (display/capture/taskbar)
@@ -102,7 +102,7 @@ extern LPWSTR    FUN_14005fc90(LPWSTR dst, uint32_t *guid, int mode);/* @0x14005
 extern void      PECMD_OpenFileHandle(void *pH, LPCWSTR path, DWORD access, DWORD share,
                                void *sa, DWORD disp, DWORD flags, HANDLE tmpl); /* CreateFile 包装 */
 extern void      FUN_140003a20(void *script, WCHAR **str, int mode); /* @0x140003a20             */
-extern WCHAR    *FUN_140006aa0(longlong *a, longlong b, ulonglong c, LPCWSTR d); /* @0x140006aa0 */
+extern WCHAR    *PECMD_EnumerateVolume(longlong *a, longlong b, ulonglong c, LPCWSTR d); /* @0x140006aa0 */
 extern void      PECMD_CreateTempMutexDir(void *a, void *b, undefined8 *c, LPCWSTR d); /* @0x140008110   */
 extern void      PECMD_ScheduleSelfDelete(void *a, int b);                     /* @0x14000481c             */
 extern void      FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
@@ -449,7 +449,7 @@ LAB_140096b4b:
                                 }
                                 PECMD_AllocWStringBuffer(&local_res10, 100);
                                 *((LPWSTR)local_res10) = L'\0';
-                                FUN_140006aa0((longlong *)&local_res10, -5, 0x48fffb,
+                                PECMD_EnumerateVolume((longlong *)&local_res10, -5, 0x48fffb,
                                               lpString);
                                 if (WVar1 != L'\0') {
                                     *(WCHAR *)(uintptr_t)local_res20 = WVar1;
@@ -1214,11 +1214,11 @@ LAB_1400987b7:
     return uVar16;
 }
 /* ================================================================
- * @0x140095178  (longlong FUN_140095178(longlong*, LPCWSTR))
+ * @0x140095178  (longlong PECMD_VolumeDeviceCommand(longlong*, LPCWSTR))
  * 卷 / 设备信息命令: setvol / idle / idlec / rsort / sort / devs /
  * link? / w, 以及盘符文件系统 (FAT/NTFS/...)、DosDevice、卷序列号等。
  * ================================================================ */
-longlong FUN_140095178(longlong *param_1, LPCWSTR param_2)
+longlong PECMD_VolumeDeviceCommand(longlong *param_1, LPCWSTR param_2)
 {
     LPWSTR    pWVar1;
     char      cVar2;

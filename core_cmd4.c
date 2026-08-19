@@ -1,4 +1,4 @@
-/* ========== FUN_140088300 @0x140088300 ========== */
+/* ========== PECMD_CodeConvertCommand @0x140088300 ========== */
 /* CODE 命令处理器 (编码转换 / 加密变换)
  *
  * 语义 (TODO(verify) 按调用点还原):
@@ -87,7 +87,7 @@ static const uint8_t BOM_UTF8[3] = { 0xEF, 0xBB, 0xBF };  /* DAT_140124130 UTF-8
 /* 分隔符/空白判断 (反编译 (8<c<0xe)||c==0x20) */
 static inline int CodeWs(WCHAR c) { return ((8 < (uint16_t)c) && ((uint16_t)c < 0xe)) || (c == 0x20); }
 
-int64_t FUN_140088300(void *script, WCHAR *args)
+int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
 {
     /* ---- 通用容器/游标 ---- */
     WCHAR *bufScr = NULL;    /* local_70  SplitTok 输出容器 */

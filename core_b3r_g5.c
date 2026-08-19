@@ -35,7 +35,7 @@ extern uint64_t FUN_14006a7f4(int64_t *param_1, uint64_t *param_2);     /* @0x14
 extern void    PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
                              DWORD share, LPSECURITY_ATTRIBUTES sa,
                              DWORD disp, DWORD flags, HANDLE tmpl);     /* @0x140003864 CreateFileW 包装 */
-extern WCHAR  *FUN_140006aa0(int64_t *param_1, int64_t param_2,
+extern WCHAR  *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2,
                              uint64_t param_3, LPCWSTR param_4);        /* @0x140006aa0 卷对象/挂载点解析 */
 
 /* ------------------------------------------------------------------
@@ -440,7 +440,7 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
             if (((iVar1 == 0) && (lpString_00 != (LPCWSTR)0x0)) &&
                 (lpString != (LPCWSTR)0x0)) {
                 FUN_140063620((WCHAR **)&local_108);
-                pWVar4 = FUN_140006aa0((int64_t *)&local_108, -5,
+                pWVar4 = PECMD_EnumerateVolume((int64_t *)&local_108, -5,
                                        0xfffffffff008fffb, lpString_00);
                 if (((pWVar4 != (WCHAR *)0x0) && (*pWVar4 != L'\0')) &&
                     (pWVar4[1] == L':')) {

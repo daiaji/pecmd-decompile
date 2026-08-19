@@ -77,7 +77,7 @@ extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
                            uint64_t *a4);
 extern void PECMD_RunFbwfHookScript(void);
 extern void PECMD_TerminateJobObject(int64_t a1);
-extern bool FUN_140019e34(int64_t a1, WCHAR *a2, uint64_t a3);
+extern bool PECMD_MatchDeviceClass(int64_t a1, WCHAR *a2, uint64_t a3);
 extern void FUN_14001a56c(int a1);
 extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR a1);
 extern void PECMD_EnumCDRomDrives(int64_t *a1);
@@ -141,7 +141,7 @@ extern void FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim);
 extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
 extern uint16_t *FUN_14006B1E8(LPCWSTR a1, uint64_t *a2, char a3);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
-extern BOOL FUN_140075f9c(LPCWSTR a1, LPCWSTR a2, WCHAR *a3,
+extern BOOL PECMD_DosDeviceMount(LPCWSTR a1, LPCWSTR a2, WCHAR *a3,
                           uint32_t a4, char a5);
 extern void FUN_140077358(void);
 extern bool PECMD_ParseNumber(int64_t *a1, int *a2);
@@ -704,7 +704,7 @@ DWORD FUN_1400279D8(uint32_t unit, WCHAR *drive, LPCWSTR label)
     _snwprintf(local_248, 0x103, WSTR("\\Device\\ImDisk%u"), unit);
     if ((local_res20[0] != L'\0') &&
         ((WVar7 != L'\0' ||
-          (BVar3 = FUN_140075f9c(local_248, local_res20, NULL, 1, '\0'), BVar3 != 0)))) {
+          (BVar3 = PECMD_DosDeviceMount(local_248, local_res20, NULL, 1, '\0'), BVar3 != 0)))) {
         lstrcpyW(local_2f8, WSTR("format.com "));
         lstrcatW(local_2f8, local_res20);
         lstrcatW(local_2f8, WSTR(" "));
@@ -1124,7 +1124,7 @@ char FUN_14002C048(int64_t *ctx, int mode, void *fileInfo,
         ctx[0x29] = ctx[0x29] + 1;
     } else {
         if ((((void *)(uintptr_t)ctx[0x23] != NULL &&
-              (bVar2 = FUN_140019e34((int64_t)ctx, (WCHAR *)ctx[0x23],
+              (bVar2 = PECMD_MatchDeviceClass((int64_t)ctx, (WCHAR *)ctx[0x23],
                                      (uint64_t)(uintptr_t)pWVar12), !bVar2)) ||
              (pWVar7 = (WCHAR *)FUN_14002B2EC(ctx, (uint64_t)(uintptr_t)pWVar12, NULL),
               pWVar7 == NULL))) {
@@ -1641,7 +1641,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
     FUN_14001d78c((uint8_t *)pWVar6, (uint8_t *)local_60, local_68);
     if ((((int)plVar5[0x34] < 0) ||
          (((pwVar16 != NULL &&
-            (bVar9 = FUN_140019e34((int64_t)plVar5, pwVar16, (uint64_t)(uintptr_t)pWVar7),
+            (bVar9 = PECMD_MatchDeviceClass((int64_t)plVar5, pwVar16, (uint64_t)(uintptr_t)pWVar7),
              !bVar9)) ||
            (pWVar13 = (WCHAR *)FUN_14002B2EC(plVar5, (uint64_t)(uintptr_t)pWVar7 + 1, NULL),
             (int)plVar5[0x34] < 0)) ||
