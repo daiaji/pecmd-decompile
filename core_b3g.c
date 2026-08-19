@@ -312,7 +312,7 @@ uint64_t PECMD_FindFirstFreeDrive(LPCWSTR buf)
  */
 uint64_t PECMD_CreateSymbolicLink(uint64_t src, uint64_t dst, uint32_t flags)
 {
-    FUN_14005C828("CreateSymbolicLinkW", "KERNEL32.DLL", (int64_t *)&g_pCreateSymbolicLinkW, NULL);
+    FUN_14005C828("CreateSymbolicLinkW", "KERNEL32.DLL", (int64_t *)(void **)&g_pCreateSymbolicLinkW, NULL);
     if (g_pCreateSymbolicLinkW == NULL) {
         return 0;
     }

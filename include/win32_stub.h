@@ -20,6 +20,8 @@ typedef uint8_t BYTE;
 typedef uint16_t WORD;
 typedef uint32_t DWORD;
 typedef DWORD *LPDWORD;
+typedef void *HDEVINFO;
+
 typedef uint32_t UINT;
 typedef int32_t LONG;
 typedef uint64_t ULONG_PTR;

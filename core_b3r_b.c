@@ -67,8 +67,8 @@ extern void    *DAT_14013e110;          /* config string pointer */
 extern int32_t  g_i32D6F4;          /* config dirty flag */
 
 /* dev-list enumeration callbacks (function pointers). */
-extern int (*DAT_14013d458)(void *buf, uint32_t *flags);
-extern int (*DAT_14013d460)(void *buf, uint32_t *flags);
+extern int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);
+extern int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags);
 
 /* ========================================================================== */
 /* @0x1400734e4                                                               */
@@ -412,7 +412,7 @@ void *PECMD_EnumDeviceList(uint64_t param_1, LPCWSTR param_2, LPCWSTR param_3, i
     *puVar10 = 0;
     FUN_1400633a8(&local_b0, 0x100020);
     local_b8[0] = 0x100000;
-    iVar2 = (*DAT_14013d458)(local_b0, local_b8);
+    iVar2 = (*g_pWIMGetMountedImages)(local_b0, local_b8);
     while (bVar1 = 0, iVar2 != 0) {
         uVar9 = local_b8[0] / 0x418;
         pvVar6 = pvVar7;
@@ -457,11 +457,11 @@ LAB_1400759c5:
                 pvVar6 = (void *)(uintptr_t)(iVar2 + 1U);
             } while ((int)(iVar2 + 1U) < (int)uVar9);
         }
-        if ((*puVar10 != 0) || (pvVar8 = (void *)0x0, DAT_14013d460 == (int (*)(void *, uint32_t *))0x0))
+        if ((*puVar10 != 0) || (pvVar8 = (void *)0x0, g_pWIMGetMountedImageCount == (int (*)(void *, uint32_t *))0x0))
             goto LAB_140075ae2;
         *puVar10 = 1;
         local_b8[0] = 0x100000;
-        iVar2 = (*DAT_14013d460)(local_b0, local_b8);
+        iVar2 = (*g_pWIMGetMountedImageCount)(local_b0, local_b8);
     }
     pvVar8 = (void *)0x1;
 LAB_140075ae2:

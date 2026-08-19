@@ -190,17 +190,17 @@ uint64_t PECMD_ServiceControl(int64_t *script, LPCWSTR name)
     (void)uVar3;
     (void)local_220;
     if (g_pOpenSCManagerW == NULL) {
-        FUN_14005C828("OpenSCManagerW", "Advapi32.DLL", (int64_t *)&g_pOpenSCManagerW,
+        FUN_14005C828("OpenSCManagerW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenSCManagerW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("OpenServiceW", "Advapi32.DLL", (int64_t *)&g_pOpenServiceW,
+        FUN_14005C828("OpenServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenServiceW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("QueryServiceStatusEx", "Advapi32.DLL", (int64_t *)&g_pQueryServiceStatusEx,
+        FUN_14005C828("QueryServiceStatusEx", "Advapi32.DLL", (int64_t *)(void **)&g_pQueryServiceStatusEx,
                       (int64_t *)&local_res18);
-        FUN_14005C828("ControlService", "Advapi32.DLL", (int64_t *)&g_pControlService,
+        FUN_14005C828("ControlService", "Advapi32.DLL", (int64_t *)(void **)&g_pControlService,
                       (int64_t *)&local_res18);
-        FUN_14005C828("StartServiceW", "Advapi32.DLL", (int64_t *)&g_pStartServiceW,
+        FUN_14005C828("StartServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pStartServiceW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("CloseServiceHandle", "Advapi32.DLL", (int64_t *)&g_pCloseServiceHandle,
+        FUN_14005C828("CloseServiceHandle", "Advapi32.DLL", (int64_t *)(void **)&g_pCloseServiceHandle,
                       (int64_t *)&local_res18);
         if (g_pOpenSCManagerW == NULL) {
             return 0;
@@ -2233,7 +2233,7 @@ LAB_14002dcd5:
                             if ((out != NULL) || (lVar17 != 0)) {
                                 if ((out != NULL) && (hProcess = OpenProcess(0x400, 0, pe32.th32ProcessID)) != (HANDLE)0) {
                                     FUN_14005C828("GetProcessMemoryInfo", "PSAPI.DLL",
-                                                  (int64_t *)&g_pGetProcessMemoryInfo, (int64_t *)0);
+                                                  (int64_t *)(void **)&g_pGetProcessMemoryInfo, (int64_t *)0);
                                     pmc.cb = 0x48;
                                     pmc.PageFaultCount = 0;
                                     memset((uint8_t *)&pmc + 8, 0, 0x40);
@@ -5262,7 +5262,7 @@ LAB_140038e01:
       }
     }
   }
-  FUN_14005C828("SetDisplayConfig","User32.DLWSTR(",(int64_t *)&g_pSetDisplayConfig,&g_hUser32);
+  FUN_14005C828("SetDisplayConfig","User32.DLWSTR(",(int64_t *)(void **)&g_pSetDisplayConfig,&g_hUser32);
   local_8a8.dmDeviceName[0] = L'\0';
   memset((uint64_t *)(local_8a8.dmDeviceName + 1),0,0x3e);
   memset((uint64_t *)&local_8a8.dmSpecVersion,0,0x9c);
@@ -5360,8 +5360,8 @@ LAB_1400395a9:
           }
         }
         uVar19 = 0x80004001;
-        FUN_14005C828("SetDeviceGammaRamp","GDI32",(int64_t *)&g_pSetDeviceGammaRamp,&g_hGdi32);
-        FUN_14005C828("GetDeviceGammaRamp","GDI32",(int64_t *)&g_pGetDeviceGammaRamp,&g_hGdi32);
+        FUN_14005C828("SetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pSetDeviceGammaRamp,&g_hGdi32);
+        FUN_14005C828("GetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pGetDeviceGammaRamp,&g_hGdi32);
         hDC = GetDC((HWND)0x0);
         FUN_1400633A8(&local_9c0,0x600);
         puVar33 = local_9c0 + 0x100;

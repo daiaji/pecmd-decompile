@@ -1927,9 +1927,9 @@ uint32_t FUN_140035CEC(uint32_t *unit, uint64_t *data1, uint64_t *data2,
     memset(&uni, 0, sizeof(uni));
     memset(&uni2, 0, sizeof(uni2));
     FUN_14005C828("RtlCreateUnicodeString", "NTDLL.DLL",
-                  (int64_t *)&g_pRtlCreateUnicodeString, NULL);
+                  (int64_t *)(void **)&g_pRtlCreateUnicodeString, NULL);
     FUN_14005C828("RtlFreeUnicodeString", "NTDLL.DLL",
-                  (int64_t *)&g_pRtlFreeUnicodeString, NULL);
+                  (int64_t *)(void **)&g_pRtlFreeUnicodeString, NULL);
     if (g_pRtlInitUnicodeString == NULL) {
         return 3;
     }
@@ -2032,7 +2032,7 @@ after_awe:
                 return 0xffffffff;
             }
             FUN_14005C828("RtlDosPathNameToNtPathName_U", "NTDLL.DLL",
-                          (int64_t *)&g_pRtlDosPathNameToNtPathName_U, NULL);
+                          (int64_t *)(void **)&g_pRtlDosPathNameToNtPathName_U, NULL);
             *(void **)&pRtlDos = g_pRtlDosPathNameToNtPathName_U;
             status = pRtlDos(path, &uni, NULL, NULL);
         } else {
@@ -2322,7 +2322,7 @@ uint64_t FUN_14003DB00(WCHAR *cmdline)
 
     PECMD_EnsureMciLoaded();
     FUN_14005C828("SetSuspendState", "powrprof.DLL",
-                  (int64_t *)&g_pSetSuspendState, NULL);
+                  (int64_t *)(void **)&g_pSetSuspendState, NULL);
     isForce = FUN_1400660AC("-force", (int64_t *)&cmd, 6);
     timeout[0] = 0;
     if (isForce != '\0') {

@@ -143,10 +143,10 @@ extern uint8_t DAT_14013d660;        /* 数组释放哨兵 */
 extern uint8_t g_u8D5D0;        /* 对象槽 vtable */
 extern uint8_t g_flagD6F5;
 extern int64_t g_pComWrite;          /* COM 调用函数指针 */
-extern void *DAT_14013cde8;          /* 图像解码函数指针 */
+extern void (*g_pGdipCreateBitmapFromHBITMAP)();          /* 图像解码函数指针 */
 extern void *g_pGdipSaveImageToFile;          /* 图像编码函数指针 */
 extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage 函数指针 */
-extern void *DAT_14013d4d8;          /* GetAdaptersInfo 函数指针 */
+extern int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);          /* GetAdaptersInfo 函数指针 */
 extern uint8_t g_b24d10[];
 extern uint8_t g_b24d20[];
 extern uint8_t g_b297d0[];
@@ -782,8 +782,8 @@ void PECMD_ReadConnectionRegistryValue(LPCSTR name, int64_t *out, LPCSTR value)
  */
 uint32_t FUN_140072D8C(uint8_t *mac, int64_t *out, int mode)
 {
-    FUN_14005C828("GetAdaptersInfo", "Iphlpapi.DLL", (int64_t *)&DAT_14013d4d8, NULL);
-    if (DAT_14013d4d8 == NULL) {
+    FUN_14005C828("GetAdaptersInfo", "Iphlpapi.DLL", (int64_t *)(void **)&g_pGetAdaptersInfo, NULL);
+    if (g_pGetAdaptersInfo == NULL) {
         return 0;
     }
 
@@ -1095,7 +1095,7 @@ uint32_t FUN_14007D340(int64_t obj, uint64_t stream,
         int64_t local_68 = 0;
         int64_t lVar1 = obj;
         if (flags == 0) {
-            ((void (*)(int64_t, int, void *))DAT_14013cde8)(obj, 0, &local_68);
+            ((void (*)(int64_t, int, void *))g_pGdipCreateBitmapFromHBITMAP)(obj, 0, &local_68);
             lVar4 = local_68;
             lVar1 = local_68;
         }

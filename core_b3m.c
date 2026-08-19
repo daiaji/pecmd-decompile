@@ -431,7 +431,7 @@ uint64_t PECMD_GetPackedSystemVersion(void)
             local_res18[0] = 0;
             local_res20 = 0;
             FUN_14005C828("RtlGetNtVersionNumbers", "NTDLL.DLL",
-                          (int64_t *)&g_pRtlGetNtVersionNumbers, &local_res20);
+                          (int64_t *)(void **)&g_pRtlGetNtVersionNumbers, &local_res20);
             if (g_pRtlGetNtVersionNumbers != NULL) {
                 ((void (*)(uint32_t *, uint32_t *, uint32_t *))g_pRtlGetNtVersionNumbers)
                     (local_res8, local_res10, local_res18);
@@ -457,18 +457,18 @@ uint64_t FUN_14005F60C(void)
     uVar2 = 0;
     if (DAT_14013d738 == 0) {
         local_res8 = 0;
-        FUN_14005C828("CreateVirtualDisk", "VirtDisk.DLL", (int64_t *)&g_pCreateVirtualDisk, &local_res8);
-        FUN_14005C828("AttachVirtualDisk", "VirtDisk.DLL", (int64_t *)&g_pAttachVirtualDisk, &local_res8);
-        FUN_14005C828("DetachVirtualDisk", "VirtDisk.DLL", (int64_t *)&g_pDetachVirtualDisk, &local_res8);
-        FUN_14005C828("GetVirtualDiskPhysicalPath", "VirtDisk.DLL", (int64_t *)&g_pGetVirtDiskPhysPath, &local_res8);
-        FUN_14005C828("GetVirtualDiskInformation", "VirtDisk.DLL", (int64_t *)&g_pGetVirtDiskInfo, &local_res8);
+        FUN_14005C828("CreateVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pCreateVirtualDisk, &local_res8);
+        FUN_14005C828("AttachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pAttachVirtualDisk, &local_res8);
+        FUN_14005C828("DetachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pDetachVirtualDisk, &local_res8);
+        FUN_14005C828("GetVirtualDiskPhysicalPath", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskPhysPath, &local_res8);
+        FUN_14005C828("GetVirtualDiskInformation", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskInfo, &local_res8);
         local_res10 = 0;
         FUN_14005C828("OpenVirtualDisk", "VirtDisk.DLL", &local_res10, &local_res8);
         local_res8 = 0;
-        FUN_14005C828("UnmountVHD", "vhdmount.dll", (int64_t *)&g_pUnmountVHD, &local_res8);
+        FUN_14005C828("UnmountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pUnmountVHD, &local_res8);
         lVar1 = local_res10;
         if (local_res10 == 0) {
-            FUN_14005C828("MountVHD", "vhdmount.dll", (int64_t *)&g_pMountVHD, &local_res8);
+            FUN_14005C828("MountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pMountVHD, &local_res8);
         }
         DAT_14013d738 = lVar1;
         if ((lVar1 != 0) || (g_pMountVHD != 0)) {

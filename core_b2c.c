@@ -35,7 +35,6 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 本文件需要的本地补充类型 ---- */
 typedef uintptr_t HDROP;
-typedef uintptr_t HDEVINFO;
 typedef struct {
     LONG x;
     LONG y;
@@ -186,7 +185,7 @@ extern uint32_t g_hookReentry;       /* 钩子重入计数 */
 extern DWORD g_d278[];        /* 线程 ID 表 */
 extern uint32_t g_threadTableInitFlag;       /* 线程表初始化标志 */
 extern int (*DAT_14013cef8)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);
-extern BOOL (*DAT_14013cf20)(DWORD, HDEVINFO, void *);
+extern BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);
 extern BOOL (*DAT_14013cf10)(HDEVINFO);
 extern uint8_t g_b21728[];      /* 热键表(6 字节/项) */
 
@@ -735,7 +734,7 @@ uint64_t FUN_14002C8A4(LPCWSTR spec)
                                                           (const BYTE *)local_228,
                                                           iVar2 * 2 + 4);
                 if ((BVar3 != 0) &&
-                    (iVar2 = (*DAT_14013cf20)(0x19, DeviceInfoSet, &local_298), iVar2 != 0))
+                    (iVar2 = (*g_pSetupDiCallClassInstaller)(0x19, (void *)(uintptr_t)DeviceInfoSet, &local_298), iVar2 != 0))
                     goto done;
             }
         }

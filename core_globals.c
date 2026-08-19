@@ -1145,3 +1145,23 @@ void * g_pGdipDeletePrivateFontCollection;   /* DAT_14013ced8 */
 void * g_pGdipPrivateAddMemoryFont;   /* DAT_14013cee0 */
 void * g_pGdipGetFontCollectionFamilyList;   /* DAT_14013cee8 */
 void * g_pGdipGetFamilyName;   /* DAT_14013cef0 */
+
+/* ---- 阶段5f void*24+typed 槽 ---- */
+int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);   /* DAT_14013d458 */
+int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags);   /* DAT_14013d460 */
+BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);   /* DAT_14013cf20 */
+void * (*g_pSetupDiGetClassDevsW)(const void *);   /* DAT_14013cf00 */
+BOOL (*g_pSetupDiDestroyDeviceInfoList)(void *);   /* DAT_14013cf08 */
+int (*g_pSetupDiEnumDeviceInfo)(void *, DWORD);   /* DAT_14013cf28 */
+void (*g_pGdipCreateBitmapFromHBITMAP)();   /* DAT_14013cde8 */
+void (*g_pGdipCreateHBITMAPFromBitmap)();   /* DAT_14013cdf0 */
+void (*g_pGdipCloneBitmapAreaI)();   /* DAT_14013cea0 */
+void (*g_pGdipCreateBitmapFromScan0)();   /* DAT_14013ce90 */
+void (*g_pGdipGetImageGraphicsContext)();   /* DAT_14013cea8 */
+void (*g_pGdipCreateHICONFromBitmap)();   /* DAT_14013ce60 */
+void (*g_pGdipCreateBitmapFromHICON)();   /* DAT_14013ce70 */
+int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);   /* DAT_14013d4d8 */
+void (*g_pGdipGetImageEncodersSize)(uint32_t *, uint32_t *);   /* DAT_14013cdb8 */
+void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);   /* DAT_14013cdc0 */
+int64_t (*g_pSetupIterateCabinetW)(void *, int);   /* DAT_14013cf30 */
+void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);   /* DAT_14013cf48 */

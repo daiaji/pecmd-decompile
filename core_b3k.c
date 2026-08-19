@@ -334,10 +334,10 @@ void PECMD_LoadImageListApi(void)
 {
     int64_t local_res8[4] = {0, 0, 0, 0};
     if (g_flagD321 == 0) {
-        FUN_14005C828("ImageList_Create", "Comctl32.DLL", (int64_t *)&g_pImageListCreate, local_res8);
-        FUN_14005C828("ImageList_Destroy", "Comctl32.DLL", (int64_t *)&g_pFnCleanup, local_res8);
-        FUN_14005C828("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)&g_pImageListReplaceIcon, local_res8);
-        FUN_14005C828("ImageList_Add", "Comctl32.DLL", (int64_t *)&g_pImageListAdd, local_res8);
+        FUN_14005C828("ImageList_Create", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListCreate, local_res8);
+        FUN_14005C828("ImageList_Destroy", "Comctl32.DLL", (int64_t *)(void **)&g_pFnCleanup, local_res8);
+        FUN_14005C828("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
+        FUN_14005C828("ImageList_Add", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListAdd, local_res8);
         g_flagD321 = (uint8_t)((-(g_pImageListAdd != 0) & 2U) - 1);
     }
 }

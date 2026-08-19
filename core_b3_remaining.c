@@ -82,21 +82,21 @@ extern uint8_t g_fgWndLock;                              /* 前台窗口锁定�
 extern HWND g_ownerWnd;                                 /* 已关联线程的窗口 */
 extern WCHAR g_szEmpty[];                                  /* g_szEmpty 空串 */
 
-/* ---- 设备/图像 函数指针表 (DAT_14013cf00 系列) ---- */
-extern void *(*DAT_14013cf00)(const void *);              /* SetupDiGetClassDevsW */
-extern BOOL (*DAT_14013cf08)(void *);                     /* SetupDiDestroyDeviceInfoList */
-extern int  (*DAT_14013cf28)(void *, DWORD);              /* SetupDiEnumDeviceInfo */
-extern void (*DAT_14013cde8)();                            /* 图标装载释放回调 */
-extern void (*DAT_14013cdf0)();
-extern void (*DAT_14013cea0)();                            /* 图像生成回调(可变参数) */
+/* ---- 设备/图像 函数指针表 (g_pSetupDiGetClassDevsW 系列) ---- */
+extern void * (*g_pSetupDiGetClassDevsW)(const void *);              /* SetupDiGetClassDevsW */
+extern BOOL (*g_pSetupDiDestroyDeviceInfoList)(void *);                     /* SetupDiDestroyDeviceInfoList */
+extern int (*g_pSetupDiEnumDeviceInfo)(void *, DWORD);              /* SetupDiEnumDeviceInfo */
+extern void (*g_pGdipCreateBitmapFromHBITMAP)();                            /* 图标装载释放回调 */
+extern void (*g_pGdipCreateHBITMAPFromBitmap)();
+extern void (*g_pGdipCloneBitmapAreaI)();                            /* 图像生成回调(可变参数) */
 extern int (*g_pGdipDisposeImage)();
-extern void (*DAT_14013ce90)();
-extern void (*DAT_14013cea8)();
+extern void (*g_pGdipCreateBitmapFromScan0)();
+extern void (*g_pGdipGetImageGraphicsContext)();
 extern void (*DAT_14013ce38)();
 extern void (*DAT_14013cd98)();
 extern int (*g_pGdipDeleteGraphics)();
-extern void (*DAT_14013ce60)();
-extern void (*DAT_14013ce70)();
+extern void (*g_pGdipCreateHICONFromBitmap)();
+extern void (*g_pGdipCreateBitmapFromHICON)();
 extern void *g_pFontBase;                                 /* 图像上下文 */
 
 /* ---- 本文件所需的辅助函数 extern(未在本文件定义的) ---- */
@@ -344,8 +344,8 @@ extern void   FUN_140103068(short *dst, LPCWSTR src);    /* @0x140103068 */
 extern void  *g_pWIMMountImage;                             /* WIMG fnptr slot */
 extern void  *g_pWIMUnmountImage;
 extern void  *g_pWIMMountImage2;
-extern void  *DAT_14013d458;
-extern void  *DAT_14013d460;
+extern int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);
+extern int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags);
 extern void  *DAT_14013d468;
 extern void  *DAT_14013d470;
 extern void  *DAT_14013d478;
@@ -479,7 +479,7 @@ extern uint8_t PTR_FUN_1401268c8[];
 extern int (*DAT_14013d4d0)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);
 extern int (*g_pinet_addr)(char *);
 extern int64_t g_pCacheBlock;
-extern int (*DAT_14013d4d8)(int64_t, uint *);
+extern int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);
 extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t); /* @0x14013d408 */
 /* 本批(B3)新增 helper/WS2 槽 extern */
 extern int64_t FUN_14001c2cc(LPCWSTR priv, DWORD attr, uint32_t flag);   /* @0x14001c2cc EnablePrivilege */
@@ -496,8 +496,8 @@ extern double g_dbl270a0;
 extern double g_dbl27098;
 extern double g_dbl27090;
 extern double g_dbl27088;
-extern void (*DAT_14013cdb8)(uint *, uint *);
-extern void (*DAT_14013cdc0)(uint, uint, int64_t);
+extern void (*g_pGdipGetImageEncodersSize)(uint32_t *, uint32_t *);
+extern void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);
 extern uint8_t PTR_FUN_140126b20[];
 /* ---- batch b3 恢复函数所需辅助/data extern (PECMD_GenerateTimeText/08bcd4 等) ---- */
 extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int); /* MultiByteToWideChar-ish @0x14013c970 */
@@ -1572,11 +1572,11 @@ extern BYTE  g_b11e7b0[];
 extern BYTE  g_b122c70[];
 extern BYTE  g_b122cb0[];
 extern BYTE  DAT_00000011;
-/* 函数指针全局：DAT_14013cf00/cf08/cf28/cf10/cf30/cf48（SetupDi 相关），
+/* 函数指针全局：g_pSetupDiGetClassDevsW/cf08/cf28/cf10/cf30/cf48（SetupDi 相关），
    已在文件别处声明或按调用点转型使用。cf10/cf30/cf48 在本文件新增声明 */
 extern void (*DAT_14013cf10)(void *);
-extern int64_t (*DAT_14013cf30)(void *, int);
-extern void (*DAT_14013cf48)(void *, void *, DWORD);
+extern int64_t (*g_pSetupIterateCabinetW)(void *, int);
+extern void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);
 
 void *PECMD_DriverInstall(int64_t *param_1, LPCWSTR param_2)
 {
@@ -2807,7 +2807,7 @@ LAB_140049438:
                     bVar53 = 0x10;
                     pWVar59 = pWVar42;
                 }
-                local_16f8 = (LPWSTR)((void *(*)(void *, int, int, int))DAT_14013cf00)((void *)pWVar59, 0, 0, (int)bVar53);
+                local_16f8 = (LPWSTR)((void *(*)(void *, int, int, int))g_pSetupDiGetClassDevsW)((void *)pWVar59, 0, 0, (int)bVar53);
                 if (local_16f8 != (LPWSTR)(uintptr_t)-1) {
 LAB_1400494e2:
                     local_17e0 = 0;
@@ -2941,7 +2941,7 @@ LAB_14004966e:
                             uVar39 = (uint32_t)bVar8;
                             while ((((pWVar37 = local_1640, WVar30 = local_17ea,
                                      (int64_t)p_Var46 - (int64_t)local_1748 < 0x400000 &&
-                                     (iVar12 = (int)(int64_t)((int (*)(void *))DAT_14013cf28)((void *)pWVar59),
+                                     (iVar12 = (int)(int64_t)((int (*)(void *))g_pSetupDiEnumDeviceInfo)((void *)pWVar59),
                                       pWVar37 = local_1640, WVar30 = local_17ea,
                                       iVar12 != 0))))) {
                                 if (uVar17 == 0) {
@@ -2965,10 +2965,10 @@ LAB_14004966e:
 LAB_1400498e4:
                                     do {
                                         local_16a0[0] = 0;
-                                        if (DAT_14013cf48 != (void *)0) {
+                                        if (g_pCmGetDevNodeStatus != (void *)0) {
                                             local_16d8.cbSize = 0x20;
                                             local_15c8 = 0x400;
-                                            (*DAT_14013cf48)(&local_15c8, local_16a0, local_16d8.DevInst);
+                                            (*g_pCmGetDevNodeStatus)(&local_15c8, local_16a0, local_16d8.DevInst);
                                         }
                                         local_1714 = (int)(short)local_181c;
                                         bVar8 = TRUE;
@@ -2992,7 +2992,7 @@ LAB_14004994f:
                                             lpStr1->InfDate.dwLowDateTime = 0;
                                             pwVar48 = 0;
                                             local_1608 = lpStr1;
-                                            iVar11 = (int)(int64_t)(*DAT_14013cf08)((void *)pWVar59);
+                                            iVar11 = (int)(int64_t)(*g_pSetupDiDestroyDeviceInfoList)((void *)pWVar59);
                                             local_16d8.cbSize = 0x20;
                                             if (iVar11 == 0) goto LAB_14004a6b7;
                                             if ((char)local_17b8 != 0) break;
@@ -3171,7 +3171,7 @@ LAB_140049c86:
                                                                         pWVar26[3] = 0;
                                                                         local_1828[lVar51] = 0;
                                                                         local_17e0 = lVar51;
-                                                                        ((BOOL (*)(void *, void *, int))DAT_14013cf08)(local_1798, &local_16d8, 2);
+                                                                        ((BOOL (*)(void *, void *, int))g_pSetupDiDestroyDeviceInfoList)(local_1798, &local_16d8, 2);
                                                                         if (*pWVar26 != 0) {
                                                                             iVar10 = lstrlenW(pWVar26);
                                                                             local_17e0 = iVar10 + lVar51;
@@ -3611,7 +3611,7 @@ LAB_14004a9aa:
                     pWVar24 = local_1768;
                     FUN_140018d8c((uint64_t)(uintptr_t)param_1, WSTR("\r\n安装驱动:[%s]\r\n"), (uint64_t)(uintptr_t)local_1768, (uint64_t)(uintptr_t)pwVar48);
                     pwVar48 = (WCHAR *)p_Var40;
-                    (*DAT_14013cf30)((void *)pWVar24, 0);
+                    (*g_pSetupIterateCabinetW)((void *)pWVar24, 0);
                     if (uVar39 != 0) {
                         pWVar24 = *(LPWSTR *)(&p_Var40->SectionName[0x88]);
 LAB_14004ad55:
@@ -8778,7 +8778,7 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
                   (uintptr_t *)&local_res8);
     FUN_14005c828("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImage,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&DAT_14013d458,
+    FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImages,
                   (uintptr_t *)&local_res8);
     FUN_14005c828("WIMCreateFile", "WIMGAPI.DLL", (void **)&DAT_14013d468,
                   (uintptr_t *)&local_res8);
@@ -8798,7 +8798,7 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
                   (uintptr_t *)&local_res8);
     if (bVar1) {
         local_res8 = (HMODULE)0;
-        FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&DAT_14013d460,
+        FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageCount,
                       (uintptr_t *)&local_res8);
         FUN_14005c828("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage2,
                       (uintptr_t *)&local_res8);
@@ -10064,7 +10064,7 @@ DWORD PECMD_EnumDeviceInterfaces(int param_1, uint param_2, GUID *param_3)
             param_3 = (GUID *)&g_bE880;
         }
     }
-    DeviceInfoSet = (void *)((void *(*)(const void *, DWORD, void *, DWORD))DAT_14013cf00)(
+    DeviceInfoSet = (void *)((void *(*)(const void *, DWORD, void *, DWORD))g_pSetupDiGetClassDevsW)(
         param_3, 0, 0, 0x12);
     if (DeviceInfoSet == (void *)0xffffffffffffffff) {
         return 0;
@@ -10429,7 +10429,7 @@ int PECMD_EnumNetAdapters(uint64_t param_1, int param_2)
     GUID local_24;
 
     (void)param_1;
-    pvVar2 = (void *)((void *(*)(const void *, DWORD, void *, DWORD))DAT_14013cf00)(
+    pvVar2 = (void *)((void *(*)(const void *, DWORD, void *, DWORD))g_pSetupDiGetClassDevsW)(
         (void *)0x0, 0, 0, 6);
     if (pvVar2 == (void *)0xffffffffffffffff) {
         iVar4 = 0;
@@ -10439,7 +10439,7 @@ int PECMD_EnumNetAdapters(uint64_t param_1, int param_2)
         memset(&local_24, 0, 0x1c);
         iVar4 = 0;
         for (uVar3 = 0;
-             (iVar1 = ((int (*)(void *, DWORD, void *))DAT_14013cf28)(pvVar2, uVar3, &local_28),
+             (iVar1 = ((int (*)(void *, DWORD, void *))g_pSetupDiEnumDeviceInfo)(pvVar2, uVar3, &local_28),
               iVar1 != 0 && (uVar3 < 2000));
              uVar3 = uVar3 + 1) {
             iVar1 = FUN_14006643c(&local_24, "Net");
@@ -12657,7 +12657,7 @@ LAB_14006ead0:
     local_res18 = (HANDLE)0x0;
     lVar4 = PECMD_LoadImageStream((uint8_t *)*param_1,param_1[1],(uint64_t *)0x0);
     if (lVar4 != 0) {
-      (*DAT_14013cdf0)(lVar4,&local_res18,0);
+      (*g_pGdipCreateHBITMAPFromBitmap)(lVar4,&local_res18,0);
       if ((param_2 == (int64_t *)0x0) || (local_res18 == (HANDLE)0x0)) {
         (*g_pGdipDisposeImage)(lVar4);
       }
@@ -12715,7 +12715,7 @@ LAB_14006ebb2:
                     if (lVar4 != 0) {
                       (*g_pGdipDisposeImage)(lVar4);
                     }
-                    (*DAT_14013cdf0)(pHVar6,&local_res18,0);
+                    (*g_pGdipCreateHBITMAPFromBitmap)(pHVar6,&local_res18,0);
                     if ((param_2 == (int64_t *)0x0) || (local_res18 == (HANDLE)0x0)) {
                       (*g_pGdipDisposeImage)(pHVar6);
                     }
@@ -13138,7 +13138,7 @@ int64_t PECMD_GetCachedBlock(void)
         FUN_1400633a8((void **)&local_res10, 0xb00);
         while (1) {
             lVar2 = local_res10;
-            iVar1 = (*DAT_14013d4d8)(local_res10, local_res8);
+            iVar1 = (*g_pGetAdaptersInfo)(local_res10, local_res8);
             if (iVar1 != 0x6f) break;
             local_res8[0] = local_res8[0] * 2;
             PECMD_GrowByteBuffer((void **)&local_res10, (uint64_t)local_res8[0]);
@@ -13909,7 +13909,7 @@ DWORD PECMD_EnumDevices(LPCWSTR param_1, LPWSTR param_2, uint32_t param_3, void 
         }
     }
     FUN_1400633a8((void **)&local_4b0, 0x50);
-    DeviceInfoSet = (void *)(uintptr_t)(*DAT_14013cf00)((const GUID *)param_4);
+    DeviceInfoSet = (void *)(uintptr_t)(*g_pSetupDiGetClassDevsW)((const GUID *)param_4);
     GetLastError();
     DeviceInterfaceDetailData = local_4b0;
 joined_r0x0001400766b4:
@@ -13927,7 +13927,7 @@ joined_r0x0001400766b4:
             memset(&local_468, 0, 0x20);
             *(DWORD *)&local_468[0] = 0x20;
             if (param_4 == NULL) {
-                iVar4 = (*DAT_14013cf28)(DeviceInfoSet, MemberIndex);
+                iVar4 = (*g_pSetupDiEnumDeviceInfo)(DeviceInfoSet, MemberIndex);
                 GetLastError();
                 if (iVar4 == 0) goto LAB_140076ab3;
                 if (((!bVar8) && (uVar6 == 0)) || (uVar6 == 0x13)) {
@@ -13980,7 +13980,7 @@ LAB_140076878:
                                     param_2[1] = L'\0';
                                     param_2[2] = L'\0';
                                     param_2[3] = L'\0';
-                                    (*DAT_14013cf08)(DeviceInfoSet);
+                                    (*g_pSetupDiDestroyDeviceInfoList)(DeviceInfoSet);
                                     if (param_2[1] != L'\0') {
                                         iVar4 = lstrlenW(param_2 + 1);
                                         param_2[(int64_t)iVar4 + 1] = L'\"';
@@ -14038,7 +14038,7 @@ LAB_140076ab3:
         }
         goto LAB_140076b07;
     }
-    DeviceInfoSet = (void *)(uintptr_t)(*DAT_14013cf00)(NULL);
+    DeviceInfoSet = (void *)(uintptr_t)(*g_pSetupDiGetClassDevsW)(NULL);
     GetLastError();
     param_4 = NULL;
     goto joined_r0x0001400766b4;
@@ -14653,14 +14653,14 @@ uint64_t PECMD_GetConfigEntryByName(wchar_t *param_1, uint64_t *param_2)
     /* @0x14007d27c size=193 */
     local_res18[0] = 0;
     local_res20[0] = 0;
-    (*DAT_14013cdb8)(local_res18, local_res20);
+    (*g_pGdipGetImageEncodersSize)(local_res18, local_res20);
     if (local_res20[0] == 0) {
         uVar3 = 0xffffffff;
     }
     else {
         FUN_1400633a8((void **)local_28, (uint64_t)local_res20[0]);
         if (local_28[0] != 0) {
-            (*DAT_14013cdc0)(local_res18[0], local_res20[0], local_28[0]);
+            (*g_pGdipGetImageEncoders)(local_res18[0], local_res20[0], local_28[0]);
             uVar3 = 0;
             if (local_res18[0] != 0) {
                 puVar4 = (uint64_t *)(local_28[0] + 0x40);
@@ -20431,7 +20431,7 @@ LAB_1400b7d8f:
                 if (cVar29 != (char)pHVar20) {
                     pHVar20 = PECMD_LoadIcon((LPCWSTR)0x0, (uint64_t *)0x0);
                     if (pHVar20 != (HICON)0x0) {
-                        ((void (*)(uint64_t))DAT_14013cde8)(*(uint64_t *)(param_1 + 0x98));
+                        ((void (*)(uint64_t))g_pGdipCreateBitmapFromHBITMAP)(*(uint64_t *)(param_1 + 0x98));
                     }
                     pHVar20 = (HICON)0x0;
                     if (local_238 != (HICON)0x0) {
@@ -20549,7 +20549,7 @@ LAB_1400b7b92:
                             *(HANDLE *)(param_1 + 0x98) = pvVar15;
                             if (pvVar15 == (HANDLE)0x0) goto LAB_1400b7c3f;
                             if ((local_238 == (HICON)0x0) &&
-                                (((void (*)(uint64_t))DAT_14013cde8)((uint64_t)pvVar15),
+                                (((void (*)(uint64_t))g_pGdipCreateBitmapFromHBITMAP)((uint64_t)pvVar15),
                                  local_238 == (HICON)0x0))
                                 goto LAB_1400b8192;
                             DeleteObject(*(HGDIOBJ *)(param_1 + 0x98));
@@ -20625,7 +20625,7 @@ LAB_1400b7d2c:
                     uVar25 = local_230;
                     pHVar20 = PECMD_LoadIcon((LPCWSTR)0x0, (uint64_t *)0x0);
                     if (pHVar20 != (HICON)0x0) {
-                        ((void (*)(void))DAT_14013ce70)();
+                        ((void (*)(void))g_pGdipCreateBitmapFromHICON)();
                     }
                     pHVar20 = (HICON)0x0;
                     if (local_238 == (HICON)0x0) goto LAB_1400b7d6b;

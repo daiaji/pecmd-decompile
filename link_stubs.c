@@ -539,11 +539,7 @@ uint64_t u_____D__140120a40(void) { return 0; }
 uint64_t wsprintfA(void) { return 0; }
 uint64_t wsprintfW(void) { return 0; }
 uint64_t DAT_14013cd98;
-uint64_t DAT_14013cde8;
-uint64_t DAT_14013cdf0;
-uint64_t DAT_14013ce70;
 uint64_t DAT_14013cf10;
-uint64_t DAT_14013cf20;
 int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t) = 0;
 uint64_t PTR_s_No_error_14013b800;
 uint64_t PTR_DAT_14013a8f0;
@@ -554,7 +550,6 @@ uint64_t PTR_DAT_14013bfe0;
 uint64_t DAT_14013d430;
 uint64_t DAT_14013d468;
 uint64_t DAT_14013d480;
-uint64_t DAT_14013d4d8;
 uint64_t DAT_14013d660;
 uint64_t DAT_14013d738;
 /* 本批(B1)新增定义 */
@@ -664,17 +659,7 @@ uint64_t SetupDiEnumDeviceInterfaces(void) { return 0; }
 uint64_t SetupDiGetDeviceInstanceIdW(void) { return 0; }
 uint64_t SetupDiGetDeviceInterfaceDetailW(void) { return 0; }
 
-uint64_t DAT_14013cdb8;
-uint64_t DAT_14013cdc0;
 uint64_t DAT_14013ce38;
-uint64_t DAT_14013ce60;
-uint64_t DAT_14013ce90;
-uint64_t DAT_14013cea0;
-uint64_t DAT_14013cea8;
-uint64_t DAT_14013cf00;
-uint64_t DAT_14013cf08;
-uint64_t DAT_14013cf28;
-
 uint64_t FUN_140017cdc(void) { return 0; }
 uint64_t FUN_14002fd88(void) { return 0; }
 uint64_t FUN_140061E98(void) { return 0; }
@@ -705,8 +690,6 @@ uint64_t FUN_14009cfbc(void) { return 0; }
 uint64_t FUN_1400f429c(void) { return 0; }
 
 /* 数据符号桩 */
-uint64_t DAT_14013cf30;
-uint64_t DAT_14013cf48;
 uint64_t PTR_FUN_14011fb08[128];
 uint64_t PTR_FUN_140120a50[128];
 uint64_t PTR_FUN_140120a60[128];

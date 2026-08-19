@@ -91,8 +91,8 @@ extern uint8_t PTR_FUN_1401296e8[];
 extern int64_t g_pCacheBlock;
 extern int32_t g_flagD6F0;
 extern int32_t DAT_14013d738;
-extern void *DAT_14013ce70;          /* GdipCreateBitmapFromHICON */
-extern void *DAT_14013cdf0;          /* GdipCreateHBITMAPFromBitmap */
+extern void (*g_pGdipCreateBitmapFromHICON)();          /* GdipCreateBitmapFromHICON */
+extern void (*g_pGdipCreateHBITMAPFromBitmap)();          /* GdipCreateHBITMAPFromBitmap */
 extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
 extern int64_t *g_pi64e118;
 extern int64_t g_i64E120;
@@ -328,9 +328,9 @@ HANDLE FUN_14005D8BC(HANDLE src, uint8_t type, int cx, int cy,
         void *pHVar1 = PECMD_LoadIcon((LPCWSTR)0, (uint64_t *)0);
         if (pHVar1 != NULL) {
             uint64_t local_18 = 0;
-            ((int (*)(HANDLE, uint64_t *))DAT_14013ce70)(src, &local_18);
+            ((int (*)(HANDLE, uint64_t *))g_pGdipCreateBitmapFromHICON)(src, &local_18);
             if (local_18 != 0) {
-                ((int (*)(uint64_t, HANDLE *, int))DAT_14013cdf0)(local_18, &local_10, 0);
+                ((int (*)(uint64_t, HANDLE *, int))g_pGdipCreateHBITMAPFromBitmap)(local_18, &local_10, 0);
                 ((void (*)(uint64_t))g_pGdipDisposeImage)(local_18);
                 return local_10;
             }
