@@ -181,7 +181,7 @@ extern uint32_t g_bitFlags;
 extern uint8_t g_u8CCB1;                /* MAIN_DBG 日志标志 */
 extern uint8_t g_topiconFlag;                /* TOPICON 标志 */
 extern uint8_t g_logoActiveFlag;                /* LOGO 活动标志 */
-extern void * g_pGdipDisposeImage;                  /* GdipDisposeImage 函数指针 */
+extern int (*g_pGdipDisposeImage)();                  /* GdipDisposeImage 函数指针 */
 extern HWND g_hPelogonWnd;
 extern HWND g_hwndCF78;
 extern uint8_t g_tipAlign;

@@ -49,18 +49,18 @@ typedef uint64_t            ulonglong;
  * ================================================================ */
 extern DWORD       DAT_14013d870;        /* pending image-buffer length */
 extern WCHAR g_szEmpty[];      /* empty string (.rdata)       */
-extern uint8_t * g_pCacheBlock;        /* cached COM enumeration      */
+extern int64_t g_pCacheBlock;        /* cached COM enumeration      */
 extern int64_t     DAT_14012d1e8;        /* CLSID slot (CoCreateInstance) */
 extern int64_t     DAT_14012d1f8;        /* IID   slot (CoCreateInstance) */
 
 /* GDI+ lazily-loaded function-pointer slots (typed) */
-extern void * g_pGdipGetImageWidth;   /* GdipGetImageWidth    */
-extern void * g_pGdipGetImageHeight;   /* GdipGetImageHeight   */
-extern void * g_pGdipCreateFromHDC;         /* GdipCreateFromHDC    */
+extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth    */
+extern int (*g_pGdipGetImageHeight)();   /* GdipGetImageHeight   */
+extern int (*g_pGdipCreateFromHDC)();         /* GdipCreateFromHDC    */
 extern int  (*DAT_14013ce38)(void *, int);          /* GdipSetInterpolationMode */
 extern int  (*DAT_14013cd98)(void *, void *, int, int, int64_t, int); /* GdipDrawImageRectI */
-extern void * g_pGdipDeleteGraphics;                 /* GdipDeleteGraphics   */
-extern void * g_pGdipDisposeImage;               /* GdipDisposeImage     */
+extern int (*g_pGdipDeleteGraphics)();                 /* GdipDeleteGraphics   */
+extern int (*g_pGdipDisposeImage)();               /* GdipDisposeImage     */
 
 /* COM/OLE lazily-loaded slots */
 extern int  (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **); /* CoCreateInstance */
@@ -354,7 +354,7 @@ LAB_14007f219:
     local_68 = pWVar10;
     FUN_14006355c((int64_t *)&local_90, pWVar10, -1, 0xffffffffffffffff);
     iVar4 = lstrlenA(local_90);
-    plVar13 = g_pCacheBlock;
+    plVar13 = (int64_t *)g_pCacheBlock;
     local_a8 = (uint32_t *)0;
     /* local_res10 doubles as an int container (Ghidra CONCAT44 of its
      * top 32 bits with iVar4).  Preserve faithfully. */
@@ -418,7 +418,7 @@ LAB_14007f319:
         local_80 = (int64_t *)0;
         if (plVar13 == (int64_t *)0) {
             PECMD_AllocMagicBlock((void **)&g_pCacheBlock, 0x28);
-            plVar13 = g_pCacheBlock;
+            plVar13 = (int64_t *)g_pCacheBlock;
         }
         *plVar13 = 1;
         plVar13[1] = (int64_t)puVar16;
@@ -432,9 +432,9 @@ LAB_14007f319:
         iVar4 = (int)(intptr_t)local_res10;
     }
     else {
-        puVar16 = (uint32_t *)(intptr_t)g_pCacheBlock[1];
-        puVar12 = (uint32_t *)(intptr_t)g_pCacheBlock[2];
-        if (*g_pCacheBlock == 0) {
+        puVar16 = (uint32_t *)(intptr_t)((int64_t *)g_pCacheBlock)[0];
+        puVar12 = (uint32_t *)(intptr_t)((int64_t *)g_pCacheBlock)[1];
+        if (*(int64_t *)g_pCacheBlock == 0) {
             goto LAB_14007f319;
         }
     }

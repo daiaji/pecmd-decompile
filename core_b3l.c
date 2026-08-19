@@ -142,10 +142,10 @@ extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern uint8_t DAT_14013d660;        /* 数组释放哨兵 */
 extern uint8_t g_u8D5D0;        /* 对象槽 vtable */
 extern uint8_t g_flagD6F5;
-extern void * g_pComWrite;          /* COM 调用函数指针 */
+extern int64_t g_pComWrite;          /* COM 调用函数指针 */
 extern void *DAT_14013cde8;          /* 图像解码函数指针 */
 extern void *g_pGdipSaveImageToFile;          /* 图像编码函数指针 */
-extern void * g_pGdipDisposeImage;          /* GdipDisposeImage 函数指针 */
+extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage 函数指针 */
 extern void *DAT_14013d4d8;          /* GetAdaptersInfo 函数指针 */
 extern uint8_t g_b24d10[];
 extern uint8_t g_b24d20[];

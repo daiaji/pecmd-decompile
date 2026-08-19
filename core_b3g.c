@@ -85,8 +85,8 @@ extern uint8_t g_flagD3EF;
 extern void *g_pCreateSymbolicLinkW;          /* CreateSymbolicLinkW 函数指针 */
 extern uint8_t g_u8D6F7;
 extern int32_t g_i32D7DC;
-extern void * g_pGdipDisposeImage;          /* 函数指针 */
-extern void * g_pGdipDeleteGraphics;          /* 函数指针 */
+extern int (*g_pGdipDisposeImage)();          /* 函数指针 */
+extern int (*g_pGdipDeleteGraphics)();          /* 函数指针 */
 
 /* ========== FUN_14004FD6C @0x14004fd6c ==========
  * 调整缓冲容量。

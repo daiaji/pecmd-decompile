@@ -69,20 +69,20 @@ extern void FUN_1400FD538(HWND hwnd, int mode);                    /* @0x1400fd5
 extern void FUN_1400fdad8(void *param_1, int param_2, long long param_3, uint64_t param_4); /* @0x1400fdad8 */
 
 /* ---- GDI+ 延迟绑定函数指针槽 (core_b1_remaining.c 初始化) ---- */
-extern void * g_pGdipGetImageWidth;   /* GdipGetImageWidth  */
-extern void * g_pGdipGetImageHeight;   /* GdipGetImageHeight */
+extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth  */
+extern int (*g_pGdipGetImageHeight)();   /* GdipGetImageHeight */
 extern void *DAT_14013cd98;   /* GdipDrawImageRectI */
-extern void * g_pGdipCreateFromHDC;   /* GdipCreateFromHDC  */
+extern int (*g_pGdipCreateFromHDC)();   /* GdipCreateFromHDC  */
 extern void *g_pGdipSetSmoothingMode;   /* GdipSetSmoothingMode */
 extern void *g_pGdipDrawImageRectRectI;   /* GdipDrawImageRectRectI */
 extern void *g_pGdipDrawImageI;   /* GdipDrawImageI     */
-extern void * g_pGdipDeleteGraphics;   /* GdipDeleteGraphics */
+extern int (*g_pGdipDeleteGraphics)();   /* GdipDeleteGraphics */
 
 /* @0x140100ac4 0x472 消息中用于重建 printf 宽格式串的常量字节 */
 extern uint64_t DAT_14012d058;
 extern uint64_t DAT_14012d060;
 
-/* ---- 本批还原所需: 额外 helper extern void * g_pGdipDisposeImage;                                    /* GdipDisposeImage 函数指针 */
+/* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    /* GdipDisposeImage 函数指针 */
 extern WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);          /* @0x1400703e4 */
 extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
 extern BOOL PathFileExistsW(LPCWSTR);                          /* Win32 API (link_stubs.c) */

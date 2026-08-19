@@ -70,7 +70,7 @@ extern HWND g_hwndD310;
 extern uint8_t g_msgWndMode;
 extern HWND g_hPelogonWnd;
 extern uint8_t g_flagD6F5;
-extern void * g_pComWrite;
+extern int64_t g_pComWrite;
 extern uint8_t PTR_FUN_1401250d0[];
 
 /* ========== PECMD_DebugOutput @0x140045868 ==========

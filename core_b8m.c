@@ -77,11 +77,11 @@ extern void FUN_1400EFF58(int64_t obj, HDC hdc, RECT *rect, int centerX); /* @0x
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern float g_alphaThreshold;                                /* DAT_14012f6bc */
-extern void * g_pGdipGetImageWidth;
-extern void * g_pGdipGetImageHeight;
-extern void * g_pGdipCreateFromHDC;
+extern int (*g_pGdipGetImageWidth)();
+extern int (*g_pGdipGetImageHeight)();
+extern int (*g_pGdipCreateFromHDC)();
 extern void *DAT_14013cd98;
-extern void * g_pGdipDeleteGraphics;
+extern int (*g_pGdipDeleteGraphics)();
 extern int64_t FUN_1400E4064(int64_t value, uint32_t align); /* @0x1400e4064 */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern int64_t FUN_14007A224(void *script, WCHAR *text, WCHAR **out, int c, int d);

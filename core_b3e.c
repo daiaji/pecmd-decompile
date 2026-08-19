@@ -71,7 +71,7 @@ extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
 
 /* ---- 本批引用的全局数据 ---- */
 extern HWND g_hwndD310;
-extern uint32_t g_msgWndState;
+extern uint32_t g_msgWndState[2];
 extern uint8_t g_flagE1B8;
 extern uint8_t g_fgWndLock;
 extern HWND g_ownerWnd;

@@ -1075,14 +1075,16 @@ void *g_pFreeLibrary;
 /* ---------------- 空串 ---------------- */
 WCHAR g_szEmpty[2] = {0};   /* g_szEmpty .rdata 空串 L"" */
 HWND g_hPelogonWnd;   /* g_hPelogonWnd */
-uint8_t * g_pCacheBlock;   /* g_pCacheBlock */
-void * g_pGdipDisposeImage;   /* g_pGdipDisposeImage */
-void * g_pComWrite;   /* g_pComWrite */
 HWND g_hTooltipParent;   /* g_hTooltipParent */
-void * g_pGdipGetImageWidth;   /* g_pGdipGetImageWidth */
-void * g_pGdipGetImageHeight;   /* g_pGdipGetImageHeight */
-uint32_t g_msgWndState;   /* g_msgWndState */
-void * g_pGdipDeleteGraphics;   /* g_pGdipDeleteGraphics */
 char * g_timeServer;   /* g_timeServer */
 uint32_t g_dpi;   /* g_dpi */
-void * g_pGdipCreateFromHDC;   /* g_pGdipCreateFromHDC */
+
+/* ---- 阶段5a-1 DAT_→g_ 定义 ---- */
+int64_t g_pCacheBlock;
+int64_t g_pComWrite;
+int (*g_pGdipDisposeImage)();
+int (*g_pGdipGetImageWidth)();
+int (*g_pGdipGetImageHeight)();
+int (*g_pGdipDeleteGraphics)();
+int (*g_pGdipCreateFromHDC)();
+uint32_t g_msgWndState[2];

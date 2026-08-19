@@ -36,7 +36,7 @@ typedef uint8_t            *LPBYTE;
 
 /* ---- Globals ---- */
 extern WCHAR g_szEmpty[];   /* empty string (g_szEmpty) */
-extern uint8_t * g_pCacheBlock;     /* PCIP 缓存标记 */
+extern int64_t g_pCacheBlock;     /* PCIP 缓存标记 */
 extern int64_t          DAT_14013d4d0;     /* dhcpcsvc 指针槽 */
 extern int32_t          g_i32D7EC;     /* 活动任务计数 (条件) */
 extern uint8_t          g_foregroundFlag;     /* 任务计数标志 */

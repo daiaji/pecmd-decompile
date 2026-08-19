@@ -540,14 +540,16 @@ extern WCHAR g_szEmpty[];                       /* DAT_14011c638 .rdata 空串 *
 
 /* ---- 阶段5a-1 DAT_→g_ ---- */
 extern HWND g_hPelogonWnd;   /* DAT_14013cf60 */
-extern uint8_t * g_pCacheBlock;   /* DAT_14013e160 */
-extern void * g_pGdipDisposeImage;   /* DAT_14013cd90 */
-extern void * g_pComWrite;   /* DAT_14013d3b8 */
 extern HWND g_hTooltipParent;   /* DAT_14013cfb8 */
-extern void * g_pGdipGetImageWidth;   /* DAT_14013ce08 */
-extern void * g_pGdipGetImageHeight;   /* DAT_14013ce10 */
-extern uint32_t g_msgWndState;   /* DAT_14013d3ec */
-extern void * g_pGdipDeleteGraphics;   /* DAT_14013ce30 */
 extern char * g_timeServer;   /* DAT_14013d5c8 */
 extern uint32_t g_dpi;   /* DAT_14013d868 */
-extern void * g_pGdipCreateFromHDC;   /* DAT_14013ce28 */
+
+/* ---- 阶段5a-1 DAT_→g_ 声明 ---- */
+extern int64_t g_pCacheBlock;
+extern int64_t g_pComWrite;
+extern int (*g_pGdipDisposeImage)();
+extern int (*g_pGdipGetImageWidth)();
+extern int (*g_pGdipGetImageHeight)();
+extern int (*g_pGdipDeleteGraphics)();
+extern int (*g_pGdipCreateFromHDC)();
+extern uint32_t g_msgWndState[2];

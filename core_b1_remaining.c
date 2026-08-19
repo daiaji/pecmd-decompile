@@ -253,8 +253,8 @@ extern HBITMAP LoadBitmapW(HINSTANCE, LPCWSTR);              /* Win32(未在 stu
 extern void *g_pGdiplusStartup;          /* GdiplusStartup */
 extern void *g_pGdiplusShutdown;          /* GdiplusShutdown */
 extern void *g_pGdipLoadImageFromFile;          /* GdipLoadImageFromFile */
-extern void * g_pGdipDisposeImage;          /* GdipDisposeImage */
-extern void * g_pGdipCreateFromHDC;          /* GdipCreateFromHDC */
+extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
+extern int (*g_pGdipCreateFromHDC)();          /* GdipCreateFromHDC */
 extern void *DAT_14013cd98;          /* GdipDrawImageRectI */
 extern void *DAT_14013cde8;          /* GdipCreateBitmapFromHBITMAP */
 extern void *DAT_14013cdf0;          /* GdipCreateHBITMAPFromBitmap */
@@ -262,10 +262,10 @@ extern void *g_pGdipSaveImageToFile;          /* GdipSaveImageToFile */
 extern void *DAT_14013cdb8;          /* GdipGetImageEncodersSize */
 extern void *DAT_14013cdc0;          /* GdipGetImageEncoders */
 extern void *g_pGdipDrawImageI;          /* GdipDrawImageI */
-extern void * g_pGdipGetImageWidth;          /* GdipGetImageWidth */
-extern void * g_pGdipGetImageHeight;          /* GdipGetImageHeight */
+extern int (*g_pGdipGetImageWidth)();          /* GdipGetImageWidth */
+extern int (*g_pGdipGetImageHeight)();          /* GdipGetImageHeight */
 extern void *g_pGdipDrawImageRectRectI;          /* GdipDrawImageRectRectI */
-extern void * g_pGdipDeleteGraphics;          /* GdipDeleteGraphics */
+extern int (*g_pGdipDeleteGraphics)();          /* GdipDeleteGraphics */
 extern void *DAT_14013ce38;          /* GdipSetInterpolationMode */
 extern void *g_pGdipSetPixelOffsetMode;          /* GdipSetPixelOffsetMode */
 extern void *g_pGdipSetSmoothingMode;          /* GdipSetSmoothingMode */
@@ -8638,8 +8638,8 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
         }
         g_pGdiplusShutdown = GetProcAddress(g_hGdiPlus, "GdiplusShutdown");
         g_pGdipLoadImageFromFile = GetProcAddress(g_hGdiPlus, "GdipLoadImageFromFile");
-        g_pGdipDisposeImage = GetProcAddress(g_hGdiPlus, "GdipDisposeImage");
-        g_pGdipCreateFromHDC = GetProcAddress(g_hGdiPlus, "GdipCreateFromHDC");
+        g_pGdipDisposeImage = (int (*)())GetProcAddress(g_hGdiPlus, "GdipDisposeImage");
+        g_pGdipCreateFromHDC = (int (*)())GetProcAddress(g_hGdiPlus, "GdipCreateFromHDC");
         DAT_14013cd98 = GetProcAddress(g_hGdiPlus, "GdipDrawImageRectI");
         DAT_14013cde8 = GetProcAddress(g_hGdiPlus, "GdipCreateBitmapFromHBITMAP");
         DAT_14013cdf0 = GetProcAddress(g_hGdiPlus, "GdipCreateHBITMAPFromBitmap");
@@ -8647,10 +8647,10 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
         DAT_14013cdb8 = GetProcAddress(g_hGdiPlus, "GdipGetImageEncodersSize");
         DAT_14013cdc0 = GetProcAddress(g_hGdiPlus, "GdipGetImageEncoders");
         g_pGdipDrawImageI = GetProcAddress(g_hGdiPlus, "GdipDrawImageI");
-        g_pGdipGetImageWidth = GetProcAddress(g_hGdiPlus, "GdipGetImageWidth");
-        g_pGdipGetImageHeight = GetProcAddress(g_hGdiPlus, "GdipGetImageHeight");
+        g_pGdipGetImageWidth = (int (*)())GetProcAddress(g_hGdiPlus, "GdipGetImageWidth");
+        g_pGdipGetImageHeight = (int (*)())GetProcAddress(g_hGdiPlus, "GdipGetImageHeight");
         g_pGdipDrawImageRectRectI = GetProcAddress(g_hGdiPlus, "GdipDrawImageRectRectI");
-        g_pGdipDeleteGraphics = GetProcAddress(g_hGdiPlus, "GdipDeleteGraphics");
+        g_pGdipDeleteGraphics = (int (*)())GetProcAddress(g_hGdiPlus, "GdipDeleteGraphics");
         DAT_14013ce38 = GetProcAddress(g_hGdiPlus, "GdipSetInterpolationMode");
         g_pGdipSetPixelOffsetMode = GetProcAddress(g_hGdiPlus, "GdipSetPixelOffsetMode");
         g_pGdipSetSmoothingMode = GetProcAddress(g_hGdiPlus, "GdipSetSmoothingMode");

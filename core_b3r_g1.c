@@ -17,11 +17,11 @@
 #include "pecmd_defs.h"
 
 /* ---- 本文件引用的全局 (link_stubs.c / core_globals.c 定义) ---- */
-extern void * g_pComWrite;               /* 全局 fnptr 槽 (COM 操作) */
+extern int64_t g_pComWrite;               /* 全局 fnptr 槽 (COM 操作) */
 extern CRITICAL_SECTION g_csE138;        /* 全局临界区 (工具提示) */
 extern HWND   g_hwndD310;                  /* 当前工具提示/消息窗口 */
 extern uint8_t g_msgWndMode;                 /* 消息窗口模式字节 */
-extern uint32_t g_msgWndState;                /* 消息窗口状态/定时器标志 */
+extern uint32_t g_msgWndState[2];                /* 消息窗口状态/定时器标志 */
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
 extern void   FUN_140061c44(void);                            /* @0x140061c44 OLE 初始化协助 */
@@ -113,20 +113,20 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
 
-    if ((g_msgWndState & 2) != 0) {
+    if ((g_msgWndState[0] & 2) != 0) {
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-        if ((g_msgWndState & 2) != 0) {
-            g_msgWndState = (g_msgWndState & 0xfffc) + 6;
+        if ((g_msgWndState[0] & 2) != 0) {
+            g_msgWndState[0] = (g_msgWndState[0] & 0xfffc) + 6;
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-        while ((g_msgWndState & 2) != 0) {
+        while ((g_msgWndState[0] & 2) != 0) {
             FUN_1400195f0((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
         }
     }
 
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     local_90 = GetForegroundWindow();
-    g_msgWndState = 0;
+    g_msgWndState[0] = 0;
     if ((g_hwndD310 != (HWND)0) ||
         (FUN_14005B9C8(-(unsigned int)bVar1 & 2 | (param_8 & 1), 0x514),
          g_hwndD310 != (HWND)0)) {
@@ -166,7 +166,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
             (UVar6 = SetTimer(param_1, 0xabb, param_7, (void *)PECMD_TimerMessage),
              (int)UVar6 != 0)) {
             sVar7 = 1;
-            g_msgWndState = 1;
+            g_msgWndState[0] = 1;
         }
         iVar2 = GetSystemMetrics(0x3d);
         iVar3 = GetSystemMetrics(0x3e);
@@ -207,7 +207,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
 
     if ((local_a4 != 0) && (g_hwndD310 != (HWND)0)) {
         DVar4 = GetTickCount();
-        while ((((sVar7 == (short)g_msgWndState) && ('\0' < g_flagA24F)) &&
+        while ((((sVar7 == (short)g_msgWndState[0]) && ('\0' < g_flagA24F)) &&
                 (0 < (int)param_7)) &&
                (DVar5 = GetTickCount(), DVar5 - DVar4 < param_7)) {
             FUN_1400195f0((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);

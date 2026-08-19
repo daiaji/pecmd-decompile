@@ -88,12 +88,12 @@ extern uint8_t PTR_FUN_1401234f0[];
 extern uint8_t PTR_FUN_140126740[];
 extern uint8_t PTR_FUN_1401290a8[];
 extern uint8_t PTR_FUN_1401296e8[];
-extern uint8_t * g_pCacheBlock;
+extern int64_t g_pCacheBlock;
 extern int32_t g_flagD6F0;
 extern int32_t DAT_14013d738;
 extern void *DAT_14013ce70;          /* GdipCreateBitmapFromHICON */
 extern void *DAT_14013cdf0;          /* GdipCreateHBITMAPFromBitmap */
-extern void * g_pGdipDisposeImage;          /* GdipDisposeImage */
+extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
 extern int64_t *g_pi64e118;
 extern int64_t g_i64E120;
 

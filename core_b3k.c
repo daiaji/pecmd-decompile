@@ -45,7 +45,7 @@ extern int64_t FUN_1400175a0(LPCWSTR a, LPCWSTR b);
 
 /* ---- 本批引用的全局数据 ---- */
 extern uint8_t PTR_FUN_1401234f0[];
-extern uint32_t g_msgWndState;
+extern uint32_t g_msgWndState[2];
 extern uint8_t g_fgWndLock;
 extern HWND g_ownerWnd;
 extern HHOOK g_hookD710;

@@ -67,8 +67,8 @@ extern uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
                                uint64_t data9);              /* @0x140055368 */
 extern void *operator_new(size_t size);                     /* 全局 new 包装 */
 extern void FUN_14005e7dc(LPVOID *psd);                     /* @0x14005e7dc */
-extern void * g_pGdipGetImageWidth;                                 /* 图像宽/尺寸回调 */
-extern void * g_pGdipGetImageHeight;                                 /* 图像释放/尺寸回调 */
+extern int (*g_pGdipGetImageWidth)();                                 /* 图像宽/尺寸回调 */
+extern int (*g_pGdipGetImageHeight)();                                 /* 图像释放/尺寸回调 */
 extern int64_t PECMD_ContainerAppend(uint64_t *container);          /* @0x14006b8fc */
 extern void FUN_1400FD538(HWND child, int margin);          /* @0x1400fd538 */
 extern void FUN_1400F1490(int64_t arr);                    /* @0x1400f1490 */
@@ -89,12 +89,12 @@ extern int  (*DAT_14013cf28)(void *, DWORD);              /* SetupDiEnumDeviceIn
 extern void (*DAT_14013cde8)();                            /* 图标装载释放回调 */
 extern void (*DAT_14013cdf0)();
 extern void (*DAT_14013cea0)();                            /* 图像生成回调(可变参数) */
-extern void * g_pGdipDisposeImage;
+extern int (*g_pGdipDisposeImage)();
 extern void (*DAT_14013ce90)();
 extern void (*DAT_14013cea8)();
 extern void (*DAT_14013ce38)();
 extern void (*DAT_14013cd98)();
-extern void * g_pGdipDeleteGraphics;
+extern int (*g_pGdipDeleteGraphics)();
 extern void (*DAT_14013ce60)();
 extern void (*DAT_14013ce70)();
 extern void *g_pFontBase;                                 /* 图像上下文 */
@@ -468,7 +468,7 @@ extern int CM_Request_Device_EjectW();
 
 /* batch37 数据符号 extern */
 extern uint8_t PTR_FUN_1401250d0[];
-extern void * g_pComWrite;
+extern int64_t g_pComWrite;
 extern uint8_t DAT_14013d660;
 extern double g_dbl25230;
 extern uint8_t g_b124148[];
@@ -478,7 +478,7 @@ extern uint8_t PTR_FUN_140126060[];
 extern uint8_t PTR_FUN_1401268c8[];
 extern int (*DAT_14013d4d0)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);
 extern int (*g_pinet_addr)(char *);
-extern uint8_t * g_pCacheBlock;
+extern int64_t g_pCacheBlock;
 extern int (*DAT_14013d4d8)(int64_t, uint *);
 extern int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t); /* @0x14013d408 */
 /* 本批(B3)新增 helper/WS2 槽 extern */
@@ -10259,7 +10259,7 @@ void FUN_1400643d4(uint64_t *param_1)
                 (*g_pOleUninit)();
             }
         }
-        (*g_pComWrite)(param_1 + 0x1a, 3, 0, 0, 0, 0, 0, 0, 0);
+        ((void (*)(void *, int, int, int, int, int, int, int, int))g_pComWrite)(param_1 + 0x1a, 3, 0, 0, 0, 0, 0, 0, 0);
         param_1[0x1a] = 0;
         if ((g_pOleUninit != NULL) && (iVar1 == 0)) {
             (*g_pOleUninit)();

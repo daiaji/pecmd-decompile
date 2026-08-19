@@ -20,8 +20,8 @@ typedef uint64_t            ulonglong;
 
 /* ---- Globals ---- */
 extern WCHAR g_szEmpty[];   /* empty string (g_szEmpty) */
-extern void * g_pGdipGetImageWidth;     /* GdipGetImageWidth  (function ptr) */
-extern void * g_pGdipGetImageHeight;     /* GdipGetImageHeight (function ptr) */
+extern int (*g_pGdipGetImageWidth)();     /* GdipGetImageWidth  (function ptr) */
+extern int (*g_pGdipGetImageHeight)();     /* GdipGetImageHeight (function ptr) */
 
 /* ---- string / var helpers ---- */
 extern void      FUN_140063620(void *out);                  /* init/release slot */
