@@ -858,6 +858,14 @@ uint64_t WaitForInputIdle(void){ return 0; }
 
 /* ---- B3 还原批次 (core_b3r_*.c) 依赖补充 ---- */
 uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
+/* ---- P0 补缺失符号桩 ---- */
+uint64_t GlobalAddAtomA(void) { return 0; }
+uint64_t lstrcpyA(void) { return 0; }
+uint64_t RegisterHotKey(void) { return 0; }
+uint64_t TlsGetValue(void) { return 0; }
+uint64_t WriteConsoleW(void) { return 0; }
+uint8_t DAT_140124100[64];   /* 磁盘类型/分区对照表(未实现) */
+uint64_t FUN_1400630d0(void){ return 0; }
 /* DATA globals */
 int64_t   DAT_14013d870;          /* bitmap data size */
 /* function-pointer slots */

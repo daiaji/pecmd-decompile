@@ -9998,7 +9998,57 @@ uint64_t PECMD_LoadImageStream(uint8_t *param_1, size_t param_2, uint64_t *param
 int16_t *FUN_14006213c(int64_t param_1, int64_t *param_2)
 {
     /* @0x14006213c size=339 */
-    return NULL;
+    int16_t sVar1;
+    uint64_t uVar2;
+    int16_t *psVar3;
+    uint64_t uVar4;
+
+    if (*(int16_t *)(param_1 + 0x88) != *(int16_t *)*param_2) {
+        do {
+            sVar1 = *(int16_t *)*param_2;
+            if ((*(int16_t *)(param_1 + 0x8a) == sVar1) || (*(int16_t *)(param_1 + 0x90) == sVar1)) break;
+            psVar3 = (int16_t *)*param_2 + 1;
+            *param_2 = (int64_t)psVar3;
+        } while (*(int16_t *)(param_1 + 0x88) != *psVar3);
+    }
+    uVar4 = 1;
+    psVar3 = (int16_t *)*param_2;
+    while (*psVar3 != *(int16_t *)(param_1 + 0x88)) {
+        while (1) {
+            psVar3 = (int16_t *)*param_2;
+            sVar1 = *psVar3;
+            if ((((*(int16_t *)(param_1 + 0x92) != sVar1) && (*(int16_t *)(param_1 + 0x94) != sVar1)) &&
+                (*(int16_t *)(param_1 + 0x8a) != sVar1)) && (*(int16_t *)(param_1 + 0x90) != sVar1)) break;
+            *param_2 = (int64_t)(psVar3 + 1);
+        }
+        uVar2 = PECMD_MatchPattern(psVar3, (int64_t *)(param_1 + 0x9a));
+        if ((int)uVar2 == 0) {
+            uVar4 = (uint64_t)((int)uVar4 + 1);
+        } else {
+            uVar2 = PECMD_MatchPattern(psVar3, (int64_t *)(param_1 + 0xaa));
+            if ((int)uVar2 == 0) {
+                uVar4 = (uint64_t)((int)uVar4 - 1);
+            }
+        }
+        sVar1 = *psVar3;
+        while (*(int16_t *)(param_1 + 0x88) != sVar1) {
+            sVar1 = *(int16_t *)*param_2;
+            if ((*(int16_t *)(param_1 + 0x8a) == sVar1) || (*(int16_t *)(param_1 + 0x90) == sVar1)) break;
+            psVar3 = (int16_t *)*param_2 + 1;
+            *param_2 = (int64_t)psVar3;
+            sVar1 = *psVar3;
+        }
+        if ((int)uVar4 < 1) break;
+        psVar3 = (int16_t *)*param_2;
+    }
+    while (1) {
+        psVar3 = (int16_t *)*param_2;
+        sVar1 = *psVar3;
+        if (((*(int16_t *)(param_1 + 0x92) != sVar1) && (*(int16_t *)(param_1 + 0x94) != sVar1)) &&
+           ((*(int16_t *)(param_1 + 0x8a) != sVar1 && (*(int16_t *)(param_1 + 0x90) != sVar1)))) break;
+        *param_2 = (int64_t)(psVar3 + 1);
+    }
+    return psVar3;
 }
 
 uint32_t PECMD_AdvanceTokenPointer(int64_t param_1, int64_t *param_2, uint param_3, int64_t *param_4)
@@ -17334,8 +17384,85 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
 uint32_t FUN_14008ba90(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4)
 {
     /* @0x14008ba90 size=577 */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4;
-    return 0;
+    LPWSTR lpString1;
+    WCHAR WVar1;
+    int16_t sVar2;
+    int iVar3;
+    int64_t lVar4;
+    LPCWSTR pWVar5;
+    int16_t sVar6;
+    uint32_t uVar7;
+    DWORD local_res18[4];
+    LPCWSTR local_68;
+    LPCWSTR local_60;
+    wchar_t local_58[4];
+    wchar_t local_50[4];
+    wchar_t local_48[4];
+    wchar_t local_40[2];
+    wchar_t local_3c;
+
+    FUN_140063620((WCHAR **)&local_60);
+    FUN_140063620((WCHAR **)&local_68);
+    PECMD_FindVolumeByDeviceId(param_1, (int64_t *)&local_60, (LPWSTR)0x0);
+    WVar1 = *local_60;
+    sVar6 = 0;
+    local_58[0] = L'\\'; local_58[1] = L'\\'; local_58[2] = L'.'; local_58[3] = L'\\';
+    local_50[0] = L'D'; local_50[1] = L'o'; local_50[2] = L's'; local_50[3] = L'D';
+    local_48[0] = L'e'; local_48[1] = L'v'; local_48[2] = L'i'; local_48[3] = L'c';
+    local_40[0] = L'e'; local_40[1] = L's';
+    local_3c = L'\\';
+    uVar7 = 0xffffffff;
+    local_res18[0] = 0;
+    sVar2 = -1;
+    if (param_3 != 0) goto bb39;
+    do {
+        if (0x19 < sVar6) {
+            FUN_14005B104((WCHAR **)&local_68);
+            FUN_14005B104((WCHAR **)&local_60);
+            return uVar7;
+        }
+        lVar4 = (int64_t)sVar6 * 0x220;
+        if (*(int *)(lVar4 + 4 + param_2) < 0) {
+            pWVar5 = (LPCWSTR)(lVar4 + 0x18 + param_2);
+            param_3 = (uint16_t)(sVar6 + L'A');
+            if (*(int *)pWVar5 == 0) {
+                *(uint16_t *)(lVar4 + 0x1a + param_2) = param_3;
+                sVar2 = sVar6;
+            bb39:
+                sVar6 = sVar2;
+                PECMD_BuildDosDevicePath(param_3, (int64_t *)&local_68);
+                pWVar5 = local_68;
+                if (-1 < sVar6) {
+                    lpString1 = (LPWSTR)((int64_t)sVar6 * 0x220 + 0x18 + param_2);
+                    lstrcpyW(lpString1, local_68);
+                    if (*lpString1 == L'\0') {
+                        *lpString1 = L'*';
+                    }
+                }
+            }
+            if (((((int)uVar7 < 0) && (param_4 != (LPCWSTR)0x0)) &&
+                (iVar3 = StrCmpNIW(WSTR("\\Device\\HarddiskDmVolumes\\PhysicalDmVolumes\\BlockVolume"), pWVar5,
+                                   0x37), iVar3 == 0)) &&
+               (iVar3 = lstrcmpiW(param_4, pWVar5 + 0x37), iVar3 == 0)) {
+                uVar7 = (uint32_t)param_3;
+            }
+            if ((WVar1 != L'\0') && (iVar3 = lstrcmpiW(local_60, pWVar5), iVar3 == 0)) {
+            bc89:
+                FUN_14005B104((WCHAR **)&local_68);
+                FUN_14005B104((WCHAR **)&local_60);
+                return (uint32_t)param_3;
+            }
+            local_40[0] = param_3;
+            local_res18[0] = 0;
+            PECMD_RegReadWrap((HKEY)0xffffffff80000002, WSTR("SYSTEM\\MountedDevices"), local_58,
+                              (int64_t *)&local_68, local_res18, (LONG *)0x0);
+            if ((local_res18[0] == 0x18) &&
+               ((pWVar5 = local_68, iVar3 = FUN_14005B184("DMIO:ID:", (int64_t)local_68, 8), iVar3 == 0 &&
+                (iVar3 = FUN_14005B184((char *)param_1, (int64_t)(pWVar5 + 4), 0x10), iVar3 == 0))))
+            goto bc89;
+        }
+        sVar6 = sVar6 + 1;
+    } while (1);
 }
 
 int64_t PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t param_3, uint64_t param_4,

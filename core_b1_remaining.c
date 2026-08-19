@@ -315,7 +315,7 @@ extern void *TlsGetValue(DWORD dwTlsIndex);                      /* Win32 TLS */
 extern BOOL WriteConsoleW(HANDLE hConsoleOutput, const void *lpBuffer, DWORD nNumberOfCharsToWrite,
                           LPDWORD lpNumberOfCharsWritten, LPVOID lpReserved);
 extern HANDLE g_hMainMutex;                                      /* DAT_14013cb18 主互斥体句柄 */
-extern int64_t FUN_140103020(const uint16_t *p);                 /* @0x140103020 WCHAR 串长 */
+extern int64_t PECMD_WideStrLen(const uint16_t *p);                 /* @0x140103020 WCHAR 串长 */
 extern void *g_pFreeLibrary;                                      /* FreeLibrary 槽 */
 extern void *PTR_DAT_14013a040;                                  /* 主窗口指针槽 */
 extern void *g_pSvStatus;                                      /* service 状态句柄 */
@@ -5418,12 +5418,12 @@ void FUN_1400185c8(char param_1, int64_t *param_2)
     if ((((*plVar4 != 0) && (param_1 != '\0')) && (0 < plVar4[2])) &&
         (psVar1 = (uint16_t *)plVar4[1], *psVar1 != 0)) {
         if ((g_flagD6F6 & 2) == 0) {
-            lVar3 = FUN_140103020(psVar1);
+            lVar3 = PECMD_WideStrLen(psVar1);
             local_res10[0] = 0;
             WriteFile((HANDLE)*plVar4, (LPCVOID)plVar4[1], (DWORD)((int)lVar3 * 2), local_res10, (void *)0x0);
         }
         else {
-            lVar3 = FUN_140103020(psVar1);
+            lVar3 = PECMD_WideStrLen(psVar1);
             WriteConsoleW((HANDLE)*plVar4, (void *)plVar4[1], (DWORD)lVar3, local_res18, (LPVOID)0x0);
         }
     }
