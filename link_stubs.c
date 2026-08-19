@@ -549,9 +549,6 @@ uint64_t DAT_14013cee8;
 uint64_t DAT_14013cef0;
 uint64_t DAT_14013cf10;
 uint64_t DAT_14013cf20;
-uint64_t DAT_14013cfe8;
-uint64_t DAT_14013cff0;
-uint64_t DAT_14013cff8;
 int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t) = 0;
 uint64_t PTR_s_No_error_14013b800;
 uint64_t PTR_DAT_14013a8f0;
@@ -715,8 +712,6 @@ uint64_t FUN_1400f429c(void) { return 0; }
 /* 数据符号桩 */
 uint64_t DAT_14013cf30;
 uint64_t DAT_14013cf48;
-uint64_t DAT_14013d838;
-uint64_t DAT_14013d860;
 uint64_t PTR_FUN_14011fb08[128];
 uint64_t PTR_FUN_140120a50[128];
 uint64_t PTR_FUN_140120a60[128];
@@ -847,26 +842,15 @@ uint64_t SetTokenInformation(void){ return 0; }
 uint64_t CreateProcessAsUserW(void){ return 0; }
 uint64_t CreateProcessWithLogonW(void){ return 0; }
 uint64_t FileTimeToSystemTime(void){ return 0; }
-int (*DAT_14013c998)(void);
-int (*DAT_14013c988)(uint32_t, uintptr_t *);
-int (*DAT_14013c9a0)(void **, uintptr_t, int);
-void (*DAT_14013c9a8)(void);
 int (*DAT_14013c970)(uint32_t, uint32_t, char *, int);
 int32_t DAT_14013d770[16];
 
 
 /* --- r39 follow-up stubs (main-agent closure) --- */
-int (*DAT_14013d4b0)(void);
-int (*DAT_14013d4b8)(void);
-int (*DAT_14013d4c0)(void);
 int (*DAT_14013d488)(void);
-int (*DAT_14013d490)(void);
 uint64_t IsRectEmpty(void){ return 0; }
 uint64_t CreateDCW(void){ return 0; }
 void FUN_1400669c4(int64_t *a, uint64_t b, const uint16_t *c){ (void)a;(void)b;(void)c; }
-int (*DAT_14013d498)(void);
-int (*DAT_14013d4a0)(void);
-int (*DAT_14013d4a8)(void);
 uint64_t ReleaseSemaphore(void){ return 0; }
 void *FUN_1400f1be4(void *a, uint64_t *b, uint64_t *c){ (void)a;(void)b;(void)c; return a; }
 void *FUN_1400fb588(void *a, uint64_t *b, uint64_t *c){ (void)a;(void)b;(void)c; return a; }
@@ -914,7 +898,6 @@ void     *DAT_14013e110;          /* config string pointer */
 /* function-pointer slots */
 int  (*DAT_14013d458)(void *, unsigned int *) = 0;
 int  (*DAT_14013d460)(void *, unsigned int *) = 0;
-void (*DAT_14013d728)(void *) = 0;             /* CoTaskMemFree slot */
 
 /* FUN_ helpers (business/unknown -> no-op typed stubs; symbol-only for link) */
 uint64_t FUN_14005b2c0(void){ return 0; }
@@ -982,7 +965,6 @@ uint64_t FUN_1400a40e8(uint64_t *a, int64_t *b, int64_t *c, int64_t *d, int64_t 
 uint64_t *FUN_14005b3a0(uint64_t *a, uint64_t b){ (void)a;(void)b; return (uint64_t*)0; }
 int64_t FUN_1400705ac(int64_t *a, const uint16_t *b, uint32_t c, uint64_t d, uint64_t e, uint32_t f, uint32_t g, uint64_t h){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; return 0; }
 char s_0_0_0_0_140126958[16];
-uint64_t DAT_14013c990;
 uint64_t FUN_14002d708(uint16_t *s, int a, int64_t *p, int b, unsigned long d){ (void)s;(void)a;(void)p;(void)b;(void)d; return 0; }
 uint64_t GetLastInputInfo(void){ return 0; }
 
@@ -1036,10 +1018,6 @@ uint64_t GetTimeZoneInformation(void) { return 0; }
 uint64_t LocalFileTimeToFileTime(void) { return 0; }
 uint64_t SetMenu(void) { return 0; }
 uint64_t SHAppBarMessage(void) { return 0; }
-uint64_t DAT_14013d358;
-uint64_t DAT_14013d780;
-uint64_t DAT_14013d810;
-uint64_t DAT_14013d828;
 uint64_t PTR_FUN_140126540;
 uint64_t PTR_FUN_140126560;
 uint64_t FUN_14003c06c(void) { return 0; }

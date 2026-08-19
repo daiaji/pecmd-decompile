@@ -67,7 +67,7 @@ extern void FUN_14006159C(void *script, uint64_t seed);   /* @0x14006159c core_e
 
 /* ---- 全局 (core_globals.c / 新声明) ---- */
 extern uint32_t g_threadId;          /* g_dwC96C 线程 ID 输出 */
-extern void (*g_pRegDeleteKeyExW)(void);  /* DAT_14013d408 动态导入 */
+extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);  /* DAT_14013d408 动态导入 */
 extern WCHAR g_szEmpty[];            /* g_szEmpty .rdata 空串 */
 extern HANDLE g_hMainMutex;          /* DAT_14013cb18 主互斥体句柄 */
 extern uint8_t g_logFlag;            /* g_u8CCB1 MAIN_DBG 日志标志 */

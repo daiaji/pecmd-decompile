@@ -69,8 +69,8 @@ extern const WCHAR g_wsz27fc8[];       /* 关键字串 .rdata         */
 extern const WCHAR g_wsz27fd0[];       /* 关键字串 .rdata         */
 
 /* ---- 惰性加载函数指针槽 (DAT_14013xxx) ---- */
-extern DWORD (*DAT_14013d358)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* GetVolumeInformationByHandleW */
-extern DWORD (*DAT_14013d780)(HANDLE, LPWSTR, DWORD, DWORD);     /* GetFinalPathNameByHandleW    */
+extern DWORD (*g_pGetVolumeInformationByHandleW)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* GetVolumeInformationByHandleW */
+extern DWORD (*g_pGetFinalPathNameByHandleW)(HANDLE, LPWSTR, DWORD, DWORD);     /* GetFinalPathNameByHandleW    */
 extern DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);           /* WlanOpenHandle               */
 extern DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);          /* WlanEnumInterfaces           */
 extern DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);/* WlanSetProfile               */
@@ -430,14 +430,14 @@ LAB_140096b4b:
                 pWVar10 = (WCHAR *)local_res10;
                 if (local_res10 != (WCHAR *)0x0) {
                     FUN_14005c828("GetFinalPathNameByHandleW", (LPCSTR)0x0,
-                                  (void **)&DAT_14013d780, &g_hKernel32);
-                    if (DAT_14013d780 != (DWORD (*)(HANDLE, LPWSTR, DWORD, DWORD))0) {
+                                  (void **)&g_pGetFinalPathNameByHandleW, &g_hKernel32);
+                    if (g_pGetFinalPathNameByHandleW != (DWORD (*)(HANDLE, LPWSTR, DWORD, DWORD))0) {
                         PECMD_AllocString(&local_88, 0xa000);
                         lpString = (LPCWSTR)local_88;
                         *local_88 = L'\0';
-                        DVar12 = (*DAT_14013d780)((HANDLE)pWVar10, local_88, 0xa000, 8);
+                        DVar12 = (*g_pGetFinalPathNameByHandleW)((HANDLE)pWVar10, local_88, 0xa000, 8);
                         if (DVar12 == 0) {
-                            DVar12 = (*DAT_14013d780)((HANDLE)pWVar10, (LPWSTR)lpString, 0xa000, 10);
+                            DVar12 = (*g_pGetFinalPathNameByHandleW)((HANDLE)pWVar10, (LPWSTR)lpString, 0xa000, 10);
                             iVar3 = lstrlenW(lpString);
                             if ((7 < iVar3) &&
                                 (iVar4 = StrCmpNW(lpString, WSTR("\\Device\\"), 8), iVar4 == 0)) {
@@ -1599,13 +1599,13 @@ LAB_1400966dc:
                     local_1124 = 0;
                     local_10d0 = 0;
                     FUN_14005c828("GetVolumeInformationByHandleW", "Kernel32.DLL",
-                                  (void **)&DAT_14013d358, &g_hKernel32);
-                    if (DAT_14013d358 != (DWORD (*)(HANDLE, LPWSTR, DWORD, LPDWORD))0) {
+                                  (void **)&g_pGetVolumeInformationByHandleW, &g_hKernel32);
+                    if (g_pGetVolumeInformationByHandleW != (DWORD (*)(HANDLE, LPWSTR, DWORD, LPDWORD))0) {
                         local_res20 = 0;
                         PECMD_OpenFileHandle(&local_res20, pWVar10, 0x80000000, 7,
                                       (LPSECURITY_ATTRIBUTES)0x0, 3, 0, (HANDLE)0x0);
                         pWVar21 = (LPCWSTR)(uintptr_t)local_res20;
-                        iVar6 = (int)(*DAT_14013d358)((HANDLE)(uintptr_t)local_res20,
+                        iVar6 = (int)(*g_pGetVolumeInformationByHandleW)((HANDLE)(uintptr_t)local_res20,
                                                       local_1100, 0x208, (LPDWORD)&local_10d0);
                         if (iVar6 == 0) {
                             DVar5 = GetLastError();

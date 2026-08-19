@@ -141,7 +141,7 @@ extern uint32_t g_u32127750;
 extern uint16_t g_u1627754;
 extern int64_t  g_i64D428;              /* GetOpenFileNameW slot */
 extern int64_t  DAT_14013d430;              /* GetSaveFileNameW slot */
-extern void    (*DAT_14013d728)(LPVOID);    /* CoTaskMemFree slot */
+extern void    (*g_pCoTaskMemFree)(LPVOID);    /* CoTaskMemFree slot */
 extern WCHAR g_szEmpty[];            /* empty string */
 extern WCHAR    g_szEmpty[];                /* alias/slot for empty string */
 
@@ -639,10 +639,10 @@ LAB_140087be8:
             if (BVar7 != 0) {
                 FUN_14007034c(&local_5b0, (const WCHAR *)local_458);
             }
-            FUN_14005c828("CoTaskMemFree", "OLE32", (void **)&DAT_14013d728,
+            FUN_14005c828("CoTaskMemFree", "OLE32", (void **)&g_pCoTaskMemFree,
                           (uintptr_t *)&g_hOle32);
-            if (DAT_14013d728 != (void (*)(LPVOID))0x0) {
-                DAT_14013d728(pidl);
+            if (g_pCoTaskMemFree != (void (*)(LPVOID))0x0) {
+                g_pCoTaskMemFree(pidl);
             }
         }
 LAB_14008822a:

@@ -37,7 +37,7 @@ void FUN_140016ae0(void);            /* @0x140016ae0 服务主过程 */
 /* ---- 全局 (core_globals.c) ---- */
 extern uint8_t g_flag16b;            /* DAT_14013c96b (DEBUGMDG) */
 extern uint32_t g_WM_TaskbarButtonCreated;  /* DAT_14013c9f8 */
-extern void (*g_pRegDeleteKeyExW)(void);   /* DAT_14013d408 */
+extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);   /* DAT_14013d408 */
 extern void (*g_pSHGetValueA)(void);       /* DAT_14013cd50 */
 extern void (*g_pStrToIntExW)(void);       /* DAT_14013cd58 */
 extern HMODULE g_hNtdll;             /* DAT_14013ccf8 */

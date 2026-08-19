@@ -53,7 +53,7 @@ HMODULE g_hKernel32;        /* DAT_14013cfd0 */
 HMODULE g_hUser32;          /* DAT_14013cfc8 */
 HMODULE g_hGdi32;           /* DAT_14013cfd8 */
 uint32_t g_bX64;            /* DAT_14013a038 */
-void (*g_pRegDeleteKeyExW)(void);  /* DAT_14013d408 */
+int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);  /* DAT_14013d408 */
 int (*g_pSHDeleteKeyW)(HKEY, LPCWSTR);  /* DAT_14013d400 */
 int (*g_pSHGetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *); /* DAT_14013cd48 */
 void (*g_pSHGetValueA)(void);      /* DAT_14013cd50 */
@@ -1109,3 +1109,28 @@ DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);   /* DAT_14013d790 */
 DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);   /* DAT_14013d7c0 */
 DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);   /* DAT_14013d798 */
 void (*g_pWlanFreeMemory)(void);   /* DAT_14013d7c8 */
+
+/* ---- 阶段5d fn-ptr 槽迁移 ---- */
+BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *);   /* DAT_14013c988 */
+int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
+                            DWORD, DWORD *, BOOL);   /* DAT_14013c990 */
+int (*g_pWTSGetActiveConsoleSessionId)(void);   /* DAT_14013c998 */
+BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);   /* DAT_14013c9a0 */
+void (*g_pDestroyEnvironmentBlock)(void);   /* DAT_14013c9a8 */
+int (*g_pSetDisplayConfig)(UINT, UINT, UINT);   /* DAT_14013cfe8 */
+int (*g_pSetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff0 */
+int (*g_pGetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff8 */
+DWORD (*g_pGetVolumeInformationByHandleW)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* DAT_14013d358 */
+int (*g_pWIMCloseHandle)();   /* DAT_14013d490 */
+int (*g_pWIMGetMountedImageHandle)();   /* DAT_14013d498 */
+int (*g_pWIMGetMountedImageNum)();   /* DAT_14013d4a0 */
+int (*g_pWIMCommitImageHandle)();   /* DAT_14013d4a8 */
+int (*g_pWIMCommitImageNum)();   /* DAT_14013d4b0 */
+int (*g_pWIMUnmountImageHandle)();   /* DAT_14013d4b8 */
+int (*g_pWIMUnmountImageNum)();   /* DAT_14013d4c0 */
+void (*g_pCoTaskMemFree)(LPVOID);   /* DAT_14013d728 */
+DWORD (*g_pGetFinalPathNameByHandleW)(HANDLE, LPWSTR, DWORD, DWORD);   /* DAT_14013d780 */
+int (*g_pUiCallback)(int, int);   /* DAT_14013d810 */
+int (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int);   /* DAT_14013d828 */
+int (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm);   /* DAT_14013d838 */
+int (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv);   /* DAT_14013d860 */

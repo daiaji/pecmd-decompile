@@ -55,7 +55,7 @@ extern HMODULE g_hKernel32;     /* DAT_14013cfd0 */
 extern HMODULE g_hUser32;       /* DAT_14013cfc8 */
 extern HMODULE g_hGdi32;        /* DAT_14013cfd8 */
 extern uint32_t g_bX64;         /* DAT_14013a038 */
-extern void (*g_pRegDeleteKeyExW)(void);  /* DAT_14013d408 */
+extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);  /* DAT_14013d408 */
 extern int (*g_pSHDeleteKeyW)(HKEY, LPCWSTR);  /* DAT_14013d400 */
 extern int (*g_pSHGetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *); /* DAT_14013cd48 */
 extern void (*g_pSHGetValueA)(void);      /* DAT_14013cd50 */
@@ -570,3 +570,26 @@ extern DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);   /* DAT_14013d7
 extern DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);   /* DAT_14013d7c0 */
 extern DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);   /* DAT_14013d798 */
 extern void (*g_pWlanFreeMemory)(void);   /* DAT_14013d7c8 */
+extern BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *);   /* DAT_14013c988 */
+extern int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
+                            DWORD, DWORD *, BOOL);   /* DAT_14013c990 */
+extern int (*g_pWTSGetActiveConsoleSessionId)(void);   /* DAT_14013c998 */
+extern BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);   /* DAT_14013c9a0 */
+extern void (*g_pDestroyEnvironmentBlock)(void);   /* DAT_14013c9a8 */
+extern int (*g_pSetDisplayConfig)(UINT, UINT, UINT);   /* DAT_14013cfe8 */
+extern int (*g_pSetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff0 */
+extern int (*g_pGetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff8 */
+extern DWORD (*g_pGetVolumeInformationByHandleW)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* DAT_14013d358 */
+extern int (*g_pWIMCloseHandle)();   /* DAT_14013d490 */
+extern int (*g_pWIMGetMountedImageHandle)();   /* DAT_14013d498 */
+extern int (*g_pWIMGetMountedImageNum)();   /* DAT_14013d4a0 */
+extern int (*g_pWIMCommitImageHandle)();   /* DAT_14013d4a8 */
+extern int (*g_pWIMCommitImageNum)();   /* DAT_14013d4b0 */
+extern int (*g_pWIMUnmountImageHandle)();   /* DAT_14013d4b8 */
+extern int (*g_pWIMUnmountImageNum)();   /* DAT_14013d4c0 */
+extern void (*g_pCoTaskMemFree)(LPVOID);   /* DAT_14013d728 */
+extern DWORD (*g_pGetFinalPathNameByHandleW)(HANDLE, LPWSTR, DWORD, DWORD);   /* DAT_14013d780 */
+extern int (*g_pUiCallback)(int, int);   /* DAT_14013d810 */
+extern int (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int);   /* DAT_14013d828 */
+extern int (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm);   /* DAT_14013d838 */
+extern int (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv);   /* DAT_14013d860 */

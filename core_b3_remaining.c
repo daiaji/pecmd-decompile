@@ -184,14 +184,14 @@ extern void FUN_1400547bc(int64_t *a, int64_t *b, int64_t *c, int d, int e);
 extern void FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);
 extern uint8_t g_b120950[];                               /* 常量串(存在) */
 extern uint8_t g_b1215e8[];                               /* 常量串(不存在) */
-extern int (*DAT_14013d498)();                                /* 镜像打开回调 */
-extern int (*DAT_14013d4a0)();
-extern int (*DAT_14013d4a8)();
-extern int (*DAT_14013d4b0)();
-extern int (*DAT_14013d4b8)();
-extern int (*DAT_14013d4c0)();
+extern int (*g_pWIMGetMountedImageHandle)();                                /* 镜像打开回调 */
+extern int (*g_pWIMGetMountedImageNum)();
+extern int (*g_pWIMCommitImageHandle)();
+extern int (*g_pWIMCommitImageNum)();
+extern int (*g_pWIMUnmountImageHandle)();
+extern int (*g_pWIMUnmountImageNum)();
 extern int (*DAT_14013d488)();
-extern int (*DAT_14013d490)();
+extern int (*g_pWIMCloseHandle)();
 
 /* A8 函数体内前向声明（被同文件后部已定义函数先调用） */
 extern LPWSTR FUN_14005fc90(LPWSTR param_1, uint *param_2, int param_3);
@@ -352,8 +352,8 @@ extern void  *DAT_14013d478;
 extern void  *DAT_14013d480;
 
 extern void    *g_pGdipLoadImageFromStream;                                  /* GdipLoadImageFromStream 函数指针 */
-extern int     (*DAT_14013d838)(void *hGlobal, int fDel, void **ppstm); /* CreateStreamOnHGlobal */
-extern int     (*DAT_14013d860)(void *punk, int a, int b, void *riid, void **ppv); /* COM load */
+extern int     (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm); /* CreateStreamOnHGlobal */
+extern int     (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv); /* COM load */
 extern uint8_t  g_b12d1d8[16];                              /* IID/GUID */
 extern CRITICAL_SECTION g_csDisk;                          /* 全局临界区 */
 extern double   g_fontMinus0;                                  /* 常量 */
@@ -480,7 +480,7 @@ extern int (*DAT_14013d4d0)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uin
 extern int (*g_pinet_addr)(char *);
 extern int64_t g_pCacheBlock;
 extern int (*DAT_14013d4d8)(int64_t, uint *);
-extern int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t); /* @0x14013d408 */
+extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t); /* @0x14013d408 */
 /* 本批(B3)新增 helper/WS2 槽 extern */
 extern int64_t FUN_14001c2cc(LPCWSTR priv, DWORD attr, uint32_t flag);   /* @0x14001c2cc EnablePrivilege */
 extern void FUN_14005c828(const char *func, const char *dll, void **out, uintptr_t *hmod); /* @0x14005c828 */
@@ -8790,11 +8790,11 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
                   (uintptr_t *)&local_res8);
     FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&DAT_14013d488,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d498,
+    FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageHandle,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d4a8,
+    FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageHandle,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d4b8,
+    FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageHandle,
                   (uintptr_t *)&local_res8);
     if (bVar1) {
         local_res8 = (HMODULE)0;
@@ -8802,13 +8802,13 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
                       (uintptr_t *)&local_res8);
         FUN_14005c828("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage2,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d4a0,
+        FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d4b0,
+        FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d4c0,
+        FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&DAT_14013d490,
+        FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandle,
                       (uintptr_t *)&local_res8);
     }
     return param_1;
@@ -9194,15 +9194,15 @@ uint64_t PECMD_ImageCommitUnmount(uint64_t param_1, int param_2, int param_3)
     local_res20 = 0;
     uVar3 = 1;
     if (param_3 == 0) {
-        iVar1 = (*DAT_14013d498)(param_1, 0, local_28, &local_res20);
+        iVar1 = (*g_pWIMGetMountedImageHandle)(param_1, 0, local_28, &local_res20);
     } else {
-        iVar1 = (*DAT_14013d4a0)();
+        iVar1 = (*g_pWIMGetMountedImageNum)();
     }
     if (iVar1 == 0) {
         if (param_3 == 0) {
-            iVar1 = (*DAT_14013d498)(param_1, 0x200, local_28, &local_res20);
+            iVar1 = (*g_pWIMGetMountedImageHandle)(param_1, 0x200, local_28, &local_res20);
         } else {
-            iVar1 = (*DAT_14013d4a0)();
+            iVar1 = (*g_pWIMGetMountedImageNum)();
         }
         if (iVar1 == 0) {
             DVar2 = GetLastError();
@@ -9221,9 +9221,9 @@ LAB_14005f56a:
         if (iVar1 == 0) goto LAB_14005f5be;
     } else {
         if (param_3 == 0) {
-            iVar1 = (*DAT_14013d4a8)(local_res20, 0, 0);
+            iVar1 = (*g_pWIMCommitImageHandle)(local_res20, 0, 0);
         } else {
-            iVar1 = (*DAT_14013d4b0)();
+            iVar1 = (*g_pWIMCommitImageNum)();
         }
         if (iVar1 == 0) {
             DVar2 = GetLastError();
@@ -9239,9 +9239,9 @@ LAB_14005f56a:
         }
     }
     if (param_3 == 0) {
-        iVar1 = (*DAT_14013d4b8)(local_res20, 0);
+        iVar1 = (*g_pWIMUnmountImageHandle)(local_res20, 0);
     } else {
-        iVar1 = (*DAT_14013d4c0)();
+        iVar1 = (*g_pWIMUnmountImageNum)();
     }
     if (iVar1 == 0) {
         DVar2 = GetLastError();
@@ -9258,14 +9258,14 @@ LAB_14005f5be:
         if (param_3 == 0) {
             (*DAT_14013d488)();
         } else {
-            (*DAT_14013d490)();
+            (*g_pWIMCloseHandle)();
         }
     }
     if (local_28[0] != 0) {
         if (param_3 == 0) {
             (*DAT_14013d488)();
         } else {
-            (*DAT_14013d490)();
+            (*g_pWIMCloseHandle)();
         }
     }
     return uVar3;
@@ -9820,7 +9820,7 @@ uint64_t PECMD_LoadImageStream(uint8_t *param_1, size_t param_2, uint64_t *param
     if ((g_pOleInit != 0) && (iVar2 = (*g_pOleInit)(0), iVar2 != 0) && (iVar2 == 1)) {
         (*g_pOleUninit)();
     }
-    if (DAT_14013d838 != 0) {
+    if (g_pCreateStreamOnHGlobal != 0) {
         local_res20 = (int64_t *)0x0;
         local_28[0] = 0;
         hMem = GlobalAlloc(2, param_2);
@@ -9828,7 +9828,7 @@ uint64_t PECMD_LoadImageStream(uint8_t *param_1, size_t param_2, uint64_t *param
             puVar3 = (uint8_t *)GlobalLock(hMem);
             FUN_14001d78c(puVar3, param_1, (int)param_2);
             GlobalUnlock(hMem);
-            (*DAT_14013d838)((void *)hMem, 0, (void **)&local_res20);
+            (*g_pCreateStreamOnHGlobal)((void *)hMem, 0, (void **)&local_res20);
             if (local_res20 != (int64_t *)0x0) {
                 (*(void (*)(int64_t *, void *))g_pGdipLoadImageFromStream)(local_res20, (void *)local_28);
             }
@@ -12539,7 +12539,7 @@ uint64_t PECMD_LoadImageFromFile(LPCWSTR param_1)
         (*g_pOleUninit)();                            /* g_pOleUninit */
     }
     lVar3 = PECMD_DelayLoadOleaut32();
-    if ((lVar3 != 0) && (DAT_14013d838 != 0)) {
+    if ((lVar3 != 0) && (g_pCreateStreamOnHGlobal != 0)) {
         local_res10 = (int64_t *)0;
         local_res20 = 0;
         local_28[0] = (HANDLE)0;
@@ -12547,9 +12547,9 @@ uint64_t PECMD_LoadImageFromFile(LPCWSTR param_1)
         puVar4 = FUN_14006e238(param_1, local_28, (uint64_t *)&local_res18);
         hMem = local_res18;
         if (puVar4 != (uint64_t *)0) {
-            (*DAT_14013d838)((void *)local_res18, 0, (void **)&local_res10);
+            (*g_pCreateStreamOnHGlobal)((void *)local_res18, 0, (void **)&local_res10);
             if (local_res10 != (int64_t *)0) {
-                (*DAT_14013d860)((void *)local_res10, 0, 0, (void *)&g_b12d1d8, (void **)&local_res20);
+                (*g_pComLoad)((void *)local_res10, 0, 0, (void *)&g_b12d1d8, (void **)&local_res20);
             }
             if (hMem != (HGLOBAL)0) {
                 GlobalFree(hMem);
@@ -12999,10 +12999,10 @@ DWORD PECMD_DeleteRegistryKeyRecursive(HKEY param_1,LPCWSTR param_2)
         }
       }
       RegCloseKey(local_38);
-      if ((DAT_14013d408 != (void *)0x0) ||
-         (FUN_14005c828("RegDeleteKeyExW","Advapi32.dll",(void **)&DAT_14013d408,
-                        (uintptr_t *)0) , DAT_14013d408 != (void *)0x0)) {
-        DVar2 = (*DAT_14013d408)(param_1,param_2,0,0);
+      if ((g_pRegDeleteKeyExW != (void *)0x0) ||
+         (FUN_14005c828("RegDeleteKeyExW","Advapi32.dll",(void **)&g_pRegDeleteKeyExW,
+                        (uintptr_t *)0) , g_pRegDeleteKeyExW != (void *)0x0)) {
+        DVar2 = (*g_pRegDeleteKeyExW)(param_1,param_2,0,0);
       }
       if (DVar2 != 0) {
         DVar3 = DVar2;

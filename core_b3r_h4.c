@@ -65,8 +65,8 @@ extern const WCHAR g_wsz28eb8[];      /* 选项串常量 (.rdata)         */
 extern const WCHAR g_wsz28bf4[];      /* 选项串常量 (.rdata)         */
 
 /* 惰性加载的函数指针槽 */
-extern int  (*DAT_14013d810)(int, int);  /* 全局槽 (调用 (*)(0,..))      */
-extern int  (*DAT_14013d828)(int,int,int,int,int,int,int,int,int); /* 全局槽 */
+extern int  (*g_pUiCallback)(int, int);  /* 全局槽 (调用 (*)(0,..))      */
+extern int  (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int); /* 全局槽 */
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
 extern void *operator_new(size_t size);
@@ -1497,9 +1497,9 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                   if ((((*(byte *)((longlong)param_1 + 0x12) & 4) == 0) &&
                       (*(byte *)((longlong)param_1 + 0x12) =
                           *(byte *)((longlong)param_1 + 0x12) | 4,
-                       DAT_14013d810 != (code *)0x0)) && ((*DAT_14013d810)(0, local_e8), -1 < iVar3)
+                       g_pUiCallback != (code *)0x0)) && ((*g_pUiCallback)(0, local_e8), -1 < iVar3)
                      ) {
-                    (*DAT_14013d828)(0, 0xffffffff, 0, 0, iVar3, iVar14, 0, 0, 0);
+                    (*g_pOle32Slot828)(0, 0xffffffff, 0, 0, iVar3, iVar14, 0, 0, 0);
                   }
                 }
               }

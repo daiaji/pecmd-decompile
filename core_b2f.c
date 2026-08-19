@@ -5012,9 +5012,9 @@ extern double g_dbl22588;
 extern double g_dbl2578;
 extern double g_dbl22580;
 extern double g_dbl20b28;
-extern int (*DAT_14013cfe8)(UINT, UINT, UINT); /* SetDisplayConfig 函数指针 */
-extern int (*DAT_14013cff0)(HDC, void *); /* SetDeviceGammaRamp 函数指针 */
-extern int (*DAT_14013cff8)(HDC, void *); /* GetDeviceGammaRamp 函数指针 */
+extern int (*g_pSetDisplayConfig)(UINT, UINT, UINT); /* SetDisplayConfig 函数指针 */
+extern int (*g_pSetDeviceGammaRamp)(HDC, void *); /* SetDeviceGammaRamp 函数指针 */
+extern int (*g_pGetDeviceGammaRamp)(HDC, void *); /* GetDeviceGammaRamp 函数指针 */
                /* g_Script */
 extern DWORD g_dwC96C;
 extern WCHAR u__26_INDATA_140121fe0[0x26];
@@ -5262,7 +5262,7 @@ LAB_140038e01:
       }
     }
   }
-  FUN_14005C828("SetDisplayConfig","User32.DLWSTR(",(int64_t *)&DAT_14013cfe8,&g_hUser32);
+  FUN_14005C828("SetDisplayConfig","User32.DLWSTR(",(int64_t *)&g_pSetDisplayConfig,&g_hUser32);
   local_8a8.dmDeviceName[0] = L'\0';
   memset((uint64_t *)(local_8a8.dmDeviceName + 1),0,0x3e);
   memset((uint64_t *)&local_8a8.dmSpecVersion,0,0x9c);
@@ -5360,13 +5360,13 @@ LAB_1400395a9:
           }
         }
         uVar19 = 0x80004001;
-        FUN_14005C828("SetDeviceGammaRamp","GDI32",(int64_t *)&DAT_14013cff0,&g_hGdi32);
-        FUN_14005C828("GetDeviceGammaRamp","GDI32",(int64_t *)&DAT_14013cff8,&g_hGdi32);
+        FUN_14005C828("SetDeviceGammaRamp","GDI32",(int64_t *)&g_pSetDeviceGammaRamp,&g_hGdi32);
+        FUN_14005C828("GetDeviceGammaRamp","GDI32",(int64_t *)&g_pGetDeviceGammaRamp,&g_hGdi32);
         hDC = GetDC((HWND)0x0);
         FUN_1400633A8(&local_9c0,0x600);
         puVar33 = local_9c0 + 0x100;
         if (cVar9 < '\x01') {
-          if ((cVar9 < '\x01') && (DAT_14013cff0 != (void *)0x0)) {
+          if ((cVar9 < '\x01') && (g_pSetDeviceGammaRamp != (void *)0x0)) {
             iVar14 = 0;
             lVar28 = 0x400 - (int64_t)puVar33;
             puVar24 = local_9c0;
@@ -5383,7 +5383,7 @@ LAB_1400395a9:
               puVar24 = puVar24 + 1;
               puVar33 = puVar33 + 1;
             } while (iVar14 < 0x100);
-            iVar14 = (*DAT_14013cff0)(hDC,local_9c0);
+            iVar14 = (*g_pSetDeviceGammaRamp)(hDC,local_9c0);
             if (iVar14 == 1) {
               uVar19 = 0;
             }
@@ -5404,8 +5404,8 @@ LAB_1400395a9:
         }
         lVar28 = 0;
         local_608[0] = L'\0';
-        if (DAT_14013cff8 == (void *)0x0) goto LAB_140039748;
-        iVar14 = (*DAT_14013cff8)(hDC,local_9c0);
+        if (g_pGetDeviceGammaRamp == (void *)0x0) goto LAB_140039748;
+        iVar14 = (*g_pGetDeviceGammaRamp)(hDC,local_9c0);
         lVar35 = lVar28;
         if (iVar14 == 1) {
           uVar19 = 0;
@@ -5667,8 +5667,8 @@ LAB_140039c58:
       local_a30 = uVar22;
       local_a20 = uVar19;
 LAB_140039e25:
-      if ((local_a48[0] != -1) && (DAT_14013cfe8 != (void *)0x0)) {
-        (*DAT_14013cfe8)(0,0,0);
+      if ((local_a48[0] != -1) && (g_pSetDisplayConfig != (void *)0x0)) {
+        (*g_pSetDisplayConfig)(0,0,0);
       }
       local_a58 = StrChrW(local_res10,L'W');
       if (local_a58 != (LPWSTR)0x0) {

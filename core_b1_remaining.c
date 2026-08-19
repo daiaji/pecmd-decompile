@@ -200,7 +200,7 @@ extern bool PECMD_InitTlsBuffer(uint64_t *param_1);        /* @0x140018534 */
 
 /* ---- 本批(B1 剩余 9 个)还原所需: 额外 helper / 全局 extern (核对自 decompiled.c) ---- */
 extern DWORD g_dwC96C;                                    /* 线程 ID 输出 */
-extern int (*DAT_14013c990)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
+extern int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
                             DWORD, DWORD *, BOOL);             /* WTSSendMessageW 槽 */
 extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d,
                           DWORD e, DWORD f, DWORD g);          /* @0x1400e3d60 消息框 */
@@ -418,10 +418,10 @@ extern GUID g_guidDevInstance;                                          /* @0x14
 /* ImDisk.cpl 动态装载的函数指针槽 (PECMD_LoadUnloadImdisk) */
 extern HMODULE g_hImdiskCpl;                                       /* Imdisk.cpl 模块句柄 */
 /* 会话/进程创建用延迟加载函数指针槽 (PECMD_CreateProcessAsUser) */
-extern int (*DAT_14013c998)(void);                                  /* WTSGetActiveConsoleSessionId 槽 */
-extern BOOL (*DAT_14013c988)(DWORD, HANDLE *);                      /* WTSQueryUserToken 槽 */
-extern BOOL (*DAT_14013c9a0)(void **, HANDLE, BOOL);                /* CreateEnvironmentBlock 槽 */
-extern void (*DAT_14013c9a8)(void);                                 /* DestroyEnvironmentBlock 槽 */
+extern int (*g_pWTSGetActiveConsoleSessionId)(void);                                  /* WTSGetActiveConsoleSessionId 槽 */
+extern BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *);                      /* WTSQueryUserToken 槽 */
+extern BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);                /* CreateEnvironmentBlock 槽 */
+extern void (*g_pDestroyEnvironmentBlock)(void);                                 /* DestroyEnvironmentBlock 槽 */
 
 /* 全局(槽/数据) extern */
 extern uint8_t  g_u8CA49;      /* CPU 计数 */
@@ -800,17 +800,17 @@ uint32_t FUN_140003aac(LPCWSTR param_1, LPCWSTR param_2, uint32_t param_3, int p
     uint32_t local_28[4];
 
     local_28[0] = 0;
-    if (DAT_14013c990 == 0) {
-        FUN_14005C828("WTSSendMessageW", "Wtsapi32.DLL", (void **)&DAT_14013c990,
+    if (g_pWTSSendMessageW == 0) {
+        FUN_14005C828("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
                       (HMODULE *)0);
     }
-    FUN_14005C828("WTSGetActiveConsoleSessionId", "Kernel32", (void **)&DAT_14013c998,
+    FUN_14005C828("WTSGetActiveConsoleSessionId", "Kernel32", (void **)&g_pWTSGetActiveConsoleSessionId,
                   &g_hKernel32);
-    if ((DAT_14013c990 != 0) && (DAT_14013c998 != 0)) {
+    if ((g_pWTSSendMessageW != 0) && (g_pWTSGetActiveConsoleSessionId != 0)) {
         iVar1 = lstrlenW(param_1);
         iVar2 = lstrlenW(param_2);
-        uVar3 = (uint32_t)(*DAT_14013c998)();
-        if ((*DAT_14013c990)((HANDLE)0, uVar3, param_2, (DWORD)(iVar2 * 2), param_1,
+        uVar3 = (uint32_t)(*g_pWTSGetActiveConsoleSessionId)();
+        if ((*g_pWTSSendMessageW)((HANDLE)0, uVar3, param_2, (DWORD)(iVar2 * 2), param_1,
                              (DWORD)(iVar1 * 2), param_3,
                              (DWORD)((param_4 + 999U) / 1000), local_28, 1) != 0) {
             return local_28[0];
@@ -2931,7 +2931,7 @@ BOOL PECMD_CreateProcessAsUser(LPCWSTR param_1, LPWSTR param_2, LPSECURITY_ATTRI
     local_b8 = (HANDLE)0;
     FUN_14000397c();
     FUN_14005C828("WTSGetActiveConsoleSessionId", "Kernel32",
-                  (void **)&DAT_14013c998, &g_hKernel32);
+                  (void **)&g_pWTSGetActiveConsoleSessionId, &g_hKernel32);
     /* param_10 实为调用方传入的 PROCESS_INFORMATION 地址(Ghidra 以 _LUID 承载) */
     lpProcessInformation = (LPPROCESS_INFORMATION)(uintptr_t)
         (((uint64_t)param_10.HighPart << 32) | (uint64_t)param_10.LowPart);
@@ -2939,8 +2939,8 @@ BOOL PECMD_CreateProcessAsUser(LPCWSTR param_1, LPWSTR param_2, LPSECURITY_ATTRI
     dwCreationFlags = param_6;
     local_a8[0] = -1;
     lpStartupInfo = param_9;
-    if ((DAT_14013c998 == NULL) ||
-        (local_a8[0] = (*DAT_14013c998)(), lpStartupInfo = param_9, local_a8[0] == -1))
+    if ((g_pWTSGetActiveConsoleSessionId == NULL) ||
+        (local_a8[0] = (*g_pWTSGetActiveConsoleSessionId)(), lpStartupInfo = param_9, local_a8[0] == -1))
         goto LAB_140007fcb;
     local_98 = (HANDLE)0;
     if ((param_11 & 1) == 0) {
@@ -2967,8 +2967,8 @@ LAB_140007e89:
         lpStartupInfo = param_9;
         if (iVar1 == 0) goto LAB_140007fcb;
     } else {
-        if ((DAT_14013c988 == NULL) ||
-            (iVar1 = (*DAT_14013c988)((DWORD)local_a8[0], &local_b8),
+        if ((g_pWTSQueryUserToken == NULL) ||
+            (iVar1 = (*g_pWTSQueryUserToken)((DWORD)local_a8[0], &local_b8),
              lpStartupInfo = param_9, iVar1 == 0))
             goto LAB_140007fcb;
         param_6 = 0;
@@ -2997,8 +2997,8 @@ LAB_140007e89:
         }
         local_a0 = NULL;
         lpEnvironment_00 = lpEnvironment;
-        if ((lpEnvironment == NULL) && (DAT_14013c9a0 != NULL)) {
-            iVar1 = (*DAT_14013c9a0)(&local_a0, pvVar3, 0);
+        if ((lpEnvironment == NULL) && (g_pCreateEnvironmentBlock != NULL)) {
+            iVar1 = (*g_pCreateEnvironmentBlock)(&local_a0, pvVar3, 0);
             if (local_a0 != NULL) {
                 dwCreationFlags_00 = dwCreationFlags | 0x410;
             }
@@ -3011,7 +3011,7 @@ LAB_140007e89:
                                      dwCreationFlags_00, lpEnvironment_00, param_8, param_9,
                                      lpProcessInformation);
         if (local_a0 != NULL) {
-            (*DAT_14013c9a8)();
+            (*g_pDestroyEnvironmentBlock)();
             local_a0 = NULL;
         }
         if (local_b8 != (HANDLE)0) {
