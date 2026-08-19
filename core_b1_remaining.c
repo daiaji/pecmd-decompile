@@ -15,6 +15,12 @@ extern void FUN_1400703E4(WCHAR **ps, LPCWSTR src);        /* @0x1400703e4 */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);    /* @0x140063720 */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);           /* @0x140074838 */
 extern uint64_t PECMD_IsDirectory(LPCWSTR path);               /* @0x140101d34 */
+extern DWORD PECMD_CreateDirectory(uint64_t unused, WCHAR *path);   /* @0x140027644 */
+extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa,
+                                LPSECURITY_ATTRIBUTES da, BOOL inherit, DWORD flags,
+                                LPVOID env, LPCWSTR cwd, LPSTARTUPINFOW si,
+                                LPPROCESS_INFORMATION pi);           /* @0x140101e04 */
+extern void FUN_1400703e4(WCHAR **ps, LPCWSTR src);                 /* @0x1400703e4 */
 extern int64_t PECMD_WideStrLen(const uint16_t *s);       /* @0x140103020 */
 extern void FUN_1400633A8(void **ps, int64_t len);         /* @0x1400633a8 */
 extern void FUN_1400E56E4(uint64_t *slot);                 /* @0x1400e56e4 */
@@ -1224,10 +1230,53 @@ void PECMD_ScheduleSelfDelete(LARGE_INTEGER param_1, int param_2)
 
 uint64_t FUN_1400048c4(int64_t *param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_1400048c4 — decompile-failed, body 未还原 */
-/* @0x1400048c4 size=322 (签名修正自反编译, 主体仍为 NO-OP stub) */
-    (void)param_1;
-    return 0;
+    /* @0x1400048c4 size=322 取串长度并扩充临时路径缓冲 (TMP/TEMP), 确保目录存在 */
+    uint32_t uVar1;
+    DWORD DVar2;
+    int iVar3;
+    uint64_t uVar4;
+    uint64_t uVar5;
+
+    uVar5 = 0;
+    if ((LPCWSTR)*param_1 != (LPCWSTR)0) {
+        uVar1 = lstrlenW((LPCWSTR)*param_1);
+        uVar5 = (uint64_t)uVar1;
+    }
+    PECMD_AllocString((WCHAR **)param_1, (int64_t)((int)uVar5 + 0x2d0));
+    if (0 < (int)uVar5) goto LAB_140004999;
+    *(uint16_t *)*param_1 = 0;
+    DVar2 = GetEnvironmentVariableW(WSTR("TMP"), (LPWSTR)*param_1, 0x208);
+    if ((int)DVar2 < 1) {
+        DVar2 = GetEnvironmentVariableW(WSTR("TEMP"), (LPWSTR)*param_1, 0x208);
+        if (0 < (int)DVar2) goto LAB_14000497e;
+        SHGetSpecialFolderPathW((HWND)0, (LPWSTR)*param_1, 0x24, 0);
+        iVar3 = lstrlenW((LPCWSTR)*param_1);
+        uVar5 = (uint64_t)iVar3;
+        if (0 < iVar3) {
+            lstrcpyW((LPWSTR)(*param_1 + uVar5 * 2), WSTR("\\TEMP"));
+            DVar2 = iVar3 + 5;
+            uVar5 = (uint64_t)DVar2;
+            if (0 < (int)DVar2) goto LAB_14000497e;
+        }
+    } else {
+LAB_14000497e:
+        *(uint16_t *)(*param_1 + (int64_t)(int)DVar2 * 2) = 0x5c;
+        uVar5 = (uint64_t)(DVar2 + 1);
+        *(uint16_t *)(*param_1 + (int64_t)(int)(DVar2 + 1) * 2) = 0;
+    }
+LAB_140004999:
+    PECMD_CreateDirectory((uint64_t)(uintptr_t)&g_Script, (WCHAR *)*param_1);
+    if (0 < (int)uVar5) {
+        uVar4 = PECMD_IsDirectory((LPCWSTR)*param_1);
+        if ((int)uVar4 != 0) goto LAB_1400049f4;
+    }
+    SHGetSpecialFolderPathW((HWND)0, (LPWSTR)*param_1, 0x24, 0);
+    lstrcatW((LPWSTR)*param_1, WSTR("\\TEMP\\"));
+    PECMD_CreateDirectory((uint64_t)(uintptr_t)&g_Script, (WCHAR *)*param_1);
+    uVar1 = lstrlenW((LPCWSTR)*param_1);
+    uVar5 = (uint64_t)uVar1;
+LAB_1400049f4:
+    return uVar5 & 0xffffffff;
 }
 
 void PECMD_InitOleCom(void)
@@ -3347,9 +3396,101 @@ void PECMD_ScanDirectory(uint64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, in
 uint64_t FUN_1400091e0(LPCWSTR param_1, int64_t *param_2, int64_t *param_3,
                        HANDLE *param_4, LPCWSTR param_5)
 {
-    /* @0x1400091e0 size=833 (签名修正自联调, 主体仍为 NO-OP stub) */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5;
-    return 0;
+    /* @0x1400091e0 size=833 构造 PECMD LOAD 映射命令并启动子进程(或回填 param_2) */
+    int iVar2;
+    int iVar3;
+    HANDLE hFileMappingObject;
+    int64_t *lpBaseAddress;
+    HANDLE *ppvVar4;
+    LPWSTR pWVar5;
+    uint64_t uVar6;
+    LPCWSTR pWVar7;
+    WCHAR *local_res10;
+    LPWSTR local_res18;
+    HANDLE local_res20;
+    PROCESS_INFORMATION local_210;
+    SECURITY_ATTRIBUTES local_1f0;
+    STARTUPINFOW local_1d8;
+    WCHAR local_168[152];
+
+    if (param_2 == (int64_t *)0) {
+        pWVar7 = g_szEmpty;
+    } else {
+        pWVar7 = (LPCWSTR)*param_2;
+    }
+    FUN_140063694(&local_res18, 0x105);
+    pWVar5 = local_res18;
+    if ((param_3 == (int64_t *)0) || (*param_3 == 0)) {
+        GetModuleFileNameW((HMODULE)0, local_res18, 0x104);
+    }
+    if (param_3 != (int64_t *)0) {
+        if (*param_3 == 0) {
+            FUN_1400703e4((WCHAR **)param_3, local_res18);
+        } else {
+            FUN_1400703e4(&local_res18, (LPCWSTR)*param_3);
+            pWVar5 = local_res18;
+        }
+    }
+    iVar2 = lstrlenW(param_1);
+    ppvVar4 = &local_res20;
+    if (param_4 != (HANDLE *)0) {
+        ppvVar4 = param_4;
+    }
+    local_res20 = (HANDLE)0;
+    local_1f0.nLength = 0x18;
+    local_1f0.lpSecurityDescriptor = (LPVOID)0;
+    local_1f0.bInheritHandle = 1;
+    hFileMappingObject = CreateFileMappingW((HANDLE)0xffffffffffffffff, &local_1f0,
+                                            0x8000004, 0, iVar2 * 2 + 2 + 0x50,
+                                            (LPCWSTR)0);
+    if (hFileMappingObject == (HANDLE)0xffffffffffffffff) {
+        hFileMappingObject = (HANDLE)0;
+    }
+    *ppvVar4 = hFileMappingObject;
+    if ((hFileMappingObject == (HANDLE)0) ||
+        (lpBaseAddress = (int64_t *)MapViewOfFile(hFileMappingObject, 6, 0, 0, 0),
+         lpBaseAddress == (int64_t *)0)) {
+        if ((local_res20 != (HANDLE)0) && (local_res20 != (HANDLE)0xffffffffffffffff)) {
+            CloseHandle(local_res20);
+        }
+    } else {
+        *lpBaseAddress = (int64_t)(iVar2 * 2 + 2);
+        FUN_14001d78c((uint8_t *)(lpBaseAddress + 1), (const uint8_t *)param_1, iVar2 * 2 + 2);
+        FUN_140102a90((uint64_t *)((uint8_t *)lpBaseAddress + (int64_t)iVar2 * 2 + 10), 0, 0x48);
+        UnmapViewOfFile(lpBaseAddress);
+        wsprintfW(local_168, WSTR(" *map:0x%p:%lu "));
+        FUN_1400702F0((int64_t *)&local_res10, "PECMD LOAD ", 0xffffffffffffffff);
+        uVar6 = 0;
+        if (*param_5 != L'\0') {
+            FUN_14006375C(&local_res10, WSTR("**logs:\""));
+            FUN_14006375C(&local_res10, param_5);
+            FUN_14006375C(&local_res10, WSTR("\""));
+        }
+        FUN_14006375C(&local_res10, local_168);
+        FUN_14006375C(&local_res10, pWVar7);
+        if (param_4 == (HANDLE *)0) {
+            local_210.hProcess = (HANDLE)0;
+            local_1d8.cb = 0x68;
+            local_210.hThread = (HANDLE)0;
+            local_210.dwProcessId = 0;
+            local_210.dwThreadId = 0;
+            FUN_140102a90(&local_1d8.lpReserved, 0, 0x60);
+            iVar2 = PECMD_CreateProcessW((LPCWSTR)pWVar5, (LPWSTR)local_res10, 0, 0, 1, 0,
+                                         0, 0, &local_1d8, &local_210);
+            if (iVar2 != 0) {
+                CloseHandle(local_210.hProcess);
+                CloseHandle(local_210.hThread);
+            }
+        } else {
+            FUN_1400703e4((WCHAR **)param_2, local_res10);
+        }
+        FUN_14005B104(&local_res10);
+        if ((local_res20 != (HANDLE)0) && (local_res20 != (HANDLE)0xffffffffffffffff)) {
+            CloseHandle(local_res20);
+        }
+    }
+    FUN_14005B104(&local_res18);
+    return uVar6;
 }
 
 int64_t PECMD_ParseVarArg(int64_t *param_1, int64_t *param_2, int64_t *param_3,

@@ -861,7 +861,6 @@ uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return 
 /* ---- 批1-01ed5c 依赖桩 ---- */
 uint64_t FUN_14001ebdc(void){ return 0; }
 uint64_t FUN_140063694(void){ return 0; }
-uint64_t SetWindowTextW(void){ return 0; }
 uint64_t FUN_140063344(void){ return 0; }
 void *DAT_14013ca68;   /* HINSTANCE 资源句柄 */
 
@@ -1029,3 +1028,37 @@ uint64_t FUN_1400bd620(void) { return 0; }
 uint64_t FUN_1400bef64(void) { return 0; }
 uint64_t DAT_14013e2a8;
 uint64_t g_pFontBase;
+
+/* ============================================================
+   ---- 新增叶依赖桩 (FUN_14004e488 行解析器恢复所需) ----
+   仅供链接满足符号, 无真实逻辑.
+   ============================================================ */
+int      FUN_14006156c(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }
+uint64_t FUN_1400a53e4(int64_t a, void *b, void *c, int d, const uint16_t *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
+const uint16_t *FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, char e) { (void)a;(void)b;(void)d;(void)e; return c; }
+
+/* ============================================================
+   ---- 新增叶依赖桩 (FUN_140051610 表达式解析恢复所需) ----
+   ============================================================ */
+int      FUN_1400510e8(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
+int      FUN_1400512f4(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
+int      FUN_1400513b8(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
+uint64_t FUN_140053be8(int *a, uint16_t **b) { (void)a;(void)b; return 0; }
+
+/* ============================================================
+   ---- 新增叶依赖桩/数据 (FUN_140057940 字体控制消息恢复所需) ----
+   ============================================================ */
+uint64_t FUN_140067b54(uint16_t *a, double *b) { (void)a;(void)b; return 0; }
+void     FUN_140007bcc(uint16_t *a, int *b) { (void)a;(void)b; }
+void     FUN_140074838(uint16_t *a, int *b) { (void)a;(void)b; }
+double   DAT_1401237e0;
+double   DAT_1401237e8;
+double   DAT_1401237f0;
+double   DAT_1401237f8;
+double   DAT_140123800;
+
+/* ============================================================
+   ---- 新增叶依赖桩 (FUN_14005ccb0 SetupDi 设备变更恢复所需) ----
+   ============================================================ */
+int SetupDiSetClassInstallParamsW(void *a, void *b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
+int SetupDiChangeState(void *a, void *b) { (void)a;(void)b; return 1; }
