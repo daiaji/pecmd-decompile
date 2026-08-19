@@ -3228,3 +3228,17 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
   字节重叠（147002/003 与 g_runFlag）/ 无大小数组（d770/d8a0 等）** ——强迁需逐调用点定类型，有改坏风险，
   按"行为不变"政策登记待深挖。
 - 校验：build/link 全程绿；打桩删净；每簇提交。
+
+---
+
+## 66. 阶段5c-f：DAT_→g_ 批量迁移（真实 DAT_ 113→33）
+
+### 做法
+- 依"extern 一致性"分层：唯一形式→直接 token 迁；`void*|单 typed`→归一 typed（把 void* 声明改 typed + 装载
+  `FUN_14005C828` 调用点 `&g_pX` 加 `(void**)` + 异构调用点参数强转）。全程每簇 build/link 绿后提交。
+### 迁移量（~80 个）
+Wlan10 + 5 GDI+void* + 4 标量 + 5 GDI+ + 22 fn-ptr(WTS/WIM/Reg/Setup+等) + 18 void*(setup/GDI+/WIM/Adapt) 等；d408 统一为 RegDeleteKeyExW 带签名；LPDWORD/HDEVINFO 补齐 typedef（并删 b2c 本地 uintptr_t HDEVINFO 冲突）；双强转修正。
+### 剩余 33（登记，强迁有语义风险）
+- 多签名异构 fn-ptr（cd98/cf10/d468/cef8/d488/d050/d4d0/d430/c970/d470/d478/d3b0/ce38…）
+- AMBIGUOUS（d738/d5c0/d480/d47010）·字节重叠（147001-3 与 g_runFlag）·无大小数组（d770/d8a0/1277x/1214d8/1210f8/12944c）·cb90 OSVERSIONINFOW
+- 校验：build/link 持续绿；每簇可回滚。
