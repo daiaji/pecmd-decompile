@@ -3128,3 +3128,23 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
 ### 校验
 - `./build.sh core_*.c` exit 0；完整链接 exit 0。git 提交。
 - 说明：此批后，**可命名的干净业务小函数大体收敛**；剩余 579 多为 b9 CRT 区/巨型/异构/需深挖项。
+
+---
+
+## 61. 阶段5-零警告：多批清除（warn 781→316）
+
+### 概述
+- 按"只做无副作用消警"机械策略（unused→`(void)`、-Wparentheses 补括号、qualifier/pointer-sign/int-ptr 加显式强转、
+  pointer→int 经 `uintptr_t`），子代理逐文件清警。
+- **已清零文件**：b3r_h2(53)、b3r_h4(29)、b3r_i28b(21)、b3r_g5(18)、b3r_d(13)、b3r_i28c(27)，
+  以及散尾 b3r_i28e/i28d/g2/g6/g7/g3/b3r_a 等；b1_remaining 57→9、b3r_h1 62→5、b3r_h3 38→4。
+- **怪物 core_b3_remaining.c 327→250**（子代理在途，err 曾一度=1 已自修，build 保持绿）。
+
+### 经验/风险
+- 子代理直接改大文件有**改坏语法风险**：b3r_i28c 曾两次引入 error，均回滚到绿基线后由子代理重做成功；
+  b1 曾有双子代理并发编辑（已核实无损坏）。对策：每批先 commit 绿基线，子代理改坏即 `git checkout` 该文件。
+- 有保留项：`-Wcast-function-type`（函数指针强转）、`-Wtype-limits`（signed<0 恒假）、`-Wsign-compare`
+  （有符号性可能改变行为）——按"行为不可变"原则遗留，登记为已知。
+
+### 校验
+- 全库 `./build.sh core_*.c` exit 0；`--Wall -Wextra -fsyntax-only` 警告 781→**316**。git 已提交多里程碑。
