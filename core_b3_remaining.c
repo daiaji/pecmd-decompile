@@ -5094,7 +5094,7 @@ LAB_1400518ab:
     sVar23 = 0x3b;
     local_c28 = (WCHAR *)0x0;
     pwVar12 = param_5;
-    local_res10 = param_2;
+    local_res10 = (LPWSTR)param_2;
     local_res18 = param_3;
     local_b98 = param_5;
     local_b78 = (int)lVar41;
@@ -5118,8 +5118,8 @@ LAB_1400518ab:
         local_b70 = local_res18;
         param_3 = local_res18;
     }
-    local_ad0 = (LPCWSTR)param_1[6];
-    local_a58 = (LPCWSTR)param_1[8];
+    local_ad0 = (LPWSTR)param_1[6];
+    local_a58 = (LPWSTR)param_1[8];
     local_a98 = (uint64_t)(param_1[7] & 0x7FFFFFFFFFFFFFFFLL);
     local_aa0 = (uint64_t)(param_1[9] & 0x7FFFFFFFFFFFFFFFLL);
     local_aa8 = (uint64_t)(param_1[7] & 0x8000000000000000LL);
@@ -5143,9 +5143,13 @@ LAB_1400518ab:
     FUN_140063620(&local_ac8);
     local_ac0 = 0;
     local_ab8 = 0;
+    (void)local_ac0;
+    (void)local_ab8;
     PECMD_AllocWStringBuffer(&local_ae8, 0x46);
     local_ae0 = 0x46;
     local_ad8 = 0x46;
+    (void)local_ae0;
+    (void)local_ad8;
     local_ba0 = (uint32_t)(((int)lVar41 * 2 + 1) * 0x100 | (uVar24 & 0xff));
     iVar42 = 0;
     local_c40 = local_c48;
@@ -5186,6 +5190,9 @@ LAB_140051b97:
         local_9c0 = 0;
         local_9bc = 0;
         local_9b8 = 1;
+        (void)local_9c0;
+        (void)local_9bc;
+        (void)local_9b8;
         local_9e8[0] = 0;
         local_c20 = L'\0';
         local_b48 = param_4;
@@ -5236,9 +5243,10 @@ LAB_140052439:
                 PECMD_ZeroStruct_f934(local_a10);
                 local_a38[0] = 0;
                 local_9f0 = 0;
+                (void)local_9f0;
                 FUN_14004fd6c(local_a10, 0x100, -1);
                 local_a30 = (WCHAR *)0x0;
-                local_a28 = (LPCWSTR)0x0;
+                local_a28 = (LPWSTR)0x0;
                 wVar19 = *pwVar28;
                 pwVar10 = pwVar28;
                 while (wVar19 != L'\0') {
@@ -5280,7 +5288,7 @@ LAB_14005257c:
                         local_b60 = local_b60 + -1;
                         if (local_b60 < 0) {
                             if (local_b40 == 0) {
-                                local_b58 = (LPCWSTR)0x0;
+                                local_b58 = (LPWSTR)0x0;
                                 lVar41 = (int64_t)((intptr_t)pwVar29 - (intptr_t)pwVar28) >> 1;
                                 local_af8 = (int64_t)((intptr_t)pWVar36 - (intptr_t)pwVar29) >> 1;
                                 if (local_bd8 < 0) {
@@ -5288,7 +5296,7 @@ LAB_14005257c:
                                         local_bf8 = local_bf8 + 10;
                                         PECMD_GrowByteBuffer((void **)&local_c08, local_bf8 * 0x20);
                                     }
-                                    local_b58 = (LPCWSTR)(local_c00 * 0x20 + local_c08);
+                                    local_b58 = (LPWSTR)(local_c00 * 0x20 + local_c08);
                                     *(WCHAR **)local_b58 = local_be8;
                                     *(LPCWSTR *)(local_b58 + 4) = pWVar36;
                                     *(int64_t *)(local_b58 + 8) = (int64_t)((intptr_t)local_c40 - (intptr_t)local_c48) >> 1;
@@ -5387,6 +5395,7 @@ LAB_14005257c:
                                                 puVar15 = *(uint8_t **)((intptr_t)local_a18 + (uint64_t)uVar20 * 0x10);
                                                 lVar41 = (local_a68 - (int64_t)(intptr_t)puVar15) >> 1;
                                                 local_a48 = puVar15;
+                                                (void)local_a48;
                                                 if ((int64_t)((intptr_t)pwVar33 - (intptr_t)pwVar28) >> 1 <= lVar41) {
                                                     lVar25 = ((lVar41 * 2 - (int64_t)(intptr_t)pwVar10) + (int64_t)(intptr_t)pwVar28) >> 1;
                                                     PECMD_AllocString(&local_c48, lVar25 + 0x408);
@@ -5480,7 +5489,7 @@ LAB_140052be3:
                                 }
                                 if (local_af0 == 0) {
                                     if (((*local_res18 == L'\0') || (local_b28 == 0)) &&
-                                       (pwVar12 = local_bd0, pwVar33 = local_be0, (char)local_res20 != '\0')) break;
+                                       (pwVar12 = local_bd0, pwVar33 = local_be0, (char)(uintptr_t)local_res20 != '\0')) break;
                                 } else {
                                     FUN_14006cc70((int64_t *)&local_ac8, lVar25);
                                 }
@@ -5778,7 +5787,7 @@ LAB_140052d2e:
                                 pWVar36 = local_bc8;
                                 do {
                                     lVar14 = plVar22[-1] - (int64_t)(intptr_t)pWVar36;
-                                    pWVar36 = (LPCWSTR)*plVar22;
+                                    pWVar36 = (LPWSTR)*plVar22;
                                     plVar1 = plVar22 + 2;
                                     plVar22 = plVar22 + local_b38;
                                     lVar34 = lVar34 + (lVar14 >> 1) + *plVar1;
@@ -5812,7 +5821,7 @@ LAB_140052d2e:
                                 pWVar36 = local_bc8;
                                 do {
                                     lVar16 = plVar22[-5] - (int64_t)(intptr_t)pWVar36;
-                                    pWVar36 = (LPCWSTR)plVar22[-4];
+                                    pWVar36 = (LPWSTR)plVar22[-4];
                                     plVar1 = plVar22 + -2;
                                     plVar2 = plVar22 + 2;
                                     lVar14 = *plVar22;
@@ -5930,7 +5939,7 @@ LAB_140052d2e:
                                 lVar41 = local_b00;
                             } while (lVar27 != 0);
                         }
-                        pWVar36 = *(LPCWSTR *)(lVar41 + lVar25 * 0x28);
+                        pWVar36 = (LPWSTR)*(LPCWSTR *)(lVar41 + lVar25 * 0x28);
                         pwVar33 = *(WCHAR **)(lVar41 + 8 + lVar25 * 0x28);
                         pwVar12 = pWVar36 + 1;
                         local_b30 = pWVar36;
@@ -6010,7 +6019,7 @@ LAB_140053001:
         local_bb8 = 0;
         local_res20 = local_c48;
         iVar9 = lstrlenW(local_c48);
-        local_res10 = (LPCWSTR)(uintptr_t)(uint32_t)iVar9; /* TODO(verify) CONCAT44 packing (dead store) */
+        local_res10 = (LPWSTR)(uintptr_t)(uint32_t)iVar9; /* TODO(verify) CONCAT44 packing (dead store) */
         WVar5 = *local_res20;
         pWVar36 = pwVar12;
         while (WVar5 != L'\0') {
@@ -6019,10 +6028,10 @@ LAB_140053001:
             }
             local_bb8 = 0;
             local_res8[0] = 2;
-            uVar18 = PECMD_ScanHexNumber((uint16_t **)&local_res20, &local_bb8, local_res8);
+            uVar18 = PECMD_ScanHexNumber((uint16_t **)&local_res20, (uint64_t *)&local_bb8, local_res8);
             if ((int)uVar18 < 1) break;
             *(uint8_t *)pWVar36 = (uint8_t)local_bb8;
-            pWVar36 = (LPCWSTR)((intptr_t)pWVar36 + 1);
+            pWVar36 = (LPWSTR)((intptr_t)pWVar36 + 1);
             WVar5 = *local_res20;
         }
         ((WCHAR *)pWVar36)[0] = L'\0';
@@ -6561,6 +6570,8 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
     local_d8 = *(int32_t *)((char *)param_1 + 0x40);
     iStack_d0 = local_d8 + *(int32_t *)((char *)param_1 + 0x48);
     iStack_cc = iStack_d4 + *(int32_t *)((char *)param_1 + 0x4c);
+    (void)iStack_d0;
+    (void)iStack_cc;
     uVar4 = *(uint32_t *)((char *)param_1 + 0x70) >> 0x17;
     uVar14 = (param_11 >> 0xc) & 0x200;
     uVar10 = 0x40000000;
@@ -6721,6 +6732,7 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
         *(int32_t *)local_a8 = 0;
         memset(local_a8 + 4, 0, 0x58);
         local_98 = 400;
+        (void)local_98;
         GetObjectW((HGDIOBJ)h, 0x5c, local_a8);
         if (local_res8_bb8 <= 0.0) {
             if (*(int32_t *)local_a8 < 0) {
@@ -6753,6 +6765,8 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
     local_b8 = 0;
     iVar5 = lstrlenW(lpString);
     local_c0 = (int64_t)iVar5 * 2;
+    (void)local_c0;
+    (void)local_b8;
     if (((*(uint32_t *)((char *)param_1 + 0x70) >> 0x18) & 1) != 0) {
         lpString = PECMD_ConvertLfToCrlf(lpString, &local_c8);
     }
@@ -8159,6 +8173,9 @@ uint64_t PECMD_ExecuteWait(int64_t *param_1, int param_2, uint64_t param_3, LPCW
         puVar7 = &local_d8;
         local_d0 = uVar3 | 1;
         local_d8 = uVar4;
+        (void)local_c8;
+        (void)local_c0;
+        (void)local_d0;
         if ((int)uVar5 != 0) {
             local_res20 = local_res20 + 1;
             iVar1 = lstrlenW(local_res20);
@@ -8264,6 +8281,7 @@ uint64_t PECMD_ReadControlValue(uint64_t *param_1, int64_t *param_2, LPCWSTR par
                 local_66 = 0;
                 local_5e = 0;
                 local_5a = 0;
+                (void)local_5a;
                 uVar5 = SendMessageW(hWnd, 0x1001, 0, (LPARAM)&local_68);
                 FUN_140063620(&local_48);
                 FUN_140063620(&local_38);
@@ -9052,6 +9070,13 @@ int64_t PECMD_DispatchByObjectName(uint64_t *param_1, LPCWSTR param_2, int64_t p
                     local_68 = param_1;
                     local_58 = param_4;
                     local_50 = param_3;
+                    (void)local_48;
+                    (void)local_40;
+                    (void)local_38;
+                    (void)local_30;
+                    (void)local_60;
+                    (void)local_58;
+                    (void)local_50;
                     SendMessageW(hWnd, 0x459, 0, (LPARAM)&local_68);
                     return 0;
                 }
@@ -11132,6 +11157,8 @@ int PECMD_FindPhysicalDrive(char *param_1, int param_2)
     iVar1 = 0;
     local_22 = 0;
     local_1a = 0;
+    (void)local_22;
+    (void)local_1a;
     do {
         if ((param_2 == 0) || (*param_1 == '\0')) {
             /* TODO(verify): 原反编译缺失 wsprintf 参数；按语义补盘号 iVar1 */
@@ -12438,6 +12465,7 @@ LAB_14006dfc2:
     local_b8[0] = L'\0';
     FUN_1400e6d74(local_b8, uVar7);
     local_3e = 0;
+    (void)local_3e;
     iVar4 = lstrlenW(local_b8);
     if (iVar4 < 1) {
         iVar4 = 0;
@@ -15264,6 +15292,14 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         if ((short)local_178 != 0) {
             local_12b = 1;
         }
+        (void)local_5f;
+        (void)local_f8;
+        (void)local_114;
+        (void)local_e8;
+        (void)local_c0;
+        (void)local_b8;
+        (void)local_5e;
+        (void)local_12b;
         local_100 = plVar13;
         FUN_140073ccc(&local_138, local_190, 0);
         plVar12[0x54] = local_140;
@@ -15300,6 +15336,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         (**(void (**)(int64_t *, int, int))(*plVar12 + 0x10))(plVar12, 0, 0);
         param_1[6] = plVar12[4];
         local_170 = (void *)0x0;
+        (void)local_170;
         param_1[3] = 0;
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         if (local_168 != (HANDLE)0x0) {
@@ -15317,6 +15354,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         FUN_1400e95f4((int64_t *)plVar12, 0);
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         local_f8 = (int64_t *)0x0;
+        (void)local_f8;
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         FUN_14004eaa8((int64_t)&local_138, 0);
         FUN_14005B104((WCHAR **)&local_c8);
@@ -15795,6 +15833,10 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     local_148 = 0;
     local_140 = 0;
     local_158 = 0;
+    (void)local_154;
+    (void)local_150;
+    (void)local_14c;
+    (void)local_140;
     cVar3 = FUN_14007fcd4((int64_t *)&local_res20, &local_158);
     local_res10 = 0;
     if (*local_res20 == L'^') {
