@@ -3186,3 +3186,26 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
 
 ### 校验
 - build/link 绿。git 提交。
+
+---
+
+## 64. 最终状态与完成性评估（round 19）
+
+### 达成项（verified）
+- 还原 99%（DONE 2098/2117）；`./build.sh core_*.c` 0 FAIL；完整链接无 undefined/multiple。
+- 命名 rename_map 790（FUNC_NAMES.md 796 行）。
+- 零警告 98，全部行为相关（cast-function-type/sign-compare/type-limits/int-ptr/不兼容调用），0 机械残留（REVIEW §62）。
+- 巨型函数已还原 + 命名 16/18（§63）。link_stubs 孤儿 FUN_ 桩清 499→383。git 17 提交。
+- DAT_→g_：已迁 g_szEmpty + 12 标量 + 4 干净 + 3 GUID = ~20；真实 DAT_ 113→**93**。
+
+### 剩余登记（已知限制/低价值，按"不臆造语义/异构不强迁"政策）
+- **DAT_ 93**：~60 惰性 fn-ptr 槽（GDI+/Setup/Wlan/WIM/WTS——各文件已有带类型 extern 正常工作，合并进
+  globals 属可选打磨，单一定型有异构调用点风险）、~10 无大小数组（猜大小有越界语义风险）、~5 AMBIGUOUS
+  （d738/d5c0/d480/d47010 等，需逐点深挖）、d660 异构哨兵。
+- **命名 563**：多为 CRT/空桩/异构/巨型歧义，按 SKIP 政策保留 FUN_。
+- **零警告 98**：行为相关，改需变语义，保留为已知限制。
+
+### 结论
+项目骨架+可读化主体已实质完成并全绿；残余为"工作正常但待合并/待深挖"的低价值项，已全部登记。
+如需"100% 合并/命名"需要对 fn-ptr 槽做带风险的单一定型与 AMBIGUOUS 深挖（可能引入语义改动），
+在"行为不变"前提下不强行推进。此评估供人类复核后在"接受逐点打磨"与"记为已知限制收口"间定夺。
