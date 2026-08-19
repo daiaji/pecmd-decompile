@@ -6509,9 +6509,9 @@ uint64_t PECMD_ResolveHostToAddr(char *param_1, int64_t param_2, int16_t *param_
                 sVar3 = 0xc;
             }
             if (param_2 != 0) {
-                FUN_14001d78c((uint8_t *)(param_2 + 4), src, sVar3);
+                FUN_14001d78c((uint8_t *)(param_2 + 4), (uint8_t *)src, sVar3);
             }
-            FUN_14001d78c((uint8_t *)local_res8, src, 4);
+            FUN_14001d78c((uint8_t *)local_res8, (uint8_t *)src, 4);
             if (param_3 != (int16_t *)0) {
                 *param_3 = sVar3;
             }
@@ -7095,7 +7095,7 @@ LAB_140055ae7:
         iVar7 = local_154 * 0xa00;
         PECMD_AllocString((WCHAR **)param_2, (int64_t)(iVar7 + 0xc64));
         _Var23 = local_138;
-        local_140 = (LPCWSTR)((uint8_t *)*param_2 + 0x200 + (int64_t)iVar7 * 2);
+        local_140 = (LPWSTR)((uint8_t *)*param_2 + 0x200 + (int64_t)iVar7 * 2);
         if (0x44 < (int64_t)local_138) {
             PECMD_AllocString(&local_168, (int64_t)(int)(local_154 << 10));
             lpBuffer_01 = local_168;
@@ -7321,7 +7321,7 @@ LAB_1400561c7:
                 pWVar17 = local_150 + -(int64_t)(int)((int64_t)(intptr_t)(local_150 + 1) >> 1);
             }
             if (((0 < (int)local_160) && (local_100 != 0)) && (local_158 == 0)) {
-                wsprintfW(pWVar17,
+                wsprintfW((LPWSTR)pWVar17,
                           WSTR("0x%02X \"%s\" 0x%I64X %I64u %u %02u %02u %02u %02u %02u\r\n"),
                           0x2ff00, WSTR("<udext.norm>"));
             }
@@ -13067,7 +13067,7 @@ uint64_t PECMD_SetDHCPSettings(uint64_t *param_1, LPCSTR param_2, uint8_t *param
     RegSetValueExA((HKEY)*param_1, "SubnetMask", 0, 7, (const BYTE *)local_20, 9);
     RegSetValueExA((HKEY)*param_1, "DefaultGateway", 0, 7, g_DefEnv, 1);
     if (param_3 != (uint8_t *)0) {
-        lpData = g_DefEnv;
+        lpData = (uint8_t *)g_DefEnv;
         if (*param_3 != '-') {
             lpData = param_3;
         }
@@ -14383,7 +14383,7 @@ uint64_t PECMD_ListDrives(uint64_t *param_1, WCHAR param_2, int param_3, int par
     if ((param_4 != 0) && (param_6 != (LPCWSTR)0x0)) {
       lpStart = (LPCWSTR)*param_1;
       WVar11 = *param_6;
-      pWVar15 = param_6;
+      pWVar15 = (WCHAR *)param_6;
       while (WVar11 != L'\0') {
         pWVar9 = StrChrW(lpStart,*pWVar15);
         if (pWVar9 != (LPWSTR)0x0) {
@@ -14395,7 +14395,7 @@ uint64_t PECMD_ListDrives(uint64_t *param_1, WCHAR param_2, int param_3, int par
       pWVar15 = (WCHAR *)*param_1;
       bVar3 = false;
       WVar11 = *param_6;
-      pWVar13 = param_6;
+      pWVar13 = (WCHAR *)param_6;
       while (WVar11 != L'\0') {
         WVar11 = *pWVar13;
         if (((WVar11 != L'*') &&
@@ -16388,7 +16388,7 @@ int64_t PECMD_EnumeratePartitions(int64_t param_1, int64_t *param_2, uint32_t *p
   local_90 = pWVar17;
   do {
     local_a0 = LVar12;
-    wsprintfW(pWVar17, WSTR("\\\\.\\PhysicalDrive%d"));
+    wsprintfW((LPWSTR)pWVar17, WSTR("\\\\.\\PhysicalDrive%d"));
     PECMD_OpenFileHandle((HANDLE *)&local_a0,pWVar17,0x80000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x22000000,(HANDLE)0x0);
     hObject = local_a0;
     LVar12.QuadPart = 0;
@@ -16813,7 +16813,7 @@ int64_t FUN_14008bcd4(int64_t *param_1, LPCWSTR param_2, uint64_t param_3, uint6
     }
 LAB_14008c004:
     lVar31 = -1;
-    pWVar21 = local_res10;
+    pWVar21 = (WCHAR *)local_res10;
     if (local_res10 < (LPCWSTR)0x8000) goto LAB_14008c016;
     while (true) {
         local_530 = (LARGE_INTEGER *)0x0;
