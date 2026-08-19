@@ -155,7 +155,8 @@ void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
  */
 void FUN_140037b84(HWND hwnd, uint32_t msg, HDC hdc, HWND wnd)
 {
-    FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd);
+    /* UNIMPLEMENTED @0xFUN_140037b84 — decompile-failed, body 未还原 */
+FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd);
 }
 
 /* ========== PECMD_ScriptWndProc @0x14003892c ==========
@@ -171,7 +172,8 @@ void PECMD_ScriptWndProc(HWND hwnd, uint32_t msg, HDC hdc, void *p4)
  */
 LRESULT FUN_14003e16c(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    FUN_14002EE44((uintptr_t)g_Script, hwnd, msg,
+    /* UNIMPLEMENTED @0xFUN_14003e16c — decompile-failed, body 未还原 */
+FUN_14002EE44((uintptr_t)g_Script, hwnd, msg,
                   (void *)(uintptr_t)wParam, (int64_t)lParam);
     return 0;
 }

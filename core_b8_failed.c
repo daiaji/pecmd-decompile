@@ -20,7 +20,8 @@ typedef uint32_t ALG_ID;
  */
 DWORD FUN_1400e4864(BYTE *data, DWORD len, ALG_ID alg, uint64_t extra)
 {
-    (void)data;
+    /* UNIMPLEMENTED @0xFUN_1400e4864 — decompile-failed, body 未还原 */
+(void)data;
     (void)len;
     (void)alg;
     (void)extra;
@@ -33,5 +34,6 @@ DWORD FUN_1400e4864(BYTE *data, DWORD len, ALG_ID alg, uint64_t extra)
  */
 void FUN_1400fdad8(void *param_1, int param_2, int64_t param_3, uint64_t param_4)
 {
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4;
+    /* UNIMPLEMENTED @0xFUN_1400fdad8 — decompile-failed, body 未还原 */
+(void)param_1; (void)param_2; (void)param_3; (void)param_4;
 }

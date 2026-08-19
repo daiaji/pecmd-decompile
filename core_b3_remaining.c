@@ -4062,7 +4062,8 @@ LAB_14004c07c:
 
 uint64_t FUN_14004e488(int64_t param_1, LPCWSTR param_2, uint64_t param_3, uint64_t param_4)
 {
-    /* @0x14004e488 size=1566 */
+    /* UNIMPLEMENTED @0xFUN_14004e488 — decompile-failed, body 未还原 */
+/* @0x14004e488 size=1566 */
     return 0;
 }
 
@@ -4660,7 +4661,8 @@ uint64_t PECMD_ParseRegexAlternation(int *param_1, WCHAR **param_2, uint8_t *par
 
 uint64_t FUN_140050cb0(uint32_t *param_1, uint64_t param_2, uint64_t param_3)
 {
-    /* @0x140050cb0 size=668 */
+    /* UNIMPLEMENTED @0xFUN_140050cb0 — decompile-failed, body 未还原 */
+/* @0x140050cb0 size=668 */
     uint uVar1;
     int iVar2;
     int iVar3;
@@ -4919,7 +4921,8 @@ int PECMD_ParseObjectElement(int *param_1, WCHAR *param_2, int param_3)
 
 uint64_t FUN_140051610(int *param_1, WCHAR **param_2, char *param_3)
 {
-    /* @0x140051610 size=535 */
+    /* UNIMPLEMENTED @0xFUN_140051610 — decompile-failed, body 未还原 */
+/* @0x140051610 size=535 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0;
 }
@@ -8016,7 +8019,8 @@ uint64_t *PECMD_ConstructControlFont(uint64_t *param_1, int64_t param_2, uint pa
 
 uint64_t FUN_140057940(WPARAM param_1, HWND param_2, uint16_t *param_3)
 {
-    /* @0x140057940 size=574 */
+    /* UNIMPLEMENTED @0xFUN_140057940 — decompile-failed, body 未还原 */
+/* @0x140057940 size=574 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0;
 }
@@ -8817,13 +8821,15 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
 
 DWORD FUN_14005ccb0(int param_1, void *param_2, void *param_3, uint16_t *param_4)
 {
-    /* @0x14005ccb0 size=337 */
+    /* UNIMPLEMENTED @0xFUN_14005ccb0 — decompile-failed, body 未还原 */
+/* @0x14005ccb0 size=337 */
     return 0;
 }
 
 bool FUN_14005ce04(uint32_t param_1, uint32_t param_2, void *param_3)
 {
-    /* @0x14005ce04 size=232 */
+    /* UNIMPLEMENTED @0xFUN_14005ce04 — decompile-failed, body 未还原 */
+/* @0x14005ce04 size=232 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0;
 }
@@ -8988,19 +8994,22 @@ void PECMD_BindForegroundInput(HWND hwnd)
 
 void FUN_14005e254(int64_t *param_1, int64_t *param_2, int64_t *param_3)
 {
-    /* @0x14005e254 size=188 */
+    /* UNIMPLEMENTED @0xFUN_14005e254 — decompile-failed, body 未还原 */
+/* @0x14005e254 size=188 */
     (void)param_1; (void)param_2; (void)param_3;
 }
 
 void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_t *param_4)
 {
-    /* @0x14005e3ac size=253 */
+    /* UNIMPLEMENTED @0xFUN_14005e3ac — decompile-failed, body 未还原 */
+/* @0x14005e3ac size=253 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
 }
 
 uint16_t FUN_14005e61c(int64_t param_1, char param_2, uint param_3)
 {
-    /* @0x14005e61c size=446 注册热键(带 ALT/CTRL/SHIFT/WIN 前缀与冲突重试) */
+    /* UNIMPLEMENTED @0xFUN_14005e61c — decompile-failed, body 未还原 */
+/* @0x14005e61c size=446 注册热键(带 ALT/CTRL/SHIFT/WIN 前缀与冲突重试) */
     ATOM label;
     int len;
     LPSTR pStr;
@@ -9230,7 +9239,8 @@ void PECMD_InstallWindowsHook(int64_t param_1, int64_t param_2)
 
 LPWSTR FUN_14005efac(WCHAR *param_1, WCHAR *param_2)
 {
-    /* @0x14005efac size=426 拷贝并展开 %%d 占位/通配符 */
+    /* UNIMPLEMENTED @0xFUN_14005efac — decompile-failed, body 未还原 */
+/* @0x14005efac size=426 拷贝并展开 %%d 占位/通配符 */
     WCHAR wc;
     int len;
     WCHAR *p;
@@ -9493,7 +9503,8 @@ uint8_t PECMD_SetDriveMount(int64_t param_1, uint32_t param_2, uint32_t param_3,
 
 LPWSTR FUN_14005fc90(LPWSTR param_1, uint *param_2, int param_3)
 {
-    /* @0x14005fc90 size=233 */
+    /* UNIMPLEMENTED @0xFUN_14005fc90 — decompile-failed, body 未还原 */
+/* @0x14005fc90 size=233 */
     /* [DECOMPILE FAILED] — no body available in decompiled.c */
     (void)param_1;
     (void)param_2;
@@ -9937,7 +9948,8 @@ done:
 
 uint64_t FUN_140061dac(uint8_t *param_1, size_t param_2)
 {
-    /* @0x140061dac size=233 (签名按反编译修正, 主体最小 no-op 桩) */
+    /* UNIMPLEMENTED @0xFUN_140061dac — decompile-failed, body 未还原 */
+/* @0x140061dac size=233 (签名按反编译修正, 主体最小 no-op 桩) */
     (void)param_1; (void)param_2;
     return 0;
 }
@@ -9997,7 +10009,8 @@ uint64_t PECMD_LoadImageStream(uint8_t *param_1, size_t param_2, uint64_t *param
 }
 int16_t *FUN_14006213c(int64_t param_1, int64_t *param_2)
 {
-    /* @0x14006213c size=339 */
+    /* UNIMPLEMENTED @0xFUN_14006213c — decompile-failed, body 未还原 */
+/* @0x14006213c size=339 */
     int16_t sVar1;
     uint64_t uVar2;
     int16_t *psVar3;
@@ -10349,7 +10362,8 @@ HBITMAP PECMD_CaptureScreenRegion(RECT *param_1, uint64_t *param_2, LPCWSTR para
 
 void FUN_140062bdc(int64_t param_1, HDC param_2, RECT *param_3, COLORREF param_4)
 {
-    /* @0x140062bdc size=677 */
+    /* UNIMPLEMENTED @0xFUN_140062bdc — decompile-failed, body 未还原 */
+/* @0x140062bdc size=677 */
     (void)param_1; (void)param_3;
     (void)param_2; (void)param_4;
 }
@@ -10370,7 +10384,8 @@ uint16_t **PECMD_SkipRepeatedDelimiter(uint16_t **pp, uint16_t ch)
 
 uint64_t FUN_140063060(uint64_t value)
 {
-    /* @0x140063060 size=4 原样返回（占位恒等函数） */
+    /* UNIMPLEMENTED @0xFUN_140063060 — decompile-failed, body 未还原 */
+/* @0x140063060 size=4 原样返回（占位恒等函数） */
     return value;
 }
 
@@ -10494,7 +10509,8 @@ void PECMD_ReleaseComObject(uint64_t *param_1)
 
 double FUN_140064694(int64_t *param_1, int64_t *param_2, uint8_t *param_3)
 {
-    /* @0x140064694 size=862 */
+    /* UNIMPLEMENTED @0xFUN_140064694 — decompile-failed, body 未还原 */
+/* @0x140064694 size=862 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0.0;
 }
@@ -10590,7 +10606,8 @@ void PECMD_FreeInitObjectList(char *param_1)
 
 uint64_t FUN_140065140(uint16_t *param_1)
 {
-    int64_t uVar1;
+    /* UNIMPLEMENTED @0xFUN_140065140 — decompile-failed, body 未还原 */
+int64_t uVar1;
     uint16_t uVar2;
     int64_t lVar3;
     int iVar4;
@@ -10933,14 +10950,16 @@ LAB_1400657c5:
 
 int64_t FUN_14006587c(int64_t *param_1, uint8_t *param_2, uint8_t param_3)
 {
-    /* @0x14006587c size=902 */
+    /* UNIMPLEMENTED @0xFUN_14006587c — decompile-failed, body 未还原 */
+/* @0x14006587c size=902 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0;
 }
 
 double FUN_140065c04(int64_t *param_1, uint8_t *param_2, uint8_t param_3)
 {
-    /* @0x140065c04 size=760 */
+    /* UNIMPLEMENTED @0xFUN_140065c04 — decompile-failed, body 未还原 */
+/* @0x140065c04 size=760 */
     (void)param_1; (void)param_2; (void)param_3;
     return 0.0;
 }
@@ -11039,14 +11058,16 @@ void PECMD_ReleaseObjectListTail(int64_t param_1, int param_2)
 
 void FUN_140066f64(int64_t param_1, int64_t param_2)
 {
-    /* @0x140066f64 size=214 */
+    /* UNIMPLEMENTED @0xFUN_140066f64 — decompile-failed, body 未还原 */
+/* @0x140066f64 size=214 */
 }
 
 /* @0x14006703c size=571 释放/隐藏窗口及关联键鼠钩子 */
 /* signature: void FUN_14006703c(int64_t param_1) */
 void FUN_14006703c(int64_t param_1)
 {
-    int16_t *psVar1;
+    /* UNIMPLEMENTED @0xFUN_14006703c — decompile-failed, body 未还原 */
+int16_t *psVar1;
     int64_t lVar2;
     int64_t lVar3;
     uint64_t *puVar4;
@@ -11563,7 +11584,8 @@ void *PECMD_CheckVarMultiLevelRef(int64_t *param_1, LPCWSTR param_2)
 
 void FUN_1400682b0(int64_t *param_1, LPCWSTR param_2, FILETIME *param_3, uint8_t param_4)
 {
-    /* @0x1400682b0 size=397 */
+    /* UNIMPLEMENTED @0xFUN_1400682b0 — decompile-failed, body 未还原 */
+/* @0x1400682b0 size=397 */
     /* SKIPPED-due-to-decompile-failure: [DECOMPILE FAILED] 签名按反编译 header, 主体最小 no-op */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
 }
@@ -11717,7 +11739,8 @@ int PECMD_FindPhysicalDrive(char *param_1, int param_2)
 
 int FUN_1400695a8(int64_t param_1, int64_t param_2, int param_3, int param_4, int param_5)
 {
-    /* @0x1400695a8 size=348 根据 ID/大小块匹配目标序号 */
+    /* UNIMPLEMENTED @0xFUN_1400695a8 — decompile-failed, body 未还原 */
+/* @0x1400695a8 size=348 根据 ID/大小块匹配目标序号 */
     int64_t lVar1, lVar4;
     int iVar2, iVar3;
     char *_Buf1;
@@ -11756,7 +11779,8 @@ f968c:
 
 int FUN_140069704(char *param_1, int64_t param_2, int param_3, int param_4, int param_5)
 {
-    /* @0x140069704 size=356 */
+    /* UNIMPLEMENTED @0xFUN_140069704 — decompile-failed, body 未还原 */
+/* @0x140069704 size=356 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5;
     return 0;
 }
@@ -13070,7 +13094,8 @@ bool PECMD_CreateAnimateCtrl(uint64_t *obj, DWORD style, int *rect,
 
 uint64_t *FUN_14006e238(LPCWSTR param_1, HANDLE *param_2, uint64_t *param_3)
 {
-    HANDLE hFile;
+    /* UNIMPLEMENTED @0xFUN_14006e238 — decompile-failed, body 未还原 */
+HANDLE hFile;
     DWORD DVar1;
     int iVar2;
     HGLOBAL hMem;
@@ -13545,14 +13570,16 @@ LAB_140070524:
 
 int FUN_140070710(int *param_1, uint8_t param_2)
 {
-    /* @0x140070710 size=1685 */
+    /* UNIMPLEMENTED @0xFUN_140070710 — decompile-failed, body 未还原 */
+/* @0x140070710 size=1685 */
     (void)param_1; (void)param_2;
     return 0;
 }
 
 void FUN_140070da8(int64_t param_1, double *param_2, uint8_t param_3, double *param_4)
 {
-    /* @0x140070da8 size=2630 */
+    /* UNIMPLEMENTED @0xFUN_140070da8 — decompile-failed, body 未还原 */
+/* @0x140070da8 size=2630 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
 }
 
@@ -13733,7 +13760,8 @@ bool PECMD_CheckNetAddress(LPCSTR param_1, uint32_t param_2, char *param_3, char
 
 int FUN_140072924(uint32_t param_1, LPCWSTR param_2, uint32_t param_3, int64_t *param_4, uint16_t *param_5)
 {
-    /* @0x140072924 size=924 */
+    /* UNIMPLEMENTED @0xFUN_140072924 — decompile-failed, body 未还原 */
+/* @0x140072924 size=924 */
     return 0;
 }
 
@@ -13780,7 +13808,8 @@ int64_t PECMD_GetCachedBlock(void)
 
 HICON FUN_140073934(HMODULE param_1, LPCWSTR param_2, int param_3, int param_4, uint64_t param_5, uint32_t *param_6)
 {
-    /* @0x140073934 size=804 */
+    /* UNIMPLEMENTED @0xFUN_140073934 — decompile-failed, body 未还原 */
+/* @0x140073934 size=804 */
     return 0;
 }
 
@@ -14662,13 +14691,15 @@ LAB_140076ab3:
 
 void FUN_140076b88(int64_t param_1, LPWSTR param_2, uint param_3)
 {
-    /* @0x140076b88 size=1541 */
+    /* UNIMPLEMENTED @0xFUN_140076b88 — decompile-failed, body 未还原 */
+/* @0x140076b88 size=1541 */
     (void)param_1; (void)param_2; (void)param_3;
 }
 
 LPWSTR FUN_140077190(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4, LPWSTR param_5, uint32_t param_6, LPCWSTR param_7)
 {
-    /* @0x140077190 size=188 */
+    /* UNIMPLEMENTED @0xFUN_140077190 — decompile-failed, body 未还原 */
+/* @0x140077190 size=188 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5; (void)param_6; (void)param_7;
     return 0;
 }
@@ -14877,7 +14908,8 @@ int64_t PECMD_LockVolumeByDevice(int param_1, uint param_2)
 
 int64_t FUN_140078514(HANDLE param_1, int *param_2, int64_t *param_3)
 {
-    uint64_t *lpBuffer;
+    /* UNIMPLEMENTED @0xFUN_140078514 — decompile-failed, body 未还原 */
+uint64_t *lpBuffer;
     uint32_t uVar1;
     uint32_t uVar2;
     BOOL BVar3;
@@ -15911,7 +15943,8 @@ void PECMD_ReleaseControlObject(uint64_t *param_1)
 
 uint8_t FUN_14007fcd4(int64_t *param_1, uint32_t *param_2)
 {
-    /* @0x14007fcd4 size=357 — 解析 "-sub L..T..H..W..<flags>" 窗口子命令参数 */
+    /* UNIMPLEMENTED @0xFUN_14007fcd4 — decompile-failed, body 未还原 */
+/* @0x14007fcd4 size=357 — 解析 "-sub L..T..H..W..<flags>" 窗口子命令参数 */
     uint16_t uVar1;
     uint16_t *puVar2;
     char cVar3;
@@ -15978,7 +16011,8 @@ LAB_14007fe19:
 
 void FUN_14007fe3c(int64_t param_1, uint32_t param_2)
 {
-    /* @0x14007fe3c size=2043 */
+    /* UNIMPLEMENTED @0xFUN_14007fe3c — decompile-failed, body 未还原 */
+/* @0x14007fe3c size=2043 */
     (void)param_1; (void)param_2;
 }
 
@@ -16198,7 +16232,8 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
 
 uint32_t FUN_140081238(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4)
 {
-    /* @0x140081238 size=826 */
+    /* UNIMPLEMENTED @0xFUN_140081238 — decompile-failed, body 未还原 */
+/* @0x140081238 size=826 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
     return 0;
 }
@@ -17116,7 +17151,8 @@ LAB_140084877:
 
 LPCWSTR FUN_140084a5c(int64_t *param_1, int64_t *param_2, uint16_t *param_3, int64_t *param_4)
 {
-    /* @0x140084a5c size=3133 */
+    /* UNIMPLEMENTED @0xFUN_140084a5c — decompile-failed, body 未还原 */
+/* @0x140084a5c size=3133 */
     /* 简化桩: 巨型反编译(3133B)含复杂指针/联体逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     (void)param_1;(void)param_2;(void)param_3;(void)param_4;
     return (LPCWSTR)0;
@@ -17443,7 +17479,8 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
 }
 uint32_t FUN_14008ba90(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4)
 {
-    /* @0x14008ba90 size=577 */
+    /* UNIMPLEMENTED @0xFUN_14008ba90 — decompile-failed, body 未还原 */
+/* @0x14008ba90 size=577 */
     LPWSTR lpString1;
     WCHAR WVar1;
     int16_t sVar2;
@@ -18263,7 +18300,8 @@ LAB_14008cfad:
 }
 LARGE_INTEGER FUN_14008cffc(int64_t *param_1, LPCWSTR param_2)
 {
-    /* @0x14008cffc size=29895 */
+    /* UNIMPLEMENTED @0xFUN_14008cffc — decompile-failed, body 未还原 */
+/* @0x14008cffc size=29895 */
     /* 简化桩: 巨型反编译(29895B)含 CRT/解析逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     LARGE_INTEGER r;
     (void)param_1;(void)param_2;
@@ -18286,7 +18324,8 @@ LARGE_INTEGER FUN_14008cffc(int64_t *param_1, LPCWSTR param_2)
 /* @0x140097150 */
 DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
 {
-    /* @0x140097150 size=1473 */
+    /* UNIMPLEMENTED @0xFUN_140097150 — decompile-failed, body 未还原 */
+/* @0x140097150 size=1473 */
     /* 简化桩: 反编译含 Windows 安全 ACL 类型/API (SE_OBJECT_TYPE/PACL/EXPLICIT_ACCESS_W/
        SetNamedSecurityInfoW ...) 未在 stub 头声明。保留签名, 主体最小实现. TODO(restore/verify) */
     (void)param_1; (void)param_2; (void)param_3;
@@ -18295,7 +18334,8 @@ DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
 
 int64_t FUN_140097714(int64_t *param_1, uint16_t *param_2)
 {
-    /* @0x140097714 size=1372 */
+    /* UNIMPLEMENTED @0xFUN_140097714 — decompile-failed, body 未还原 */
+/* @0x140097714 size=1372 */
     (void)param_1; (void)param_2;
     return 0;
 }
@@ -18304,7 +18344,8 @@ int64_t FUN_140097714(int64_t *param_1, uint16_t *param_2)
 
 LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
 {
-    /* @0x1400987ec size=5930 */
+    /* UNIMPLEMENTED @0xFUN_1400987ec — decompile-failed, body 未还原 */
+/* @0x1400987ec size=5930 */
     /* 简化桩: 巨型反编译(5930B)含复杂字符串/文件逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     (void)param_1;(void)param_2;
     return (LPCWSTR)0;
@@ -20306,7 +20347,8 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
 
 HBITMAP FUN_1400b2ca8(HBITMAP param_1, void *param_2, uint64_t *param_3, uint64_t param_4)
 {
-    /* @0x1400b2ca8 size=4193 */
+    /* UNIMPLEMENTED @0xFUN_1400b2ca8 — decompile-failed, body 未还原 */
+/* @0x1400b2ca8 size=4193 */
     return 0;
 }
 
@@ -22370,7 +22412,8 @@ LAB_1400bb1d8:
 
 uint64_t FUN_1400bb718(int64_t *param_1, WCHAR *param_2, int64_t *param_3)
 {
-    /* @0x1400bb718 size=4933 */
+    /* UNIMPLEMENTED @0xFUN_1400bb718 — decompile-failed, body 未还原 */
+/* @0x1400bb718 size=4933 */
     return 0;
 }
 

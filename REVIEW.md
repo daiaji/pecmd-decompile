@@ -3346,3 +3346,9 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 教训：**盲正则全局替换会连带破坏（b2c 被删掉所需声明致 KeyboardHookProc 等 error）→ 须逐文件
   精确 edit，或先删除 defs 再按"含 '(' 的真调用点"受限替换并单文件校验**。已回滚 memcpy 尝试到 git47 绿。
 - 进度：Step1 死桩✅(558→548) · Step2 CRT标注✅ · Step5试点 07fcd4 真body✅(git47)。
+## 76. Item4 给简化桩加 UNIMPLEMENTED 标注（零风险推进）
+- 纯注释：在 215 个未还原简化桩的函数签名后插 `/* UNIMPLEMENTED @0x.. decompile-failed, body 未还原 */`
+  （b9+136 / b3+43 / b1+20 / helpers+11 / others）。
+- 读者一眼可辨"未实现占位"而非神秘 FUN_。build/link 全绿（注释级不可能红）。
+- 新策略（对治"老红再回退"）：**每步一个原子小改动、逐文件编译、各自提交**；跨文件改一律拆成单文件；
+  纯注释/低风险项优先，保证净推进。

@@ -785,12 +785,14 @@ int64_t PECMD_DelayLoadOleaut32(void)
 
 void FUN_14000397c(void)
 {
-    /* @0x14000397c size=161 (签名修正自反编译, 主体仍为 NO-OP stub) */
+    /* UNIMPLEMENTED @0xFUN_14000397c — decompile-failed, body 未还原 */
+/* @0x14000397c size=161 (签名修正自反编译, 主体仍为 NO-OP stub) */
 }
 
 uint32_t FUN_140003aac(LPCWSTR param_1, LPCWSTR param_2, uint32_t param_3, int param_4)
 {
-    /* @0x140003aac size=277 */
+    /* UNIMPLEMENTED @0xFUN_140003aac — decompile-failed, body 未还原 */
+/* @0x140003aac size=277 */
     int iVar1;
     int iVar2;
     uint32_t uVar3;
@@ -1222,7 +1224,8 @@ void PECMD_ScheduleSelfDelete(LARGE_INTEGER param_1, int param_2)
 
 uint64_t FUN_1400048c4(int64_t *param_1)
 {
-    /* @0x1400048c4 size=322 (签名修正自反编译, 主体仍为 NO-OP stub) */
+    /* UNIMPLEMENTED @0xFUN_1400048c4 — decompile-failed, body 未还原 */
+/* @0x1400048c4 size=322 (签名修正自反编译, 主体仍为 NO-OP stub) */
     (void)param_1;
     return 0;
 }
@@ -1520,7 +1523,8 @@ bool PECMD_WaitUserInputIdle(uint32_t param_1)
 
 uint64_t *FUN_140005390(uint64_t *p, uint64_t value, uint32_t count)
 {
-    /* @0x140005390 size=35 按字节数填充 */
+    /* UNIMPLEMENTED @0xFUN_140005390 — decompile-failed, body 未还原 */
+/* @0x140005390 size=35 按字节数填充 */
     if ((int)(count - 1) >= 0) {
         memset(p, (int)value, (size_t)count);
     }
@@ -1685,12 +1689,14 @@ void PECMD_UnmapFileView(void)
 
 void FUN_1400056bc(void)
 {
-    /* @0x1400056bc size=121 */
+    /* UNIMPLEMENTED @0xFUN_1400056bc — decompile-failed, body 未还原 */
+/* @0x1400056bc size=121 */
 }
 
 uint64_t FUN_140005818(int64_t *param_1, LPCWSTR param_2)
 {
-    /* @0x140005818 size=115 */
+    /* UNIMPLEMENTED @0xFUN_140005818 — decompile-failed, body 未还原 */
+/* @0x140005818 size=115 */
     int64_t lVar1;
     void *puVar2;
 
@@ -1769,7 +1775,8 @@ uint64_t PECMD_ParseVersionString(short *param_1)
 
 void FUN_140005c18(LPWSTR param_1, uint64_t param_2, uint32_t param_3)
 {
-    /* @0x140005c18 size=49
+    /* UNIMPLEMENTED @0xFUN_140005c18 — decompile-failed, body 未还原 */
+/* @0x140005c18 size=49
      * [DECOMPILE FAILED] — 参考文件中该函数标记为 [DECOMPILE FAILED]。
      * 语义: 将多段版本号(uint64_t, 每 16 位一段)格式化成 "M.m" 宽串写入 param_1。
      * 因无法忠实恢复, 此处 SKIPPED-due-to-decompile-failure, 提供最小 no-op 体。 */
@@ -1938,7 +1945,8 @@ uint64_t PECMD_GetFileVersionInfo(LPCWSTR param_1, void *param_2, void *param_3,
 
 HANDLE FUN_1400060b8(HANDLE param_1)
 {
-    /* @0x1400060b8 size=282 (签名修正自反编译, 主体仍为 NO-OP stub) */
+    /* UNIMPLEMENTED @0xFUN_1400060b8 — decompile-failed, body 未还原 */
+/* @0x1400060b8 size=282 (签名修正自反编译, 主体仍为 NO-OP stub) */
     (void)param_1;
     return (HANDLE)0;
 }
@@ -2085,7 +2093,8 @@ void PECMD_ReleaseObjectResources(int64_t *p)
 
 uint64_t FUN_140006660(HWND param_1)
 {
-    /* @0x140006660 size=86 (not in this batch; signature fixed from decompile) */
+    /* UNIMPLEMENTED @0xFUN_140006660 — decompile-failed, body 未还原 */
+/* @0x140006660 size=86 (not in this batch; signature fixed from decompile) */
     (void)param_1;
     return 0;
 }
@@ -3240,7 +3249,8 @@ LAB_140008d7f:
 
 void FUN_140008d9c(uint16_t *param_1)
 {
-    /* @0x140008d9c size=152 */
+    /* UNIMPLEMENTED @0xFUN_140008d9c — decompile-failed, body 未还原 */
+/* @0x140008d9c size=152 */
     (void)param_1;
 }
 
@@ -3787,7 +3797,8 @@ void PECMD_TerminateAndCancelShutdown(void *param_1, char param_2, void *param_3
 
 DWORD FUN_14000a584(LPCWSTR param_1, int param_2)
 {
-    /* @0x14000a584 size=6520 */
+    /* UNIMPLEMENTED @0xFUN_14000a584 — decompile-failed, body 未还原 */
+/* @0x14000a584 size=6520 */
     (void)param_1;
     (void)param_2;
     return 0;
@@ -4143,14 +4154,16 @@ LAB_14000c705:
 
 uint8_t FUN_14000c764(LPWSTR param_1)
 {
-    /* @0x14000c764 size=1909 (stub; 真实签名 undefined1(LPWSTR)) */
+    /* UNIMPLEMENTED @0xFUN_14000c764 — decompile-failed, body 未还原 */
+/* @0x14000c764 size=1909 (stub; 真实签名 undefined1(LPWSTR)) */
     (void)param_1;
     return 0;
 }
 
 void FUN_14000cedc(WCHAR *param_1, int64_t *param_2)
 {
-    /* @0x14000cedc size=961 (stub; 真实签名 void(WCHAR*, int64_t*)) */
+    /* UNIMPLEMENTED @0xFUN_14000cedc — decompile-failed, body 未还原 */
+/* @0x14000cedc size=961 (stub; 真实签名 void(WCHAR*, int64_t*)) */
     (void)param_1;
     (void)param_2;
 }
@@ -4799,7 +4812,8 @@ code_r0x000140016cec:
    按任务要求不实现，保留正确签名空桩。 */
 void FUN_14001708c(WCHAR *param_1, size_t param_2, void *param_3, void *param_4)
 {
-    (void)param_1;
+    /* UNIMPLEMENTED @0xFUN_14001708c — decompile-failed, body 未还原 */
+(void)param_1;
     (void)param_2;
     (void)param_3;
     (void)param_4;
@@ -5397,7 +5411,8 @@ bool PECMD_InitTlsBuffer(uint64_t *param_1)
 
 void FUN_1400185c8(char param_1, int64_t *param_2)
 {
-    uint16_t *psVar1;
+    /* UNIMPLEMENTED @0xFUN_1400185c8 — decompile-failed, body 未还原 */
+uint16_t *psVar1;
     int64_t *plVar2;
     int64_t lVar3;
     int64_t *plVar4;
@@ -6796,7 +6811,8 @@ uint64_t PECMD_EnumerateDeviceList(void)
 
 bool FUN_14001af7c(uint32_t param_1)
 {
-    /* @0x14001af7c size=104 (not in this batch; signature fixed from decompile) */
+    /* UNIMPLEMENTED @0xFUN_14001af7c — decompile-failed, body 未还原 */
+/* @0x14001af7c size=104 (not in this batch; signature fixed from decompile) */
     (void)param_1;
     return 0;
 }
@@ -7274,7 +7290,8 @@ void PECMD_LoadUnloadImdisk(uint64_t param_1, int param_2)
 
 uint64_t FUN_14001c82c(void)
 {
-    /* @0x14001c82c size=16 固定返回 1 */
+    /* UNIMPLEMENTED @0xFUN_14001c82c — decompile-failed, body 未还原 */
+/* @0x14001c82c size=16 固定返回 1 */
     return 1;
 }
 
@@ -7719,7 +7736,8 @@ LAB_14001d4a2:
 
 uint8_t *FUN_14001d744(uint8_t *dst, uint8_t *src, int len)
 {
-    /* @0x14001d744 size=71 支持重叠的字节搬移 */
+    /* UNIMPLEMENTED @0xFUN_14001d744 — decompile-failed, body 未还原 */
+/* @0x14001d744 size=71 支持重叠的字节搬移 */
     ptrdiff_t diff = dst - src;
     int i;
     uint8_t *p;
@@ -7746,7 +7764,8 @@ uint8_t *FUN_14001d744(uint8_t *dst, uint8_t *src, int len)
 
 uint8_t *FUN_14001d78c(uint8_t *dst, const uint8_t *src, int len)
 {
-    /* @0x14001d78c size=36 字节拷贝（保留原反编译的逐字节循环） */
+    /* UNIMPLEMENTED @0xFUN_14001d78c — decompile-failed, body 未还原 */
+/* @0x14001d78c size=36 字节拷贝（保留原反编译的逐字节循环） */
     uint8_t *p;
     int i;
 
@@ -8465,7 +8484,8 @@ uint32_t PECMD_ReadFileStr(LPCWSTR param_1, int64_t *param_2)
 
 uint8_t FUN_14001ed5c(int64_t param_1, LPCWSTR param_2)
 {
-    /* @0x14001ed5c size=365 (签名修正自联调, 主体仍为 NO-OP stub) */
+    /* UNIMPLEMENTED @0xFUN_14001ed5c — decompile-failed, body 未还原 */
+/* @0x14001ed5c size=365 (签名修正自联调, 主体仍为 NO-OP stub) */
     (void)param_1; (void)param_2;
     return 0;
 }

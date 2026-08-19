@@ -36,7 +36,8 @@ void FUN_14005B21C(int code);    /* @0x14005b21c (TODO: 待重构确认) */
  * 失败弹窗: 选 Retry(4)/Ignore(5) 重试, 否则退出+int3 */
 void *FUN_140063118(void *ptr, size_t size)
 {
-    if (ptr == NULL) {
+    /* UNIMPLEMENTED @0xFUN_140063118 — decompile-failed, body 未还原 */
+if (ptr == NULL) {
         for (;;) {
             uint8_t *hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);
             if (hdr) {
