@@ -3304,3 +3304,23 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - **阶段7 子任务3（去解译残留）启动**：b3i/b3k/b3_remaining/b1/b2f 已清 CONCAT artefact/死代码/冗余cast，
   0 错误、警告不增。子任务2/4/5 待做。
 - 校验：全程 build/link 绿；git 35 提交。
+
+---
+
+## 71. P0止血 + P1漏改名 + FUN_残局全套方案（round 26）
+### P0 止血（完成）
+- 修正此前"link 全绿"误判：真正确认全链接基线。补 7 个缺失符号桩
+  （GlobalAddAtomA/lstrcpyA/RegisterHotKey/TlsGetValue/WriteConsoleW + 数据 DAT_140124100 + helper FUN_1400630d0）
+  → build 0 FAIL / link 0 undefined **真全绿**。
+- 清理 tmp 垃圾；补漏改名 FUN_140103020→PECMD_WideStrLen。
+### P1 漏改名（完成）
+- 全库复查：core 中"在 rename_map 但仍用 FUN_" 的漏改名 **已清零**（此前 1 处已修）。
+### P2 未实现桩标注（失败暂缓）
+- 正则对"简化桩"加 UNIMPLEMENTED 标注的脚本因格式不一报错，未改动（零风险）。低价值，择机再补或省略。
+### FUN_ 残局方案（轻重缓急，目标全清）
+- 症结：decompile-failed 巨型函数是**互锁调用图**——恢复一个引出未定义的 helper/Win32/数据常量→undef 滚雪球；
+  加之一度并行子代理同文件并发→毁绿（已回滚并改单代理单文件）。
+- FUN_ 唯一 558 ≈ core 194 简化桩（多为 decompile-failed）+ link_stubs 319 定义桩（含 ~139 CRT 区）+ 调用点。
+- 路线：P3 **顺序还原**（按依赖序、一次一函数+所需最小桩、单代理单文件、每步保绿提交记账）→
+  P4 命名（apply_rename 正则）→ P5 DAT_ 18 登记。真未实现桩(~150)静态不可凭空还原，需原二进制/反汇编；
+  力争"全部可还原者→真代码、不可还原者→明确标注"，全程 build/link 绿 + MD 记账。
