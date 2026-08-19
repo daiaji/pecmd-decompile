@@ -15911,10 +15911,70 @@ void PECMD_ReleaseControlObject(uint64_t *param_1)
 
 uint8_t FUN_14007fcd4(int64_t *param_1, uint32_t *param_2)
 {
-    /* @0x14007fcd4 size=357 */
-    (void)param_1; (void)param_2;
-    return 0;
+    /* @0x14007fcd4 size=357 — 解析 "-sub L..T..H..W..<flags>" 窗口子命令参数 */
+    uint16_t uVar1;
+    uint16_t *puVar2;
+    char cVar3;
+    uint32_t uVar4;
+    uint64_t uVar5;
+    uint16_t *puVar6;
+    uint16_t *local_res8;
+
+    param_2[4] = 0;
+    if ((*(uint16_t *)(uintptr_t)*param_1 == 0x2d) &&
+        (uVar5 = FUN_14005c788("-sub", (const uint16_t *)(uintptr_t)*param_1, 4), (char)uVar5 != '\0')) {
+        param_2[4] = 1;
+        cVar3 = '\b';
+        *param_1 = *param_1 + 8;
+        puVar6 = (uint16_t *)(uintptr_t)*param_1;
+        uVar1 = *puVar6;
+        while ((uVar1 != 0 && (((puVar2 = (uint16_t *)(uintptr_t)*param_1, *puVar2 < 9 || (0xd < *puVar2)) && (*puVar2 != 0x20))))) {
+            *param_1 = (int64_t)(intptr_t)(puVar2 + 1);
+            uVar1 = puVar2[1];
+        }
+        local_res8 = puVar6;
+        FUN_14005b154((uint16_t **)param_1);
+        if (*puVar6 == 0x3a) {
+            puVar6 = puVar6 + 1;
+        }
+        do {
+            if (*puVar6 == 0x40) {
+                param_2[4] = param_2[4] | 2;
+            }
+            else if (*puVar6 == 0x2d) {
+                cVar3 = '\0';
+            }
+            else {
+                if (*puVar6 != 0x23) goto LAB_14007fdc2;
+                if (cVar3 != '\0') {
+                    cVar3 = '\x04';
+                }
+            }
+            puVar6 = puVar6 + 1;
+        } while (true);
+    }
+    goto LAB_14007fe19;
+LAB_14007fdc2:
+    local_res8 = puVar6;
+    uVar4 = PECMD_ParseLtwhFlags((int64_t *)&local_res8, param_2);
+    param_2[5] = uVar4;
+    param_2[4] = param_2[4] | (int)cVar3;
+    if (*local_res8 == 0x3a) {
+        local_res8 = local_res8 + 1;
+        *(uint16_t **)(param_2 + 6) = local_res8;
+        for (; (uVar1 = *local_res8), uVar1 != 0; local_res8 = local_res8 + 1) {
+            if (((8 < uVar1) && (uVar1 < 0xe)) || (uVar1 == 0x20)) {
+                if (*local_res8 != 0) {
+                    *local_res8 = 0;
+                }
+                break;
+            }
+        }
+    }
+LAB_14007fe19:
+    return *(uint8_t *)(param_2 + 4);
 }
+
 
 void FUN_14007fe3c(int64_t param_1, uint32_t param_2)
 {

@@ -3335,3 +3335,6 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 ## 73. Step2 CRT尾桩标注
 - CRT区(0x14010-1f)唯一函数体 147，其中 core_b9 已标 SKIP/CRT 61；link_stubs 补 `/* CRT 标准库内联 */`。
 - 纯注释，build/link 绿。CRT 区多为 MSVC 标准库内联、绝大多数未被调用（保链接占位）。
+## 74. Step5 还原试点：FUN_14007fcd4（-sub 窗口flag解析）真 body 移植成功
+- 从 decompiled.c 移植 357B 真 body（含 PECMD_ParseLtwhFlags/vs FUN_14005c788、05b154 桩依赖），build/link 绿。
+- 确立"单函数、叶子 helper 先桩、全链接绿"即回的还原范式。
