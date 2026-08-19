@@ -1960,11 +1960,11 @@ extern double g_dbl1668;
 extern double g_dbl21630;
 extern void *g_pNtQuerySystemInformation;               /* NtQuerySystemInformation */
 extern void *g_pGetProcessMemoryInfo;               /* GetProcessMemoryInfo */
-extern void *DAT_14013ced0;               /* 字体枚举函数指针 */
-extern void *DAT_14013cee0;
-extern void *DAT_14013cee8;
-extern void *DAT_14013cef0;
-extern void *DAT_14013ced8;
+extern void * g_pGdipNewPrivateFontCollection;               /* 字体枚举函数指针 */
+extern void * g_pGdipPrivateAddMemoryFont;
+extern void * g_pGdipGetFontCollectionFamilyList;
+extern void * g_pGdipGetFamilyName;
+extern void * g_pGdipDeletePrivateFontCollection;
 
 /* FUN_14002D708 is defined below and used by FUN_140032DC4. */
 DWORD FUN_14002D708(LPCWSTR filter, uint32_t mode, int64_t *out,
@@ -2561,13 +2561,13 @@ LAB_14002f98f:
                             HICON pHVar17 = PECMD_LoadIcon((LPCWSTR)(uintptr_t)-1, NULL);
                             if (pHVar17 != 0) {
                                 int64_t local_a8 = 0;
-                                ((void (*)(int64_t *))DAT_14013ced0)(&local_a8);
+                                ((void (*)(int64_t *))g_pGdipNewPrivateFontCollection)(&local_a8);
                                 if (local_a8 != 0) {
-                                    ((void (*)(int64_t, void *, DWORD))DAT_14013cee0)(
+                                    ((void (*)(int64_t, void *, DWORD))g_pGdipPrivateAddMemoryFont)(
                                         local_a8, local_90, (DWORD)uVar16);
                                     FUN_1400633A8((WCHAR **)&local_70, 800);
                                     local_res18 = 0;
-                                    ((void (*)(int64_t, int, void *, uint64_t *))DAT_14013cee8)(
+                                    ((void (*)(int64_t, int, void *, uint64_t *))g_pGdipGetFontCollectionFamilyList)(
                                         local_a8, 100, local_70, &local_res18);
                                     if (0 < (int)local_res18) {
                                         PECMD_AllocString(&local_b0, ((int)local_res18 * 9 + 9) * 4);
@@ -2584,7 +2584,7 @@ LAB_14002f98f:
                                                 }
                                                 *pWVar12 = L'\"';
                                                 pWVar13 = pWVar12 + 1;
-                                                ((void (*)(uintptr_t, WCHAR *, uint16_t))DAT_14013cef0)(
+                                                ((void (*)(uintptr_t, WCHAR *, uint16_t))g_pGdipGetFamilyName)(
                                                     *(uint64_t *)((uint8_t *)local_70 +
                                                                   (intptr_t)pHVar22 * 8),
                                                     pWVar13, (uint16_t)local_58);
@@ -2605,7 +2605,7 @@ LAB_14002f98f:
                                         } while ((intptr_t)pHVar22 < (intptr_t)iVar8);
                                     }
                                     *pWVar12 = L'\0';
-                                    ((void (*)(int64_t *))DAT_14013ced8)(&local_a8);
+                                    ((void (*)(int64_t *))g_pGdipDeletePrivateFontCollection)(&local_a8);
                                     FUN_14005B104((WCHAR **)&local_70);
                                     DVar7 = 0;
                                     goto LAB_14002f98f;

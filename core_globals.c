@@ -1134,3 +1134,14 @@ int (*g_pUiCallback)(int, int);   /* DAT_14013d810 */
 int (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int);   /* DAT_14013d828 */
 int (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm);   /* DAT_14013d838 */
 int (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv);   /* DAT_14013d860 */
+
+/* ---- 阶段5e 剩余干净DAT_ ---- */
+uint64_t g_u64_124e40;   /* DAT_140124e40 */
+uint64_t g_u64_124e48;   /* DAT_140124e48 */
+uint64_t g_u64_12d058;   /* DAT_14012d058 */
+uint64_t g_u64_12d060;   /* DAT_14012d060 */
+void * g_pGdipNewPrivateFontCollection;   /* DAT_14013ced0 */
+void * g_pGdipDeletePrivateFontCollection;   /* DAT_14013ced8 */
+void * g_pGdipPrivateAddMemoryFont;   /* DAT_14013cee0 */
+void * g_pGdipGetFontCollectionFamilyList;   /* DAT_14013cee8 */
+void * g_pGdipGetFamilyName;   /* DAT_14013cef0 */

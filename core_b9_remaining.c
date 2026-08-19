@@ -79,8 +79,8 @@ extern void *g_pGdipDrawImageI;   /* GdipDrawImageI     */
 extern int (*g_pGdipDeleteGraphics)();   /* GdipDeleteGraphics */
 
 /* @0x140100ac4 0x472 消息中用于重建 printf 宽格式串的常量字节 */
-extern uint64_t DAT_14012d058;
-extern uint64_t DAT_14012d060;
+extern uint64_t g_u64_12d058;
+extern uint64_t g_u64_12d060;
 
 /* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    /* GdipDisposeImage 函数指针 */
 extern WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);          /* @0x1400703e4 */

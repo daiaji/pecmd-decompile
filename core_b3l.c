@@ -156,8 +156,8 @@ extern uint64_t g_u6497f8;
 extern uint32_t g_u329800;
 extern uint16_t g_u169804;
 extern uint8_t g_u897806;
-extern uint64_t DAT_140124e40;
-extern uint64_t DAT_140124e48;
+extern uint64_t g_u64_124e40;
+extern uint64_t g_u64_124e48;
 
 /* ========== FUN_140050F58 @0x140050f58 ==========
  * 解析字符类主体，返回起始槽位或 -1。

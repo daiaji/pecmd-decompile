@@ -292,11 +292,11 @@ extern void *g_pGdipCreateTexture;          /* GdipCreateTexture */
 extern void *g_pGdipDeleteBrush;          /* GdipDeleteBrush */
 extern void *g_pGdipFillRectangle;          /* GdipFillRectangle */
 extern void *g_pGdipDrawString;          /* GdipDrawString */
-extern void *DAT_14013ced0;          /* GdipNewPrivateFontCollection */
-extern void *DAT_14013ced8;          /* GdipDeletePrivateFontCollection */
-extern void *DAT_14013cee0;          /* GdipPrivateAddMemoryFont */
-extern void *DAT_14013cee8;          /* GdipGetFontCollectionFamilyList */
-extern void *DAT_14013cef0;          /* GdipGetFamilyName */
+extern void * g_pGdipNewPrivateFontCollection;          /* GdipNewPrivateFontCollection */
+extern void * g_pGdipDeletePrivateFontCollection;          /* GdipDeletePrivateFontCollection */
+extern void * g_pGdipPrivateAddMemoryFont;          /* GdipPrivateAddMemoryFont */
+extern void * g_pGdipGetFontCollectionFamilyList;          /* GdipGetFontCollectionFamilyList */
+extern void * g_pGdipGetFamilyName;          /* GdipGetFamilyName */
 
 /* ---- B1 剩余 15 个业务函数还原所需: 额外 helper extern ---- */
 extern void FUN_1400e6860(WPARAM param_1, int param_2);          /* @0x1400e6860 */
@@ -8703,11 +8703,11 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
         g_pGdipDeleteBrush = GetProcAddress(g_hGdiPlus, "GdipDeleteBrush");
         g_pGdipFillRectangle = GetProcAddress(g_hGdiPlus, "GdipFillRectangle");
         g_pGdipDrawString = GetProcAddress(g_hGdiPlus, "GdipDrawString");
-        DAT_14013ced0 = GetProcAddress(g_hGdiPlus, "GdipNewPrivateFontCollection");
-        DAT_14013ced8 = GetProcAddress(g_hGdiPlus, "GdipDeletePrivateFontCollection");
-        DAT_14013cee0 = GetProcAddress(g_hGdiPlus, "GdipPrivateAddMemoryFont");
-        DAT_14013cee8 = GetProcAddress(g_hGdiPlus, "GdipGetFontCollectionFamilyList");
-        DAT_14013cef0 = GetProcAddress(g_hGdiPlus, "GdipGetFamilyName");
+        g_pGdipNewPrivateFontCollection = GetProcAddress(g_hGdiPlus, "GdipNewPrivateFontCollection");
+        g_pGdipDeletePrivateFontCollection = GetProcAddress(g_hGdiPlus, "GdipDeletePrivateFontCollection");
+        g_pGdipPrivateAddMemoryFont = GetProcAddress(g_hGdiPlus, "GdipPrivateAddMemoryFont");
+        g_pGdipGetFontCollectionFamilyList = GetProcAddress(g_hGdiPlus, "GdipGetFontCollectionFamilyList");
+        g_pGdipGetFamilyName = GetProcAddress(g_hGdiPlus, "GdipGetFamilyName");
         g_pGdiplusStartup = GetProcAddress(g_hGdiPlus, "GdiplusStartup");
     }
     if ((uint64_t)(intptr_t)param_1 - 1U == 0xfffffffffffffffdULL) {
