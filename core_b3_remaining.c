@@ -109,6 +109,8 @@ extern int64_t FUN_14001e69c(int64_t *param_1, LPCWSTR param_2, int64_t *param_3
 extern int64_t FUN_14005e04c(void);                         /* @0x14005e04c 随机数 */
 extern void FUN_1400e6d74(LPCWSTR param_1, uint64_t param_2); /* %I64u 格式化 */
 extern uint64_t FUN_14006A81C(WCHAR **pp, uint64_t *out);  /* @0x14006a81c (本文件) */
+extern uint8_t  DAT_140124100[];  /* 16 字节清零哨兵区 (memcmp 源) */
+extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out); /* @0x140067e2c 解析整数取整 */
 
 /* 前向声明：被本文件多个函数调用 */
 LPWSTR PECMD_CalcExpression(int64_t *param_1, WCHAR *param_2, uint64_t *param_3);
@@ -8998,9 +9000,61 @@ void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_
 
 uint16_t FUN_14005e61c(int64_t param_1, char param_2, uint param_3)
 {
-    /* @0x14005e61c size=446 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0;
+    /* @0x14005e61c size=446 注册热键(带 ALT/CTRL/SHIFT/WIN 前缀与冲突重试) */
+    ATOM label;
+    int len;
+    LPSTR pStr;
+    char *pCur;
+    CHAR local_e8;
+    char acStack_e7[207];
+
+    lstrcpyA(&local_e8, "PECMD_HotKEY_");
+    len = lstrlenA(&local_e8);
+    pStr = &local_e8 + len;
+    if ((param_3 & 1) != 0) {
+        lstrcpyA(pStr, "ALT_");
+    }
+    len = lstrlenA(pStr);
+    pStr = pStr + len;
+    if ((param_3 & 2) != 0) {
+        lstrcpyA(pStr, "CTRL_");
+    }
+    len = lstrlenA(pStr);
+    pStr = pStr + len;
+    if ((param_3 & 4) != 0) {
+        lstrcpyA(pStr, "SHIFT_");
+    }
+    len = lstrlenA(pStr);
+    pStr = pStr + len;
+    if ((param_3 & 8) != 0) {
+        lstrcpyA(pStr, "WIN_");
+    }
+    len = lstrlenA(pStr);
+    pCur = pStr + len;
+    *pCur = param_2;
+    pCur[1] = '\0';
+    do {
+        label = (ATOM)GlobalAddAtomA(&local_e8);
+        if (label == 0) {
+            Sleep(1);
+            label = (ATOM)GlobalAddAtomA(&local_e8);
+            if (label != 0) goto reg_hotkey;
+            Sleep(1);
+            label = (ATOM)GlobalAddAtomA(&local_e8);
+            if (label != 0) goto reg_hotkey;
+        }
+        else {
+reg_hotkey:
+            RegisterHotKey(*(HWND *)(param_1 + 0x20), (uint)label, param_3, (int)param_2);
+            if (label != 0) {
+                return label;
+            }
+        }
+        GetTickCount();
+        FUN_14005e04c();
+        wsprintfA(pCur + 1, "_%u");
+        Sleep(1);
+    } while (1);
 }
 
 void PECMD_WaitOpenNamedPipe(LPCWSTR pipeName, uint32_t timeout, int wait)
@@ -9176,8 +9230,96 @@ void PECMD_InstallWindowsHook(int64_t param_1, int64_t param_2)
 
 LPWSTR FUN_14005efac(WCHAR *param_1, WCHAR *param_2)
 {
-    /* @0x14005efac size=426 */
-    return NULL;
+    /* @0x14005efac size=426 拷贝并展开 %%d 占位/通配符 */
+    WCHAR wc;
+    int len;
+    WCHAR *p;
+
+    wc = *param_2;
+    do {
+        if (wc == L'\0') {
+f130:
+            *param_1 = L'\0';
+            return param_1;
+        }
+        if (wc == L'%') {
+            p = param_2 + 1;
+            if (*p != L'%') {
+                *param_1 = L'%';
+                wc = *p;
+                param_1 = param_1 + 1;
+                param_2 = p;
+                if (wc != L'\0') {
+f05a:
+                    param_2 = param_2 + 1;
+                    if (wc == L'?') {
+                        *param_1 = L'?';
+                        wc = *param_2;
+                        param_1 = param_1 + 1;
+                        if (wc != L'\0') {
+                            do {
+                                if (wc == L'%') {
+                                    wc = *param_2;
+                                    goto f118;
+                                }
+                                if (wc == L':') {
+                                    wc = *param_2;
+                                    goto f0b2;
+                                }
+                                param_2 = param_2 + 1;
+                                *param_1 = wc;
+                                param_1 = param_1 + 1;
+                                wc = *param_2;
+                            } while (wc != L'\0');
+                            goto f107;
+                        }
+                        goto f130;
+                    }
+                    *param_1 = wc;
+                    param_1 = param_1 + 1;
+                    if (wc == L'%') goto f123;
+                    goto f107;
+                }
+                goto f130;
+            }
+            if (param_2[2] == L'd') {
+                len = wsprintfW(param_1, WSTR("%d"));
+                param_1 = param_1 + len;
+                param_2 = param_2 + 3;
+            }
+            else {
+                *param_1 = L'%';
+                param_1 = param_1 + 1;
+                param_2 = param_2 + 2;
+            }
+        }
+        else {
+f118:
+            *param_1 = wc;
+            param_1 = param_1 + 1;
+            param_2 = param_2 + 1;
+        }
+f123:
+        wc = *param_2;
+    } while (1);
+    while (wc != L'%') {
+f0b2:
+        p = param_2;
+        param_2 = p + 1;
+        *param_1 = wc;
+        param_1 = param_1 + 1;
+        wc = *param_2;
+        if (wc == L'\0') break;
+    }
+    if (((*param_2 == L'%') && (p[2] == L'%')) && (p[3] == L'd')) {
+        len = wsprintfW(param_1, WSTR("%d"));
+        param_2 = p + 4;
+        param_1 = param_1 + len;
+    }
+f107:
+    wc = *param_2;
+    if (wc == L'\0') goto f123;
+    goto f05a;
 }
 
 /* @0x14005f458 size=435 卸载/提交镜像句柄（VHD/IMG 回调） */
@@ -10398,8 +10540,345 @@ void PECMD_FreeInitObjectList(char *param_1)
 
 uint64_t FUN_140065140(uint16_t *param_1)
 {
+    int64_t uVar1;
+    uint16_t uVar2;
+    int64_t lVar3;
+    int iVar4;
+    uint16_t *puVar5;
+    uint16_t *puVar6;
+    uint16_t *local_res8;
+
     /* @0x140065140 size=1827 */
-    return 0;
+    local_res8 = param_1;
+    FUN_14005B154((WCHAR **)&local_res8);
+    uVar2 = *local_res8;
+    puVar5 = local_res8;
+joined_r0x000140065172:
+    if (uVar2 == 0) {
+        return 0;
+    }
+    if (((0x2f < uVar2) && (uVar2 < 0x3a)) || (uVar2 == 0x2e)) {
+        while ((0x2f < *puVar5 && *puVar5 < 0x3a) ||
+               (*puVar5 == 0x2e || (0x60 < *puVar5 && *puVar5 < 0x67)) ||
+               *puVar5 == 0x78) {
+            puVar5 = puVar5 + 1;
+            local_res8 = puVar5;
+        }
+    }
+    FUN_14005B154((WCHAR **)&local_res8);
+    puVar6 = local_res8;
+    if ((uint8_t)((char)*local_res8 + 0x9fU) < 0x1a) {
+        for (; ((uint8_t)((char)*local_res8 + 0x9fU) < 0x1a ||
+                ((uint16_t)(*local_res8 - 0x30) < 10)); local_res8 = local_res8 + 1) {
+        }
+    }
+    puVar5 = local_res8;
+    iVar4 = (int)(((intptr_t)local_res8 - (intptr_t)puVar6) >> 1);
+    if (0 < iVar4) {
+        if (iVar4 == 2) {
+            if (*puVar6 == 0x70) {
+                if (puVar6[1] == 0x69) goto LAB_1400656b2;
+                goto LAB_14006522f;
+            }
+LAB_140065645:
+            uVar1 = FUN_14005C788("lg", (const WCHAR *)puVar6, 2);
+            if ((char)uVar1 == '\0') {
+                uVar1 = FUN_14005C788("ln", (const WCHAR *)puVar6, 2);
+                if ((char)uVar1 == '\0') goto LAB_1400656b2;
+                uVar2 = 0x15;
+            }
+            else {
+                uVar2 = 0x14;
+            }
+        }
+        else {
+LAB_14006522f:
+            if ((iVar4 == 1) && (*puVar6 == 0x65)) goto LAB_1400656b2;
+            if (iVar4 == 3) {
+                uVar1 = FUN_14005C788("deg", (const WCHAR *)puVar6, 3);
+                if ((char)uVar1 == '\0') {
+                    uVar1 = FUN_14005C788("int", (const WCHAR *)puVar6, 3);
+                    if ((char)uVar1 == '\0') {
+                        uVar1 = FUN_14005C788("rad", (const WCHAR *)puVar6, 3);
+                        if ((char)uVar1 == '\0') {
+                            uVar1 = FUN_14005C788("not", (const WCHAR *)puVar6, 3);
+                            if ((char)uVar1 == '\0') {
+                                uVar1 = FUN_14005C788("div", (const WCHAR *)puVar6, 3);
+                                if ((char)uVar1 == '\0') {
+                                    uVar1 = FUN_14005C788("max", (const WCHAR *)puVar6, 3);
+                                    if ((char)uVar1 == '\0') {
+                                        uVar1 = FUN_14005C788("min", (const WCHAR *)puVar6, 3);
+                                        if ((char)uVar1 == '\0') {
+                                            uVar1 = FUN_14005C788("mod", (const WCHAR *)puVar6, 3);
+                                            if ((char)uVar1 == '\0') {
+                                                uVar1 = FUN_14005C788("shl", (const WCHAR *)puVar6, 3);
+                                                if ((char)uVar1 == '\0') {
+                                                    uVar1 = FUN_14005C788("shr", (const WCHAR *)puVar6, 3);
+                                                    if ((char)uVar1 == '\0') {
+                                                        uVar1 = FUN_14005C788("xor", (const WCHAR *)puVar6, 3);
+                                                        if ((char)uVar1 == '\0') {
+                                                            uVar1 = FUN_14005C788("cos", (const WCHAR *)puVar6, 3);
+                                                            if ((char)uVar1 == '\0') {
+                                                                uVar1 = FUN_14005C788("sin", (const WCHAR *)puVar6, 3);
+                                                                if ((char)uVar1 == '\0') {
+                                                                    uVar1 = FUN_14005C788("abs", (const WCHAR *)puVar6, 3);
+                                                                    if ((char)uVar1 == '\0') {
+                                                                        uVar1 = FUN_14005C788("ctg", (const WCHAR *)puVar6, 3);
+                                                                        if ((char)uVar1 == '\0') {
+                                                                            uVar1 = FUN_14005C788("exp", (const WCHAR *)puVar6, 3);
+                                                                            if ((char)uVar1 == '\0') {
+                                                                                uVar1 = FUN_14005C788("tan", (const WCHAR *)puVar6, 3);
+                                                                                if ((char)uVar1 == '\0') {
+                                                                                    uVar1 = FUN_14005C788("log", (const WCHAR *)puVar6, 3);
+                                                                                    if ((char)uVar1 == '\0') {
+                                                                                        uVar1 = FUN_14005C788("pow", (const WCHAR *)puVar6, 3);
+                                                                                        if ((char)uVar1 == '\0') goto LAB_1400656b2;
+                                                                                        uVar2 = 0x88;
+                                                                                    }
+                                                                                    else {
+                                                                                        uVar2 = 0x84;
+                                                                                    }
+                                                                                }
+                                                                                else {
+                                                                                    uVar2 = 0x1b;
+                                                                                }
+                                                                            }
+                                                                            else {
+                                                                                uVar2 = 0x10;
+                                                                            }
+                                                                        }
+                                                                        else {
+                                                                            uVar2 = 0xe;
+                                                                        }
+                                                                    }
+                                                                    else {
+                                                                        uVar2 = 3;
+                                                                    }
+                                                                }
+                                                                else {
+                                                                    uVar2 = 2;
+                                                                }
+                                                            }
+                                                            else {
+                                                                uVar2 = 1;
+                                                            }
+                                                        }
+                                                        else {
+                                                            uVar2 = 0x8b;
+                                                        }
+                                                    }
+                                                    else {
+                                                        uVar2 = 0x8a;
+                                                    }
+                                                }
+                                                else {
+                                                    uVar2 = 0x89;
+                                                }
+                                            }
+                                            else {
+                                                uVar2 = 0x87;
+                                            }
+                                        }
+                                        else {
+                                            uVar2 = 0x86;
+                                        }
+                                    }
+                                    else {
+                                        uVar2 = 0x85;
+                                    }
+                                }
+                                else {
+                                    uVar2 = 0x82;
+                                }
+                            }
+                            else {
+                                uVar2 = 0x1c;
+                            }
+                        }
+                        else {
+                            uVar2 = 0x17;
+                        }
+                    }
+                    else {
+                        uVar2 = 0x13;
+                    }
+                }
+                else {
+                    uVar2 = 0xf;
+                }
+            }
+            else if (iVar4 == 4) {
+                uVar1 = FUN_14005C788("frac", (const WCHAR *)puVar6, 4);
+                if ((char)uVar1 == '\0') {
+                    uVar1 = FUN_14005C788("rand", (const WCHAR *)puVar6, 4);
+                    if ((char)uVar1 == '\0') {
+                        uVar1 = FUN_14005C788("lnot", (const WCHAR *)puVar6, 4);
+                        if ((char)uVar1 == '\0') {
+                            uVar1 = FUN_14005C788("ceil", (const WCHAR *)puVar6, 4);
+                            if ((char)uVar1 == '\0') {
+                                uVar1 = FUN_14005C788("sqrt", (const WCHAR *)puVar6, 4);
+                                if ((char)uVar1 == '\0') goto LAB_1400656b2;
+                                uVar2 = 0x1a;
+                            }
+                            else {
+                                uVar2 = 8;
+                            }
+                        }
+                        else {
+                            uVar2 = 0x1d;
+                        }
+                    }
+                    else {
+                        uVar2 = 0x18;
+                    }
+                }
+                else {
+                    uVar2 = 0x11;
+                }
+            }
+            else if (iVar4 == 5) {
+                uVar1 = FUN_14005C788("floor", (const WCHAR *)puVar6, 5);
+                if ((char)uVar1 == '\0') {
+                    uVar1 = FUN_14005C788("round", (const WCHAR *)puVar6, 5);
+                    if ((char)uVar1 == '\0') {
+                        uVar1 = FUN_14005C788("pow10", (const WCHAR *)puVar6, 5);
+                        if ((char)uVar1 == '\0') {
+                            uVar1 = FUN_14005C788("hypot", (const WCHAR *)puVar6, 5);
+                            if ((char)uVar1 == '\0') goto LAB_1400656b2;
+                            uVar2 = 0x83;
+                        }
+                        else {
+                            uVar2 = 0x16;
+                        }
+                    }
+                    else {
+                        uVar2 = 0x19;
+                    }
+                }
+                else {
+                    uVar2 = 0x12;
+                }
+            }
+            else {
+                if (iVar4 != 6) {
+                    if (iVar4 == 2) goto LAB_140065645;
+                    goto LAB_1400656b2;
+                }
+                uVar1 = FUN_14005C788("arccos", (const WCHAR *)puVar6, 6);
+                if ((char)uVar1 == '\0') {
+                    uVar1 = FUN_14005C788("arcctg", (const WCHAR *)puVar6, 6);
+                    if ((char)uVar1 == '\0') {
+                        uVar1 = FUN_14005C788("arcsin", (const WCHAR *)puVar6, 6);
+                        if ((char)uVar1 == '\0') {
+                            uVar1 = FUN_14005C788("arctan", (const WCHAR *)puVar6, 6);
+                            if ((char)uVar1 == '\0') goto LAB_1400656b2;
+                            uVar2 = 7;
+                        }
+                        else {
+                            uVar2 = 6;
+                        }
+                    }
+                    else {
+                        uVar2 = 5;
+                    }
+                }
+                else {
+                    uVar2 = 4;
+                }
+            }
+        }
+        lVar3 = (int64_t)iVar4;
+        puVar5 = puVar6;
+        if (1 < lVar3) {
+            while (1) {
+                lVar3 = lVar3 + -1;
+                if (lVar3 == 0) break;
+                puVar5[1] = 0x20;
+                puVar5 = puVar5 + 1;
+            }
+        }
+        *puVar6 = uVar2;
+        FUN_14005B154((WCHAR **)&local_res8);
+        puVar5 = local_res8;
+    }
+LAB_1400656b2:
+    if ((*puVar5 == 0x3d) && (puVar5[1] == 0x3d)) {
+        *puVar5 = 0x20;
+        puVar5 = puVar5 + 1;
+        goto LAB_1400657a8;
+    }
+    if ((*puVar5 == 0x3e) && (puVar5[1] == 0x3d)) {
+        uVar2 = 0x8c;
+LAB_14006575b:
+        *puVar5 = uVar2;
+    }
+    else {
+        if (*puVar5 == 0x3c) {
+            if (puVar5[1] != 0x3d) {
+                if (puVar5[1] != 0x3e) goto LAB_140065702;
+                goto LAB_140065712;
+            }
+            uVar2 = 0x8d;
+            goto LAB_14006575b;
+        }
+LAB_140065702:
+        if ((*puVar5 != 0x21) || (puVar5[1] != 0x3d)) {
+            if ((*puVar5 == 0x26) && (puVar5[1] == 0x26)) {
+                uVar2 = 0x8f;
+                goto LAB_14006575b;
+            }
+            if ((*puVar5 == 0x7c) && (puVar5[1] == 0x7c)) {
+                uVar2 = 0x91;
+            }
+            else {
+                if ((*puVar5 != 0x40) || (puVar5[1] != 0x40)) {
+                    if (*puVar5 == 0x21) {
+                        uVar2 = 0x1f;
+                    }
+                    else if (*puVar5 == 0x7e) {
+                        uVar2 = 0x1e;
+                    }
+                    else if ((*puVar5 == 0x5b) || (*puVar5 == 0x7b)) {
+                        uVar2 = 0x28;
+                    }
+                    else {
+                        if ((*puVar5 != 0x5d) && (*puVar5 != 0x7d)) goto LAB_1400657c5;
+                        uVar2 = 0x29;
+                    }
+                    *puVar5 = uVar2;
+                    goto LAB_1400657a8;
+                }
+                uVar2 = 0x90;
+            }
+            goto LAB_14006575b;
+        }
+LAB_140065712:
+        *puVar5 = 0x8e;
+    }
+    puVar5 = puVar5 + 1;
+    *puVar5 = 0x20;
+LAB_1400657a8:
+    local_res8 = puVar5 + 1;
+    FUN_14005B154((WCHAR **)&local_res8);
+    puVar5 = local_res8;
+    goto LAB_1400656b2;
+LAB_1400657c5:
+    uVar2 = *puVar5;
+    while (1) {
+        if (uVar2 == 0) {
+            return 0;
+        }
+        if (((((uVar2 == 0x21) || (uVar2 == 0x7e)) || (uVar2 == 0x5b)) ||
+            (((uVar2 == 0x7b || (uVar2 == 0x5d)) ||
+             ((uVar2 == 0x7d || ((uint8_t)((char)*puVar5 + 0x9fU) < 0x1a)))))) ||
+           (((0x2f < uVar2 && (uVar2 < 0x3a)) ||
+            ((uVar2 == 0x2e || (((0x60 < uVar2 && (uVar2 < 0x67)) || (uVar2 == 0x78)))))))) break;
+        puVar5 = puVar5 + 1;
+        uVar2 = *puVar5;
+        local_res8 = puVar5;
+    }
+    uVar2 = *puVar5;
+    goto joined_r0x000140065172;
 }
 
 int64_t FUN_14006587c(int64_t *param_1, uint8_t *param_2, uint8_t param_3)
@@ -11188,8 +11667,40 @@ int PECMD_FindPhysicalDrive(char *param_1, int param_2)
 
 int FUN_1400695a8(int64_t param_1, int64_t param_2, int param_3, int param_4, int param_5)
 {
-    /* @0x1400695a8 size=348 */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5;
+    /* @0x1400695a8 size=348 根据 ID/大小块匹配目标序号 */
+    int64_t lVar1, lVar4;
+    int iVar2, iVar3;
+    char *_Buf1;
+    int64_t *plVar5;
+
+    lVar4 = *(int64_t *)(param_1 + 8) / (int64_t)param_4;
+    lVar1 = *(int64_t *)(param_1 + 0x10);
+    iVar2 = memcmp(&DAT_140124100, (void *)(param_1 + 0x20), 0x10);
+    if (((iVar2 != 0) && (iVar2 = memcmp(&DAT_140124100, (void *)(param_1 + 0x30), 0x10), iVar2 != 0))
+        && (iVar2 = 0, 0 < param_3)) {
+        plVar5 = (int64_t *)(param_2 + 0x28);
+        do {
+            if (param_5 == 0) {
+f6966b:
+                _Buf1 = (char *)((int64_t)iVar2 * 0x80 + param_2);
+                iVar3 = FUN_14005b184(_Buf1 + 0x10, param_1 + 0x30, 0x10);
+                if (iVar3 == 0) goto f968c;
+            }
+            else {
+                _Buf1 = (char *)((int64_t)iVar2 * 0x80 + param_2);
+                iVar3 = memcmp(_Buf1 + 0x10, &DAT_140124100, 0x10);
+                if (iVar3 == 0) goto f6966b;
+f968c:
+                if ((((param_5 != 0) && (iVar3 = memcmp(_Buf1, &DAT_140124100, 0x10), iVar3 != 0)) ||
+                    (iVar3 = FUN_14005b184(_Buf1, param_1 + 0x20, 0x10), iVar3 == 0)) &&
+                    ((lVar4 == plVar5[-1] && (lVar1 / (int64_t)param_4 + -1 + lVar4 == *plVar5)))) {
+                    return iVar2 + 1;
+                }
+            }
+            iVar2 = iVar2 + 1;
+            plVar5 = plVar5 + 0x10;
+        } while (iVar2 < param_3);
+    }
     return 0;
 }
 
@@ -14587,8 +15098,71 @@ uint64_t PECMD_ListDrives(uint64_t *param_1, WCHAR param_2, int param_3, int par
 void FUN_140079524(WCHAR *param_1, int64_t *param_2, int *param_3, int param_4,
                    int64_t param_5)
 {
-    /* @0x140079524 size=399 */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5;
+    /* @0x140079524 size=399 解析 ^键/<宽x高>/图像 参数并应用 */
+    WCHAR wc;
+    int64_t oldIcon;
+    HICON hIcon;
+    WCHAR *pWVar4;
+    int nRepeat;
+    WCHAR *pCur;
+
+    /* 首字符非数字(0xFFD0 == -0x30 mod 65536)时记录三级大小 */
+    if ((9 < (uint16_t)(*param_1 + 0xFFD0)) && (0 < param_4)) {
+        param_3[2] = param_4;
+    }
+    nRepeat = 0;
+    wc = *param_1;
+    pCur = param_1;
+    while (wc == L'^') {
+        pCur = pCur + 1;
+        nRepeat = nRepeat + 1;
+        wc = *pCur;
+    }
+    PECMD_ParseIntRound((int64_t *)&pCur, param_3 + 2);
+    pWVar4 = pCur;
+    if (*pCur == L'<') {
+        pCur = pCur + 1;
+        PECMD_ParseIntRound((int64_t *)&pCur, param_3);
+        if (*pCur != L'\0') {
+            pCur = pCur + 1;
+            PECMD_ParseIntRound((int64_t *)&pCur, param_3 + 1);
+        }
+        pWVar4 = pCur;
+        if (*pCur == L'>') {
+            pWVar4 = pCur + 1;
+        }
+        if ((*param_3 < 1) || (param_3[1] < 1)) {
+            param_3[1] = 0;
+            *param_3 = 0;
+        }
+    }
+    if (*pWVar4 == L':') {
+        pWVar4 = pWVar4 + 1;
+    }
+    if (*pWVar4 != L'\0') {
+        hIcon = PECMD_LoadIcon(pWVar4, (uint64_t *)0x0);
+        *param_2 = (int64_t)hIcon;
+    }
+    if ((param_5 != 0) &&
+        ((((0 < *param_3 || (0 < param_3[1])) || (0 < param_3[2])) || (*param_2 != 0)))) {
+        if (0 < param_3[2]) {
+            *(short *)(param_5 + 0xea) = (short)param_3[2];
+        }
+        if (0 < *param_3) {
+            *(short *)(param_5 + 0xfc) = (short)*param_3;
+        }
+        if (0 < param_3[1]) {
+            *(short *)(param_5 + 0xfe) = (short)param_3[1];
+        }
+        if ((*param_2 != 0) &&
+           (oldIcon = *(int64_t *)(param_5 + 0xf0),
+            *(int64_t *)(param_5 + 0xf0) = *param_2, oldIcon != 0)) {
+            ((void (*)(int64_t))g_pGdipDisposeImage)(oldIcon);
+        }
+        if (nRepeat != 1) {
+            InvalidateRect(*(HWND *)(param_5 + 0x20), (RECT *)0x0, (uint)(nRepeat == 0));
+        }
+    }
 }
 
 
