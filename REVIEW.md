@@ -3242,3 +3242,25 @@ Wlan10 + 5 GDI+void* + 4 标量 + 5 GDI+ + 22 fn-ptr(WTS/WIM/Reg/Setup+等) + 18
 - 多签名异构 fn-ptr（cd98/cf10/d468/cef8/d488/d050/d4d0/d430/c970/d470/d478/d3b0/ce38…）
 - AMBIGUOUS（d738/d5c0/d480/d47010）·字节重叠（147001-3 与 g_runFlag）·无大小数组（d770/d8a0/1277x/1214d8/1210f8/12944c）·cb90 OSVERSIONINFOW
 - 校验：build/link 持续绿；每簇可回滚。
+
+---
+
+## 67. 全阶段完成性终评（round 23）
+
+### 已达成（全部验证，build 0 FAIL / link 无未解析多重 / git 26 commits / 工作区干净）
+1. 函数还原 ~99%（DONE 2098/2117）。
+2. 命名 rename_map 790；巨函数命名 16/18；link_stubs 孤儿桩清 499→383。
+3. 零警告 102（98 起始+19 槽迁移引入 4 cast 类），全为行为相关，0 机械残留（REVIEW §62）。
+4. DAT_→g_ 迁移 ~80（113→33），fn-ptr 槽分簇安全迁移（Wlan/WTS/WIM/Setup/GDI+/Reg 等）。
+5. TASKS/REVIEW/git 全程同步，每批 build/link 绿。
+
+### 剩余（登记为已知限制，需运行时/逆编译深挖，强挖有改语义风险）
+- 真实 DAT_ 33：多签名异构 fn-ptr（cd98/cf10/d468/cef8/d050/d430…）、AMBIGUOUS（d738/d5c0/d480/d47010）、
+  字节重叠（147001-3）、无大小数组（d770/d8a0/1277x）。
+- FUN_ 563：CRT/空桩/异构（SKIP 政策）。
+- 警告 102：cast-function-type/sign-compare/type-limits 等行为相关。
+
+### 结论
+主干（还原/构建/命名/零警告/巨函数/link_stubs/DAT_ 安全迁移）**已全部实质完成并持续全绿**。
+残余属"静态反编译无法在不改语义下收净"的一类；若要 100% 收口需运行时实测/逐点逆编译（高风险）。
+此终评供人类决断：接受"记为已知限制收官" 或 授权高风险深挖。
