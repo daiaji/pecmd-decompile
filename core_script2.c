@@ -20,21 +20,13 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
-extern void FUN_140017CDC(void *dst, void *src);       /* @0x140017cdc */
-extern void FUN_1400186BC(void *s, int64_t parent);    /* @0x1400186bc */
-extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0x140073ccc */
-extern void FUN_14006159C(void *script, uint64_t seed); /* @0x14006159c */
 extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
-extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern uint16_t FUN_14001B510(void);                     /* @0x14001b510 */
-extern uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *out,
-                                 LPCWSTR script, uint32_t flags); /* @0x140030420 */
 extern void FUN_14002452C(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32_t *flags); /* @0x14001ea18 */
@@ -43,10 +35,6 @@ extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out,
 extern int64_t FUN_140045C90(void *script, void *param, int64_t a3); /* @0x140045c90 */
 extern int64_t PECMD_RunCommand(void *script, LPCWSTR cmdline, void *a3, void *a4,
                                 void *a5, void *a6);   /* @0x140031454 */
-extern void FUN_14007BF44(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt); /* @0x14007bf44 */
-
-/* 全局引用 */
-extern WCHAR *g_pLocale;         /* DAT_14013ca70 */
 
 /* 数据区标志（待 B9 核对） */
 static int32_t g_scriptInitFlag;   /* DAT_14013d209 */

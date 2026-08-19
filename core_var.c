@@ -16,8 +16,6 @@
 #include <stddef.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
-
 /* ---- 待重构函数原型 (后续批次) ---- */
 void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int a);  /* @0x14001e6bc 变量写入 */
 void FUN_14005D534(void *s, LPCWSTR k, LPCWSTR v);         /* @0x14005d534 无锁写入 */

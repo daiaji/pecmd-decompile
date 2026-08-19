@@ -22,7 +22,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 待重构函数原型 (后续批次) ---- */
 void FUN_140053E78(void);            /* @0x140053e78 */
@@ -36,7 +35,6 @@ void FUN_140016ae0(void);            /* @0x140016ae0 服务主过程 */
 
 /* ---- 全局 (core_globals.c) ---- */
 extern uint8_t g_flag16b;            /* DAT_14013c96b (DEBUGMDG) */
-extern uint32_t g_WM_TaskbarButtonCreated;  /* DAT_14013c9f8 */
 extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);   /* DAT_14013d408 */
 extern void (*g_pSHGetValueA)(void);       /* DAT_14013cd50 */
 extern void (*g_pStrToIntExW)(void);       /* DAT_14013cd58 */

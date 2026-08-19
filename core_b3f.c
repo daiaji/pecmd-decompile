@@ -45,7 +45,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t *PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,

@@ -27,7 +27,6 @@
 #include <wchar.h>
 
 #include "pecmd_defs.h"   /* FUN_140063620 / FUN_14005C788 / wsprintfW 等 */
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out); /* @0x1400c1194 */
 

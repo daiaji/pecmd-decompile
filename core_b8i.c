@@ -30,7 +30,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
@@ -57,7 +56,6 @@ extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);
 extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
 extern uint8_t *FUN_14001d78c(uint8_t *dst, uint8_t *src, int n);
-extern uint8_t *FUN_14001d744(uint8_t *dst, int64_t src, int n);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
@@ -75,7 +73,6 @@ extern uint32_t g_dpi;                                    /* g_dpi */
 extern HCURSOR g_hArrowCursor;                            /* DAT_14013e4d8 */
 extern HGDIOBJ g_hStockWhiteBrush;                        /* DAT_14013a858 */
 extern HWND g_hActiveDevWnd;                                     /* DAT_14013e400 */
-extern void *g_syncState;                               /* DAT_14013e298 */
 extern uint64_t g_rasState;                               /* DAT_14013e2a0 RAS 等待状态 (B8i 新增) */
 extern uint64_t *g_pRasEntryBuf;                          /* DAT_14013e300 条目缓冲指针 (B8i 新增) */
 

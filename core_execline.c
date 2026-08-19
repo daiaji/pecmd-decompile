@@ -17,7 +17,6 @@
 
 #include "pecmd_defs.h"
 #include "win32_stub.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* core_strbld.c 构建器/格式化 */
 extern void FUN_14006D7E8(void *s[6], WCHAR **out, int *count, WCHAR **cur,

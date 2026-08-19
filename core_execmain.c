@@ -45,7 +45,6 @@
 
 #include "pecmd_defs.h"
 #include "win32_stub.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现辅助（core_string.c / core_var*.c / core_exec*.c）---- */
 extern void FUN_1400A4020(WCHAR **ps, LPCWSTR src);          /* @0x1400a4020 core_exec4.c */

@@ -16,7 +16,6 @@
 #include <stddef.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 待重构函数原型 (后续批次) ---- */
 void PECMD_InitDynamicImports(void);            /* @0x140017908 初始化 */
@@ -51,7 +50,6 @@ extern uint32_t *g_pExitCode;        /* DAT_14013d180 退出码指针 */
 extern int (*g_pConvFunc)(uint32_t, DWORD, LPCSTR, int, LPWSTR, int); /* DAT_14013c970 */
 extern uint32_t g_SysCodePage;       /* DAT_140147004 */
 extern uint32_t g_ShowWindow;        /* DAT_14013a234 */
-extern WCHAR *g_szMsgBuf;            /* DAT_14013cab8 */
 
 /* ========== ExitProcess 封装 @0x14005b21c ========== */
 static void FUN_14005B21C(int code)

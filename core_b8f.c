@@ -50,7 +50,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 本地小结构 (win32_stub.h 暂缺) ---- */
 typedef struct {

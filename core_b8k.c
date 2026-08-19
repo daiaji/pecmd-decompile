@@ -64,12 +64,8 @@ extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);  /* @0x1400629b8 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
-extern void *FUN_1400E57C0(void *obj);                 /* @0x1400e57c0 */
-extern uint64_t *FUN_1400F5C74(uint64_t *obj);        /* @0x1400f5c74 */
-extern int64_t *FUN_140063B64(int64_t *arr);                /* @0x140063b64 */
 extern bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style,
                                        int *rect, HWND parent, uint32_t param6); /* @0x1400efff8 */
-extern void FUN_1400E8940(void *obj);               /* @0x1400e8940 */
 extern LRESULT FUN_1400E5890(int64_t obj);             /* @0x1400e5890 */
 extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
                                 int64_t script, int64_t cmdCtx, int64_t *varTable); /* @0x1400e5248 */
@@ -77,7 +73,6 @@ extern void FUN_1400F0DF4(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
                                  int edge);                   /* @0x1400f0df4 */
 extern void FUN_1400F0CA0(HWND hwnd, COLORREF color); /* @0x1400f0ca0 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
-extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize); /* @0x140063b00 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,

@@ -15,8 +15,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
-
 /* ========== FUN_1400E1228 @0x1400e1228 ==========
  * [简化桩] 原函数为 8K 大函数，按签名返回 0。
  * TODO(verify): 需完整还原脚本执行逻辑。

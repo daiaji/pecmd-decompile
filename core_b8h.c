@@ -45,8 +45,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
-
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key,
                             LPCWSTR fmt);                        /* @0x1400668ec */

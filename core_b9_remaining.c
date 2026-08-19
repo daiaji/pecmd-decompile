@@ -21,30 +21,7 @@ extern uint64_t g_u64EC88;
 extern uint64_t g_u64F520;
 
 /* ---- 业务辅助函数声明 (已实现于 core_b8* / core_* ) ---- */
-extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);       /* @0x14005c7c4 */
-extern WCHAR **FUN_14005B154(WCHAR **pp);                          /* @0x14005b154 */
-extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);                 /* @0x1400f429c */
-extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *path, uint64_t *out); /* @0x1400ff414 */
-extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);                   /* @0x140067d20 */
-extern int64_t *FUN_14007034C(int64_t *param_1, LPCWSTR param_2);  /* @0x14007034c */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);            /* @0x140063720 */
-extern int FUN_1400FEDA4(int64_t obj, uint64_t param2, uint64_t *out, uint32_t param4); /* @0x1400feda4 */
-extern int FUN_1400FEE24(int64_t obj, uint64_t param2, uint64_t *out); /* @0x1400fee24 */
-extern void FUN_1400FF20C(int64_t obj, uint64_t a2, uint32_t a3, uint64_t a4,
-                          uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8,
-                          uint64_t a9, uint32_t a10);              /* @0x1400ff20c */
-extern void FUN_1400FFA38(int64_t obj, int64_t *cursor, uint8_t *flags, int64_t *tailPtr); /* @0x1400ffa38 */
-extern int64_t FUN_1400FF8A8(int64_t obj, int64_t *out, uint64_t hItem, uint64_t flags); /* @0x1400ff8a8 */
-extern int64_t FUN_1400FF730(int64_t obj, int64_t *out, WPARAM hItem, uint64_t flags); /* @0x1400ff730 */
-extern uint64_t FUN_1400FFB64(int64_t obj, uint16_t *path, int64_t *out,
-                              LPCWSTR prefix, LPCWSTR suffix, uint64_t flags); /* @0x1400ffb64 */
-extern int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem, int64_t mode); /* @0x1400ff5d0 */
-extern void FUN_1400C44F4(int64_t *a, uint64_t *b);                /* @0x1400c44f4 */
-extern bool FUN_1400C1194(WCHAR **pp, uint64_t *size);             /* @0x1400c1194 */
-extern int64_t FUN_1400FF2BC(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
-extern int64_t FUN_1400FEE94(int64_t obj, LRESULT hItem, int64_t recurse); /* @0x1400fee94 */
-extern WCHAR *FUN_1400E6D38(WCHAR *dst, uint64_t v, LPCWSTR fmt);  /* @0x1400e6d38 */
-extern void FUN_1400702B0(WCHAR **ps, LPCWSTR src);                /* @0x1400702b0 */
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);        /* @0x140070398 */
 extern void FUN_14005B104(WCHAR **ps);                             /* @0x14005b104 */
 extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 (本批构造函数调用用小写) */

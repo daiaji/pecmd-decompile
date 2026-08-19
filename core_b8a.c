@@ -44,7 +44,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- win32_stub.h 暂缺的 API ---- */
 extern DWORD GetFileSize(HANDLE, DWORD *);

@@ -36,7 +36,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t PECMD_GetAvailPhysMemoryMB(void);
@@ -54,8 +53,6 @@ extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
-extern uint64_t PECMD_MatchPattern(int16_t *s, int64_t ctx);
-extern int16_t PECMD_XorStrNCaseCmp(int64_t ctx, uint16_t *s, int16_t *key, int len);
 extern uint64_t FUN_14001D628(void);
 extern uint64_t PECMD_MapPhysicalMemoryNT5(void);
 extern uint32_t PECMD_ReadPhysMemSlot(uint64_t a);
@@ -85,7 +82,6 @@ extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void FUN_14001b888(uint32_t mode);
-extern uint32_t PECMD_ReadRamdataDword(uint64_t name);
 extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 

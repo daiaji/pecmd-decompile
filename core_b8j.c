@@ -30,7 +30,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern void FUN_1400633A8(void **ps, int64_t len);          /* @0x1400633a8 */
@@ -73,7 +72,6 @@ extern WCHAR g_szEmpty[];
 
 /* ---- 全局数据 (core_globals.c 定义) ---- */
 extern uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *, uint32_t *); /* DAT_14013e270 */
-extern HGDIOBJ g_hStockWhiteBrush;                      /* DAT_14013a858 */
 
 /* 未来链接用占位 (避免 extern 悬空): 由本文件内 static 提供 */
 static const uint8_t *g_dummy = NULL;

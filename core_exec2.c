@@ -29,9 +29,7 @@
 
 #include "pecmd_defs.h"
 
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                 /* @0x14005b154 见 core_string.c */
-extern void *PECMD_StrDupAlloc(LPCWSTR src);                /* @0x1400700c4 */
 extern char *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
 extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
 extern void FUN_14005B21C(UINT code);                  /* @0x14005b21c */

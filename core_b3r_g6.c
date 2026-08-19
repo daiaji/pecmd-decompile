@@ -47,9 +47,6 @@ extern uint64_t  PECMD_ParseAndSkipSpace_7b54(WCHAR **pp, double *out);         
 extern LPCWSTR   PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
                                int64_t *a4, uint32_t a5, uint16_t *a6); /* @0x140067278 取变量 */
 
-/* Windows API 中 stub 缺声明而本文件用到的符号 */
-extern int       StrCmpIW(LPCWSTR, LPCWSTR);
-
 /* ================================================================
  * @0x140078f00  FORMAT.COM 包装器
  * signature: longlong __fastcall PECMD_FormatVolume(longlong *param_1, WCHAR *param_2)

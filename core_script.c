@@ -24,25 +24,19 @@ extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac */
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
 extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
-extern int64_t *FUN_14005B154(WCHAR **ps);                 /* @0x14005b154 */
-extern void *PECMD_ReallocBuffer(void *old, int64_t size);      /* @0x140063224 */
 extern void FUN_140024A54(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
-extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern char FUN_14006CCD4(LPCWSTR *ps);                /* @0x14006ccd4 */
 extern int32_t FUN_140006A4C(LPCWSTR path);             /* @0x140006a4c */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl); /* @0x140003864 */
 extern int64_t FUN_14001D810(LPCWSTR path, uint64_t access, int64_t share); /* @0x14001d810 */
-extern int64_t FUN_14005FBD4(HANDLE h, int64_t *geo);     /* @0x14005fbd4 */
 extern int64_t PECMD_GetDeviceSize(HANDLE h, uint8_t mtype);   /* @0x140061070 */
 extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out); /* @0x14006a7f4 */
 extern int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp); /* @0x140068984 */
 
 /* B9 待实现 */
 extern uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags); /* @0x1400e7d58 */
-/* B8c 待实现 */
-extern void FUN_14007BF44(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt); /* @0x14007bf44 */
 
 /* 前向声明（本文件内相互调用） */
 extern uint32_t FUN_1400307C8(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,

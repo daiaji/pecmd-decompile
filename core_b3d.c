@@ -306,11 +306,6 @@ void PECMD_FillCharTable(uint16_t start, uint64_t *table)
 void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam)
 {
     uint64_t local_38 = 1;
-    uint64_t local_30 = 0;
-    uint64_t local_28 = lParam;
-    uint64_t local_20 = 0;
-    uint64_t local_18 = 0;
-    (void)local_30; (void)local_28; (void)local_20; (void)local_18;
     return (void *)SendMessageW(*(HWND *)((uint8_t *)wParam + OBJ_HWND), 0x465,
                                 wParam, (LPARAM)&local_38);
 }

@@ -25,31 +25,17 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                               uint64_t cap);
-extern DWORD FUN_1400195F0(uint64_t ctx, int64_t timeout, int mode,
-                           uint64_t *result);
 extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *out,
                           int64_t *err);
-extern int64_t PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len,
-                             void *p5);
-extern void FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int64_t a,
-                          int64_t b);
 extern HWND PECMD_FindTrayWindow(void);
-extern void FUN_1400F172C(void *a, int b, int c, uint64_t *d, void *e, int f,
-                          void *g);
 extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
 
 /* ---- 本批引用的全局数据 ---- */
 extern uint8_t PTR_FUN_1401234f0[];
-extern uint32_t g_msgWndState[2];
-extern uint8_t g_fgWndLock;
-extern HWND g_ownerWnd;
-extern HHOOK g_hookD710;
-extern void *DAT_14013d660;
 extern uint8_t g_flagD321;
 
 /* ========== FUN_140053DC8 @0x140053dc8 ==========

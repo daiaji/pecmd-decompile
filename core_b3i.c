@@ -95,7 +95,6 @@ extern void (*g_pGdipCreateBitmapFromHICON)();          /* GdipCreateBitmapFromH
 extern void (*g_pGdipCreateHBITMAPFromBitmap)();          /* GdipCreateHBITMAPFromBitmap */
 extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
 extern int64_t *g_pi64e118;
-extern int64_t g_i64E120;
 
 /* ========== PECMD_DispatchSpecialDirective @0x140040350 ==========
  * PATH 命令处理：@ 恢复当前目录，# 执行脚本，空串写默认 PATH。

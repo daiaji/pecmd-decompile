@@ -30,7 +30,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 本文件需要的本地补充类型 ---- */
 typedef struct {

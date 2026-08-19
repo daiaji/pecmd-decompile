@@ -14,7 +14,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ========== FUN_1400C0AD8 @0x1400c0ad8 ==========
  * [简化桩] 读取文件并计算哈希。返回 NULL。

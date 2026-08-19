@@ -21,11 +21,8 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
-extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
 extern void FUN_14005B0B8(void *p, size_t len);         /* @0x14005b0b8 */
 extern DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf, LPWSTR *last); /* @0x14006459c */
 extern void FUN_14004E2CC(int64_t table, int64_t *task);  /* @0x14004e2cc */

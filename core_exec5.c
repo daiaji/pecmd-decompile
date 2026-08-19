@@ -18,7 +18,6 @@ extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x14006
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern int64_t *FUN_14005B154(WCHAR **ps);               /* @0x14005b154 */
-extern void *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
 
 /* ========== FUN_140017CDC @0x140017cdc ==========
  * 脚本结构复制（0xe0 字节字段逐项复制，bit0 强制清除）。

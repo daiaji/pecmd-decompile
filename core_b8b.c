@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
 extern void FUN_1400F06FC(int64_t obj);            /* @0x1400f06fc */

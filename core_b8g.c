@@ -50,7 +50,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
 extern int64_t FUN_1400F40C8(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */

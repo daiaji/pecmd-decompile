@@ -60,10 +60,8 @@ typedef struct _APPBARDATA {
 #define ABM_GETTASKBARPOS 5
 
 /* ---- 本文件引用的全局 DATA ---- */
-extern uint8_t    g_u8CCB1;          /* MAIN_DBG 日志标志      */
 extern DWORD g_imgBufLen;          /* 位图数据大小           */
 extern WCHAR g_szEmpty[];       /* "" (空串)              */
-extern const WCHAR DAT_1401210f8[];       /* 关键字串 .rdata         */
 extern const WCHAR g_wsz28038[];       /* 关键字串 .rdata         */
 extern const WCHAR g_wsz27fc8[];       /* 关键字串 .rdata         */
 extern const WCHAR g_wsz27fd0[];       /* 关键字串 .rdata         */
@@ -87,7 +85,6 @@ extern void      FUN_14005b104(void *ps);                           /* @0x14005b
 extern void      PECMD_FreeContainer(void *ps);                           /* @0x14005b134 释放串资源   */
 extern void      FUN_14005b0b8(void *ps);                           /* @0x14005b0b8 对象初始化   */
 extern WCHAR    *FUN_14005b154(WCHAR **pp);                         /* @0x14005b154 跳过空白     */
-extern int       FUN_14005b184(char *buf, longlong a, longlong b);  /* @0x14005b184              */
 extern undefined8 FUN_14005b1a8(ushort *a, undefined8 *b, int c);   /* @0x14005b1a8              */
 extern undefined8 FUN_14005b2c0(void *a, LPCWSTR b, HWND c);        /* @0x14005b2c0              */
 extern LPCWSTR   FUN_14005b6ac(HINSTANCE, UINT, LPWSTR, int);       /* @0x14005b6ac 资源字符串   */
@@ -98,21 +95,16 @@ extern void      FUN_14005c828(const char *func, const char *dll, void **out,
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
 extern DWORD     FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                                BYTE *data, DWORD size);             /* @0x14005c5a0 RegSetValue  */
-extern LPWSTR    FUN_14005fc90(LPWSTR dst, uint32_t *guid, int mode);/* @0x14005fc90 GUID->string*/
 extern void      PECMD_OpenFileHandle(void *pH, LPCWSTR path, DWORD access, DWORD share,
                                void *sa, DWORD disp, DWORD flags, HANDLE tmpl); /* CreateFile 包装 */
 extern void      FUN_140003a20(void *script, WCHAR **str, int mode); /* @0x140003a20             */
 extern WCHAR    *PECMD_EnumerateVolume(longlong *a, longlong b, ulonglong c, LPCWSTR d); /* @0x140006aa0 */
 extern void      PECMD_CreateTempMutexDir(void *a, void *b, undefined8 *c, LPCWSTR d); /* @0x140008110   */
 extern void      PECMD_ScheduleSelfDelete(void *a, int b);                     /* @0x14000481c             */
-extern void      FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
-extern DWORD     FUN_1400195f0(uint64_t param_1, int64_t param_2, int param_3,
-                               undefined8 *param_4);                /* @0x1400195f0 消息泵       */
 extern WCHAR    *FUN_14001be14(WCHAR *s);                           /* @0x14001be14 前缀/标签查询 */
 extern undefined1 *FUN_14001d744(undefined1 *dst, longlong src, int len); /* @0x14001d744 搬移 */
 extern undefined1 *FUN_14001d78c(undefined1 *dst, undefined1 *src, int len); /* @0x14001d78c memcpy */
 extern longlong  PECMD_EnumNtSymbolicLink(LPWSTR a, longlong *b, longlong *c, longlong *d); /* @0x14001d8c8 */
-extern longlong  FUN_14001e69c(longlong *a, LPCWSTR b, longlong *c, int d); /* @0x14001e69c   */
 extern WCHAR    *FUN_140024c48(longlong *a, longlong *b, uint32_t c); /* @0x140024c48           */
 extern longlong  PECMD_RunCommand(longlong *a, pthreadmbcinfo b);      /* @0x140031454 执行命令    */
 extern void      FUN_14003c06c(void *a, void *b, uint c);           /* @0x14003c06c             */
@@ -129,7 +121,6 @@ extern void      FUN_140063620(void *out);                          /* @0x140063
 extern void      PECMD_AllocWStringBuffer(WCHAR **ps, longlong count);         /* @0x140063694 串分配      */
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, longlong count);         /* @0x140063720 串扩容      */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, LPCWSTR src);            /* @0x14006375c 串追加      */
-extern WCHAR    *FUN_1400637dc(WCHAR **ps, LPCSTR src, ulonglong a, ulonglong b); /* @0x1400637dc */
 extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, longlong len); /* @0x140063888       */
 extern char      FUN_1400660ac(const char *tok, WCHAR **pp, int n); /* @0x1400660ac 词比较      */
 extern void      FUN_1400669c4(longlong *a, undefined8 b, LPCWSTR c); /* @0x1400669c4 SetVarD   */
@@ -142,7 +133,6 @@ extern void      PECMD_RegReadWrap(void *a, LPCWSTR b, LPCWSTR c, longlong *d,
 extern undefined8 PECMD_StripDevicePrefix(longlong a);                       /* @0x14006acb8             */
 extern void      PECMD_HexStringToBytes(byte *a, byte *b);                   /* @0x14006ad9c             */
 extern undefined8 PECMD_Base64Decode(byte *a, undefined8 *b);            /* @0x14006ae00             */
-extern longlong *PECMD_InitStrContainer(longlong *a, LPCWSTR b, longlong c, ulonglong d); /* @0x140070294 */
 extern longlong *FUN_1400702f0(longlong *a, LPCSTR b, ulonglong c); /* @0x1400702f0 取串槽      */
 extern void      FUN_1400702b0(WCHAR **ps, const WCHAR *src);       /* @0x1400702b0 串赋值      */
 extern WCHAR    *FUN_14007034c(WCHAR **ps, const WCHAR *src);       /* @0x14007034c             */
@@ -152,14 +142,10 @@ extern void      FUN_14007d0ac(longlong *a, LPCWSTR b, LPCWSTR c);  /* @0x14007d
 extern undefined8 PECMD_ListDrives(undefined8 *a, WCHAR b, int c, int d,
                                 uint e, LPCWSTR f);                 /* @0x1400787b4             */
 extern undefined8 *FUN_14007f6e4(undefined8 *a, longlong *b, short c, byte d); /* @0x14007f6e4 */
-extern undefined8 FUN_14001e000(void);                              /* unused placeholder      */
-extern void      FUN_1400545fc(void);                               /* unused placeholder      */
 extern undefined8 FUN_1400a9a84(longlong *a, ulonglong *b);         /* @0x1400a9a84             */
 extern undefined8 FUN_1400e4d84(void);                              /* @0x1400e4d84             */
 extern undefined8 FUN_1400e4d94(undefined8 a);                      /* @0x1400e4d94             */
-extern undefined8 *FUN_1400e4e6c(undefined8 *a);                    /* @0x1400e4e6c             */
 extern void      FUN_1400e4e94(undefined8 *a);                      /* @0x1400e4e94             */
-extern undefined8 *FUN_1400e6cf8(undefined8 *a, longlong b, longlong c); /* @0x1400e6cf8    */
 extern ulonglong FUN_1400e7664(LPCWSTR a);                          /* @0x1400e7664             */
 extern longlong  FUN_1400e7758(longlong *a);                        /* @0x1400e7758             */
 extern longlong  FUN_1400e7840(longlong *a, int b);                 /* @0x1400e7840             */

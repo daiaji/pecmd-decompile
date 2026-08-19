@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint64_t PECMD_ParseCommandBlock(void *script, void **args, int count, uint64_t flags);

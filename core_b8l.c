@@ -34,9 +34,6 @@
 /* ---- 缺失平台声明/类型 (本文件局部) ---- */
 extern void *operator_new(size_t size);
 extern uint8_t PTR_FUN_14012c670[];
-extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
-                         uint32_t flags, LPVOID env, LPCWSTR cwd,
-                         STARTUPINFOW *si, PROCESS_INFORMATION *pi);
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);             /* @0x140067d20 */

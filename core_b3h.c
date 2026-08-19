@@ -52,7 +52,6 @@ extern int64_t *PECMD_CreateVariableNode(int64_t **a1, LPCWSTR a2);
 extern void FUN_1400e67e8(void);
 extern intptr_t FUN_14003E220(HWND a1, int a2, int16_t a3);
 extern uint64_t PECMD_ParseRegexAlternation(int *a1, wchar_t **a2, uint8_t *a3);
-extern uint64_t PECMD_ParseRegexQuantifier(int *a1, wchar_t **a2, char *a3);
 extern bool FUN_14005F1B0(uint64_t *a1, uint8_t *a2, uint64_t a3,
                           DWORD *a4);
 extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
@@ -94,7 +93,6 @@ extern void *g_pHookCb3d0;          /* 钩子回调对象 */
 extern HHOOK g_hHook2;
 extern uint32_t DAT_140147001;
 extern uint32_t g_flagD7FC;
-extern uint16_t u__DosDevices_C__140125ba0[];
 extern int32_t g_i1255d0[];
 
 /* ========== FUN_1400458A8 @0x1400458a8 ==========

@@ -24,7 +24,6 @@
 
 #include "pecmd_defs.h"
 #include "win32_stub.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 已有实现（core_exec2.c / core_string.c / core_thread.c / core_var3.c） */
 extern void *PECMD_ReallocBuffer(void *old, int64_t size);                    /* @0x140063224 */
@@ -34,9 +33,6 @@ extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch);             /* @0x14001b4f8 */
 
 /* 同批（core_scriptdep.c）：core_var3.c 已实现，此处仅声明供衔接核对 */
-extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);      /* @0x14001b5ac */
-extern uint16_t FUN_14001B510(void);                                   /* @0x14001b510 */
-
 /* 未实现辅助（TODO(verify) 挂起，语义待核对） */
 extern int32_t FUN_14005B184(const char *a, const char *b, int n);
 extern void FUN_140060A74(uint8_t *buf, int len);

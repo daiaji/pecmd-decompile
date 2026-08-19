@@ -92,7 +92,6 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
     DWORD local_res10[6];
     int64_t local_38[3];
     LPVOID local_20;
-    ulonglong local_18;
 
     uVar1 = PECMD_DetectFileEncoding(param_1);
     bVar3 = (char)uVar1 != '\0';
@@ -103,8 +102,6 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
         if (local_20 != (LPVOID)0) {
             FUN_14007026c(&local_20, (LPCSTR)0);
             PECMD_AllocSmallObject((undefined8 *)local_38);
-            local_18 = (ulonglong)local_res10[0];
-            (void)local_18;
             local_38[1] = 0;
             local_38[2] = 0;
             PECMD_EncodeBuffer((longlong *)&local_20, local_38, 0);
@@ -143,15 +140,10 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
     LPWSTR local_b8;
     char local_b0[32];
     uint64_t local_90;      /* WCHAR local_90 + uStack_8e (8 字节路径前缀) */
-    uint64_t local_88;
     uint64_t local_80;
-    uint32_t local_78;
     uint64_t local_70;
     uint64_t local_68;
-    uint32_t local_60;
     uint64_t local_58;
-    uint64_t local_50;      /* short local_50 + uStack_4e (8 字节路径前缀) */
-    uint32_t local_48;
 
     local_res10 = param_2;
     PECMD_LoadSetupApiFunctions();
@@ -190,10 +182,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
     }
     local_70 = g_u6426e70;
     local_68 = g_u646e78;
-    local_60 = g_u32126e80;
     local_80 = g_u64ee90;
-    local_78 = g_u3211ee98;
-    (void)local_60; (void)local_78;
     if (local_res18[0] < 0) {
         if (WVar9 != L'\0') {
             /* TODO(verify): CONCAT62 仅替换低位 WCHAR(盘符) */
@@ -230,12 +219,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
         cVar6 = (char)uVar8;
         if ((DVar2 >> (uVar8 & 0x1f) & 1) != 0) {
             local_58 = g_u6426e70;
-            local_48 = g_u32126e80;
-            local_88 = g_u3211ee98;
             /* TODO(verify): CONCAT62 仅替换低位 WCHAR(盘符) */
-            local_50 = (g_u646e78 & 0xFFFFFFFFFFFF0000ULL)
-                       | (uint64_t)(uint8_t)(cVar6 + 0x41);
-            (void)local_48; (void)local_88; (void)local_50;
             local_90 = (g_u64ee90 & 0xFFFFFFFFFFFF0000ULL)
                        | (uint64_t)(uint8_t)(cVar6 + 0x41);
             UVar3 = GetDriveTypeW((LPCWSTR)&local_90);

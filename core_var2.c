@@ -26,7 +26,6 @@
 
 #include "pecmd_defs.h"
 extern void *FUN_140063118(void *ptr, size_t size); /* @0x140063118 */
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 待重构函数原型 (后续批次) ---- */
 void PECMD_VarWrite_impl(void);   /* placeholder, 本文件实现 */

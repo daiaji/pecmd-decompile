@@ -43,8 +43,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
-
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_14004F788(int64_t obj);
 extern void FUN_140054B18(void *obj);

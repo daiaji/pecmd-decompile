@@ -32,7 +32,6 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 局部补充类型/API 声明 ---- */
 typedef void *HDROP;

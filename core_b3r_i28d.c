@@ -51,7 +51,6 @@ extern void      FUN_1400b1724(void *script, LPCWSTR p);  /* 脚本执行循环 
 extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符串设置 */
 extern uint32_t  FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
-extern void      FUN_1400BEF64(LPCWSTR cmd);              /* 蜂鸣 + 执行脚本 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *p, char c);   /* 清空串 */
 extern void      FUN_140067F90(int64_t *ps);              /* '&' -> '&&' 转义 */
 extern void      FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,

@@ -41,7 +41,6 @@ extern void    PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWO
                               HANDLE tmpl);                      /* @0x140003864 */
 extern WCHAR  *FUN_14001BE14(WCHAR *s);                       /* @0x14001be14 */
 extern void   *PECMD_AllocSmallObject(void **ps);                          /* @0x140063344 小对象 */
-extern void    FUN_1400633A8(void **ps, int64_t len);             /* @0x1400633a8 */
 extern void    FUN_140060A74(uint8_t *buf, int len);           /* @0x140060a74 */
 extern int32_t FUN_14005B184(const char *a, const char *b, int n);/* @0x14005b184 0=相等 */
 extern void    FUN_14005B0B8(void *p, size_t len);               /* @0x14005b0b8 */

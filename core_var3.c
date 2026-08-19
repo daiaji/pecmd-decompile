@@ -19,16 +19,10 @@
 #include <stdbool.h>
 
 #include "pecmd_defs.h"
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 
-/* 内部：单个变量节点插入 (operator_new(0x20) 布局) */
-extern int64_t *PECMD_VarNodeNew(int64_t *node, LPCWSTR name, LPCWSTR value, int len, uint64_t cap);
-/* 内部：直接写值 (无锁) */
-extern void PECMD_VarWriteDirect(void *script, LPCWSTR key, LPCWSTR value);
-
+/* 内部：变量查找 (无锁) */
 extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                               int64_t len, void **out); /* @0x140018978 */
 
