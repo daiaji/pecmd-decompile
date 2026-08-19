@@ -1182,3 +1182,6 @@ int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);   /* DAT_140
 void (*g_pWIMCloseHandleSlot)();   /* DAT_14013d488 */
 int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);   /* DAT_14013d3b0 */
 int (*g_pGetSaveFileNameW)(void);   /* DAT_14013d430 */
+/* ---- 阶段6 深挖 ---- */
+OSVERSIONINFOW g_osVersionInfo;   /* DAT_14013cb90 */
+int32_t g_aiDiskType[2];          /* DAT_14013d770 磁盘类型缓存 */

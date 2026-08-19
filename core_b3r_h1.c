@@ -28,7 +28,7 @@ extern uint32_t         g_randSeedAccum;     /* 随机种子累加 */
 extern uint8_t          g_u8CCB1;     /* MAIN_DBG 日志标志 */
 extern HANDLE           g_hStdIn;     /* 标准输入句柄 */
 extern uint8_t          g_b24d00[];   /* 文件读缓冲区数据 (.rdata) */
-extern int32_t          DAT_14013d770[];   /* 磁盘类型缓存 */
+extern int32_t g_aiDiskType[];   /* 磁盘类型缓存 */
 extern uint32_t         g_u322570;     /* 卷信息格式串第一字 (int32) */
 extern uint16_t         g_u162574;     /* 卷信息格式串第二字 (int16) */
 extern uint16_t         g_u16127d30[];   /* "--xxx" 宽串常量 */
@@ -1817,7 +1817,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
                         if (cVar4 == '\0') {
                             cVar4 = FUN_1400660ac("-clear", (WCHAR **)&local_res10, 6);
                             if (cVar4 != '\0') {
-                                memset((void *)&DAT_14013d770, 0, 8);
+                                memset((void *)&g_aiDiskType, 0, 8);
                                 pWVar12 = (LPCWSTR)0x0;
                                 goto LAB_140094bba;
                             }
@@ -1928,7 +1928,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
         else {
 LAB_1400949c9:
             local_res10 = (LPWSTR)0x0;
-            if (((1 < iVar13) || (*(int *)((intptr_t)&DAT_14013d770 + (int64_t)iVar13 * 4) == 0)) &&
+            if (((1 < iVar13) || (*(int *)((intptr_t)&g_aiDiskType + (int64_t)iVar13 * 4) == 0)) &&
                 (*local_130 != L'\0')) {
                 PECMD_OpenFileHandle((HANDLE *)&local_res10, pWVar14, 0x80000000, 3,
                               (LPSECURITY_ATTRIBUTES)0x0, 3, 0x20000000, (HANDLE)0x0);

@@ -138,6 +138,18 @@ extern void *g_pImDiskRemoveMountPoint;  /* DAT_14013d0d0 ImDiskRemoveMountPoint
 extern void *g_pImDiskStartService;      /* DAT_14013d0d8 ImDiskStartService */
 extern void *g_pImDiskCreateMountPoint;  /* DAT_14013d0e0 ImDiskCreateMountPoint */
 
+/* ---- 阶段6 全局结构 typedef ---- */
+typedef struct tagOSVERSIONINFOW {
+    DWORD   dwOSVersionInfoSize;
+    DWORD   dwMajorVersion;
+    DWORD   dwMinorVersion;
+    DWORD   dwBuildNumber;
+    DWORD   dwPlatformId;
+    WCHAR   szCSDVersion[128];
+} OSVERSIONINFOW;
+extern OSVERSIONINFOW g_osVersionInfo;   /* DAT_14013cb90 */
+extern int32_t g_aiDiskType[2];   /* DAT_14013d770 */
+
 #endif /* PECMD_DEFS_H */
 extern int64_t g_randState;   /* DAT_14013a358 */
 extern int64_t g_lcgState;    /* DAT_14013a360 */
@@ -634,3 +646,4 @@ extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);   /* 
 extern void (*g_pWIMCloseHandleSlot)();   /* DAT_14013d488 */
 extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);   /* DAT_14013d3b0 */
 extern int (*g_pGetSaveFileNameW)(void);   /* DAT_14013d430 */
+

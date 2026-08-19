@@ -136,14 +136,6 @@ extern void FUN_14005DAF8(int64_t a1, int *a2, int *a3,
                              int *a4, int *a5);
 
 /* ---- 未覆盖原生 API / CRT 声明 ---- */
-typedef struct {
-    DWORD dwOSVersionInfoSize;
-    DWORD dwMajorVersion;
-    DWORD dwMinorVersion;
-    DWORD dwBuildNumber;
-    DWORD dwPlatformId;
-    WCHAR szCSDVersion[128];
-} OSVERSIONINFOW;
 extern BOOL GetVersionExW(OSVERSIONINFOW *);
 extern void RtlGetNtVersionNumbers(DWORD *, DWORD *, DWORD *);
 extern void SetLocalTime(SYSTEMTIME *);

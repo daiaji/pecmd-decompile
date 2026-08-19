@@ -501,7 +501,7 @@ extern void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);
 extern uint8_t PTR_FUN_140126b20[];
 /* ---- batch b3 恢复函数所需辅助/data extern (PECMD_GenerateTimeText/08bcd4 等) ---- */
 extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int); /* MultiByteToWideChar-ish @0x14013c970 */
-extern int32_t DAT_14013d770[];                               /* @0x14013d770 磁盘类型缓存 */
+extern int32_t g_aiDiskType[];                               /* @0x14013d770 磁盘类型缓存 */
 extern uint32_t g_u32127758;                                /* GUID 组合数据 @0x140127758 */
 extern uint32_t g_u32127760;
 extern uint32_t g_u32127768;
@@ -6019,8 +6019,6 @@ LAB_140053001:
     if (((*local_ac8 == L'\0') && (local_ac8 = local_c48, 0 < local_b78)) && (local_b40 == 0)) {
         local_bb8 = 0;
         local_res20 = local_c48;
-        iVar9 = lstrlenW(local_c48);
-        local_res10 = (LPWSTR)(uintptr_t)(uint32_t)iVar9; /* TODO(verify) CONCAT44 packing (dead store) */
         WVar5 = *local_res20;
         pWVar36 = pwVar12;
         while (WVar5 != L'\0') {
@@ -9474,7 +9472,7 @@ LAB_140060512:
     if (hDevice == INVALID_HANDLE_VALUE) {
         uVar5 = 0;
     } else {
-        local_328 = CONCAT44((uint32_t)(local_328 >> 32), 0xa0000003);
+        local_328 = 0xa0000003;
         iVar4 = lstrlenW(param_2);
         *(uint16_t *)((char *)local_320 + 2) = (uint16_t)(iVar4 * 2);
         *(uint16_t *)((char *)local_320 + 4) = *(uint16_t *)((char *)local_320 + 2) + 2;
@@ -11278,8 +11276,8 @@ int PECMD_QueryDiskGeometry(HANDLE param_1, uint64_t *param_2, int param_3, int 
         param_2 = local_res10;
     }
     local_res18[0] = 0;
-    if ((param_4 < 2) && (*(int *)((intptr_t)&DAT_14013d770 + lVar4 * 4) != 0)) {
-        iVar3 = (int)*(int16_t *)((intptr_t)&DAT_14013d770 + lVar4 * 4);
+    if ((param_4 < 2) && (*(int *)((intptr_t)&g_aiDiskType + lVar4 * 4) != 0)) {
+        iVar3 = (int)*(int16_t *)((intptr_t)&g_aiDiskType + lVar4 * 4);
     } else {
         FUN_140102a90(param_2, 0, 0x18);
         BVar1 = DeviceIoControl(param_1, 0x70000, (LPVOID)0x0, 0, param_2, 0x18,
@@ -11295,12 +11293,12 @@ int PECMD_QueryDiskGeometry(HANDLE param_1, uint64_t *param_2, int param_3, int 
         } else {
             iVar3 = (int)param_2[1];
         }
-        if ((param_4 < 2) && (*(int *)((intptr_t)&DAT_14013d770 + lVar4 * 4) == 0)) {
+        if ((param_4 < 2) && (*(int *)((intptr_t)&g_aiDiskType + lVar4 * 4) == 0)) {
             iVar2 = -0x800000;
             if (iVar3 != 0) {
                 iVar2 = iVar3;
             }
-            *(int *)((intptr_t)&DAT_14013d770 + lVar4 * 4) = iVar2;
+            *(int *)((intptr_t)&g_aiDiskType + lVar4 * 4) = iVar2;
         }
     }
     if ((param_3 == 0) && (iVar3 == 0xc)) {
@@ -15453,7 +15451,7 @@ int64_t PECMD_ExecWindowThread(int64_t *param_1, uint64_t param_2, int64_t *para
     cVar3 = (char)FUN_14007fcd4((int64_t *)&local_res20, &local_70);
     iVar15 = (int)cVar3;
     WVar12 = *local_res20;
-    local_60 = CONCAT44((uint32_t)(local_60 >> 32), iVar15);
+    local_60 = (uint32_t)iVar15;
     plVar14 = plVar19;
     if (WVar12 != L'\0') {
         plVar14 = (int64_t *)(uint64_t)(uint16_t)local_res20[1];
@@ -15675,7 +15673,7 @@ LAB_1400817c9:
     FUN_14005e3ac(plVar7, uVar4, (uint64_t)(uintptr_t)local_80, &local_70);
     FUN_1400668ec(param_1, (uint64_t)plVar7[4], WSTR("&&__LastWinID"), WSTR("0x%I64X"));
     uVar4 = FUN_1400e91f0(plVar7, 0);
-    local_90 = (int64_t *)CONCAT44((uint32_t)((uint64_t)(uintptr_t)local_90 >> 32), uVar4);
+    local_90 = (int64_t *)(uintptr_t)(uint32_t)uVar4;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     *(uint64_t *)(_Memory.QuadPart + 0x40) = 0;
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -18823,7 +18821,6 @@ uint64_t PECMD_DispatchCommandObject(WPARAM param_1, int64_t *param_2, int64_t *
     uint64_t uVar3;
     uint64_t *puVar4;
     uint64_t *puVar5;
-    uint32_t stack_d4 = 0;   /* TODO(verify): Ghidra 溢栈 in_stack_ffffffffffffffd4 残余 */
 
     psVar2 = (uint16_t *)PECMD_SendCtrlMessage_0834(param_1, (uint64_t)(uintptr_t)g_szEmpty);
     puVar5 = (uint64_t *)0;
@@ -18839,7 +18836,7 @@ uint64_t PECMD_DispatchCommandObject(WPARAM param_1, int64_t *param_2, int64_t *
                 (uint64_t)((int)((((int64_t)psVar2 - lVar1) >> 3) + 0x1000)), param_4,
                 (uint32_t)param_5, (uint32_t)param_6, (uint32_t)param_7, (uint32_t)param_8,
                 param_9, param_10, param_11, psVar2,
-                CONCAT44(stack_d4, *(uint32_t *)(param_1 + 0x17c)), param_12);
+                *(uint32_t *)(param_1 + 0x17c), param_12);
         }
         *(uint64_t **)psVar2 = puVar5;
         FUN_14005d9a8(param_1, 0);

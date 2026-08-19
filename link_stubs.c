@@ -599,7 +599,6 @@ uint64_t PTR_FUN_14012cf00;
 uint64_t PTR__purecall_140126050;
 uint64_t PTR_u_CallBackhWnd_14011e668_2_14013a288;
 uint64_t PTR_u_Shell_14011ddb8_2_14013a290;
-uint32_t DAT_14013cb90[4];
 uint8_t  GetCommandLineW_exref[8];
 uint64_t PTR_FUN_140126080;
 uint64_t PTR_FUN_1401272a8;
@@ -813,9 +812,6 @@ uint64_t CreateProcessAsUserW(void){ return 0; }
 uint64_t CreateProcessWithLogonW(void){ return 0; }
 uint64_t FileTimeToSystemTime(void){ return 0; }
 int (*DAT_14013c970)(uint32_t, uint32_t, char *, int);
-int32_t DAT_14013d770[16];
-
-
 /* --- r39 follow-up stubs (main-agent closure) --- */
 uint64_t IsRectEmpty(void){ return 0; }
 uint64_t CreateDCW(void){ return 0; }

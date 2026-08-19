@@ -7113,10 +7113,7 @@ int64_t FUN_14003ED4C(int64_t *script, LPCWSTR cmd)
   uint8_t local_4158 [256];
   WCHAR local_4058 [1279];
   uint16_t local_365a;
-  uint64_t uStack_48;
   
-  uStack_48 = 0x14003ed6c;
-  (void)uStack_48;
   local_res10 = cmd;
   PECMD_SkipLeadingControls(&local_res10);
   plVar26 = (int64_t *)0x0;

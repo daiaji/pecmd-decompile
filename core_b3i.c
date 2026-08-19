@@ -373,7 +373,7 @@ uint64_t *FUN_14005FEAC(HANDLE hDevice, uint64_t *info, uint32_t *outSize)
     if (BVar1 == 0) {
         info = NULL;
     } else {
-        *outSize = *(uint32_t *)((int64_t)info + 4);
+        *outSize = *(uint32_t *)((uint8_t *)info + 4);
     }
     return info;
 }
@@ -742,15 +742,8 @@ void FUN_1400AA484(uint64_t *obj)
 void FUN_1400B8960(HANDLE hFont, int *size, LPCWSTR name)
 {
     int local_68 = 0;
-    uint64_t local_64 = 0;
-    uint32_t local_58 = 400;
-    uint8_t local_51 = 1;
-    memset(&local_64, 0, 0x58);
     GetObjectW((HGDIOBJ)hFont, 0x5c, &local_68);
-    local_64 = (local_64 & ~0xffffffffULL) | 0;  /* _0_4_ = 0 */
     FUN_1400B2218(&local_68, size, name);
-    (void)local_58;
-    (void)local_51;
 }
 
 /* ========== FUN_1400BCBE0 @0x1400bcbe0 ==========

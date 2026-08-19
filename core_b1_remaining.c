@@ -327,14 +327,6 @@ typedef HANDLE (*FFVW_t)(LPWSTR, DWORD);
 typedef BOOL   (*FNFVW_t)(HANDLE, LPWSTR, DWORD);
 
 /* ---- B1 剩余 18 函数还原(B2)所需: 额外 helper/全局 extern ---- */
-typedef struct tagOSVERSIONINFOW {
-    DWORD   dwOSVersionInfoSize;
-    DWORD   dwMajorVersion;
-    DWORD   dwMinorVersion;
-    DWORD   dwBuildNumber;
-    DWORD   dwPlatformId;
-    WCHAR   szCSDVersion[128];
-} OSVERSIONINFOW;
 
 typedef struct tagPROCESSENTRY32W {
     DWORD   dwSize;
@@ -428,7 +420,7 @@ extern uint8_t  g_u8CA49;      /* CPU 计数 */
 extern int      g_ramdrivFlag;      /* Ramdriv 标志 */
 extern int      g_readBufSize;      /* 读取缓冲大小 */
 extern DWORD    g_dwC934;      /* Tls 索引 */
-extern uint32_t DAT_14013cb90[4];   /* OSVERSIONINFOW 于 14013cb90 */
+extern OSVERSIONINFOW g_osVersionInfo;   /* OSVERSIONINFOW 于 14013cb90 */
 extern uint8_t  GetCommandLineW_exref[]; /* GetCommandLineW 导入引用 */
 
 /* ---- 本批(B1 剩余 10 个)还原所需: 额外 helper / 全局 extern ---- */
@@ -3860,7 +3852,6 @@ uint32_t PECMD_SearchComObject(uint64_t param_1, uint64_t param_2, LPCWSTR param
     int64_t *local_e0;
     LPCWSTR local_d8;
     uint16_t local_d0;
-    uint8_t uStack_ce[6];
     int64_t local_c8;
     uint64_t local_c0;
     LPCWSTR local_b8;
@@ -4012,7 +4003,7 @@ uint32_t PECMD_SearchComObject(uint64_t param_1, uint64_t param_2, LPCWSTR param
     }
     uVar7 = 1;
 LAB_14000c361:
-    (void)local_d0; (void)uStack_ce; (void)local_a0; (void)local_98;
+    (void)local_d0; (void)local_a0; (void)local_98;
     LeaveCriticalSection(&g_csCom);
     return uVar7;
 }
@@ -4856,13 +4847,13 @@ uint64_t PECMD_MapPhysicalMemoryNT5(void)
     uint64_t local_10;
     (void)local_30; (void)local_28; (void)local_20; (void)local_18; (void)local_10;
 
-    DAT_14013cb90[0] = 0x114;   /* dwOSVersionInfoSize */
-    GetVersionExW((OSVERSIONINFOW *)DAT_14013cb90);
-    if (DAT_14013cb90[1] == 5) {                 /* dwMajorVersion == 5 */
-        if (DAT_14013cb90[2] == 0) {             /* dwMinorVersion == 0 */
+    g_osVersionInfo.dwOSVersionInfoSize = 0x114;   /* dwOSVersionInfoSize */
+    GetVersionExW(&g_osVersionInfo);
+    if (g_osVersionInfo.dwMajorVersion == 5) {                 /* dwMajorVersion == 5 */
+        if (g_osVersionInfo.dwMinorVersion == 0) {             /* dwMinorVersion == 0 */
             dwFileOffsetLow = 0x30000;
         } else {
-            if (DAT_14013cb90[2] != 1) {
+            if (g_osVersionInfo.dwMinorVersion != 1) {
                 return 0;
             }
             dwFileOffsetLow = 0x39000;

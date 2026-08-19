@@ -88,13 +88,6 @@ bool FUN_14005B2C0(uint64_t *obj, LPCWSTR cmd, HWND hwnd)
     int iVar1 = lstrcmpiW(cmd, WSTR("*del"));
     if (iVar1 == 0) {
         uint64_t local_58 = 4;
-        uint64_t local_50 = 0;
-        void *local_40 = &DAT_14013d660;
-        uint64_t local_38 = 0;
-        uint64_t *local_48 = obj;
-        (void)local_50; (void)local_40; (void)local_38; (void)local_48;
-        uint8_t local_30[0x28];
-        memset(local_30, 0, sizeof(local_30));
         *(uint8_t *)obj[3] = 0;
         *(uint16_t *)obj[2] = 0;
         SendMessageW(hwnd, 0x465, *(WPARAM *)(obj[10] + 0x40), (LPARAM)&local_58);
@@ -338,6 +331,6 @@ void PECMD_LoadImageListApi(void)
         FUN_14005C828("ImageList_Destroy", "Comctl32.DLL", (int64_t *)(void **)&g_pFnCleanup, local_res8);
         FUN_14005C828("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
         FUN_14005C828("ImageList_Add", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListAdd, local_res8);
-        g_flagD321 = (uint8_t)((-(g_pImageListAdd != 0) & 2U) - 1);
+        g_flagD321 = (g_pImageListAdd != 0) ? 1 : 0xff;
     }
 }
