@@ -3388,7 +3388,6 @@ uint64_t PECMD_LoadFileMappingExec(LPCWSTR param_1, int64_t *param_2, int64_t *p
 {
     /* @0x1400091e0 size=833 构造 PECMD LOAD 映射命令并启动子进程(或回填 param_2) */
     int iVar2;
-    int iVar3;
     HANDLE hFileMappingObject;
     int64_t *lpBaseAddress;
     HANDLE *ppvVar4;
@@ -8588,8 +8587,10 @@ uint8_t PECMD_WriteBackTextCRLF(int64_t param_1, LPCWSTR param_2)
     uVar5 = 0;
     local_230 = 0;
     local_228 = 0;
+    (void)local_230;
+    (void)local_228;
     iVar2 = FUN_14001ebdc(param_2, (int64_t *)&local_238);
-    pWVar3 = (WCHAR *)FUN_14005b6ac(DAT_14013ca68, 0x271d, local_218, 0x104);
+    pWVar3 = (WCHAR *)(uintptr_t)FUN_14005b6ac(DAT_14013ca68, 0x271d, local_218, 0x104);
     if (iVar2 != -2) {
         if (iVar2 == -1) {
             SetWindowTextW(*(HWND *)(param_1 + 0xa8), pWVar3);

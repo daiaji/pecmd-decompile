@@ -4187,7 +4187,7 @@ uint64_t FUN_14004e488(int64_t param_1, LPCWSTR param_2, uint64_t param_3, uint6
                 pWVar8 = pWVar8 + 1) {
             }
             if (WVar3 == *pWVar8) {
-                FUN_1400702d4(&local_50, pWVar9, (int64_t)((int64_t)local_res8 - (int64_t)pWVar9 >> 1));
+                FUN_1400702d4(&local_50, pWVar9, (int64_t)(((int64_t)local_res8 - (int64_t)pWVar9) >> 1));
                 for (local_res8 = pWVar8 + 1;
                     (((WVar3 = *local_res8, *(WCHAR *)(param_1 + 0x92) == WVar3 ||
                       (*(WCHAR *)(param_1 + 0x94) == WVar3)) || (*(WCHAR *)(param_1 + 0x8a) == WVar3)) ||
@@ -5182,7 +5182,7 @@ uint64_t FUN_140051610(int *param_1, WCHAR **param_2, char *param_3)
     else {
         if (*pwVar1 == L'!') {
             *param_2 = pwVar1 + 1;
-            uVar5 = FUN_140050cb0(param_1, (uint64_t)(uintptr_t)param_2, (uint64_t)(uintptr_t)param_3);
+            uVar5 = FUN_140050cb0((uint32_t *)param_1, (uint64_t)(uintptr_t)param_2, (uint64_t)(uintptr_t)param_3);
             return uVar5;
         }
         if ((((*pwVar1 != L'}') && (*pwVar1 != L']')) && (*pwVar1 != L')')) && (*pwVar1 != L'\0')) {
@@ -8355,22 +8355,22 @@ uint64_t FUN_140057940(WPARAM param_1, HWND param_2, uint16_t *param_3)
     }
     for (; (uVar2 = *local_60 & 0xffdf, 0x40 < uVar2 && (uVar2 < 0x5b)); local_60 = local_60 + 1) {
         if (uVar2 == 0x43) {
-            uVar4 = uVar4 & 0xfd | 0x11;
+            uVar4 = (uVar4 & 0xfd) | 0x11;
         }
         else if (uVar2 == 0x52) {
-            uVar4 = uVar4 & 0xfe | 0x12;
+            uVar4 = (uVar4 & 0xfe) | 0x12;
         }
         else if (uVar2 == 0x4c) {
-            uVar4 = uVar4 & 0xfc | 0x10;
+            uVar4 = (uVar4 & 0xfc) | 0x10;
         }
         else if (uVar2 == 0x56) {
-            uVar4 = uVar4 & 0xff | 0x20;
+            uVar4 = (uVar4 & 0xff) | 0x20;
         }
         else if (uVar2 == 0x46) {
-            uVar4 = uVar4 & 0xf7 | 0x80;
+            uVar4 = (uVar4 & 0xf7) | 0x80;
         }
         else if (uVar2 == 0x45) {
-            uVar4 = uVar4 & 0x7f | 8;
+            uVar4 = (uVar4 & 0x7f) | 8;
         }
     }
     if (*local_60 != 0) {
@@ -8392,6 +8392,12 @@ uint64_t FUN_140057940(WPARAM param_1, HWND param_2, uint16_t *param_3)
     local_28 = (int64_t)(int)uVar4;
     local_20 = 0;
     local_30 = local_60;
+    (void)local_48;
+    (void)local_40;
+    (void)local_38;
+    (void)local_28;
+    (void)local_20;
+    (void)local_30;
     SendMessageW(param_2, 0x45b, param_1, (LPARAM)&local_50);
     return 1;
 }
@@ -9229,6 +9235,9 @@ DWORD FUN_14005ccb0(int param_1, void *param_2, void *param_3, uint16_t *param_4
         bVar2 = true;
         local_28c = 2;
     }
+    (void)local_290;
+    (void)local_28c;
+    (void)local_288;
     if ((iVar4 != 0) && (param_1 != 5)) {
         iVar4 = SetupDiChangeState(param_3, param_2);
     }
@@ -9495,6 +9504,7 @@ void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_
         *(int *)(param_1 + 0x28) = local_14 + local_res8.y;
     }
     local_20 = param_1;
+    (void)local_20;
     {
         void (**fnptr)(int64_t *, uint32_t, uint64_t) =
             (void (**)(int64_t *, uint32_t, uint64_t))(*param_1 + 0x10);
@@ -9516,7 +9526,6 @@ uint16_t PECMD_RegisterHotkeyCmd(int64_t param_1, char param_2, uint param_3)
     LPSTR pStr;
     char *pCur;
     CHAR local_e8;
-    char acStack_e7[207];
 
     lstrcpyA(&local_e8, "PECMD_HotKEY_");
     len = lstrlenA(&local_e8);
@@ -18061,6 +18070,10 @@ uint32_t FUN_14008ba90(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPC
         }
         sVar6 = sVar6 + 1;
     } while (1);
+    (void)local_50;
+    (void)local_48;
+    (void)local_40;
+    (void)local_3c;
 }
 
 int64_t PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t param_3, uint64_t param_4,

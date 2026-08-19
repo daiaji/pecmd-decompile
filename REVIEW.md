@@ -3385,3 +3385,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 其定义体实为 `memset(p,value,count)` 字节填充；唯一调用点 `FUN_140005390(puVar1,0,100)`→`memset(puVar1,0,100)`，
   删定义+桩。b1 有 string.h。build/link 绿。
 - Item(1) mem 家族(memcpy/memmove/memset)全库真库化达成；CRT 数学/字符串(0x14010-11)为未调用死桩，登记待删/标注。
+## 84. 机械安全警告清零（全库警告 108→81）
+- b1_remaining 清 4、b3_remaining 清 23（unused-but-set/unused/parentheses/pointer-sign/int-ptr cast），
+  行为类(cast-function-type/sign-compare/type-limits/shift/incompatible/builtin)不变。
+- 结果：全库警告 **81**，其中机械安全项已清零；余者全为行为相关（登记）。
