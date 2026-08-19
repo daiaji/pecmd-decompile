@@ -1,0 +1,327 @@
+/* ========== FUN_1400c36c8 @ 1400c36c8 ========== */
+/* signature: undefined8 __fastcall FUN_1400c36c8(LPCWSTR param_1, longlong param_2, int param_3) */
+
+ulonglong FUN_1400c36c8(LPCWSTR param_1,longlong param_2,int param_3)
+
+{
+  int iVar1;
+  WCHAR WVar2;
+  int iVar3;
+  LPCWSTR pWVar4;
+  ulonglong uVar5;
+  int iVar6;
+  ulonglong uVar8;
+  LPCWSTR local_res8;
+  ulonglong local_res20;
+  ulonglong uVar7;
+  
+  local_res20 = 0;
+  if (*param_1 == L'\0') {
+LAB_1400c3806:
+    local_res20 = 0;
+  }
+  else {
+    local_res8 = param_1;
+    if ((((ushort)*param_1 < 0x30) || (0x39 < (ushort)*param_1)) && (*param_1 != L'(')) {
+      while( true ) {
+        uVar5 = 0;
+        iVar1 = **(int **)(param_2 + 0x1a8);
+        WVar2 = *param_1;
+        pWVar4 = param_1;
+        uVar8 = uVar5;
+        while ((uVar7 = uVar5, WVar2 != L'\0' && (WVar2 != L':'))) {
+          uVar8 = uVar8 + 1;
+          pWVar4 = pWVar4 + 1;
+          WVar2 = *pWVar4;
+        }
+        while( true ) {
+          iVar6 = (int)uVar7;
+          if (iVar1 + -1 <= iVar6) goto LAB_1400c3806;
+          if (((param_3 < 1) ||
+              (*(int *)(*(longlong *)(**(longlong **)(param_2 + 0x1a0) + uVar5 * 8) + 8) == param_3)
+              ) && ((pWVar4 = *(LPCWSTR *)
+                               (*(longlong *)(**(longlong **)(param_2 + 0x1a0) + uVar5 * 8) + 0x10),
+                    pWVar4 != (LPCWSTR)0x0 &&
+                    ((iVar3 = StrCmpNIW(param_1,pWVar4,(int)uVar8), iVar3 == 0 &&
+                     (pWVar4[uVar8] == L'\0')))))) break;
+          uVar5 = uVar5 + 1;
+          uVar7 = (ulonglong)(iVar6 + 1);
+        }
+        if ((param_1[uVar8] == L'\0') || (param_1 = param_1 + uVar8 + 1, *param_1 == L'\0')) break;
+        param_2 = *(longlong *)(*(longlong *)(**(longlong **)(param_2 + 0x1a0) + uVar5 * 8) + 0x38);
+      }
+      local_res20 = *(ulonglong *)(**(longlong **)(param_2 + 0x1a0) + (longlong)iVar6 * 8);
+    }
+    else {
+      FUN_1400c1194((longlong *)&local_res8,&local_res20);
+    }
+  }
+  return local_res20;
+}
+
+/* ========== FUN_1400c42ac @ 1400c42ac ========== */
+/* signature: undefined8 __fastcall FUN_1400c42ac(HKEY param_1, LPCWSTR param_2) */
+
+undefined8 FUN_1400c42ac(HKEY param_1,LPCWSTR param_2)
+
+{
+  WCHAR *pWVar1;
+  LPWSTR pWVar2;
+  LPCWSTR pWVar3;
+  LPCWSTR pWVar4;
+  int iVar5;
+  int iVar6;
+  LPCWSTR local_res10;
+  undefined8 local_res18;
+  int local_res20 [2];
+  short *local_38;
+  short *local_30;
+  
+  local_res10 = param_2;
+  FUN_14005b154((longlong *)&local_res10);
+  pWVar1 = StrRChrW(local_res10,(LPCWSTR)0x0,L',');
+  if (pWVar1 != (LPWSTR)0x0) {
+    *pWVar1 = L'\0';
+    pWVar1 = pWVar1 + 1;
+  }
+  pWVar2 = StrRChrW(local_res10,(LPCWSTR)0x0,L',');
+  if (pWVar2 != (LPWSTR)0x0) {
+    *pWVar2 = L'\0';
+    pWVar2 = pWVar2 + 1;
+  }
+  local_res20[0] = 0;
+  local_res18._0_4_ = 0;
+  FUN_140063620(&local_38);
+  iVar6 = 0;
+  if (pWVar2 != (LPWSTR)0x0) {
+    *local_38 = 0;
+    FUN_14007bf44((longlong *)param_1,pWVar1,&local_38,0,1);
+    local_30 = local_38;
+    FUN_1400c11c0(&local_30,(int *)&local_res18);
+    pWVar1 = pWVar2;
+    iVar6 = (int)local_res18;
+  }
+  iVar5 = 0;
+  if (pWVar1 != (WCHAR *)0x0) {
+    *local_38 = 0;
+    FUN_14007bf44((longlong *)param_1,pWVar1,&local_38,0,1);
+    local_30 = local_38;
+    FUN_1400c11c0(&local_30,local_res20);
+    iVar5 = local_res20[0];
+  }
+  FUN_1400702b0(&local_res18,L"$HKCU\\Software\\Microsoft\\Internet Explorer\\Main\\Start Page=");
+  *local_38 = 0;
+  FUN_14007a224((longlong *)param_1,local_res10,&local_38,0,0);
+  pWVar3 = FUN_14001be14(local_38);
+  FUN_14006375c(&local_res18,pWVar3);
+  FUN_1400c13f8(param_1,(HKEY)CONCAT44(local_res18._4_4_,(int)local_res18),'\x01');
+  FUN_14007034c(&local_res18,
+                L"#HKCU\\Software\\Policies\\Microsoft\\Internet Explorer\\Control Panel\\HomePage="
+               );
+  pWVar4 = &DAT_14011c638;
+  pWVar3 = &DAT_14011c638;
+  if (iVar5 != 0) {
+    pWVar3 = L"1";
+  }
+  FUN_14006375c(&local_res18,pWVar3);
+  FUN_1400c13f8(param_1,(HKEY)(CONCAT44(local_res18._4_4_,(int)local_res18) +
+                              (ulonglong)(iVar5 == 0) * 2),'\0');
+  FUN_14007034c(&local_res18,
+                L"#HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\DisableRegistryTools="
+               );
+  if (iVar6 != 0) {
+    pWVar4 = L"1";
+  }
+  FUN_14006375c(&local_res18,pWVar4);
+  FUN_1400c13f8(param_1,(HKEY)(CONCAT44(local_res18._4_4_,(int)local_res18) +
+                              (ulonglong)(iVar6 == 0) * 2),'\0');
+  FUN_14005b104(&local_res18);
+  FUN_14005b104((longlong *)&local_38);
+  return 0;
+}
+
+/* ========== FUN_1400c99b4 @ 1400c99b4 ========== */
+/* signature: int __fastcall FUN_1400c99b4(longlong param_1, longlong * param_2, longlong * param_3, int * param_4, char * param_5, uint * param_6, short param_7) */
+
+int FUN_1400c99b4(longlong param_1,longlong *param_2,longlong *param_3,int *param_4,char *param_5,
+                 uint *param_6,short param_7)
+
+{
+  char cVar1;
+  short sVar2;
+  char *pcVar3;
+  uint *puVar4;
+  uint uVar5;
+  ulonglong uVar6;
+  LPCWSTR pWVar7;
+  int local_res8 [2];
+  
+  pcVar3 = param_5;
+  cVar1 = *param_5;
+  *param_5 = '\0';
+  *param_4 = -0x80000000;
+  *(undefined4 *)(param_1 + 4) = 0;
+  local_res8[0] = -0x80000000;
+  param_5._0_4_ = 0x32;
+  if (*(short *)*param_2 == 0x23) {
+    *param_2 = (longlong)((short *)*param_2 + 1);
+    FUN_1400c11c0(param_2,local_res8);
+    if (*(short *)*param_2 == 0x23) {
+      *param_2 = (longlong)((short *)*param_2 + 1);
+      FUN_1400c11c0(param_2,param_4);
+    }
+    if (*(short *)*param_2 == 0x3a) {
+      *param_2 = (longlong)((short *)*param_2 + 1);
+    }
+  }
+  do {
+    sVar2 = *(short *)*param_2;
+    if (sVar2 == 0x3d) {
+      uVar5 = *(int *)(param_1 + 4) << 8 | 0x32;
+LAB_1400c9a87:
+      *(uint *)(param_1 + 4) = uVar5;
+    }
+    else {
+      if (sVar2 == 0x2b) {
+        uVar5 = *(int *)(param_1 + 4) << 8 | 0x31;
+        goto LAB_1400c9a87;
+      }
+      if (sVar2 != 0x2a) {
+        if (*(int *)(param_1 + 4) == 0) {
+          *(undefined4 *)(param_1 + 4) = 0x30;
+        }
+        FUN_140074838(param_2,(int *)&param_5);
+        puVar4 = param_6;
+        *param_6 = 0xffffffff;
+        while (*(short *)*param_2 == 0x2f) {
+          *param_2 = *param_2 + 2;
+          param_6 = (uint *)0x0;
+          uVar6 = FUN_1400c11f4(param_2,(ulonglong *)&param_6);
+          if (0 < (int)uVar6) {
+            *puVar4 = *puVar4 << 0x10 | (uint)(ushort)param_6;
+          }
+        }
+        if ((short)*puVar4 < 0) {
+          *(undefined2 *)puVar4 = 2;
+        }
+        if (*(short *)*param_2 == 0x3a) {
+          *param_2 = (longlong)((short *)*param_2 + 1);
+        }
+        *(undefined4 *)(param_1 + 8) = param_5._0_4_;
+        if (cVar1 == '\0') {
+          pWVar7 = (LPCWSTR)*param_2;
+          thunk_FUN_1400f429c(param_2,param_7);
+          FUN_140063888(param_3,pWVar7,*param_2 - (longlong)pWVar7 >> 1);
+          if (*(short *)*param_2 != 0) {
+            *param_2 = (longlong)((short *)*param_2 + 1);
+          }
+        }
+        else {
+          FUN_1400703e4(param_3,(LPCWSTR)*param_2);
+        }
+        *(longlong *)(param_1 + 0x10) = *param_3;
+        return local_res8[0];
+      }
+      *(uint *)(param_1 + 4) = *(int *)(param_1 + 4) << 8 | 0x30;
+      *pcVar3 = '\x10';
+    }
+    *param_2 = *param_2 + 2;
+  } while( true );
+}
+
+/* ========== FUN_1400cadec @ 1400cadec ========== */
+/* signature: undefined8 __fastcall FUN_1400cadec(WPARAM param_1, undefined8 param_2, ulonglong param_3, undefined8 * param_4, int param_5, int param_6, int param_7, int param_8, undefined8 * param_9, ushort * param_10, LPCWSTR param_11, longlong param_12, short * param_13, LPCWSTR param_14, undefined8 param_15, undefined8 param_16) */
+
+undefined8
+FUN_1400cadec(WPARAM param_1,undefined8 param_2,ulonglong param_3,undefined8 *param_4,int param_5,
+             int param_6,int param_7,int param_8,undefined8 *param_9,ushort *param_10,
+             LPCWSTR param_11,longlong param_12,short *param_13,LPCWSTR param_14,undefined8 param_15
+             ,undefined8 param_16)
+
+{
+  longlong lVar1;
+  undefined8 *puVar2;
+  undefined8 uVar3;
+  undefined8 *puVar4;
+  undefined8 *puVar5;
+  
+  puVar2 = (undefined8 *)FUN_140060834(param_1,&DAT_14011c638);
+  puVar5 = (undefined8 *)0x0;
+  if (puVar2 == (undefined8 *)0x0) {
+    uVar3 = 0;
+  }
+  else {
+    lVar1 = **(longlong **)(param_1 + 0x1a0);
+    FUN_14005daf8(param_1,&param_5,&param_6,&param_7,&param_8);
+    puVar4 = operator_new(0x78);
+    if (puVar4 != (undefined8 *)0x0) {
+      puVar5 = FUN_1400c9b9c(puVar4,param_2,param_3,(int)((longlong)puVar2 - lVar1 >> 3) + 0x1000,
+                             param_4,param_5,param_6,param_7,param_8,param_9,param_10,param_11,
+                             param_12,param_13,param_14,puVar2,param_15,param_16);
+    }
+    *puVar2 = puVar5;
+    FUN_14005d9a8(param_1,0);
+    uVar3 = *puVar2;
+  }
+  return uVar3;
+}
+
+/* ========== FUN_1400d95f0 @ 1400d95f0 ========== */
+/* signature: undefined __fastcall FUN_1400d95f0(longlong * param_1, undefined8 param_2, undefined8 param_3) */
+
+/* WARNING: Restarted to delay deadcode elimination for space: register */
+
+void FUN_1400d95f0(longlong *param_1,undefined8 param_2,undefined8 param_3)
+
+{
+  short sVar1;
+  BOOL BVar2;
+  int iVar3;
+  int iVar4;
+  HDC pHVar5;
+  tagRECT local_2d8;
+  tagPAINTSTRUCT local_2c8;
+  WCHAR local_278 [304];
+  
+  BVar2 = IsIconic((HWND)param_1[4]);
+  if (BVar2 == 0) {
+    if ((*(byte *)(param_1 + 0x4a) & 1) != 0) {
+      pHVar5 = GetWindowDC((HWND)param_1[4]);
+      FUN_1400d5b48((longlong)param_1,pHVar5);
+      *(byte *)(param_1 + 0x4a) = *(byte *)(param_1 + 0x4a) & 0xfe;
+    }
+    sVar1 = *(short *)param_1[0x44];
+    if ((-1 < (int)param_1[0x55]) || (sVar1 != 0)) {
+      pHVar5 = BeginPaint((HWND)param_1[4],&local_2c8);
+      local_2d8.left = 0;
+      local_2d8.top = 0;
+      local_2d8.right = 0;
+      local_2d8.bottom = 0;
+      GetClientRect((HWND)param_1[4],&local_2d8);
+      if (-1 < (int)*(COLORREF *)(param_1 + 0x55)) {
+        FUN_1400e68e0(pHVar5,&local_2d8,*(COLORREF *)(param_1 + 0x55));
+      }
+      if (sVar1 != 0) {
+        wsprintfW(local_278,L"%.260s 0x%p %ld  %ld",param_1[0x44]);
+        FUN_1400a4dcc((longlong *)param_1[0x52],local_278,param_1,(LPCWSTR)0x0,0,0,0);
+      }
+      EndPaint((HWND)param_1[4],&local_2c8);
+    }
+    FUN_1400f0fa8(param_1,param_2,param_3);
+    return;
+  }
+  pHVar5 = BeginPaint((HWND)param_1[4],&local_2c8);
+  SendMessageW((HWND)param_1[4],0x27,(WPARAM)pHVar5,0);
+  iVar3 = GetSystemMetrics(0xb);
+  iVar4 = GetSystemMetrics(0xc);
+  local_2d8.left = 0;
+  local_2d8.top = 0;
+  local_2d8.right = 0;
+  local_2d8.bottom = 0;
+  GetClientRect((HWND)param_1[4],&local_2d8);
+  DrawIcon(pHVar5,(((local_2d8.right - local_2d8.left) - iVar3) + 1) / 2,
+           (((local_2d8.bottom - local_2d8.top) - iVar4) + 1) / 2,(HICON)param_1[0x151]);
+  EndPaint((HWND)param_1[4],&local_2c8);
+  return;
+}
+

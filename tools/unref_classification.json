@@ -1,0 +1,849 @@
+[
+  {
+    "name": "FUN_140003184",
+    "file": "core_b1_remaining.c",
+    "size": 350,
+    "class": "BUSINESS_INDIRECT",
+    "note": "WndProc/message dispatch (WM_* cases, PostMessageW/KillTimer); callback-shaped, likely registered by address"
+  },
+  {
+    "name": "FUN_1400032e4",
+    "file": "core_b1_remaining.c",
+    "size": 421,
+    "class": "BUSINESS_INDIRECT",
+    "note": "TimerProc (handles timer ids 10/0x14/0x16/0x1e, SetWindowPos/KillTimer); callback-shaped"
+  },
+  {
+    "name": "FUN_1400035d4",
+    "file": "core_b1_remaining.c",
+    "size": 655,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Window resize/layout handler (WM_SIZE-style, vtable fn call); callback-shaped"
+  },
+  {
+    "name": "FUN_140004ebc",
+    "file": "core_b1_remaining.c",
+    "size": 123,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Referenced by address as arg to FUN_14005b228 (indirect/callback use)"
+  },
+  {
+    "name": "FUN_1400050a0",
+    "file": "core_b1_remaining.c",
+    "size": 40,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Fiber proc: passed to CreateFiber(0x2000000, FUN_1400050a0, ...); SwitchToFiber callback"
+  },
+  {
+    "name": "FUN_140005914",
+    "file": "core_b1_remaining.c",
+    "size": 249,
+    "class": "DEAD",
+    "note": "Business string-dictionary lookup helper; 0 refs anywhere, not callback-shaped"
+  },
+  {
+    "name": "FUN_140005a10",
+    "file": "core_b1_remaining.c",
+    "size": 331,
+    "class": "DEAD",
+    "note": "Business GetEnvironmentVariable/dictionary helper; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_14000685c",
+    "file": "core_b1_remaining.c",
+    "size": 97,
+    "class": "BUSINESS_INDIRECT",
+    "note": "OnWndProc1 debug message logger - named WndProc callback (OnWndProc)"
+  },
+  {
+    "name": "FUN_1400068c0",
+    "file": "core_b1_remaining.c",
+    "size": 97,
+    "class": "BUSINESS_INDIRECT",
+    "note": "OnWndProc2 debug message logger - named WndProc callback"
+  },
+  {
+    "name": "FUN_140006924",
+    "file": "core_b1_remaining.c",
+    "size": 97,
+    "class": "BUSINESS_INDIRECT",
+    "note": "OnWndProc3 debug message logger - named WndProc callback"
+  },
+  {
+    "name": "FUN_140008c5c",
+    "file": "core_b1_remaining.c",
+    "size": 317,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Service control handler: RegisterServiceCtrlHandlerW(...,FUN_140008c5c)"
+  },
+  {
+    "name": "FUN_14000befc",
+    "file": "core_b1_remaining.c",
+    "size": 208,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread proc: CreateThread(...,FUN_14000befc,...); service/loop worker"
+  },
+  {
+    "name": "FUN_140018148",
+    "file": "core_b1_remaining.c",
+    "size": 46,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Referenced by address (pcVar8 = FUN_140018148); library GetProcAddress helper"
+  },
+  {
+    "name": "FUN_1400187cc",
+    "file": "core_b1_remaining.c",
+    "size": 65,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Destructor-callback shape reading frame at param_3+8; unreferenced but callback-shaped, conservative"
+  },
+  {
+    "name": "FUN_140018830",
+    "file": "core_b1_remaining.c",
+    "size": 130,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Destructor-callback shape (uses *DAT_14013c980 fn ptr); conservative"
+  },
+  {
+    "name": "FUN_14001b6b4",
+    "file": "core_b1_remaining.c",
+    "size": 257,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Keyboard hook: SetWindowsHookExW(0xd, FUN_14001b6b4,...); CallNextHookEx callback"
+  },
+  {
+    "name": "FUN_14001bd4c",
+    "file": "core_b1_remaining.c",
+    "size": 199,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread/worker cleanup handler operating on job object; conservative"
+  },
+  {
+    "name": "FUN_140057d64",
+    "file": "core_b3_remaining.c",
+    "size": 2454,
+    "class": "DEAD",
+    "note": "Business VAL command dispatch handler via SendMessage; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_140058ae4",
+    "file": "core_b3_remaining.c",
+    "size": 7220,
+    "class": "DEAD",
+    "note": "Business file/socket read/write/bind command handler; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_14005bab0",
+    "file": "core_b3_remaining.c",
+    "size": 186,
+    "class": "DEAD",
+    "note": "Business lock/wait helper (critical section + GetTickCount); 0 refs"
+  },
+  {
+    "name": "FUN_14005ed70",
+    "file": "core_b3_remaining.c",
+    "size": 181,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Journal hook: SetWindowsHookExW(7, FUN_14005ed70,...); CallNextHookEx callback"
+  },
+  {
+    "name": "FUN_140066a10",
+    "file": "core_b3_remaining.c",
+    "size": 193,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread proc: CreateThread(...,FUN_140066a10,...); message-loop worker"
+  },
+  {
+    "name": "FUN_140066ad4",
+    "file": "core_b3_remaining.c",
+    "size": 579,
+    "class": "DEAD",
+    "note": "Business keyboard/hotkey message dispatch; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_14006bbfc",
+    "file": "core_b3_remaining.c",
+    "size": 909,
+    "class": "DEAD",
+    "note": "Business VAL command message dispatch via SendMessage; 0 refs"
+  },
+  {
+    "name": "FUN_14006bff0",
+    "file": "core_b3_remaining.c",
+    "size": 985,
+    "class": "DEAD",
+    "note": "Business VAL/<buddy> command message dispatch; 0 refs"
+  },
+  {
+    "name": "FUN_14006edf8",
+    "file": "core_b3_remaining.c",
+    "size": 2372,
+    "class": "DEAD",
+    "note": "Business GDI paint/bitmap drawing logic (HDC); 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_14007c5e4",
+    "file": "core_b3_remaining.c",
+    "size": 331,
+    "class": "BUSINESS_INDIRECT",
+    "note": "WM_PAINT/Timer window message handler (PAINTSTRUCT+SetTimer); callback-shaped"
+  },
+  {
+    "name": "FUN_140080638",
+    "file": "core_b3_remaining.c",
+    "size": 407,
+    "class": "DEAD",
+    "note": "Business window text/UI update helper; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_1400807d0",
+    "file": "core_b3_remaining.c",
+    "size": 577,
+    "class": "DEAD",
+    "note": "Business window shutdown/update logic; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_140080cfc",
+    "file": "core_b3_remaining.c",
+    "size": 1339,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread proc: CreateThread(...,FUN_140080cfc,...); creates window"
+  },
+  {
+    "name": "FUN_14009d0d8",
+    "file": "core_b3_remaining.c",
+    "size": 215,
+    "class": "DEAD",
+    "note": "Business window text update via SendMessage; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_14009d9e8",
+    "file": "core_b3_remaining.c",
+    "size": 107,
+    "class": "BUSINESS_INDIRECT",
+    "note": "C++ class destructor (operator new/delete, sets vftable PTR_FUN) -> reachable via delete"
+  },
+  {
+    "name": "FUN_1400a6874",
+    "file": "core_b3_remaining.c",
+    "size": 7664,
+    "class": "DEAD",
+    "note": "Business Sel/selection command handling via SendMessage; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_1400b0820",
+    "file": "core_b3_remaining.c",
+    "size": 982,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread proc: CreateThread(...,FUN_1400b0820,...)"
+  },
+  {
+    "name": "FUN_1400b52b8",
+    "file": "core_b3_remaining.c",
+    "size": 977,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Drag-drop/mouse handler (HDROP, POINT, SendMessage); callback-shaped"
+  },
+  {
+    "name": "FUN_1400b568c",
+    "file": "core_b3_remaining.c",
+    "size": 1047,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Thread proc: CreateThread(...,FUN_1400b568c,...) x2"
+  },
+  {
+    "name": "FUN_1400b945c",
+    "file": "core_b3_remaining.c",
+    "size": 810,
+    "class": "DEAD",
+    "note": "Business font/property query handler building string; 0 refs, not callback-shaped"
+  },
+  {
+    "name": "FUN_140100ac4",
+    "file": "core_b9_remaining.c",
+    "size": 4631,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Large business message-handler dispatcher (SendMessageW, msg ids); callback-shaped, conservative"
+  },
+  {
+    "name": "FUN_140102270",
+    "file": "core_b9_remaining.c",
+    "size": 1288,
+    "class": "BUSINESS_INDIRECT",
+    "note": "GDI window paint proc (BeginPaint/EndPaint/DrawFocusRect); paint-proc shaped"
+  },
+  {
+    "name": "FUN_140102778",
+    "file": "core_b9_remaining.c",
+    "size": 207,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Business window-creation helper (CreateWindowExW STATIC); conservative"
+  },
+  {
+    "name": "FUN_140102848",
+    "file": "core_b9_remaining.c",
+    "size": 221,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Business window-creation helper (CreateWindowExW BUTTON); conservative"
+  },
+  {
+    "name": "FUN_140102928",
+    "file": "core_b9_remaining.c",
+    "size": 309,
+    "class": "BUSINESS_INDIRECT",
+    "note": "Business window message handler (WM 0xf/0x113/0x200, InvalidateRect/SetTimer); callback-shaped"
+  },
+  {
+    "name": "FUN_140102d08",
+    "file": "core_b9_remaining.c",
+    "size": 57,
+    "class": "SKIP(CRT)",
+    "note": "std::bad_alloc destructor (exception::~exception + free); CRT"
+  },
+  {
+    "name": "FUN_140102d44",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "std::bad_alloc constructor (std::exception::exception + vftable); CRT"
+  },
+  {
+    "name": "FUN_140103e10",
+    "file": "core_b9_remaining.c",
+    "size": 134,
+    "class": "SKIP(CRT)",
+    "note": "CRT fp/format fn-pointer table init (_cfltcvt/_fassign_l/_cropzeros_l); CRT"
+  },
+  {
+    "name": "FUN_140107fb8",
+    "file": "core_b9_remaining.c",
+    "size": 57,
+    "class": "SKIP(CRT)",
+    "note": "type_info destructor (_Type_info_dtor + free); CRT"
+  },
+  {
+    "name": "FUN_140108334",
+    "file": "core_b9_remaining.c",
+    "size": 17,
+    "class": "SKIP(CRT)",
+    "note": "exception::what() returning \"Unknown exception\"; CRT"
+  },
+  {
+    "name": "FUN_140108348",
+    "file": "core_b9_remaining.c",
+    "size": 47,
+    "class": "SKIP(CRT)",
+    "note": "exception destructor (exception::~exception + free); CRT"
+  },
+  {
+    "name": "FUN_14011067c",
+    "file": "core_b9_remaining.c",
+    "size": 57,
+    "class": "SKIP(CRT)",
+    "note": "std::bad_exception destructor (exception::~exception + free); CRT"
+  },
+  {
+    "name": "FUN_140111874",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "std::bad_exception constructor (std::exception::exception + vftable); CRT"
+  },
+  {
+    "name": "FUN_140111c60",
+    "file": "core_b9_remaining.c",
+    "size": 64,
+    "class": "SKIP(CRT)",
+    "note": "CRT SEH unhandled-exception filter (checks codes, terminate()); CRT"
+  },
+  {
+    "name": "FUN_140111ca4",
+    "file": "core_b9_remaining.c",
+    "size": 24,
+    "class": "SKIP(CRT)",
+    "note": "CRT init installing unhandled-exception filter via SetUnhandledExceptionFilter; CRT"
+  },
+  {
+    "name": "FUN_140112374",
+    "file": "core_b9_remaining.c",
+    "size": 56,
+    "class": "SKIP(CRT)",
+    "note": "atexit-registered table walker calling fn-ptrs; CRT exit dispatch"
+  },
+  {
+    "name": "FUN_140112a10",
+    "file": "core_b9_remaining.c",
+    "size": 36,
+    "class": "SKIP(CRT)",
+    "note": "CRT exception unwinding helper wrapping RtlUnwindEx; CRT"
+  },
+  {
+    "name": "FUN_14011a24e",
+    "file": "core_b9_remaining.c",
+    "size": 20,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock cleanup wrapper -> FUN_14010b504(8) LeaveCriticalSection"
+  },
+  {
+    "name": "FUN_14011a262",
+    "file": "core_b9_remaining.c",
+    "size": 27,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_fhandle(2); CRT stream/file unlock"
+  },
+  {
+    "name": "FUN_14011a27d",
+    "file": "core_b9_remaining.c",
+    "size": 37,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_file2 on CRT _File table; CRT"
+  },
+  {
+    "name": "FUN_14011a2e6",
+    "file": "core_b9_remaining.c",
+    "size": 28,
+    "class": "SKIP(CRT)",
+    "note": "_XcptFilter; CRT SEH exception filter"
+  },
+  {
+    "name": "FUN_14011a302",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(0xd)"
+  },
+  {
+    "name": "FUN_14011a322",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(0xc)"
+  },
+  {
+    "name": "FUN_14011a33b",
+    "file": "core_b9_remaining.c",
+    "size": 34,
+    "class": "SKIP(CRT)",
+    "note": "conditional CRT lock wrapper FUN_14010b504(8)"
+  },
+  {
+    "name": "FUN_14011a35d",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(0xd)"
+  },
+  {
+    "name": "FUN_14011a376",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(0xc)"
+  },
+  {
+    "name": "FUN_14011a38f",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(1)"
+  },
+  {
+    "name": "FUN_14011a3a8",
+    "file": "core_b9_remaining.c",
+    "size": 38,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_file2 on CRT _File entry; CRT"
+  },
+  {
+    "name": "FUN_14011a3d8",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(1)"
+  },
+  {
+    "name": "FUN_14011a3f1",
+    "file": "core_b9_remaining.c",
+    "size": 28,
+    "class": "SKIP(CRT)",
+    "note": "LeaveCriticalSection on CRT lock; CRT"
+  },
+  {
+    "name": "FUN_14011a40d",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(10)"
+  },
+  {
+    "name": "FUN_14011a426",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(7)"
+  },
+  {
+    "name": "FUN_14011a43f",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(6)"
+  },
+  {
+    "name": "FUN_14011a458",
+    "file": "core_b9_remaining.c",
+    "size": 20,
+    "class": "SKIP(CRT)",
+    "note": "CRT EH handler wrapper (FUN_1401107dc, _getptd/terminate)"
+  },
+  {
+    "name": "FUN_14011a4a0",
+    "file": "core_b9_remaining.c",
+    "size": 23,
+    "class": "SKIP(CRT)",
+    "note": "CRT SEH frame flag check (param_2+0x38)"
+  },
+  {
+    "name": "FUN_14011a4b7",
+    "file": "core_b9_remaining.c",
+    "size": 243,
+    "class": "SKIP(CRT)",
+    "note": "CRT locinfo/EH init (_ptiddata/_setloc_data, _FILE magic)"
+  },
+  {
+    "name": "FUN_14011a647",
+    "file": "core_b9_remaining.c",
+    "size": 25,
+    "class": "SKIP(CRT)",
+    "note": "CRT lock wrapper FUN_14010b504(0xe)"
+  },
+  {
+    "name": "FUN_14011a660",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "CRT exception-type check (EH magic -0x3ffffffb)"
+  },
+  {
+    "name": "FUN_14011a681",
+    "file": "core_b9_remaining.c",
+    "size": 28,
+    "class": "SKIP(CRT)",
+    "note": "conditional CRT lock wrapper FUN_14010b504(0)"
+  },
+  {
+    "name": "FUN_14011a69d",
+    "file": "core_b9_remaining.c",
+    "size": 34,
+    "class": "SKIP(CRT)",
+    "note": "CRT exception-type check (EH magic -0x3fffffe9)"
+  },
+  {
+    "name": "FUN_14011a6bf",
+    "file": "core_b9_remaining.c",
+    "size": 24,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_file on CRT FILE; CRT"
+  },
+  {
+    "name": "FUN_14011a6d7",
+    "file": "core_b9_remaining.c",
+    "size": 47,
+    "class": "SKIP(CRT)",
+    "note": "CRT exception-type check (EH magic)"
+  },
+  {
+    "name": "FUN_14011a706",
+    "file": "core_b9_remaining.c",
+    "size": 43,
+    "class": "SKIP(CRT)",
+    "note": "CRT exception-type check (EH magic)"
+  },
+  {
+    "name": "FUN_14011a731",
+    "file": "core_b9_remaining.c",
+    "size": 23,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_fhandle; CRT"
+  },
+  {
+    "name": "FUN_14011a748",
+    "file": "core_b9_remaining.c",
+    "size": 23,
+    "class": "SKIP(CRT)",
+    "note": "_unlock_fhandle; CRT"
+  },
+  {
+    "name": "FUN_14011a808",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "InitializeCriticalSection + atexit; CRT static-init glue"
+  },
+  {
+    "name": "FUN_14011a844",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "InitializeCriticalSection + atexit; CRT static-init glue"
+  },
+  {
+    "name": "FUN_14011a868",
+    "file": "core_b9_remaining.c",
+    "size": 34,
+    "class": "SKIP(CRT)",
+    "note": "CRT struct init + atexit registration; CRT"
+  },
+  {
+    "name": "FUN_14011a88c",
+    "file": "core_b9_remaining.c",
+    "size": 35,
+    "class": "SKIP(CRT)",
+    "note": "FreeLibrary module cleanup; CRT uninitializer"
+  },
+  {
+    "name": "FUN_14011a8b0",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "InitializeCriticalSection + atexit; CRT static-init glue"
+  },
+  {
+    "name": "FUN_14011a8d4",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "InitializeCriticalSection + atexit; CRT static-init glue"
+  },
+  {
+    "name": "FUN_14011a8f8",
+    "file": "core_b9_remaining.c",
+    "size": 32,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a918",
+    "file": "core_b9_remaining.c",
+    "size": 32,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a938",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a968",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a9b0",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a9d4",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011a9f8",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aa80",
+    "file": "core_b9_remaining.c",
+    "size": 33,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aaa4",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aab0",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aabc",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aac8",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aad4",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aae0",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aaec",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011aaf8",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab04",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab10",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab1c",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab28",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab34",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab40",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab5c",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab68",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ab9c",
+    "file": "core_b9_remaining.c",
+    "size": 34,
+    "class": "SKIP(CRT)",
+    "note": "atexit-registered cleanup thunk (FUN_14004eaa8/14005b104); compiler-generated CRT glue"
+  },
+  {
+    "name": "FUN_14011abf0",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ac0c",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ac18",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ac24",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011ac90",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011acb4",
+    "file": "core_b9_remaining.c",
+    "size": 32,
+    "class": "SKIP(CRT)",
+    "note": "static-destructor cleanup thunk (teardown+free global); CRT glue"
+  },
+  {
+    "name": "FUN_14011acd4",
+    "file": "core_b9_remaining.c",
+    "size": 12,
+    "class": "SKIP(CRT)",
+    "note": "Compiler-generated MSVC C++ static-init/destructor thunk (atexit/_onexit); CRT glue"
+  },
+  {
+    "name": "FUN_14011acf0",
+    "file": "core_b9_remaining.c",
+    "size": 26,
+    "class": "SKIP(CRT)",
+    "note": "atexit-registered dtor destroying static std::bad_alloc exception global; CRT"
+  }
+]

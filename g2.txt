@@ -1,0 +1,167 @@
+/* ========== FUN_1400644c8 @ 1400644c8 ========== */
+/* signature: undefined4 __fastcall FUN_1400644c8(longlong param_1, undefined8 param_2) */
+
+undefined4 FUN_1400644c8(longlong param_1,undefined8 param_2)
+
+{
+  int iVar1;
+  undefined4 uVar2;
+  
+  if (((longlong)DAT_14013d3b8 < 2) || (*(longlong *)(param_1 + 0xd0) == 0)) {
+    uVar2 = 1;
+  }
+  else {
+    EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e168);
+    FUN_140061c44();
+    iVar1 = -3;
+    if (DAT_14013d800 != (code *)0x0) {
+      iVar1 = (*DAT_14013d800)(0);
+      if ((iVar1 != 0) && (iVar1 == 1)) {
+        (*DAT_14013d808)();
+      }
+    }
+    uVar2 = (*DAT_14013d3b8)((longlong *)(param_1 + 0xd0),2,param_2,0,0,0,0,0,0);
+    if ((DAT_14013d808 != (code *)0x0) && (iVar1 == 0)) {
+      (*DAT_14013d808)();
+    }
+    LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e168);
+  }
+  return uVar2;
+}
+
+/* ========== FUN_140064c38 @ 140064c38 ========== */
+/* signature: undefined __fastcall FUN_140064c38(HWND param_1, undefined8 param_2, LPARAM param_3, uint param_4, int param_5, int param_6, uint param_7, uint param_8, undefined8 param_9) */
+
+/* WARNING: Removing unreachable block (ram,0x000140065075) */
+/* WARNING: Removing unreachable block (ram,0x0001400650a3) */
+
+void FUN_140064c38(HWND param_1,undefined8 param_2,LPARAM param_3,uint param_4,int param_5,
+                  int param_6,uint param_7,uint param_8,undefined8 param_9)
+
+{
+  bool bVar1;
+  HWND hWnd;
+  int iVar2;
+  int iVar3;
+  DWORD DVar4;
+  DWORD DVar5;
+  UINT_PTR UVar6;
+  short sVar7;
+  tagRECT local_b8;
+  uint local_a8;
+  uint local_a4;
+  uint local_a0;
+  uint local_9c;
+  uint local_98;
+  HWND local_90;
+  undefined4 local_88;
+  undefined4 local_84;
+  HWND local_80;
+  undefined8 local_78;
+  undefined8 local_58;
+  
+  local_9c = param_8 & 0x40;
+  local_a0 = param_8 & 0x80;
+  local_98 = param_8 & 4;
+  local_a8 = param_8 & 8;
+  local_a4 = param_8 & 0x100;
+  if (((param_8 & 0x10) == 0) || (bVar1 = true, (param_8 & 0x20) == 0)) {
+    bVar1 = false;
+  }
+  sVar7 = 0;
+  EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  if ((DAT_14013d310 != (HWND)0x0) && ((int)DAT_14013d323 != (param_8 & 1))) {
+    FUN_14005ba6c();
+  }
+  LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  if ((DAT_14013d3ec & 2) != 0) {
+    EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    if ((DAT_14013d3ec & 2) != 0) {
+      DAT_14013d3ec = (DAT_14013d3ec & 0xfffc) + 6;
+    }
+    LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    while ((DAT_14013d3ec & 2) != 0) {
+      FUN_1400195f0(&DAT_14013d130,1,0,(undefined8 *)0x0);
+    }
+  }
+  EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  local_90 = GetForegroundWindow();
+  DAT_14013d3ec = 0;
+  if ((DAT_14013d310 != (HWND)0x0) ||
+     (FUN_14005b9c8(-(uint)bVar1 & 2 | param_8 & 1,0x514), DAT_14013d310 != (HWND)0x0)) {
+    hWnd = DAT_14013d310;
+    FUN_140102a90((ulonglong *)&local_84,0,0x44);
+    local_88 = 0x2c;
+    local_78 = param_9;
+    local_84 = 0x123;
+    local_80 = param_1;
+    SendMessageW(hWnd,0x432,0,(LPARAM)&local_88);
+    SendMessageW(DAT_14013d310,0x411,0,0);
+    SendMessageW(DAT_14013d310,0x413,0xe0f0f0,0);
+    local_58 = param_2;
+    SendMessageW(DAT_14013d310,0x439,0,(LPARAM)&local_88);
+    SendMessageW(DAT_14013d310,0x421,(longlong)param_6,param_3);
+    local_b8.left = 0;
+    local_b8.top = 0;
+    local_b8.right = 0;
+    local_b8.bottom = 0;
+    if (!bVar1) {
+      SendMessageW(DAT_14013d310,0x412,0,(longlong)(int)(param_5 << 0x10 | param_4 & 0xffff));
+    }
+    SetWindowPos(DAT_14013d310,(HWND)0x0,0,0,0,0,0x13);
+    SetWindowPos(DAT_14013d310,(HWND)0xffffffffffffffff,0,0,0,0,0x13);
+    SendMessageW(DAT_14013d310,0x411,1,(LPARAM)&local_88);
+    KillTimer(param_1,0xabb);
+    if ((0 < (int)param_7) &&
+       (UVar6 = SetTimer(param_1,0xabb,param_7,FUN_14005bb6c), (int)UVar6 != 0)) {
+      sVar7 = 1;
+      DAT_14013d3ec = 1;
+    }
+    iVar2 = GetSystemMetrics(0x3d);
+    iVar3 = GetSystemMetrics(0x3e);
+    GetWindowRect(DAT_14013d310,&local_b8);
+    if ((param_8 & 0x10) == 0) {
+      if (local_98 != 0) {
+        param_4 = param_4 + iVar2;
+      }
+    }
+    else if ((param_8 & 0x20) == 0) {
+      param_4 = param_4 + (local_b8.left - local_b8.right);
+    }
+    else {
+      param_4 = param_4 + (local_b8.left - local_b8.right) + iVar2;
+    }
+    if (local_9c == 0) {
+      if (local_a8 != 0) {
+        param_5 = param_5 + iVar3;
+      }
+    }
+    else {
+      iVar2 = local_b8.top - local_b8.bottom;
+      if (local_a0 != 0) {
+        iVar2 = iVar2 + iVar3;
+      }
+      param_5 = param_5 + iVar2;
+    }
+    if (bVar1) {
+      SetWindowPos(DAT_14013d310,(HWND)0x0,param_4,param_5,0,0,0x15);
+    }
+    else {
+      SendMessageW(DAT_14013d310,0x412,0,(longlong)(int)(param_5 << 0x10 | param_4 & 0xffff));
+    }
+  }
+  SetForegroundWindow(local_90);
+  LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  if ((local_a4 != 0) && (DAT_14013d310 != (HWND)0x0)) {
+    DVar4 = GetTickCount();
+    while ((((sVar7 == DAT_14013d3ec && ('\0' < DAT_14013a24f)) && (0 < (int)param_7)) &&
+           (DVar5 = GetTickCount(), DVar5 - DVar4 < param_7))) {
+      FUN_1400195f0(&DAT_14013d130,1,0,(undefined8 *)0x0);
+    }
+  }
+                    /* WARNING: Could not recover jumptable at 0x000140065139. Too many branches */
+                    /* WARNING: Treating indirect jump as call */
+  LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e138);
+  return;
+}
+

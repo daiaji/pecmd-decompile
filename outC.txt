@@ -1,0 +1,749 @@
+/* ====================================================================
+ * 还原: gC.txt  (批次28 C 组)
+ * 仅包含本组 6 个业务函数定义 + 顶部 extern/typedef 声明。
+ * 未定义任何 helper 体 (由 link_stubs.c / 相应 core 文件提供)。
+ * ==================================================================== */
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "win32_stub.h"
+#include "pecmd_defs.h"
+
+/* ---- 本批补充类型 ---- */
+typedef int (*PFN_WIM_CREATE)(LPCWSTR, DWORD, DWORD, DWORD, DWORD, HANDLE *);
+typedef int (*PFN_WIM_SET_TEMP)(HANDLE, LPCWSTR);
+typedef HANDLE (*PFN_WIM_LOAD_IMAGE)(HANDLE, DWORD);
+typedef int (*PFN_WIM_MOUNT)(HANDLE, LPCWSTR, DWORD);
+typedef int (*PFN_WIM_CLOSE)(HANDLE);
+typedef int (*PFN_CREATE_VIRTUAL_DISK)(void *, uint64_t, DWORD, DWORD, DWORD,
+                                       DWORD, void *, void *, HANDLE *);
+typedef int (*PFN_GET_STORAGE_DEP)(HANDLE, DWORD, DWORD, void *, unsigned long *);
+
+/* ---- Win32 API 补充声明 (win32_stub.h 未含) ---- */
+extern DWORD GetTempPathW(DWORD, LPWSTR);
+
+/* ---- 现有 helper (未在本文件定义, 由 core 文件/link_stubs 提供) ----
+ * 签名取自项目中已有 extern 声明, 调用处按需强转。*/
+extern void FUN_140063694(WCHAR **ps, int64_t count);
+extern void FUN_14005b104(WCHAR **ps);
+extern uint64_t FUN_14006a7f4(int64_t *param_1, uint64_t *param_2);
+extern void FUN_14005c828(const char *func, const char *dll, void **out, uintptr_t *hmod);
+extern void FUN_140003864(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                          LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
+extern void FUN_1400633a8(void **ps, int64_t len);
+extern void FUN_14005b0b8(void *p);
+extern void FUN_140063620(WCHAR **out);
+extern WCHAR *FUN_140006aa0(int64_t *param_1, int64_t param_2, uint64_t param_3, LPCWSTR param_4);
+extern WCHAR *FUN_140063720(WCHAR **ps, int64_t count);
+extern WCHAR *FUN_14007034c(WCHAR **ps, const WCHAR *src);
+extern WCHAR *FUN_14005b154(WCHAR **pp);
+extern WCHAR *FUN_14006375c(WCHAR **ps, LPCWSTR src);
+extern void FUN_1400675b8(int64_t *src, WCHAR **dst, short delim);
+extern WCHAR *FUN_140024c48(int64_t *a, int64_t *b, uint32_t c);
+extern WCHAR *FUN_140063888(WCHAR **ps, LPCWSTR src, int64_t len);
+extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
+extern int64_t *FUN_140070310(uint64_t *a1, uint64_t *a2);
+extern int32_t FUN_14005c7c4(const char *a, const WCHAR *w);
+extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+                             uint32_t flag, void *p6, void *s7, void *p8);
+extern int FUN_14005b2c0(uint64_t *p, LPCWSTR a, void *h);
+extern int FUN_140057b80(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *,
+                         int64_t *, HWND, int64_t);
+extern int FUN_140074838(WCHAR **pp, int *out);
+extern int FUN_140067b54(WCHAR **pp, double *out);
+extern uint64_t FUN_14005ea5c(void);
+extern LPCWSTR FUN_140067278(uint64_t a1, int *a2, LPCWSTR a3, int64_t *a4,
+                             uint32_t a5, uint16_t *a6);
+
+/* ---- DAT_ 函数指针全局 (link_stubs 以 uint64_t 提供; 此处以函数指针类型引用并直接调用) ---- */
+extern PFN_WIM_CREATE DAT_14013d468;
+extern PFN_WIM_SET_TEMP DAT_14013d470;
+extern PFN_WIM_LOAD_IMAGE DAT_14013d478;
+extern PFN_WIM_MOUNT DAT_14013d480;
+extern PFN_WIM_CLOSE DAT_14013d488;
+extern PFN_CREATE_VIRTUAL_DISK DAT_14013d730;
+extern PFN_GET_STORAGE_DEP DAT_14013d3b0;
+extern CRITICAL_SECTION DAT_14013e190;
+extern uint8_t DAT_14013d130[];
+extern uint8_t DAT_14011c638[];
+
+/* ---- DAT_ 数据全局 (疑似未定义, 待补 link_stubs) ---- */
+extern uint64_t _DAT_14012d1c8;     /* 虚拟磁盘 GUID 高 8 字节 */
+extern uint64_t _UNK_14012d1d0;     /* 虚拟磁盘 GUID 低 8 字节 */
+extern const WCHAR u__Y__X_1401270d0[];  /* 格式选项串源 */
+extern double DAT_140127188;        /* 进度百分数下界 */
+extern double DAT_140127190;        /* 进度百分数上界 */
+
+/* =========================================================================
+ * FUN_140075628 @0x140075628 — WIM 挂载 (WIMCreateFile/SetTempPath/LoadImage/Mount)
+ * ========================================================================= */
+int FUN_140075628(uint64_t param_1, uint64_t param_2, uint32_t param_3,
+                  WCHAR *param_4)
+{
+    DWORD DVar1;
+    int iVar2;
+    int iVar3;
+    int64_t lVar4;
+    int64_t lVar5;
+    unsigned int uVar6;
+    DWORD DVar7;
+    HANDLE local_res20;
+    int64_t local_248[2];
+    WCHAR local_238[264];
+
+    DVar1 = 1;
+    local_238[0] = L'\0';
+    FUN_140063694((WCHAR **)local_248, 0x100000);
+    DVar7 = DVar1;
+    if (param_4 == (WCHAR *)0x0) {
+        DVar1 = GetTempPathW(0x104, local_238);
+        param_4 = local_238;
+        iVar3 = 0;
+        DVar7 = 0;
+        if (DVar1 == 0) goto LAB_14007581a;
+    }
+    uVar6 = 0xa0000000;
+    if (DVar7 != 0) {
+        uVar6 = 0xe0000000;
+    }
+    local_res20 = 0;
+    lVar4 = DAT_14013d468((LPCWSTR)param_2, uVar6, 3, 0, 0, &local_res20);
+    if (lVar4 == 0) {
+        do {
+            if (DVar7 != 1) break;
+            DVar7 = 2;
+            uVar6 = uVar6 & 0xbfffffff;
+            lVar4 = DAT_14013d468((LPCWSTR)param_2, uVar6, 3, 0, 0, &local_res20);
+        } while (lVar4 == 0);
+        if (lVar4 == 0) {
+            GetLastError();
+            DVar1 = 0;
+        }
+    }
+    iVar3 = 0;
+    if (DVar1 != 0) {
+        iVar2 = DAT_14013d470((HANDLE)lVar4, param_4);
+        if (iVar2 == 0) {
+            GetLastError();
+            iVar2 = 1;
+        }
+        lVar5 = DAT_14013d478((HANDLE)lVar4, (DWORD)param_3);
+        if (lVar5 == 0) {
+            GetLastError();
+            iVar2 = 0;
+        }
+        iVar3 = 0;
+        if (iVar2 != 0) {
+            uVar6 = 0x400;
+            if (DVar7 == 0) {
+                uVar6 = 0x600;
+            }
+            iVar3 = DAT_14013d480((HANDLE)lVar5, (LPCWSTR)param_1, uVar6);
+            DVar1 = GetLastError();
+            if (iVar3 == 0) {
+                do {
+                    if ((uVar6 >> 10 == 0) || (DVar1 != 0x57)) break;
+                    uVar6 = uVar6 & 0xfffffbff;
+                    iVar3 = DAT_14013d480((HANDLE)lVar5, (LPCWSTR)param_1, uVar6);
+                    DVar1 = GetLastError();
+                } while (iVar3 == 0);
+                if ((iVar3 == 0) &&
+                    ((DVar7 != 2 ||
+                      (iVar3 = DAT_14013d480((HANDLE)lVar5, (LPCWSTR)param_1,
+                                             uVar6 | 0x200), iVar3 == 0)))) {
+                    GetLastError();
+                }
+            }
+        }
+        if (lVar5 != 0) {
+            DAT_14013d488((HANDLE)lVar5);
+        }
+    }
+    if (lVar4 != 0) {
+        DAT_14013d488((HANDLE)lVar4);
+    }
+LAB_14007581a:
+    FUN_14005b104((WCHAR **)local_248);
+    return iVar3;
+}
+
+/* =========================================================================
+ * FUN_140075b04 @0x140075b04 — 创建虚拟磁盘 (CreateVirtualDisk 封装)
+ * ========================================================================= */
+int FUN_140075b04(uint64_t param_1, int64_t param_2, uint32_t param_3,
+                  uint32_t param_4, unsigned int param_5)
+{
+    int iVar2;
+    int64_t local_res10;
+    uint32_t local_b8;
+    uint32_t local_b4;
+    uint16_t local_b0;
+    uint16_t local_ae;
+    uint8_t local_ac, local_ab, local_aa, local_a9, local_a8, local_a7, local_a6, local_a5;
+    HANDLE local_a0;
+    uint64_t local_98[2];
+    uint32_t local_88[2];
+    uint64_t local_80;
+    uint64_t uStack_78;
+    int64_t local_70;
+    uint32_t local_68;
+    unsigned int local_64;
+    int64_t local_60;
+    uint64_t local_58;
+
+    if (DAT_14013d730 == (PFN_CREATE_VIRTUAL_DISK)0) {
+        iVar2 = (int)(uint32_t)-0x7fffbfff;
+    }
+    else {
+        local_98[0] = 0;
+        local_res10 = param_2;
+        FUN_14006a7f4((int64_t *)&local_res10, (uint64_t *)local_98);
+        local_80 = _DAT_14012d1c8;
+        uStack_78 = _UNK_14012d1d0;
+        local_a0 = (HANDLE)(uintptr_t)-1;
+        local_68 = 0;
+        local_58 = 0;
+        local_64 = param_5;
+        local_b0 = 0xa0f9;
+        local_ae = 0x47e9;
+        local_b4 = 0xec984aec;
+        local_ac = 0x90;
+        local_ab = 0x1f;
+        local_aa = 0x71;
+        local_a9 = 0x41;
+        local_a8 = 0x5a;
+        local_a7 = 0x66;
+        local_a6 = 0x34;
+        local_a5 = 0x5b;
+        local_88[0] = 1;
+        local_70 = ((int64_t)local_98[0] / (int64_t)(uint64_t)param_5) *
+                   (uint64_t)param_5;
+        local_60 = 0;
+        if (local_98[0] == 0) {
+            local_60 = local_res10;
+        }
+        local_b8 = (uint32_t)param_4;
+        iVar2 = DAT_14013d730(&local_b8, (uint64_t)param_1, 0x100000, 0, param_3,
+                              0, local_88, 0, &local_a0);
+        if ((iVar2 == 0) && (local_a0 != (HANDLE)(uintptr_t)-1)) {
+            CloseHandle(local_a0);
+        }
+    }
+    (void)local_80; (void)uStack_78; (void)local_70; (void)local_60;
+    (void)local_68; (void)local_64; (void)local_58;
+    (void)local_b4; (void)local_b0; (void)local_ae;
+    (void)local_ac; (void)local_ab; (void)local_aa; (void)local_a9;
+    (void)local_a8; (void)local_a7; (void)local_a6; (void)local_a5;
+    return iVar2;
+}
+
+/* =========================================================================
+ * FUN_140077c1c @0x140077c1c — 取存储依存信息拼接卷标 (GetStorageDependencyInformation)
+ * ========================================================================= */
+int FUN_140077c1c(uint64_t param_1, uint64_t *param_2, WCHAR *param_3, int param_4)
+{
+    LPCWSTR lpString;
+    HANDLE hObject;
+    int iVar1;
+    int iVar2;
+    int iVar3;
+    WCHAR *pWVar4;
+    wchar_t *pwVar5;
+    LPCWSTR lpString_00;
+    HANDLE local_108;
+    uint64_t *local_100;
+    uint64_t local_f8[2];
+    WCHAR local_e8[104];
+
+    EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    FUN_14005c828("GetStorageDependencyInformation", "VirtDisk.DLL",
+                  (void **)&DAT_14013d3b0, (uintptr_t *)0);
+    iVar1 = 0;
+    if (DAT_14013d3b0 == (PFN_GET_STORAGE_DEP)0) {
+        LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+        iVar1 = 0;
+    }
+    else {
+        local_108 = (HANDLE)0;
+        if (param_3 < (WCHAR *)0x10000) {
+            /* param_3 以指针形式编码驱动器号 */
+            pwVar5 = WSTR("\\\\.\\PhysicalDrive%d");
+            if (param_4 == 8) {
+                pwVar5 = WSTR("\\\\.\\CDROM%d");
+            }
+            /* TODO(verify): 原反编译丢掉了 %d 实参, 驱动器号即 (int)(intptr_t)param_3 */
+            wsprintfW(local_e8, (LPCWSTR)pwVar5, (int)(intptr_t)param_3);
+            param_3 = local_e8;
+        }
+        FUN_140003864(&local_108, param_3, 0x80000000, 3, (LPSECURITY_ATTRIBUTES)0,
+                      3, 0x22000000, (HANDLE)0);
+        hObject = local_108;
+        if (local_108 != (HANDLE)0) {
+            FUN_1400633a8((void **)&local_100, 0x7ff0);
+            FUN_14005b0b8(local_100);
+            *(uint32_t *)local_100 = 2;
+            local_f8[0] = 0;
+            iVar1 = DAT_14013d3b0(hObject, 3, 0x7ff0, local_100, (unsigned long *)local_f8);
+            lpString_00 = (LPCWSTR)local_100[6];
+            lpString = (LPCWSTR)local_100[8];
+            if (((iVar1 == 0) && (lpString_00 != (LPCWSTR)0)) &&
+                (lpString != (LPCWSTR)0)) {
+                FUN_140063620((WCHAR **)&local_108);
+                pWVar4 = FUN_140006aa0((int64_t *)&local_108, -5, 0xfffffffff008fffb,
+                                       lpString_00);
+                if (((pWVar4 != (WCHAR *)0) && (*pWVar4 != L'\0')) &&
+                    (pWVar4[1] == L':')) {
+                    pWVar4[2] = L'\0';
+                    lpString_00 = pWVar4;
+                }
+                iVar2 = lstrlenW(lpString_00);
+                iVar3 = lstrlenW(lpString);
+                FUN_140063720((WCHAR **)param_2, (int64_t)(iVar3 + iVar2 + 8));
+                /* TODO(verify): 原反编译丢掉 %s%s 实参, 补 lpString_00 / lpString */
+                wsprintfW((LPWSTR)*param_2, WSTR("%s%s"), lpString_00, lpString);
+                FUN_14005b104((WCHAR **)&local_108);
+            }
+            FUN_14005b104((WCHAR **)&local_100);
+            if (hObject != (HANDLE)(uintptr_t)-1) {
+                CloseHandle(hObject);
+            }
+        }
+        LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    }
+    return iVar1;
+}
+
+/* =========================================================================
+ * FUN_140078f00 @0x140078f00 — FORMAT 命令串构造并执行 (卷格式化)
+ * ========================================================================= */
+int64_t FUN_140078f00(int64_t *param_1, WCHAR *param_2)
+{
+    WCHAR WVar1;
+    bool bVar2;
+    WCHAR *pWVar3;
+    uint64_t uVar4;
+    LPWSTR pWVar5;
+    WCHAR *pWVar6;
+    wchar_t *pwVar8;
+    LPCWSTR pWVar9;
+    short sVar10;
+    short sVar17;
+    WCHAR WVar11;
+    uint64_t uVar12;
+    uint64_t uVar13;
+    uint64_t uVar14;
+    int iVar15;
+    int iVar16;
+    WCHAR *local_res10[2];
+    int local_res20[2];
+    int local_88[2];
+    WCHAR *local_80;            /* 命令串槽 */
+    WCHAR *local_78;
+    WCHAR *local_70;
+    WCHAR *local_68;
+    WCHAR *local_60;
+    WCHAR *local_58;
+
+    local_res10[0] = param_2;
+    FUN_140063620((WCHAR **)&local_70);
+    FUN_140063620((WCHAR **)&local_60);
+    FUN_140063620((WCHAR **)&local_78);
+    FUN_140063620((WCHAR **)&local_68);
+    FUN_140063620((WCHAR **)&local_80);
+    iVar15 = 1;
+    local_res20[0] = 1;
+    iVar16 = 0;
+    local_88[0] = 0;
+    sVar10 = 0;
+    sVar17 = 0;
+    uVar4 = FUN_14005ea5c();
+    pwVar8 = WSTR("!=FORMAT.COM ");
+    bVar2 = (unsigned int)(uVar4 >> 0x10) < 0x50001;
+    if (bVar2) {
+        pwVar8 = WSTR("!=cmd /c echo Y|FORMAT.COM ");
+    }
+    FUN_14007034c((WCHAR **)&local_80, (const WCHAR *)pwVar8);
+    WVar11 = *param_2;
+    WVar1 = WVar11;
+    while ((WVar1 != L'\0' &&
+            (((local_res10[0] = param_2, (uint16_t)WVar1 < 9 || (0xd < (uint16_t)WVar1)) &&
+              (WVar1 != L' '))))) {
+        param_2 = param_2 + 1;
+        local_res10[0] = param_2;
+        WVar1 = *param_2;
+    }
+    FUN_14005b154((WCHAR **)local_res10);
+    pWVar6 = local_res10[0];
+    if (WVar11 == L'*') {
+        FUN_14006375c((WCHAR **)&local_80, local_res10[0]);
+        if ((!bVar2) &&
+            (pWVar5 = StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0)) {
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /Y "));
+        }
+        pWVar5 = StrStrIW(pWVar6, WSTR("/X"));
+        if (pWVar5 == (LPWSTR)0) {
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /X "));
+        }
+        pWVar9 = (LPCWSTR)local_70;
+        if (!bVar2) goto LAB_140079428;
+        uVar12 = 0x2f;
+        if (*pWVar6 == L'/') {
+            uVar13 = 0x20;
+            uVar14 = 9;
+            WVar11 = L'/';
+            do {
+                while ((WVar11 != L'\0' &&
+                        ((((uint16_t)WVar11 < (uint16_t)(WCHAR)uVar14) ||
+                          (0xd < (uint16_t)WVar11)) &&
+                         ((WCHAR)uVar13 != WVar11)))) {
+                    pWVar6 = pWVar6 + 1;
+                    local_res10[0] = pWVar6;
+                    WVar11 = *pWVar6;
+                }
+                FUN_14005b154((WCHAR **)local_res10);
+                WVar11 = *local_res10[0];
+                pWVar6 = local_res10[0];
+            } while ((WCHAR)uVar12 == WVar11);
+        }
+        pWVar9 = (LPCWSTR)local_70;
+        if ((*pWVar6 == L'\0') || (pWVar6[1] != L':')) goto LAB_140079428;
+        pWVar6[2] = L'\0';
+        local_70 = pWVar6;
+        sVar10 = sVar17;
+    }
+    else {
+        FUN_1400675b8((int64_t *)local_res10, (WCHAR **)&local_70, 0x2c);
+        if (*local_res10[0] == L',') {
+            local_res10[0] = local_res10[0] + 1;
+            FUN_1400675b8((int64_t *)local_res10, (WCHAR **)&local_60, 0x2c);
+        }
+        sVar10 = 0x2c;
+        if (((*local_70 == L'\0') || (pWVar9 = (LPCWSTR)0, *local_60 == L'\0')) ||
+            ((*local_70 != L'\\' && (local_70[1] != L':')))) {
+            FUN_14005b104((WCHAR **)&local_80);
+            FUN_14005b104((WCHAR **)&local_68);
+            FUN_14005b104((WCHAR **)&local_78);
+            FUN_14005b104((WCHAR **)&local_60);
+            FUN_14005b104((WCHAR **)&local_70);
+            return (int64_t)(int)(uint32_t)-0x7ff8ffa9;
+        }
+        if (*local_res10[0] == L',') {
+            local_res10[0] = local_res10[0] + 1;
+            FUN_14005b154((WCHAR **)local_res10);
+            if (*local_res10[0] == L'\"') {
+                local_58 = local_res10[0];
+                local_res10[0] = (WCHAR *)pWVar9;
+                pWVar6 = (WCHAR *)FUN_140024c48((int64_t *)&local_58, (int64_t *)local_res10,
+                                                0x85);
+                FUN_140063888((WCHAR **)&local_78, local_58, (int64_t)local_res10[0]);
+            }
+            else {
+                FUN_1400675b8((int64_t *)local_res10, (WCHAR **)&local_78, sVar10);
+                pWVar6 = local_res10[0];
+            }
+            if (*pWVar6 == L',') {
+                local_res10[0] = pWVar6 + 1;
+                FUN_1400679b0(local_res10, local_res20, 0x2c);
+                iVar15 = local_res20[0];
+                if (*local_res10[0] == L',') {
+                    local_res10[0] = local_res10[0] + 1;
+                    FUN_1400675b8((int64_t *)local_res10, (WCHAR **)&local_68, 0x2c);
+                    if (*local_res10[0] == L',') {
+                        local_res10[0] = local_res10[0] + 1;
+                        FUN_1400679b0(local_res10, local_88, 0x2c);
+                        iVar16 = local_88[0];
+                    }
+                }
+            }
+        }
+        FUN_14006375c((WCHAR **)&local_80, local_70);
+        FUN_14006375c((WCHAR **)&local_80, WSTR(" /FS:"));
+        FUN_14006375c((WCHAR **)&local_80, local_60);
+        sVar10 = sVar17;
+        if (*local_78 != L'\0') {
+            FUN_140070310((uint64_t *)local_res10, (uint64_t *)&local_78);
+            pWVar3 = local_res10[0];
+            WVar11 = *local_res10[0];
+            pWVar6 = local_res10[0];
+            while (WVar11 != L'\0') {
+                if (((8 < (uint16_t)*pWVar6) && ((uint16_t)*pWVar6 < 0xe)) ||
+                    (*pWVar6 == L' ')) {
+                    *pWVar6 = L'_';
+                    sVar10 = 0x5f;
+                }
+                pWVar6 = pWVar6 + 1;
+                WVar11 = *pWVar6;
+            }
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /V:"));
+            FUN_14006375c((WCHAR **)&local_80, pWVar3);
+            FUN_14005b104((WCHAR **)local_res10);
+        }
+        if (*local_68 != L'\0') {
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /A:"));
+            FUN_14006375c((WCHAR **)&local_80, local_68);
+        }
+        if (iVar15 != 0) {
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /Q"));
+        }
+        uVar12 = (uint64_t)FUN_14005c7c4("NTFS", (const WCHAR *)local_60);
+        if (((char)uVar12 != '\0') && (iVar16 != 0)) {
+            FUN_14006375c((WCHAR **)&local_80, WSTR(" /C"));
+        }
+        /* 由全局 u__Y__X_1401270d0 构造附加选项串 (bVar2 分支位域噪音已简化) */
+        {
+            WCHAR sbuf[16];
+            int k;
+            for (k = 0; k < 8; k++) {
+                sbuf[k] = u__Y__X_1401270d0[k];
+            }
+            if (bVar2) {
+                sbuf[0] = u__Y__X_1401270d0[0];
+                sbuf[1] = 0x20;
+                sbuf[3] = (WCHAR)((const uint8_t *)u__Y__X_1401270d0)[6];
+            }
+            sbuf[8] = L'\0';
+            /* TODO(verify): u__Y__X_1401270d0 全局内容待从 .data 确认 */
+            FUN_14006375c((WCHAR **)&local_80, (LPCWSTR)sbuf);
+        }
+        pWVar9 = (LPCWSTR)local_70;
+        if (!bVar2) goto LAB_140079428;
+    }
+    if (local_70 != (WCHAR *)0) {
+        SetVolumeLabelW(local_70, (LPCWSTR)&DAT_14011c638);
+    }
+LAB_140079428:
+    {
+        uint64_t ret =
+            (uint64_t)FUN_14000e26c((void *)param_1, (void *)local_80, (void *)param_1,
+                                    0, 1, 0, 0, 0);
+        if (sVar10 != 0) {
+            SetVolumeLabelW((LPCWSTR)pWVar9, (LPCWSTR)local_78);
+        }
+        FUN_14005b104((WCHAR **)&local_80);
+        FUN_14005b104((WCHAR **)&local_68);
+        FUN_14005b104((WCHAR **)&local_78);
+        FUN_14005b104((WCHAR **)&local_60);
+        FUN_14005b104((WCHAR **)&local_70);
+        return (int64_t)(int)(uint32_t)ret;
+    }
+}
+
+/* =========================================================================
+ * FUN_1400796e4 @0x1400796e4 — percent 命令 (color / smooth / 百分数) 处理
+ * ========================================================================= */
+uint64_t FUN_1400796e4(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
+                         LPCWSTR param_4, WPARAM param_5, uint64_t *param_6)
+{
+    HWND hWnd;
+    HWND pHVar1;
+    LPCRITICAL_SECTION lpCriticalSection;
+    double dVar2;
+    int bVar3;
+    int iVar4;
+    uint64_t uVar5;
+    uint64_t uVar6;
+    LPCWSTR pWVar7;
+    UINT Msg;
+    byte bVar8;
+    int64_t lVar9;
+    double local_res8;
+    WCHAR *local_res18[2];
+    uint64_t *local_78;
+    int64_t local_70;
+    LPCWSTR local_68;
+    uint64_t local_60;
+    LPCWSTR local_58;
+    uint64_t local_50;
+    uint64_t local_48;
+
+    hWnd = *(HWND *)(param_1[7] + 0x20);
+    pHVar1 = *(HWND *)(*(int64_t *)(param_1[10] + 0x40) + 0x20);
+    local_res18[0] = (WCHAR *)param_3;
+    bVar3 = FUN_14005b2c0((uint64_t *)param_1, param_4, (void *)pHVar1);
+    if (bVar3 == 0) {
+        return 0;
+    }
+    lVar9 = param_1[7];
+    bVar8 = *(byte *)(lVar9 + 0xe4);
+    uVar5 = (uint64_t)FUN_14005c7c4("percent", (const WCHAR *)param_4);
+    if ((char)uVar5 == '\0') {
+LAB_140079792:
+        lpCriticalSection = (LPCRITICAL_SECTION)*param_6;
+        if (lpCriticalSection != (LPCRITICAL_SECTION)0) {
+            *param_6 = 0;
+            LeaveCriticalSection(lpCriticalSection);
+        }
+        uVar5 = (uint64_t)FUN_140057b80((void *)param_1[7], param_4, param_5, hWnd,
+                                        param_3, (void *)param_1[10], param_2, pHVar1,
+                                        (int64_t)param_1);
+        if ((int)uVar5 == 0) {
+            iVar4 = lstrcmpW(WSTR("color"), param_4);
+            if (iVar4 == 0) {
+                {
+                    int cval = (int)0x80000000;
+                    bVar3 = FUN_140074838(local_res18, &cval);
+                    if (bVar3 != 0) {
+                        if (cval < 0) {
+                            cval = (int)0x80000000;
+                        }
+                        if ((bVar8 & 1) == 0) {
+                            *(int *)(param_1[7] + 0xe0) = cval;
+                        }
+                        else {
+                            *(int *)(param_1[7] + 0x5c) = cval;
+                        }
+                    }
+                }
+            }
+            else if (*param_4 == L'\0') {
+                if (*param_3 == L'\0') {
+                    return 0x80070057;
+                }
+                local_res8 = 0.0;
+                iVar4 = (int)(uint32_t)-0x7fffff7;
+                uVar6 = (uint64_t)FUN_140067b54(local_res18, &local_res8);
+                if (0 < (int)uVar6) {
+                    dVar2 = DAT_140127190;
+                    if ((DAT_140127190 < local_res8) ||
+                        (dVar2 = DAT_140127188,
+                         (dVar2 = local_res8, local_res8 < DAT_140127188))) {
+                        dVar2 = (DAT_140127190 < local_res8) ? DAT_140127190 : DAT_140127188;
+                    }
+                    iVar4 = (int)dVar2;
+                }
+                if (*local_res18[0] != L'\0') {
+                    pWVar7 = (LPCWSTR)(local_res18[0] + 1);
+                }
+                if ((bVar8 & 1) == 0) {
+                    if ((iVar4 == (int)(uint32_t)-0x7fffff7) && (pWVar7 == (LPCWSTR)0)) {
+                        return 0;
+                    }
+                    local_70 = (int64_t)iVar4;
+                    local_60 = 0;
+                    local_58 = (LPCWSTR)0;
+                    local_50 = 0;
+                    Msg = 0x462;
+                    local_78 = param_1;
+                    local_68 = pWVar7;
+                }
+                else {
+                    local_50 = (uint64_t)0xffffffffffffffffULL;
+                    local_78 = (uint64_t *)(int64_t)(iVar4 * 10000000);
+                    Msg = 0x45b;
+                    local_70 = (int64_t)(int)-0x80000000;
+                    local_68 = (LPCWSTR)(uintptr_t)0xffffffff80000000ULL;
+                    local_60 = (uint64_t)0xffffffff80000000ULL;
+                    local_58 = pWVar7;
+                }
+                local_48 = 0;
+                SendMessageW(hWnd, Msg, (WPARAM)param_1[7], (LPARAM)&local_78);
+            }
+        }
+    }
+    else {
+        uVar5 = (uint64_t)FUN_14005c7c4("smooth", (const WCHAR *)param_3);
+        if ((char)uVar5 == '\0') {
+            uVar5 = (uint64_t)FUN_14005c7c4("-smooth", (const WCHAR *)param_3);
+            if ((char)uVar5 == '\0') goto LAB_140079792;
+            bVar8 = bVar8 & 0xfe;
+        }
+        else {
+            bVar8 = bVar8 | 1;
+        }
+        *(byte *)(lVar9 + 0xe4) = bVar8;
+    }
+    return 0;
+}
+
+/* =========================================================================
+ * FUN_140079a88 @0x140079a88 — 从参数列表定位第 n 个匹配 token
+ * ========================================================================= */
+int FUN_140079a88(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3, int param_4,
+                  uint16_t param_5)
+{
+    LPCWSTR lpStr2;
+    LPCWSTR pWVar1;
+    WCHAR WVar2;
+    int iVar3;
+    int iVar4;
+    LPCWSTR pWVar5;
+    int iVar6;
+    WCHAR *local_res8;
+    WCHAR *local_res10;
+    int local_res18[2];
+
+    iVar6 = 1;
+    if (param_4 < 0) {
+        param_4 = 1;
+    }
+    local_res8 = (WCHAR *)param_1;
+    local_res10 = (WCHAR *)param_2;
+    FUN_14005b154((WCHAR **)&local_res8);
+    FUN_14005b154((WCHAR **)&local_res10);
+    lpStr2 = local_res8;
+    WVar2 = *local_res8;
+    pWVar5 = local_res8;
+    while ((WVar2 != L'\0' &&
+            ((((uint16_t)WVar2 < 9 || (0xd < (uint16_t)WVar2)) && (WVar2 != L' '))))) {
+        pWVar5 = pWVar5 + 1;
+        WVar2 = *pWVar5;
+    }
+    iVar3 = lstrlenW((LPCWSTR)local_res8);
+    if ((param_3 & 0x10) == 0) {
+        while (pWVar5 = (LPCWSTR)local_res10, *local_res10 != L'\0') {
+            if ((param_3 & 0xf) == 0) {
+                iVar4 = StrCmpNIW((LPCWSTR)local_res10, lpStr2, iVar3);
+            }
+            else {
+                iVar4 = StrCmpNW((LPCWSTR)local_res10, lpStr2, iVar3);
+            }
+            if (((iVar4 == 0) &&
+                 (((WVar2 = pWVar5[iVar3],
+                    WVar2 == L'\0' || ((8 < (uint16_t)WVar2 && ((uint16_t)WVar2 < 0xe))) ||
+                    (WVar2 == L' ')))) &&
+                (param_4 = param_4 + -1, param_4 < 1)) {
+                return iVar6;
+            }
+            WVar2 = *pWVar5;
+            while (((WVar2 != L'\0' &&
+                    ((local_res10 = (WCHAR *)pWVar5,
+                      (uint16_t)WVar2 < 9 || (0xd < (uint16_t)WVar2)))) &&
+                   (WVar2 != L' '))) {
+                pWVar5 = pWVar5 + 1;
+                local_res10 = (WCHAR *)pWVar5;
+                WVar2 = *pWVar5;
+            }
+            FUN_14005b154((WCHAR **)&local_res10);
+            iVar6 = iVar6 + 1;
+        }
+    }
+    else {
+        FUN_140063620((WCHAR **)&local_res8);
+        pWVar1 = (LPCWSTR)local_res10;
+        WVar2 = *local_res10;
+        pWVar5 = (LPCWSTR)local_res8;
+        while (WVar2 != L'\0') {
+            local_res18[0] = iVar6 + -1;
+            *pWVar5 = L'\0';
+            FUN_140067278((uint64_t)(uintptr_t)&DAT_14013d130, local_res18, pWVar1,
+                          (int64_t *)&local_res8, (uint32_t)param_5, (uint16_t *)0);
+            pWVar5 = (LPCWSTR)local_res8;
+            if (*local_res8 == L'\0') break;
+            if ((param_3 & 0xf) == 0) {
+                iVar3 = lstrcmpiW((LPCWSTR)local_res8, lpStr2);
+            }
+            else {
+                iVar3 = lstrcmpW((LPCWSTR)local_res8, lpStr2);
+            }
+            if ((iVar3 == 0) && (param_4 = param_4 + -1, param_4 < 1)) {
+                FUN_14005b104((WCHAR **)&local_res8);
+                return iVar6;
+            }
+            iVar6 = iVar6 + 1;
+            WVar2 = *pWVar1;
+        }
+        FUN_14005b104((WCHAR **)&local_res8);
+    }
+    return 0;
+}

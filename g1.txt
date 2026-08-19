@@ -1,0 +1,41 @@
+/* ========== FUN_140061828 @ 140061828 ========== */
+/* signature: undefined __fastcall FUN_140061828(longlong param_1, int param_2, int param_3, int param_4) */
+
+void FUN_140061828(longlong param_1,int param_2,int param_3,int param_4)
+
+{
+  longlong lVar1;
+  undefined8 *puVar2;
+  longlong *plVar3;
+  int iVar4;
+  
+  EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  iVar4 = 0;
+  if (0 < **(int **)(param_1 + 0x1c0)) {
+    plVar3 = (longlong *)**(undefined8 **)(param_1 + 0x1b8);
+    do {
+      lVar1 = *plVar3;
+      if ((*(int *)(lVar1 + 0x74) == param_2) && (*(int *)(lVar1 + 0x78) == param_3)) {
+        if (param_4 == 0) {
+          if (*(short *)(lVar1 + 0x7c) != 0) goto LAB_1400618e5;
+        }
+        else if ((-1 < *(int *)(lVar1 + 0x70)) || (*(short *)(lVar1 + 0x7c) == 0))
+        goto LAB_1400618e5;
+        puVar2 = *(undefined8 **)(**(longlong **)(param_1 + 0x1b8) + (longlong)iVar4 * 8);
+        *(undefined **)(**(longlong **)(param_1 + 0x1b8) + (longlong)iVar4 * 8) = &DAT_14013d660;
+        if (puVar2 != (undefined8 *)0x0) {
+          (**(code **)*puVar2)(puVar2,1);
+        }
+        break;
+      }
+LAB_1400618e5:
+      iVar4 = iVar4 + 1;
+      plVar3 = plVar3 + 1;
+    } while (iVar4 < **(int **)(param_1 + 0x1c0));
+  }
+                    /* WARNING: Could not recover jumptable at 0x0001400618d7. Too many branches */
+                    /* WARNING: Treating indirect jump as call */
+  LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  return;
+}
+
