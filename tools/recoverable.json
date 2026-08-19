@@ -1,0 +1,524 @@
+[
+{
+"addr": "FUN_140069314",
+"dc": 46,
+"cl": 2,
+"file": "core_remaining_helpers.c"
+},
+{
+"addr": "FUN_140075148",
+"dc": 69,
+"cl": 2,
+"file": "core_remaining_helpers.c"
+},
+{
+"addr": "FUN_140075c7c",
+"dc": 165,
+"cl": 2,
+"file": "core_remaining_helpers.c"
+},
+{
+"addr": "FUN_1401001c0",
+"dc": 282,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140100ac4",
+"dc": 727,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140102d44",
+"dc": 203,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140103a20",
+"dc": 315,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140103e10",
+"dc": 403,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010443c",
+"dc": 270,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1401047a8",
+"dc": 258,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140104b00",
+"dc": 81,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140104e08",
+"dc": 75,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010511c",
+"dc": 84,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1401054bc",
+"dc": 43,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1401055ec",
+"dc": 84,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1401058cc",
+"dc": 77,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140105bc0",
+"dc": 85,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140106654",
+"dc": 114,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140106c5c",
+"dc": 408,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140107a88",
+"dc": 356,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140107fb8",
+"dc": 251,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140108378",
+"dc": 76,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140108450",
+"dc": 470,
+"cl": 1,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140108d40",
+"dc": 916,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140109d28",
+"dc": 1211,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010ae40",
+"dc": 367,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010b3e8",
+"dc": 89,
+"cl": 1,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010b504",
+"dc": 100,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010b650",
+"dc": 2015,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010d950",
+"dc": 67,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010dbc4",
+"dc": 108,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010f1e4",
+"dc": 108,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14010f2f4",
+"dc": 937,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1401105c8",
+"dc": 102,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14011067c",
+"dc": 88,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140111318",
+"dc": 209,
+"cl": 3,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140111874",
+"dc": 130,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140111ae4",
+"dc": 122,
+"cl": 1,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140111ca4",
+"dc": 434,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140112374",
+"dc": 318,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140112734",
+"dc": 145,
+"cl": 1,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140113084",
+"dc": 2183,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140115488",
+"dc": 2871,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_140118660",
+"dc": 84,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_14011a4b7",
+"dc": 41,
+"cl": 2,
+"file": "core_b9_remaining.c"
+},
+{
+"addr": "FUN_1400048c4",
+"dc": 57,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_1400091e0",
+"dc": 113,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_14000c764",
+"dc": 180,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_14000cedc",
+"dc": 143,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_1400185c8",
+"dc": 46,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_14001ed5c",
+"dc": 70,
+"cl": 3,
+"file": "core_b1_remaining.c"
+},
+{
+"addr": "FUN_14004e488",
+"dc": 180,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140051610",
+"dc": 121,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140057940",
+"dc": 91,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005ccb0",
+"dc": 68,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005ce04",
+"dc": 41,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005e254",
+"dc": 45,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005e3ac",
+"dc": 46,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005e61c",
+"dc": 66,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14005efac",
+"dc": 99,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14006213c",
+"dc": 62,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140062bdc",
+"dc": 95,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140064694",
+"dc": 146,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140065140",
+"dc": 347,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14006587c",
+"dc": 185,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140065c04",
+"dc": 161,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140066f64",
+"dc": 44,
+"cl": 1,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_1400695a8",
+"dc": 46,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140069704",
+"dc": 50,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14006e238",
+"dc": 68,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140070710",
+"dc": 521,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140070da8",
+"dc": 547,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140072924",
+"dc": 150,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140073934",
+"dc": 126,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140076b88",
+"dc": 230,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140078514",
+"dc": 83,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140079524",
+"dc": 74,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14007fcd4",
+"dc": 73,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14007fe3c",
+"dc": 271,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140081238",
+"dc": 124,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140084a5c",
+"dc": 544,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_14008ba90",
+"dc": 99,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140097150",
+"dc": 203,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_140097714",
+"dc": 169,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_1400987ec",
+"dc": 758,
+"cl": 3,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_1400b2ca8",
+"dc": 625,
+"cl": 2,
+"file": "core_b3_remaining.c"
+},
+{
+"addr": "FUN_1400bb718",
+"dc": 749,
+"cl": 2,
+"file": "core_b3_remaining.c"
+}
+]

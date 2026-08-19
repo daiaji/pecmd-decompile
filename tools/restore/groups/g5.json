@@ -1,0 +1,51 @@
+[
+ {
+  "addr": "FUN_140070710",
+  "dc": 520,
+  "file": "core_b3_remaining.c",
+  "start": 70753,
+  "end": 71273
+ },
+ {
+  "addr": "FUN_140065140",
+  "dc": 346,
+  "file": "core_b3_remaining.c",
+  "start": 62016,
+  "end": 62362
+ },
+ {
+  "addr": "FUN_140065c04",
+  "dc": 160,
+  "file": "core_b3_remaining.c",
+  "start": 62564,
+  "end": 62724
+ },
+ {
+  "addr": "FUN_140051610",
+  "dc": 120,
+  "file": "core_b3_remaining.c",
+  "start": 47589,
+  "end": 47709
+ },
+ {
+  "addr": "FUN_140078514",
+  "dc": 82,
+  "file": "core_b3_remaining.c",
+  "start": 76343,
+  "end": 76425
+ },
+ {
+  "addr": "FUN_14006e238",
+  "dc": 67,
+  "file": "core_b3_remaining.c",
+  "start": 68980,
+  "end": 69047
+ },
+ {
+  "addr": "FUN_1400185c8",
+  "dc": 45,
+  "file": "core_b1_remaining.c",
+  "start": 13276,
+  "end": 13321
+ }
+]

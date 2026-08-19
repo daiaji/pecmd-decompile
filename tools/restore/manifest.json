@@ -1,0 +1,310 @@
+[
+ {
+  "addr": "FUN_140069314",
+  "dc": 45,
+  "file": "core_remaining_helpers.c",
+  "start": 65378,
+  "end": 65423
+ },
+ {
+  "addr": "FUN_140075148",
+  "dc": 68,
+  "file": "core_remaining_helpers.c",
+  "start": 74256,
+  "end": 74324
+ },
+ {
+  "addr": "FUN_140075c7c",
+  "dc": 164,
+  "file": "core_remaining_helpers.c",
+  "start": 74706,
+  "end": 74870
+ },
+ {
+  "addr": "FUN_1400048c4",
+  "dc": 56,
+  "file": "core_b1_remaining.c",
+  "start": 1761,
+  "end": 1817
+ },
+ {
+  "addr": "FUN_1400091e0",
+  "dc": 112,
+  "file": "core_b1_remaining.c",
+  "start": 4990,
+  "end": 5102
+ },
+ {
+  "addr": "FUN_14000c764",
+  "dc": 179,
+  "file": "core_b1_remaining.c",
+  "start": 6894,
+  "end": 7073
+ },
+ {
+  "addr": "FUN_14000cedc",
+  "dc": 142,
+  "file": "core_b1_remaining.c",
+  "start": 7074,
+  "end": 7216
+ },
+ {
+  "addr": "FUN_1400185c8",
+  "dc": 45,
+  "file": "core_b1_remaining.c",
+  "start": 13276,
+  "end": 13321
+ },
+ {
+  "addr": "FUN_14001ed5c",
+  "dc": 69,
+  "file": "core_b1_remaining.c",
+  "start": 18477,
+  "end": 18546
+ },
+ {
+  "addr": "FUN_14004e488",
+  "dc": 179,
+  "file": "core_b3_remaining.c",
+  "start": 45231,
+  "end": 45410
+ },
+ {
+  "addr": "FUN_140051610",
+  "dc": 120,
+  "file": "core_b3_remaining.c",
+  "start": 47589,
+  "end": 47709
+ },
+ {
+  "addr": "FUN_140057940",
+  "dc": 90,
+  "file": "core_b3_remaining.c",
+  "start": 51512,
+  "end": 51602
+ },
+ {
+  "addr": "FUN_14005ccb0",
+  "dc": 67,
+  "file": "core_b3_remaining.c",
+  "start": 55262,
+  "end": 55329
+ },
+ {
+  "addr": "FUN_14005e254",
+  "dc": 44,
+  "file": "core_b3_remaining.c",
+  "start": 56340,
+  "end": 56384
+ },
+ {
+  "addr": "FUN_14005e3ac",
+  "dc": 45,
+  "file": "core_b3_remaining.c",
+  "start": 56435,
+  "end": 56480
+ },
+ {
+  "addr": "FUN_14005e61c",
+  "dc": 65,
+  "file": "core_b3_remaining.c",
+  "start": 56561,
+  "end": 56626
+ },
+ {
+  "addr": "FUN_14005efac",
+  "dc": 98,
+  "file": "core_b3_remaining.c",
+  "start": 56990,
+  "end": 57088
+ },
+ {
+  "addr": "FUN_14006213c",
+  "dc": 61,
+  "file": "core_b3_remaining.c",
+  "start": 59731,
+  "end": 59792
+ },
+ {
+  "addr": "FUN_140062bdc",
+  "dc": 94,
+  "file": "core_b3_remaining.c",
+  "start": 60252,
+  "end": 60346
+ },
+ {
+  "addr": "FUN_140064694",
+  "dc": 145,
+  "file": "core_b3_remaining.c",
+  "start": 61561,
+  "end": 61706
+ },
+ {
+  "addr": "FUN_140065140",
+  "dc": 346,
+  "file": "core_b3_remaining.c",
+  "start": 62016,
+  "end": 62362
+ },
+ {
+  "addr": "FUN_14006587c",
+  "dc": 184,
+  "file": "core_b3_remaining.c",
+  "start": 62379,
+  "end": 62563
+ },
+ {
+  "addr": "FUN_140065c04",
+  "dc": 160,
+  "file": "core_b3_remaining.c",
+  "start": 62564,
+  "end": 62724
+ },
+ {
+  "addr": "FUN_140066f64",
+  "dc": 43,
+  "file": "core_b3_remaining.c",
+  "start": 63556,
+  "end": 63599
+ },
+ {
+  "addr": "FUN_1400695a8",
+  "dc": 45,
+  "file": "core_b3_remaining.c",
+  "start": 65515,
+  "end": 65560
+ },
+ {
+  "addr": "FUN_140069704",
+  "dc": 49,
+  "file": "core_b3_remaining.c",
+  "start": 65561,
+  "end": 65610
+ },
+ {
+  "addr": "FUN_14006e238",
+  "dc": 67,
+  "file": "core_b3_remaining.c",
+  "start": 68980,
+  "end": 69047
+ },
+ {
+  "addr": "FUN_140070710",
+  "dc": 520,
+  "file": "core_b3_remaining.c",
+  "start": 70753,
+  "end": 71273
+ },
+ {
+  "addr": "FUN_140070da8",
+  "dc": 546,
+  "file": "core_b3_remaining.c",
+  "start": 71274,
+  "end": 71820
+ },
+ {
+  "addr": "FUN_140072924",
+  "dc": 149,
+  "file": "core_b3_remaining.c",
+  "start": 72384,
+  "end": 72533
+ },
+ {
+  "addr": "FUN_140073934",
+  "dc": 125,
+  "file": "core_b3_remaining.c",
+  "start": 73078,
+  "end": 73203
+ },
+ {
+  "addr": "FUN_140076b88",
+  "dc": 229,
+  "file": "core_b3_remaining.c",
+  "start": 75345,
+  "end": 75574
+ },
+ {
+  "addr": "FUN_140078514",
+  "dc": 82,
+  "file": "core_b3_remaining.c",
+  "start": 76343,
+  "end": 76425
+ },
+ {
+  "addr": "FUN_140079524",
+  "dc": 73,
+  "file": "core_b3_remaining.c",
+  "start": 77029,
+  "end": 77102
+ },
+ {
+  "addr": "FUN_14007fcd4",
+  "dc": 72,
+  "file": "core_b3_remaining.c",
+  "start": 81519,
+  "end": 81591
+ },
+ {
+  "addr": "FUN_14007fe3c",
+  "dc": 270,
+  "file": "core_b3_remaining.c",
+  "start": 81592,
+  "end": 81862
+ },
+ {
+  "addr": "FUN_140081238",
+  "dc": 123,
+  "file": "core_b3_remaining.c",
+  "start": 82370,
+  "end": 82493
+ },
+ {
+  "addr": "FUN_140084a5c",
+  "dc": 543,
+  "file": "core_b3_remaining.c",
+  "start": 84459,
+  "end": 85002
+ },
+ {
+  "addr": "FUN_14008ba90",
+  "dc": 98,
+  "file": "core_b3_remaining.c",
+  "start": 88975,
+  "end": 89073
+ },
+ {
+  "addr": "FUN_140097150",
+  "dc": 202,
+  "file": "core_b3_remaining.c",
+  "start": 95075,
+  "end": 95277
+ },
+ {
+  "addr": "FUN_140097714",
+  "dc": 168,
+  "file": "core_b3_remaining.c",
+  "start": 95278,
+  "end": 95446
+ },
+ {
+  "addr": "FUN_1400987ec",
+  "dc": 757,
+  "file": "core_b3_remaining.c",
+  "start": 95846,
+  "end": 96603
+ },
+ {
+  "addr": "FUN_1400b2ca8",
+  "dc": 624,
+  "file": "core_b3_remaining.c",
+  "start": 111013,
+  "end": 111637
+ },
+ {
+  "addr": "FUN_1400bb718",
+  "dc": 748,
+  "file": "core_b3_remaining.c",
+  "start": 116235,
+  "end": 116983
+ }
+]
