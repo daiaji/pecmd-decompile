@@ -837,7 +837,6 @@ uint64_t SetupDiGetDriverInfoDetailW(void){ return 0; }
 uint64_t SetupDiClassNameFromGuidW(void){ return 0; }
 uint64_t GetShortPathNameW(void){ return 0; }
 uint64_t CreateJobObjectW(void){ return 0; }
-void *FUN_1400280a8(void *a, const void *b, int c, unsigned d){ (void)a;(void)b;(void)c;(void)d; return 0; }
 void FUN_14003b540(void *a, uint64_t b, uint64_t c, int d, void *e){ (void)a;(void)b;(void)c;(void)d;(void)e; }
 char *PTR_s___disverify_14013a2c8;
 char *PTR_s__AutoDisverify_14013a2c0;
@@ -874,10 +873,8 @@ int64_t   DAT_14013d870;          /* bitmap data size */
 uint64_t FUN_14005b2c0(void){ return 0; }
 uint64_t FUN_14005d770(void){ return 0; }
 uint64_t FUN_14005fbd4(void){ return 0; }
-void *FUN_14006045c(void *s){ (void)s; return 0; }
 uint64_t FUN_1400612cc(uint64_t *p){ (void)p; return 0; }
 void FUN_14006345c(void **ps, const char *s){ (void)ps;(void)s; }
-intptr_t FUN_140068ca8(void *a, void *b, void *c, void *d){ (void)a;(void)b;(void)c;(void)d; return 0; }
 uint64_t FUN_140069bd8(void){ return 0; }
 uint64_t FUN_14007d340(void){ return 0; }
 uint64_t FUN_1400e3d60(void){ return 0; }
@@ -918,22 +915,15 @@ int FUN_1400efb08(int64_t *a, const uint16_t *b, uint64_t c, int *d, void *e, ui
 void FUN_1400ef078(int64_t a, uint64_t b){ (void)a;(void)b; }
 uint64_t *FUN_1400fec9c(uint64_t *a, uint64_t b, uint64_t c){ (void)a;(void)b;(void)c; return (uint64_t*)0; }
 int FUN_1400ff080(int64_t *a, unsigned long b, int *c, void *d, uint32_t e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 1; }
-int FUN_1400628b4(double a){ (void)a; return 0; }
-int FUN_1400618f8(int64_t a, intptr_t b){ (void)a;(void)b; return 0; }
 int FUN_14006e4f4(const uint16_t *a){ (void)a; return 1; }
 uint64_t *FUN_1400eee30(uint64_t *a, uint64_t b){ (void)a;(void)b; return (uint64_t*)0; }
 uint8_t PTR_FUN_140124f70[8];
 uint8_t PTR_FUN_140125e20[8];
-uint32_t FUN_14005d87c(uint16_t *a){ (void)a; return 0; }
-uint32_t FUN_14005d83c(uint16_t *a){ (void)a; return 0; }
 uint32_t FUN_14005d7e8(uint16_t *a){ (void)a; return 0; }
-int FUN_140061a28(int *a){ (void)a; return 1; }
-int FUN_140061a34(int16_t *a){ (void)a; return 1; }
 uint64_t DestroyCursor(void){ return 0; }
 uint64_t EnumResourceNamesW(void){ return 0; }
 uint64_t CreateIconFromResource(void){ return 0; }
 uint64_t FUN_1400a40e8(uint64_t *a, int64_t *b, int64_t *c, int64_t *d, int64_t *e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
-uint64_t *FUN_14005b3a0(uint64_t *a, uint64_t b){ (void)a;(void)b; return (uint64_t*)0; }
 int64_t FUN_1400705ac(int64_t *a, const uint16_t *b, uint32_t c, uint64_t d, uint64_t e, uint32_t f, uint32_t g, uint64_t h){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; return 0; }
 char s_0_0_0_0_140126958[16];
 uint64_t FUN_14002d708(uint16_t *s, int a, int64_t *p, int b, unsigned long d){ (void)s;(void)a;(void)p;(void)b;(void)d; return 0; }
