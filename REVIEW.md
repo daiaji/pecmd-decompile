@@ -3170,3 +3170,19 @@ GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / Reserv
 ### 校验
 - `./build.sh core_*.c` 持续 exit 0；完整链接 exit 0；git 多里程碑（8 次零警告提交）。
 - 教训：子代理编辑大文件有改坏风险，坚持"每次先 commit 绿基线、子代理改坏即 git checkout 重做、同一文件只允许一个子代理顺序编辑"。
+
+---
+
+## 63. 巨型函数：已还原 + 命名 16/18
+
+### 结论
+- classify 曾标"未还原"的巨型（0474a8 19KB/075f9c 8KB/006aa0 6.6KB 等）实为**完整还原体**（SetupAPI 驱动安装/
+  卷枚举/设备类匹配等），只是体量大而保留 FUN_ 名——非缺代码。
+- 0a6874/58ae4 等"未还原"在 core 中**完全无引用**（decompiled 死角块），构建/链接不需要、非缺口。
+- **命名 16/18**（2 个歧义 skip：05182c/08bcd4）：DosDeviceMount/EnumerateVolume/MatchDeviceClass/
+  DriverInstall/LoadObjectIcon/ReadTextLine/CodeConvertCommand/WriteFileEncoded/VolumeDeviceCommand/
+  PcipCommand/GenerateTimeText/GenerateTextContent/ProcessEncodedFile/SearchStringAndLocate/
+  LaunchAsyncScriptThread/LoadIconAndTooltip。rename_map 774→**790**。剩余唯一 FUN_ 563。
+
+### 校验
+- build/link 绿。git 提交。
