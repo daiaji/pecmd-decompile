@@ -545,9 +545,6 @@ uint64_t PTR_FUN_14011eb78;
 uint64_t PTR_FUN_14011eb88;
 uint64_t PTR_FUN_14011c410;
 uint64_t PTR_DAT_14013bfe0;
-uint64_t DAT_14013d430;
-uint64_t DAT_14013d468;
-uint64_t DAT_14013d480;
 uint64_t DAT_14013d660;
 uint64_t DAT_14013d738;
 /* 本批(B1)新增定义 */
@@ -820,7 +817,6 @@ int32_t DAT_14013d770[16];
 
 
 /* --- r39 follow-up stubs (main-agent closure) --- */
-int (*DAT_14013d488)(void);
 uint64_t IsRectEmpty(void){ return 0; }
 uint64_t CreateDCW(void){ return 0; }
 void FUN_1400669c4(int64_t *a, uint64_t b, const uint16_t *c){ (void)a;(void)b;(void)c; }
@@ -949,14 +945,10 @@ uint64_t FUN_14004f948(void){ return 0; }
 uint64_t FUN_14004fea4(void){ return 0; }
 uint64_t FUN_14005b7dc(void){ return 0; }
 uint64_t FUN_14005be68(void){ return 0; }
-uint64_t DAT_14013d470;
-uint64_t DAT_14013d478;
-
 /* --- batch28 restored-function (core_b3r_g*.c) link stubs --- */
 /* data globals */
 uint8_t  DAT_14013d5c0[8] = {0};
 uint8_t  DAT_1401210f8[8] = {0};
-uint64_t DAT_14013d3b0 = 0;
 uint64_t _UNK_14012d1d0 = 0;
 /* Win32 / SetupAPI */
 uint64_t SetVolumeLabelW(void){ return 0; }

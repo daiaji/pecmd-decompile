@@ -190,7 +190,7 @@ extern int (*g_pWIMCommitImageHandle)();
 extern int (*g_pWIMCommitImageNum)();
 extern int (*g_pWIMUnmountImageHandle)();
 extern int (*g_pWIMUnmountImageNum)();
-extern int (*DAT_14013d488)();
+extern void (*g_pWIMCloseHandleSlot)();
 extern int (*g_pWIMCloseHandle)();
 
 /* A8 函数体内前向声明（被同文件后部已定义函数先调用） */
@@ -346,10 +346,10 @@ extern void  *g_pWIMUnmountImage;
 extern void  *g_pWIMMountImage2;
 extern int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);
 extern int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags);
-extern void  *DAT_14013d468;
-extern void  *DAT_14013d470;
-extern void  *DAT_14013d478;
-extern void  *DAT_14013d480;
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);
+extern int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);
+extern uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);
+extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);
 
 extern void    *g_pGdipLoadImageFromStream;                                  /* GdipLoadImageFromStream 函数指针 */
 extern int     (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm); /* CreateStreamOnHGlobal */
@@ -8755,7 +8755,7 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
     bool bVar1;
     HMODULE local_res8;
 
-    if (DAT_14013d468 != 0) {
+    if (g_pWIMCreateFile != 0) {
         return param_1;
     }
     bVar1 = param_2 == (LPCWSTR)0;
@@ -8780,15 +8780,15 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
                   (uintptr_t *)&local_res8);
     FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImages,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCreateFile", "WIMGAPI.DLL", (void **)&DAT_14013d468,
+    FUN_14005c828("WIMCreateFile", "WIMGAPI.DLL", (void **)&g_pWIMCreateFile,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMSetTemporaryPath", "WIMGAPI.DLL", (void **)&DAT_14013d470,
+    FUN_14005c828("WIMSetTemporaryPath", "WIMGAPI.DLL", (void **)&g_pWIMSetTemporaryPath,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMLoadImage", "WIMGAPI.DLL", (void **)&DAT_14013d478,
+    FUN_14005c828("WIMLoadImage", "WIMGAPI.DLL", (void **)&g_pWimLoadImage,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMMountImageHandle", "WIMGAPI.DLL", (void **)&DAT_14013d480,
+    FUN_14005c828("WIMMountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMHandleOp480,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&DAT_14013d488,
+    FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandleSlot,
                   (uintptr_t *)&local_res8);
     FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageHandle,
                   (uintptr_t *)&local_res8);
@@ -9256,14 +9256,14 @@ LAB_14005f56a:
 LAB_14005f5be:
     if (local_res20 != 0) {
         if (param_3 == 0) {
-            (*DAT_14013d488)();
+            (*g_pWIMCloseHandleSlot)();
         } else {
             (*g_pWIMCloseHandle)();
         }
     }
     if (local_28[0] != 0) {
         if (param_3 == 0) {
-            (*DAT_14013d488)();
+            (*g_pWIMCloseHandleSlot)();
         } else {
             (*g_pWIMCloseHandle)();
         }

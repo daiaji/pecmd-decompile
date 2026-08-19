@@ -140,7 +140,7 @@ extern uint8_t  g_b127748[];
 extern uint32_t g_u32127750;
 extern uint16_t g_u1627754;
 extern int64_t  g_i64D428;              /* GetOpenFileNameW slot */
-extern int64_t  DAT_14013d430;              /* GetSaveFileNameW slot */
+extern int (*g_pGetSaveFileNameW)(void);              /* GetSaveFileNameW slot */
 extern void    (*g_pCoTaskMemFree)(LPVOID);    /* CoTaskMemFree slot */
 extern WCHAR g_szEmpty[];            /* empty string */
 extern WCHAR    g_szEmpty[];                /* alias/slot for empty string */
@@ -713,7 +713,7 @@ LAB_14008822a:
         (void)local_520;
         FUN_14005C904();
         if (bVar3) {
-            local_598[0] = (uint)((int (*)(void))DAT_14013d430)();
+            local_598[0] = (uint)((int (*)(void))g_pGetSaveFileNameW)();
         } else {
             local_598[0] = (uint)((int (*)(void *))g_i64D428)(local_538);
         }

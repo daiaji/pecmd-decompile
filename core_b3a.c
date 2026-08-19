@@ -57,8 +57,8 @@ extern void *FUN_140070154(LPCWSTR src);
 extern void FUN_14007DF90(int64_t ctx, int mode);
 
 /* ---- 本批引用的全局数据 ---- */
-extern uint32_t DAT_14013d468;
-extern uint32_t DAT_14013d480;
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);
+extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);
 
 /* ========== PECMD_WrapParamCall_02d8 @0x1400402d8 ==========
  * 参数包装: 调 PECMD_CreateVariable(..., NULL)。
@@ -210,10 +210,10 @@ void PECMD_FillSpaces(int64_t *cursor, int count)
  */
 uint64_t PECMD_QueryState_c95c(void)
 {
-    if (DAT_14013d468 == 0) {
+    if (g_pWIMCreateFile == 0) {
         return 0xffffffff;
     }
-    return (uint64_t)(DAT_14013d480 != 0);
+    return (uint64_t)(g_pWIMHandleOp480 != 0);
 }
 
 /* ========== PECMD_QueryState_cfc0 @0x14005cfc0 ==========

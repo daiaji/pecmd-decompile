@@ -47,11 +47,11 @@ extern uint64_t _UNK_14012d1d0;             /* 16 字节 GUID 后 8 字节 (.rda
 /* ------------------------------------------------------------------
  * 本文件引用的函数指针槽 (Wimgapi / VirtDisk 延迟加载)
  *  WIM 镜像 API (wtc/wimgapi):
- *   DAT_14013d468 = 打开/创建 WIM (WIMCreateFile)
- *   DAT_14013d470 = 设置临时路径 (WIMSetTemporaryPath)
- *   DAT_14013d478 = 装载映像 (WIMLoadImage)
- *   DAT_14013d480 = 应用映像 (WIMApplyImage)
- *   DAT_14013d488 = 关闭句柄 (WIMCloseHandle)
+ *   g_pWIMCreateFile = 打开/创建 WIM (WIMCreateFile)
+ *   g_pWIMSetTemporaryPath = 设置临时路径 (WIMSetTemporaryPath)
+ *   g_pWimLoadImage = 装载映像 (WIMLoadImage)
+ *   g_pWIMHandleOp480 = 应用映像 (WIMApplyImage)
+ *   g_pWIMCloseHandleSlot = 关闭句柄 (WIMCloseHandle)
  * ------------------------------------------------------------------ */
 typedef uint64_t (*FN_14013d468)(uint64_t wim, uint32_t mode, int f3,
                                  int f4, int f5, uint32_t *out);
@@ -65,12 +65,12 @@ typedef int      (*FN_14013d730)(void *guid, uint64_t a2, uint32_t a3,
 typedef int      (*FN_14013d3b0)(HANDLE h, int a2, uint32_t a3,
                                  void *a4, uint64_t *a5);
 
-extern FN_14013d468 DAT_14013d468;
-extern FN_14013d470 DAT_14013d470;
-extern FN_14013d478 DAT_14013d478;
-extern FN_14013d480 DAT_14013d480;
-extern FN_14013d488 DAT_14013d488;
-extern FN_14013d3b0 DAT_14013d3b0;
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);
+extern int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);
+extern uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);
+extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);
+extern void (*g_pWIMCloseHandleSlot)();
+extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);
 
 /* ================================================================
  * @0x1400752a0  清洗文本 (去注释/空白/CRLF)
@@ -247,7 +247,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
         uVar6 = 0xe0000000;
     }
     local_res20[0] = 0;
-    lVar4 = (*DAT_14013d468)(param_2, uVar6, 3, 0, 0, local_res20);
+    lVar4 = (*g_pWIMCreateFile)(param_2, uVar6, 3, 0, 0, local_res20);
     if (lVar4 == 0) {
         do {
             if (DVar7 != 1) {
@@ -255,7 +255,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
             }
             DVar7 = 2;
             uVar6 = uVar6 & 0xbfffffff;
-            lVar4 = (*DAT_14013d468)(param_2, uVar6, 3, 0, 0, local_res20);
+            lVar4 = (*g_pWIMCreateFile)(param_2, uVar6, 3, 0, 0, local_res20);
         } while (lVar4 == 0);
         if (lVar4 == 0) {
             GetLastError();
@@ -264,12 +264,12 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
     }
     iVar3 = 0;
     if (DVar1 != 0) {
-        iVar2 = (*DAT_14013d470)(lVar4, param_4);
+        iVar2 = (*g_pWIMSetTemporaryPath)(lVar4, param_4);
         if (iVar2 == 0) {
             GetLastError();
             iVar2 = 1;
         }
-        lVar5 = (*DAT_14013d478)(lVar4, param_3);
+        lVar5 = (*g_pWimLoadImage)(lVar4, param_3);
         if (lVar5 == 0) {
             GetLastError();
             iVar2 = 0;
@@ -280,7 +280,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
             if (DVar7 == 0) {
                 uVar6 = 0x600;
             }
-            iVar3 = (*DAT_14013d480)(lVar5, param_1, uVar6);
+            iVar3 = (*g_pWIMHandleOp480)(lVar5, param_1, uVar6);
             DVar1 = GetLastError();
             if (iVar3 == 0) {
                 do {
@@ -288,23 +288,23 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
                         break;
                     }
                     uVar6 = uVar6 & 0xfffffbff;
-                    iVar3 = (*DAT_14013d480)(lVar5, param_1, uVar6);
+                    iVar3 = (*g_pWIMHandleOp480)(lVar5, param_1, uVar6);
                     DVar1 = GetLastError();
                 } while (iVar3 == 0);
                 if ((iVar3 == 0) &&
                     ((DVar7 != 2 ||
-                      (iVar3 = (*DAT_14013d480)(lVar5, param_1,
+                      (iVar3 = (*g_pWIMHandleOp480)(lVar5, param_1,
                                                 uVar6 | 0x200), iVar3 == 0)))) {
                     GetLastError();
                 }
             }
         }
         if (lVar5 != 0) {
-            (*DAT_14013d488)(lVar5);
+            (*g_pWIMCloseHandleSlot)(lVar5);
         }
     }
     if (lVar4 != 0) {
-        (*DAT_14013d488)(lVar4);
+        (*g_pWIMCloseHandleSlot)(lVar4);
     }
 LAB_14007581a:
     FUN_14005b104((void *)local_248);
@@ -411,9 +411,9 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
 
     EnterCriticalSection((void *)&g_csInit);
     FUN_14005c828("GetStorageDependencyInformation", "VirtDisk.DLL",
-                  (void **)&DAT_14013d3b0, (uintptr_t *)0x0);
+                  (void **)&g_pGetStorageDependencyInformation, (uintptr_t *)0x0);
     iVar1 = 0;
-    if (DAT_14013d3b0 == (FN_14013d3b0)0x0) {
+    if (g_pGetStorageDependencyInformation == (FN_14013d3b0)0x0) {
         LeaveCriticalSection((void *)&g_csInit);
         iVar1 = 0;
     } else {
@@ -434,7 +434,7 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
             FUN_14005b0b8((void *)local_100);
             *(uint32_t *)local_100 = 2;
             local_f8[0] = 0;
-            iVar1 = (*DAT_14013d3b0)(hObject, 3, 0x7ff0, local_100, local_f8);
+            iVar1 = (*g_pGetStorageDependencyInformation)(hObject, 3, 0x7ff0, local_100, local_f8);
             lpString_00 = (LPCWSTR)local_100[6];
             lpString = (LPCWSTR)local_100[8];
             if (((iVar1 == 0) && (lpString_00 != (LPCWSTR)0x0)) &&

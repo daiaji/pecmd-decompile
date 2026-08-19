@@ -1174,3 +1174,11 @@ BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);   /* DAT_14013cf10 */
 void (*g_pMciSendStringW)(LPCWSTR, int);   /* DAT_14013d050 */
 int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);   /* DAT_14013d4d0 */
 void *g_pConfigStr;   /* DAT_14013e110 */
+/* ---- 阶段5i FN_ 槽 ---- */
+uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);   /* DAT_14013d468 */
+int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);   /* DAT_14013d470 */
+uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);   /* DAT_14013d478 */
+int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);   /* DAT_14013d480 */
+void (*g_pWIMCloseHandleSlot)();   /* DAT_14013d488 */
+int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);   /* DAT_14013d3b0 */
+int (*g_pGetSaveFileNameW)(void);   /* DAT_14013d430 */

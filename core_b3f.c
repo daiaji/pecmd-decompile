@@ -78,7 +78,7 @@ extern int64_t g_i64CCB8;
 extern void *g_pSetWindowTheme;          /* SetWindowTheme 函数指针 */
 extern uint8_t g_bD500[];      /* 主题名 */
 extern uint8_t PTR_FUN_1401234f0[];
-extern uint32_t DAT_14013d430;
+extern int (*g_pGetSaveFileNameW)(void);
 extern int64_t g_i64D428;
 extern int64_t g_i64D438;
 extern double g_dbl20b28;
@@ -192,10 +192,10 @@ DWORD FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR name)
  */
 void FUN_14005C904(void)
 {
-    if (DAT_14013d430 == 0) {
+    if (g_pGetSaveFileNameW == 0) {
         FUN_14005C828("GetOpenFileNameW", "COMDLG32.DLL", (int64_t *)&g_i64D428,
                       (int64_t *)&g_i64D438);
-        FUN_14005C828("GetSaveFileNameW", "COMDLG32.DLL", (int64_t *)&DAT_14013d430,
+        FUN_14005C828("GetSaveFileNameW", "COMDLG32.DLL", (int64_t *)(void **)&g_pGetSaveFileNameW,
                       (int64_t *)&g_i64D438);
     }
 }

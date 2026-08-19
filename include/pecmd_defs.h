@@ -627,3 +627,10 @@ extern BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);   /* DAT_14013cf10 
 extern void (*g_pMciSendStringW)(LPCWSTR, int);   /* DAT_14013d050 */
 extern int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);   /* DAT_14013d4d0 */
 extern void *g_pConfigStr;   /* DAT_14013e110 */
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);   /* DAT_14013d468 */
+extern int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);   /* DAT_14013d470 */
+extern uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);   /* DAT_14013d478 */
+extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);   /* DAT_14013d480 */
+extern void (*g_pWIMCloseHandleSlot)();   /* DAT_14013d488 */
+extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);   /* DAT_14013d3b0 */
+extern int (*g_pGetSaveFileNameW)(void);   /* DAT_14013d430 */
