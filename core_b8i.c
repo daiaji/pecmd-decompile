@@ -55,7 +55,6 @@ extern void FUN_140063620(WCHAR **ps);
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);
 extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
-extern uint8_t *FUN_14001d78c(uint8_t *dst, uint8_t *src, int n);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
@@ -343,7 +342,7 @@ int64_t FUN_1400E7758(int64_t *out)
             pos += 2;
             dst += 2;
         }
-        FUN_14001d78c((uint8_t *)dst,
+        memcpy((uint8_t *)dst,
                       (uint8_t *)(blk + i * 0x15b + 3),
                       (len + 1) * 2);
         pos += len;
