@@ -489,7 +489,7 @@ uint64_t PECMD_ControlMessage(HWND hwnd, uint32_t msg, uint64_t unused, LPARAM l
  */
 void PECMD_ArrayAppend(int64_t arr, int64_t value)
 {
-    int64_t *plVar1 = (int64_t *)FUN_140063118(
+    int64_t *plVar1 = (int64_t *)(uintptr_t)FUN_140063118(
         *(void **)(arr + 0xe0),
         (size_t)((int64_t)(*(int *)(arr + 0xe8) + 1) << 3));
     *(int64_t **)(arr + 0xe0) = plVar1;
