@@ -92,8 +92,8 @@ extern void (*g_pGdipCloneBitmapAreaI)();                            /* 图像�
 extern int (*g_pGdipDisposeImage)();
 extern void (*g_pGdipCreateBitmapFromScan0)();
 extern void (*g_pGdipGetImageGraphicsContext)();
-extern void (*DAT_14013ce38)();
-extern void (*DAT_14013cd98)();
+extern int (*g_pGdipSetInterpolationMode)(void *, int);
+extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);
 extern int (*g_pGdipDeleteGraphics)();
 extern void (*g_pGdipCreateHICONFromBitmap)();
 extern void (*g_pGdipCreateBitmapFromHICON)();
@@ -476,7 +476,7 @@ extern uint8_t s_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef_140124db0[];
 extern uint8_t g_b124df8[];
 extern uint8_t PTR_FUN_140126060[];
 extern uint8_t PTR_FUN_1401268c8[];
-extern int (*DAT_14013d4d0)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);
+extern int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);
 extern int (*g_pinet_addr)(char *);
 extern int64_t g_pCacheBlock;
 extern int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);
@@ -1563,7 +1563,7 @@ static void skip_to(WCHAR **pp, WCHAR c)
 }
 
 /* ---- globals referenced by PECMD_DriverInstall (declared here; not defined) ---- */
-extern int  DAT_14013cef8;
+extern int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);
 extern CRITICAL_SECTION g_csThreadTbl;
 extern WCHAR u__SystemRoot___140123190[];
 extern char *PTR_s___disverify_14013a2c8;
@@ -1574,7 +1574,7 @@ extern BYTE  g_b122cb0[];
 extern BYTE  DAT_00000011;
 /* 函数指针全局：g_pSetupDiGetClassDevsW/cf08/cf28/cf10/cf30/cf48（SetupDi 相关），
    已在文件别处声明或按调用点转型使用。cf10/cf30/cf48 在本文件新增声明 */
-extern void (*DAT_14013cf10)(void *);
+extern BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);
 extern int64_t (*g_pSetupIterateCabinetW)(void *, int);
 extern void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);
 
@@ -1783,7 +1783,7 @@ void *PECMD_DriverInstall(int64_t *param_1, LPCWSTR param_2)
 
     p_Var40 = (PSP_DRVINFO_DETAIL_DATA_W)0;
     local_1700 = (LPWSTR)0;
-    if (DAT_14013cef8 == 0) {
+    if (g_pSetupDiGetINFClassW == 0) {
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csThreadTbl);
         PECMD_LoadSetupApiFunctions();
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csThreadTbl);
@@ -3435,7 +3435,7 @@ LAB_14004a726:
     }
 LAB_14004a8ba:
     if (local_16f8 != (LPWSTR)0) {
-        (*DAT_14013cf10)(local_16f8);
+        (*g_pSetupDiDestroyDeviceInfoListRev)(local_16f8);
         local_16f8 = (LPWSTR)0;
     }
     iVar10 = local_168c;
@@ -4044,7 +4044,7 @@ LAB_14004bf8c:
         PECMD_FormatSetVar(param_1, (uint64_t)(uint16_t)p_Var40->SectionName[0x99], local_1598, WSTR("0x%X"));
     }
     if (local_16f8 != (LPWSTR)0) {
-        (*DAT_14013cf10)(local_16f8);
+        (*g_pSetupDiDestroyDeviceInfoListRev)(local_16f8);
     }
     if (local_1660 != (PSP_DRVINFO_DETAIL_DATA_W)0) {
         local_1660 = (PSP_DRVINFO_DETAIL_DATA_W)0;
@@ -13094,7 +13094,7 @@ bool PECMD_CheckNetAddress(LPCSTR param_1, uint32_t param_2, char *param_3, char
     /* @0x1400726f0 size=211 */
     (void)param_5;
     iVar3 = 0;
-    if (DAT_14013d4d0 == NULL) {
+    if (g_pDhcpNotifyConfigChange == NULL) {
         bVar4 = false;
     }
     else {
@@ -13108,7 +13108,7 @@ bool PECMD_CheckNetAddress(LPCSTR param_1, uint32_t param_2, char *param_3, char
             (iVar3 = (*g_pinet_addr)(param_3), iVar3 != 0)) {
             bVar1 = (uint8_t)(-(param_6 != 0) & 2);
         }
-        iVar3 = (*DAT_14013d4d0)(0, local_18[0], 1, param_2, iVar3, uVar2, bVar1);
+        iVar3 = (*g_pDhcpNotifyConfigChange)(0, local_18[0], 1, param_2, iVar3, uVar2, bVar1);
         bVar4 = iVar3 == 0;
         FUN_14005B104((WCHAR **)local_18);
     }

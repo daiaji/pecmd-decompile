@@ -538,8 +538,6 @@ uint64_t u__26_INDATA_140121fe0(void) { return 0; }
 uint64_t u_____D__140120a40(void) { return 0; }
 uint64_t wsprintfA(void) { return 0; }
 uint64_t wsprintfW(void) { return 0; }
-uint64_t DAT_14013cd98;
-uint64_t DAT_14013cf10;
 int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t) = 0;
 uint64_t PTR_s_No_error_14013b800;
 uint64_t PTR_DAT_14013a8f0;
@@ -659,7 +657,6 @@ uint64_t SetupDiEnumDeviceInterfaces(void) { return 0; }
 uint64_t SetupDiGetDeviceInstanceIdW(void) { return 0; }
 uint64_t SetupDiGetDeviceInterfaceDetailW(void) { return 0; }
 
-uint64_t DAT_14013ce38;
 uint64_t FUN_140017cdc(void) { return 0; }
 uint64_t FUN_14002fd88(void) { return 0; }
 uint64_t FUN_140061E98(void) { return 0; }
@@ -780,8 +777,6 @@ void FUN_1400e9138(uint64_t *p){ (void)p; }
 uint8_t PTR_FUN_140126b20[8];
 void SwitchToThisWindow(void *hw, int b){ (void)hw;(void)b; }
 int GetClassNameW(void *hw, uint16_t *p, int n){ (void)hw;(void)p; return 0; }
-int (*DAT_14013d4d0)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);
-uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
 uint64_t *FUN_14007026c(uint64_t *a, char *b){ (void)a;(void)b; return a; }
 uint8_t s_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef_140124db0[128];
 uint8_t PTR_FUN_1401268c8[8];
@@ -870,9 +865,9 @@ void FUN_14003ed4c(void *a, const uint16_t *b){ (void)a;(void)b; }
 uint64_t WaitForInputIdle(void){ return 0; }
 
 /* ---- B3 还原批次 (core_b3r_*.c) 依赖补充 ---- */
+uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
 /* DATA globals */
 int64_t   DAT_14013d870;          /* bitmap data size */
-void     *DAT_14013e110;          /* config string pointer */
 /* function-pointer slots */
 
 /* FUN_ helpers (business/unknown -> no-op typed stubs; symbol-only for link) */
@@ -1039,7 +1034,5 @@ uint64_t FUN_1400aaa4c(void) { return 0; }
 uint64_t FUN_1400b9340(void) { return 0; }
 uint64_t FUN_1400bd620(void) { return 0; }
 uint64_t FUN_1400bef64(void) { return 0; }
-uint64_t DAT_14013cef8;
-uint64_t DAT_14013d050;
 uint64_t DAT_14013e2a8;
 uint64_t g_pFontBase;

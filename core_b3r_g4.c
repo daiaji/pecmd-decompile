@@ -22,7 +22,7 @@ extern char * g_timeServer;      /* time-server 名 / 解析结果 (char*) */
 extern int32_t g_qMode;      /* -q/-qo 模式 */
 extern int64_t DAT_14013d5c0;      /* 临时缓冲指针槽 */
 extern int32_t g_i32D6F4;      /* config dirty flag */
-extern void   *DAT_14013e110;      /* config string pointer */
+extern void *g_pConfigStr;      /* config string pointer */
 
 /* 动态导入的函数指针槽 */
 
@@ -335,5 +335,5 @@ uint64_t PECMD_ReadTipDummyConfig(void)
         PECMD_SetConfigString(pwVar4, (int)(uint32_t)bVar5);
         PECMD_StrFree(&local_30);
     }
-    return (uint64_t)(uintptr_t)DAT_14013e110;
+    return (uint64_t)(uintptr_t)g_pConfigStr;
 }

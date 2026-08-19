@@ -1165,3 +1165,12 @@ void (*g_pGdipGetImageEncodersSize)(uint32_t *, uint32_t *);   /* DAT_14013cdb8 
 void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);   /* DAT_14013cdc0 */
 int64_t (*g_pSetupIterateCabinetW)(void *, int);   /* DAT_14013cf30 */
 void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);   /* DAT_14013cf48 */
+/* ---- 阶段5g 多形式fn-ptr深挖 ---- */
+int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);   /* DAT_14013cd98 */
+/* ---- 阶段5h 深挖II ---- */
+int (*g_pGdipSetInterpolationMode)(void *, int);   /* DAT_14013ce38 */
+int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);   /* DAT_14013cef8 */
+BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);   /* DAT_14013cf10 */
+void (*g_pMciSendStringW)(LPCWSTR, int);   /* DAT_14013d050 */
+int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);   /* DAT_14013d4d0 */
+void *g_pConfigStr;   /* DAT_14013e110 */

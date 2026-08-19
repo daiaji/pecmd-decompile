@@ -46,7 +46,7 @@ extern HANDLE RegisterDeviceNotificationW(HANDLE hRecipient, void *notificationF
 extern BOOL DeviceIoControl(HANDLE hDevice, DWORD dwIoControlCode, LPVOID lpInBuffer,
                             DWORD nInBufferSize, LPVOID lpOutBuffer, DWORD nOutBufferSize,
                             DWORD *lpBytesReturned, void *lpOverlapped); /* Win32 API */
-extern uint64_t DAT_14013d050;                             /* mciSendStringW 延迟加载槽 */
+extern void (*g_pMciSendStringW)(LPCWSTR, int);                             /* mciSendStringW 延迟加载槽 */
 extern uint64_t g_u64CA50;                             /* 释放回调 */
 extern uint64_t g_u64C9E8;                             /* GetModuleFileNameExW 槽 */
 extern uint64_t g_u64C9F0;                             /* EnumProcessModules 槽 */
@@ -93,7 +93,7 @@ extern uint64_t FUN_14005f33c(int64_t buf, int len);            /* @0x14005f33c 
 extern uint32_t FUN_1400e7d58(int64_t *ps, uint32_t flag);      /* @0x1400e7d58 卸载/释放缓冲 */
 extern LPWSTR FUN_14005fc90(LPWSTR dst, uint32_t *guid, int mode); /* @0x14005fc90 GUID->字符串 */
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
-extern int (*DAT_14013cef8)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD); /* SetupDiGetINFClassW 槽 */
+extern int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD); /* SetupDiGetINFClassW 槽 */
 extern BOOL LookupAccountSidW(LPCWSTR sys, void *sid, LPWSTR name, DWORD *cchName,
                               LPWSTR dom, DWORD *cchDom, int *peUse); /* Win32 API */
 extern uint64_t FUN_1400688E0(LPCWSTR path);                    /* @0x1400688e0 core_b3_remaining.c */
@@ -227,7 +227,7 @@ extern void *g_pNtOpenSymLink;          /* NtOpenSymbolicLinkObject 槽 */
 extern void *g_pNtQuerySymLink;          /* NtQuerySymbolicLinkObject 槽 */
 extern void * (*g_pSetupDiGetClassDevsW)(const void *);          /* SetupDiGetClassDevsW 槽 */
 extern BOOL (*g_pSetupDiDestroyDeviceInfoList)(void *);          /* SetupDiGetDeviceRegistryPropertyW 槽 */
-extern void *DAT_14013cf10;          /* SetupDiDestroyDeviceInfoList 槽 */
+extern BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);          /* SetupDiDestroyDeviceInfoList 槽 */
 extern void *g_pSetupDiSetClassInstallParamsW;          /* SetupDiSetClassInstallParamsW 槽 */
 extern BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);          /* SetupDiCallClassInstaller 槽 */
 extern int (*g_pSetupDiEnumDeviceInfo)(void *, DWORD);          /* SetupDiEnumDeviceInfo 槽 */
@@ -255,7 +255,7 @@ extern void *g_pGdiplusShutdown;          /* GdiplusShutdown */
 extern void *g_pGdipLoadImageFromFile;          /* GdipLoadImageFromFile */
 extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
 extern int (*g_pGdipCreateFromHDC)();          /* GdipCreateFromHDC */
-extern void *DAT_14013cd98;          /* GdipDrawImageRectI */
+extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);          /* GdipDrawImageRectI */
 extern void (*g_pGdipCreateBitmapFromHBITMAP)();          /* GdipCreateBitmapFromHBITMAP */
 extern void (*g_pGdipCreateHBITMAPFromBitmap)();          /* GdipCreateHBITMAPFromBitmap */
 extern void *g_pGdipSaveImageToFile;          /* GdipSaveImageToFile */
@@ -266,7 +266,7 @@ extern int (*g_pGdipGetImageWidth)();          /* GdipGetImageWidth */
 extern int (*g_pGdipGetImageHeight)();          /* GdipGetImageHeight */
 extern void *g_pGdipDrawImageRectRectI;          /* GdipDrawImageRectRectI */
 extern int (*g_pGdipDeleteGraphics)();          /* GdipDeleteGraphics */
-extern void *DAT_14013ce38;          /* GdipSetInterpolationMode */
+extern int (*g_pGdipSetInterpolationMode)(void *, int);          /* GdipSetInterpolationMode */
 extern void *g_pGdipSetPixelOffsetMode;          /* GdipSetPixelOffsetMode */
 extern void *g_pGdipSetSmoothingMode;          /* GdipSetSmoothingMode */
 extern void *g_pGdipLoadImageFromStream;          /* GdipLoadImageFromStream */
@@ -5131,11 +5131,11 @@ void PECMD_LoadSetupApiFunctions(void)
     /* @0x140017b8c size=336 延迟加载 SetupApi.DLL 设备管理函数 */
     HMODULE hmod;
 
-    if (DAT_14013cef8 == 0) {
+    if (g_pSetupDiGetINFClassW == 0) {
         hmod = (HMODULE)0;
         FUN_14005C828("SetupDiGetClassDevsW", "SetupApi.DLL", (void **)&g_pSetupDiGetClassDevsW, &hmod);
         FUN_14005C828("SetupDiGetDeviceRegistryPropertyW", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoList, &hmod);
-        FUN_14005C828("SetupDiDestroyDeviceInfoList", "SetupApi.DLL", &DAT_14013cf10, &hmod);
+        FUN_14005C828("SetupDiDestroyDeviceInfoList", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoListRev, &hmod);
         FUN_14005C828("SetupDiSetClassInstallParamsW", "SetupApi.DLL", (void **)&g_pSetupDiSetClassInstallParamsW, &hmod);
         FUN_14005C828("SetupDiCallClassInstaller", "SetupApi.DLL", (void **)&g_pSetupDiCallClassInstaller, &hmod);
         FUN_14005C828("SetupDiEnumDeviceInfo", "SetupApi.DLL", (void **)&g_pSetupDiEnumDeviceInfo, &hmod);
@@ -5143,7 +5143,7 @@ void PECMD_LoadSetupApiFunctions(void)
         FUN_14005C828("InstallHinfSectionW", "SetupApi.DLL", (void **)&g_pInstallHinfSectionW, &hmod);
         FUN_14005C828("InstallHinfSection", "SetupApi.DLL", (void **)&g_pInstallHinfSection, &hmod);
         FUN_14005C828("CM_Get_DevNode_Status", "SetupApi.DLL", (void **)&g_pCmGetDevNodeStatus, &hmod);
-        FUN_14005C828("SetupDiGetINFClassW", "SetupApi.DLL", (void **)&DAT_14013cef8, &hmod);
+        FUN_14005C828("SetupDiGetINFClassW", "SetupApi.DLL", (void **)&g_pSetupDiGetINFClassW, &hmod);
     }
 }
 
@@ -6187,7 +6187,7 @@ bool PECMD_MatchDeviceClass(int64_t param_1, WCHAR *param_2, uint64_t param_3)
     local_88[2] = 0;
     local_88[3] = 0;
     PECMD_AllocWStringBuffer(&local_res8, 0xa2);
-    (*DAT_14013cef8)((LPCWSTR)param_3, (GUID *)local_88, local_res8, 0xa0, 0);
+    (*g_pSetupDiGetINFClassW)((LPCWSTR)param_3, (GUID *)local_88, local_res8, 0xa0, 0);
     _Str1 = local_res8;
     if (*param_2 == L'{') {
         local_78[0] = L'\0';
@@ -6457,9 +6457,9 @@ uint32_t PECMD_ReadPelogonFlag(LPCWSTR name)
 void PECMD_EnsureMciLoaded(void)
 {
     /* @0x14001a610 size=48 延迟加载 mciSendStringW */
-    if (DAT_14013d050 == 0) {
+    if (g_pMciSendStringW == 0) {
         FUN_14005C828("mciSendStringW", "winmm.DLL",
-                      (void **)&DAT_14013d050, NULL);
+                      (void **)&g_pMciSendStringW, NULL);
     }
 }
 
@@ -6834,7 +6834,7 @@ uint64_t PECMD_SetRamdrivDiskSize(int param_1, LPCWSTR param_2)
                                 if (g_ramdrivFlag == -1) {
                                     return 1;
                                 }
-                                ((void (*)(void))(uintptr_t)DAT_14013cf10)();
+                                ((void (*)(void))(uintptr_t)g_pSetupDiDestroyDeviceInfoListRev)();
                                 return 1;
                             }
                             DVar1 = GetLastError();
@@ -6845,7 +6845,7 @@ uint64_t PECMD_SetRamdrivDiskSize(int param_1, LPCWSTR param_2)
         }
     }
     if (g_ramdrivFlag != -1) {
-        ((void (*)(void))(uintptr_t)DAT_14013cf10)();
+        ((void (*)(void))(uintptr_t)g_pSetupDiDestroyDeviceInfoListRev)();
     }
     return 0;
 }
@@ -8666,7 +8666,7 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
         g_pGdipLoadImageFromFile = GetProcAddress(g_hGdiPlus, "GdipLoadImageFromFile");
         g_pGdipDisposeImage = (int (*)())GetProcAddress(g_hGdiPlus, "GdipDisposeImage");
         g_pGdipCreateFromHDC = (int (*)())GetProcAddress(g_hGdiPlus, "GdipCreateFromHDC");
-        DAT_14013cd98 = GetProcAddress(g_hGdiPlus, "GdipDrawImageRectI");
+        g_pGdipDrawImageRectI = (int (*)(void *, void *, int, int, int64_t, int))GetProcAddress(g_hGdiPlus, "GdipDrawImageRectI");
         g_pGdipCreateBitmapFromHBITMAP = GetProcAddress(g_hGdiPlus, "GdipCreateBitmapFromHBITMAP");
         g_pGdipCreateHBITMAPFromBitmap = GetProcAddress(g_hGdiPlus, "GdipCreateHBITMAPFromBitmap");
         g_pGdipSaveImageToFile = GetProcAddress(g_hGdiPlus, "GdipSaveImageToFile");
@@ -8677,7 +8677,7 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
         g_pGdipGetImageHeight = (int (*)())GetProcAddress(g_hGdiPlus, "GdipGetImageHeight");
         g_pGdipDrawImageRectRectI = GetProcAddress(g_hGdiPlus, "GdipDrawImageRectRectI");
         g_pGdipDeleteGraphics = (int (*)())GetProcAddress(g_hGdiPlus, "GdipDeleteGraphics");
-        DAT_14013ce38 = GetProcAddress(g_hGdiPlus, "GdipSetInterpolationMode");
+        g_pGdipSetInterpolationMode = GetProcAddress(g_hGdiPlus, "GdipSetInterpolationMode");
         g_pGdipSetPixelOffsetMode = GetProcAddress(g_hGdiPlus, "GdipSetPixelOffsetMode");
         g_pGdipSetSmoothingMode = GetProcAddress(g_hGdiPlus, "GdipSetSmoothingMode");
         g_pGdipLoadImageFromStream = GetProcAddress(g_hGdiPlus, "GdipLoadImageFromStream");

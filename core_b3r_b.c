@@ -63,7 +63,7 @@ extern uint32_t PECMD_DetectMinintBoot(void);
 extern void    FUN_1400703e4(int64_t *param_1, LPCWSTR param_2);
 
 /* ---- global data ---- */
-extern void    *DAT_14013e110;          /* config string pointer */
+extern void *g_pConfigStr;          /* config string pointer */
 extern int32_t  g_i32D6F4;          /* config dirty flag */
 
 /* dev-list enumeration callbacks (function pointers). */
@@ -365,15 +365,15 @@ LAB_140074e7e:
         param_2 = 0;
     }
     if (param_2 == 0) {
-        if (DAT_14013e110 != 0) {
-            HeapFree(g_hHeap, 0, (LPVOID)((char *)DAT_14013e110 - 8));
+        if (g_pConfigStr != 0) {
+            HeapFree(g_hHeap, 0, (LPVOID)((char *)g_pConfigStr - 8));
         }
         g_i32D6F4 = 1;
-        DAT_14013e110 = 0;
+        g_pConfigStr = 0;
         return;
     }
 LAB_140074ec7:
-    FUN_1400703e4((int64_t *)&DAT_14013e110, (LPCWSTR)param_1);
+    FUN_1400703e4((int64_t *)&g_pConfigStr, (LPCWSTR)param_1);
     g_i32D6F4 = 1;
     return;
 }

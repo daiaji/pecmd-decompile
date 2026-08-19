@@ -38,7 +38,7 @@ typedef uint8_t            *LPBYTE;
 /* ---- Globals ---- */
 extern WCHAR g_szEmpty[];   /* empty string (g_szEmpty) */
 extern int64_t g_pCacheBlock;     /* PCIP 缓存标记 */
-extern int64_t          DAT_14013d4d0;     /* dhcpcsvc 指针槽 */
+extern int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);     /* dhcpcsvc 指针槽 */
 extern int32_t          g_i32D7EC;     /* 活动任务计数 (条件) */
 extern uint8_t          g_foregroundFlag;     /* 任务计数标志 */
 
@@ -551,8 +551,8 @@ LAB_1400af515:
         PECMD_WideToAnsiStr((int64_t *)&local_b8, local_170, -1, 0xffffffffffffffffULL);
         lstrlenA(local_b8);
         if ((int)(uint32_t)local_148 == 0) {
-            FUN_14005c828("DhcpNotifyConfigChange", "dhcpcsvc.DLL", (void **)&DAT_14013d4d0, (uintptr_t *)0);
-            if (DAT_14013d4d0 == 0) {
+            FUN_14005c828("DhcpNotifyConfigChange", "dhcpcsvc.DLL", (void **)&g_pDhcpNotifyConfigChange, (uintptr_t *)0);
+            if (g_pDhcpNotifyConfigChange == 0) {
                 DVar26 = 1;
             } else {
                 if (((*local_e8 != L'\0') || (*local_f0 != L'\0')) || (*local_d8 != L'\0')) {
@@ -620,7 +620,7 @@ LAB_1400af515:
                             DVar4 = DVar10;
                         }
                         DVar26 = DVar4;
-                        if ((((fresh == 0) && (DAT_14013d4d0 != 0)) && (local_168 != '\0')) &&
+                        if ((((fresh == 0) && (g_pDhcpNotifyConfigChange != 0)) && (local_168 != '\0')) &&
                             ((uVar19 == 0 && (uVar23 < 2)))) {
                             if (0xffff < (int)local_100) {
                                 FUN_1400195f0((uint64_t)param_1, 500, 0, (undefined8 *)0);

@@ -57,8 +57,8 @@ extern GUID g_iidCoCreate;        /* IID   slot (CoCreateInstance) */
 extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth    */
 extern int (*g_pGdipGetImageHeight)();   /* GdipGetImageHeight   */
 extern int (*g_pGdipCreateFromHDC)();         /* GdipCreateFromHDC    */
-extern int  (*DAT_14013ce38)(void *, int);          /* GdipSetInterpolationMode */
-extern int  (*DAT_14013cd98)(void *, void *, int, int, int64_t, int); /* GdipDrawImageRectI */
+extern int (*g_pGdipSetInterpolationMode)(void *, int);          /* GdipSetInterpolationMode */
+extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int); /* GdipDrawImageRectI */
 extern int (*g_pGdipDeleteGraphics)();                 /* GdipDeleteGraphics   */
 extern int (*g_pGdipDisposeImage)();               /* GdipDisposeImage     */
 
@@ -192,8 +192,8 @@ DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3, LPC
             }
             local_40 = 0;
             (*g_pGdipCreateFromHDC)(local_38, (void **)&local_40);
-            (*DAT_14013ce38)((void *)(intptr_t)local_40, 2);
-            (*DAT_14013cd98)((void *)(intptr_t)local_40, (void *)pHVar4, 0, 0,
+            (*g_pGdipSetInterpolationMode)((void *)(intptr_t)local_40, 2);
+            (*g_pGdipDrawImageRectI)((void *)(intptr_t)local_40, (void *)pHVar4, 0, 0,
                              (int64_t)CONCAT44(uVar5, (uint32_t)iVar2),
                              (int)iVar3);
             SelectObject(hdc, local_30);

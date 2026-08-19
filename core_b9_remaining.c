@@ -71,7 +71,7 @@ extern void FUN_1400fdad8(void *param_1, int param_2, long long param_3, uint64_
 /* ---- GDI+ 延迟绑定函数指针槽 (core_b1_remaining.c 初始化) ---- */
 extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth  */
 extern int (*g_pGdipGetImageHeight)();   /* GdipGetImageHeight */
-extern void *DAT_14013cd98;   /* GdipDrawImageRectI */
+extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);   /* GdipDrawImageRectI */
 extern int (*g_pGdipCreateFromHDC)();   /* GdipCreateFromHDC  */
 extern void *g_pGdipSetSmoothingMode;   /* GdipSetSmoothingMode */
 extern void *g_pGdipDrawImageRectRectI;   /* GdipDrawImageRectRectI */
@@ -446,7 +446,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
                     }
                     if (*((char *)param_1 + 0xfb) == 0) {
                         if (*((int *)&param_1[0x23]) < 1) {
-                            ((void (*)(int64_t, int64_t, LONG, int, int, int))DAT_14013cd98)(
+                            ((void (*)(int64_t, int64_t, LONG, int, int, int))g_pGdipDrawImageRectI)(
                                 local_a8, param_1[0x20], local_a0.left, local_a0.top,
                                 (int)uVar7, (int)uVar8);
                         }

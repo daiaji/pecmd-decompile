@@ -184,9 +184,9 @@ extern uint32_t g_hookBusyFlag;       /* 钩子忙标志 */
 extern uint32_t g_hookReentry;       /* 钩子重入计数 */
 extern DWORD g_d278[];        /* 线程 ID 表 */
 extern uint32_t g_threadTableInitFlag;       /* 线程表初始化标志 */
-extern int (*DAT_14013cef8)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);
+extern int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);
 extern BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);
-extern BOOL (*DAT_14013cf10)(HDEVINFO);
+extern BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);
 extern uint8_t g_b21728[];      /* 热键表(6 字节/项) */
 
 /* ========== FUN_1400229F8 @0x1400229f8 ==========
@@ -721,7 +721,7 @@ uint64_t FUN_14002C8A4(LPCWSTR spec)
     local_res8 = local_res8 + 1;
     memset(local_228, 0, 0x208);
     lstrcpynW(local_228, spec, 0x100);
-    iVar2 = (*DAT_14013cef8)(local_res8, &local_2a8, local_278, 0x24, 0);
+    iVar2 = (*g_pSetupDiGetINFClassW)(local_res8, &local_2a8, local_278, 0x24, 0);
     if (iVar2 != 0) {
         DeviceInfoSet = SetupDiCreateDeviceInfoList(&local_2a8, (HWND)0);
         if (DeviceInfoSet != (HDEVINFO)0xffffffffffffffffULL) {
@@ -743,7 +743,7 @@ uint64_t FUN_14002C8A4(LPCWSTR spec)
 done:
     *pWVar1 = L':';
     if (DeviceInfoSet != (HDEVINFO)0xffffffffffffffffULL) {
-        (*DAT_14013cf10)(DeviceInfoSet);
+        (*g_pSetupDiDestroyDeviceInfoListRev)(DeviceInfoSet);
     }
     return 0;
 }

@@ -80,7 +80,7 @@ extern float g_alphaThreshold;                                /* DAT_14012f6bc *
 extern int (*g_pGdipGetImageWidth)();
 extern int (*g_pGdipGetImageHeight)();
 extern int (*g_pGdipCreateFromHDC)();
-extern void *DAT_14013cd98;
+extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);
 extern int (*g_pGdipDeleteGraphics)();
 extern int64_t FUN_1400E4064(int64_t value, uint32_t align); /* @0x1400e4064 */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
@@ -1143,7 +1143,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
     if (*(int8_t *)(obj + 0xdc) == '@' && *(int64_t *)(obj + OBJ_LINK) != 0) {
         int64_t tmp = 0;
         if (((int (*)(HDC, int64_t *))g_pGdipCreateFromHDC)(hdc, &tmp) == 0 && tmp != 0) {
-            ((void (*)(int64_t, int64_t, LONG, int, int, uint64_t))DAT_14013cd98)(
+            ((void (*)(int64_t, int64_t, LONG, int, int, uint64_t))g_pGdipDrawImageRectI)(
                 tmp, *(int64_t *)(obj + OBJ_LINK), x, drawY, (int)drawW,
                 ((uint64_t)(uint32_t)uVar15 << 32) | (uint32_t)(int32_t)drawH);
             ((void (*)(int64_t))g_pGdipDeleteGraphics)(tmp);

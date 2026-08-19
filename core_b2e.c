@@ -177,7 +177,7 @@ extern HWND g_hwndTray;
 extern WCHAR *g_pwszD250;
 extern uint8_t g_answerFlag;
 extern void *g_pSetSuspendState;                  /* SetSuspendState 函数指针 */
-extern void (*DAT_14013d050)();              /* CD 门函数指针 */
+extern void (*g_pMciSendStringW)(LPCWSTR, int);              /* CD 门函数指针 */
 extern void *PTR_u_CallBackhWnd_14011e668_2_14013a288;
 extern void *g_pRtlCreateUnicodeString;                  /* RtlCreateUnicodeString */
 extern void *g_pRtlFreeUnicodeString;                  /* RtlFreeUnicodeString */
@@ -2406,7 +2406,7 @@ skip_to_exec:
         }
         if (ch == 0x45) { /* E: eject open */
             rest = cmd + 1;
-            pCdDoor = DAT_14013d050;
+            pCdDoor = g_pMciSendStringW;
             if (pCdDoor != NULL) {
                 pCdDoor(WSTR("Set cdAudio door open"), 0);
                 {
@@ -2425,7 +2425,7 @@ skip_to_exec:
                      cmd = cmd + 1) {
                     delay = (uint64_t)((cmd[1] - 0x30) + (int)delay * 10);
                 }
-                pCdDoor = DAT_14013d050;
+                pCdDoor = g_pMciSendStringW;
                 if (pCdDoor != NULL) {
                     pCdDoor(WSTR("Set cdAudio door open"), 0);
                     FUN_1400195F0((uint64_t)(uintptr_t)g_Script, (int64_t)delay, 0, NULL);
@@ -2436,7 +2436,7 @@ skip_to_exec:
                 goto skip_to_exec;
             }
             rest = cmd + 1;
-            pCdDoor = DAT_14013d050;
+            pCdDoor = g_pMciSendStringW;
             if (pCdDoor != NULL) {
                 pCdDoor(WSTR("Set cdAudio door close"), 0, 0);
             }
