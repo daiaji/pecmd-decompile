@@ -473,6 +473,13 @@ extern uint8_t PTR_FUN_1401250d0[];
 extern int64_t g_pComWrite;
 extern uint8_t DAT_14013d660;
 extern double g_dbl25230;
+extern double DAT_140124110;  /* 数字解析常数(link_stubs.c 定义) */
+extern double DAT_140124118;  /* 数字解析常数 */
+extern double DAT_1401263a0;  /* 数字解析常数(乘10) */
+extern double DAT_1401261a0;  /* 数字解析常数(1.0) */
+extern double DAT_140126398;  /* 数字解析舍入阈值 */
+extern double DAT_140126390;  /* 数字解析小数缩放 */
+extern double DAT_140121668;  /* 数字解析常数 */
 extern uint8_t g_b124148[];
 extern uint8_t s_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef_140124db0[];
 extern uint8_t g_b124df8[];
@@ -10519,7 +10526,7 @@ uint64_t PECMD_LoadImageStream(uint8_t *param_1, size_t param_2, uint64_t *param
 }
 int16_t *FUN_14006213c(int64_t param_1, int64_t *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14006213c — decompile-failed, body 未还原 */
+    /* @0x14006213c size=339 — 按括号层级匹配，返回配对结束符位置（表达式解析用） */
 /* @0x14006213c size=339 */
     int16_t sVar1;
     uint64_t uVar2;
@@ -10872,7 +10879,7 @@ HBITMAP PECMD_CaptureScreenRegion(RECT *param_1, uint64_t *param_2, LPCWSTR para
 
 void FUN_140062bdc(int64_t param_1, HDC param_2, RECT *param_3, COLORREF param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_140062bdc — decompile-failed, body 未还原 */
+    /* SKIP @0x140062bdc — GDI+ 渲染，需 4 个未迁移 GDI+ 函数指针(ce08/ce10/ce28/ce30)+字符串资源，签名不确定 */
 /* @0x140062bdc size=677 */
     (void)param_1; (void)param_3;
     (void)param_2; (void)param_4;
@@ -11019,10 +11026,134 @@ void PECMD_ReleaseComObject(uint64_t *param_1)
 
 double FUN_140064694(int64_t *param_1, int64_t *param_2, uint8_t *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140064694 — decompile-failed, body 未还原 */
-/* @0x140064694 size=862 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0.0;
+    /* @0x140064694 size=862 — 数字解析核心：宽字符串→十进制浮点(整数/小数/e指数/正负号) */
+    uint8_t bVar1;
+    uint16_t uVar2;
+    double dVar3;
+    int bVar4, bVar5;
+    double dVar6, dVar7;
+    uint32_t uVar8;
+    int16_t *psVar9;
+    int64_t lVar10;
+    uint32_t uVar11;
+    uint16_t *puVar12;
+    double dVar13, dVar14, dVar15, dVar16, dVar17, dVar18;
+
+    dVar16 = 0.0;
+    uVar8 = 0;
+    *param_2 = 0;
+    bVar1 = *param_3;
+    bVar4 = 0;
+    bVar5 = 0;
+    *param_3 = 0;
+    if (((bVar1 & 8) != 0) && (*(int16_t *)*param_1 == 0x2d)) {
+        bVar4 = 1;
+        *param_1 = (int64_t)((int16_t *)*param_1 + 1);
+    }
+    dVar15 = DAT_1401263a0;
+    psVar9 = (int16_t *)*param_1;
+    if (*psVar9 != 0x2c) {
+        while (*psVar9 != 0) {
+            puVar12 = (uint16_t *)*param_1;
+            if ((uint16_t)(*puVar12 - 0x30) < 10) {
+                uVar2 = *puVar12;
+                *param_1 = (int64_t)(puVar12 + 1);
+                bVar5 = 1;
+                dVar16 = dVar16 * dVar15 + (double)(int)(uVar2 - 0x30);
+                *param_2 = (int64_t)(int)(uVar2 - 0x30) + *param_2 * 10;
+            } else {
+                if ((((((bVar1 & 0xf0) != 0x20) || (*puVar12 != 0x2c)) ||
+                      (9 < (uint16_t)(puVar12[1] - 0x30))) ||
+                     ((9 < (uint16_t)(puVar12[2] - 0x30) || (9 < (uint16_t)(puVar12[3] - 0x30))))) ||
+                    ((uint16_t)(puVar12[4] - 0x30) < 10)) break;
+                *param_1 = (int64_t)(puVar12 + 1);
+            }
+            psVar9 = (int16_t *)*param_1;
+        }
+    }
+    dVar7 = DAT_140126398;
+    dVar6 = DAT_1401261a0;
+    if (*(int16_t *)*param_1 == 0x2e) {
+        dVar17 = 0.0;
+        *param_3 = 1;
+        *param_1 = *param_1 + 2;
+        puVar12 = (uint16_t *)*param_1;
+        dVar14 = dVar6;
+        dVar3 = dVar6;
+        while ((uint16_t)(*puVar12 - 0x30) < 10) {
+            uVar2 = *puVar12;
+            dVar14 = dVar14 * DAT_140126390;
+            dVar3 = dVar3 * g_dbl25230;
+            puVar12 = puVar12 + 1;
+            lVar10 = 0;
+            bVar5 = 1;
+            *param_1 = (int64_t)puVar12;
+            dVar17 = (double)(int)(uVar2 - 0x30) + dVar17 * dVar15;
+            dVar13 = dVar17 / dVar14;
+            if ((dVar7 < dVar13) && (dVar13 = dVar13 - dVar7, dVar13 < dVar7)) {
+                lVar10 = -0x8000000000000000LL;
+            }
+            dVar18 = (double)((int64_t)dVar13 + lVar10);
+            if ((int64_t)dVar13 + lVar10 < 0) {
+                dVar18 = dVar18 + DAT_140121668;
+            }
+            dVar16 = dVar16 + dVar18 * dVar3;
+            dVar17 = dVar17 + (0.0 - dVar18 * dVar14);
+        }
+        dVar16 = dVar16 + (dVar17 / dVar14) * dVar3;
+    }
+    if ((*(uint16_t *)*param_1 | 0x20) == 0x65) {
+        *param_3 = 1;
+        *param_1 = *param_1 + 2;
+        uVar11 = uVar8;
+        if (*(int16_t *)*param_1 == 0x2d) {
+            uVar8 = 0xffffffff;
+            *param_1 = (int64_t)((int16_t *)*param_1 + 1);
+            uVar11 = 0;
+        }
+        while (puVar12 = (uint16_t *)*param_1, (uint16_t)(*puVar12 - 0x30) < 10) {
+            uVar2 = *puVar12;
+            bVar5 = 1;
+            *param_1 = (int64_t)(puVar12 + 1);
+            uVar11 = (uVar2 - 0x30) + uVar11 * 10;
+        }
+        if (uVar8 != 0) {
+            uVar11 = -(uint32_t)uVar11;
+        }
+        uVar8 = uVar11;
+        dVar14 = dVar6;
+        if ((int)uVar11 < 0) {
+            uVar8 = -(uint32_t)uVar11;
+        }
+        while (1) {
+            if ((uVar8 & 1) != 0) {
+                dVar14 = dVar14 * dVar15;
+            }
+            if (uVar8 >> 1 == 0) break;
+            dVar15 = dVar15 * dVar15;
+            uVar8 = uVar8 >> 1;
+        }
+        if ((int)uVar11 < 0) {
+            dVar14 = dVar6 / dVar14;
+        }
+        dVar16 = dVar16 * dVar14;
+    }
+    if (((bVar1 & 4) != 0) && (*param_3 != 0)) {
+        lVar10 = 0;
+        dVar15 = dVar16 + g_dbl25230;
+        if ((dVar7 < dVar15) && (dVar15 = dVar15 - dVar7, dVar15 < dVar7)) {
+            lVar10 = -0x8000000000000000LL;
+        }
+        *param_2 = (int64_t)dVar15 + lVar10;
+    }
+    if (bVar4) {
+        dVar16 = g_fontMinus0 - dVar16;
+        *param_2 = -*param_2;
+    }
+    if (!bVar5) {
+        *param_3 = *param_3 | 2;
+    }
+    return dVar16;
 }
 
 /* @0x140064ab8 size=191 — 十六进制数字流解析
@@ -11116,7 +11247,7 @@ void PECMD_FreeInitObjectList(char *param_1)
 
 uint64_t FUN_140065140(uint16_t *param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140065140 — decompile-failed, body 未还原 */
+    /* @0x140065140 size=1827 — 数学/逻辑表达式词法分析：运算符与函数关键字映射为单字节 token 码 */
 int64_t uVar1;
     uint16_t uVar2;
     int64_t lVar3;
@@ -11460,18 +11591,316 @@ LAB_1400657c5:
 
 int64_t FUN_14006587c(int64_t *param_1, uint8_t *param_2, uint8_t param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14006587c — decompile-failed, body 未还原 */
-/* @0x14006587c size=902 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0;
+    /* @0x14006587c size=902 — 数字解析(整数/十六/八/二进制 + e指数或pi常数)，返回整数分量或整×浮点混合 */
+    uint16_t uVar1;
+    int16_t *psVar2;
+    uint32_t uVar3;
+    int iVar4;
+    int16_t sVar5;
+    uint8_t bVar6;
+    int64_t lVar7, lVar8, lVar10, lVar12;
+    uint32_t uVar9;
+    uint16_t *puVar11;
+    uint8_t bVar13, bVar14, bVar15;
+    double dVar16, dVar17;
+    uint8_t local_res8[8];
+    int64_t local_res20;
+
+    psVar2 = (int16_t *)*param_1;
+    dVar17 = 0.0;
+    lVar8 = 0;
+    local_res20 = 0;
+    lVar7 = 0;
+    bVar15 = 0;
+    bVar13 = 0;
+    bVar6 = 0;
+    if (*psVar2 == 0x2d) {
+        bVar13 = 1;
+f58ce:
+        *param_1 = (int64_t)(psVar2 + 1);
+        bVar14 = bVar13;
+    } else {
+        bVar14 = bVar15;
+        if (*psVar2 == 0x2b) goto f58ce;
+    }
+    if (*(int16_t *)*param_1 == 0) {
+        *param_2 = *param_2 | 2;
+    }
+    psVar2 = (int16_t *)*param_1;
+    sVar5 = *psVar2;
+    if (sVar5 == 0x30) {
+        if ((uint16_t)(psVar2[1] | 0x20U) == 0x78) {
+            puVar11 = (uint16_t *)(psVar2 + 2);
+            *param_1 = (int64_t)puVar11;
+            lVar12 = lVar8;
+            if (((((0x2f < *puVar11) && (*puVar11 < 0x3a)) || (*puVar11 == 0x2e)) ||
+                ((0x60 < *puVar11 && (*puVar11 < 0x67)))) || (lVar10 = lVar8, *puVar11 == 0x78)) {
+                lVar10 = 1;
+            }
+            while (1) {
+                uVar9 = (uint32_t)lVar10;
+                puVar11 = (uint16_t *)*param_1;
+                if (((*puVar11 < 0x30) || (0x39 < *puVar11)) &&
+                   ((lVar7 = lVar8, bVar15 = bVar6, (*puVar11 | 0x20) < 0x61 || (0x66 < (*puVar11 | 0x20)))))
+                   break;
+                uVar1 = *puVar11;
+                *param_1 = (int64_t)(puVar11 + 1);
+                if (uVar1 < 0x41) {
+                    iVar4 = uVar1 - 0x30;
+                } else {
+                    iVar4 = (uVar1 | 0x20) - 0x57;
+                }
+                lVar12 = lVar12 * 0x10 + (int64_t)iVar4;
+            }
+        } else if ((uint16_t)(psVar2[1] | 0x20U) == 0x6f) {
+            puVar11 = (uint16_t *)(psVar2 + 2);
+            *param_1 = (int64_t)puVar11;
+            if ((*puVar11 < 0x30) || (uVar9 = 1, 0x37 < *puVar11)) {
+                uVar9 = 0;
+            }
+            uVar1 = *puVar11;
+            while ((lVar12 = lVar8, bVar15 = bVar6, 0x2f < uVar1 &&
+                   (puVar11 = (uint16_t *)*param_1, *puVar11 < 0x38))) {
+                uVar1 = *puVar11;
+                *param_1 = (int64_t)(puVar11 + 1);
+                lVar8 = (int64_t)(int)(uVar1 - 0x30) + lVar8 * 8;
+                uVar1 = puVar11[1];
+            }
+        } else {
+            if ((uint16_t)(psVar2[1] | 0x20U) != 0x62) goto f5a6b;
+            psVar2 = psVar2 + 2;
+            *param_1 = (int64_t)psVar2;
+            if ((*psVar2 == 0x30) || (lVar10 = lVar8, *psVar2 == 0x31)) {
+                lVar10 = 1;
+            }
+            while (uVar9 = (uint32_t)lVar10, lVar12 = lVar8, bVar15 = bVar6, *psVar2 != 0) {
+                psVar2 = (int16_t *)*param_1;
+                if (*psVar2 == 0x30) {
+                    lVar8 = lVar8 * 2;
+                } else {
+                    if (*psVar2 != 0x31) break;
+                    lVar8 = lVar8 * 2 + 1;
+                }
+                psVar2 = psVar2 + 1;
+                *param_1 = (int64_t)psVar2;
+            }
+        }
+    } else {
+f5a6b:
+        if (sVar5 == 0x65) {
+            puVar11 = (uint16_t *)(psVar2 + 1);
+            uVar3 = FUN_14005bc28(*puVar11);
+            if ((char)uVar3 == '\0') {
+                lVar12 = 0;
+                dVar16 = DAT_140124110;
+                if ((DAT_140126398 < DAT_140124110) &&
+                   (dVar16 = DAT_140124110 - DAT_140126398, dVar16 < DAT_140126398)) {
+                    lVar12 = -0x8000000000000000LL;
+                }
+                *param_1 = (int64_t)puVar11;
+                lVar12 = (int64_t)dVar16 + lVar12;
+                goto f5b96;
+            }
+        }
+        if ((sVar5 == 0x70) && (psVar2[1] == 0x69)) {
+            puVar11 = (uint16_t *)(psVar2 + 2);
+            uVar3 = FUN_14005bc28(*puVar11);
+            if ((char)uVar3 == '\0') {
+                lVar12 = 0;
+                dVar16 = DAT_140124118;
+                if ((DAT_140126398 < DAT_140124118) &&
+                   (dVar16 = DAT_140124118 - DAT_140126398, dVar16 < DAT_140126398)) {
+                    lVar12 = -0x8000000000000000LL;
+                }
+                *param_1 = (int64_t)puVar11;
+                lVar12 = (int64_t)dVar16 + lVar12;
+                goto f5b96;
+            }
+        }
+        if ((uint16_t)(sVar5 - 0x30U) < 10) {
+            while (1) {
+                puVar11 = (uint16_t *)*param_1 + 1;
+                if (9 < (uint16_t)(*puVar11 - 0x30)) break;
+                uVar1 = *(uint16_t *)*param_1;
+                *param_1 = (int64_t)puVar11;
+                lVar8 = ((uint64_t)uVar1 - 0x30) + lVar8 * 10;
+            }
+            lVar8 = lVar8 * 10;
+        }
+        local_res8[0] = param_3;
+        dVar17 = FUN_140064694(param_1, &local_res20, local_res8);
+        uVar9 = ~((uint32_t)(int)(char)local_res8[0] >> 1) & 1;
+        lVar7 = lVar8;
+        lVar12 = local_res20 + lVar8;
+        bVar15 = local_res8[0] & 1;
+    }
+    lVar8 = lVar7;
+    if (uVar9 == 0) {
+        *param_2 = *param_2 | 2;
+    }
+f5b96:
+    lVar7 = FUN_14005bbb4(param_1);
+    uVar3 = FUN_14005bc28(*(uint16_t *)*param_1);
+    if ((char)uVar3 != '\0') {
+        *param_2 = *param_2 | 2;
+    }
+    FUN_14005B154((WCHAR **)param_1);
+    if (bVar14 != 0) {
+        lVar7 = -lVar7;
+    }
+    if (bVar15 == 0) {
+        lVar7 = lVar7 * lVar12;
+    } else {
+        lVar7 = (int64_t)((double)lVar7 * dVar17) + lVar7 * lVar8;
+    }
+    return lVar7;
 }
 
 double FUN_140065c04(int64_t *param_1, uint8_t *param_2, uint8_t param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140065c04 — decompile-failed, body 未还原 */
-/* @0x140065c04 size=760 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0.0;
+    /* @0x140065c04 size=760 — 数字解析(整数/十六/八/二进制 + e指数或pi常数)，返回双精度浮点结果 */
+    uint16_t uVar1;
+    int bVar2, bVar3;
+    int16_t *psVar4;
+    uint64_t uVar5;
+    uint32_t uVar6;
+    int iVar7;
+    uint16_t *puVar8;
+    uint32_t uVar9;
+    int64_t lVar10, lVar11;
+    uint8_t bVar12;
+    double dVar13, dVar14;
+    uint8_t local_res8[8];
+    int64_t local_res20;
+
+    psVar4 = (int16_t *)*param_1;
+    dVar14 = 0.0;
+    lVar11 = 0;
+    local_res20 = 0;
+    bVar2 = 0;
+    bVar12 = 0;
+    if (*psVar4 == 0x2d) {
+        bVar3 = 1;
+f5c4b:
+        bVar2 = bVar3;
+        *param_1 = (int64_t)(psVar4 + 1);
+    } else {
+        bVar3 = 0;
+        if (*psVar4 == 0x2b) goto f5c4b;
+    }
+    if (*(int16_t *)*param_1 == 0) {
+        *param_2 = *param_2 | 2;
+    }
+    psVar4 = (int16_t *)*param_1;
+    if (*psVar4 == 0x30) {
+        if ((uint16_t)(psVar4[1] | 0x20U) == 0x78) {
+            puVar8 = (uint16_t *)(psVar4 + 2);
+            *param_1 = (int64_t)puVar8;
+            if (((((0x2f < *puVar8) && (*puVar8 < 0x3a)) || (*puVar8 == 0x2e)) ||
+                ((0x60 < *puVar8 && (*puVar8 < 0x67)))) || (lVar10 = lVar11, *puVar8 == 0x78)) {
+                lVar10 = 1;
+            }
+            while (1) {
+                uVar9 = (uint32_t)lVar10;
+                puVar8 = (uint16_t *)*param_1;
+                if (((*puVar8 < 0x30) || (0x39 < *puVar8)) &&
+                   (((*puVar8 | 0x20) < 0x61 || (0x66 < (*puVar8 | 0x20))))) break;
+                uVar1 = *puVar8;
+                *param_1 = (int64_t)(puVar8 + 1);
+                if (uVar1 < 0x41) {
+                    iVar7 = uVar1 - 0x30;
+                } else {
+                    iVar7 = (uVar1 | 0x20) - 0x57;
+                }
+                lVar11 = lVar11 * 0x10 + (int64_t)iVar7;
+            }
+        } else {
+            if (*psVar4 != 0x30) goto f5ddf;
+            if ((uint16_t)(psVar4[1] | 0x20U) == 0x6f) {
+                puVar8 = (uint16_t *)(psVar4 + 2);
+                *param_1 = (int64_t)puVar8;
+                if ((*puVar8 < 0x30) || (uVar9 = 1, 0x37 < *puVar8)) {
+                    uVar9 = 0;
+                }
+                uVar1 = *puVar8;
+                while ((0x2f < uVar1 && (puVar8 = (uint16_t *)*param_1, *puVar8 < 0x38))) {
+                    uVar1 = *puVar8;
+                    *param_1 = (int64_t)(puVar8 + 1);
+                    lVar11 = (int64_t)(int)(uVar1 - 0x30) + lVar11 * 8;
+                    uVar1 = puVar8[1];
+                }
+            } else {
+                if ((*psVar4 != 0x30) || ((uint16_t)(psVar4[1] | 0x20U) != 0x62)) goto f5ddf;
+                psVar4 = psVar4 + 2;
+                *param_1 = (int64_t)psVar4;
+                if ((*psVar4 == 0x30) || (lVar10 = lVar11, *psVar4 == 0x31)) {
+                    lVar10 = 1;
+                }
+                while (uVar9 = (uint32_t)lVar10, *psVar4 != 0) {
+                    psVar4 = (int16_t *)*param_1;
+                    if (*psVar4 == 0x30) {
+                        lVar11 = lVar11 * 2;
+                    } else {
+                        if (*psVar4 != 0x31) break;
+                        lVar11 = lVar11 * 2 + 1;
+                    }
+                    psVar4 = psVar4 + 1;
+                    *param_1 = (int64_t)psVar4;
+                }
+            }
+        }
+    } else {
+f5ddf:
+        if (*psVar4 == 0x65) {
+            puVar8 = (uint16_t *)(psVar4 + 1);
+            uVar6 = FUN_14005bc28(*puVar8);
+            dVar14 = DAT_140124110;
+            if ((char)uVar6 != '\0') goto f5e07;
+            *param_1 = (int64_t)puVar8;
+f5e02:
+            bVar12 = 2;
+            goto f5e71;
+        }
+f5e07:
+        if ((*psVar4 == 0x70) && (psVar4[1] == 0x69)) {
+            puVar8 = (uint16_t *)(psVar4 + 2);
+            uVar6 = FUN_14005bc28(*puVar8);
+            dVar14 = DAT_140124118;
+            if ((char)uVar6 == '\0') {
+                *param_1 = (int64_t)puVar8;
+                goto f5e02;
+            }
+        }
+        local_res8[0] = param_3;
+        dVar14 = FUN_140064694(param_1, &local_res20, local_res8);
+        uVar9 = ~((uint32_t)(int)(char)local_res8[0] >> 1) & 1;
+        bVar12 = local_res8[0] & 1;
+        lVar11 = local_res20;
+    }
+    if (uVar9 == 0) {
+        *param_2 = *param_2 | 2;
+    }
+f5e71:
+    uVar5 = (uint64_t)FUN_14005bbb4(param_1);
+    uVar6 = FUN_14005bc28(*(uint16_t *)*param_1);
+    if ((char)uVar6 != '\0') {
+        *param_2 = *param_2 | 2;
+    }
+    FUN_14005B154((WCHAR **)param_1);
+    if ((bVar12 == 0) && (dVar14 = (double)lVar11, lVar11 < 0)) {
+        dVar14 = dVar14 + DAT_140121668;
+    }
+    if (1 < uVar5) {
+        dVar13 = (double)(int64_t)uVar5;
+        if ((int64_t)uVar5 < 0) {
+            dVar13 = dVar13 + DAT_140121668;
+        }
+        dVar14 = dVar14 * dVar13;
+    }
+    if (bVar2) {
+        dVar14 = g_fontMinus0 - dVar14;
+    }
+    return dVar14;
 }
 
 
@@ -12249,7 +12678,7 @@ int PECMD_FindPhysicalDrive(char *param_1, int param_2)
 
 int FUN_1400695a8(int64_t param_1, int64_t param_2, int param_3, int param_4, int param_5)
 {
-    /* UNIMPLEMENTED @0xFUN_1400695a8 — decompile-failed, body 未还原 */
+    /* @0x1400695a8 size=348 — 按磁盘几何/大小在分区表数组里匹配目标分区序号 */
 /* @0x1400695a8 size=348 根据 ID/大小块匹配目标序号 */
     int64_t lVar1, lVar4;
     int iVar2, iVar3;
@@ -12289,10 +12718,42 @@ f968c:
 
 int FUN_140069704(char *param_1, int64_t param_2, int param_3, int param_4, int param_5)
 {
-    /* UNIMPLEMENTED @0xFUN_140069704 — decompile-failed, body 未还原 */
-/* @0x140069704 size=356 */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4; (void)param_5;
-    return 0;
+    /* @0x140069704 size=356 — 按磁盘几何/大小在分区表数组里匹配目标分区序号(变体2) */
+    int64_t lVar1, lVar2, lVar3, lVar6;
+    int iVar4, iVar5;
+    int64_t *plVar7;
+
+    lVar1 = *(int64_t *)(param_1 + 0x20);
+    lVar2 = *(int64_t *)(param_1 + 0x28);
+    lVar3 = *(int64_t *)(param_1 + 0x20);
+    iVar4 = memcmp(&DAT_140124100, param_1, 0x10);
+    if (((iVar4 != 0) && (iVar4 = memcmp(&DAT_140124100, param_1 + 0x10, 0x10), iVar4 != 0))
+        && (iVar4 = 0, 0 < param_3)) {
+        plVar7 = (int64_t *)(param_2 + 0x10);
+        do {
+            if (param_5 == 0) {
+f7c3:
+                lVar6 = (int64_t)iVar4 * 0x90 + param_2;
+                iVar5 = FUN_14005b184(param_1 + 0x10, lVar6 + 0x30, 0x10);
+                if (iVar5 == 0) goto f7e8;
+            }
+            else {
+                lVar6 = (int64_t)iVar4 * 0x90 + param_2;
+                iVar5 = memcmp(&DAT_140124100, (void *)(lVar6 + 0x30), 0x10);
+                if (iVar5 == 0) goto f7c3;
+f7e8:
+                if ((((param_5 != 0) &&
+                     (iVar5 = memcmp(&DAT_140124100, (void *)(lVar6 + 0x20), 0x10), iVar5 != 0)) ||
+                    (iVar5 = FUN_14005b184(param_1, lVar6 + 0x20, 0x10), iVar5 == 0)) &&
+                   (lVar1 * param_4 == plVar7[-1] && (((lVar2 - lVar3) + 1) * (int64_t)param_4 == *plVar7))) {
+                    return iVar4;
+                }
+            }
+            iVar4 = iVar4 + 1;
+            plVar7 = plVar7 + 0x12;
+        } while (iVar4 < param_3);
+    }
+    return -1;
 }
 
 uint64_t PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2, uint32_t param_3,
@@ -13604,7 +14065,7 @@ bool PECMD_CreateAnimateCtrl(uint64_t *obj, DWORD style, int *rect,
 
 uint64_t *FUN_14006e238(LPCWSTR param_1, HANDLE *param_2, uint64_t *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14006e238 — decompile-failed, body 未还原 */
+    /* @0x14006e238 size=361 — 把整个文件读入内存并返回缓冲区（含长度/魔数头） */
 HANDLE hFile;
     DWORD DVar1;
     int iVar2;
@@ -14080,7 +14541,7 @@ LAB_140070524:
 
 int FUN_140070710(int *param_1, uint8_t param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140070710 — decompile-failed, body 未还原 */
+    /* SKIP @0x140070710 — 巨型(1685B)复杂逻辑，需多未映射 helper/DAT，保存桩 */
 /* @0x140070710 size=1685 */
     (void)param_1; (void)param_2;
     return 0;
@@ -14088,7 +14549,7 @@ int FUN_140070710(int *param_1, uint8_t param_2)
 
 void FUN_140070da8(int64_t param_1, double *param_2, uint8_t param_3, double *param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_140070da8 — decompile-failed, body 未还原 */
+    /* SKIP @0x140070da8 — 巨型(2630B)且混淆，需多未映射数据/helper，保存桩 */
 /* @0x140070da8 size=2630 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
 }
@@ -14270,7 +14731,7 @@ bool PECMD_CheckNetAddress(LPCSTR param_1, uint32_t param_2, char *param_3, char
 
 int FUN_140072924(uint32_t param_1, LPCWSTR param_2, uint32_t param_3, int64_t *param_4, uint16_t *param_5)
 {
-    /* UNIMPLEMENTED @0xFUN_140072924 — decompile-failed, body 未还原 */
+    /* SKIP @0x140072924 — SetupDi 设备枚举，需多个未迁移函数指针+helper，保存桩 */
 /* @0x140072924 size=924 */
     return 0;
 }
@@ -14318,7 +14779,7 @@ int64_t PECMD_GetCachedBlock(void)
 
 HICON FUN_140073934(HMODULE param_1, LPCWSTR param_2, int param_3, int param_4, uint64_t param_5, uint32_t *param_6)
 {
-    /* UNIMPLEMENTED @0xFUN_140073934 — decompile-failed, body 未还原 */
+    /* SKIP @0x140073934 — 参数签名不匹配(param_5 指针vs值)+多 helper+资源回调，保存桩 */
 /* @0x140073934 size=804 */
     return 0;
 }
@@ -15201,7 +15662,7 @@ LAB_140076ab3:
 
 void FUN_140076b88(int64_t param_1, LPWSTR param_2, uint param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140076b88 — decompile-failed, body 未还原 */
+    /* SKIP @0x140076b88 — 控件构造 helper，需多对象虚表/helper 未映射，保存桩 */
 /* @0x140076b88 size=1541 */
     (void)param_1; (void)param_2; (void)param_3;
 }
@@ -15418,7 +15879,7 @@ int64_t PECMD_LockVolumeByDevice(int param_1, uint param_2)
 
 int64_t FUN_140078514(HANDLE param_1, int *param_2, int64_t *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140078514 — decompile-failed, body 未还原 */
+    /* @0x140078514 size=669 — 扫描磁盘 MBR/分区表，定位指定分区起始扇区 */
 uint64_t *lpBuffer;
     uint32_t uVar1;
     uint32_t uVar2;
@@ -16521,7 +16982,7 @@ LAB_14007fe19:
 
 void FUN_14007fe3c(int64_t param_1, uint32_t param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14007fe3c — decompile-failed, body 未还原 */
+    /* SKIP @0x14007fe3c — 窗口定位函数，含 extraout 寄存器残留(反编译不全)+多 helper，保存桩 */
 /* @0x14007fe3c size=2043 */
     (void)param_1; (void)param_2;
 }
@@ -16742,7 +17203,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
 
 uint32_t FUN_140081238(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_140081238 — decompile-failed, body 未还原 */
+    /* SKIP @0x140081238 — 命令串解析，需 ~10 个 helper 未映射，保存桩 */
 /* @0x140081238 size=826 */
     (void)param_1; (void)param_2; (void)param_3; (void)param_4;
     return 0;
@@ -17661,7 +18122,7 @@ LAB_140084877:
 
 LPCWSTR FUN_140084a5c(int64_t *param_1, int64_t *param_2, uint16_t *param_3, int64_t *param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_140084a5c — decompile-failed, body 未还原 */
+    /* SKIP @0x140084a5c — 巨型(3133B)且混淆，保存桩 */
 /* @0x140084a5c size=3133 */
     /* 简化桩: 巨型反编译(3133B)含复杂指针/联体逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     (void)param_1;(void)param_2;(void)param_3;(void)param_4;
@@ -17989,7 +18450,7 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
 }
 uint32_t FUN_14008ba90(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_14008ba90 — decompile-failed, body 未还原 */
+    /* @0x14008ba90 size=577 — 枚举物理磁盘分区，把设备路径映射为盘符（含 MountedDevices 回查） */
 /* @0x14008ba90 size=577 */
     LPWSTR lpString1;
     WCHAR WVar1;
@@ -18838,7 +19299,7 @@ LARGE_INTEGER FUN_14008cffc(int64_t *param_1, LPCWSTR param_2)
 /* @0x140097150 */
 DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140097150 — decompile-failed, body 未还原 */
+    /* SKIP @0x140097150 — 安全描述符/ACL 设置，需多 WinAPI+helper 未映射，保存桩 */
 /* @0x140097150 size=1473 */
     /* 简化桩: 反编译含 Windows 安全 ACL 类型/API (SE_OBJECT_TYPE/PACL/EXPLICIT_ACCESS_W/
        SetNamedSecurityInfoW ...) 未在 stub 头声明。保留签名, 主体最小实现. TODO(restore/verify) */
@@ -18848,7 +19309,7 @@ DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
 
 int64_t FUN_140097714(int64_t *param_1, uint16_t *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140097714 — decompile-failed, body 未还原 */
+    /* SKIP @0x140097714 — 注册表 hive 载入，需多 helper 未映射(含调 097150)，保存桩 */
 /* @0x140097714 size=1372 */
     (void)param_1; (void)param_2;
     return 0;
@@ -18858,7 +19319,7 @@ int64_t FUN_140097714(int64_t *param_1, uint16_t *param_2)
 
 LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_1400987ec — decompile-failed, body 未还原 */
+    /* SKIP @0x1400987ec — 巨型(5930B)且混淆，保存桩 */
 /* @0x1400987ec size=5930 */
     /* 简化桩: 巨型反编译(5930B)含复杂字符串/文件逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     (void)param_1;(void)param_2;
@@ -20861,7 +21322,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
 
 HBITMAP FUN_1400b2ca8(HBITMAP param_1, void *param_2, uint64_t *param_3, uint64_t param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_1400b2ca8 — decompile-failed, body 未还原 */
+    /* SKIP @0x1400b2ca8 — 巨型(4193B)位图缩放且混淆，保存桩 */
 /* @0x1400b2ca8 size=4193 */
     return 0;
 }
@@ -22926,7 +23387,7 @@ LAB_1400bb1d8:
 
 uint64_t FUN_1400bb718(int64_t *param_1, WCHAR *param_2, int64_t *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_1400bb718 — decompile-failed, body 未还原 */
+    /* SKIP @0x1400bb718 — 巨型(4933B)且混淆，保存桩 */
 /* @0x1400bb718 size=4933 */
     return 0;
 }

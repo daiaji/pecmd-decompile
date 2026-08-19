@@ -1068,3 +1068,16 @@ int SetupDiChangeState(void *a, void *b) { (void)a;(void)b; return 1; }
    ============================================================ */
 int64_t FUN_140018978(int64_t *a, const uint16_t *b, int64_t *c, int64_t d, void *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return (int64_t)0; }
 void    FUN_14005e36c(int64_t a, uint32_t *b) { (void)a;(void)b; }
+
+/* ============================================================
+   ---- 新增叶依赖桩/数据 (FUN_140064694/14006587c/140065c04 数字解析族恢复所需) ----
+   ============================================================ */
+int      FUN_14005bc28(uint16_t a) { (void)a; return 0; }      /* 字符分类: 返回0表示字符合法 */
+int64_t  FUN_14005bbb4(int64_t *a) { (void)a; return 0; }      /* 跳过前导 数字后读后缀 */
+double   DAT_140124110;                                        /* 常数(解析) */
+double   DAT_140124118;                                        /* 常数(解析) */
+double   DAT_1401263a0;                                        /* 数字解析乘以10 */
+double   DAT_1401261a0;                                        /* 常数1.0 */
+double   DAT_140126398;                                        /* 舍入阈值0.5 */
+double   DAT_140126390;                                        /* 小数缩放 */
+double   DAT_140121668;                                        /* 常数(解析) */

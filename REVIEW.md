@@ -3389,3 +3389,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - b1_remaining 清 4、b3_remaining 清 23（unused-but-set/unused/parentheses/pointer-sign/int-ptr cast），
   行为类(cast-function-type/sign-compare/type-limits/shift/incompatible/builtin)不变。
 - 结果：全库警告 **81**，其中机械安全项已清零；余者全为行为相关（登记）。
+## 85. Item2 续：b3 批 10 个还原（24→全处理，14 复杂/缺符号 SKIP 登记）
+- RESTORED 10：069704(分区匹配变体2)/064694(宽串浮点解析)/06587c(数值解析整型)/065c04(同,双精度)/
+  06213c(括号匹配)/065140(表达式词法)/0695a8(分区匹配)/06e238(读文件)/078514(MBR分区扫描)/08ba90(设备→盘符)。
+- 补浮点 leaf 桩/常量到 link_stubs + extern。SKIP 14：6巨型(070710/070da8/084a5c/0987ec/0b2ca8/0bb718)混淆难照搬
+  + 缺符号(WinAPI/DAT)；登记不虚构。build/link 全绿。
