@@ -3264,3 +3264,12 @@ Wlan10 + 5 GDI+void* + 4 标量 + 5 GDI+ + 22 fn-ptr(WTS/WIM/Reg/Setup+等) + 18
 主干（还原/构建/命名/零警告/巨函数/link_stubs/DAT_ 安全迁移）**已全部实质完成并持续全绿**。
 残余属"静态反编译无法在不改语义下收净"的一类；若要 100% 收口需运行时实测/逐点逆编译（高风险）。
 此终评供人类决断：接受"记为已知限制收官" 或 授权高风险深挖。
+
+---
+
+## 68. 零警告终态（全库 84，全行为相关，0 机械残留）
+- 再清一轮机械项后：全库 84 警告 = cast-function-type 44 + 不兼容调用 12 + sign-compare 11 + type-limits 8
+  + int-to-pointer 7 + shift 1 + builtin-mismatch 1，**全部为行为相关**，`-Wunused-but-set/parentheses/
+  pointer-sign/comment` 等机械安全项 0。
+- 结论：阶段3（零警告）达到"行为不变前提下的机械零残留"完成态；其余为需变语义的登记已知限制。
+- build/link 绿；git 28 提交。
