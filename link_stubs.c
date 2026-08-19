@@ -874,8 +874,6 @@ uint64_t WaitForInputIdle(void){ return 0; }
 int64_t   DAT_14013d870;          /* bitmap data size */
 void     *DAT_14013e110;          /* config string pointer */
 /* function-pointer slots */
-int  (*DAT_14013d458)(void *, unsigned int *) = 0;
-int  (*DAT_14013d460)(void *, unsigned int *) = 0;
 
 /* FUN_ helpers (business/unknown -> no-op typed stubs; symbol-only for link) */
 uint64_t FUN_14005b2c0(void){ return 0; }
