@@ -3381,3 +3381,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 结果：业务代码不再内嵌 memcpy/memmove 重实现，只调用 libc；build/link 全绿。
 - 示意 == 用户架构要求"业务代码只 import/call，不内嵌/重实现 CRT"的 memc 部分完成；
   剩余 005390(memset 字/字节歧义)与 CRT 数学/字符串(未调用死桩)登记待办或删。
+## 83. Item1 补：005390(memset) 迁移
+- 其定义体实为 `memset(p,value,count)` 字节填充；唯一调用点 `FUN_140005390(puVar1,0,100)`→`memset(puVar1,0,100)`，
+  删定义+桩。b1 有 string.h。build/link 绿。
+- Item(1) mem 家族(memcpy/memmove/memset)全库真库化达成；CRT 数学/字符串(0x14010-11)为未调用死桩，登记待删/标注。

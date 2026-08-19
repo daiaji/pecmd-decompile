@@ -1568,15 +1568,7 @@ bool PECMD_WaitUserInputIdle(uint32_t param_1)
     return 0 < g_flagA24F;
 }
 
-uint64_t *FUN_140005390(uint64_t *p, uint64_t value, uint32_t count)
-{
-    /* UNIMPLEMENTED @0xFUN_140005390 — decompile-failed, body 未还原 */
-/* @0x140005390 size=35 按字节数填充 */
-    if ((int)(count - 1) >= 0) {
-        memset(p, (int)value, (size_t)count);
-    }
-    return p;
-}
+
 
 LPCWSTR PECMD_FindStrI(LPCWSTR param_1, LPCWSTR param_2)
 {
@@ -1716,7 +1708,7 @@ void PECMD_CreateSharedMemoryMap(LPCWSTR param_1, uint64_t param_2)
         puVar1 = (uint64_t *)MapViewOfFile(hFileMappingObject, 6, 0, 0, 0);
         CloseHandle(hFileMappingObject);
         if (puVar1 != (uint64_t *)0x0) {
-            FUN_140005390(puVar1, 0, 100);
+            memset(puVar1, 0, 100);
             *(uint32_t *)puVar1 = 0xffffffff;
             puVar1[2] = param_2;
             PTR_DAT_14013a040 = (void *)(puVar1 + 1);
