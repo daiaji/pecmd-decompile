@@ -551,7 +551,7 @@ extern int64_t  FUN_1400705ac(int64_t *param_1, LPCWSTR param_2, uint32_t param_
                               uint64_t param_4, uint64_t param_5, uint32_t param_6,
                               uint32_t param_7, uint64_t param_8); /* @0x1400705ac */
 extern uint64_t FUN_14001c270(LPCWSTR param_1, uint64_t *param_2); /* @0x14001c270 */
-extern uint64_t *FUN_140102184(uint64_t *param_1, uint64_t param_2); /* @0x140102184 构造 */
+extern uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2); /* @0x140102184 构造 */
 extern void     PECMD_ReleaseGdiImage(int64_t param_1);                   /* @0x140102244 析构 */
 extern uint32_t PECMD_IsBitmapResource(uint16_t *param_1);                 /* @0x14005d87c */
 extern uint32_t PECMD_IsIconResource(uint16_t *param_1);                 /* @0x14005d83c */
@@ -3580,7 +3580,7 @@ LAB_14004a9aa:
         local_ea8.dwFileAttributes = 0;
         memset((void *)&local_ea8.ftCreationTime, 0, (size_t)0x24c);
         local_1780 = (HANDLE)0;
-        FUN_140101db8(&local_1780, local_1838, &local_ea8);
+        PECMD_FindFirstFileW(&local_1780, local_1838, &local_ea8);
         if (local_1780 != (HANDLE)0) {
             FUN_1400702b0(&local_1768, local_1838);
             FUN_140078be8(local_1838, (int64_t *)&local_1768);
@@ -3782,7 +3782,7 @@ LAB_14004b104:
         local_10f8.dwFileAttributes = 0;
         memset((void *)&local_10f8.ftCreationTime, 0, (size_t)0x24c);
         local_16e0 = (HANDLE)0;
-        FUN_140101db8(&local_16e0, local_1838, &local_10f8);
+        PECMD_FindFirstFileW(&local_16e0, local_1838, &local_10f8);
         if (local_16e0 != (HANDLE)0) {
             FUN_1400702b0(&local_17c0, local_1838);
             FUN_140078be8(local_1838, (int64_t *)&local_17c0);
@@ -4728,7 +4728,7 @@ uint64_t FUN_140050cb0(uint32_t *param_1, uint64_t param_2, uint64_t param_3)
     return 0xffffffff;
 }
 
-int FUN_1400510e8(int *param_1, uint64_t *param_2, uint8_t *param_3)
+int PECMD_ParseRegexCloseBrace(int *param_1, uint64_t *param_2, uint8_t *param_3)
 {
     /* @0x1400510e8 size=514 */
     int iVar1;
@@ -4929,7 +4929,7 @@ static WCHAR *r182c_skip_to(WCHAR *p, WCHAR c)
 }
 
 /* @0x14005182c size=7902 */
-LPCWSTR FUN_14005182c(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3, WCHAR *param_4,
+LPCWSTR PECMD_RegexReplace(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3, WCHAR *param_4,
                       WCHAR *param_5, int64_t *param_6)
 {
     int64_t *plVar1;
@@ -16163,10 +16163,10 @@ LAB_140083f44:
 
 
 /* @0x1400846a4 size=950 解析 @/$ 变量引用与数值表达式赋值语义 */
-/* signature: uint64_t FUN_1400846a4(int64_t *param_1, WCHAR *param_2,
+/* signature: uint64_t PECMD_ParseTokenResolve(int64_t *param_1, WCHAR *param_2,
  *                                  uint64_t *param_3, uint64_t *param_4,
  *                                  char param_5, uint64_t *param_6) */
-uint64_t FUN_1400846a4(int64_t *param_1, WCHAR *param_2, uint64_t *param_3, uint64_t *param_4, char param_5, uint64_t *param_6)
+uint64_t PECMD_ParseTokenResolve(int64_t *param_1, WCHAR *param_2, uint64_t *param_3, uint64_t *param_4, char param_5, uint64_t *param_6)
 {
     WCHAR WVar1;
     uint64_t *puVar2;
@@ -16636,7 +16636,7 @@ uint32_t FUN_14008ba90(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPC
     return 0;
 }
 
-int64_t FUN_14008bcd4(int64_t *param_1, LPCWSTR param_2, uint64_t param_3, uint64_t param_4,
+int64_t PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t param_3, uint64_t param_4,
                       LARGE_INTEGER *param_5, uint32_t *param_6, char param_7)
 {
     /* @0x14008bcd4 size=4904 */
@@ -20223,7 +20223,7 @@ LAB_1400b801f:
             if (local_1f8 == 0) {
                 puVar9 = (uint64_t *)operator_new(0x120);
                 if (puVar9 == (uint64_t *)0x0) goto LAB_1400b806b;
-                puVar21 = FUN_140102184(puVar9, (uint64_t)(param_1 + 0x58));
+                puVar21 = PECMD_ConstructObject(puVar9, (uint64_t)(param_1 + 0x58));
                 puVar9 = puVar21;
             }
             else {
@@ -20234,7 +20234,7 @@ LAB_1400b806b:
                     puVar9 = (uint64_t *)0x0;
                 }
                 else {
-                    puVar21 = FUN_140102184(puVar9, (uint64_t)(param_1 + 0x58));
+                    puVar21 = PECMD_ConstructObject(puVar9, (uint64_t)(param_1 + 0x58));
                     *puVar9 = (uint64_t)(uintptr_t)PTR_FUN_140124f70;
                 }
             }
@@ -20274,7 +20274,7 @@ LAB_1400b7e64:
             if (uVar37 == 0) {
                 puVar9 = (uint64_t *)operator_new(0x120);
                 if (puVar9 == (uint64_t *)0x0) goto LAB_1400b7ee1;
-                puVar9 = FUN_140102184(puVar9, (uint64_t)(param_1 + 0x58));
+                puVar9 = PECMD_ConstructObject(puVar9, (uint64_t)(param_1 + 0x58));
             }
             else {
                 puVar9 = (uint64_t *)operator_new(0x120);
@@ -20283,7 +20283,7 @@ LAB_1400b7ee1:
                     puVar9 = (uint64_t *)0x0;
                 }
                 else {
-                    FUN_140102184(puVar9, (uint64_t)(param_1 + 0x58));
+                    PECMD_ConstructObject(puVar9, (uint64_t)(param_1 + 0x58));
                     *puVar9 = (uint64_t)(uintptr_t)PTR_FUN_140124f70;
                 }
             }
@@ -20805,7 +20805,7 @@ LAB_1400b8786:
                 if (local_1f8 == (uint32_t)pHVar30) {
                     puVar9 = (uint64_t *)operator_new(0x120);
                     if (puVar9 == (uint64_t *)0x0) goto LAB_1400b8602;
-                    plVar10 = (int64_t *)FUN_140102184(puVar9, (uint64_t)(param_1 + 0x58));
+                    plVar10 = (int64_t *)PECMD_ConstructObject(puVar9, (uint64_t)(param_1 + 0x58));
                 }
                 else {
                     plVar10 = (int64_t *)operator_new(0x120);
@@ -20814,7 +20814,7 @@ LAB_1400b8602:
                         plVar10 = (int64_t *)0x0;
                     }
                     else {
-                        FUN_140102184((uint64_t *)plVar10, (uint64_t)(param_1 + 0x58));
+                        PECMD_ConstructObject((uint64_t *)plVar10, (uint64_t)(param_1 + 0x58));
                         *plVar10 = (int64_t)(uintptr_t)PTR_FUN_140124f70;
                     }
                 }

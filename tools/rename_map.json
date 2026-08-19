@@ -788,5 +788,17 @@
   "FUN_140086944": "PECMD_ProcessEncodedFile",
   "FUN_1400a0d38": "PECMD_SearchStringAndLocate",
   "FUN_1400b0bf8": "PECMD_LaunchAsyncScriptThread",
-  "FUN_1400ba35c": "PECMD_LoadIconAndTooltip"
+  "FUN_1400ba35c": "PECMD_LoadIconAndTooltip",
+  "FUN_14005182c": "PECMD_RegexReplace",
+  "FUN_140102778": "PECMD_CreateStaticControl",
+  "FUN_14008bcd4": "PECMD_DescribePartitionInfo",
+  "FUN_140102928": "PECMD_ControlHoverWndProc",
+  "FUN_140063224": "PECMD_ReallocBuffer",
+  "FUN_1400abc74": "PECMD_ParseControlCenterArgs",
+  "FUN_140101e04": "PECMD_CreateProcessW",
+  "FUN_1400846a4": "PECMD_ParseTokenResolve",
+  "FUN_140101db8": "PECMD_FindFirstFileW",
+  "FUN_140102184": "PECMD_ConstructObject",
+  "FUN_1400510e8": "PECMD_ParseRegexCloseBrace",
+  "FUN_140102848": "PECMD_CreateButtonCtl"
 }

@@ -40,7 +40,7 @@ extern char *lstrcpynA(char *, const char *, int);
 /* ---- FUN_ helper 声明 ---- */
 extern void *FUN_14001d78c(void *dst, const void *src, int len);   /* 小写 memcpy 类 @0x14001d78c */
 extern void *FUN_14001d744(void *dst, const void *src, int len);   /* 小写 memmove 类 @0x14001d744 */
-extern void  FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
+extern void  PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
 extern LPCVOID FUN_1400e3f80(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* @0x140063424 分配槽数组 */
@@ -90,7 +90,7 @@ int64_t PECMD_GetDirectorySize(LPCWSTR param_1)
                       WSTR("\\*.*"), 10);
         lpFindFileData[2].cFileName[0xd3] = L'\0';
         local_res18 = (HANDLE)0;
-        FUN_140101db8(&local_res18, (LPCWSTR)(lpFindFileData + 1), lpFindFileData);
+        PECMD_FindFirstFileW(&local_res18, (LPCWSTR)(lpFindFileData + 1), lpFindFileData);
         if (local_res18 != (HANDLE)0) {
             do {
                 if ((lpFindFileData->dwFileAttributes & 0x10) == 0) {

@@ -84,7 +84,7 @@ extern uint64_t g_u64_12d060;
 
 /* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    (GdipDisposeImage 函数指针) */
 extern WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);          /* @0x1400703e4 */
-extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
+extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
 extern BOOL PathFileExistsW(LPCWSTR);                          /* Win32 API (link_stubs.c) */
 extern HBITMAP PECMD_LoadImageBitmap(LPCWSTR param_1, int64_t *param_2, int64_t param_3,
                              uint64_t param_4, uint32_t *param_5, uint64_t *param_6,
@@ -186,7 +186,7 @@ uint64_t PECMD_CheckFileAttr(LPCWSTR path)
     return result;
 }
 
-void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd)
+void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd)
 {
     /* @0x140101db8 size=63 FindFirstFileW 业务包装:失败返回句柄0 */
     HANDLE h;
@@ -198,7 +198,7 @@ void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd)
     *ph = h;
 }
 
-int FUN_140101e04(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa, LPSECURITY_ATTRIBUTES da,
+int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa, LPSECURITY_ATTRIBUTES da,
                   BOOL inherit, DWORD flags, LPVOID env, LPCWSTR cwd,
                   LPSTARTUPINFOW si, LPPROCESS_INFORMATION pi)
 {
@@ -231,7 +231,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
     local_298.dwFileAttributes = 0;
     memset(&local_298.ftCreationTime, 0, 0x24c);
     local_res8 = (LPWSTR)0;
-    FUN_140101db8(local_res18, param_1, &local_298);
+    PECMD_FindFirstFileW(local_res18, param_1, &local_298);
     hFindFile = local_res18[0];
     uVar5 = uVar4;
     if (local_res18[0] == (HANDLE)0x0) {
@@ -260,7 +260,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
             local_res8[lVar3] = L'\\';
             local_res8[lVar3 + 1] = L'*';
             local_res8[lVar3 + 2] = L'\0';
-            FUN_140101db8(local_res18, local_res8, &local_298);
+            PECMD_FindFirstFileW(local_res18, local_res8, &local_298);
             hFindFile = local_res18[0];
             uVar5 = uVar4 | 0x10;
             if (local_res18[0] == (HANDLE)0x0) {
@@ -268,7 +268,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
                 local_res8[lVar3 + 2] = L'.';
                 local_res8[lVar3 + 1] = L'*';
                 local_res8[lVar3 + 3] = L'\0';
-                FUN_140101db8(local_res18, param_1, &local_298);
+                PECMD_FindFirstFileW(local_res18, param_1, &local_298);
                 hFindFile = local_res18[0];
                 if (local_res18[0] == (HANDLE)0x0) {
                     local_res8[lVar3] = L'\0';
@@ -296,7 +296,7 @@ LAB_140102142:
     return local_res10;
 }
 
-uint64_t *FUN_140102184(uint64_t *param_1, uint64_t param_2)
+uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2)
 {
     /* @0x140102184 size=190 对象构造函数 */
     int64_t local_res8;
@@ -478,7 +478,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
     EndPaint((HWND)param_1[4], &local_88);
 }
 
-bool FUN_140102778(int64_t *param_1, LPCWSTR param_2, DWORD param_3, int *param_4,
+bool PECMD_CreateStaticControl(int64_t *param_1, LPCWSTR param_2, DWORD param_3, int *param_4,
                    HWND param_5, unsigned int param_6)
 {
     /* @0x140102778 size=207 创建 STATIC 静态文本子控件并挂钩容器 */
@@ -502,7 +502,7 @@ bool FUN_140102778(int64_t *param_1, LPCWSTR param_2, DWORD param_3, int *param_
     return param_1[4] != 0;
 }
 
-bool FUN_140102848(int64_t *param_1, LPCWSTR param_2, unsigned int param_3, int *param_4,
+bool PECMD_CreateButtonCtl(int64_t *param_1, LPCWSTR param_2, unsigned int param_3, int *param_4,
                    HWND param_5, unsigned int param_6)
 {
     /* @0x140102848 size=221 创建 BUTTON 命令按钮子控件并挂钩容器 */
@@ -527,7 +527,7 @@ bool FUN_140102848(int64_t *param_1, LPCWSTR param_2, unsigned int param_3, int 
     return param_1[4] != 0;
 }
 
-void FUN_140102928(int64_t *param_1, int param_2, long long param_3, uint64_t param_4)
+void PECMD_ControlHoverWndProc(int64_t *param_1, int param_2, long long param_3, uint64_t param_4)
 {
     /* @0x140102928 size=309 控件 WM_PAINT/WM_TIMER/WM_MOUSEMOVE 处理 */
     POINT pt;

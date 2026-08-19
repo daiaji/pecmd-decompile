@@ -25,7 +25,7 @@ extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
 extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
 extern int64_t *FUN_14005B154(WCHAR **ps);                 /* @0x14005b154 */
-extern void *FUN_140063224(void *old, int64_t size);      /* @0x140063224 */
+extern void *PECMD_ReallocBuffer(void *old, int64_t size);      /* @0x140063224 */
 extern void FUN_140024A54(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
 extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */

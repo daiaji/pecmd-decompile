@@ -27,7 +27,7 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 已有实现（core_exec2.c / core_string.c / core_thread.c / core_var3.c） */
-extern void *FUN_140063224(void *old, int64_t size);                    /* @0x140063224 */
+extern void *PECMD_ReallocBuffer(void *old, int64_t size);                    /* @0x140063224 */
 extern void FUN_14005B0B8(void *p);                                     /* @0x14005b0b8 */
 extern bool FUN_1400C11C0(LPCWSTR *ps, int *out);                      /* @0x1400c11c0 */
 extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
@@ -192,7 +192,7 @@ no_precheck:
 raw_decode:
     /* 两次解码尝试：先自动模式，失败再 0xfde9 强制模式 */
     skipN = len * 3;
-    pNew = (uint8_t *)FUN_140063224(pNew, (int64_t)(skipN + 3) * 2 + 2);
+    pNew = (uint8_t *)PECMD_ReallocBuffer(pNew, (int64_t)(skipN + 3) * 2 + 2);
     iVar3 = FUN_1400E7994(0, (const uint8_t *)(intptr_t)ps[0], len, (uint16_t *)pNew, skipN,
                             (key & 0xffff) | 0x1000000);
     if (iVar3 < 1) {
@@ -220,7 +220,7 @@ main_decode:
         pOld = (uint8_t *)(intptr_t)ps[0];
         ps[0] = (int64_t)(intptr_t)t;
     }
-    ps[0] = (int64_t)(intptr_t)FUN_140063224((void *)(intptr_t)ps[0],
+    ps[0] = (int64_t)(intptr_t)PECMD_ReallocBuffer((void *)(intptr_t)ps[0],
                                              (int64_t)(len * 3 + 3) * 2 + 2);
     iVar3 = FUN_1400E7994(spec, data, len, (uint16_t *)(intptr_t)ps[0], len * 2,
                             key & 0xffff);
@@ -228,7 +228,7 @@ main_decode:
 postproc:
     /* 后处理：尾部补密钥填充 + 终止符，扫描 "#code=N" / "#!tN" */
     for (;;) {
-        ps[0] = (int64_t)(intptr_t)FUN_140063224((void *)(intptr_t)ps[0],
+        ps[0] = (int64_t)(intptr_t)PECMD_ReallocBuffer((void *)(intptr_t)ps[0],
                                                  (int64_t)(iVar3 + 9) * 2 + 2);
         for (int j = 0; j < 8; j++) ((uint16_t *)(intptr_t)ps[0])[iVar3 + j] = key16;
         ((uint16_t *)(intptr_t)ps[0])[iVar3 + 8] = 0;

@@ -34,7 +34,7 @@
 /* ---- 缺失平台声明/类型 (本文件局部) ---- */
 extern void *operator_new(size_t size);
 extern uint8_t PTR_FUN_14012c670[];
-extern int FUN_140101e04(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
+extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
                          uint32_t flags, LPVOID env, LPCWSTR cwd,
                          STARTUPINFOW *si, PROCESS_INFORMATION *pi);
 
@@ -68,7 +68,7 @@ extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
 extern void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1,
                           int16_t sep2);
-extern int64_t FUN_1400846a4(int64_t *ctx, WCHAR *p, uint64_t *out1, uint64_t *out2,
+extern int64_t PECMD_ParseTokenResolve(int64_t *ctx, WCHAR *p, uint64_t *out1, uint64_t *out2,
                              bool async, uint64_t *out3);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
@@ -87,7 +87,7 @@ extern uint8_t g_tooltipCount0;     /* DAT_14013a860 Tooltip 计数 0 */
 /* ========== FUN_1400F1504 @0x1400f1504 ==========
  * 解析 "[:var;] [#]msg ..." 控件命令串，展开变量后向控件窗口发送
  * PostMessage/SendMessage(Timeout)，并把结果写回命名变量。
- * TODO(verify): FUN_1400846a4 参数/返回值语义。
+ * TODO(verify): PECMD_ParseTokenResolve 参数/返回值语义。
  */
 DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
                                      int64_t *script, uint8_t sync, void **ppcs)
@@ -122,7 +122,7 @@ DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
     if (PECMD_ParseUIntValue(&p, &parsed) && parsed > 0)
         msg = (uint32_t)parsed + (uint32_t)extra;
     if (msg != 0) {
-        if (FUN_1400846a4(script, p, &wParam, &lParam, sync != 0, timeout) == 0) {
+        if (PECMD_ParseTokenResolve(script, p, &wParam, &lParam, sync != 0, timeout) == 0) {
             hwnd = *(HWND *)(obj + OBJ_HWND);
             if (ppcs != NULL && *ppcs != NULL) {
                 LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION)*ppcs;

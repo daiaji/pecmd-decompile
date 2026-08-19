@@ -80,7 +80,7 @@ extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize); /* @0x140063b00 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int FUN_140101e04(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
+extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
                          uint32_t flags, LPVOID env, LPCWSTR cwd,
                          STARTUPINFOW *si, PROCESS_INFORMATION *pi);
 extern int FUN_1400E7124(void *p1, uint32_t p2, int64_t *p3, int64_t *p4,
@@ -152,7 +152,7 @@ uint32_t FUN_1400E4324(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
 
     base = (uint64_t)g_remoteTebBase;
     read = 0;
-    ok = FUN_140101e04(param11, cmd, NULL, NULL, inherit, flags | 4,
+    ok = PECMD_CreateProcessW(param11, cmd, NULL, NULL, inherit, flags | 4,
                        env, cwd, si, pi);
     if (ok != 0) {
         *(uint32_t *)(g_ptrA84C + ctxOff) = 0x10000b;

@@ -47,7 +47,7 @@ extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140
 
 /* ---- 未实现依赖 (extern + TODO(verify), 不编造) ---- */
 extern void FUN_140063620(void *ps);              /* @0x140063620 分配引用串容器 */
-extern void *FUN_140063224(void *ptr, int64_t len); /* @0x140063224 重分配(带 OOM 处理) */
+extern void *PECMD_ReallocBuffer(void *ptr, int64_t len); /* @0x140063224 重分配(带 OOM 处理) */
 extern void *FUN_140070154(LPCWSTR src);            /* @0x140070154 带 -8 头的串复制 */
 extern void FUN_14001b660(void *script);            /* @0x14001b660 sysinit 前置 */
 extern void FUN_1400250f0(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
@@ -147,7 +147,7 @@ WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
     /* 从 off 起找下一个 key 分隔字符, +1 含其自身 */
     seglen = (size_t)FUN_14001B4F8(*(const WCHAR **)pbuf + off, (WCHAR)key) + 1;
     FUN_14001B5AC(tmp, key, 0);
-    nb = FUN_140063224(*(void **)pbuf, (int64_t)(seglen + linelen + (size_t)off) * 2 + 0x12);
+    nb = PECMD_ReallocBuffer(*(void **)pbuf, (int64_t)(seglen + linelen + (size_t)off) * 2 + 0x12);
     ins = (WCHAR *)((uint8_t *)nb + (size_t)off * 2);
     *(void **)pbuf = nb;
     /* 旧段 (原 off 起 seglen 字符) 后移 linelen 字符 (FUN_14001d744 memmove) */
@@ -265,7 +265,7 @@ WCHAR *FUN_140030F1C(uint32_t key, void **buf, LPCWSTR name, int64_t a4)
     clen = (size_t)lstrlenW(line);
     FUN_14001B5AC(line, key, 0);
     /* iVar4 = pos + 0x10: 跳过 key 段 + 16 字符头 */
-    nb = FUN_140063224(*(void **)buf, (int64_t)(clen + 0x11 + pos + 0x10) * 2 + 2);
+    nb = PECMD_ReallocBuffer(*(void **)buf, (int64_t)(clen + 0x11 + pos + 0x10) * 2 + 2);
     *(void **)buf = nb;
     ins = (WCHAR *)((uint8_t *)nb + (pos + 0x10) * 2);
     memcpy(ins, line, (clen + 1) * 2);

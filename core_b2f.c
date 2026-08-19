@@ -5067,7 +5067,7 @@ extern int64_t FUN_1400B638C();
 extern LARGE_INTEGER FUN_1400D2E90();
 extern void *FUN_1400E3F80();
 extern int64_t FUN_1400E693C();
-extern int64_t FUN_140101db8();
+extern int64_t PECMD_FindFirstFileW();
 
 #endif /* B2F_PART4_LOCAL */
 
@@ -6221,7 +6221,7 @@ LAB_14003b9c8:
     memset((uint64_t *)&local_278.ftCreationTime,0,0x24c);
     pWVar13 = local_2d8;
     local_310 = (HANDLE)0x0;
-    FUN_140101db8(&local_310,local_2d8,&local_278);
+    PECMD_FindFirstFileW(&local_310,local_2d8,&local_278);
     local_2a8 = (WCHAR *)(int64_t)(int)uVar9;
     if (local_310 != (HANDLE)0x0) {
       do {
@@ -6267,7 +6267,7 @@ LAB_14003b9c8:
     if ((mode & 0xf) == 1) {
       FUN_14001d78c((uint8_t *)local_2e0,(uint8_t *)WSTR("\\*.*"),0xc);
       local_278.cFileName[2] = L'\0';
-      FUN_140101db8(&local_310,pWVar13,&local_278);
+      PECMD_FindFirstFileW(&local_310,pWVar13,&local_278);
       if (local_310 != (HANDLE)0x0) {
         do {
           if (*(int *)(size + 0x1a0) < 0) break;

@@ -88,7 +88,7 @@ extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);
 extern DWORD FUN_14006459C(LPCWSTR path, uint32_t mode, LPWSTR buf,
                            LPWSTR *out);
-extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
+extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern int64_t PECMD_WideStrLen(void *s);
 extern char PECMD_ParseEnvSwitches(LPCWSTR s, int64_t *ctx, int mode);
 extern POINT FUN_1400CB820(int64_t *ctx, uint64_t p, int64_t a, char c);
@@ -1312,7 +1312,7 @@ DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR srcPath, uint32_t flags)
 
     FUN_14001d78c(fileName, (const void *)0x140120dd8, 8);
     memset(&fd, 0, sizeof(fd));
-    FUN_140101db8(&hFind, buf, &fd);
+    PECMD_FindFirstFileW(&hFind, buf, &fd);
     if (hFind != (HANDLE)0) {
         do {
             if (((fd.dwFileAttributes & 0x10) == 0) &&

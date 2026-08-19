@@ -4,6 +4,18 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14005182c | FUN_14005182c | PECMD_RegexReplace |
+| 0x140102778 | FUN_140102778 | PECMD_CreateStaticControl |
+| 0x14008bcd4 | FUN_14008bcd4 | PECMD_DescribePartitionInfo |
+| 0x140102928 | FUN_140102928 | PECMD_ControlHoverWndProc |
+| 0x140063224 | FUN_140063224 | PECMD_ReallocBuffer |
+| 0x1400abc74 | FUN_1400abc74 | PECMD_ParseControlCenterArgs |
+| 0x140101e04 | FUN_140101e04 | PECMD_CreateProcessW |
+| 0x1400846a4 | FUN_1400846a4 | PECMD_ParseTokenResolve |
+| 0x140101db8 | FUN_140101db8 | PECMD_FindFirstFileW |
+| 0x140102184 | FUN_140102184 | PECMD_ConstructObject |
+| 0x1400510e8 | FUN_1400510e8 | PECMD_ParseRegexCloseBrace |
+| 0x140102848 | FUN_140102848 | PECMD_CreateButtonCtl |
 | 0x140075f9c | FUN_140075f9c | PECMD_DosDeviceMount |
 | 0x140006aa0 | FUN_140006aa0 | PECMD_EnumerateVolume |
 | 0x140019e34 | FUN_140019e34 | PECMD_MatchDeviceClass |

@@ -45,7 +45,7 @@ extern uint8_t FUN_140062fc4(LPCWSTR param_1, int64_t *param_2, int param_3); /*
 extern void   FUN_140063620(WCHAR **out);                                     /* @0x140063620 串容器初始化 */
 extern WCHAR *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* @0x1400547bc */
 extern WCHAR *FUN_14001be14(WCHAR *s);                                         /* 串标签/前缀查找 */
-extern void   FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);   /* @0x140101db8 查找入口 */
+extern void   PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);   /* @0x140101db8 查找入口 */
 extern void   PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                             LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                             HANDLE tmpl);
@@ -193,7 +193,7 @@ uint64_t PECMD_GetPathSizeToVar(int64_t *param_1, LARGE_INTEGER param_2)
     if ((iVar3 < 1) ||
         ((LVar1 = local_res10[0],
           (lpString[iVar3 - 1] != L'\\') && (lpString[iVar3 - 1] != L'/')))) {
-        FUN_140101db8((HANDLE *)&local_368, lpString, &local_278);
+        PECMD_FindFirstFileW((HANDLE *)&local_368, lpString, &local_278);
         if (local_368 != (HANDLE)0) {
             LVar1.QuadPart = LVar4.QuadPart;
             if ((local_278.dwFileAttributes & 0x10) != 0) goto LAB_14006b539;

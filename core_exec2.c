@@ -20,7 +20,7 @@
  *   FUN_14006159C   @0x14006159c   脚本分隔符初始化（XOR 编码表）
  *   FUN_14002487C     @0x14002487c   行分割（_ENDFILE 处理）
  *   FUN_14005B21C    @0x14005b21c   退出进程
- *   FUN_140063224     @0x140063224   带 0xaa55 头分配
+ *   PECMD_ReallocBuffer     @0x140063224   带 0xaa55 头分配
  */
 #include <stdlib.h>
 #include <string.h>
@@ -115,10 +115,10 @@ void FUN_14005B21C(UINT code)
     ExitProcess(code);
 }
 
-/* ========== FUN_140063224 @0x140063224 ==========
+/* ========== PECMD_ReallocBuffer @0x140063224 ==========
  * 分配 size+8 头（0xaa55 魔数 + 容量），复制旧块内容（按小者）。
  */
-void *FUN_140063224(void *old, int64_t size)
+void *PECMD_ReallocBuffer(void *old, int64_t size)
 {
     int64_t *p;
     int r;
@@ -366,7 +366,7 @@ uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32
         return (uint8_t *)*out;
     }
     /* 原样复制 + XOR */
-    buf = (int64_t *)FUN_140063224(NULL, (int64_t)sz + 0x411);
+    buf = (int64_t *)PECMD_ReallocBuffer(NULL, (int64_t)sz + 0x411);
     *(int64_t *)((char *)buf + 0x10) = sz;
     *(int64_t *)((char *)buf + 8) = sz;
     memcpy(buf, data, sz);

@@ -1,5 +1,5 @@
 /* Restored batch28 B3 business functions (part i28b)
- * Functions: PECMD_SubCommand, FUN_1400abc74, PECMD_ForCommand, PECMD_AssignDriveLetter
+ * Functions: PECMD_SubCommand, PECMD_ParseControlCenterArgs, PECMD_ForCommand, PECMD_AssignDriveLetter
  */
 #include <stdbool.h>
 
@@ -262,10 +262,10 @@ LAB_1400abc25:
 
 /* ================================================================
  * @0x1400abc74  列表/组合控件命令解析 (带 -center/-right/-left 对齐)
- * signature: undefined8 __fastcall FUN_1400abc74(longlong * param_1,
+ * signature: undefined8 __fastcall PECMD_ParseControlCenterArgs(longlong * param_1,
  *   ushort * param_2, WPARAM param_3, undefined8 param_4)
  */
-undefined8 FUN_1400abc74(longlong *param_1, ushort *param_2, WPARAM param_3,
+undefined8 PECMD_ParseControlCenterArgs(longlong *param_1, ushort *param_2, WPARAM param_3,
                          undefined8 param_4)
 {
     ushort uVar1;

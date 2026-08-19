@@ -47,7 +47,7 @@ extern void *FUN_14001d78c(void *dst, const void *src, int len);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
 extern BOOL FUN_140101E70(LPCWSTR s);
 extern uint64_t PECMD_IsDirectory(LPCWSTR s);
-extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
+extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern LARGE_INTEGER PECMD_ExecDashCommand(LPCWSTR path);
 extern uint32_t PECMD_ParseVirtualKeyCode(LPCWSTR s, int len);
 extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
@@ -362,7 +362,7 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
             FUN_14006375C((WCHAR **)&local_res18, WSTR("\\*.*"));
         }
         local_res20 = 0;
-        FUN_140101db8(&local_res20, local_res18, &local_278);
+        PECMD_FindFirstFileW(&local_res20, local_res18, &local_278);
         {
             WCHAR *pWVar8 = StrRChrW(local_res18, NULL, L'\\');
             if (pWVar8 != NULL) {
@@ -1109,7 +1109,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
     PECMD_AllocWStringBuffer(&local_res20, 0x208);
     iVar4 = 1;
     local_res18 = 0;
-    FUN_140101db8(&local_res18, (LPCWSTR)dir, &local_268);
+    PECMD_FindFirstFileW(&local_res18, (LPCWSTR)dir, &local_268);
     pWVar3 = StrRChrW((LPCWSTR)dir, NULL, L'\\');
     if (pWVar3 != NULL) {
         *pWVar3 = L'\0';

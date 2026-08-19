@@ -116,7 +116,7 @@ extern uint64_t  PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, ui
 extern uint64_t  PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3);  /* 清洗文本 */
 extern LPWSTR    FUN_14005eefc(LPWSTR param_1, WCHAR *param_2);   /* 串拷贝 */
 extern void      FUN_14006459c(LPCWSTR path, DWORD a, LPWSTR buf, LPWSTR *out);
-extern int64_t   FUN_14008bcd4(int64_t *param_1, LPCWSTR param_2, uint64_t param_3,
+extern int64_t   PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t param_3,
                                uint64_t param_4, LARGE_INTEGER *param_5,
                                uint32_t *param_6, char param_7);
 extern int64_t   PECMD_StripDevicePrefix(int64_t param_1);            /* 变量值读取 */
@@ -140,7 +140,7 @@ extern void *FUN_14001d744(void *dst, const void *src, int len);  /* memmove */
 /* ---- 文本渲染 (PECMD_GenerateTextContent) ---- */
 extern bool      FUN_1400c1194(WCHAR **pp, uint64_t *size);   /* 解析十六进制大小 */
 extern uint64_t  PECMD_ParseFirstWordToken(int64_t *a, int64_t *b, uint64_t *c); /* 取单词 */
-extern LPCWSTR   FUN_14005182c(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3,
+extern LPCWSTR   PECMD_RegexReplace(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3,
                                WCHAR *param_4, WCHAR *param_5, int64_t *param_6);
 extern WCHAR    *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3, uint32_t a4);
 extern void      PECMD_ListDrives(int64_t *, WCHAR, int, int, uint32_t, LPCWSTR);
@@ -1226,7 +1226,7 @@ LAB_14008638a:
                         }
                         FUN_14005b104((void *)&local_1a0);
                     }
-                    pWVar14 = (WCHAR *)FUN_14005182c((int64_t *)&local_a8, local_180, local_190, local_188,
+                    pWVar14 = (WCHAR *)PECMD_RegexReplace((int64_t *)&local_a8, local_180, local_190, local_188,
                                             local_e0, param_1);
                 } while (0 < local_198);
             }
@@ -2186,7 +2186,7 @@ LAB_140094f98:
         if (bVar4) {
             *lpString = local_68[0];
             lpString[1] = L'\0';
-            FUN_14008bcd4((int64_t *)&local_60, (LPCWSTR)0xffffffffffffffff, 0xffffffffffffffff,
+            PECMD_DescribePartitionInfo((int64_t *)&local_60, (LPCWSTR)0xffffffffffffffff, 0xffffffffffffffff,
                           0xac, (LARGE_INTEGER *)0x0, (uint32_t *)0x0, '\0');
             pWVar13 = local_60;
             if ((-1 < *(int64_t *)local_60) && (0 < *(int64_t *)(local_60 + 4))) {

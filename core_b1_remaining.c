@@ -84,7 +84,7 @@ extern WCHAR *FUN_14001BE14(WCHAR *s);                          /* @0x14001be14 
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 */
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out,
                           int mode, uint8_t flag);             /* @0x14007bf44 */
-extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
+extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                            HANDLE tmpl);                     /* @0x140003864 CreateFileW 包装(exec2 定义, 返回句柄) */
@@ -433,7 +433,7 @@ extern uint64_t FUN_14005b7dc(void);                           /* @0x14005b7dc *
 extern void     FUN_14005B21C(UINT code);                      /* @0x14005b21c 退出进程 */
 extern void     FUN_14004eaa8(int64_t script, int mode);       /* @0x14004eaa8 */
 extern void     PECMD_NormalizeQuoteChars(int16_t *param_1, int param_2);  /* @0x14005b540 引号/括号归一 */
-extern LPCWSTR  FUN_14005182c(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3,
+extern LPCWSTR  PECMD_RegexReplace(int64_t *param_1, LPCWSTR param_2, WCHAR *param_3,
                               WCHAR *param_4, WCHAR *param_5, int64_t *param_6); /* @0x14005182c */
 extern void     PECMD_CreateHelperThread(uint8_t *param_1);               /* @0x140004f38 (本文件定义) */
 extern void     PECMD_InitProcessGlobals(void);                           /* @0x1400051b4 (本文件定义) */
@@ -3280,7 +3280,7 @@ void PECMD_ScanDirectory(uint64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, in
     local_278.dwFileAttributes = 0;
     memset(&local_278.ftCreationTime, 0, 0x24c);
     local_280 = (HANDLE)0;
-    FUN_140101db8(&local_280, param_2, &local_278);
+    PECMD_FindFirstFileW(&local_280, param_2, &local_278);
     if (local_280 != (HANDLE)0) {
         do {
             if ((local_278.dwFileAttributes & 0x10) == 0) {
@@ -3935,7 +3935,7 @@ uint32_t PECMD_SearchComObject(uint64_t param_1, uint64_t param_2, LPCWSTR param
                          ((uVar8 == 1) &&
                           (pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, param_3),
                            pWVar5 != (LPWSTR)0x0))) ||
-                        (pWVar6 = FUN_14005182c(local_88, param_3, local_res18, (WCHAR *)pWVar6,
+                        (pWVar6 = PECMD_RegexReplace(local_88, param_3, local_res18, (WCHAR *)pWVar6,
                                                 (WCHAR *)0x0, (int64_t *)(uintptr_t)g_Script),
                          pWVar6 != (LPCWSTR)0x0)) {
                         PECMD_VT_CALL(local_108, 0x50, void (*)(int64_t *), local_108);
@@ -8621,7 +8621,7 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
             local_300 = (LPWSTR)0;
             memcpy(local_2b8, L"%SystemRoot%\\WinSxS\\*", 0x2c);
             FUN_14007BF44((int64_t *)&g_Script, local_2b8, (void *)&local_300, 0, 1);
-            FUN_140101db8(&local_2e8, (LPCWSTR)local_300, &local_288);
+            PECMD_FindFirstFileW(&local_2e8, (LPCWSTR)local_300, &local_288);
             if (local_2e8 != (HANDLE)0) {
                 pWVar7 = StrRChrW((LPCWSTR)local_300, (LPCWSTR)0, L'\\');
                 if (pWVar7 != (LPWSTR)0) {
