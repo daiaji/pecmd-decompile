@@ -858,6 +858,13 @@ uint64_t WaitForInputIdle(void){ return 0; }
 /* ---- B3 还原批次 (core_b3r_*.c) 依赖补充 ---- */
 uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
 /* ---- P0 补缺失符号桩 ---- */
+/* ---- 批1-01ed5c 依赖桩 ---- */
+uint64_t FUN_14001ebdc(void){ return 0; }
+uint64_t FUN_140063694(void){ return 0; }
+uint64_t SetWindowTextW(void){ return 0; }
+uint64_t FUN_140063344(void){ return 0; }
+void *DAT_14013ca68;   /* HINSTANCE 资源句柄 */
+
 uint64_t GlobalAddAtomA(void) { return 0; }
 uint64_t lstrcpyA(void) { return 0; }
 uint64_t RegisterHotKey(void) { return 0; }

@@ -3352,3 +3352,6 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 读者一眼可辨"未实现占位"而非神秘 FUN_。build/link 全绿（注释级不可能红）。
 - 新策略（对治"老红再回退"）：**每步一个原子小改动、逐文件编译、各自提交**；跨文件改一律拆成单文件；
   纯注释/低风险项优先，保证净推进。
+## 77. Item2 还原 FUN_14001ed5c（文本框回写+CRLF归一化）
+- 真 365B body 移植（含 goto CR/LF 归一化循环）；leaf helper(063344/1ebdc/063694/SetWindowTextW) 先补桩、
+  DAT_14013ca68 作数据全局；build/link 全绿。累计还原真 body：07fcd4、01ed5c。

@@ -8482,13 +8482,72 @@ uint32_t PECMD_ReadFileStr(LPCWSTR param_1, int64_t *param_2)
     return uVar1;
 }
 
+extern void *DAT_14013ca68;   /* HINSTANCE 资源句柄 */
 uint8_t FUN_14001ed5c(int64_t param_1, LPCWSTR param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14001ed5c — decompile-failed, body 未还原 */
-/* @0x14001ed5c size=365 (签名修正自联调, 主体仍为 NO-OP stub) */
-    (void)param_1; (void)param_2;
-    return 0;
+    /* @0x14001ed5c size=365 — 把文本框内容回写主窗口(处理 CR/LF 归一化到 CRLF) */
+    WCHAR WVar1;
+    int iVar2;
+    WCHAR *pWVar3;
+    LPCWSTR pWVar4;
+    uint8_t uVar5;
+    LPCWSTR local_res8;
+    LPCWSTR local_238;
+    uint64_t local_230;
+    uint64_t local_228;
+    WCHAR local_218[264];
+
+    SetWindowTextW(*(HWND *)(param_1 + 0xa8), &g_szEmpty[0]);
+    FUN_140063344(&local_238);
+    uVar5 = 0;
+    local_230 = 0;
+    local_228 = 0;
+    iVar2 = FUN_14001ebdc(param_2, (int64_t *)&local_238);
+    pWVar3 = (WCHAR *)FUN_14005b6ac(DAT_14013ca68, 0x271d, local_218, 0x104);
+    if (iVar2 != -2) {
+        if (iVar2 == -1) {
+            SetWindowTextW(*(HWND *)(param_1 + 0xa8), pWVar3);
+        }
+        else {
+            iVar2 = lstrlenW(local_238);
+            FUN_140063694(&local_res8, (int64_t)(iVar2 * 2 + 3));
+            WVar1 = *local_238;
+            pWVar3 = (WCHAR *)local_res8;
+            while (WVar1 != L'\0') {
+                WVar1 = *local_238;
+                if (WVar1 == L'\r') {
+                    if (local_238[1] != L'\n') {
+LAB_14001ee68:
+                        *pWVar3 = L'\r';
+                        pWVar3[1] = L'\n';
+                        pWVar4 = pWVar3 + 2;
+                        goto LAB_14001ee75;
+                    }
+                    *pWVar3 = L'\r';
+                    pWVar4 = pWVar3 + 2;
+                    pWVar3[1] = local_238[1];
+                    local_238 = local_238 + 2;
+                }
+                else {
+                    if (WVar1 == L'\n') goto LAB_14001ee68;
+                    *pWVar3 = WVar1;
+                    pWVar4 = pWVar3 + 1;
+LAB_14001ee75:
+                    local_238 = local_238 + 1;
+                }
+                pWVar3 = pWVar4;
+                WVar1 = *local_238;
+            }
+            *pWVar3 = L'\0';
+            SetWindowTextW(*(HWND *)(param_1 + 0xa8), local_res8);
+            FUN_14005b104((int64_t *)&local_res8);
+        }
+        uVar5 = 1;
+    }
+    FUN_14005b104((int64_t *)&local_238);
+    return uVar5;
 }
+
 
 uint64_t PECMD_ExecLoadCommand(LPCWSTR param_1, LPCWSTR param_2)
 {
