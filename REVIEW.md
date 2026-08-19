@@ -3338,3 +3338,11 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 ## 74. Step5 还原试点：FUN_14007fcd4（-sub 窗口flag解析）真 body 移植成功
 - 从 decompiled.c 移植 357B 真 body（含 PECMD_ParseLtwhFlags/vs FUN_14005c788、05b154 桩依赖），build/link 绿。
 - 确立"单函数、叶子 helper 先桩、全链接绿"即回的还原范式。
+## 75. 内嵌CRT清理（方向确认 + 改写方法）
+- 架构原则（用户确认）：**业务代码只导入/调用，不内嵌/重实现 CRT**。故 memcpy/memmove/memset/数学/字符串的
+  FUN_ 重实现应删定义、调用点改真库调用（memcpy/…）、链接真 libc/libm。
+- 试点得到的正确顺序：①删 FUN_ 定义体 ②删对应 extern ③仅替换**真调用点** ④(不全局加 string.h，
+  因项目用 -Wno-implicit-function-declaration 可隐式链接真 libc) ⑤删 link_stubs 桩。
+- 教训：**盲正则全局替换会连带破坏（b2c 被删掉所需声明致 KeyboardHookProc 等 error）→ 须逐文件
+  精确 edit，或先删除 defs 再按"含 '(' 的真调用点"受限替换并单文件校验**。已回滚 memcpy 尝试到 git47 绿。
+- 进度：Step1 死桩✅(558→548) · Step2 CRT标注✅ · Step5试点 07fcd4 真body✅(git47)。
