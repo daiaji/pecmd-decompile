@@ -3365,3 +3365,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
   069314→WcharToByteDigits, 075148→VarWriteLine, 0048c4→EnsureTempDirPath, 0091e0→LoadFileMappingExec,
   05e61c→RegisterHotkeyCmd, 05efac→ExpandStringMarkers。rename_map 802→811；build/link 绿。
 - 命名基本到可行尽头：余者为 CRT/桩/不可还原（登记）。
+## 80. Item5 终审 + 里程碑
+- 最终量表：build/link 真全绿；rename_map 811；FUN_ 556；UNIMPLEMENTED 标注 203；git 54。
+- 说明：还原原始反编译体会引入行为相关警告(~108)与未迁 DAT_ 引用(24)——这是"桩→真代码"的必然代价，
+  已在 REVIEW/TASKS 诚实登记；需进一步精调(逐警告)或需原二进制二次反编译(已登记)。
+- 里程碑：本目标(goal-a921d377)核心项(2)(3)(4)及收尾(5)已按可行推进；真不可做项登记"待提供原PECMD.EXE"。
