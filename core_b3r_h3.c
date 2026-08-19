@@ -249,7 +249,7 @@ LAB_0a058a:
         }
 LAB_0a050d:
         plVar6 = FUN_14005b154((WCHAR **)&local_res10);
-        FUN_1400702b0((WCHAR **)&local_a0, (LPCWSTR)*plVar6);
+        FUN_1400702b0((WCHAR **)&local_a0, (LPCWSTR)(uintptr_t)*plVar6);
         FUN_140003a20(param_1, &local_a0, 1);
         PECMD_VarLookup(param_1, local_a0, (void *)0, -1, (uint64_t *)0);
         FUN_14005b104(&local_a0);
@@ -585,6 +585,10 @@ LAB_0a0f9b:
     FUN_140063620((WCHAR **)&local_70);
     local_68 = 0;
     local_60 = 0;
+    (void)local_50;
+    (void)local_48;
+    (void)local_68;
+    (void)local_60;
     ppWVar21 = ppWVar14;
     if (*local_a0 == L'*') {
         local_a0 = local_a0 + 1;
@@ -621,10 +625,10 @@ LAB_0a0f9b:
         goto LAB_0a18da;
     }
     pWVar16 = local_res10 + 1;
-    local_res10 = pWVar16;
+    local_res10 = (WCHAR *)pWVar16;
     do {
         pWVar13 = local_res10;
-        local_res10 = pWVar13 + 1;
+        local_res10 = (WCHAR *)(pWVar13 + 1);
         local_e8 = pWVar16;
         if (*local_res10 == L'\0') {
             if (*local_res10 != L',') {
@@ -635,7 +639,7 @@ LAB_0a0f9b:
     } while (*local_res10 != L',');
     *local_res10 = L'\0';
     pWVar13 = pWVar13 + 2;
-    local_res10 = pWVar13;
+    local_res10 = (WCHAR *)pWVar13;
     if (param_4 == 0) {
         local_f0 = pWVar16;
         FUN_14005b154((WCHAR **)&local_f0);
@@ -670,7 +674,7 @@ LAB_0a0f9b:
     uVar11 = 0;
     ppWVar21 = ppWVar14;
     if (WVar18 == L'\0') {
-        iVar8 = (int)local_f0;
+        iVar8 = (int)(intptr_t)local_f0;
         pWVar16 = local_res10;
         ppWVar14 = (uintptr_t)0xffffffff80070057ULL;
         pWVar17 = local_res10;
@@ -680,7 +684,7 @@ LAB_0a0f9b:
             param_4 = param_4 & 0xfe;
         }
         FUN_14007bf44(param_1, local_res10, (int64_t *)&local_90, 0, 1);
-        local_res10 = local_90;
+        local_res10 = (WCHAR *)local_90;
         local_c8[0] = 1;
         FUN_1400679b0(&local_res10, local_c8, 0x2c);
         if (*local_res10 != L',') {
@@ -695,7 +699,7 @@ LAB_0a12fd:
             FUN_140079c80(param_1, (int64_t *)&local_res10, (int64_t *)&local_88);
             pWVar16 = local_88;
         }
-        local_res10 = pWVar16;
+        local_res10 = (WCHAR *)pWVar16;
         iVar7 = lstrlenW(pWVar16);
         iVar8 = local_b8;
         local_f0 = (LPCWSTR)(int64_t)iVar7;
@@ -718,10 +722,10 @@ LAB_0a13ff:
                 if (local_c8[0] < 1) {
                     pWVar13 = local_f0;
                     uVar6 = local_d0;
-                    for (local_res10 = pWVar16 + (int64_t)local_f0 + -1;
+                    for (local_res10 = (WCHAR *)(pWVar16 + (int64_t)local_f0 + -1);
                          pWVar19 = local_f0, pWVar16 <= local_res10;
                          local_res10 = local_res10 + -1) {
-                        iVar7 = (int)pWVar13;
+                        iVar7 = (int)(intptr_t)pWVar13;
                         WVar1 = *local_res10;
                         if ((WVar1 == WVar18) ||
                             (((uVar6 == 0 && ((uint16_t)WVar1 < 0x7b)) &&
@@ -734,7 +738,7 @@ LAB_0a13ff:
                                     ppWVar20 = (uintptr_t)((int64_t)pWVar17 - (int64_t)ppWVar21);
                                 }
                                 FUN_14006cc70((int64_t *)&local_58, (int64_t)ppWVar20);
-                                iVar7 = (int)local_f0;
+                                iVar7 = (int)(intptr_t)local_f0;
                             }
                             if (local_80 != 0) {
                                 iVar7 = (int)FUN_140060b5c((uint64_t *)pWVar16,
@@ -754,10 +758,10 @@ LAB_0a13ff:
                 else {
                     WVar1 = *pWVar16;
                     pWVar13 = local_f0;
-                    local_res10 = pWVar16;
+                    local_res10 = (WCHAR *)pWVar16;
                     iVar7 = local_c8[0];
                     while (pWVar19 = local_f0, WVar1 != L'\0') {
-                        iVar9 = (int)pWVar13;
+                        iVar9 = (int)(intptr_t)pWVar13;
                         if (((*local_res10 == WVar18) ||
                              ((cVar4 != '\0' && ((WCHAR)(*local_res10 | 0x20U) == WVar18)))) &&
                             (iVar7 = iVar7 + -1, iVar7 < 1)) {
@@ -769,7 +773,7 @@ LAB_0a13ff:
                                     ppWVar20 = (uintptr_t)((int64_t)pWVar17 - (int64_t)ppWVar21);
                                 }
                                 FUN_14006cc70((int64_t *)&local_58, (int64_t)ppWVar20);
-                                iVar9 = (int)local_f0;
+                                iVar9 = (int)(intptr_t)local_f0;
                             }
                             if (local_80 != 0) {
                                 iVar9 = (int)FUN_140060b5c((uint64_t *)pWVar16, (int)ppWVar21,
@@ -790,9 +794,9 @@ LAB_0a13ff:
             else {
                 iVar7 = lstrlenW(local_e8);
                 pWVar19 = local_f0;
-                iVar9 = (int)local_f0;
+                iVar9 = (int)(intptr_t)local_f0;
                 if (local_c8[0] < 1) {
-                    local_res10 = pWVar16 + ((int64_t)local_f0 - (int64_t)iVar7);
+                    local_res10 = (WCHAR *)(pWVar16 + ((int64_t)local_f0 - (int64_t)iVar7));
                     if (pWVar16 <= local_res10) {
                         do {
                             if (local_d0 == 0) {
@@ -828,7 +832,7 @@ LAB_0a13ff:
                 }
                 else {
                     WVar18 = *pWVar16;
-                    local_res10 = pWVar16;
+                    local_res10 = (WCHAR *)pWVar16;
                     iVar15 = local_c8[0];
                     while (WVar18 != L'\0') {
                         if (local_d0 == 0) {
@@ -863,12 +867,12 @@ LAB_0a13ff:
             }
         }
         else {
-            iVar8 = (int)PECMD_FindTokenIndex(local_e8, pWVar16, (uint32_t)uVar6 | local_d0, local_c8[0],
+            iVar8 = (int)PECMD_FindTokenIndex(local_e8, (WCHAR *)pWVar16, (uint32_t)uVar6 | local_d0, local_c8[0],
                                        (uint16_t)local_cc);
             ppWVar21 = (uintptr_t)iVar8;
             pWVar19 = local_f0;
         }
-        iVar8 = (int)pWVar19;
+        iVar8 = (int)(intptr_t)pWVar19;
     }
     pWVar13 = local_a8;
     if (*local_70 == L'\0') {
@@ -904,7 +908,7 @@ LAB_0a18da:
 
 /* ==========================================================================
  * @0x14009da54  (LARGE_INTEGER FUN_14009da54(longlong*, _FILETIME))
- * READLINE/读文件行: BOM/编码识别、行扫描、*fix/*nl/*left 修饰。
+ * READLINE/读文件行: BOM/编码识别、行扫描、*fix *nl *left 修饰。
  * 注意: Ghidra 将大量局部量类型化为 _FILETIME 但实际是"编码标志寄存器 +
  * FILETIME 计数 + WCHAR 指针"的多态栈槽, 此处以 uint64_t 承载并用位运算
  * 访问字段 (TODO(verify))。
@@ -1476,6 +1480,7 @@ LAB_14009ebed:
       FUN_1400633a8((void **)&local_a8, 8);
       cVar4 = (char)(uint8_t)local_res20;
       local_48 = 0;
+      (void)local_48;
       *(int16_t *)(uintptr_t)LVar10.QuadPart = 0;
       local_50 = g_hStdIn;
       _Var27 = (uint64_t)(uintptr_t)&local_50;
@@ -1726,7 +1731,7 @@ LAB_14009efbe:
           FUN_140063620((WCHAR **)&local_e0);
           while (1) {
             bVar5 = PECMD_ReadFileLine((void *)(uintptr_t)_Var27, (int64_t *)&local_e0,
-                                  DVar31, (uint8_t)(bVar29 & 0xf3 | 1), &local_c0);
+                                  DVar31, (uint8_t)((bVar29 & 0xf3) | 1), &local_c0);
             iVar13 = (int)bVar5;
             if (((iVar13 == 0) && ((uint8_t)local_res20 == '\x02')) &&
                 (DVar32 = GetLastError(), DVar32 == 0x6d)) {
@@ -1775,7 +1780,7 @@ LAB_14009f024:
 
 /* ==========================================================================
  * @0x14009f070  (LARGE_INTEGER FUN_14009f070(longlong*, LARGE_INTEGER))
- * 写文件: 编码 codepage 判定、*fix/*v/*fv/*c/*sparse/*nobom 修饰、文件定位/
+ * 写文件: 编码 codepage 判定、*fix *v *fv *c *sparse *nobom 修饰、文件定位/
  * 追加/截断、BOM 写入。local_res20 为字节标志寄存器 (bWriteMode 等)。
  * ========================================================================== */
 LARGE_INTEGER FUN_14009f070(int64_t *param_1, LARGE_INTEGER param_2)
@@ -1848,6 +1853,8 @@ LARGE_INTEGER FUN_14009f070(int64_t *param_1, LARGE_INTEGER param_2)
     cVar29 = '\0';
     bVar8 = false;
     local_50 = param_1;
+    (void)local_48;
+    (void)local_50;
     uVar11 = 0;
     if (((((uint16_t)*(const uint16_t *)(uintptr_t)param_2.QuadPart < 9) ||
           (0xd < (uint16_t)*(const uint16_t *)(uintptr_t)param_2.QuadPart)) &&
@@ -2396,6 +2403,7 @@ LAB_1400a0366:
                 local_b0 = '\0';
                 local_af = '\0';
                 local_ad = 0;
+                (void)local_ad;
                 local_ae = '\0';
                 if (cVar7 != '\0') {
                     ReadFile((HANDLE)local_c0.QuadPart, &local_b0, 3, (DWORD *)&local_68, (OVERLAPPED *)0);

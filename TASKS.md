@@ -334,6 +334,9 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - [x] **阶段5a-1（DAT_→g_ 批1，12 符号）完成**：HWND cf60/cfb8、e160 cacheBlock、GDI+ fn-ptr 槽x5、
       d3ec state 数组、timeServer、dpi 统一（g_dpi）；异构符号逐类型/强转修正；build/link 绿
       （REVIEW 57）。真实 DAT_ 112→100；首次 git init+双提交。
+- [x] **批23（业务小函数命名收尾）完成**：6 子代理 x42=251 候选，173 个真实业务函数取名
+      （858 替换，跨 ~40 文件）；rename_map 601→774，FUN_ 752→579；build/link 绿（REVIEW 60）。
+      命中"可命名的干净业务函数已基本收敛"；剩余 579 多为 b9 CRT/巨型/异构需深挖项。
 - [x] **阶段5a-2（DAT_ 100 符号全量定类型 + 4 干净标量迁移）完成**：6 子代理分析全部 100 真实 DAT_；
       迁 DWORD/COLORREF/HWND 4 个（imgBufLen/tipsTextColor/tipBkColor/hwndTray）；真实 DAT_ 100→96；
       build/link 绿；git 提交（REVIEW 58）。余下 ~60 fn-ptr 槽（已正常工作，合并为可选打磨）

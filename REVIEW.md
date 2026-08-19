@@ -3101,3 +3101,30 @@ d770 diskType(int32_t[])、127740/127738/d8a0(byte[])、1214d8/1210f8(WCHAR[] �
 3. link_stubs 499 桩按需归并；DAT_ fn-ptr 槽合并（可选）；AMBIGUOUS 深挖。
 4. 阶段5 零警告 + 最终 REVIEW 复核。
 - 本表与 REVIEW §47(工期) 对齐：命名收尾 3-4 轮、零警告 2-3 轮、AMBIGUOUS/桩归并 2-3 轮。
+
+---
+
+## 60. 阶段4y（批23）：业务小函数命名收尾（6 子代理 × ~42 = 251 候选 → 173 命名）
+
+### 概述
+- 从剩余未命名 FUN_ 中筛"业务地址区(0x14000-0x1400f)+体 4-149 行"候选 251 个，6 子代理并行读体判定。
+- **173 个真实业务函数取名**，替换 **858 处**，跨 ~40 文件；其余判 SKIP（CRT 包装如 memcpy/memset、
+  `return 0` 简化桩、decompile-failed、no-op、转发 thunk）。
+- 命中：`rename_map` 601→**774**；剩余唯一 FUN_ 752→**579**。
+
+### 命名亮点（节选）
+PECMD_InitComState / WriteFileChunked / ApplyDesktopWallpaper / EnumCDRomDrives / InstallWindowsHook /
+ConstructTreeView / ParseDeviceClassGuid / RelocateImage / ValidatePeHeader / InitWinsock /
+CreateDirectoryTree / GetProcessorCount / ServiceMainLoop / KeyboardHookProcBlock / QuoteTokenString /
+EvalExpressionTree / ResolveHostToAddr / ParseNtpSetSystemTime / LockVolumeByDevice / RunExeIndata /
+CaptureScreenRegion / EnumNetAdapters / WideToAnsiStr / ServiceStatusCallback / ParseVersionString /
+GetProcessModuleFile / DetectFileEncoding / RegisterCallbackWindowClass / ReserveObjectArray ...（173 条）
+
+### 撞车处理
+- 批内重复 & 与既有重复预消歧：ThreadMessageLoop/MessagePumpLoop、ParseSignedNumber/ParseSignedNumberStr/
+  ParseIntWithSign、KeyboardHookProcBlock/TaskMgr、ConstructControlObjectEx/B、ReleaseCtrlObject、
+  LoadImageFileToMemory、DispatchControlCommandV、AdvanceAfterPrefix(MatchPrefixAdvance 已属 140066110) 等。
+
+### 校验
+- `./build.sh core_*.c` exit 0；完整链接 exit 0。git 提交。
+- 说明：此批后，**可命名的干净业务小函数大体收敛**；剩余 579 多为 b9 CRT 区/巨型/异构/需深挖项。

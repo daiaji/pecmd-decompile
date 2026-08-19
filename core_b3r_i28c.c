@@ -213,7 +213,9 @@ int64_t FUN_1400aee2c(int64_t *param_1, LPCWSTR param_2)
     DVar10 = 0;
     DVar26 = 0;
     local_110 = 0;
+    (void)local_110;
     local_118 = param_1;
+    (void)local_118;
     FUN_14005b154((WCHAR **)&local_res10);
     FUN_140063620(&local_e8);
     FUN_140063620(&local_130);
@@ -487,6 +489,7 @@ LAB_1400af515:
             FUN_14005cf3c();
         } else {
             in_stack_resid = 0;
+            (void)in_stack_resid;
             lVar14 = (int64_t)PECMD_VarLookup(param_1, local_a0, (void *)0, -1, (void **)0);
             if ((lVar14 == 0) || ((*(ulonglong *)(lVar14 + 0x18) & 0x3fffffffffffffffULL) < 0x10)) {
                 FUN_14005cf3c();
@@ -728,6 +731,7 @@ LAB_1400afff3:
         } else if (local_188 == '\0') {
             local_70 = (LPWSTR)0xa55aaa55;
             local_68 = g_pCacheBlock;
+            (void)local_68;
             FUN_140075148(param_1, local_a0, (LPCWSTR)&local_70, 0x10, (int64_t *)0, '\0');
             local_188 = '\x01';
             lVar14 = (int64_t)PECMD_VarLookup(param_1, local_a0, (void *)0, -1, (void **)0);
@@ -1135,6 +1139,7 @@ LAB_1400b10dd:
                 }
                 lVar18 = param_1[0x10];
                 local_98 = _Memory;
+                (void)local_98;
                 _Memory_00 = (LARGE_INTEGER){ .QuadPart = (int64_t)(uintptr_t)operator_new(0xf0) };
                 if ((long long *)(uintptr_t)_Memory_00.QuadPart == (long long *)0) {
                     _Memory_00.QuadPart = 0;
@@ -1150,6 +1155,7 @@ LAB_1400b10dd:
                 }
                 *(long long *)(uintptr_t)(_Memory_00.QuadPart + 0x80) = lVar18;
                 local_90 = _Memory_00;
+                (void)local_90;
                 FUN_140073ccc((int64_t *)(uintptr_t)_Memory_00.QuadPart, local_d8, 0);
                 iVar9 = (uint32_t)local_f0;
                 ((LARGE_INTEGER *)(uintptr_t)(_Memory_00.QuadPart + 0x78))->QuadPart = (int64_t)_Memory.QuadPart;

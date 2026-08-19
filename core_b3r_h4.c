@@ -250,6 +250,10 @@ LPCWSTR *PECMD_VarSearchReplace(longlong *param_1, LPCWSTR param_2)
   FUN_140063620(&local_68);
   local_60 = 0;
   local_58 = 0;
+  (void)local_48;
+  (void)local_40;
+  (void)local_60;
+  (void)local_58;
   ppWVar18 = ppWVar16;
   if (*local_a8 == L'*') {
     local_a8 = local_a8 + 1;
@@ -334,7 +338,7 @@ LAB_1400a1bd9:
   WVar20 = *local_d8;
   uVar11 = 0;
   if (WVar20 == L'\0') {
-    iVar7 = (int)local_res10;
+    iVar7 = (int)(uintptr_t)local_res10;
     pWVar13 = local_res10;
     ppWVar18 = ppWVar16;
     pWVar19 = local_res10;
@@ -386,7 +390,7 @@ LAB_1400a1e3b:
           WVar1 = *local_res10;
           if ((WVar1 == WVar20) ||
              (((!bVar22 && ((ushort)WVar1 < 0x5b)) && ((WCHAR)(WVar1 | 0x20U) == WVar20)))) {
-            ppWVar18 = (LPCWSTR *)((longlong)local_res10 - (longlong)(pWVar13 + -1) >> 1);
+            ppWVar18 = (LPCWSTR *)(((longlong)local_res10 - (longlong)(pWVar13 + -1)) >> 1);
             if (uVar3 != 0) {
               ppWVar14 = ppWVar18;
               if (((longlong)pWVar15 < 1) && (0 < (longlong)ppWVar18)) {
@@ -395,7 +399,7 @@ LAB_1400a1e3b:
               FUN_14006cc70((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (uVar4 != 0) {
-              iVar9 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar9 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               FUN_14006cc70((longlong *)&local_68, iVar9);
             }
             pWVar15 = local_c8;
@@ -410,7 +414,7 @@ LAB_1400a1e3b:
           if (((*local_res10 == WVar20) ||
               ((cVar21 != '\0' && ((WCHAR)(*local_res10 | 0x20U) == WVar20)))) &&
              (iVar9 = iVar9 + -1, iVar9 < 1)) {
-            ppWVar18 = (LPCWSTR *)((longlong)local_res10 - (longlong)(pWVar13 + -1) >> 1);
+            ppWVar18 = (LPCWSTR *)(((longlong)local_res10 - (longlong)(pWVar13 + -1)) >> 1);
             if (local_88 != 0) {
               ppWVar14 = ppWVar18;
               if (((longlong)pWVar15 < 1) && (0 < (longlong)ppWVar18)) {
@@ -419,7 +423,7 @@ LAB_1400a1e3b:
               FUN_14006cc70((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (local_70 != 0) {
-              iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               FUN_14006cc70((longlong *)&local_68, iVar8);
             }
             pWVar15 = local_c8;
@@ -443,7 +447,7 @@ LAB_1400a1e3b:
               iVar8 = StrCmpNIW(local_res10, local_d8, iVar9);
             }
             if (iVar8 == 0) {
-              ppWVar18 = (LPCWSTR *)((longlong)local_res10 - (longlong)(pWVar13 + -1) >> 1);
+              ppWVar18 = (LPCWSTR *)(((longlong)local_res10 - (longlong)(pWVar13 + -1)) >> 1);
               if (local_88 != 0) {
                 ppWVar14 = ppWVar18;
                 if (((longlong)pWVar15 < 1) && (0 < (longlong)ppWVar18)) {
@@ -452,7 +456,7 @@ LAB_1400a1e3b:
                 FUN_14006cc70((longlong *)&local_50, (longlong)ppWVar14);
               }
               if (local_70 != 0) {
-                iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)ppWVar18, (void *)(longlong)local_d0, iVar7);
+                iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
                 FUN_14006cc70((longlong *)&local_68, iVar8);
               }
               if (bVar2) break;
@@ -473,7 +477,7 @@ LAB_1400a1e3b:
             iVar10 = StrCmpNIW(local_res10, local_d8, iVar9);
           }
           if ((iVar10 == 0) && (iVar8 = iVar8 + -1, iVar8 < 1)) {
-            ppWVar18 = (LPCWSTR *)((longlong)local_res10 - (longlong)(pWVar13 + -1) >> 1);
+            ppWVar18 = (LPCWSTR *)(((longlong)local_res10 - (longlong)(pWVar13 + -1)) >> 1);
             if (local_88 != 0) {
               ppWVar14 = ppWVar18;
               if (((longlong)pWVar15 < 1) && (0 < (longlong)ppWVar18)) {
@@ -482,7 +486,7 @@ LAB_1400a1e3b:
               FUN_14006cc70((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (local_70 != 0) {
-              iVar10 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar10 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               FUN_14006cc70((longlong *)&local_68, iVar10);
             }
             if (bVar2) break;
@@ -495,7 +499,7 @@ LAB_1400a1e3b:
   if (*local_68 == L'\0') {
     if (*local_a0 != L'\0') {
       if (0 < (longlong)ppWVar18) {
-        uVar11 = FUN_140060b5c((ulonglong *)pWVar13, (int)ppWVar18, (void *)(longlong)local_d0, iVar7);
+        uVar11 = FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
       }
       FUN_1400669c4(param_1, uVar11, pWVar17);
     }
@@ -549,6 +553,8 @@ int PECMD_ParseCommaParams(longlong *param_1, int16_t *param_2, longlong *param_
   FUN_140063620(&local_40);
   local_30 = 0;
   local_38 = param_1;
+  (void)local_30;
+  (void)local_38;
   FUN_1400675b8(&local_res10, param_3, 0x2c);
   FUN_140003a20(param_1, param_3, 1);
   iVar4 = 0;
@@ -563,7 +569,7 @@ int PECMD_ParseCommaParams(longlong *param_1, int16_t *param_2, longlong *param_
       FUN_1400676e4(plVar2, param_5, 0);
       if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
-        puVar3 = FUN_14007f6e4(&local_40, (longlong *)&local_res10, 0x2c, 1);
+        puVar3 = (undefined8 *)FUN_14007f6e4(&local_40, (longlong *)&local_res10, 0x2c, 1);
         local_48 = (int16_t *)*puVar3;
         sVar1 = *local_48;
         FUN_1400679b0(&local_48, local_res8, 0x2c);
@@ -599,6 +605,7 @@ FILETIME PECMD_DirWildcardExpand(longlong *param_1, FILETIME param_2)
   LPCWSTR local_res20;
   WCHAR *p;
 
+  (void)p;
   local_res10[0] = 0;
   memcpy(&local_res10[0], &param_2, 8);   /* 8 字节按位复用为指针/值 */
   /* Ghidra: local_res10[0] 最初即 param_2 (8 字节槽) */
@@ -660,7 +667,7 @@ FILETIME PECMD_DirWildcardExpand(longlong *param_1, FILETIME param_2)
       local_res10[0] = _Var4;
     } while (uVar5 != 0);
     PECMD_StrCopyW(&local_res20, (LPCWSTR)(uintptr_t)_Var1,
-                  (longlong)_Var4 - (longlong)_Var1 >> 1);
+                  ((longlong)_Var4 - (longlong)_Var1) >> 1);
     FUN_14005b154((longlong *)local_res10);
     _Var1 = local_res10[0];
     if (*((int16_t *)(uintptr_t)local_res10[0]) != 0) {
@@ -978,12 +985,12 @@ LAB_1400a344b:
   WVar6 = *local_res10[0];
   cVar4 = cVar5;
   pWVar13 = local_res10[0];
-  while (local_res10[0] = pWVar13, uVar14 == (ushort)WVar6) {
+  while (local_res10[0] = (WCHAR *)pWVar13, uVar14 == (ushort)WVar6) {
     uVar8 = FUN_14005c788("utc:", (ushort *)(pWVar13 + 1), 4);
     if ((char)uVar8 == '\0') {
       uVar8 = FUN_14005c788("gmt:", (ushort *)(pWVar13 + 1), 4);
       if ((char)uVar8 != '\0') {
-        local_res10[0] = pWVar13 + 5;
+        local_res10[0] = (WCHAR *)(pWVar13 + 5);
         uVar9 = FUN_1400745c8((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
         if ((int)uVar9 < 1) goto LAB_1400a34a9;
         local_1908.QuadPart = (local_1908.QuadPart + 0x2b6109100) * 10000000;
@@ -1031,7 +1038,7 @@ LAB_1400a344b:
         else {
           cVar17 = '\x01';
 LAB_1400a35e0:
-          local_res10[0] = pWVar13 + (cVar17 + 5);
+          local_res10[0] = (WCHAR *)(pWVar13 + (cVar17 + 5));
           uVar9 = FUN_140079cf8(local_res10, &local_1918.wYear, cVar17);
           if ((int)uVar9 < 1) goto LAB_1400a34a9;
           SystemTimeToFileTime(&local_1918, (FILETIME *)&local_1908);
@@ -1041,7 +1048,7 @@ LAB_1400a35e0:
       else {
         cVar17 = '\x01';
 LAB_1400a3551:
-        local_res10[0] = pWVar13 + (cVar17 + 7);
+        local_res10[0] = (WCHAR *)(pWVar13 + (cVar17 + 7));
         uVar9 = FUN_140079cf8(local_res10, &local_1918.wYear, cVar17);
         if ((int)uVar9 < 1) goto LAB_1400a34a9;
         SystemTimeToFileTime(&local_1918, (FILETIME *)&local_1900);
@@ -1052,13 +1059,13 @@ LAB_1400a3551:
       while ((WVar6 != L'\0' && ((((ushort)WVar6 < 9 || (0xd < (ushort)WVar6)) && (WVar6 != L' '))))
             ) {
         pWVar13 = pWVar13 + 1;
-        local_res10[0] = pWVar13;
+        local_res10[0] = (WCHAR *)pWVar13;
         WVar6 = *pWVar13;
       }
       FUN_14005b154((longlong *)local_res10);
     }
     else {
-      local_res10[0] = pWVar13 + 5;
+      local_res10[0] = (WCHAR *)(pWVar13 + 5);
       uVar9 = FUN_1400745c8((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
       if ((int)uVar9 < 1) {
 LAB_1400a34a9:
@@ -1078,7 +1085,7 @@ LAB_1400a36ff:
       WVar6 = *local_res10[0];
     } while (WVar6 != L'\0');
     PECMD_StrCopyW(&local_18f8, pWVar13,
-                  (longlong)local_res10[0] - (longlong)pWVar13 >> 1);
+                  ((longlong)local_res10[0] - (longlong)pWVar13) >> 1);
     FUN_140003a20(param_1, &local_18f8, 0);
   }
   FUN_14005b154((longlong *)local_res10);
@@ -1455,7 +1462,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                   }
                   if (puVar7 != (uint64_t *)0x0) {
                     *(int *)((longlong)puVar7 + 0x14) = local_res20[0];
-                    local_78 = lpString1;
+                    local_78 = (WCHAR *)lpString1;
                     FUN_1400639f0(&local_98, &local_90, &local_88, &local_78, 8, 1);
                     local_70 = puVar7;
                     FUN_1400639f0(&local_d0, &local_c8, &local_c0, &local_70, 8, 1);
@@ -1468,13 +1475,13 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                   }
                 }
                 else {
-                  local_108 = pWVar18 + 4;
+                  local_108 = (WCHAR *)(pWVar18 + 4);
                   local_e8 = 0;
                   local_e4 = 3;
                   iVar3 = -1000;
                   iVar14 = 3;
                   if (*local_108 != L'\0') {
-                    local_108 = pWVar18 + 5;
+                    local_108 = (WCHAR *)(pWVar18 + 5);
                     FUN_140067d20(&local_108, &local_e8);
                     if (*local_108 != L'\0') {
                       local_108 = local_108 + 1;

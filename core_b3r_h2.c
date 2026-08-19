@@ -352,6 +352,8 @@ longlong PECMD_LinkFile(longlong *param_1, LPCWSTR param_2)
     FUN_140063620(&local_80);
     local_70 = 0;
     local_78 = param_1;
+    (void)local_70;
+    (void)local_78;
     FUN_14005b154(&local_res10);
     DVar6 = 0;
     PECMD_AllocWStringBuffer(&local_90, 5);
@@ -360,11 +362,11 @@ longlong PECMD_LinkFile(longlong *param_1, LPCWSTR param_2)
     local_res20 = (uint64_t)((uint64_t)(uint32_t)(local_res20 >> 32) << 32);
     cVar2 = FUN_1400660ac("-j", &local_res10, 2);
     DVar12 = 1;
-    plVar7 = FUN_14007f6e4(&local_80, (longlong *)&local_res10, 0x2c, 1);
+    plVar7 = (longlong *)FUN_14007f6e4((undefined8 *)&local_80, (longlong *)&local_res10, 0x2c, 1);
     FUN_1400675b8((longlong *)plVar7, (longlong *)&local_90, 0);
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;
-        plVar7 = FUN_14007f6e4(&local_80, (longlong *)&local_res10, 0x2c, 1);
+        plVar7 = (longlong *)FUN_14007f6e4((undefined8 *)&local_80, (longlong *)&local_res10, 0x2c, 1);
         FUN_1400675b8((longlong *)plVar7, (longlong *)&local_98, 0);
     }
     DVar14 = DVar5;
@@ -377,7 +379,7 @@ longlong PECMD_LinkFile(longlong *param_1, LPCWSTR param_2)
             pWVar9 = (LPCWSTR)(local_res10 + 2);
         }
         local_res10 = (WCHAR *)pWVar9;
-        puVar8 = FUN_14007f6e4(&local_80, (longlong *)&local_res10, 0x2c, 1);
+        puVar8 = FUN_14007f6e4((undefined8 *)&local_80, (longlong *)&local_res10, 0x2c, 1);
         FUN_1400679b0(puVar8, (int *)&local_res20, 0x2c);
         DVar14 = (uint)(uint32_t)local_res20;
     }
@@ -1001,7 +1003,7 @@ LAB_140097f33:
             WVar2 = *pWVar23;
             local_res10[0] = (WCHAR *)pWVar23;
             if (WVar2 == L'#') {
-                local_res10[0] = pWVar23 + 1;
+                local_res10[0] = (WCHAR *)(pWVar23 + 1);
             }
             local_b0.bottom = uVar10;
             iVar7 = (int)FUN_1400a9a84((longlong *)local_res10, (ulonglong *)&local_98);
@@ -1295,7 +1297,7 @@ longlong FUN_140095178(longlong *param_1, LPCWSTR param_2)
     cVar20 = '\x01';
     local_1108 = 0x200;
     pWVar18 = pWVar21;
-    if ((int)cVar2 == (uint)(ushort)*local_res10) {
+    if ((uint)(int)cVar2 == (uint)(ushort)*local_res10) {
         do {
             local_res10 = local_res10 + 1;
             uVar8 = FUN_14005b1a8((ushort *)&g_wsz28038, (undefined8 *)&local_res10, 3);
@@ -1419,7 +1421,7 @@ LAB_140095579:
             if ((uVar22 != 0) && (iVar6 != 0)) {
                 uVar22 = uVar22 & -(uint)(pWVar18 != (LPCWSTR)0x0);
             }
-        } while ((int)cVar2 == (uint)(ushort)*local_res10);
+        } while ((uint)(int)cVar2 == (uint)(ushort)*local_res10);
         local_res20 = (local_res20 & 0xffffffff00000000ULL) | (uint32_t)iVar6;
         local_10c8 = (WCHAR *)pWVar18;
         if ((uVar22 != 0) && (iVar6 != 0)) {
@@ -1721,6 +1723,8 @@ LAB_140095d85:
                                 memcpy(local_10f0, WSTR("\\\\.\\"), 8);
                                 local_10e6 = 0x3a;
                                 local_10e4 = 0;
+                                (void)local_10e6;
+                                (void)local_10e4;
                             }
                         }
                         local_10b8 = (HANDLE)0x0;
@@ -1744,6 +1748,7 @@ LAB_140095d85:
                             if (local_1128 == 4) {
                                 local_1108 = (uint64_t)(uintptr_t)local_1050;
                                 auStack_102c[lVar11] = 0;
+                                (void)auStack_102c[lVar11];
                                 memset(local_1050, 0, 8);
                                 PECMD_HexStringToBytes((byte *)pWVar12, (byte *)local_1050);
                                 pWVar12 = local_1050;
@@ -1845,6 +1850,8 @@ LAB_140095d85:
                     local_10f0[4] = *pWVar10;
                     local_10e6 = 0x3a;
                     local_10e4 = 0;
+                    (void)local_10e6;
+                    (void)local_10e4;
                     pWVar10 = local_10f0;
                 }
                 local_res10 = local_1120;
@@ -1977,6 +1984,17 @@ ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
     ulonglong  local_b06[9];
     undefined8 local_ab8[336];
 
+    (void)bVar2; (void)bVar3; (void)lpString; (void)pWVar6; (void)DVar11;
+    (void)pwVar14; (void)ppWVar15; (void)wVar16; (void)pWVar19;
+    (void)pWVar20; (void)pWVar21; (void)pWVar23; (void)psVar24;
+    (void)puVar26; (void)pwVar27; (void)lVar28; (void)iVar29;
+    (void)pWVar34; (void)pWVar35; (void)local_c57; (void)local_c50;
+    (void)local_c20; (void)local_c08; (void)local_bb8; (void)local_bb0;
+    (void)local_ba0; (void)local_b98; (void)local_b90; (void)local_b80;
+    (void)uStack_b7c; (void)local_b78; (void)local_b68; (void)local_b60;
+    (void)local_b50; (void)local_b40; (void)local_b3c; (void)local_b38;
+    (void)local_b08; (void)local_b06;
+
     local_res10 = param_2;
     FUN_14005b154((WCHAR **)&local_res10);
     local_c27 = FUN_1400660ac("-wlan", (WCHAR **)&local_res10, 5);
@@ -2028,7 +2046,7 @@ ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
         wsprintfW(local_bf0, WSTR("%s.PN"), pWVar30);
         PECMD_AllocString((WCHAR **)&local_c10, (longlong)((int)(uint32_t)local_be8 + 100));
         pWVar21 = local_c10;
-        wsprintfW(local_c10, WSTR("%s"), pWVar30);
+        wsprintfW((LPWSTR)local_c10, WSTR("%s"), pWVar30);
     }
     cVar7 = FUN_1400660ac("-start", (WCHAR **)&local_res10, 6);
     local_bd0 = 0;
