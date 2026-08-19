@@ -82,7 +82,7 @@ extern int (*g_pGdipDeleteGraphics)();   /* GdipDeleteGraphics */
 extern uint64_t g_u64_12d058;
 extern uint64_t g_u64_12d060;
 
-/* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    /* GdipDisposeImage 函数指针 */
+/* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    (GdipDisposeImage 函数指针) */
 extern WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);          /* @0x1400703e4 */
 extern void FUN_140101db8(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
 extern BOOL PathFileExistsW(LPCWSTR);                          /* Win32 API (link_stubs.c) */

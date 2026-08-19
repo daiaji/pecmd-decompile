@@ -199,6 +199,12 @@ LAB_14009d456:
     local_70 = param_2;
     local_68 = param_4;
     local_58 = param_1;
+    (void)local_68;
+    (void)local_60;
+    (void)local_58;
+    (void)local_50;
+    (void)local_48;
+    (void)local_40;
     SendMessageW(hWnd, 0x459, (WPARAM)param_1[7], (LPARAM)&local_70);
     return 0;
 }

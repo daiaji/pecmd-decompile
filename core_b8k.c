@@ -568,6 +568,7 @@ void FUN_1400ED7A0(HDC hdcDst, int x0, uint32_t wFor, int x1, int y1,
                             g2 += (int)(c >> 8 & 0xff);
                         }
                         n += r2;
+                        (void)n;
                         rSum = g2;
                         gSum = b2;
                     }

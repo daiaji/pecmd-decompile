@@ -1755,7 +1755,7 @@ LAB_140087144:
     local_d570 = (int64_t *)&PTR_FUN_140126540;
     ppvVar14 = &local_d568;
 LAB_14008755e:
-    FUN_14006849c(ppvVar14);
+    FUN_14006849c((int64_t *)ppvVar14);
     FUN_14005b104((void *)&local_d590);
     FUN_14005b104((void *)&local_d598);
     return uVar23;
@@ -1982,6 +1982,7 @@ LAB_140094864:
     }
     local_b8 = g_u322570;
     local_b4 = g_u162574;
+    (void)local_b4;
     memset(local_b2, 0, 0x76);
     local_110[0].QuadPart = 0;
     local_110[1].QuadPart = 0;
@@ -2031,7 +2032,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
     LPWSTR local_50;
     int64_t local_48[2];
 
-    local_res10[0] = param_2;
+    local_res10[0] = (LPWSTR)param_2;
     FUN_14005b154((WCHAR **)local_res10);
     PECMD_AllocWStringBuffer((WCHAR **)&local_50, 5);
     PECMD_AllocWStringBuffer((WCHAR **)local_48, 0x14);
@@ -2131,7 +2132,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
         local_res10[0] = local_res10[0] + 1;
         FUN_1400545f8(param_1, (WCHAR **)local_res10, (WCHAR **)local_48, L'\0', 0);
     }
-    pWVar12 = (LPCWSTR)PECMD_StripDevicePrefix(local_48[0]);
+    pWVar12 = (LPWSTR)PECMD_StripDevicePrefix(local_48[0]);
     if ((*local_50 == L'\0') || (*pWVar12 == L'\0')) {
         FUN_14005b104((void *)local_48);
         FUN_14005b104((void *)&local_50);
@@ -2204,7 +2205,7 @@ LAB_14009509b:
     }
     FUN_14005b104((void *)&local_60);
 LAB_1400950ce:
-    local_60 = (LPCWSTR)0x0;
+    local_60 = (LPWSTR)0x0;
     local_res10[0] = pWVar12;
     if ((bVar5) && (*pWVar12 != L'\"')) {
         PECMD_QuoteTokenString((int64_t *)local_res10, (int64_t *)&local_60, -1);

@@ -3408,6 +3408,8 @@ uint64_t FUN_1400FFB64(int64_t obj, uint16_t *path, int64_t *out,
         preLen = lstrlenW(prefix);
     if (suffix != NULL)
         sufLen = lstrlenW(suffix);
+    (void)preLen;
+    (void)sufLen;
     off = out[1];
     PECMD_AllocString(out, off + 0x100086);
 

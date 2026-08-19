@@ -128,7 +128,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
     local_90 = GetForegroundWindow();
     g_msgWndState[0] = 0;
     if ((g_hwndD310 != (HWND)0) ||
-        (FUN_14005B9C8(-(unsigned int)bVar1 & 2 | (param_8 & 1), 0x514),
+        (FUN_14005B9C8((-(unsigned int)bVar1 & 2) | (param_8 & 1), 0x514),
          g_hwndD310 != (HWND)0)) {
         hWnd = g_hwndD310;
         /* 消息缓冲区布局 (TODO(verify): 偏移无法精确恢复) */
@@ -156,7 +156,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
         local_b8.bottom = 0;
         if (!bVar1) {
             SendMessageW(g_hwndD310, 0x412, 0,
-                         (LPARAM)(int64_t)(int)(param_5 << 0x10 | param_4 & 0xffff));
+                         (LPARAM)(int64_t)(int)((param_5 << 0x10) | (param_4 & 0xffff)));
         }
         SetWindowPos(g_hwndD310, (HWND)0, 0, 0, 0, 0, 0x13);
         SetWindowPos(g_hwndD310, (HWND)0xffffffffffffffffULL, 0, 0, 0, 0, 0x13);
@@ -199,7 +199,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
         }
         else {
             SendMessageW(g_hwndD310, 0x412, 0,
-                         (LPARAM)(int64_t)(int)(param_5 << 0x10 | param_4 & 0xffff));
+                         (LPARAM)(int64_t)(int)((param_5 << 0x10) | (param_4 & 0xffff)));
         }
     }
     SetForegroundWindow(local_90);
