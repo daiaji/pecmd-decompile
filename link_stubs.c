@@ -4,6 +4,11 @@ typedef unsigned int uint;   /* 兼容 setupdi 桩 */
 typedef unsigned long DWORD;
 typedef uint16_t WCHAR;
 typedef uint32_t REGSAM;
+typedef char CHAR;
+typedef const CHAR *LPCSTR;
+typedef const WCHAR *LPCWSTR;
+typedef void *HANDLE;
+typedef void *HDC;
 typedef uint8_t BYTE;
 typedef const uint16_t *LPCWSTR;
 typedef void *HKEY;
@@ -185,7 +190,7 @@ uint64_t FUN_1400629b8(void) { return 0; }
 void FUN_1400633a8(void **ps, int64_t len) { (void)ps;(void)len; }
 uint16_t *FUN_140063620(uint16_t **out) { (void)out; return (uint16_t *)0; }
 uint16_t *FUN_14006375c(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; return (uint16_t *)0; }
-uint64_t FUN_1400637dc(void) { return 0; }
+WCHAR *FUN_1400637dc(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b){ (void)ps;(void)src;(void)a;(void)b; return (WCHAR*)0; } /* @0x1400637dc 字符串追加 */
 void FUN_1400639f0(int64_t *a, int64_t *b, int64_t *c, void *d, int e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
 uint64_t FUN_140063a6c(void) { return 0; }
 int64_t FUN_140063b00(int64_t param_1, int64_t *param_2, int64_t *param_3, unsigned int param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
@@ -528,7 +533,7 @@ uint64_t lstrcmpiA(void) { return 0; }
 uint64_t lstrcmpiW(void) { return 0; }
 uint64_t lstrcpyW(void) { return 0; }
 uint64_t lstrcpynW(void) { return 0; }
-uint64_t lstrlenA(void) { return 0; }
+int32_t lstrlenA(const char *s) { (void)s; return 0; }
 uint64_t lstrlenW(void) { return 0; }
 int main(void) { return 0; }
 uint64_t mouse_event(void) { return 0; }
@@ -1022,7 +1027,82 @@ uint64_t FUN_14006a740(void) { return 0; }
 uint64_t FUN_14007033c(void) { return 0; }
 uint64_t FUN_1400738d0(void) { return 0; }
 uint64_t FUN_140078c68(void) { return 0; }
-uint64_t FUN_140078d8c(void) { return 0; }
+/* @0x140078d8c 类 base64/十六进制位串解码 (size=259) */
+uint64_t FUN_140078d8c(uint8_t *param_1, uint64_t *param_2)
+{
+  int iVar2;
+  uint8_t bVar1;
+  uint8_t bVar3;
+  uint64_t uVar4;
+  uint64_t uVar6;
+  uint8_t *pCVar5;
+  uint8_t *local_res8;
+  LPCSTR pstr;
+
+  iVar2 = lstrlenA((LPCSTR)param_1);
+  FUN_1400633a8((void **)&local_res8,(int64_t)((iVar2 + 1) * 3));
+  uVar4 = 0;
+  pCVar5 = local_res8 + 1;
+  *local_res8 = ' ';
+  *pCVar5 = '\0';
+  bVar3 = 0;
+  uVar6 = uVar4;
+  do {
+    if (*param_1 == 0) {
+      *pCVar5 = '\0';
+      FUN_1400637dc((WCHAR **)param_2, (LPCWSTR)local_res8,0xffffffffffffffffLL,0xfde9);
+      uVar4 = *param_2;
+LAB_140078e06:
+      FUN_14005b104((void *)&local_res8);
+      return uVar4;
+    }
+    bVar1 = *param_1;
+    if (bVar1 == 0x3d) {
+      if ((char)bVar3 > 0) {
+        *pCVar5 = (uint8_t)uVar6;
+        bVar3 = 0;
+        pCVar5 = pCVar5 + 1;
+        uVar6 = uVar4;
+      }
+    }
+    else {
+      if ((bVar1 < 0x41) || (0x5a < bVar1)) {
+        if ((bVar1 < 0x61) || (0x7a < bVar1)) {
+          if ((bVar1 < 0x30) || (0x39 < bVar1)) {
+            if (bVar1 == 0x2b) {
+              bVar1 = 0x3e;
+            }
+            else {
+              if (bVar1 != 0x2f) {
+                *(uint16_t *)*param_2 = 0;
+                goto LAB_140078e06;
+              }
+              bVar1 = 0x3f;
+            }
+          }
+          else {
+            bVar1 = bVar1 + 4;
+          }
+        }
+        else {
+          bVar1 = bVar1 + 0xb9;
+        }
+      }
+      else {
+        bVar1 = bVar1 + 0xbf;
+      }
+      uVar6 = (uint64_t)((uint32_t)uVar6 | (uint32_t)bVar1 << (bVar3 & 0x1f));
+      bVar3 = bVar3 + 6;
+      while (((char)bVar3 > 7) || (((char)bVar3 > 0) && (*param_1 == 0))) {
+        *pCVar5 = (uint8_t)uVar6;
+        pCVar5 = pCVar5 + 1;
+        uVar6 = uVar6 >> 8;
+        bVar3 = bVar3 - 8;
+      }
+    }
+    param_1 = param_1 + 1;
+  } while( 1 );
+}
 uint64_t FUN_14007bf78(void) { return 0; }
 uint64_t FUN_14008293c(void) { return 0; }
 uint64_t FUN_1400a9650(void) { return 0; }

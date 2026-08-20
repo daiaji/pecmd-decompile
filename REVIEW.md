@@ -3460,3 +3460,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 计划分为 P0-P5；已做 P0-P3，P4 主战(剥洋葱循环)待开跑，P5 收口。
 - 量化: 调用点 4837→4424(-8.5%)；剩余~476 被调未命名(290 直移/25 asm/142 CRT 2B/19)+4 巨型登记+行为警告81。
 - 纪律与工具同前；诚实边界: 不可核验项登记、需 Windows 运行时者待运行时。
+## 96. P4 wave-1（剥洋葱第一波）：40 helper 直移入库
+- 从 decompiled 直移 40 个被调 helper 真体到 link_stubs（含 base64/hex 解码 140078d8c 等）。
+- 修 3 处：link_stubs 补 CHAR/LPCSTR/LPCWSTR/HANDLE/HDC 局部 typedef、lstrlenA 桩改带参签名、633a8 实参 (void**)强转。
+- build 0 / link(-lm) 0 绿，提交。P4 循环起步：剩余可直移 ~248。
