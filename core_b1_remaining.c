@@ -2024,14 +2024,286 @@ uint64_t PECMD_GetFileVersionInfo(LPCWSTR param_1, void *param_2, void *param_3,
     return uVar9;
 }
 
+/* ====================================================================
+ * @0x1400060b8 / @0x140008d9c / @0x14000c764 还原所需本地类型/桩/真值数据
+ * 真值(嵌入)均取值自 PECMD原始.EXE .data/.rdata。
+ * ==================================================================== */
+
+/* win32_stub.h 未提供 SID/LUID 类型 — 按 x64 布局本地定义 */
+typedef struct { uint32_t LowPart; int32_t  HighPart; } PECMD_LUID;                /* 8B  */
+typedef struct { PECMD_LUID Luid; uint32_t Attributes; } PECMD_LUID_AND_ATTRIBUTES; /* 12B */
+typedef struct { uint8_t Value[6]; } PECMD_SID_IDENTIFIER_AUTHORITY;                /* 8B  */
+typedef struct { void *Sid; uint32_t Attributes; uint32_t pad; } PECMD_SID_AND_ATTRIBUTES; /* 16B(x64) */
+
+/* 缺失的 Win32 extern (符号在 link_stubs.c, 头文件未声明, 由调用方补原型) */
+extern BOOL AllocateAndInitializeSid(PECMD_SID_IDENTIFIER_AUTHORITY *pAuth, BYTE nCount,
+                                     DWORD a0, DWORD a1, DWORD a2, DWORD a3, DWORD a4, DWORD a5,
+                                     DWORD a6, DWORD a7, void **ppSid);  /* Win32 API (link_stubs.c) */
+extern void FreeSid(void *sid);                                        /* Win32 API (link_stubs.c) */
+
+/* 缺失的 helper extern (定义于其他 core_*.c) */
+extern void FUN_1400675b8(void *src, void *dst, int16_t delim);       /* @0x1400675b8 core_remaining_helpers.c */
+extern WCHAR *PECMD_StrDupAlloc(LPCWSTR src);                          /* @0x1400700c4 core_string.c */
+
+/* ---- 本地静态桩 (仅本文件使用; 不改 link_stubs.c/include) ---- */
+static BOOL CreateRestrictedToken(HANDLE existingToken, DWORD flags,
+                                  DWORD sidsToDisableCount, PECMD_SID_AND_ATTRIBUTES *sidsToDisable,
+                                  DWORD privilegesToDeleteCount, PECMD_LUID_AND_ATTRIBUTES *privilegesToDelete,
+                                  DWORD restrictedSidCount, void *sidsToRestrict, HANDLE *newToken)
+{
+    /* SKIP: link_stubs.c 缺 CreateRestrictedToken, 本地桩 (仅 FUN_1400060b8 引用) */
+    (void)existingToken; (void)flags; (void)sidsToDisableCount; (void)sidsToDisable;
+    (void)privilegesToDeleteCount; (void)privilegesToDelete;
+    (void)restrictedSidCount; (void)sidsToRestrict;
+    if (newToken != NULL) {
+        *newToken = (HANDLE)0;
+    }
+    return 0;
+}
+
+static uint16_t *FUN_14000531c(uint16_t *param_1)
+{
+    /* @0x14000531c size=38 — 跳过前导空白 (0x9-0xD / 0x20) */
+    while (*param_1 > 8 && *param_1 < 0xe || *param_1 == 0x20) {
+        param_1 = param_1 + 1;
+    }
+    return param_1;
+}
+
+static uint16_t *FUN_14000546c(uint16_t *param_1)
+{
+    /* @0x14000546c size=85 — 定位令牌结尾 (支持双引号括起) */
+    uint16_t u = *param_1;
+    uint16_t *p;
+    if (u == 0x22) {
+        do {
+            p = param_1;
+            param_1 = p + 1;
+            if (*param_1 == 0) break;
+        } while (*param_1 != 0x22);
+        if (*param_1 == 0x22) {
+            param_1 = p + 2;
+        }
+    } else {
+        while (u != 0 && (u < 9 || 0xd < u) && u != 0x20) {
+            param_1 = param_1 + 1;
+            u = *param_1;
+        }
+    }
+    return param_1;
+}
+
+static void FUN_1400055ec(LPCWSTR param_1, uint64_t param_2)
+{
+    /* @0x1400055ec size=159 — 创建 100B 共享文件映射并登记全局槽 (服务命令入共享内存) */
+    HANDLE hMap;
+    uint64_t *base;
+    hMap = CreateFileMappingW((HANDLE)(uintptr_t)-1, (LPSECURITY_ATTRIBUTES)0,
+                             0x8000004u, 0, 100, param_1);
+    if (hMap != (HANDLE)0) {
+        base = (uint64_t *)MapViewOfFile(hMap, 6, 0, 0, 0);
+        CloseHandle(hMap);
+        if (base != NULL) {
+            memset(base, 0, 100);                 /* FUN_140005390 == memset */
+            *(uint32_t *)base = 0xffffffffu;
+            base[2] = param_2;                    /* 8 字节偏移 0x10 */
+            PTR_DAT_14013a040 = (void *)(base + 1);   /* 数据起点 = 映射基址+8 */
+            g_u64CA20 = (uint64_t)(uintptr_t)base;    /* DAT_14013ca20 */
+        }
+    }
+}
+
+static void FUN_140070310(LPCWSTR *dst, LPCWSTR *src)
+{
+    /* @0x140070310 — 串槽赋值(深拷贝); 原体未反编译, 按 FUN_1400702b0 语义实现 */
+    if (src != NULL && *src != NULL) {
+        *dst = PECMD_StrDupAlloc(*src);
+    } else {
+        *dst = NULL;
+    }
+}
+
+static void FUN_140009068(int64_t *tbl, LPCWSTR name, LPCWSTR value)
+{
+    /* SKIP @0x140009068 size=372 — .pecmdplugin.*.PEI 注册进命令表1; 原体未还原, 桩 */
+    (void)tbl; (void)name; (void)value;
+}
+
+/* ---- 真值数据 (取值自 PECMD原始.EXE .data/.rdata) ---- */
+
+/* SID authority @0x14013a208 = SECURITY_NT_AUTHORITY (00 00 00 00 00 05 00 00) */
+static const unsigned char g_sidAuthorityNT[8] = { 0x00,0x00,0x00,0x00,0x00,0x05,0x00,0x00 };
+
+/* 特权表 @0x14013a0d0 — 26×12B LUID_AND_ATTRIBUTES (LUID HighPart=0, Attributes=0)
+ * 注: 任务描述写 208B; 实际按 decompiled body 以 0x1a(26) 项 × 12B 索引 => 312B,
+ *     与二进制字节一致 (stride-8 读到的 2,0,0,4,0,0,6... 即 12B 结构交错)。 */
+static const PECMD_LUID_AND_ATTRIBUTES g_privilegeTable[26] = {
+    { { 0x2, 0 }, 0x0 },
+    { { 0x3, 0 }, 0x0 },
+    { { 0x4, 0 }, 0x0 },
+    { { 0x5, 0 }, 0x0 },
+    { { 0x6, 0 }, 0x0 },
+    { { 0x7, 0 }, 0x0 },
+    { { 0x8, 0 }, 0x0 },
+    { { 0x9, 0 }, 0x0 },
+    { { 0xa, 0 }, 0x0 },
+    { { 0xb, 0 }, 0x0 },
+    { { 0xc, 0 }, 0x0 },
+    { { 0xd, 0 }, 0x0 },
+    { { 0xe, 0 }, 0x0 },
+    { { 0xf, 0 }, 0x0 },
+    { { 0x10, 0 }, 0x0 },
+    { { 0x11, 0 }, 0x0 },
+    { { 0x12, 0 }, 0x0 },
+    { { 0x14, 0 }, 0x0 },
+    { { 0x15, 0 }, 0x0 },
+    { { 0x16, 0 }, 0x0 },
+    { { 0x18, 0 }, 0x0 },
+    { { 0x1a, 0 }, 0x0 },
+    { { 0x1b, 0 }, 0x0 },
+    { { 0x1c, 0 }, 0x0 },
+    { { 0x1d, 0 }, 0x0 },
+    { { 0x1e, 0 }, 0x0 },
+};
+
+/* 服务名前缀 @0x14011d288 — 宽字符 "service:" (Linux wchar_t=4B, 故用显式 WCHAR 初值,
+ * 效果同 L"service:" 的 UTF-16LE 低字: 73 00 65 00 72 00 76 00 69 00 63 00 65 00 3a 00) */
+static const WCHAR szServicePrefix[] = { 's','e','r','v','i','c','e',':',0 };
+
+/* 文件关联描述表 (PTR_PTR_14013a050 -> 0x14011d4b8 等; 首 qword 为 .text 回调地址,
+ * 其后为内联宽字符串/ASCII 池; 原样嵌入, 内部指针保持原始地址数值) */
+static const unsigned char g_desc_14011d4b8[0x140] = {
+    0x60, 0xc7, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00,
+    0x2e, 0x00, 0x77, 0x00, 0x63, 0x00, 0x7a, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x77, 0x00, 0x63, 0x00, 0x65, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x77, 0x00,
+    0x63, 0x00, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00,
+    0x2e, 0x00, 0x77, 0x00, 0x63, 0x00, 0x69, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x4c, 0x00, 0x4f, 0x00,
+    0x41, 0x00, 0x44, 0x00, 0x3a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x49, 0x00, 0x4e, 0x00, 0x44, 0x00, 0x41, 0x00, 0x54, 0x00, 0x41, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x24, 0x00, 0x2a, 0x00, 0x2e, 0x00,
+    0x64, 0x00, 0x6c, 0x00, 0x78, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x24, 0x00,
+    0x2a, 0x00, 0x2e, 0x00, 0x64, 0x00, 0x6c, 0x00, 0x6c, 0x00, 0x00, 0x00,
+    0x2e, 0x00, 0x70, 0x00, 0x65, 0x00, 0x63, 0x00, 0x6d, 0x00, 0x64, 0x00,
+    0x70, 0x00, 0x6c, 0x00, 0x75, 0x00, 0x67, 0x00, 0x69, 0x00, 0x6e, 0x00,
+    0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x50, 0x00, 0x45, 0x00, 0x49, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x62, 0x00,
+    0x61, 0x00, 0x74, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00,
+    0x2e, 0x00, 0x63, 0x00, 0x6d, 0x00, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x72, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00, 0x2e, 0x00, 0x63, 0x00,
+    0x6f, 0x00, 0x6d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x2a, 0x00,
+    0x2e, 0x00, 0x65, 0x00, 0x78, 0x00, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x23, 0x00, 0x2c, 0x00, 0x30, 0x00, 0x78, 0x00, 0x25, 0x00, 0x70, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x43, 0x41, 0x4c, 0x4c, 0x00, 0x00, 0x00, 0x00,
+    0x6f, 0x70, 0x74, 0x00, 0x3d, 0x00, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x2d, 0x00, 0x31, 0x00, 0x3b, 0x00, 0x25, 0x00,
+    0x75, 0x00, 0x3b, 0x00, 0x25, 0x00, 0x70, 0x00
+};  /* 0x14011d4b8..0x14011d5f8 */
+
+static const unsigned char g_desc_14011d2a0[0x100] = {
+    0xa0, 0x8e, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x50, 0x45, 0x43, 0x4d,
+    0x44, 0x54, 0x42, 0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xdc, 0x91, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x2a, 0x00, 0x2a, 0x00,
+    0x6c, 0x00, 0x6f, 0x00, 0x67, 0x00, 0x73, 0x00, 0x3a, 0x00, 0x22, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x45, 0x43, 0x4d,
+    0x44, 0x20, 0x4c, 0x4f, 0x41, 0x44, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x20, 0x00, 0x2a, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x70, 0x00, 0x3a, 0x00,
+    0x30, 0x00, 0x78, 0x00, 0x25, 0x00, 0x70, 0x00, 0x3a, 0x00, 0x25, 0x00,
+    0x6c, 0x00, 0x75, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2a, 0x2a, 0x75, 0x00, 0x4d, 0x41, 0x49, 0x4e, 0x00, 0x00, 0x00, 0x00,
+    0x45, 0x58, 0x45, 0x43, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00, 0x45, 0x00,
+    0x43, 0x00, 0x4d, 0x00, 0x44, 0x00, 0x2a, 0x00, 0x2a, 0x00, 0x70, 0x00,
+    0x65, 0x00, 0x63, 0x00, 0x6d, 0x00, 0x64, 0x00, 0x2d, 0x00, 0x63, 0x00,
+    0x6d, 0x00, 0x64, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2a, 0x00, 0x50, 0x00, 0x45, 0x00, 0x43, 0x00, 0x4d, 0x00, 0x44, 0x00,
+    0x20, 0x00, 0x00, 0x00, 0x73, 0x00, 0x68, 0x00, 0x75, 0x00, 0x74, 0x00,
+    0x64, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x6e, 0x00, 0x20, 0x00, 0x2d, 0x00,
+    0x61, 0x00, 0x00, 0x00, 0x53, 0x00, 0x65, 0x00, 0x53, 0x00, 0x68, 0x00,
+    0x75, 0x00, 0x74, 0x00, 0x64, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x6e, 0x00,
+    0x50, 0x00, 0x72, 0x00, 0x69, 0x00, 0x76, 0x00, 0x69, 0x00, 0x6c, 0x00,
+    0x65, 0x00, 0x67, 0x00, 0x65, 0x00, 0x00, 0x00, 0x50, 0x00, 0x45, 0x00,
+    0x43, 0x00, 0x4d, 0x00
+};  /* 0x14011d2a0..0x14011d3a0 */
+
+static const unsigned char g_desc_14011d2b8[0x100] = {
+    0xdc, 0x91, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x2a, 0x00, 0x2a, 0x00,
+    0x6c, 0x00, 0x6f, 0x00, 0x67, 0x00, 0x73, 0x00, 0x3a, 0x00, 0x22, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x45, 0x43, 0x4d,
+    0x44, 0x20, 0x4c, 0x4f, 0x41, 0x44, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x20, 0x00, 0x2a, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x70, 0x00, 0x3a, 0x00,
+    0x30, 0x00, 0x78, 0x00, 0x25, 0x00, 0x70, 0x00, 0x3a, 0x00, 0x25, 0x00,
+    0x6c, 0x00, 0x75, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2a, 0x2a, 0x75, 0x00, 0x4d, 0x41, 0x49, 0x4e, 0x00, 0x00, 0x00, 0x00,
+    0x45, 0x58, 0x45, 0x43, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00, 0x45, 0x00,
+    0x43, 0x00, 0x4d, 0x00, 0x44, 0x00, 0x2a, 0x00, 0x2a, 0x00, 0x70, 0x00,
+    0x65, 0x00, 0x63, 0x00, 0x6d, 0x00, 0x64, 0x00, 0x2d, 0x00, 0x63, 0x00,
+    0x6d, 0x00, 0x64, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x2a, 0x00, 0x50, 0x00, 0x45, 0x00, 0x43, 0x00, 0x4d, 0x00, 0x44, 0x00,
+    0x20, 0x00, 0x00, 0x00, 0x73, 0x00, 0x68, 0x00, 0x75, 0x00, 0x74, 0x00,
+    0x64, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x6e, 0x00, 0x20, 0x00, 0x2d, 0x00,
+    0x61, 0x00, 0x00, 0x00, 0x53, 0x00, 0x65, 0x00, 0x53, 0x00, 0x68, 0x00,
+    0x75, 0x00, 0x74, 0x00, 0x64, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x6e, 0x00,
+    0x50, 0x00, 0x72, 0x00, 0x69, 0x00, 0x76, 0x00, 0x69, 0x00, 0x6c, 0x00,
+    0x65, 0x00, 0x67, 0x00, 0x65, 0x00, 0x00, 0x00, 0x50, 0x00, 0x45, 0x00,
+    0x43, 0x00, 0x4d, 0x00, 0x44, 0x00, 0x2a, 0x00, 0x2a, 0x00, 0x70, 0x00,
+    0x65, 0x00, 0x63, 0x00, 0x6d, 0x00, 0x64, 0x00, 0x2d, 0x00, 0x63, 0x00,
+    0x6d, 0x00, 0x64, 0x00
+};  /* 0x14011d2b8..0x14011d3b8 */
+
+/* 原始关联槽 @0x14013a050 / 0x90 / 0x70 (各 0x18B):
+ *   [0x00] 描述表指针 (原始值 0x14011d4b8 / 0x14011d2a0 / 0x14011d2b8)
+ *   [0x08] 计数 (原始 g_cmdTable3Count / g_cmdTable4Count / g_cmdTable2Count)
+ *   [0x10] 命令表槽 (原始 g_cmdTable3 / g_cmdTable4 / g_cmdTable2 变量) */
+typedef struct {
+    const unsigned char *desc;   /* 0x00 */
+    int count;                   /* 0x08 */
+    int pad;                     /* 0x0c */
+    void *slot;                  /* 0x10 */
+} PECMD_ASSOC_TABLE;
+static PECMD_ASSOC_TABLE PTR_PTR_14013a050 = { g_desc_14011d4b8, 0, 0, NULL };
+static PECMD_ASSOC_TABLE PTR_PTR_14013a090 = { g_desc_14011d2a0, 0, 0, NULL };
+static PECMD_ASSOC_TABLE PTR_PTR_14013a070 = { g_desc_14011d2b8, 0, 0, NULL };
+
+/* ====================================================================
+ * 恢复: @0x1400060b8 受限令牌创建
+ * ==================================================================== */
 HANDLE FUN_1400060b8(HANDLE param_1)
 {
-    /* SKIP @0x1400060b8 size=282 — 受限令牌创建 (OpenProcessToken→AllocateAndInitializeSid
-     * (S-1-5-32-544)→CreateRestrictedToken 禁用 26 项特权→FreeSid→CloseHandle)。
-     * 依赖 DAT_14013a208 (SID authority) 与 DAT_14013a0d0 (26×LUID_AND_ATTRIBUTES 特权表)
-     * 均未映射且内容不可复原, 强行补桩会伪造安全数据, 故保存 NO-OP 桩。*/
-    (void)param_1;
-    return (HANDLE)0;
+    /* 受限管理员令牌: 打开当前进程令牌(或复用调用方令牌) → 建立 S-1-5-32-544
+     * (Authority=SECURITY_NT_AUTHORITY, SubAuthority[0]=0x20, [1]=0x220) SID →
+     * CreateRestrictedToken 禁用 26 项特权(LUID 2..0x12,0x14..0x1e) →
+     * 成功才返回新令牌; 自开令牌则随后关闭。真值数据: SID authority @0x14013a208,
+     * 特权表 @0x14013a0d0 (26×12B, Attributes=0)。 */
+    BOOL ok;
+    HANDLE hToken;
+    HANDLE newToken;
+    PECMD_SID_AND_ATTRIBUTES sidAttr;
+    PECMD_SID_IDENTIFIER_AUTHORITY *pAuth =
+        (PECMD_SID_IDENTIFIER_AUTHORITY *)(uintptr_t)g_sidAuthorityNT;
+
+    newToken = (HANDLE)0;
+    memset(&sidAttr, 0, sizeof(sidAttr));
+    hToken = param_1;
+    if (param_1 == (HANDLE)0) {
+        OpenProcessToken((HANDLE)(uintptr_t)-1, 0xf01ff, &hToken);
+        if (hToken == (HANDLE)0) goto LAB_1400061a9;
+    }
+    ok = AllocateAndInitializeSid(pAuth, 2, 0x20, 0x220, 0, 0, 0, 0, 0, 0, &sidAttr.Sid);
+    if (ok != 0) {
+        sidAttr.Attributes = 0;   /* 原体 local_18._8_8_ &= 0xffffffff00000000 */
+        ok = CreateRestrictedToken(hToken, 0, 1, &sidAttr, 0x1a,
+                                   (PECMD_LUID_AND_ATTRIBUTES *)g_privilegeTable,
+                                   0, NULL, &newToken);
+        newToken = (HANDLE)(-(uint64_t)(ok != 0) & (uint64_t)newToken);
+        FreeSid(sidAttr.Sid);
+    }
+LAB_1400061a9:
+    if (param_1 == (HANDLE)0) {
+        CloseHandle(hToken);
+    }
+    return newToken;
 }
 
 short *PECMD_ResolveWildcardPath(uint64_t *param_1, short *param_2, LPWSTR param_3, LPCWSTR param_4)
@@ -3339,11 +3611,26 @@ LAB_140008d7f:
 
 void FUN_140008d9c(uint16_t *param_1)
 {
-    /* SKIP @0x140008d9c size=152 — 服务命令入共享内存: 以 u_service__14011d288 前缀 +
-     * 解析出的 token(≤1000 字符) 为名创建共享映射 (PECMD_CreateSharedMemoryMap)。
-     * 仅缺 u_service__14011d288 (20 字节服务名前缀 .rdata) 一处数据, 项目未映射
-     * 且无原始二进制可提取内容, 补桩会伪造映射名, 故保存 NO-OP 桩。*/
-    (void)param_1;
+    /* @0x140008d9c size=152 — 服务命令入共享内存: 以 "service:" + 解析出的令牌
+     * (≤1000 宽字符; 跳过前导空白, 支持引号) 为名创建/登记共享文件映射
+     * (FUN_1400055ec → DAT_14013a040 / DAT_14013ca20)。
+     * 真值数据: 前缀 @0x14011d288 = L"service:" */
+    uint16_t *p;
+    uint16_t *q;
+    int len;
+    WCHAR name[8 + 1012];           /* "service:"(8) + 令牌(≤1000) + NUL */
+
+    memset(name, 0, sizeof(name));          /* FUN_140102a90(local_7f6,0,0x7e4) */
+    memcpy(name, szServicePrefix, sizeof(szServicePrefix));  /* 前缀 + 结尾 NUL */
+    p = FUN_14000531c(param_1);             /* 跳过前导空白 */
+    q = FUN_14000546c(p);                   /* 令牌结尾 (支持引号) */
+    len = (int)(q - p);
+    if (999 < len) {
+        len = 1000;
+    }
+    memcpy(name + 8, p, (size_t)len * 2);   /* 令牌紧接前缀写入 */
+    name[8 + len] = L'\0';                  /* 原体在缓冲区 iVar1 处落 0 */
+    FUN_1400055ec(name, 0);                 /* 创建 100B 共享映射并登记 */
 }
 
 void PECMD_FreeStringArray(int64_t *param_1)
@@ -4337,12 +4624,180 @@ LAB_14000c705:
 
 uint8_t FUN_14000c764(LPWSTR param_1)
 {
-    /* SKIP @0x14000c764 size=1909 — 注册文件关联/INI 解析 (依模块名登记 *.exe/*.com/*.ntr/
-     * *.cmd/*.bat/*.dll 等关联表, 解析 INDATA 中 LOAD: 项, 写命令表5)。
-     * 依赖 PTR_PTR_14013a050/090/070 三张数据表(文件关联槽表)未定义于任何文件,
-     * 按任务规则 SKIP, 保存 NO-OP 桩。*/
-    (void)param_1;
-    return 0;
+    /* @0x14000c764 size=1909 — 文件关联注册: 依模块路径登记扩展关联表
+     * ('.exe/.com/.ntr/.cmd/.bat' 表=PTR_PTR_14013a050; '.$*.dll/.$*.dlx' 表=
+     * PTR_PTR_14013a090; '.wci/.wcs/.wce/.wcz' 表=PTR_PTR_14013a070;
+     * .pecmdplugin.*.PEI 进命令表1); 解析 INDATA 资源中 LOAD: 行, 将
+     * "##word ..." 型命令写入命令表2(g_cmdTable2) 并计数。
+     * 真值数据: PTR_PTR_14013a050/090/070 描述表 (0x14011d4b8/0x14011d2a0/0x14011d2b8)
+     * 已按二进制原样嵌入(首 qword 为 .text 回调地址常量)。 */
+    WCHAR c;
+    LPCWSTR pDir;
+    int iLen;
+    LPCWSTR pTok;
+    LPWSTR pBSlash;
+    uint64_t *puSlot;
+    WCHAR *pW;
+    int iBasename;
+    uint8_t ret = 0;
+    LPWSTR pStr;                 /* local_res8  */
+    LPCWSTR lps;                 /* local_res10 */
+    LPCWSTR lps2;                /* local_res18 */
+    LPCWSTR lps3;                /* local_res20 */
+    LPCWSTR pTok2;               /* local_78    */
+    LPCWSTR pCmd;                /* local_70    */
+    WCHAR *pLine;                /* local_68    */
+    WCHAR *pData;                /* local_60    */
+    uint64_t dataLen;            /* local_58    */
+    uint64_t dummy;              /* local_50    */
+
+    pStr = param_1;
+    FUN_14005B154((WCHAR **)&pStr);                 /* 跳前导空白 */
+    FUN_140063620((WCHAR **)&lps);
+    FUN_1400675b8((WCHAR **)&pStr, (WCHAR **)&lps, 0x2c);   /* 按 ',' 切第一段 */
+    pTok = FUN_14001BE14((WCHAR *)lps);             /* 去引号/前缀查询 */
+    if (*pTok == L'\0') {
+        PECMD_AllocString((WCHAR **)&lps, 0x105);
+        pTok = lps;
+        *(LPWSTR)lps = L'\0';
+        GetModuleFileNameW(g_hInst, (LPWSTR)lps, 0x104);
+    } else {
+        FUN_1400702B0((WCHAR **)&lps3, pTok);
+        FUN_1400e3cd4(lps3, (uint64_t *)&lps, (int64_t *)0);
+        pTok = lps;
+        FUN_14005B104((WCHAR **)&lps3);
+    }
+    pBSlash = StrRChrW(pTok, (LPCWSTR)0, L'\\');
+    if (pBSlash != (LPWSTR)0) {
+        pTok = pBSlash + 1;                          /* 文件名部分 */
+        FUN_140070310(&lps2, &lps);                  /* 复制完整路径槽 */
+        ((LPWSTR)lps2)[(int)((pTok - lps) >> 1)] = L'\0';   /* 截到文件名前 */
+        pStr = StrRChrW(pTok, (LPCWSTR)0, L'.');
+        if (pStr == (LPWSTR)0) {
+            iBasename = lstrlenW(pTok);
+            pStr = (LPWSTR)(pTok + iBasename);
+        } else {
+            *pStr = L'\0';                           /* 去掉扩展名 */
+        }
+        pDir = lps2;                                 /* 目录路径 */
+        iLen = (int)((pStr - pTok) >> 1);            /* 基本名长度 */
+        iBasename = iLen + 1;
+
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.exe"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pDir, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.com"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.ntr"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.cmd"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.bat"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".pecmdplugin.*.PEI"));
+        FUN_140009068((int64_t *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dll"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a090, *(LPCWSTR *)puSlot, pTok, iLen + 2, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dlx"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a090, *(LPCWSTR *)puSlot, pTok, iLen + 2, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+
+        PECMD_AllocSmallObject((uint64_t *)&pData);      /* FUN_140063344 */
+        dataLen = 0;
+        dummy = 0;
+        FUN_14001EA18(g_hInst, (LPCWSTR)0x4, WSTR("INDATA"), (int64_t *)&pData, (uint32_t *)0);
+        FUN_1400e7d58((int64_t *)&pData, 1);
+        dataLen = dataLen >> 1;                          /* 字节数 -> 宽字符数 */
+        pLine = pData;
+        dummy = dataLen;
+        (void)dummy;                                     /* local_50 原体仅赋值未读 */
+        if (2 < dataLen) {
+            c = *pData;
+            while (c != L'\0') {
+                FUN_14005B154((WCHAR **)&pLine);
+                pW = pLine;
+                lps3 = pLine;
+                for (; (c = *pLine) != L'\0' && c != L'\r' && c != L'\n'; pLine = pLine + 1) {
+                }
+                for (; *pLine == L'\n' || *pLine == L'\r'; pLine = pLine + 1) {
+                }
+                iLen = StrCmpNIW(pW, WSTR("LOAD:"), 5);
+                if (iLen == 0) {
+                    lps3 = lps3 + 5;                     /* 跳过 "LOAD:" */
+                    FUN_14005B154((WCHAR **)&lps3);
+                    pTok = lps3;
+                    for (; (c = *lps3) != L'\0' && ((c < 9 || c > 0xd) && c != L' ');
+                         lps3 = lps3 + 1) {
+                    }
+                    iLen = (int)((lps3 - pTok) >> 1);    /* 第一段长度 */
+                    if (0 < iLen) {
+                        FUN_1400702D4((WCHAR **)&pTok2, pTok, (int64_t)iLen);
+                        FUN_14005B154((WCHAR **)&lps3);
+                        pTok = lps3;
+                        for (; (c = *lps3) != L'\0' && ((c < 9 || c > 0xd) && c != L' ');
+                             lps3 = lps3 + 1) {
+                        }
+                        if ((*pTok == L'#') &&
+                            (iLen = (int)((lps3 - pTok) >> 1), 1 < iLen)) {
+                            FUN_1400702D4((WCHAR **)&pCmd, pTok - 1, (int64_t)(iLen + 1));
+                            *(LPWSTR)pCmd = L'#';        /* 原体: 前置空格位改写为 '#' */
+                            FUN_14006375C((WCHAR **)&pCmd, WSTR(" "));
+                            FUN_14006375C((WCHAR **)&pCmd, pTok2);
+                            FUN_140005818((int64_t *)&g_cmdTable2, pCmd);   /* DAT_14013a080 */
+                            c = *pTok2;
+                            pW = (WCHAR *)pTok2;
+                            while (c != L'\0') {
+                                if (*pW == L'+') {
+                                    *pW = L'\0';
+                                    break;
+                                }
+                                pW = pW + 1;
+                                c = *pW;
+                            }
+                            FUN_140005818((int64_t *)&g_cmdTable2, pTok2);
+                            g_cmdTable2Count = g_cmdTable2Count + 1;   /* DAT_14013a078 */
+                            FUN_14005B104((WCHAR **)&pCmd);
+                        }
+                        FUN_14005B104((WCHAR **)&pTok2);
+                    }
+                }
+                c = *pLine;
+            }
+        }
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wci"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wcs"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        pTok = lps2;
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wce"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wcz"));
+        PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, lps2, iBasename, 4);
+        FUN_14005B104((WCHAR **)&lps3);
+        FUN_14005B104((WCHAR **)&pData);
+        FUN_14005B104((WCHAR **)&lps2);
+        ret = 1;
+    }
+    FUN_14005B104((WCHAR **)&lps);
+    return ret;
 }
 
 void FUN_14000cedc(WCHAR *param_1, int64_t *param_2)
