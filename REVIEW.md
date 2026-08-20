@@ -3451,3 +3451,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 关键判据（行为保持）：wchar 族(wcslen/wcscpy/wcslwr)因 WCHAR=2B vs libc wchar_t=4B 语义不符**正确保留 FUN_**；
   stdio 表/反编译失败项保留。数学 CRT 桩无真实调用点(仅自定义)，`-lm` 已入链接。
 - shared 桩因仍有他文件调用未删(正确)。build/link 绿。
+## 94. P3 巨型还原（b3）：6 还原 + 3 复杂 SKIP 登记
+- RESTORED: 063060(identity)/077190(盘表盘符)/081238(命令分段解析)/097150(ACL 授权)/070da8(表达式算术分派,SUB81/84 归一,π等真值)/0987ec(Win10 PINT 固定任务栏,CONCAT71 归一)。
+- 补 link_stubs helpers/全局(DAT_14013a848/e1f0…, π/dbl 常量)+计算栈/安全 API/atexit 桩。
+- SKIP(不虚构): 084a5c/0b2ca8/0bb718(type-not-settling 多层星号/HBITMAP即指针/CONCAT 反卷积不可核验)，注释详述。
+- build/link(-lm) 全绿。FUN_ 唯一进一步下降。

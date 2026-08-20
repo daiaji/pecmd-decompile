@@ -1097,9 +1097,12 @@ void    FUN_14005e36c(int64_t a, uint32_t *b) { (void)a;(void)b; }
 int      FUN_14005bc28(uint16_t a) { (void)a; return 0; }      /* 字符分类: 返回0表示字符合法 */
 int64_t  FUN_14005bbb4(int64_t *a) { (void)a; return 0; }      /* 跳过前导 数字后读后缀 */
 double   DAT_140124110;                                        /* 常数(解析) */
-double   DAT_140124118;                                        /* 常数(解析) */
-double   DAT_1401263a0;                                        /* 数字解析乘以10 */
-double   DAT_1401261a0;                                        /* 常数1.0 */
+/* DAT_140124118 = 3.141592653589793 (π, 0x400921fb54442d18) — 来自 PECMD.exe .rdata */
+double   DAT_140124118 = 3.1415926535897932384626433832795;
+/* DAT_1401263a0 = 10.0 (0x4024000000000000) */
+double   DAT_1401263a0 = 10.0;
+/* DAT_1401261a0 = 1.0 (0x3ff0000000000000) */
+double   DAT_1401261a0 = 1.0;
 double   DAT_140126398;                                        /* 舍入阈值0.5 */
 double   DAT_140126390;                                        /* 小数缩放 */
 double   DAT_140121668;                                        /* 常数(解析) */
@@ -1153,3 +1156,81 @@ int64_t FUN_140065864(int64_t param_1, int64_t *param_2, int64_t *param_3,
     }
     return FUN_140063b00(param_1, param_2, param_3, param_5);
 }
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_140081238 命令串解析) 缺失 token 解析 helper 桩 ----
+   字符串 token 切分辅助, 供 FUN_140081238 解析 "名称,值" 序对使用.
+   真实逻辑为: 按分隔符扫描/拷贝子串到容器(00[0]); 此处保留签名与副作用(不推进指针),
+   使调用方编译/链接通过并按返回码走控制流.
+   ============================================================ */
+void FUN_1400675b8(int64_t *param_1, int64_t *param_2, int16_t param_3) { (void)param_1,(void)param_2,(void)param_3; }
+void FUN_1400676e4(int64_t *param_1, int64_t *param_2, int16_t param_3) { (void)param_1,(void)param_2,(void)param_3; }
+void FUN_140067748(int64_t *param_1, int64_t *param_2, int16_t param_3) { (void)param_1,(void)param_2,(void)param_3; }
+uint32_t FUN_1400734e4(int64_t param_1, void *param_2, int64_t *param_3) { (void)param_1,(void)param_2,(void)param_3; return 0; }
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_140097150 安全描述符/ACL 设置) 缺失
+        Advapi32 安全 API 与内部 helper 桩 ----
+   真实逻辑: GetNamedSecurityInfoW + BuildExplicitAccessWithNameW + SetEntriesInAclW +
+   SetNamedSecurityInfoW 为 NTFS/注册表 ACL 授权; GetUserNameW/LookupAccountNameW 取当前用户 SID.
+   此处以 no-op 桩保持签名, 使调用方编译/链接通过且控制流按返回码推进.
+   ============================================================ */
+typedef long LSTATUS;
+uint64_t GetNamedSecurityInfoW(void) { return 0; }      /* 0=ERROR_SUCCESS 走主授权分支 */
+uint64_t BuildExplicitAccessWithNameW(void) { return 0; }
+uint64_t SetEntriesInAclW(void) { return 0; }
+uint64_t GetUserNameW(void) { return 0; }
+uint64_t LookupAccountNameW(void) { return 0; }
+LSTATUS  FUN_140096f84(void *param_1, void *param_2, void *param_3) { (void)param_1,(void)param_2,(void)param_3; return 0; }
+uint64_t FUN_140063424(void *param_1, int64_t param_2) { (void)param_1,(void)param_2; return 0; }
+void     FUN_140101db8(void *param_1, const void *param_2, void *param_3) { (void)param_1,(void)param_2,(void)param_3; }
+/* LocalFree — 安全描述符/ACL 释放 (FUN_140097150 使用), 声明于 win32_stub.h, 原无定义 */
+uint64_t LocalFree(uint64_t hMem) { (void)hMem; return 0; }
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_140070da8 计算器浮点运算分派) 新增
+        常数与栈写入 helper 桩 ----
+   ※ 真实值提取自 PECMD.exe .rdata/.text, 见各注释.
+   ============================================================ */
+/* DAT_140124120 = 1.5707963267948966 (π/2, 0x3ff921fb54442d18) */
+double DAT_140124120 = 1.5707963267948966192313216916398;
+/* DAT_1401268f0 = 180.0 (0x4066800000000000, 弧度↔角度转换) */
+double DAT_1401268f0 = 180.0;
+/* DAT_140125230 -> g_dbl25230 = 0.5 (core_globals.c 定义), DAT_140125238 -> g_fontMinus0 = -0.0 */
+/* 计算器栈写入辅助: 将值 param_3 写入栈元素 param_2 并递减栈指针 (param_1+4) */
+void FUN_14005bc48(int64_t param_1, double *param_2, double param_3)
+{ (void)param_1;(void)param_2;(void)param_3; }
+void FUN_14005bc5c(int64_t param_1, double *param_2, double param_3)
+{ (void)param_1;(void)param_2;(void)param_3; }
+/* 取计算器栈顶当前值 (取模运算种子) */
+uint64_t FUN_14005e0a0(void) { return 0; }
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_1400987ec Win10 开始菜单/任务栏 PINT 固定)
+        新增全局槽与缺失 helper/WinAPI 桩 ----
+   ※ 全局槽初始值取自已提取 PECMD.exe 映像(静态清零区, 初值 0).
+   ============================================================ */
+uint32_t DAT_14013a848;                    /* PINT 固定方向/标志(用户注册表缓存, 初 0) */
+uint32_t DAT_14013e1f0;                    /* PINT 一次性清理注册标志位 */
+int64_t  DAT_14013e1e8;                    /* (后台清理槽, 无初始化) */
+int64_t  DAT_14013e1e0;
+int64_t  DAT_14013e1d8;
+int64_t  DAT_14013e1d0;
+uint8_t  DAT_14011c638[64];                /* 默认命令串缓存区(静态, 初 0) */
+
+/* 缺失 helper 桩 (无调用方校验, 仅满足符号) */
+uint64_t FUN_14005ea5c(void) { return 0; }                      /* 取命令行模式标志 */
+uint64_t FUN_14001b7f4(const uint16_t *a) { (void)a; return (uint64_t)-1; }  /* 注册表读取值 */
+void     FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void *e, uint32_t f, uint32_t g, void *h) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; }
+void    *FUN_14005b374(void *a, int16_t b, int16_t c) { (void)a;(void)b;(void)c; return a; } /* 行切分 */
+void     FUN_14006b684(int64_t *a, void *b, int c) { (void)a;(void)b;(void)c; }              /* 串填充 */
+uint64_t FUN_1400048c4(int64_t *a) { (void)a; return 0; }
+void     FUN_1400607a4(const uint16_t *a, const uint16_t *b, int c) { (void)a;(void)b;(void)c; }
+void    *FUN_140017770(void *a, const char *b) { (void)a;(void)b; return (void *)0; }        /* 命名互斥/事件 */
+void     FUN_1400177b8(void *a) { (void)a; }                                                 /* 释放互斥/事件 */
+uint32_t FUN_14000bfcc(uint64_t a, uint64_t b, const uint16_t *c) { (void)a;(void)b;(void)c; return 0; } /* 执行固定操作 */
+/* WinAPI 桩: 资源串读取 / CRT atexit */
+uint64_t LoadStringA(void){ return 0; }
+int      atexit(void (*fn)(void)) { (void)fn; return 0; }
+/* FUN_14005b540 — 去除串内前导/尾随空白 (FUN_1400987ec 使用) */
+void     FUN_14005b540(uint16_t *a, int b) { (void)a;(void)b; }
