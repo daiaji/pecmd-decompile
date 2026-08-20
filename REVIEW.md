@@ -3411,3 +3411,10 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 ### 结论
 "待原二进制"仅适用于 **③ + ②中那些"取值未知的数据常量"**；②的主体（body+依赖链）**可继续静态还原**。
 后续路线：不提供二进制时，可继续把②类逐层还原（常量标 TODO、每步 build/link 绿），③类维持登记。
+## 88. Item2 Tier 批次（用户"三档全推"）
+- b3 tier 8/11 真体：05ce04(图标资源加载)/061dac/062bdc(GDI+渲染,补4槽)/072924/073934(修复wsprintfW/const)/
+  077190/081238/097150；076b88/07fe3c/097714 仍桩（代理中途失败，待补跑）。
+- helpers tier 5/7：05b374 跳字符/0675b8+0676e4 分隔取词/06923c 字节→宽hex/07f6e4 取词赋变量；
+  0693c0(缺LCMapStringA)/075c7c(缺01b4f8+05dff4) SKIP 登记。
+- b1 tier 9：代理判定多依赖全局映射存疑（01708c=CRT printf shim 等），b1_remaining 未落改，SKIP 登记。
+- 修 link_stubs `uint`(SetupDi桩)。build/link 全绿（git 64）。
