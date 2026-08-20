@@ -871,6 +871,11 @@ uint64_t TlsGetValue(void) { return 0; }
 uint64_t WriteConsoleW(void) { return 0; }
 uint8_t DAT_140124100[64];   /* 磁盘类型/分区对照表(未实现) */
 uint64_t FUN_1400630d0(void){ return 0; }
+/* ---- Tier 依赖预补 ---- */
+uint64_t LCMapStringA(void){ return 0; }
+uint64_t DAT_14013a360;   /* 48位随机种子 */
+uint32_t FUN_14001b4f8(int16_t *s, int16_t ch){ int32_t i; for(i=0; s[i]!=ch; i++){} return (uint32_t)(uint32_t)(int32_t)i; }
+void FUN_14005dff4(void){ DAT_14013a360 = (DAT_14013a360 * 0x5deece66d + 0xb) & 0xffffffffffff; }
 /* DATA globals */
 int64_t   DAT_14013d870;          /* bitmap data size */
 /* function-pointer slots */
