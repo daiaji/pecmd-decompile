@@ -3426,3 +3426,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
   00cedc(缺 thunk)/01708c(CRT shim)。
 - 补 link_stubs：RegLoadKeyW/RegUnLoadKeyW/两个 .rdata 模板(u_____C__140126e88, ram0x000140126e90, TODO(verify))/d388 槽。
 - 全绿：build 0 FAIL / link 0 undef。累计还原真实现 ~33（新 8：076b88/07fe3c/097714/0693c0/00397c/0056bc/006660/01af7c）。
+## 90. 最后 2 个可行还原（075c7c/00cedc）+ 本路收官
+- 075c7c：BIG5 字符名表解码/重排（PRNG 随机选行、XOR 解密、LCMapStringW zh-CN 大小写映射、回写；SUB168/164=64位取模）。
+- 00cedc：表项注册（"opt 名=值"解析、命令表5 增删改（含时间日期改写段）、临界区保护）。
+- 依赖全部补桩可解析；build/link 全绿。累计还原真实现 ~35。
+- 剩余（登记）：0060b8/008d9c/00c764 需原二进制数据表(SID/服务名/PTR_PTR)、01708c CRT shim、巨型混淆(08cffc 等)。

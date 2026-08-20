@@ -44,6 +44,8 @@ extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x14006
 extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len); /* @0x1400702d4 */
 extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags); /* @0x14003c06c */
 extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);     /* @0x14006375c */
+extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);     /* @0x140018b70 */
+extern void thunk_FUN_1400f429c(WCHAR **pp, WCHAR delim); /* @0x1400f429c 分隔符扫描 thunk */
 extern LARGE_INTEGER FUN_14004c0bc(uint64_t script, LARGE_INTEGER cmd,
                                    void *p3, void *p4, void *p5); /* @0x14004c0bc */
 extern void *g_pQueryServiceStatusEx;                                 /* QueryServiceStatusEx 槽 */
@@ -4345,12 +4347,156 @@ uint8_t FUN_14000c764(LPWSTR param_1)
 
 void FUN_14000cedc(WCHAR *param_1, int64_t *param_2)
 {
-    /* SKIP @0x14000cedc size=961 — 注册表/环境变量项注册: 解析 "opt 名=值"、
-     * 处理 CALL $ 子串展开、在临界区 g_csInit 内更新命令表5 (g_cmdTable5)。
-     * 依赖 thunk_FUN_1400f429c (分隔符扫描 thunk) 未定义(项目仅 FUN_1400f429c),
-     * 按任务规则 SKIP, 保存 NO-OP 桩。*/
-    (void)param_1;
-    (void)param_2;
+    /* @0x14000cedc size=961 — 表项注册: 解析 "opt 名=值"; 支持 "opt *CALL $..." 时间格式:
+     * 先由 PECMD_ParseDateTimeSpec 解析 CALL $ 参数, 成功则把值重写为
+     * "值#,0x%p<尾部>" (%,后段经 '，' 分隔), 在临界区 g_csInit 内维护命令表5
+     * (g_cmdTable5: 每项 value,name 各占 0x10 字节两槽): 名已存在且值为空→删除该项
+     * (释放两槽并收缩长度), 值非空→覆盖; 不存在→FUN_140005818 依 (值,名) 顺序追加。
+     * 原 SKIP 因 thunk_FUN_1400f429c 未定义 — 现已桩齐, 恢复本体。 */
+    WCHAR WVar1;
+    int64_t *plVar2;
+    int bVar3;
+    char cVar5;
+    char cVar11;
+    int iVar6;
+    int iVar7;
+    int iVar12;
+    int64_t lVar4;
+    WCHAR *pWVar8;
+    int64_t _Var9;
+    int16_t sVar10;
+    uint64_t uVar13;
+    uint64_t uVar14;
+    uint64_t uVar15;
+    WCHAR *lpString1;
+    WCHAR *local_res8;
+    WCHAR *local_res18;
+    WCHAR *local_res20;
+    WCHAR *local_c8;
+    WCHAR *local_c0;
+    WCHAR *pPre;
+    WCHAR local_b8[64];
+
+    local_res8 = param_1;
+    FUN_14005B154(&local_res8);
+    cVar11 = '*';
+    if (*local_res8 == 0x2d) {
+        cVar11 = (char)*local_res8;
+    }
+    local_c0 = local_res8 + 1;
+    uVar13 = 0;
+    bVar3 = 0;
+    if (((int)cVar11 == (int)(uint16_t)*local_res8) &&
+        (cVar5 = FUN_1400660ac("opt", &local_c0, 3), cVar5 != 0)) {
+        bVar3 = 1;
+        local_res8 = local_c0;
+    }
+    lpString1 = local_res8;
+    pWVar8 = StrChrW((LPCWSTR)local_res8, L'=');
+    if (pWVar8 != (WCHAR *)0) {
+        *pWVar8 = L'\0';
+        local_res18 = pWVar8 + 1;
+        FUN_14005B154(&local_res18);
+        PECMD_StripTrailingSpaces((LPCWSTR)lpString1);
+        if (*lpString1 != L'\0') {
+            local_res20 = (WCHAR *)0;
+            local_c8 = local_res18;
+            if (bVar3 != 0 &&
+                (cVar5 = FUN_1400660ac("CALL", &local_c8, 4), cVar5 != 0) &&
+                *local_c8 == L'$') {
+                local_c8++;
+                FUN_14005B154(&local_c8);
+                if (*local_c8 != 0x3f) {
+                    FUN_1400703e4(&local_res20, (LPCWSTR)local_c8);
+                    _Var9 = (int64_t)PECMD_ParseDateTimeSpec((void *)param_2,
+                                                            (void *)local_res20,
+                                                            0x10, (void *)0);
+                    if (_Var9 != 0) {
+                        local_res8 = local_c8;
+                        if ((*local_c8 == L'-') || (*local_c8 == L'*')) {
+                            cVar11 = (char)*local_c8;
+                        }
+                        while (((int)cVar11 == (int)(uint16_t)*local_res8) &&
+                               ((int)cVar11 == (int)(uint16_t)local_res8[1])) {
+                            for (; (WVar1 = *local_res8,
+                                    WVar1 != L'\0' &&
+                                    ((((uint16_t)WVar1 < 9) ||
+                                      (0xd < (uint16_t)WVar1)) &&
+                                     (WVar1 != L' ')));
+                                 local_res8++) {
+                            }
+                            FUN_14005B154(&local_res8);
+                        }
+                        sVar10 = 0x2c;
+                        pPre = local_res8;
+                        thunk_FUN_1400f429c(&local_res8, 0x2c);
+                        local_res8++;
+                        thunk_FUN_1400f429c(&local_res8, sVar10);
+                        _Var9 = (int64_t)(uintptr_t)local_res8;
+                        PECMD_StrCopyW(&local_res20, (LPCWSTR)local_res18,
+                                       (int64_t)((uintptr_t)pPre -
+                                                 (uintptr_t)local_res18) >> 1);
+                        wsprintfW(local_b8, WSTR("#,0x%p"));
+                        FUN_14006375C(&local_res20, local_b8);
+                        FUN_14006375C(&local_res20, (LPCWSTR)(uintptr_t)_Var9);
+                        local_res18 = local_res20;
+                    }
+                }
+            }
+            EnterCriticalSection(&g_csInit);
+            iVar6 = g_cmdTable5Len / 2;
+            if (0 < iVar6) {
+                uVar14 = 0;
+                uVar15 = 0;
+                do {
+                    iVar7 = lstrcmpiW((LPCWSTR)lpString1,
+                                      (LPCWSTR)**((uintptr_t **)((uintptr_t)g_cmdTable5 +
+                                                                  8 + uVar14)));
+                    lVar4 = (int64_t)(uintptr_t)g_cmdTable5;
+                    iVar12 = (int)uVar13;
+                    if (iVar7 == 0) {
+                        if ((local_res18 == (WCHAR *)0) || (*local_res18 == L'\0')) {
+                            iVar12 = iVar12 * 2;
+                            plVar2 = *(int64_t **)((uintptr_t)g_cmdTable5 +
+                                                   (uint64_t)iVar12 * 8);
+                            if (plVar2 != (int64_t *)0) {
+                                FUN_14005B104((WCHAR **)plVar2);
+                                free(plVar2);
+                            }
+                            plVar2 = *(int64_t **)((uintptr_t)g_cmdTable5 + 8 +
+                                                   (uint64_t)iVar12 * 8);
+                            if (plVar2 != (int64_t *)0) {
+                                FUN_14005B104((WCHAR **)plVar2);
+                                free(plVar2);
+                            }
+                            g_cmdTable5Len -= 2;
+                            if (iVar12 < g_cmdTable5Len) {
+                                iVar12 = g_cmdTable5Len;
+                            }
+                            *(uintptr_t *)((uintptr_t)lVar4 + 8 +
+                                           (uint64_t)iVar12 * 8) = 0;
+                            *(uintptr_t *)((uintptr_t)lVar4 +
+                                           (uint64_t)iVar12 * 8) = 0;
+                        } else {
+                            FUN_1400703e4((WCHAR **)((uintptr_t)g_cmdTable5 +
+                                                     (uint64_t)iVar12 * 0x10),
+                                          (LPCWSTR)local_res18);
+                        }
+                        goto LAB_14000d1e6;
+                    }
+                    uVar15++;
+                    uVar13 = (uint64_t)(iVar12 + 1);
+                    uVar14 += 0x10;
+                } while ((int64_t)uVar15 < (int64_t)iVar6);
+            }
+            FUN_140005818((int64_t *)&g_cmdTable5, (LPCWSTR)local_res18);
+            FUN_140005818((int64_t *)&g_cmdTable5, (LPCWSTR)lpString1);
+LAB_14000d1e6:
+            LeaveCriticalSection(&g_csInit);
+            FUN_14005B104(&local_res20);
+        }
+    }
+    return;
 }
 
 uint8_t PECMD_ParseEnvSwitches(const WCHAR *s, int64_t *param_2, short param_3)

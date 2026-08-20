@@ -1,6 +1,7 @@
 /* Helper stubs for DONE-classified functions still missing definitions. */
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "pecmd_defs.h"
 
@@ -25,6 +26,16 @@ extern WCHAR *FUN_140063620(WCHAR **out);                           /* @0x140063
 extern void  FUN_14005b104(void *ps);                               /* @0x14005b104 释放引用串容器 */
 extern void  FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
+
+/* ---- FUN_140075c7c (BIG5 字符名表解码/重排) 依赖 ---- */
+extern uint32_t FUN_14001b4f8(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
+extern void FUN_140063a6c(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
+extern void FUN_1400639f0(void **pdata, void **pend, int64_t *pcount,
+                          void *tmp, int size, int grow);           /* @0x1400639f0 表追加行 */
+extern WCHAR *FUN_140063694(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
+extern uint64_t FUN_14005dff4(void);                                /* @0x14005dff4 PRNG */
+extern void *FUN_140063224(void *ps, int64_t len);                  /* @0x140063224 输出串扩容 */
+extern void FUN_14005b0b8(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
 
 /* @0x14005b374 size=44 — 从 *pp 起跳过字符, 直到撞上 '\0'/ch1/ch2 (行切分定界) */
 void FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2)
@@ -254,14 +265,166 @@ LAB_done:
     return;
 }
 
-/* @0x140075c7c size=797 — BIG5 字符名表解码/重排: 按 uVar19 切行, PRNG(FUN_14005dff4) 选行,
- * 行内 XOR uVar19 解密 + LCMapStringW 大小写映射, 写回 *param_2 输出串。
- * SKIP: 依赖 FUN_140063224(输出串扩容)、LCMapStringW 全项目无定义 (link_stubs.c 仅备
- * LCMapStringA), FUN_14001d78c 亦仅注释注明为 memcpy 库替换; SUB168/SUB164 实为
- * 64 位取模伪影可普通书写, 但缺符号硬阻断链接, 保持桩不误报. */
-uint64_t FUN_140075c7c(void)
+/* @0x140075c7c size=797 — BIG5 字符名表解码/重排: 以 uVar19(参4) 定位节首(puVar10),
+ * 节内行以 (uVar19^10) 为分隔符经 FUN_1400639f0 收集入 0x28 字节行表(行串指针+行长),
+ * PRNG(FUN_14005dff4) 随机抽未处理行, 行串 XOR uVar19 解密, ASCII 前缀直拷 + 余段
+ * LCMapStringW(zh-CN) 映射, 再 XOR 回密存入行表输出槽; 循环至全表处理完, 按表序级联
+ * 写入 *param_2 并在尾部附 uVar19 封口返回。SUB168/SUB164 为 64 位取模伪影, 已按
+ * uint64 取模书写。 */
+uint64_t FUN_140075c7c(uint16_t *param_1, WCHAR **param_2, int param_3, int param_4)
 {
-    return 0;
+    uint16_t uVar19;
+    uint64_t uVar4;
+    uint64_t uVar7;
+    uint64_t uVar8;
+    uint64_t uVar14;
+    uint64_t uVar17;
+    uint8_t *puVar10;
+    uint8_t *puVar12;
+    uint8_t *puVar13;
+    uint32_t local_res18;
+    int iVar3;
+    int iVar16;
+    int iVar20;
+    int iVar21;
+    int64_t lVar11;
+    WCHAR WVar2;
+    WCHAR *pWVar1;
+    WCHAR *pWVar9;
+    WCHAR *pWVar15;
+    WCHAR *lpDestStr;
+    WCHAR *lpSrcStr;
+    WCHAR *local_98;
+    uint8_t *local_90;
+    uint8_t *local_88;
+    int64_t *plVar18;
+    int local_80[2] = {0, 0};
+    uint64_t local_78;
+    uint8_t *local_70;
+    int64_t local_68;
+
+    uVar19 = (uint16_t)param_4;
+    uVar7 = FUN_14001b4f8((int16_t *)param_1, (int16_t)uVar19);
+    local_78 = 0;
+    puVar10 = (uint8_t *)&param_1[(size_t)uVar7];
+    uVar17 = uVar7 & 0xffffffff;
+    memset(&local_70, 0, 0x20);
+    FUN_140063a6c((void **)&local_90, (void **)&local_88, local_80, 0x28);
+    uVar14 = 0x400;
+    puVar13 = puVar10;
+    if (param_4 != 0) goto LAB_140075d12;
+    while (1) {
+        local_68 = (int64_t)(int)uVar17;
+        local_70 = (uint8_t *)param_1;
+        FUN_1400639f0((void **)&local_90, (void **)&local_88, (int64_t *)local_80,
+                      (void *)&local_78, 0x28, 0x400);
+        (void)local_68;
+        param_1 = (uint16_t *)puVar13;
+        if ((int)uVar14 < (int)uVar17) {
+            uVar14 = uVar17 & 0xffffffff;
+        }
+    LAB_140075d12:
+        puVar12 = (uint8_t *)param_1;
+        if (puVar10 <= puVar12) break;
+        do {
+            puVar13 = puVar12 + 1;
+            if ((uVar19 ^ 10) == *(uint16_t *)puVar12) break;
+            puVar12 = puVar13;
+        } while (puVar13 < puVar10);
+        uVar17 = ((uint64_t)(puVar13 - (uint8_t *)param_1)) >> 1;
+    }
+    FUN_140063694(&local_98, (int64_t)((int)uVar14 + 0x1a + (int)uVar7));
+    uVar17 = 0;
+    iVar21 = 0;
+    uVar7 = (uint64_t)local_80[0];
+    local_res18 = 0;
+    if (local_80[0] < 1) goto LAB_140075f08;
+LAB_140075dbb:
+    uVar8 = FUN_14005dff4();                 /* PRNG 选行起点 (SUB168/SUB164=64位取模伪影) */
+    uVar8 = uVar8 % uVar7;
+    lVar11 = (int64_t)uVar8;
+    if (lVar11 < (int64_t)uVar7) {
+        plVar18 = (int64_t *)(local_90 + (uint64_t)lVar11 * 0x28);
+        do {
+            if (plVar18[0] == 0) {
+                local_res18++;
+                lVar11 = (int64_t)(int)uVar8;
+                iVar3 = *(int *)(local_90 + (uint64_t)lVar11 * 0x28 + 0x10);
+                *(uint64_t *)(local_90 + (uint64_t)lVar11 * 0x28) = 1;
+                memcpy(local_98, *(void **)(local_90 + (uint64_t)lVar11 * 0x28 + 8),
+                       (size_t)iVar3 * 2);
+                pWVar1 = local_98 + iVar3;
+                pWVar15 = local_98 + (int)uVar14 + iVar21 + 10;
+                pWVar9 = local_98;
+                lpDestStr = pWVar15;
+                lpSrcStr = local_98;
+                if (local_98 < pWVar1) goto LAB_140075e4c;
+                goto LAB_140075e73;
+            }
+            lVar11++;
+            uVar8 = (uint64_t)((int)uVar8 + 1);
+            plVar18 += 5;
+        } while (lVar11 < (int64_t)uVar7);
+    }
+    goto LAB_140075efd;
+LAB_140075e4c:
+    do {
+        *pWVar9 = (WCHAR)(*pWVar9 ^ uVar19);
+        pWVar9++;
+    } while (pWVar9 < pWVar1);
+    do {
+        if (0x7f < (uint8_t)*lpSrcStr) break;
+        WVar2 = *lpSrcStr;
+        lpSrcStr++;
+        *lpDestStr = WVar2;
+        lpDestStr++;
+    } while (lpSrcStr < pWVar1);
+LAB_140075e73:
+    iVar16 = (int)(lpDestStr - pWVar15);
+    iVar20 = iVar3 - iVar16;
+    if (0 < iVar20 &&
+        (iVar20 = (int)LCMapStringW(0x20804,
+                                    (uint32_t)(-((uint32_t)(param_3 != 0)) & 0x2000000)
+                                        + 0x2000000,
+                                    (LPCWSTR)lpSrcStr, iVar20, (LPWSTR)lpDestStr,
+                                    iVar3 + iVar20),
+         0 < iVar20)) {
+        iVar16 += iVar20;
+    }
+    memset(local_98, 0, (size_t)iVar3 * 2);
+    iVar21 += iVar16;
+    *(WCHAR **)(local_90 + (uint64_t)lVar11 * 0x28 + 0x18) = pWVar15;
+    *(int64_t *)(local_90 + (uint64_t)lVar11 * 0x28 + 0x20) = (int64_t)iVar16;
+    if (0 < iVar16) {
+        while (iVar16 = iVar16 - 1, -1 < iVar16) {
+            *pWVar15 = (WCHAR)(*pWVar15 ^ uVar19);
+            pWVar15++;
+        }
+    }
+    uVar17 = (uint64_t)local_res18;
+LAB_140075efd:
+    if (local_80[0] <= (int)uVar17) goto LAB_140075f08;
+    goto LAB_140075dbb;
+LAB_140075f08:
+    puVar10 = (uint8_t *)FUN_140063224((void *)*param_2,
+                                       (int64_t)(iVar21 + 0x11) * 2 + 2);
+    *param_2 = (WCHAR *)puVar10;
+    if (0 < (int64_t)uVar7) {
+        plVar18 = (int64_t *)(local_90 + 0x20);
+        do {
+            memcpy(puVar10, (void *)plVar18[-1], (size_t)((int)plVar18[0]) * 2);
+            lVar11 = plVar18[0];
+            plVar18 += 5;
+            uVar7--;
+            puVar10 += (size_t)lVar11 * 2;
+        } while (uVar7 != 0);
+    }
+    *(uint16_t *)puVar10 = uVar19;
+    FUN_14005b0b8((void *)local_98);
+    uVar4 = (uint64_t)(uintptr_t)*param_2;
+    FUN_14005b104((void *)&local_98);
+    FUN_14005b104((void *)&local_90);
+    return uVar4;
 }
 
 /* @0x14007f6e4 size=127 — 按分隔符取 token 赋值变量, 推进游标并返回其+2 */
