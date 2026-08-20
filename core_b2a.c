@@ -132,7 +132,8 @@ void PECMD_InitIfOldSystem(void)
 }
 
 /* ========== FUN_140035b08 @0x140035b08 ==========
- * 文件大小/位置包装, mode=1。
+ * @0x140035b08 size=25 — 文件大小/位置包装(asm→C): 纯尾调用包装,
+ *   将第4参(r8)移入第4槽(r9)、置第3参 r8b=1, call PECMD_BuildImDiskMenu。
  */
 void FUN_140035b08(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
@@ -141,7 +142,8 @@ void FUN_140035b08(int64_t *obj, ULARGE_INTEGER pos,
 }
 
 /* ========== FUN_140035b24 @0x140035b24 ==========
- * 文件大小/位置包装, mode=0。
+ * @0x140035b24 size=25 — 文件大小/位置包装(asm→C): 同 b08, 第3参 xor r8d=0,
+ *   call PECMD_BuildImDiskMenu。
  */
 void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
@@ -150,12 +152,13 @@ void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
 }
 
 /* ========== FUN_140037b84 @0x140037b84 ==========
- * 窗口过程转发到 FUN_140028A00(应用数据基址, ...)。
+ * @0x140037b84 size=35 — 窗口过程转发(asm→C): rcx=DAT_14013cfb0(g_pAppData),
+ *   rdx=hwnd, r8d=msg, r9=hdc, [rsp+0x20]=wnd,
+ *   call FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd)。
  */
 void FUN_140037b84(HWND hwnd, uint32_t msg, HDC hdc, HWND wnd)
 {
-    /* UNIMPLEMENTED @0xFUN_140037b84 — decompile-failed, body 未还原 */
-FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd);
+    FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd);
 }
 
 /* ========== PECMD_ScriptWndProc @0x14003892c ==========

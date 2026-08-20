@@ -2121,10 +2121,51 @@ static void FUN_140070310(LPCWSTR *dst, LPCWSTR *src)
     }
 }
 
-static void FUN_140009068(int64_t *tbl, LPCWSTR name, LPCWSTR value)
+/* @0x140009068 size=372 — 扫描 param_2 所给目录中的 *.PEI 插件:
+ * 对每个非目录文件加载 DLL, 取 "PECMDTBL" 导出(前 4B 为条目数), 把其后的
+ * 条目表(每条 0x18 字节)追加进命令表1 (param_1→&g_cmdTable1Count, 偏移 0x08 为
+ * &g_cmdTable1 表指针槽)。 */
+static void FUN_140009068(int *param_1, LPCWSTR param_2, LPCWSTR param_3)
 {
-    /* SKIP @0x140009068 size=372 — .pecmdplugin.*.PEI 注册进命令表1; 原体未还原, 桩 */
-    (void)tbl; (void)name; (void)value;
+    BOOL BVar1;
+    HMODULE hModule;
+    void *pFVar2;
+    HANDLE hFind;
+    WCHAR *local_260;
+    WIN32_FIND_DATAW local_258;
+
+    memset(&local_258.ftCreationTime, 0, 0x24c);
+    hFind = (HANDLE)0;
+    PECMD_FindFirstFileW(&hFind, param_2, &local_258);
+    if (hFind != (HANDLE)0) {
+        do {
+            if ((local_258.dwFileAttributes & 0x10) == 0) {
+                FUN_1400702B0(&local_260, param_3);
+                FUN_14006375C(&local_260, local_258.cFileName);
+                hModule = LoadLibraryW(local_260);
+                if (hModule != (HMODULE)0) {
+                    pFVar2 = GetProcAddress(hModule, "PECMDTBL");
+                    if ((pFVar2 != (void *)0) && (0 < *(int *)pFVar2)) {
+                        PECMD_GrowByteBuffer((void **)(param_1 + 2),
+                                             (long long)((*(int *)pFVar2 + *param_1) * 0x18));
+                        memcpy((char *)(*(long long *)(param_1 + 2) + (long long)*param_1 * 0x18),
+                               (char *)pFVar2 + 8, (size_t)(*(int *)pFVar2 * 0x18));
+                        *param_1 = *param_1 + *(int *)pFVar2;
+                        FUN_14005B104(&local_260);
+                        goto next_entry;
+                    }
+                    FreeLibrary(hModule);
+                }
+                FUN_14005B104(&local_260);
+            }
+        next_entry:
+            BVar1 = FindNextFileW(hFind, &local_258);
+            if (BVar1 == 0) break;
+        } while (hFind != (HANDLE)0);
+        if ((hFind != (HANDLE)0) && (hFind != (HANDLE)0xffffffffffffffff)) {
+            FindClose(hFind);
+        }
+    }
 }
 
 /* ---- 真值数据 (取值自 PECMD原始.EXE .data/.rdata) ---- */
@@ -4702,7 +4743,7 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
         puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".pecmdplugin.*.PEI"));
-        FUN_140009068((int64_t *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
+        FUN_140009068((int *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
         puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dll"));

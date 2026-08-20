@@ -11,6 +11,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp);              /* @0x14005b154 */
 /* --- helper symbols referenced by restored bodies below --- */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 分配清零槽数组 */
 extern bool  FUN_1400c11c0(WCHAR **pp, int *out);                   /* @0x1400c11c0 */
+extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
 extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                              int namelen, void **found);            /* @0x140018978 */
 extern int64_t *FUN_14001e5b0(int64_t *script, LPCWSTR name, LPCWSTR text,
@@ -146,11 +147,14 @@ int PECMD_BytesToHexStr(WCHAR **out, LPCSTR src, int len)
     return 1;
 }
 
-uint64_t FUN_1400692d8(void)
+/* @0x1400692d8 size=58 — WCHAR 串 → 十六进制串包装: len<1 先取串长,
+ * 再以 len*2 字节长度调 PECMD_BytesToHexStr(@0x14006923c) 转 "0x%02X " 宽串 */
+void FUN_1400692d8(WCHAR **ps, LPCWSTR src, int len)
 {
-    /* UNIMPLEMENTED @0xFUN_1400692d8 — decompile-failed, body 未还原 */
-/* @0x1400692d8 size=58 */
-    return 0;
+    if (len < 1) {
+        len = lstrlenW(src);
+    }
+    PECMD_BytesToHexStr(ps, (LPCSTR)src, len * 2);
 }
 
 /* @0x140069314 WCHAR串→字节缓冲(仅保留十进制数字, 每数字1字节), 返回字节数 */
@@ -440,9 +444,15 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
     return cursor + 2;
 }
 
-uint64_t FUN_1400a9a84(void)
+/* @0x1400a9a84 size=36 — 解析一个值(成功时推进 *pp)再越过 1 个字符;
+ * 返回值沿用 FUN_1400745c8 的解析结果(ABI: ret 时 RAX 未改) */
+uint64_t FUN_1400a9a84(int64_t *pp, uint64_t *out)
 {
-    /* UNIMPLEMENTED @0xFUN_1400a9a84 — decompile-failed, body 未还原 */
-/* @0x1400a9a84 size=36 */
-    return 0;
+    uint64_t v;
+
+    v = FUN_1400745c8((WCHAR **)pp, out);
+    if (*(short *)(uintptr_t)*pp != 0) {
+        *pp = (int64_t)((short *)(uintptr_t)*pp + 1);
+    }
+    return v;
 }
