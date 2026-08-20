@@ -46,15 +46,15 @@ extern int32_t FUN_14005B184(const char *a, const char *b, int n);/* @0x14005b18
 extern void    FUN_14005B0B8(void *p, size_t len);               /* @0x14005b0b8 */
 
 /* ---- 未实现 (extern + TODO(verify)) ---- */
-extern int64_t *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
+extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
     /* @0x14007f6e4 按分隔符切分串, token 存 out, *pp 停在分隔符 */
-extern void FUN_1400675b8(int64_t *src, WCHAR **dst, int mode);
+extern void PECMD_SplitTokenTrimWs(int64_t *src, WCHAR **dst, int mode);
     /* @0x1400675b8 串拷入容器 */
-extern void FUN_1400676e4(int64_t *src, WCHAR **dst, int mode);
+extern void PECMD_ExtractTokenByDelim(int64_t *src, WCHAR **dst, int mode);
     /* @0x1400676e4 串拷入容器 (变体) */
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
     /* @0x140003a20 取脚本当前命令串 */
-extern void FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2);
+extern void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2);
     /* @0x14005b374 查找两字符之一, *pp 停在字符或串尾 */
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
     /* @0x1400f429c thunk: 查找字符, *pp 停在字符或串尾 */
@@ -70,12 +70,12 @@ extern int PECMD_WcharToByteDigits(void *out, LPCWSTR src);
     /* @0x140069314 WCHAR 串→字节缓冲, 返回字节数 */
 extern void FUN_1400692d8(WCHAR **ps, LPCWSTR src, int len);
     /* @0x1400692d8 追加 len 字节到串 */
-extern void FUN_14006923c(WCHAR **ps, LPCSTR src, int len);
+extern void PECMD_BytesToHexStr(WCHAR **ps, LPCSTR src, int len);
     /* @0x14006923c 追加 len 字节 (字节→WCHAR) 到串 */
 extern void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
                           int64_t *pkey, char mode);
     /* @0x140075148 按行写变量 */
-extern void FUN_1400693c0(LPCSTR src, WCHAR **out, uint32_t isBIG5);
+extern void PECMD_MapStringByLocale(LPCSTR src, WCHAR **out, uint32_t isBIG5);
     /* @0x1400693c0 GBK/BIG5 字节重映射 */
 
 /* ---- .rdata BOM 常量 ---- */
@@ -139,8 +139,8 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
     PECMD_AllocWStringBuffer(&sArg3, 0);
     PECMD_AllocWStringBuffer(&sArg4, 0);
     pTok = args;
-    plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);   /* 切首 token */
-    FUN_1400675b8(plVar9, &sTok, 0);
+    plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);   /* 切首 token */
+    PECMD_SplitTokenTrimWs(plVar9, &sTok, 0);
 
     /* ---- 首 token 末空白处截断: 前面是 *标志, 后面是文件名 ---- */
     {
@@ -196,18 +196,18 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
         pSplit = pTok + 1;
         if (*pTok == 0x2c) {
             pTok = pSplit;
-            plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);
-            FUN_1400676e4(plVar9, &sArg2, 0);
+            plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);
+            PECMD_ExtractTokenByDelim(plVar9, &sArg2, 0);
             if (*pTok == 0x2c) {
                 pTok = pTok + 1;
-                plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);
-                FUN_1400675b8(plVar9, &sArg3, 0);
+                plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);
+                PECMD_SplitTokenTrimWs(plVar9, &sArg3, 0);
             }
         }
         if (*pTok == 0x2c) {
             pTok = pTok + 1;
-            plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);
-            FUN_1400675b8(plVar9, &sArg4, 0);
+            plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);
+            PECMD_SplitTokenTrimWs(plVar9, &sArg4, 0);
         }
         if ((*sTok == 0) || (*sArg2 == 0) || (*sArg3 == 0) || (*sArg4 == 0)) {
             FUN_14005B104(&sArg4);
@@ -341,8 +341,8 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
 
             pSplit = pTok;                        /* local_c0 */
             pTok = pSplit;
-            plVar9 = FUN_14007f6e4(&bufScr, &pTok, 0x2c, 1);
-            FUN_1400675b8(plVar9, &sArg2, 0);
+            plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);
+            PECMD_SplitTokenTrimWs(plVar9, &sArg2, 0);
             fn = FUN_14001BE14(sArg2);
             PECMD_OpenFileHandle(&hFile, fn, 0x80000000, 7, NULL, 3, 0x80, 0);
             if (hFile != 0) {
@@ -557,7 +557,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 dataMode = 0;
                 if (flTrans) dataMode = 3;
                 PECMD_AllocSmallObject((void **)&sStr3);
-                FUN_1400693c0((LPCSTR)data, &sStr3, (uint32_t)(dstCp == 0x3b6));
+                PECMD_MapStringByLocale((LPCSTR)data, &sStr3, (uint32_t)(dstCp == 0x3b6));
                 old = data;
                 data = (uint8_t *)sStr3;
                 sStr3 = (WCHAR *)old;
@@ -618,7 +618,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                                               (int64_t *)&sArg4, '\0');
                                 goto L_ab5e;
                             }
-                            FUN_14006923c(&sStr, (LPCSTR)mb, (int)datalen);
+                            PECMD_BytesToHexStr(&sStr, (LPCSTR)mb, (int)datalen);
                             FUN_1400629B8(script, sArg4, sStr);
                             goto L_ab5e;
                         }
@@ -702,7 +702,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
         FUN_140003A20(script, &sLine, 0);
         n1 = -1;
         pSep = sLine;
-        FUN_14005b374(&pSep, 0x7c, 0x2a);      /* 找 '|' 或 '*' */
+        PECMD_SkipUntilDelim(&pSep, 0x7c, 0x2a);      /* 找 '|' 或 '*' */
         pAfter = pSep;
         if (*pSep != 0) {
             *pSep = 0;

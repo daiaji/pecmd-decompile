@@ -53,13 +53,13 @@ extern void    FUN_1400702b0(WCHAR **ps, const WCHAR *src);          /* 串赋�
 extern int64_t FUN_1400545f8(int64_t *ctx, int64_t *pp, int64_t *out,
                              int16_t c1, int16_t c2);
 extern int64_t FUN_14007a224(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);
-extern void    FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 */
+extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 */
 extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);
 extern void    FUN_14005b104(void *ps);                               /* 释放字符串槽 */
 extern void    FUN_1400633a8(void **ps, int64_t len);                 /* 分配槽 */
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);              /* 分配串 (StrAlloc) */
 extern void    PECMD_ParseSignedNumberStr(void *pp, void *out, int16_t sep);       /* 数值解析 */
-extern int64_t *FUN_14007f6e4(WCHAR **src, WCHAR **pp, uint16_t sep, int mode);
+extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **src, WCHAR **pp, uint16_t sep, int mode);
 extern void    PECMD_AllocSmallObject(void *pp);                               /* 小对象分配 */
 extern WCHAR  *FUN_1400f429c(WCHAR **pp, uint16_t ch);                /* 分隔符扫描 */
 extern void    PECMD_GenerateTimeText(LPCWSTR a, int64_t *out, LPCWSTR b,
@@ -290,7 +290,7 @@ uint64_t PECMD_WriteVarTruncated(int64_t *param_1, LPCWSTR param_2)
         FUN_14005b104(&local_38);
         return 0;
     }
-    FUN_1400675b8((int64_t *)local_res10, (int64_t *)&local_38, 0x3d);
+    PECMD_SplitTokenTrimWs((int64_t *)local_res10, (int64_t *)&local_38, 0x3d);
     FUN_140003a20(param_1, &local_38, 0);
     if (*local_38 != L'\0') {
         if (*local_res10[0] == L'=') {
@@ -369,7 +369,7 @@ uint64_t PECMD_SetVarRange(int64_t *param_1, LPCWSTR param_2)
         FUN_14005b104(&local_38);
         return 0;
     }
-    FUN_1400675b8((int64_t *)local_res10, (int64_t *)&local_38, 0x3d);
+    PECMD_SplitTokenTrimWs((int64_t *)local_res10, (int64_t *)&local_38, 0x3d);
     FUN_140003a20(param_1, &local_38, 0);
     if (*local_38 != L'\0') {
         if (*local_res10[0] == L'=') {
@@ -566,7 +566,7 @@ LAB_0a0f9b:
     }
     local_88 = (LPCWSTR)0;
     FUN_140063620((WCHAR **)&local_90);
-    FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_b0, 0x3d);
+    PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_b0, 0x3d);
     FUN_140003a20(param_1, &local_b0, 1);
     local_a0 = local_b0;
     local_78 = local_b0;
@@ -1123,7 +1123,7 @@ LAB_14009dd92:
   if (*(WCHAR *)(uintptr_t)local_60 == L',') {
     FUN_140063620((WCHAR **)&local_b0);
     local_res10 = (uint64_t)((int64_t)local_res10 + 2);
-    FUN_1400675b8((int64_t *)&local_res10, &local_b0.QuadPart, 0x2c);
+    PECMD_SplitTokenTrimWs((int64_t *)&local_res10, &local_b0.QuadPart, 0x2c);
     local_a8 = local_b0;
     LVar10 = local_b0;
     uVar8 = FUN_14005c7c4("*r", (const WCHAR *)(uintptr_t)local_b0.QuadPart);
@@ -1167,7 +1167,7 @@ LAB_14009dd92:
     FUN_14005b104((void *)&local_b0.QuadPart);
     if (*(WCHAR *)(uintptr_t)local_res10 == L',') {
       local_res10 = (uint64_t)((int64_t)local_res10 + 2);
-      FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_b8, 0x2c);
+      PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_b8, 0x2c);
     }
   }
 
@@ -1970,8 +1970,8 @@ LAB_14009f25f:
     FUN_1400702b0((WCHAR **)&local_98, WSTR("+0"));
     local_88.QuadPart = 0;
     local_a8.QuadPart = 0;
-    plVar14 = FUN_14007f6e4((WCHAR **)&local_58, (WCHAR **)&local_res10.QuadPart, 0x2c, 1);
-    FUN_1400675b8(plVar14, (int64_t *)&local_90, 0);
+    plVar14 = PECMD_SplitTokenAssignVar((WCHAR **)&local_58, (WCHAR **)&local_res10.QuadPart, 0x2c, 1);
+    PECMD_SplitTokenTrimWs(plVar14, (int64_t *)&local_90, 0);
     pWVar15 = FUN_14001be14((WCHAR *)local_90);
     local_78 = pWVar15;
     if (*pWVar15 == L'\0') {
@@ -1986,8 +1986,8 @@ LAB_14009f25f:
         local_res10.QuadPart = local_res10.QuadPart + 2;
         FUN_14005b154((WCHAR **)&local_res10.QuadPart);
         if ((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart != uVar26) {
-            plVar14 = FUN_14007f6e4((WCHAR **)&local_58, (WCHAR **)&local_res10.QuadPart, uVar26, 1);
-            FUN_1400675b8(plVar14, (int64_t *)&local_98, 0);
+            plVar14 = PECMD_SplitTokenAssignVar((WCHAR **)&local_58, (WCHAR **)&local_res10.QuadPart, uVar26, 1);
+            PECMD_SplitTokenTrimWs(plVar14, (int64_t *)&local_98, 0);
             uVar27 = 0x2c;
             uVar26 = 0x2c;
             if ((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart != 0x2c) goto LAB_14009f52b;

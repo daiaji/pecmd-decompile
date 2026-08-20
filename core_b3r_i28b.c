@@ -36,9 +36,9 @@ extern WCHAR    *FUN_14005b154(WCHAR **pp);                /* @0x14005b154 skip 
 extern void      FUN_1400702b0(void *ps, const WCHAR *src);/* @0x1400702b0 assign */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
 extern void      FUN_14005b104(void *ps);                   /* @0x14005b104 free slot */
-extern void      FUN_1400675b8(void *src, void *dst, int16_t delim); /* split list */
+extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      FUN_140003a20(void *script, void *str, int mode);   /* expand */
-extern int64_t  *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
+extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
@@ -63,7 +63,7 @@ extern WCHAR    *FUN_14001be14(WCHAR *s);                           /* tag looku
 extern void      FUN_1400639f0(int64_t *, int64_t *, int64_t *, void *, int, int);
 extern int64_t   FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d);
 extern uint64_t *PECMD_CopyStrToSlot(uint64_t **pp, uint64_t *arg);
-extern double    FUN_140064694(int64_t *param_1, int64_t *param_2, uint8_t *param_3);
+extern double    PECMD_WideStrToDouble(int64_t *param_1, int64_t *param_2, uint8_t *param_3);
 extern void      PECMD_FreeArray_ddf8(int64_t *param_1);                   /* list destroy */
 extern uint64_t  PECMD_ParseStringToken(int64_t *pp, uint64_t ctx, int64_t *out);
 extern bool      PECMD_MatchPrefixAdvance(const char *key, int64_t *pp, int len);
@@ -80,7 +80,7 @@ extern uint64_t  PECMD_DispatchCommandObject(WPARAM param_1, int64_t *param_2, i
 extern void      FUN_1400aaa4c(WPARAM param_1, longlong param_2, undefined8 *param_3,
                                int param_4, int param_5, int param_6, int param_7,
                                ushort *param_8, undefined8 *param_9, uint param_10);
-extern uint64_t  FUN_1400ac094(int64_t *param_1, int64_t *param_2, LPCWSTR param_3,
+extern uint64_t  PECMD_ProcessControlCommand(int64_t *param_1, int64_t *param_2, LPCWSTR param_3,
                                uint64_t param_4, int64_t param_5, uint32_t param_6,
                                int16_t *param_7, int64_t *param_8, int param_9,
                                uint64_t param_10);
@@ -97,11 +97,11 @@ extern int       FUN_14005f96c(HANDLE h, int sz);             /* 扇区大小 */
 extern uint64_t *FUN_14005feac(HANDLE h, uint64_t *buf, uint32_t *out);
 extern uint64_t  PECMD_ReadDiskSectorScan(uint64_t *p1, uint64_t *p2, uint32_t a, uint32_t b, uint32_t c,
                                uint64_t *d, LARGE_INTEGER e);
-extern int64_t   FUN_140078514(HANDLE h, int *p, int64_t *q);
+extern int64_t   PECMD_FindPartitionStartSector(HANDLE h, int *p, int64_t *q);
 extern uint8_t   PECMD_SetDriveMount(int64_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e,
                                uint32_t f, short *g, DWORD *h);
-extern int       FUN_1400695a8(int64_t a, int64_t b, int c, int d, int e);
-extern void      FUN_140076b88(int64_t a, LPWSTR b, uint c);
+extern int       PECMD_FindPartitionByGeometry(int64_t a, int64_t b, int c, int d, int e);
+extern void      PECMD_EnumDrivesToTable(int64_t a, LPWSTR b, uint c);
 
 /* ================================================================
  * @0x1400ab724  "SUB" 命令 (子过程调用/-sub 前缀) 
@@ -168,7 +168,7 @@ longlong PECMD_SubCommand(longlong *param_1, WCHAR *param_2, longlong *param_3)
         local_res10 = local_res10 + 1;
         FUN_14005b154((WCHAR **)&local_res10);
     }
-    FUN_1400675b8(&local_res10, &local_98, 0x2c);
+    PECMD_SplitTokenTrimWs(&local_res10, &local_98, 0x2c);
     FUN_140003a20(param_1, &local_98, 1);
     if (*local_res10 != L',') {
         FUN_14005b104(&local_60);
@@ -178,7 +178,7 @@ longlong PECMD_SubCommand(longlong *param_1, WCHAR *param_2, longlong *param_3)
         return -0x7ff8ffa9;
     }
     local_res10 = local_res10 + 1;
-    puVar6 = FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+    puVar6 = PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
     lpString = local_98;
     local_68 = (LPCWSTR)*puVar6;
     if (*local_res10 == L',') {
@@ -187,12 +187,12 @@ longlong PECMD_SubCommand(longlong *param_1, WCHAR *param_2, longlong *param_3)
     pWVar10 = local_res10;
     if (cVar2 == '\0') {
         PECMD_ParseLtwhParams((int64_t *)&local_68, (uint32_t *)&local_8c, &local_90, local_78, (uint32_t *)local_88);
-        plVar7 = FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+        plVar7 = PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
         PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_res20, local_res8, (int *)&local_70,
                       (uint32_t *)&local_58);
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
-            puVar6 = FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+            puVar6 = PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
             uVar8 = PECMD_ParseSignedNumber((short *)*puVar6);
             uVar11 = (uint)uVar8 & 0xffff;
         }
@@ -366,23 +366,23 @@ undefined8 PECMD_ParseControlCenterArgs(longlong *param_1, ushort *param_2, WPAR
         local_res10 = puVar8 + 1;
         FUN_14005b154((WCHAR **)&local_res10);
     }
-    FUN_1400675b8(&local_res10, &local_80, 0x2c);
+    PECMD_SplitTokenTrimWs(&local_res10, &local_80, 0x2c);
     FUN_140003a20(param_1, &local_80, 1);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
-        plVar4 = FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+        plVar4 = PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
         PECMD_ParseLtwhParams(plVar4, (uint32_t *)&local_88, &local_84, local_res18,
                       (uint32_t *)&local_res8);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
-            plVar4 = FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
-            FUN_1400675b8(plVar4, (void *)local_78, 0);
+            plVar4 = PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+            PECMD_SplitTokenTrimWs(plVar4, (void *)local_78, 0);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
                 PECMD_CopyUpToChar(&local_res10, &local_68, 0x2c);
                 if (*local_res10 == 0x2c) {
                     local_res10 = local_res10 + 1;
-                    puVar5 = (undefined8 *)FUN_14007f6e4((WCHAR **)&local_50, &local_res10, 0x2c, 1);
+                    puVar5 = (undefined8 *)PECMD_SplitTokenAssignVar((WCHAR **)&local_50, &local_res10, 0x2c, 1);
                     uVar6 = PECMD_ParseSignedNumber((short *)*puVar5);
                     uVar11 = uVar11 | (uint)uVar6;
                 }
@@ -660,7 +660,7 @@ uint PECMD_AssignDriveLetter(LPCWSTR param_1, WCHAR *param_2)
                     longlong local_210 = -1;
                     ulonglong *puVar11;
                     iVar19 = 0;
-                    FUN_140078514(hObject, local_res20, &local_210);
+                    PECMD_FindPartitionStartSector(hObject, local_res20, &local_210);
                     local_res20[0] = 0;
                     puVar11 = FUN_14005feac(hObject, (ulonglong *)local_250, (uint32_t *)local_res20);
                     if (puVar11 == (ulonglong *)0) {

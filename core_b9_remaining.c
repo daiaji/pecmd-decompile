@@ -43,7 +43,7 @@ extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out); /* @0x1400f172c */
 extern void FUN_1400FD538(HWND hwnd, int mode);                    /* @0x1400fd538 */
-extern void FUN_1400fdad8(void *param_1, int param_2, long long param_3, uint64_t param_4); /* @0x1400fdad8 */
+extern void PECMD_HandleControlMessage(void *param_1, int param_2, long long param_3, uint64_t param_4); /* @0x1400fdad8 */
 
 /* ---- GDI+ 延迟绑定函数指针槽 (core_b1_remaining.c 初始化) ---- */
 extern int (*g_pGdipGetImageWidth)();   /* GdipGetImageWidth  */
@@ -545,7 +545,7 @@ void PECMD_ControlHoverWndProc(int64_t *param_1, int param_2, long long param_3,
         InvalidateRect((HWND)param_1[4], (RECT *)0, 1);
         SetTimer((HWND)param_1[4], 0x2714, 0x32, (void *)0);
     }
-    FUN_1400fdad8(param_1, param_2, param_3, param_4);
+    PECMD_HandleControlMessage(param_1, param_2, param_3, param_4);
 }
 
 void *FUN_140102d08(void *param_1, uint32_t param_2)

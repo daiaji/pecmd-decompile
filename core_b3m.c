@@ -68,7 +68,7 @@ extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint6
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
                                    DWORD a3);
-extern void FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim);
+extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
@@ -78,7 +78,7 @@ extern void FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int64_t a,
 extern void PECMD_VarSetUInt(int64_t *a1, uint64_t a2, LPCWSTR a3);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
-extern int FUN_140072924(uint32_t state, LPCWSTR id, uint32_t flag, int64_t *p4,
+extern int PECMD_EnumClassDevices(uint32_t state, LPCWSTR id, uint32_t flag, int64_t *p4,
                          uint16_t *p5);
 extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
                            uint64_t *a4);
@@ -838,7 +838,7 @@ void FUN_14006FD1C(int64_t *pp, int64_t *out1, int64_t *out2,
     plVar3 = pp;
     FUN_14005B154((WCHAR **)pp);
     *(uint16_t *)*tmp = 0;
-    FUN_1400675b8(plVar3, tmp, 0x3b);
+    PECMD_SplitTokenTrimWs(plVar3, tmp, 0x3b);
     if (*(uint16_t *)*pp == 0x3b) {
         *pp = (int64_t)((uint16_t *)*pp + 1);
     }
@@ -954,11 +954,11 @@ int FUN_140078C68(LPCSTR deviceId, int action, uint32_t flags)
         PECMD_WideToAnsiStr((int64_t *)&local_res20, (LPCWSTR)local_28[0], -1, (uint64_t)-1);
         pWVar1 = local_res20;
         if ((char)*local_res20 != '\0') {
-            iVar2 = FUN_140072924((uint32_t)(iVar2 != 0), local_res20, flags & 1,
+            iVar2 = PECMD_EnumClassDevices((uint32_t)(iVar2 != 0), local_res20, flags & 1,
                                   NULL, NULL);
             if (action < 0) {
                 FUN_1400195F0((uint64_t)(uintptr_t)g_Script, 0x32, 0, NULL);
-                FUN_140072924(1, pWVar1, flags & 1, NULL, NULL);
+                PECMD_EnumClassDevices(1, pWVar1, flags & 1, NULL, NULL);
             }
             goto LAB_140078d61;
         }
@@ -1353,11 +1353,11 @@ int64_t PECMD_SetFileNameExtension(int64_t *script, uint16_t *spec)
     PECMD_AllocWStringBuffer(&local_res20, 5);
     PECMD_AllocWStringBuffer(&local_18, 0x14);
     FUN_140063620(&local_10);
-    FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d);
+    PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d);
     FUN_140003A20(script, &local_res20, 0);
     if (*local_res10 == 0x3d) {
         local_res10 = local_res10 + 1;
-        FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_18, 0);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_18, 0);
     }
     pWVar1 = g_szEmpty;
     iVar4 = -0x7ff8ffa9;

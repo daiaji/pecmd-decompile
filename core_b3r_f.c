@@ -26,7 +26,7 @@ extern WCHAR g_szEmpty[];                /* .rdata 空串/虚表基址 */
 extern uint64_t *PECMD_ConstructControlObjectB(uint64_t *obj, uint32_t type, uint64_t data,
                                LPCWSTR text, uint64_t *src, LPCWSTR subText,
                                uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10);
-extern void FUN_140079524(WCHAR *param_1, int64_t *param_2, int *param_3,
+extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *param_3,
                           int param_4, int64_t param_5);
 extern uint64_t *FUN_1400f0648(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
 extern uint64_t *FUN_1400ecf18(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
@@ -46,7 +46,7 @@ extern uint64_t *PECMD_CreateWindowObject(uint64_t *param_1, uint64_t param_2, u
 extern int64_t *FUN_14007034c(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
 extern uint64_t FUN_14005b77c(int64_t param_1);            /* @0x14005b77c */
 extern void FUN_140053e78(void);                           /* @0x140053e78 PECMD_Empty */
-extern void FUN_14005e3ac(int64_t *param_1, uint32_t param_2, uint64_t param_3,
+extern void PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2, uint64_t param_3,
                           uint32_t *param_4);             /* @0x14005e3ac */
 extern uint32_t FUN_1400e91f0(int64_t *param_1, uint64_t param_2); /* @0x1400e91f0 */
 extern int64_t  FUN_1400e95f4(int64_t *param_1, uint64_t param_2); /* @0x1400e95f4 */
@@ -168,7 +168,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     local_44 = 0;
     local_40 = 0;
     if ((param_14 == NULL) ||
-        (FUN_140079524(param_14, (int64_t *)&param_9, &local_48,
+        (PECMD_ParseKeySizeIconSpec(param_14, (int64_t *)&param_9, &local_48,
                        *(int *)(lVar1 + 0x17c), 0),
          iVar3 = local_40, puVar6 = param_9,
          (local_40 < 1) && (param_9 == NULL))) {
@@ -383,7 +383,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         }
         puVar1[5] = puVar1[5] & 0xfffffff3;
         puVar1[4] = puVar1[4] & 0xfffffff3;
-        FUN_14005e3ac(plVar6, 0, (uint64_t)param_13, puVar1);
+        PECMD_PositionWindowDispatchCommand(plVar6, 0, (uint64_t)param_13, puVar1);
         if (uVar9 == 0x40) {
             FUN_1400e91f0(plVar6, 0);
         } else if (uVar9 == 0xc0) {

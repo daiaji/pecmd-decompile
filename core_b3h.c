@@ -56,7 +56,7 @@ extern bool FUN_14005F1B0(uint64_t *a1, uint8_t *a2, uint64_t a3,
                           DWORD *a4);
 extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
                              int64_t *a4, uint32_t a5, uint16_t *a6);
-extern void FUN_14006703c(int64_t a1);
+extern void PECMD_ReleaseWindowHooks(int64_t a1);
 extern void PECMD_ReleaseObjectListTail(int64_t a1, int a2);
 extern int64_t *FUN_14007034C(int64_t *a1, LPCWSTR a2);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
@@ -517,7 +517,7 @@ void FUN_140069B68(uint64_t ctx, int64_t *pp, uint32_t flags)
 void FUN_140073C58(int64_t parser)
 {
     EnterCriticalSection(&g_csInit);
-    FUN_14006703c(parser);
+    PECMD_ReleaseWindowHooks(parser);
     if (*(int64_t *)(parser + 400) != 0) {
         PECMD_ReleaseObjectListTail(parser, 0);
     }

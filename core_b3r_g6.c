@@ -30,7 +30,7 @@ extern uint64_t  PECMD_GetPackedSystemVersion(void);                       /* @0
 extern WCHAR    *FUN_14007034c(WCHAR **ps, LPCWSTR src);    /* @0x14007034c 字符串赋值 */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, LPCWSTR src);    /* @0x14006375c 字符串追加 */
 extern void      FUN_140063620(WCHAR **out);                /* @0x140063620 字符串清理 */
-extern void      FUN_1400675b8(WCHAR **src, WCHAR **dst, short delim); /* @0x1400675b8 按分隔切分 */
+extern void      PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, short delim); /* @0x1400675b8 按分隔切分 */
 extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern WCHAR    *FUN_140024c48(int64_t *a, int64_t *b, uint32_t c);    /* @0x140024c48 展转义 */
 extern void      FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);       /* @0x1400679b0 解析整数 */
@@ -142,10 +142,10 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
         local_70 = pWVar6;
         sVar10 = 0;
     } else {
-        FUN_1400675b8(&local_res10, (WCHAR **)&local_70, 0x2c);
+        PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_70, 0x2c);
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
-            FUN_1400675b8(&local_res10, (WCHAR **)&local_60, 0x2c);
+            PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_60, 0x2c);
         }
         sVar10 = 0x2c;
         if ((*local_70 == L'\0') || ((pWVar9 = (LPCWSTR)0), *local_60 == L'\0') ||
@@ -166,7 +166,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
                 pWVar6 = (WCHAR *)FUN_140024c48((int64_t *)&local_58, (int64_t *)&local_res10, 0x85);
                 PECMD_StrCopyW((WCHAR **)&local_78, local_58, (int64_t)local_res10);
             } else {
-                FUN_1400675b8(&local_res10, (WCHAR **)&local_78, sVar10);
+                PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_78, sVar10);
                 pWVar6 = local_res10;
             }
             if (*pWVar6 == L',') {
@@ -175,7 +175,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
                 iVar15 = local_res20;
                 if (*local_res10 == L',') {
                     local_res10 = local_res10 + 1;
-                    FUN_1400675b8(&local_res10, (WCHAR **)&local_68, 0x2c);
+                    PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_68, 0x2c);
                     if (*local_res10 == L',') {
                         local_res10 = local_res10 + 1;
                         FUN_1400679b0(&local_res10, &local_88, 0x2c);

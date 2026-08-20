@@ -52,10 +52,10 @@ extern void     FUN_140063620(void *out);                  /* release/init slot 
 extern WCHAR   *FUN_14005b154(WCHAR **pp);                 /* skip spaces */
 extern void     FUN_1400702b0(void *ps, const WCHAR *src); /* assign string slot */
 extern void     FUN_14005b104(void *ps);                   /* free string slot */
-extern void     FUN_1400675b8(void *src, void *dst, int16_t delim); /* split list */
+extern void     PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void     FUN_140003a20(void *script, void *str, int mode);   /* expand */
-extern int64_t *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void     FUN_1400676e4(void *src, void *dst, int mode);
+extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
+extern void     PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
 extern void     PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void     FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern uint64_t PECMD_ParseSignedNumber(short *);
@@ -85,7 +85,7 @@ extern void    *PECMD_ReadTipDummyConfig(void);
 extern int64_t  FUN_1400e8644(int64_t *a);
 extern HBITMAP  PECMD_LoadImageBitmap(LPCWSTR, int64_t *, int64_t, uint64_t, uint32_t *,
                               uint64_t *, uint64_t);       /* 图/图标装载 */
-extern uint     FUN_14007e15c(uint8_t *, uint64_t, LPCWSTR, HICON, LPCWSTR,
+extern uint     PECMD_DrawTrayIcon(uint8_t *, uint64_t, LPCWSTR, HICON, LPCWSTR,
                               uint, uint32_t);             /* 图标绘制/注册 */
 extern uint8_t  PECMD_DhcpWriteAndWait(LPCWSTR, LPCWSTR, uint64_t, int, LPCWSTR,
                               uint32_t, uint64_t, uint32_t); /* 工作线程执行 */
@@ -189,7 +189,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
             local_res10 = local_res10 + 1;
             FUN_14005b154((WCHAR **)&local_res10);
         }
-        FUN_1400675b8((void *)&local_res10, &local_78, 0x2c);
+        PECMD_SplitTokenTrimWs((void *)&local_res10, &local_78, 0x2c);
         FUN_140003a20(param_1, &local_78, 1);
         uVar6 = 1;
         if (*local_res10 == 0x2c) {
@@ -198,7 +198,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
                           &local_88, local_80, (uint32_t *)local_res18);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
-                FUN_1400676e4((void *)&local_res10, &local_68, 0x2c);
+                PECMD_ExtractTokenByDelim((void *)&local_res10, &local_68, 0x2c);
                 if (*local_res10 == 0x2c) {
                     local_res10 = local_res10 + 1;
                     uVar4 = PECMD_ParseSignedNumber((short *)local_res10);
@@ -216,7 +216,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
                         }
                         if (*local_res10 == 0x2c) {
                             local_res10 = local_res10 + 1;
-                            FUN_1400675b8((void *)&local_res10, &local_70, 0x2c);
+                            PECMD_SplitTokenTrimWs((void *)&local_res10, &local_70, 0x2c);
                         }
                     }
                 }
@@ -407,7 +407,7 @@ HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_
                 goto icon_error_baee4;
             } else {
                 if (*lpStr2 != L'\0') {
-                    FUN_1400675b8((void *)&local_res10, &local_a0, 0x2c);
+                    PECMD_SplitTokenTrimWs((void *)&local_res10, &local_a0, 0x2c);
                     FUN_140003a20(param_1, &local_a0, 1);
                     pWVar6 = local_res10;
                     if (*local_res10 == L',') {
@@ -428,7 +428,7 @@ HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_
                             PECMD_StrCopyW(&local_a8, lpString2,
                                           ((int64_t)pEnd - (int64_t)lpString2) >> 1);
                         } else {
-                            FUN_1400676e4((void *)&local_res10, &local_a8, 0x2c);
+                            PECMD_ExtractTokenByDelim((void *)&local_res10, &local_a8, 0x2c);
                             pWVar6 = local_res10;
                         }
                         FUN_140003a20(param_1, &local_a8, 1);
@@ -497,8 +497,8 @@ icon_parse_ba800:
             }
             goto icon_error_baee4;
         }
-        plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-        FUN_1400676e4(plVar7, &local_98, 0);
+        plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
+        PECMD_ExtractTokenByDelim(plVar7, &local_98, 0);
         if ((g_i64D170 == 0) && (lVar11 = FUN_1400e8644((int64_t *)g_Script),
                                      lVar11 == 0)) {
             DVar5 = GetLastError();
@@ -546,7 +546,7 @@ icon_parse_ba800:
                     goto icon_error_badd0;
                 }
             }
-            uVar19 = FUN_14007e15c((uint8_t *)((char *)(uintptr_t)param_3 + 0x690),
+            uVar19 = PECMD_DrawTrayIcon((uint8_t *)((char *)(uintptr_t)param_3 + 0x690),
                                    *(uint64_t *)((char *)(uintptr_t)param_3 + 0x20),
                                    local_a0, pHVar10, local_a8,
                                    local_50 | 0x80000000u, (uint32_t)local_84);
@@ -997,26 +997,26 @@ bd_option_done:
         local_res10 = local_res10 + 1;
         FUN_14005b154((WCHAR **)&local_res10);
     }
-    FUN_1400675b8((void *)&local_res10, &local_90, 0x2c);
+    PECMD_SplitTokenTrimWs((void *)&local_res10, &local_90, 0x2c);
     FUN_140003a20(param_1, &local_90, 1);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
-        plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
+        plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
         PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_88, local_b0, (uint32_t *)local_res18);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
-            plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-            FUN_1400676e4(plVar7, &local_c8, 0);
+            plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
+            PECMD_ExtractTokenByDelim(plVar7, &local_c8, 0);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
                 PECMD_CopyUpToChar((int64_t *)&local_res10, &local_50, 0x2c);
                 if (*local_res10 == 0x2c) {
                     local_res10 = local_res10 + 1;
-                    plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-                    FUN_1400675b8(plVar7, (int64_t *)&local_c0_hwnd, 0);
+                    plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
+                    PECMD_SplitTokenTrimWs(plVar7, (int64_t *)&local_c0_hwnd, 0);
                     if (*local_res10 == 0x2c) {
                         local_res10 = local_res10 + 1;
-                        puVar8 = (uint64_t *)FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
+                        puVar8 = (uint64_t *)PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
                         uVar9 = PECMD_ParseSignedNumber((short *)*puVar8);
                         uVar16 = (uint32_t)uVar9;
                     }

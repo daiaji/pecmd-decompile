@@ -52,7 +52,7 @@ extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void FUN_140063620(void *ps);
-extern void FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim);
+extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
 extern void PECMD_FormatSetVar(int64_t *script, uint64_t value, LPCWSTR key,
@@ -557,7 +557,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
 
         if (*p == L':') {
             p++;
-            FUN_1400675b8((int64_t *)&p, (int64_t *)&varName, 0x2c);
+            PECMD_SplitTokenTrimWs((int64_t *)&p, (int64_t *)&varName, 0x2c);
             FUN_14007BF44((int64_t *)script, varName, &varVal, 0, 1);
             if (msg == 0x111 || ((flags >> 8) & 1) != 0) {
                 PECMD_FormatSetVar((int64_t *)script, wParam & 0xffff,
@@ -579,7 +579,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
             }
             if (*p == L',') {
                 p++;
-                FUN_1400675b8((int64_t *)&p, (int64_t *)&varKey, 0x2c);
+                PECMD_SplitTokenTrimWs((int64_t *)&p, (int64_t *)&varKey, 0x2c);
                 FUN_14007BF44((int64_t *)script, varKey, &varVal, 0, 1);
                 if (varVal != NULL && *varVal != L'\0') {
                     FUN_1400668EC((void *)script, (uint64_t)(uintptr_t)lParam,

@@ -3441,3 +3441,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - **P4 余下硬骨头**（混淆巨型/6 个 DECOMPILE-FAILED 若 asm 也难）→ 登记。
 - 工具落档：tools/nameable_60.json（58 待命名）、tools/stub_recovery_plan.json（19 空桩 asm）、tools/pe_registry.json（1082 数据真值）。
 - 已做：命名 813、还原 ~35+6asm、CRT mem 家族、机械警告清零。全程 build/link 绿。
+## 92. P1 命名批量：6 组只读提案 → 集中 apply_rename
+- 59 个"core 有真 body 未命名"函数，由 6 子代理读体提案、统一应用 57 个高置信名（510 处替换）。
+  rename_map 813→**870**；build/link 全绿。
+- 补名 005c18→PECMD_FormatIpAddress(IPv4 前四位)、0cedc→PECMD_RegisterTableItem。
+- 剩未命名：0060b8/01708c(未还原/CRT shim) 等，待 P3 还原后命名。

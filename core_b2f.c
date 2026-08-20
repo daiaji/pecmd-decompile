@@ -10,7 +10,7 @@
  *   枚举进程          FUN_14002D708 @0x14002d708
  *   安装字体          FUN_14002F454 @0x14002f454
  *   IF 条件求值       FUN_140032DC4 @0x140032dc4
- *   虚拟盘菜单构建    FUN_140034788 @0x140034788
+ *   虚拟盘菜单构建    PECMD_BuildImDiskMenu @0x140034788
  *   虚拟盘命令        FUN_1400369D0 @0x1400369d0
  *   LOGO 窗口过程     FUN_140037BA8 @0x140037ba8
  *   显示模式命令      FUN_140038D30 @0x140038d30
@@ -84,8 +84,8 @@ extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
 extern void PECMD_ParseSkipSeparator(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern WCHAR *FUN_1400679DC(uint64_t *a1, int *a2, int16_t a3);
-extern void FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim);
-extern void FUN_1400676e4(int64_t *src, WCHAR **dst, int mode);
+extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
+extern void PECMD_ExtractTokenByDelim(int64_t *src, WCHAR **dst, int mode);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *a2, void *out, int mode,
                           uint8_t flag);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *a1, uint32_t *a2, int64_t *a3,
@@ -633,7 +633,7 @@ int64_t FUN_140021A4C(int64_t *script, LPCWSTR text)
     local_2b8 &= 0xffffffff00000000ULL;
 
     if (*local_2d8 != L'\0') {
-        FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
         FUN_14007BF44(script, local_2d0, (void *)&local_280, 0, 1);
     }
     local_res10 = local_280;
@@ -678,18 +678,18 @@ int64_t FUN_140021A4C(int64_t *script, LPCWSTR text)
 
     if (*local_2d8 != L'\0') {
         local_2d8 = local_2d8 + 1;
-        FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
         FUN_14007BF44(script, local_2d0, (void *)&local_260, 0, 1);
     }
     lpFileName = FUN_14001BE14(local_260);
 
     if (*local_2d8 != L'\0') {
         local_2d8 = local_2d8 + 1;
-        FUN_1400676e4((int64_t *)&local_2d8, &local_2d0, sVar6);
+        PECMD_ExtractTokenByDelim((int64_t *)&local_2d8, &local_2d0, sVar6);
         FUN_14007BF44(script, local_2d0, (void *)&local_298, 0, 1);
         if (*local_2d8 != L'\0') {
             local_2d8 = local_2d8 + 1;
-            FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+            PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
             FUN_14007BF44(script, local_2d0, (void *)&local_270, 0, 1);
         }
     }
@@ -705,7 +705,7 @@ int64_t FUN_140021A4C(int64_t *script, LPCWSTR text)
         }
         if (*local_2d8 != L'\0') {
             local_2d8 = local_2d8 + 1;
-            FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+            PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
             FUN_14007BF44(script, local_2d0, (void *)&local_278, 0, 1);
         }
         pWVar15 = local_278;
@@ -720,7 +720,7 @@ label_021e1f:
         pWVar11 = pWVar15;
         if (*local_2d8 != L'\0') {
             local_2d8 = local_2d8 + 1;
-            FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+            PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
             FUN_14007BF44(script, local_2d0, (void *)&local_2b0, 0, 1);
         }
     }
@@ -733,18 +733,18 @@ label_021e1f:
 
     if (*local_2d8 != L'\0') {
         local_2d8 = local_2d8 + 1;
-        FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
         FUN_14007BF44(script, local_2d0, (void *)&local_268, 0, 1);
     }
     local_250 = FUN_14001BE14(local_268);
 
     if (*local_2d8 != L'\0') {
         local_2d8 = local_2d8 + 1;
-        FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
         FUN_14007BF44(script, local_2d0, (void *)&local_2a0, 0, 1);
         if (*local_2d8 != L'\0') {
             local_2d8 = local_2d8 + 1;
-            FUN_1400675b8((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
+            PECMD_SplitTokenTrimWs((int64_t *)&local_2d8, (int64_t *)&local_2d0, sVar6);
             FUN_14007BF44(script, local_2d0, (void *)&local_290, 0, 1);
         }
     }
@@ -1937,7 +1937,7 @@ extern int64_t FUN_14007A224(int64_t *a1, WCHAR *s, ULARGE_INTEGER *out,
                              int a4, uint8_t a5);
 extern WCHAR *PECMD_ResolveScriptVariable(int64_t *a1, LPCWSTR s, ULARGE_INTEGER *out);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
-extern void FUN_14005b374(void *pp, WCHAR a, WCHAR b);
+extern void PECMD_SkipUntilDelim(void *pp, WCHAR a, WCHAR b);
 extern uint64_t PECMD_IsRemovableDrive(uint32_t c);
 extern uint32_t PECMD_FindFileOrDir(LPCWSTR s, int mode);
 extern void PECMD_ParseParenthesizedExpression(int64_t *pp, double *out);
@@ -3147,7 +3147,7 @@ LAB_140033812:
         if (local_148 == DVar8) {
 LAB_140033fb7:
             local_1a0 = local_res10;
-            FUN_14005b374((WCHAR **)&local_1a0.QuadPart, 0x2a, 0x3f);
+            PECMD_SkipUntilDelim((WCHAR **)&local_1a0.QuadPart, 0x2a, 0x3f);
             DVar8 = FUN_14002D708((LPCWSTR)local_res10.QuadPart,
                                         (uint32_t)(-(uint32_t)(*(WCHAR *)local_1a0.QuadPart != L'\0') & 0x101),
                                         NULL, 0, DVar8);
@@ -3671,7 +3671,7 @@ code_r0x00014003460d:
  * b2f_part3.c — B2F 批次 Part 3 (0x140034788, 0x1400369d0, 0x140037ba8)
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   菜单构建            FUN_140034788 @0x140034788 (stub)
+ *   菜单构建            PECMD_BuildImDiskMenu @0x140034788 (stub)
  *   RAM 盘命令行        FUN_1400369D0      @0x1400369d0
  *   LOGO 窗口过程       FUN_140037BA8         @0x140037ba8
  *
@@ -3775,16 +3775,21 @@ extern uint8_t g_u8D6F7;
 
 #endif /* B2F_PART3_LOCAL */
 
-/* ========== FUN_140034788 @0x140034788 ==========
- * 原始 FUN_140034788 反编译标记为 [DECOMPILE FAILED]，无函数体。
- * 反编译给出的原始签名：
- *   HMENU __fastcall FUN_140034788(longlong *a1, ULARGE_INTEGER pos,
+
+/* ========== PECMD_BuildImDiskMenu @0x140034788 ==========
+ * Original PECMD_BuildImDiskMenu was marked [DECOMPILE FAILED], no body.
+ * Given signature:
+ *   HMENU __fastcall PECMD_BuildImDiskMenu(longlong *a1, ULARGE_INTEGER pos,
  *                                  byte mode, longlong *out, undefined8 flags)
  *
- * 本文件按要求提供最小桩，返回空菜单句柄。
- * TODO(verify): 原始反编译失败，需从汇编/原 binary 恢复。
+ * SKIP(blocker) @0x140034788 size=4312: this function is very large
+ * (~1000 instructions, 23 internal calls, 9 imports) with complex virtual-disk
+ * menu building (GetMenu/GetMenuItemCount/GetSubMenu, --sub/--user/--visible/
+ * --invisible/--class:/--pid/--menu/--wid/--forpid:/--fortid:, and *var* form).
+ * A faithful byte-level reconstruction could not be produced & verified here,
+ * so the minimal stub is kept to keep the full link free of undefined refs.
  */
-HMENU FUN_140034788(int64_t *a1, ULARGE_INTEGER pos,
+HMENU PECMD_BuildImDiskMenu(int64_t *a1, ULARGE_INTEGER pos,
                                uint8_t mode, int64_t *out, uint64_t flags)
 {
     (void)a1;
@@ -3794,6 +3799,7 @@ HMENU FUN_140034788(int64_t *a1, ULARGE_INTEGER pos,
     (void)flags;
     return (HMENU)0;
 }
+
 
 /* ========== FUN_1400369D0 @0x1400369d0 ==========
  * RAM 盘命令行入口：解析 -a/-e/-l/-s/-v 等选项，创建/删除/查询 RAM 盘。
@@ -6991,7 +6997,7 @@ LAB_14003d128:
       bVar19 = local_res18;
       if (local_res10 == (LPCRITICAL_SECTION)0x0) goto LAB_14003d2f8;
       local_90 = local_res10;
-      FUN_14005b374(&local_90,0x2a,0x3f);
+      PECMD_SkipUntilDelim(&local_90,0x2a,0x3f);
       p_Var11 = local_b8;
       p_Var16 = local_res10;
       UVar14 = local_res20;
@@ -7301,7 +7307,7 @@ LAB_14003efd6:
     FUN_140063620(&local_4228);
     pwVar37 = WSTR("PressKey");
     if (*local_res10 != L'\0') {
-      FUN_1400675b8((int64_t *)&local_res10,(int64_t *)&local_4228,0x2c);
+      PECMD_SplitTokenTrimWs((int64_t *)&local_res10,(int64_t *)&local_4228,0x2c);
       pwVar37 = local_4228;
     }
     local_4158[0] = 0;
@@ -7391,7 +7397,7 @@ LAB_14003efd6:
     pwVar37 = WSTR("PressKey");
     if (*local_res10 == L',') {
       local_res10 = local_res10 + 1;
-      FUN_1400675b8((int64_t *)&local_res10,(int64_t *)&local_4258,0x2c);
+      PECMD_SplitTokenTrimWs((int64_t *)&local_res10,(int64_t *)&local_4258,0x2c);
       if (*local_4258 != L'\0') {
         pwVar37 = local_4258;
       }

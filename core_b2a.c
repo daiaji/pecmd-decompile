@@ -29,7 +29,7 @@ extern uint64_t PECMD_ParseCommandBlock(void *script, void **args, int count, ui
 extern uint64_t PECMD_OneTimeInitBody(void);
 extern void PECMD_SetObjectVtable(void *obj);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
-extern HMENU FUN_140034788(int64_t *obj, ULARGE_INTEGER pos, int mode,
+extern HMENU PECMD_BuildImDiskMenu(int64_t *obj, ULARGE_INTEGER pos, int mode,
                            int64_t *out, uint64_t flags);
 extern uint64_t FUN_140028A00(void *app, HWND hwnd, uint32_t msg, HDC hdc, HWND wnd);
 extern HGDIOBJ FUN_140037BA8(void *script, HWND hwnd, uint32_t msg, HDC hdc, void *p4);
@@ -137,7 +137,7 @@ void PECMD_InitIfOldSystem(void)
 void FUN_140035b08(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
 {
-    FUN_140034788(obj, pos, 1, out, flags);
+    PECMD_BuildImDiskMenu(obj, pos, 1, out, flags);
 }
 
 /* ========== FUN_140035b24 @0x140035b24 ==========
@@ -146,7 +146,7 @@ void FUN_140035b08(int64_t *obj, ULARGE_INTEGER pos,
 void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
 {
-    FUN_140034788(obj, pos, 0, out, flags);
+    PECMD_BuildImDiskMenu(obj, pos, 0, out, flags);
 }
 
 /* ========== FUN_140037b84 @0x140037b84 ==========

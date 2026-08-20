@@ -36,11 +36,11 @@ extern int32_t PECMD_QueryState_cfc0(void);                    /* 初始化成�
 extern void    FUN_14005d2a4(void *p);                 /* 附加初始化 */
 extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                              uint64_t cap);            /* 复制/解析串 */
-extern void    FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
+extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
 extern void    FUN_1400633a8(void **ps, int64_t len);  /* 分配缓冲 */
 extern void    FUN_140063620(void *ps);                /* 初始化串容器 */
 extern void    PECMD_NtpSyncLoop(uint32_t *addr);          /* IP 地址 → 串 */
-extern void    FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
+extern void    PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
 extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
                              DWORD share, LPSECURITY_ATTRIBUTES sa,
                              DWORD disp, DWORD flags, HANDLE tmpl); /* CreateFile 包装 */
@@ -164,13 +164,13 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     FUN_140063620(&local_res18);
     pWVar6 = local_res10;
     local_res20 = (WCHAR *)local_res10;
-    FUN_1400675b8((int64_t *)&local_res20, (int64_t *)&local_res18, 0x2c);
+    PECMD_SplitTokenTrimWs((int64_t *)&local_res20, (int64_t *)&local_res18, 0x2c);
     *((WCHAR *)local_res18) = L'\0';
     pWVar7 = local_res18;
     if (*local_res20 == L',') {
         *local_res20 = L'\0';
         local_res20 = local_res20 + 1;
-        FUN_1400675b8((int64_t *)&local_res20, (int64_t *)&local_res18, 0x2c);
+        PECMD_SplitTokenTrimWs((int64_t *)&local_res20, (int64_t *)&local_res18, 0x2c);
         pWVar7 = local_res18;
     }
     iVar4 = StrCmpNIW(pWVar6, WSTR("-q"), 2);
@@ -315,7 +315,7 @@ uint64_t PECMD_ReadTipDummyConfig(void)
                 PECMD_SkipSpace((WCHAR **)&local_res20);
                 lpStr1 = local_res20;
                 iVar3 = 10;
-                FUN_14005b374(&local_res20, 10, 0xd);
+                PECMD_SkipUntilDelim(&local_res20, 10, 0xd);
                 iVar3 = StrCmpNIW(lpStr1, WSTR("TIPSDUMMY:"), iVar3);
                 if (iVar3 == 0) {
                     if (*local_res20 != L'\0') {

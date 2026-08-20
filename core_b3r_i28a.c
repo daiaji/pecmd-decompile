@@ -31,10 +31,10 @@ extern WCHAR    *FUN_14005b154(WCHAR **pp);        /* @0x14005b154 skip spaces *
 extern void      FUN_1400702b0(void *ps, const WCHAR *src);  /* @0x1400702b0 assign */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
 extern void      FUN_14005b104(void *ps);          /* @0x14005b104 free slot */
-extern void      FUN_1400675b8(void *src, void *dst, int16_t delim); /* split list */
+extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      FUN_140003a20(void *script, void *str, int mode);   /* expand */
-extern int64_t  *FUN_14007f6e4(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void      FUN_1400676e4(void *src, void *dst, int mode);
+extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
+extern void      PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void      FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
@@ -342,23 +342,23 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
         local_res10 = puVar11 + 1;
         FUN_14005b154(&local_res10);
     }
-    FUN_1400675b8(&local_res10, &local_a0, 0x2c);
+    PECMD_SplitTokenTrimWs(&local_res10, &local_a0, 0x2c);
     FUN_140003a20(param_1, &local_a0, 1);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
-        plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
+        plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
         PECMD_ParseLtwhParams(plVar7, (uint32_t *)&local_a8, &local_a4, local_res18,
                       (uint32_t *)local_res8);
         if (*local_res10 == 0x2c) {
             local_res10 = local_res10 + 1;
-            plVar7 = FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
-            FUN_1400676e4(plVar7, &local_98, 0);
+            plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
+            PECMD_ExtractTokenByDelim(plVar7, &local_98, 0);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
                 PECMD_CopyUpToChar(&local_res10, &local_78, 0x2c);
                 if (*local_res10 == 0x2c) {
                     local_res10 = local_res10 + 1;
-                    puVar8 = (uint64_t *)FUN_14007f6e4(&local_68, &local_res10, 0x2c, 1);
+                    puVar8 = (uint64_t *)PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
                     uVar9 = PECMD_ParseSignedNumber((short *)*puVar8);
                     uVar14 = (uint32_t)uVar9;
                 }
@@ -466,30 +466,30 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
                 local_res10 = puVar11 + 1;
                 FUN_14005b154(&local_res10);
             }
-            FUN_1400675b8(&local_res10, &local_88, 0x2c);
+            PECMD_SplitTokenTrimWs(&local_res10, &local_88, 0x2c);
             FUN_140003a20(param_1, &local_88, 1);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
-                plVar6 = FUN_14007f6e4(&local_60, &local_res10, 0x2c, 1);
+                plVar6 = PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, 1);
                 PECMD_ParseLtwhParams(plVar6, (uint32_t *)&local_8c, &local_94, &local_98,
                               (uint32_t *)&local_90);
                 uVar14 = 0;
                 if (*local_res10 == 0x2c) {
                     local_res10 = local_res10 + 1;
-                    plVar6 = FUN_14007f6e4(&local_60, &local_res10, 0x2c, 1);
-                    FUN_1400676e4(plVar6, &local_78, 0);
+                    plVar6 = PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, 1);
+                    PECMD_ExtractTokenByDelim(plVar6, &local_78, 0);
                     uVar14 = uVar13;
                     if (*local_res10 == 0x2c) {
                         local_res10 = local_res10 + 1;
                         PECMD_CopyUpToChar(&local_res10, &local_48, 0x2c);
                         if (*local_res10 == 0x2c) {
                             local_res10 = local_res10 + 1;
-                            puVar7 = (uint64_t *)FUN_14007f6e4(&local_60, &local_res10, 0x2c, 1);
+                            puVar7 = (uint64_t *)PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, 1);
                             uVar8 = PECMD_ParseSignedNumber((short *)*puVar7);
                             uVar15 = (uint32_t)uVar8;
                             if (*local_res10 == 0x2c) {
                                 local_res10 = local_res10 + 1;
-                                puVar7 = (uint64_t *)FUN_14007f6e4(&local_60, &local_res10, 0x2c, 1);
+                                puVar7 = (uint64_t *)PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, 1);
                                 FUN_1400679b0(puVar7, (int *)local_res18, 0x2c);
                                 uVar14 = local_res18[0];
                             }
@@ -594,7 +594,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
         FUN_14005b154(&local_res10);
     }
     cVar2 = FUN_1400660ac("-smooth", &local_res10, 7);
-    FUN_1400675b8(&local_res10, &local_48, 0x2c);
+    PECMD_SplitTokenTrimWs(&local_res10, &local_48, 0x2c);
     FUN_140003a20(param_1, &local_48, 1);
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;

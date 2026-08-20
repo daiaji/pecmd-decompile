@@ -27,7 +27,7 @@ extern void  FUN_14005b104(void *ps);                               /* @0x14005b
 extern void  FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
 
-/* ---- FUN_140075c7c (BIG5 字符名表解码/重排) 依赖 ---- */
+/* ---- PECMD_DecodeBig5NameTable (BIG5 字符名表解码/重排) 依赖 ---- */
 extern uint32_t FUN_14001b4f8(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
 extern void FUN_140063a6c(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
 extern void FUN_1400639f0(void **pdata, void **pend, int64_t *pcount,
@@ -38,7 +38,7 @@ extern void *FUN_140063224(void *ps, int64_t len);                  /* @0x140063
 extern void FUN_14005b0b8(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
 
 /* @0x14005b374 size=44 — 从 *pp 起跳过字符, 直到撞上 '\0'/ch1/ch2 (行切分定界) */
-void FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2)
+void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2)
 {
     WCHAR *p;
 
@@ -60,7 +60,7 @@ LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method)
 }
 
 /* @0x1400675b8 size=145 — 按定界符切分 token (跳过前导/尾随空白), 写入 dst 容器 */
-void FUN_1400675b8(WCHAR **src, WCHAR **dst, int16_t delim)
+void PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, int16_t delim)
 {
     WCHAR *pStart;
     WCHAR *p;
@@ -92,7 +92,7 @@ void FUN_1400675b8(WCHAR **src, WCHAR **dst, int16_t delim)
 }
 
 /* @0x1400676e4 size=99 — 按定界符切分 token (不跳空白), 写入 dst 容器 */
-void FUN_1400676e4(WCHAR **src, WCHAR **dst, int16_t delim)
+void PECMD_ExtractTokenByDelim(WCHAR **src, WCHAR **dst, int16_t delim)
 {
     WCHAR *pStart;
     WCHAR *p;
@@ -126,7 +126,7 @@ bool PECMD_ParseNumSkipWs(WCHAR **pp, uint64_t *out)
 }
 
 /* @0x14006923c size=153 — LPCSTR 字节串 → 宽十六进制串 "0x%02X " 每字节 */
-int FUN_14006923c(WCHAR **out, LPCSTR src, int len)
+int PECMD_BytesToHexStr(WCHAR **out, LPCSTR src, int len)
 {
     LPWSTR pW;
     int i;
@@ -191,7 +191,7 @@ int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
 /* @0x1400693c0 size=161 — GBK↔BIG5 区码表重映射 (LCMapStringA, locale 0x20804):
  *   len=-1 试探求目标长 → 扩容 *out 字节缓冲 → 正式映射回填并补 '\0', 返回缓冲指针。
  *   isBIG5=0 → LCMAP_UPPERCASE(0x2000000); isBIG5≠0 → 叠加 LCMAP_LOWERCASE(0x4000000)。 */
-uint64_t FUN_1400693c0(LPCSTR src, void **out, uint32_t isBIG5)
+uint64_t PECMD_MapStringByLocale(LPCSTR src, void **out, uint32_t isBIG5)
 {
     LPSTR lpDestStr;
     DWORD cchDest;
@@ -271,7 +271,7 @@ LAB_done:
  * LCMapStringW(zh-CN) 映射, 再 XOR 回密存入行表输出槽; 循环至全表处理完, 按表序级联
  * 写入 *param_2 并在尾部附 uVar19 封口返回。SUB168/SUB164 为 64 位取模伪影, 已按
  * uint64 取模书写。 */
-uint64_t FUN_140075c7c(uint16_t *param_1, WCHAR **param_2, int param_3, int param_4)
+uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param_3, int param_4)
 {
     uint16_t uVar19;
     uint64_t uVar4;
@@ -428,12 +428,12 @@ LAB_140075f08:
 }
 
 /* @0x14007f6e4 size=127 — 按分隔符取 token 赋值变量, 推进游标并返回其+2 */
-int64_t *FUN_14007f6e4(int64_t *cursor, WCHAR **pp, uint16_t sep, int flag)
+int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, int flag)
 {
     WCHAR *tok = NULL;
 
     FUN_140063620(&tok);
-    FUN_1400676e4(pp, &tok, (int16_t)sep);
+    PECMD_ExtractTokenByDelim(pp, &tok, (int16_t)sep);
     FUN_14007bf44((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
     cursor[2] = cursor[0];
     FUN_14005b104(&tok);

@@ -20,7 +20,7 @@ extern int     FUN_14005b2c0(void *, LPCWSTR, HWND);         /* list-control acc
 extern int     PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
 extern int     PECMD_ParseUIntValue(LPCWSTR *, int *);              /* scan list token */
 extern void    FUN_140063620(void *);                        /* string release/cleanup */
-extern void    FUN_1400675b8(void *, void *, int);           /* split list string on delim */
+extern void    PECMD_SplitTokenTrimWs(void *, void *, int);           /* split list string on delim */
 
 #ifndef SE_REGISTRY_KEY
 #define SE_REGISTRY_KEY 5
@@ -131,7 +131,7 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
         if ((*local_res20 == L';') || (*local_res20 == L':')) {
             local_res20 = local_res20 + 1;
         }
-        FUN_1400675b8((void *)&local_res20, (void *)&local_res8, 0x3b);
+        PECMD_SplitTokenTrimWs((void *)&local_res20, (void *)&local_res8, 0x3b);
         FUN_140063620((void *)&local_78);
         if (iVar4 < 1) {
             SendMessageW(hWnd, 0x462, (WPARAM)(long long)iVar7, (LPARAM)&local_78);

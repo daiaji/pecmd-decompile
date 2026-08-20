@@ -134,7 +134,7 @@ extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
                                    DWORD a3);
 extern void PECMD_TrimWorkingSet(char a1);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
-extern void FUN_1400675b8(int64_t *src, int64_t *dst, int16_t delim);
+extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
 extern uint16_t *FUN_14006B1E8(LPCWSTR a1, uint64_t *a2, char a3);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
@@ -1239,7 +1239,7 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
         bVar10 = 3;
     }
     FUN_140063620(&local_188);
-    FUN_1400675b8((int64_t *)&local_res10, (int64_t *)&local_188, 0x2c);
+    PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_188, 0x2c);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         FUN_1400679b0(&local_res10, &g_tooltipTimeout, 0x2c);
