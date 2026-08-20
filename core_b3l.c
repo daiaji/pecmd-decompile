@@ -45,7 +45,7 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
-extern void *FUN_140063118(void *ptr, size_t size); /* @0x140063118 */
+extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
@@ -644,7 +644,7 @@ uint64_t FUN_14006B6E8(int64_t obj)
             } while ((int)(iVar4 + 1U) < iVar1);
         }
 
-        int64_t *plVar2 = FUN_140063118(
+        int64_t *plVar2 = PECMD_HeapRealloc(
             (void *)**(uint64_t **)((uint8_t *)obj + 0x1a0),
             (size_t)((int64_t)(iVar1 + 1) << 3));
         **(uint64_t **)((uint8_t *)obj + 0x1a0) = (uint64_t)(uintptr_t)plVar2;

@@ -1854,16 +1854,15 @@ uint64_t PECMD_ParseVersionString(short *param_1)
     return uVar1 << 0x10 | local_res10;
 }
 
-void FUN_140005c18(LPWSTR param_1, uint64_t param_2, uint32_t param_3)
+/* @0x140005c18 size=49 — 把两个 32 位版本分量各拆成高/低 16 位, 用 wsprintfW 格式化为
+ * "%u.%u.%u.%u" 写入 dst (手工 asm→C 重建, 反编译器 varnode 失败).
+ * 寄存器/栈序: wsprintfW(dst, fmt0x14011cc10, v1>>16, (u16)v1, v2>>16, (u16)v2).
+ * 返回值即 wsprintfW 计数字符数 (asm 的 rax 未再改写). */
+int FUN_140005c18(LPWSTR dst, uint64_t v1, uint32_t v2)
 {
-    /* UNIMPLEMENTED @0xFUN_140005c18 — decompile-failed, body 未还原 */
-/* @0x140005c18 size=49
-     * [DECOMPILE FAILED] — 参考文件中该函数标记为 [DECOMPILE FAILED]。
-     * 语义: 将多段版本号(uint64_t, 每 16 位一段)格式化成 "M.m" 宽串写入 param_1。
-     * 因无法忠实恢复, 此处 SKIPPED-due-to-decompile-failure, 提供最小 no-op 体。 */
-    (void)param_1;
-    (void)param_2;
-    (void)param_3;
+    return wsprintfW(dst, WSTR("%u.%u.%u.%u"),
+                     (uint32_t)(v1 >> 16), (uint16_t)v1,
+                     (uint32_t)(v2 >> 16), (uint16_t)v2);
 }
 
 uint64_t PECMD_GetFileVersionInfo(LPCWSTR param_1, void *param_2, void *param_3, uint64_t *param_4,

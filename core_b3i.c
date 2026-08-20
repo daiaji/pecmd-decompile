@@ -492,7 +492,7 @@ int64_t *FUN_1400634D4(int64_t *ps, LPCSTR src, int64_t len)
         len = (int64_t)iVar2;
     }
     void *puVar1 = (void *)*ps;
-    plVar3 = (int64_t *)(uintptr_t)FUN_140063118(puVar1, (size_t)(len + 1));
+    plVar3 = (int64_t *)(uintptr_t)PECMD_HeapRealloc(puVar1, (size_t)(len + 1));
     *ps = (int64_t)plVar3;
     memcpy((void *)plVar3, (const void *)src, (int)len);
     if (puVar1 != NULL) {
@@ -515,7 +515,7 @@ int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
     if (*cap - 1 <= *cnt) {
         lVar1 = *cap + grow;
         *cap = lVar1;
-        plVar3 = (int64_t *)(uintptr_t)FUN_140063118((void *)*arr, (size_t)((uint64_t)esize * lVar1));
+        plVar3 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*arr, (size_t)((uint64_t)esize * lVar1));
         *arr = (int64_t)plVar3;
     }
     memcpy((void *)(*cnt * (uint64_t)esize + *arr), data, esize);

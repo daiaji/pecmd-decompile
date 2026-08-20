@@ -25,7 +25,7 @@
 #include <stdbool.h>
 
 #include "pecmd_defs.h"
-extern void *FUN_140063118(void *ptr, size_t size); /* @0x140063118 */
+extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 
 /* ---- 待重构函数原型 (后续批次) ---- */
 void PECMD_VarWrite_impl(void);   /* placeholder, 本文件实现 */
@@ -247,7 +247,7 @@ void *FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int namelen, int6
     PECMD_VarWriteValueCap((WCHAR **)((uint8_t *)node + 8),
                     (uint64_t *)((uint8_t *)node + 0x18), value, caplen);
     *(int *)((uint8_t *)script + 8) = *(int *)((uint8_t *)script + 8) + 1;
-    newtbl = FUN_140063118(*(void **)script,
+    newtbl = PECMD_HeapRealloc(*(void **)script,
                                (size_t)*(int *)((uint8_t *)script + 8) * 32);
     *(void **)script = newtbl;
     ((void **)newtbl)[*(int *)((uint8_t *)script + 8) - 1] = node;
@@ -308,7 +308,7 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
                 node = PECMD_NewVarNode(node, p, value, namelen, (int64_t)len);
             }
             *(uint64_t *)((uint8_t *)node + 0x18) = len;
-            newarr = FUN_140063118(*(void **)script,
+            newarr = PECMD_HeapRealloc(*(void **)script,
                                        (size_t)(*(int *)((uint8_t *)script + 8) + 1) * 32);
             *(void **)script = newarr;
             ((void **)newarr)[*(int *)((uint8_t *)script + 8)] = node;

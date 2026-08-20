@@ -10060,15 +10060,25 @@ uint8_t PECMD_SetDriveMount(int64_t param_1, uint32_t param_2, uint32_t param_3,
     return uVar1;
 }
 
+/* @0x14005fc90 size=233 — GUID(16 字节 buffer param_2) → 标准 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" 宽串,
+ * 写入 param_1 并返回之 (手工 asm→C 重建, 反编译器 varnode 失败).
+ * 经 wsprintfW(fmt 0x1401259f0 "%s%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X%s") 输出;
+ * param_3≠0 时加花括号 "{GUID}", 否则无括号. 各段来自 param_2 平铺字节: dw0=byte[0..3], w4=byte[4..5],
+ * w6=byte[6..7], 其后 byte[8..0xf] 逐字节 %02X. rax=param_1 作为返回值. */
 LPWSTR FUN_14005fc90(LPWSTR param_1, uint *param_2, int param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14005fc90 — decompile-failed, body 未还原 */
-/* @0x14005fc90 size=233 */
-    /* [DECOMPILE FAILED] — no body available in decompiled.c */
-    (void)param_1;
-    (void)param_2;
-    (void)param_3;
-    return NULL;
+    const uint8_t *b = (const uint8_t *)param_2;
+    uint32_t dw0 = (uint32_t)b[0] | ((uint32_t)b[1] << 8) |
+                   ((uint32_t)b[2] << 16) | ((uint32_t)b[3] << 24);
+    uint16_t w4 = (uint16_t)((uint16_t)b[4] | ((uint16_t)b[5] << 8));
+    uint16_t w6 = (uint16_t)((uint16_t)b[6] | ((uint16_t)b[7] << 8));
+
+    wsprintfW(param_1, WSTR("%s%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X%s"),
+              (param_3 != 0) ? WSTR("{") : WSTR(""),
+              dw0, w4, w6,
+              b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15],
+              (param_3 != 0) ? WSTR("}") : WSTR(""));
+    return param_1;
 }
 
 void PECMD_DataToWideString(int64_t data, int start, int end, uint16_t *out)
@@ -12673,12 +12683,64 @@ void *PECMD_CheckVarMultiLevelRef(int64_t *param_1, LPCWSTR param_2)
     return &g_b120950;
 }
 
+extern void FUN_1400E6D74(WCHAR *dst, uint64_t v);        /* @0x1400e6d74 值→十进制宽串 */
+extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 变量写值 */
+extern int  FUN_140060EE0(uint16_t *s, int mode);          /* @0x140060ee0 周次计算 */
+
+/* @0x1400682b0 size=397 — 文件时间(FILETIME*)→日期串并写入脚本变量 key=param_2 (手工 asm→C 重建).
+ * param_4 位标志: &1 前缀 '&'(并跳 1 个宽字符再判 星号/&), &2 先 FileTimeToLocalFileTime 转本地时间,
+ * &0xc 在末尾追加周次 " %lu".
+ * 路径首字符(或次字符当 &1)为 '*' 时: 跳过 '*', 可能加 '&' 前缀, 直接把原始 64 位 FILETIME
+ * 值按 "%I64u"(FUN_1400E6D74)写入 out; 否则经 FileTimeToSystemTime 转 SYSTEMTIME 后按
+ * wsprintfW(fmt 0x1401264f0 "%04u %02u %02u %02u %02u %02u %03u %1u", y,mo,d,h,mi,s,ms,dow)
+ * 格式化, 若 &0xc 再以 FUN_140060EE0(st,&8) 算周次续写 " %lu".
+ * 最后以 FUN_1400629B8(param_1, path, out) 存入脚本 (空 path 直接返回). */
 void FUN_1400682b0(int64_t *param_1, LPCWSTR param_2, FILETIME *param_3, uint8_t param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_1400682b0 — decompile-failed, body 未还原 */
-/* @0x1400682b0 size=397 */
-    /* SKIPPED-due-to-decompile-failure: [DECOMPILE FAILED] 签名按反编译 header, 主体最小 no-op */
-    (void)param_1; (void)param_2; (void)param_3; (void)param_4;
+    FILETIME localFt;      /* 本地时间转换结果 */
+    SYSTEMTIME st;         /* 分解后的系统时间 */
+    WCHAR out[0x40];       /* 输出日期串缓冲 */
+    FILETIME *ft;
+    WCHAR *path;
+    int skip;
+    int len;
+    uint32_t wk;
+
+    if (*(const WCHAR *)param_2 == L'\0')
+        return;                       /* 空 path: 不写变量 */
+
+    path = (WCHAR *)param_2;
+    skip = (int)(param_4 & 1);        /* sil 经 movsx 成 0/1 */
+
+    if ((param_4 & 2) != 0) {
+        FileTimeToLocalFileTime(param_3, &localFt);
+        ft = &localFt;
+    } else {
+        ft = param_3;
+    }
+
+    if (*(WCHAR *)(path + skip) == L'*') {
+        /* 星号模式: 输出原始 FILETIME 64 位值 */
+        path += 1;
+        if ((param_4 & 1) != 0) {
+            *path = L'&';
+        }
+        FUN_1400E6D74(out, (uint64_t)(uint32_t)ft->dwLowDateTime |
+                            ((uint64_t)(uint32_t)ft->dwHighDateTime << 32));
+    } else {
+        /* 普通模式: 转系统时间并格式化 */
+        FileTimeToSystemTime(ft, &st);
+        wsprintfW(out, WSTR("%04u %02u %02u %02u %02u %02u %03u %1u"),
+                  st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute,
+                  st.wSecond, st.wMilliseconds, st.wDayOfWeek);
+        if ((param_4 & 0xc) != 0) {
+            len = lstrlenW(out);
+            wk = (uint32_t)FUN_140060EE0((uint16_t *)&st, (int)(param_4 & 8));
+            wsprintfW(out + len, WSTR(" %lu"), wk);
+        }
+    }
+
+    FUN_1400629B8(param_1, (LPCWSTR)path, (LPCWSTR)out);
 }
 
 
@@ -14691,11 +14753,123 @@ LAB_140070524:
     return lVar2;
 }
 
+/* @0x140070710 size=1685 — 表达式/计算器“合法字符分类”函数 (RESTORED)
+ * 原逻辑: 依据操作符 param_2 与当前栈顶字节 bVar1 (*FUN_140065864(...))
+ * 判定该字符是否允许, 返回 0xffffffff(禁止) / 1(允许) / 0(置位标志 bit2)。
+ * 禁止集按原二进制出现顺序递增长度 (每个 case 取前缀), 见 FUN_140070710_forbid。
+ * 依赖 helper FUN_140065864 已在 link_stubs.c 补齐 (真实逻辑, 内绕 FUN_140063b00)。
+ */
+static const uint8_t FUN_140070710_forbid[] = {
+    0x5e, 0x2a, 0x2f, 0x25, 0x2b, 0x2d, 0x8c, 0x8d,
+    0x3e, 0x3c, 0x3d, 0x8e, 0x26, 0x40, 0x7c, 0x8f, 0x90
+};
+static int FUN_140070710_chk(uint8_t bVar1, int nforbid, uint8_t target)
+{
+    if ((bVar1 != 0) && (bVar1 < 0x1e)) return 0xffffffff;
+    if ((0x81 < bVar1) && (bVar1 < 0x8c)) return 0xffffffff;
+    for (int i = 0; i < nforbid; i++) {
+        if (bVar1 == FUN_140070710_forbid[i]) return 0xffffffff;
+    }
+    return (bVar1 == target) ? 0xffffffff : 1;
+}
 int FUN_140070710(int *param_1, uint8_t param_2)
 {
-    /* SKIP @0x140070710 — 巨型(1685B)复杂逻辑，需多未映射 helper/DAT，保存桩 */
-/* @0x140070710 size=1685 */
-    (void)param_1; (void)param_2;
+    uint8_t bVar1;
+    uint8_t *pbVar2;
+
+    pbVar2 = (uint8_t *)FUN_140065864((long long)*param_1, (long long *)(param_1 + 4),
+                                      (long long *)(param_1 + 6), (uint8_t *)(param_1 + 10), 2);
+    bVar1 = *pbVar2;
+    if (param_2 < 0x3d) {
+        if (param_2 != 0x3c) {
+            if (param_2 < 0x29) {
+                if (param_2 == 0x28) {
+                    return 1;
+                }
+                if (param_2 == 0) {
+                    goto FUN_140070710_flag;
+                }
+                if (param_2 < 9) {
+                    return 0xffffffff;
+                }
+                if (param_2 < 0xe) goto FUN_140070710_flag;
+                if (param_2 < 0x1e) {
+                    return 0xffffffff;
+                }
+                if (param_2 < 0x20) {
+                    return 1;
+                }
+                if (param_2 != 0x25) {
+                    if (param_2 == 0x26) {
+                        return FUN_140070710_chk(bVar1, 12, 0x26);
+                    }
+                    goto FUN_140070710_flag;
+                }
+                /* param_2 == 0x25: 落入 0x25/0x2a/0x2f 公共块 */
+                return FUN_140070710_chk(bVar1, 3, 0x25);
+            }
+            else {
+                if (param_2 == 0x29) {
+                    return 0;
+                }
+                if (param_2 != 0x2a) {
+                    if ((param_2 == 0x2b) || (param_2 == 0x2d)) {
+                        return FUN_140070710_chk(bVar1, 5, 0x2d);
+                    }
+                    if (param_2 != 0x2f) goto FUN_140070710_flag;
+                }
+                /* param_2 == 0x2a / 0x2f: 落入 0x25/0x2a/0x2f 公共块 */
+                return FUN_140070710_chk(bVar1, 3, 0x25);
+            }
+        }
+        /* param_2 == 0x3c: 落入 0x3c 块 */
+        return FUN_140070710_chk(bVar1, 9, 0x3c);
+    }
+    else if (param_2 < 0x8c) {
+        if (0x81 < param_2) {
+            return 0xffffffff;
+        }
+        if (param_2 == 0x3d) {
+            return FUN_140070710_chk(bVar1, 11, 0x8e);
+        }
+        if (param_2 != 0x3e) {
+            if (param_2 == 0x40) {
+                return FUN_140070710_chk(bVar1, 13, 0x40);
+            }
+            else if (param_2 == 0x5e) {
+                return FUN_140070710_chk(bVar1, 0, 0x5e);
+            }
+            else {
+                if (param_2 != 0x7c) goto FUN_140070710_flag;
+                return FUN_140070710_chk(bVar1, 14, 0x7c);
+            }
+        }
+        /* param_2 == 0x3e: 落入 0x3c 块 */
+        return FUN_140070710_chk(bVar1, 9, 0x3c);
+    }
+    else {
+        if (param_2 < 0x8c) goto FUN_140070710_flag;   /* 死分支 (此处 param_2>=0x8c), 原样保留 */
+        if (0x8d < param_2) {
+            if (param_2 != 0x8e) {
+                if (param_2 == 0x8f) {
+                    return FUN_140070710_chk(bVar1, 15, 0x8f);
+                }
+                else if (param_2 == 0x90) {
+                    return FUN_140070710_chk(bVar1, 16, 0x90);
+                }
+                else {
+                    if (param_2 != 0x91) goto FUN_140070710_flag;
+                    return FUN_140070710_chk(bVar1, 17, 0x91);
+                }
+            }
+            /* param_2 == 0x8e: 0x3d/0x8e 块 */
+            return FUN_140070710_chk(bVar1, 11, 0x8e);
+        }
+        /* param_2 == 0x8c / 0x8d: 落入 0x3c 块 */
+        return FUN_140070710_chk(bVar1, 9, 0x3c);
+    }
+FUN_140070710_flag:
+    *(uint8_t *)(param_1 + 2) = *(uint8_t *)(param_1 + 2) | 4;
     return 0;
 }
 

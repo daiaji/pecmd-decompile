@@ -124,7 +124,7 @@ extern void FUN_140006554(void *hDrop, int64_t *a, int64_t *b);
 extern void FUN_14007D0AC(int64_t **ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern void PECMD_AdjustEditScrollRect(int64_t obj);
 extern BOOL SystemParametersInfoW(UINT uiAction, UINT uiParam, void *pvParam, UINT fWinIni);
-extern void *FUN_140063118(void *ptr, size_t size);      /* @0x140063118 */
+extern void *PECMD_HeapRealloc(void *ptr, size_t size);      /* @0x140063118 */
 extern uint8_t DefWindowProcW_exref;
 extern uint64_t FUN_1400F3554(int64_t obj, LPARAM param2); /* @0x1400f3554 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);      /* @0x140063424 */
@@ -1623,7 +1623,7 @@ uint64_t FUN_1400E89FC(int64_t obj, uint64_t msg, int64_t wParam,
                     return 0;
                 }
             }
-            arr = (int64_t *)FUN_140063118(*(void **)(b + 0xe0),
+            arr = (int64_t *)PECMD_HeapRealloc(*(void **)(b + 0xe0),
                                                (size_t)(count + 1) * 8);
             *(int64_t **)(b + 0xe0) = arr;
             if (arr == NULL) {
@@ -1762,7 +1762,7 @@ uint64_t FUN_1400E89FC(int64_t obj, uint64_t msg, int64_t wParam,
                 }
             }
             if (i < 0) {
-                arr = (int64_t *)FUN_140063118(*(void **)(b + 0x130),
+                arr = (int64_t *)PECMD_HeapRealloc(*(void **)(b + 0x130),
                                                    (size_t)(*(int32_t *)(b + 0x138) + 1) * 0x18);
                 *(int64_t **)(b + 0x130) = arr;
                 i = *(int32_t *)(b + 0x138);

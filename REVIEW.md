@@ -3431,3 +3431,13 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 00cedc：表项注册（"opt 名=值"解析、命令表5 增删改（含时间日期改写段）、临界区保护）。
 - 依赖全部补桩可解析；build/link 全绿。累计还原真实现 ~35。
 - 剩余（登记）：0060b8/008d9c/00c764 需原二进制数据表(SID/服务名/PTR_PTR)、01708c CRT shim、巨型混淆(08cffc 等)。
+## 91. FUN_ 4837 削减方案（已量化，分阶段执行）
+> 总调用点 4822（~555 唯一被调）。削减只能靠"给被调函数命名/还原"——命名一个函数删它全部调用点。
+
+- **P1 命名可命名（~58 个真体未命名函数）→ -507 处(11%)**：6×N 子代理读 body→PECMD_→apply_rename。58 个在被还原子代理编辑的文件中，等收尾即跑。
+- **P2 CRT 标准库化（142 个 0x14010-11）→ 清 66 处直接调用点+142 桩**：逐文件 `FUN_→sqrt/strchr/...`、删桩、`-lm`。
+- **P3 还原占位桩（~89% 调用点所在）**：把空桩/链接桩函数逐一还原成真 body——
+  ①有 decompiled 体的直接移植（②批）；②decompiled 无体的走 asm→C（objdump+二进制现可用，19 个空桩已列 stub_recovery_plan.json）。
+- **P4 余下硬骨头**（混淆巨型/6 个 DECOMPILE-FAILED 若 asm 也难）→ 登记。
+- 工具落档：tools/nameable_60.json（58 待命名）、tools/stub_recovery_plan.json（19 空桩 asm）、tools/pe_registry.json（1082 数据真值）。
+- 已做：命名 813、还原 ~35+6asm、CRT mem 家族、机械警告清零。全程 build/link 绿。

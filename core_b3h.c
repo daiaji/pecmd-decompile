@@ -431,7 +431,7 @@ int64_t *FUN_14006345C(int64_t *ps, LPCSTR src)
             iVar1 = lstrlenA((LPCSTR)*ps);
         }
         int iVar2 = lstrlenA(src);
-        int64_t *plVar3 = (int64_t *)(uintptr_t)FUN_140063118((void *)*ps,
+        int64_t *plVar3 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*ps,
                                                        (size_t)(iVar2 + 1 + iVar1));
         *ps = (int64_t)plVar3;
         memcpy((void *)((int64_t)iVar1 + (int64_t)plVar3), src, iVar2 + 1);
@@ -446,7 +446,7 @@ void PECMD_ArrayGrowRaw(uint64_t *arr, int64_t *cap, uint32_t esize,
                         int64_t grow)
 {
     int iVar2 = (int)grow + (int)*cap;
-    int64_t *plVar1 = (int64_t *)(uintptr_t)FUN_140063118((void *)*arr,
+    int64_t *plVar1 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*arr,
                                                    (size_t)(iVar2 * (int)esize));
     *arr = (uint64_t)plVar1;
     memset((void *)(*cap * (uint64_t)esize + (uint64_t)plVar1), 0,
@@ -464,7 +464,7 @@ void FUN_140063BE8(int64_t *arr, int64_t count)
         count = 0;
     }
     int64_t lVar1 = count + 1;
-    int64_t *plVar2 = (int64_t *)(uintptr_t)FUN_140063118((void *)*arr, (size_t)(lVar1 * 8));
+    int64_t *plVar2 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*arr, (size_t)(lVar1 * 8));
     *arr = (int64_t)plVar2;
     if (0 < lVar1) {
         do {

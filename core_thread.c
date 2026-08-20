@@ -18,7 +18,7 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-extern void *FUN_140063118(void *ptr, size_t size); /* @0x140063118 */
+extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 全局 */
@@ -27,7 +27,7 @@ extern uint32_t g_threadId;      /* g_dwC96C 线程 ID 输出 */
 /* ========== 字节缓冲扩容 @0x140063424 ========== */
 void *PECMD_GrowByteBuffer(void **ps, int64_t len)
 {
-    void *p = FUN_140063118(*ps, (size_t)len + 1);
+    void *p = PECMD_HeapRealloc(*ps, (size_t)len + 1);
     *ps = p;
     if (p != NULL) {
         ((uint8_t *)p)[len] = 0;

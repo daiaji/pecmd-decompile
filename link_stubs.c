@@ -1135,3 +1135,21 @@ uintptr_t g_hFontE2B8;   /* DAT_14013e2b8 缓存字体 (HFONT, 初值 0, 惰性�
 uint64_t LCMapStringW(void){ return 0; }
 uint64_t FUN_140063224(void){ return 0; }
 uint64_t thunk_FUN_1400f429c(void){ return 0; }
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_140070710) 新增依赖 ----
+   ※ 本批仅添加真正缺失的 helper: FUN_140065864 (真实逻辑, 内绕
+     FUN_140063b00 栈求值器). 其余候选函数 (140070da8/084a5c/0987ec/
+     0b2ca8/0bb718/0a8a30/0ac094) 因混淆/C++对象/巨型依赖按 SKIP 保留.
+   ============================================================ */
+/* 取值自 PECMD原始.EXE — FUN_140065864 计算器栈定位: param_1<0 时清 0 并置
+ * param_4 低字节 bit3(8); 随后按 FUN_140063b00 定位栈元素并返回其指针(RAX). */
+int64_t FUN_140065864(int64_t param_1, int64_t *param_2, int64_t *param_3,
+                      uint8_t *param_4, uint32_t param_5)
+{
+    if (param_1 < 0) {
+        param_1 = 0;
+        *param_4 = (uint8_t)(*param_4 | 8);
+    }
+    return FUN_140063b00(param_1, param_2, param_3, param_5);
+}

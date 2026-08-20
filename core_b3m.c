@@ -1499,7 +1499,7 @@ void FUN_1400B1DEC(int64_t mgr, int64_t v2, int64_t *p3,
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     ppArray = *(int64_t ***)(mgr + 0x1b8);
     pCount = *(int32_t **)(mgr + 0x1c0);
-    plVar4 = (int64_t *)(uintptr_t)FUN_140063118((void *)(uintptr_t)*ppArray,
+    plVar4 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)(uintptr_t)*ppArray,
                                           (size_t)((*pCount + 1) << 3));
     *ppArray = plVar4;
     uVar1 = (uint32_t)*pCount;
