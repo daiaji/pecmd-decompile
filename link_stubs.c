@@ -1081,3 +1081,28 @@ double   DAT_1401261a0;                                        /* 常数1.0 */
 double   DAT_140126398;                                        /* 舍入阈值0.5 */
 double   DAT_140126390;                                        /* 小数缩放 */
 double   DAT_140121668;                                        /* 常数(解析) */
+
+/* ============================================================
+   ---- core_b3_remaining.c 本轮还原 (FUN_14005ce04/061dac/062bdc/
+        072924/073934/077190/081238) 新增依赖桩/数据符号 ----
+   ============================================================ */
+/* GDI+ 渲染 (FUN_140062bdc) 所需函数指针槽 (no-proto, 初值 0) */
+int64_t (*DAT_14013ce08)(void) = 0;
+int64_t (*DAT_14013ce10)(void) = 0;
+int64_t (*DAT_14013ce28)(void) = 0;
+int64_t (*DAT_14013ce30)(void) = 0;
+/* GDI+ 渲染默认色 / 插值矩阵数据 */
+uint32_t DAT_14013a34c;
+uint8_t  DAT_14013a838[8];
+
+/* SetupDi 设备枚举 (FUN_140072924) 缺失 helper 桩 */
+uint64_t FUN_140062ec8(const uint16_t *src, const uint16_t *devid, int len, uint flags)
+{ (void)src;(void)devid;(void)len;(void)flags; return 0; }
+uint64_t FUN_1400662a4(int64_t *p1, void *p2, int64_t *p3, const uint16_t *p4,
+                       const uint16_t *p5, uint p6)
+{ (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; return 0; }
+int SetupDiClassNameFromGuidA(const void *guid, char *buf, uint32_t buflen, uint32_t *req)
+{ (void)guid;(void)buf;(void)buflen;(void)req; return 1; }
+
+/* 图标资源 (FUN_140073934) 缺失 WinAPI 桩 */
+uint64_t CreateIconFromResourceEx(void){ return 0; }

@@ -99,6 +99,13 @@ extern int (*g_pGdipDeleteGraphics)();
 extern void (*g_pGdipCreateHICONFromBitmap)();
 extern void (*g_pGdipCreateBitmapFromHICON)();
 extern void *g_pFontBase;                                 /* 图像上下文 */
+/* GDI+ 渲染 (FUN_140062bdc) 所需函数指针槽 (link_stubs.c 定义, no-proto 初值 0) */
+extern int64_t (*DAT_14013ce08)(void);
+extern int64_t (*DAT_14013ce10)(void);
+extern int64_t (*DAT_14013ce28)(void);
+extern int64_t (*DAT_14013ce30)(void);
+extern uint32_t DAT_14013a34c;
+extern uint8_t  DAT_14013a838[8];
 
 /* ---- 本文件所需的辅助函数 extern(未在本文件定义的) ---- */
 extern uint64_t PECMD_ParseAndSkipSpace_7b54(int64_t *pp, double *out);   /* @0x140067b54 */
@@ -120,6 +127,11 @@ extern uint8_t g_bE870[];   /* GUID (设备类) */
 extern GUID g_guidDevInstance;   /* GUID (设备实例) */
 extern uint8_t g_bE8a0[];   /* GUID */
 extern void PECMD_LoadSetupApiFunctions(void);  /* 初始化 */
+/* FUN_140072924 设备枚举所需 helper (link_stubs.c 定义) */
+extern uint64_t FUN_140062ec8(const uint16_t *src, const uint16_t *devid, int len, uint flags);
+extern uint64_t FUN_1400662a4(int64_t *p1, void *p2, int64_t *p3, const uint16_t *p4,
+                              const uint16_t *p5, uint p6);
+extern int SetupDiClassNameFromGuidA(const void *guid, char *buf, uint32_t buflen, uint32_t *req);
 extern DWORD PECMD_QueryDeviceInfo(LPCWSTR path, DWORD *out1, int64_t *out2);
 extern void FUN_1400633a8(void **ps, int64_t len);          /* 分配 */
 extern void PECMD_GetDeviceParent(DWORD a, uint32_t b, void *c);    /* 设备属性设置 */
@@ -9270,12 +9282,42 @@ DWORD FUN_14005ccb0(int param_1, void *param_2, void *param_3, uint16_t *param_4
     return DVar5;
 }
 
+/* @0x14005ce04 size=232 — 设置指定设备的类安装参数并通过类安装器应用 (SetupDi 设备操作) */
 bool FUN_14005ce04(uint32_t param_1, uint32_t param_2, void *param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_14005ce04 — decompile-failed, body 未还原 */
-/* @0x14005ce04 size=232 */
-    (void)param_1; (void)param_2; (void)param_3;
-    return 0;
+    int iVar1;
+    BOOL BVar2;
+    HCURSOR pHVar3;
+    bool bVar4;
+    uint8_t local_48[12];
+    uint32_t local_40;
+    uint32_t local_3c;
+    uint8_t local_30[0x1c + 4];
+    uint32_t *plocal_30 = (uint32_t *)local_30;
+
+    *(uint32_t *)local_48 = 8;
+    FUN_140102a90((uint64_t *)(local_48 + 4), 0, 0x10);
+    plocal_30[0] = 0x20;       /* cbSize */
+    FUN_140102a90((uint64_t *)&local_30[4], 0, 0x1c);   /* ClassGuid 区 */
+    pHVar3 = LoadCursorW((HINSTANCE)0x0, (LPCWSTR)0x7f02);
+    pHVar3 = SetCursor(pHVar3);
+    iVar1 = ((int (*)(void *, DWORD, void *))g_pSetupDiEnumDeviceInfo)(param_3, param_2,
+                                                                       (void *)plocal_30);
+    if (iVar1 == 0) {
+        bVar4 = false;
+    }
+    else {
+        *(uint32_t *)(local_48 + 4) = 0x12;   /* InstallFunction = DIF_PROPERTYCHANGE */
+        local_3c = 1;
+        local_40 = param_1;
+        BVar2 = SetupDiSetClassInstallParamsW(param_3, (void *)plocal_30, local_48, 0x14);
+        bVar4 = BVar2 != 0;
+        if (bVar4) {
+            (*g_pSetupDiCallClassInstaller)(0x12, param_3, (void *)plocal_30);
+        }
+        SetCursor(pHVar3);
+    }
+    return bVar4;
 }
 
 uint64_t PECMD_InitWinsock(uint64_t param_1)
@@ -10463,11 +10505,36 @@ done:
     *(uint64_t *)(obj + 0x98) = 0;
 }
 
+/* @0x140061dac size=233 — 将内存字节流封装为 COM IStream 并用 g_pComLoad 加载为图像 (返回图像对象) */
 uint64_t FUN_140061dac(uint8_t *param_1, size_t param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140061dac — decompile-failed, body 未还原 */
-/* @0x140061dac size=233 (签名按反编译修正, 主体最小 no-op 桩) */
-    (void)param_1; (void)param_2;
+    int64_t lVar1;
+    HGLOBAL hMem;
+    uint8_t *puVar2;
+    int64_t *local_res18;
+    uint64_t local_res20;
+
+    lVar1 = PECMD_DelayLoadOleaut32();
+    if ((lVar1 != 0) && (g_pCreateStreamOnHGlobal != 0) && (g_pComLoad != 0)) {
+        local_res18 = (int64_t *)0x0;
+        local_res20 = 0;
+        hMem = GlobalAlloc(2, param_2);
+        if (hMem != (HGLOBAL)0x0) {
+            puVar2 = (uint8_t *)GlobalLock(hMem);
+            memcpy(puVar2, param_1, (int)param_2);
+            GlobalUnlock(hMem);
+            (*g_pCreateStreamOnHGlobal)((void *)hMem, 0, (void **)&local_res18);
+            if (local_res18 != (int64_t *)0x0) {
+                (*g_pComLoad)((void *)local_res18, 0, 0, (void *)&g_b12d1d8, (void **)&local_res20);
+            }
+            GlobalFree(hMem);
+            if (local_res18 == (int64_t *)0x0) {
+                return local_res20;
+            }
+            (*(void (**)(void))(*(uint8_t **)local_res18 + 0x10))();
+            return local_res20;
+        }
+    }
     return 0;
 }
 
@@ -10877,12 +10944,97 @@ HBITMAP PECMD_CaptureScreenRegion(RECT *param_1, uint64_t *param_2, LPCWSTR para
     return h;
 }
 
+/* @0x140062bdc size=677 — GDI+ 位图渲染: 按 param_1 描述的尺寸/位置把图像绘制到 param_2 DC 的 param_3 矩形 */
 void FUN_140062bdc(int64_t param_1, HDC param_2, RECT *param_3, COLORREF param_4)
 {
-    /* SKIP @0x140062bdc — GDI+ 渲染，需 4 个未迁移 GDI+ 函数指针(ce08/ce10/ce28/ce30)+字符串资源，签名不确定 */
-/* @0x140062bdc size=677 */
-    (void)param_1; (void)param_3;
-    (void)param_2; (void)param_4;
+    HDC hdc;
+    int iVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+    HBITMAP h;
+    HDC hdc_00;
+    HBRUSH hbr;
+    int64_t lVar1;
+    int local_res8[2];
+    HDC local_res10;
+    RECT *local_res18;
+    COLORREF local_res20;
+    uint32_t uVar6;          /* Ghidra 入栈高半字 (in_stack artifact) */
+    int local_68;
+    int local_64;
+    int local_60;
+    int local_5c;
+    int local_58;
+    HGDIOBJ local_50;
+
+    uVar6 = 0;               /* 原始反编译自 in_stack_ffffffffffffff50>>32, 栈传值无法还原; 结构保留 */
+    local_res8[0] = 0;
+    local_68 = 0;
+    local_res10 = param_2;
+    local_res18 = param_3;
+    ((int (*)(int64_t, uint8_t *, int))g_pGdipImageSelectActiveFrame)(*(int64_t *)(param_1 + 0x38),
+                                                        (uint8_t *)&DAT_14013a838,
+                                                        *(int *)(param_1 + 0x1c));
+    ((int (*)(int64_t, int *))DAT_14013ce08)(*(int64_t *)(param_1 + 0x38), local_res8);
+    ((int (*)(int64_t, int *))DAT_14013ce10)(*(int64_t *)(param_1 + 0x38), &local_68);
+    iVar2 = GetDeviceCaps(param_2, 0x58);
+    iVar3 = GetDeviceCaps(param_2, 0x5a);
+    iVar4 = MulDiv(*(int *)(param_1 + 0x28), 0x9ec, iVar2);
+    local_58 = iVar4;
+    local_64 = MulDiv(*(int *)(param_1 + 0x2c), 0x9ec, iVar3);
+    iVar5 = MulDiv(*(int *)(param_1 + 0x30), 0x9ec, iVar2);
+    iVar3 = MulDiv(*(int *)(param_1 + 0x34), 0x9ec, iVar3);
+    iVar4 = local_res8[0] - iVar4;
+    iVar2 = local_68 - local_64;
+    if ((0 < *(int *)(param_1 + 0x30)) && (iVar5 < iVar4)) {
+        iVar4 = iVar5;
+    }
+    if ((0 < *(int *)(param_1 + 0x34)) && (iVar3 < iVar2)) {
+        iVar2 = iVar3;
+    }
+    local_5c = param_3->bottom;
+    local_60 = param_3->right;
+    if (param_4 == 0x80000000) {
+        param_4 = DAT_14013a34c;
+    }
+    local_res20 = param_4;
+    h = CreateCompatibleBitmap(param_2, local_60, local_5c);
+    lVar1 = *(int64_t *)(param_1 + 0x50);
+    hdc = *(HDC *)(param_1 + 0x48);
+    *(int64_t *)(param_1 + 0x48) = 0;
+    *(int64_t *)(param_1 + 0x50) = 0;
+    hdc_00 = CreateCompatibleDC(local_res10);
+    *(HDC *)(param_1 + 0x48) = hdc_00;
+    local_50 = SelectObject(hdc_00, h);
+    hbr = CreateSolidBrush(local_res20);
+    FillRect(*(HDC *)(param_1 + 0x48), local_res18, hbr);
+    if (hbr != (HBRUSH)0x0) {
+        DeleteObject(hbr);
+    }
+    ((int (*)(HDC, int64_t))DAT_14013ce28)(*(HDC *)(param_1 + 0x48), param_1 + 0x50);
+    iVar5 = local_5c;
+    iVar3 = local_60;
+    if (*(int64_t *)(param_1 + 0x50) != 0) {
+        ((int (*)(void *, int64_t, int, int, int, int64_t, int, int, int, int,
+                  int, int, int, int))g_pGdipDrawImageRectRectI)(
+            (void *)*(int64_t *)(param_1 + 0x50), *(int64_t *)(param_1 + 0x38),
+            0, 0, local_60, ((int64_t)uVar6 << 32) | (uint32_t)local_5c,
+            local_58, local_64, iVar4, iVar2, 2, 0, 0, 0);
+    }
+    BitBlt(local_res10, 0, 0, iVar3, iVar5, *(HDC *)(param_1 + 0x48), 0, 0, 0xcc0020);
+    if (local_50 != (HGDIOBJ)0x0) {
+        SelectObject(*(HDC *)(param_1 + 0x48), local_50);
+    }
+    if (lVar1 != 0) {
+        ((int (*)(int64_t))DAT_14013ce30)(lVar1);
+    }
+    if (hdc != (HDC)0x0) {
+        DeleteDC(hdc);
+    }
+    if (h != (HBITMAP)0x0) {
+        DeleteObject(h);
+    }
 }
 
 uint16_t **PECMD_SkipRepeatedDelimiter(uint16_t **pp, uint16_t ch)
@@ -14729,11 +14881,157 @@ bool PECMD_CheckNetAddress(LPCSTR param_1, uint32_t param_2, char *param_3, char
     return bVar4;
 }
 
+/* @0x140072924 size=924 — SetupDi 设备枚举/多设备操作 (更新实例ID/类安装/分配) 返回处理的设备数 */
 int FUN_140072924(uint32_t param_1, LPCWSTR param_2, uint32_t param_3, int64_t *param_4, uint16_t *param_5)
 {
-    /* SKIP @0x140072924 — SetupDi 设备枚举，需多个未迁移函数指针+helper，保存桩 */
-/* @0x140072924 size=924 */
-    return 0;
+    typedef struct { uint32_t cbSize; uint8_t ClassGuid[16]; uint32_t DevInst; uint64_t Reserved; } SP_DID_l;
+    LPCWSTR pWVar3;
+    int iVar4;
+    int iVar5;
+    void *DeviceInfoSet;
+    LPCWSTR pWVar7;
+    LPCWSTR pWVar8;
+    uint uVar9;
+    uint uVar10;
+    uint64_t uVar1;
+    int iVar11;
+    int local_res8;
+    LPCWSTR local_170;
+    uint local_168;
+    uint64_t local_160;
+    LPCWSTR local_158;
+    WCHAR *local_150;
+    SP_DID_l local_148;
+    int64_t local_128;
+    int64_t local_120;
+    char local_118[216];
+    DWORD DVar6;
+
+    uVar10 = param_3 & 0xf00;
+    local_168 = param_1 & 0x10000;
+    iVar11 = 0;
+    uVar9 = param_1 & 0xff;
+    local_160 = 3;
+    if (uVar10 == 0) {
+        uVar9 = 2 - ((param_1 & 0xff) != 0);
+    }
+    local_158 = param_2;
+    DeviceInfoSet = (void *)((void *(*)(const void *, DWORD, void *, DWORD))g_pSetupDiGetClassDevsW)(
+        (const void *)0, 0, 0, 6);
+    if (DeviceInfoSet == (void *)0xffffffffffffffff) {
+        iVar11 = 0;
+    }
+    else {
+        local_170 = (LPCWSTR)0x0;
+        if ((param_1 & 0xf00) == 0) {
+            FUN_1400637dc((WCHAR **)&local_170, (LPCWSTR)param_2, (int64_t)-1, (int64_t)-1);
+            local_158 = local_170;
+            param_2 = local_170;
+        }
+        iVar4 = lstrlenW(param_2);
+        local_148.cbSize = 0x20;
+        FUN_140102a90((uint64_t *)&local_148.ClassGuid, 0, 0x1c);
+        local_118[0] = 0;
+        FUN_140102a90((uint64_t *)(local_118 + 1), 0, 199);
+        PECMD_AllocWStringBuffer(&local_150, 0x840b);
+        local_res8 = 0;
+        local_150[0x400] = L'\0';
+        local_150[0x401] = L'\0';
+        local_150[0x402] = L'\0';
+        local_150[0x403] = L'\0';
+        local_128 = (int64_t)(int)(param_1 & 0x600);
+        local_150[0x8403] = L'\0';
+        local_150[0x8404] = L'\0';
+        local_150[0x8405] = L'\0';
+        local_150[0x8406] = L'\0';
+        local_120 = (int64_t)(int)(param_1 & 0xf00);
+        iVar5 = ((int (*)(void *, DWORD, void *))g_pSetupDiEnumDeviceInfo)(DeviceInfoSet, 0,
+                                                                           (void *)&local_148);
+        pWVar3 = local_158;
+        while (iVar5 != 0) {
+            if (uVar10 == 0) {
+                memset(local_118, 0, sizeof(local_118));
+                SetupDiClassNameFromGuidA(&local_148.ClassGuid, local_118, 200, (uint32_t *)0);
+                iVar5 = lstrcmpA(local_118, "Net");
+                if (iVar5 == 0) goto LAB_140072ae4;
+            }
+            else {
+LAB_140072ae4:
+                pWVar7 = (LPCWSTR)0x0;
+                local_150[0x404] = L'\0';
+                local_150[0x405] = L'\0';
+                local_150[0x406] = L'\0';
+                local_150[0x407] = L'\0';
+                if (local_128 == 0) {
+                    SetupDiGetDeviceInstanceIdW(DeviceInfoSet, &local_148, &local_150[0x404],
+                                                0x7fff, (uint32_t *)0);
+                    uVar1 = uVar10 | 1;
+LAB_140072ba8:
+                    pWVar7 = (LPCWSTR)(uintptr_t)FUN_140062ec8(pWVar3, &local_150[0x404], iVar4, uVar1);
+LAB_140072bbb:
+                    if (pWVar7 == (LPCWSTR)0x0) goto LAB_140072c5b;
+                }
+                else {
+                    local_148.cbSize = 0x20;
+                    iVar5 = ((int (*)(void *, void *, uint32_t, uint32_t, WCHAR *, uint32_t, uint32_t))
+                             g_pSetupDiDestroyDeviceInfoList)(
+                        DeviceInfoSet, &local_148, 2 - (uint)((param_1 & 0x200) != 0), 0,
+                        &local_150[0x404], 0xfffe, 0);
+                    if (iVar5 != 0) {
+                        pWVar7 = (LPCWSTR)(uintptr_t)FUN_140062ec8(pWVar3, &local_150[0x404], iVar4,
+                                                                   uVar10);
+                    }
+                    if ((param_1 & 0x600) != 0x600) goto LAB_140072bbb;
+                    if (pWVar7 == (LPCWSTR)0x0) {
+                        local_150[0x404] = L'\0';
+                        local_150[0x405] = L'\0';
+                        local_150[0x406] = L'\0';
+                        local_150[0x407] = L'\0';
+                        iVar5 = ((int (*)(void *, void *, uint32_t, uint32_t, WCHAR *, uint32_t, uint32_t))
+                                 g_pSetupDiDestroyDeviceInfoList)(
+                            DeviceInfoSet, &local_148, 2, 0, &local_150[0x404], 0xfffe, 0);
+                        uVar1 = uVar10;
+                        if (iVar5 == 0) goto LAB_140072c5b;
+                        goto LAB_140072ba8;
+                    }
+                }
+                if (uVar9 == 0x12) {
+                    if (param_4 != (int64_t *)0x0) {
+                        pWVar8 = pWVar7;
+                        if (local_128 != 0) {
+                            local_150[0] = L'\0';
+                            local_150[1] = L'\0';
+                            local_150[2] = L'\0';
+                            local_150[3] = L'\0';
+                            SetupDiGetDeviceInstanceIdW(DeviceInfoSet, &local_148, local_150, 0x400,
+                                                        (uint32_t *)0);
+                            pWVar8 = local_150;
+                        }
+                        local_160 = FUN_1400662a4((int64_t *)&local_148, DeviceInfoSet, param_4,
+                                                  pWVar7, pWVar8, local_168);
+                    }
+                }
+                else {
+                    DVar6 = FUN_14005ccb0(uVar9, &local_148, DeviceInfoSet, param_5);
+                    local_160 = (local_160 & 0xffffffff00000000ULL) | (uint32_t)DVar6;
+                }
+                iVar11 = iVar11 + 1;
+                if (local_120 == 0) break;
+            }
+LAB_140072c5b:
+            local_res8 = local_res8 + 1;
+            iVar5 = ((int (*)(void *, DWORD, void *))g_pSetupDiEnumDeviceInfo)(DeviceInfoSet,
+                                                                               (DWORD)local_res8,
+                                                                               (void *)&local_148);
+        }
+        SetupDiDestroyDeviceInfoList(DeviceInfoSet);
+        FUN_14005b104((WCHAR **)&local_150);
+        FUN_14005b104((WCHAR **)&local_170);
+        if (uVar10 != 0) {
+            iVar11 = (int)local_160;
+        }
+    }
+    return iVar11;
 }
 
 int64_t PECMD_GetCachedBlock(void)
@@ -14777,11 +15075,129 @@ int64_t PECMD_GetCachedBlock(void)
 
 
 
+/* @0x140073934 size=804 — 按名称/资源号加载图标 (支持 #号/标记), 失败时从原始位图资源创建图标 */
 HICON FUN_140073934(HMODULE param_1, LPCWSTR param_2, int param_3, int param_4, uint64_t param_5, uint32_t *param_6)
 {
-    /* SKIP @0x140073934 — 参数签名不匹配(param_5 指针vs值)+多 helper+资源回调，保存桩 */
-/* @0x140073934 size=804 */
-    return 0;
+    uint uVar1;
+    uint uVar5;
+    bool bVar2;
+    bool bVar3;
+    int64_t *plVar4;
+    HICON pHVar6;
+    int *presbits;
+    LPCWSTR name;
+    int iVar7;
+    uint32_t *puVar8;
+    DWORD dwResSize;
+    int local_res10[2];
+    int local_res18;
+    WCHAR *local_a8;
+    uint64_t local_a0[4];
+    uint64_t local_98;
+    LPCWSTR local_90;
+    uint64_t local_88;
+    WCHAR local_78[32];
+    uint32_t local_flags;
+    int64_t *param5p;
+
+    local_90 = (LPCWSTR)0x0;
+    local_88 = 0;
+    local_flags = 0;
+    local_res18 = param_3;
+    param5p = (int64_t *)(uintptr_t)param_5;
+    if (param_2 < (LPCWSTR)0x10000) {
+        wsprintfW(local_78, (WCHAR *)L"#%d");
+        param_2 = local_78;
+    }
+    iVar7 = 0;
+    if (*param_2 == L'#') {
+        iVar7 = 1;
+        while (param_2[1] == L'#') {
+            iVar7 = iVar7 + 1;
+            param_2 = param_2 + 1;
+        }
+    }
+    local_res10[0] = 0;
+    local_a8 = (WCHAR *)(param_2 + 1);
+    FUN_1400c11c0((WCHAR **)&local_a8, local_res10);
+    plVar4 = param5p;
+    if (*local_a8 == L'|') {
+        *local_a8 = L'\0';
+    }
+    if (*local_a8 != L'\0') {
+        param_2 = param_2 + 1;
+    }
+    if ((param5p == (int64_t *)0x0) || (bVar2 = true, *param5p == 0)) {
+        bVar2 = false;
+    }
+    bVar3 = false;
+    puVar8 = (param_6 != (uint32_t *)0x0) ? param_6 : &local_flags;
+    uVar1 = *puVar8;
+    uVar5 = uVar1 & 0xf;
+    *puVar8 = uVar5;
+    if (((2 < iVar7) && (uVar5 == 0)) || ((uVar1 & 4) != 0)) goto LAB_140073b28;
+    if (bVar2) {
+        if (iVar7 == 1) {
+LAB_140073b10:
+            bVar3 = true;
+        }
+    }
+    else if (iVar7 == 2) goto LAB_140073b10;
+    if (1 < iVar7) {
+        *puVar8 = uVar5 | 0x20;
+    }
+    name = param_2;
+    if ((bVar3) && ((*puVar8 & 2) == 0)) {
+        local_a0[0] = (uint64_t)(uintptr_t)&param_6;
+        local_a0[1] = (uint64_t)local_res10[0];
+        local_a0[2] = 0;
+        local_a0[3] = 0;
+        EnumResourceNamesW(param_1, (LPCWSTR)0xe, (void *)FUN_1400738D0, (LONG_PTR)&local_a0);
+        name = (LPCWSTR)local_a0[2];
+    }
+    pHVar6 = (HICON)(uintptr_t)LoadImageW(param_1, name, 1, local_res18, param_4, 0);
+    if (*puVar8 != 0) {
+        FUN_14005b104((WCHAR **)&param_6);
+        return pHVar6;
+    }
+    FUN_14005b104((WCHAR **)&param_6);
+    if (pHVar6 != (HICON)0x0) {
+        return pHVar6;
+    }
+LAB_140073b28:
+    pHVar6 = (HICON)0x0;
+    local_90 = (LPCWSTR)0x0;
+    if (((2 < iVar7) || ((*puVar8 & 4) != 0)) && ((*puVar8 & 2) == 0)) {
+        *puVar8 = *puVar8 | 0x41;
+        FUN_140063344((uint64_t *)local_a0);
+        local_98 = 0;
+        presbits = (int *)FUN_14001ea18(param_1, (uint16_t *)param_2, (uint16_t *)0x3,
+                                        (int64_t *)local_a0, (uint *)0x0);
+        dwResSize = (DWORD)local_98;
+        if ((0xf < (int)dwResSize) && (presbits != (int *)0x0)) {
+            if ((((*puVar8 & 6) == 2) && ((uVar1 & 0xfffffff0) != 0 && (*presbits != 0x10000)))) {
+                *puVar8 = *puVar8 | 0x100;
+                pHVar6 = (HICON)(uintptr_t)PECMD_LoadImageStream((uint8_t *)local_a0,
+                                                                 (int64_t)(int)dwResSize,
+                                                                 (uint64_t *)0);
+                if (pHVar6 != (HICON)0x0) {
+                    FUN_14005b104((WCHAR **)&local_a0);
+                    return pHVar6;
+                }
+            }
+            pHVar6 = (HICON)(uintptr_t)CreateIconFromResourceEx((const uint8_t *)presbits,
+                                                                dwResSize, 1, 0x30000,
+                                                                local_res18, param_4, 0x40);
+            if ((pHVar6 != (HICON)0x0) && (plVar4 != (int64_t *)0x0) &&
+                ((HMODULE)(uintptr_t)*plVar4 != (HMODULE)0x0)) {
+                FreeLibrary((HMODULE)(uintptr_t)*plVar4);
+                *plVar4 = 0;
+            }
+        }
+        FUN_14005b104((WCHAR **)&local_a0);
+    }
+    (void)local_90; (void)local_88; (void)iVar7;
+    return pHVar6;
 }
 
 uint PECMD_TokenizeList(int64_t param_1, int16_t *param_2, int param_3)

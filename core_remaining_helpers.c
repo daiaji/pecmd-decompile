@@ -19,11 +19,25 @@ extern void PECMD_VarTruncateUpdate(void *node, const void *src,
 extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap,
                                    const void *src, int64_t len);    /* @0x140066224 */
 
-uint64_t FUN_14005b374(void)
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);        /* @0x140063720 串扩容 */
+extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
+extern WCHAR *FUN_140063620(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
+extern void  FUN_14005b104(void *ps);                               /* @0x14005b104 释放引用串容器 */
+extern void  FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,
+                           int mode, int flag);                      /* @0x14007bf44 */
+
+/* @0x14005b374 size=44 — 从 *pp 起跳过字符, 直到撞上 '\0'/ch1/ch2 (行切分定界) */
+void FUN_14005b374(WCHAR **pp, WCHAR ch1, WCHAR ch2)
 {
-    /* UNIMPLEMENTED @0xFUN_14005b374 — decompile-failed, body 未还原 */
-/* @0x14005b374 size=44 */
-    return 0;
+    WCHAR *p;
+
+    p = *pp;
+    if (p != NULL) {
+        while (*p != L'\0' && (uint16_t)*p != (uint16_t)ch1 &&
+               (uint16_t)*p != (uint16_t)ch2) {
+            *pp = ++p;
+        }
+    }
 }
 
 LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method)
@@ -34,18 +48,59 @@ LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method)
     return (LARGE_INTEGER)newPos;
 }
 
-uint64_t FUN_1400675b8(void)
+/* @0x1400675b8 size=145 — 按定界符切分 token (跳过前导/尾随空白), 写入 dst 容器 */
+void FUN_1400675b8(WCHAR **src, WCHAR **dst, int16_t delim)
 {
-    /* UNIMPLEMENTED @0xFUN_1400675b8 — decompile-failed, body 未还原 */
-/* @0x1400675b8 size=145 */
-    return 0;
+    WCHAR *pStart;
+    WCHAR *p;
+    WCHAR *pEnd;
+    int iLen;
+    WCHAR wc;
+
+    FUN_14005B154(src);          /* 跳过前导空白 */
+    pStart = *src;
+    p = pStart;
+    wc = *p;
+    while (wc != L'\0' && (uint16_t)wc != (uint16_t)delim) {
+        p++;
+        *src = p;
+        wc = *p;
+    }
+    /* 归去尾随空白 (pEnd 停在最后一个非空白字符) */
+    pEnd = *src;
+    do {
+        pEnd--;
+        if (pEnd < pStart)
+            break;
+    } while (((uint16_t)*pEnd > 8 && (uint16_t)*pEnd < 0xe) || *pEnd == L' ');
+    iLen = (int)((pEnd - pStart) + 1);
+    /* 拷贝 iLen+1 宽字符(可能多读1), 再在 [iLen] 落 0 */
+    PECMD_StrCopyW(dst, pStart, (int64_t)(iLen + 1));
+    (*dst)[iLen] = L'\0';
+    return;
 }
 
-uint64_t FUN_1400676e4(void)
+/* @0x1400676e4 size=99 — 按定界符切分 token (不跳空白), 写入 dst 容器 */
+void FUN_1400676e4(WCHAR **src, WCHAR **dst, int16_t delim)
 {
-    /* UNIMPLEMENTED @0xFUN_1400676e4 — decompile-failed, body 未还原 */
-/* @0x1400676e4 size=99 */
-    return 0;
+    WCHAR *pStart;
+    WCHAR *p;
+    int iVar3;
+    WCHAR wc;
+
+    pStart = *src;
+    p = pStart;
+    wc = *p;
+    while (wc != L'\0' && (uint16_t)wc != (uint16_t)delim) {
+        p++;
+        *src = p;
+        wc = *p;
+    }
+    iVar3 = (int)(p - pStart);
+    /* 拷贝 iVar3+1 宽字符(可能多读1), 再在 [iVar3] 落 0 */
+    PECMD_StrCopyW(dst, pStart, (int64_t)(iVar3 + 1));
+    (*dst)[iVar3] = L'\0';
+    return;
 }
 
 bool PECMD_ParseNumSkipWs(WCHAR **pp, uint64_t *out)
@@ -59,11 +114,25 @@ bool PECMD_ParseNumSkipWs(WCHAR **pp, uint64_t *out)
     return ok;
 }
 
-uint64_t FUN_14006923c(void)
+/* @0x14006923c size=153 — LPCSTR 字节串 → 宽十六进制串 "0x%02X " 每字节 */
+int FUN_14006923c(WCHAR **out, LPCSTR src, int len)
 {
-    /* UNIMPLEMENTED @0xFUN_14006923c — decompile-failed, body 未还原 */
-/* @0x14006923c size=153 */
-    return 0;
+    LPWSTR pW;
+    int i;
+
+    if (len < 1) {
+        len = lstrlenA(src);
+    }
+    PECMD_AllocString(out, (int64_t)(len * 5 + 1));
+    pW = *out;
+    if (0 < len) {
+        for (i = 0; i < len; i++) {
+            wsprintfW(pW, WSTR("0x%02X "), (unsigned char)src[i]);
+            pW += 5;
+        }
+        pW[-1] = L'\0';
+    }
+    return 1;
 }
 
 uint64_t FUN_1400692d8(void)
@@ -110,7 +179,7 @@ int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
 
 uint64_t FUN_1400693c0(void)
 {
-    /* UNIMPLEMENTED @0xFUN_1400693c0 — decompile-failed, body 未还原 */
+    /* SKIP @0x1400693c0 — body 需 LCMapStringA, 未在任何 core_*.c/link_stubs.c 定义, 保持桩 */
 /* @0x1400693c0 size=161 */
     return 0;
 }
@@ -181,11 +250,17 @@ uint64_t FUN_140075c7c(void)
     return 0;
 }
 
-uint64_t FUN_14007f6e4(void)
+/* @0x14007f6e4 size=127 — 按分隔符取 token 赋值变量, 推进游标并返回其+2 */
+int64_t *FUN_14007f6e4(int64_t *cursor, WCHAR **pp, uint16_t sep, int flag)
 {
-    /* UNIMPLEMENTED @0xFUN_14007f6e4 — decompile-failed, body 未还原 */
-/* @0x14007f6e4 size=127 */
-    return 0;
+    WCHAR *tok = NULL;
+
+    FUN_140063620(&tok);
+    FUN_1400676e4(pp, &tok, (int16_t)sep);
+    FUN_14007bf44((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
+    cursor[2] = cursor[0];
+    FUN_14005b104(&tok);
+    return cursor + 2;
 }
 
 uint64_t FUN_1400a9a84(void)
