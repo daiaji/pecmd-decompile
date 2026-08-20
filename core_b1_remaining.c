@@ -164,7 +164,6 @@ extern WCHAR *FUN_1400637dc(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b); /* @
 extern void FUN_14003ed4c(void *script, LPCWSTR cmd);                     /* @0x14003ed4c */
 extern void FUN_14003cd0c(void *script, void *p2);                        /* @0x14003cd0c */
 extern uint64_t *PECMD_ServiceControl(void *script, LPCWSTR cmd);                /* @0x140020018 */
-extern void FUN_140102a90(void *buf, int val, uint64_t count);            /* @0x140102a90 buffer zero-fill 辅助 */
 extern void FUN_140067b78(int64_t *ps, uint64_t *out);                    /* @0x140067b78 数字解析 */
 extern uint64_t PECMD_GetParentProcessId(DWORD pid);                                 /* @0x140006988 */
 extern uint64_t PECMD_RunCommand(void *p1, void *p2);                        /* @0x140031454 */
@@ -966,7 +965,7 @@ bool PECMD_LaunchServiceProcess(LPCWSTR param_1, LPCWSTR param_2)
     local_f0 = (HANDLE)0;
     local_12c[0] = (*param_2 == L'\0');
     local_68 = 0;
-    FUN_140102a90(local_67, 0, 0x27);
+    memset(local_67, 0, 0x27);
     local_80.lpSecurityDescriptor = &local_68;
     local_80.nLength = 0x18;
     local_80.bInheritHandle = 0;
@@ -1058,7 +1057,7 @@ LAB_1400040bd:
                 pvVar8 = local_b0;
                 if (puVar9 == (uint64_t *)0x0)
                     goto LAB_140004287;
-                FUN_140102a90(puVar9, 0, 0x80);
+                memset(puVar9, 0, 0x80);
                 if (bVar2) {
                     iVar5 = lstrlenW(local_d0);
                     iVar5 = iVar5 * 2;
@@ -3550,7 +3549,7 @@ void PECMD_LaunchProcessInSession(LPWSTR param_1, char param_2, uint8_t param_3)
     local_78.cb = 0x68;
     local_78.lpReserved = (LPWSTR)0x0;
     local_88 = 0;
-    FUN_140102a90(&local_78.lpDesktop, 0, 0x58);
+    memset(&local_78.lpDesktop, 0, 0x58);
     uVar1 = local_78.dwFlags | 0x80;
     if ((param_3 & 1) != 0) {
         local_78.wShowWindow = 0;
@@ -3619,7 +3618,7 @@ void PECMD_SvcPostCommand(uint16_t *param_1)
     int len;
     WCHAR name[8 + 1012];           /* "service:"(8) + 令牌(≤1000) + NUL */
 
-    memset(name, 0, sizeof(name));          /* FUN_140102a90(local_7f6,0,0x7e4) */
+    memset(name, 0, sizeof(name));          /* memset(local_7f6,0,0x7e4) */
     memcpy(name, szServicePrefix, sizeof(szServicePrefix));  /* 前缀 + 结尾 NUL */
     p = FUN_14000531c(param_1);             /* 跳过前导空白 */
     q = FUN_14000546c(p);                   /* 令牌结尾 (支持引号) */
@@ -3784,7 +3783,7 @@ uint64_t PECMD_LoadFileMappingExec(LPCWSTR param_1, int64_t *param_2, int64_t *p
     } else {
         *lpBaseAddress = (int64_t)(iVar2 * 2 + 2);
         memcpy((uint8_t *)(lpBaseAddress + 1), (const uint8_t *)param_1, iVar2 * 2 + 2);
-        FUN_140102a90((uint64_t *)((uint8_t *)lpBaseAddress + (int64_t)iVar2 * 2 + 10), 0, 0x48);
+        memset((uint64_t *)((uint8_t *)lpBaseAddress + (int64_t)iVar2 * 2 + 10), 0, 0x48);
         UnmapViewOfFile(lpBaseAddress);
         wsprintfW(local_168, WSTR(" *map:0x%p:%lu "));
         FUN_1400702F0((int64_t *)&local_res10, "PECMD LOAD ", 0xffffffffffffffff);
@@ -3802,7 +3801,7 @@ uint64_t PECMD_LoadFileMappingExec(LPCWSTR param_1, int64_t *param_2, int64_t *p
             local_210.hThread = (HANDLE)0;
             local_210.dwProcessId = 0;
             local_210.dwThreadId = 0;
-            FUN_140102a90(&local_1d8.lpReserved, 0, 0x60);
+            memset(&local_1d8.lpReserved, 0, 0x60);
             iVar2 = PECMD_CreateProcessW((LPCWSTR)pWVar5, (LPWSTR)local_res10, 0, 0, 1, 0,
                                          0, 0, &local_1d8, &local_210);
             if (iVar2 != 0) {

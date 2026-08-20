@@ -3446,3 +3446,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
   rename_map 813→**870**；build/link 全绿。
 - 补名 005c18→PECMD_FormatIpAddress(IPv4 前四位)、0cedc→PECMD_RegisterTableItem。
 - 剩未命名：0060b8/01708c(未还原/CRT shim) 等，待 P3 还原后命名。
+## 93. P2 CRT 标准库化
+- FUN_140102a90→memset 45 处、FUN_14010443c→isalpha 1 处；删对应 extern、补 string.h/ctype.h。
+- 关键判据（行为保持）：wchar 族(wcslen/wcscpy/wcslwr)因 WCHAR=2B vs libc wchar_t=4B 语义不符**正确保留 FUN_**；
+  stdio 表/反编译失败项保留。数学 CRT 桩无真实调用点(仅自定义)，`-lm` 已入链接。
+- shared 桩因仍有他文件调用未删(正确)。build/link 绿。

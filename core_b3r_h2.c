@@ -10,7 +10,7 @@
  *   PECMD_ControlTimer @0x14009c548  定时器控制 (-del)
  *
  * 约定:
- *   - FUN_140102a90(...) 是 memset 别名, 直接写 memset。
+ *   - memset(...) 是 memset 别名, 直接写 memset。
  *   - 宽字符串字面量用 WSTR("..") (赋值给 LPCWSTR/WCHAR*); 单宽字符比较用 L'x'。
  *   - CONCAT44/CONCAT22/CONCAT71 拼接以位运算再现 (Ghidra register glue)。
  *   - 带 `._4_4_` / `._1_7_` 的高低位拼接按 64 位整数就地还原 (位运算)。
@@ -403,7 +403,7 @@ LAB_140096b4b:
             return (longlong)(int)DVar6;
         }
         if (DVar15 != 0) {
-            FUN_140102a90((ulonglong *)local_60, 0, 0x24);
+            memset((ulonglong *)local_60, 0, 0x24);
             GetFileAttributesExW(pWVar10, 2, local_60);
             local_88 = (WCHAR *)0x0;
             lpString = (LPCWSTR)g_szEmpty;

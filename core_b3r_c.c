@@ -13,7 +13,6 @@
 /* ---------- extern helpers / globals / Win32 APIs (not in headers) ---------- */
 /* helpers */
 extern void FUN_1400633a8(void **ps, int64_t len);          /* @0x1400633a8 alloc */
-extern void FUN_140102a90(void *buf, int val, uint64_t cnt); /* @0x140102a90 memset (use memset directly) */
 extern void FUN_14005b104(void *ps);                         /* @0x14005b104 free */
 extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
@@ -86,11 +85,11 @@ uint64_t PECMD_QueryDevice(HANDLE param_1, uint64_t param_2, uint16_t *param_3, 
     FUN_1400633a8((void **)&buf, 0x1410);
     lpOutBuffer = buf + 0x400;
 
-    FUN_140102a90(buf, 0, 0xc);
+    memset(buf, 0, 0xc);
     *(uint32_t *)(buf + 0) = 0;
     *(uint32_t *)(buf + 4) = 0;
     *(uint8_t *)(buf + 8) = 0;
-    FUN_140102a90(lpOutBuffer, 0, 0x28);
+    memset(lpOutBuffer, 0, 0x28);
     uVar8 = DeviceIoControl(param_1, 0x2d1400, buf, 0xc, lpOutBuffer, 0x828, &local_54[0], 0);
     iVar9 = *(int32_t *)(buf + 0x41c);
     if ((int)uVar8 < 1) {
@@ -131,8 +130,8 @@ uint64_t PECMD_QueryDevice(HANDLE param_1, uint64_t param_2, uint16_t *param_3, 
 L1400779bd:
         do {
             bVar6 = 1;
-            FUN_140102a90(lpOutBuffer, 0, 0x400);
-            FUN_140102a90(buf, 0, 0x29);
+            memset(lpOutBuffer, 0, 0x400);
+            memset(buf, 0, 0x29);
             *(uint32_t *)(buf + 0) = 0x200;
             *(uint8_t *)(buf + 5) = 1;
             *(uint8_t *)(buf + 6) = 1;
@@ -161,7 +160,7 @@ L1400779bd:
 L140077696:
             do {
                 local_res20 = 0x01;
-                FUN_140102a90(buf, 0, 0x1030);
+                memset(buf, 0, 0x1030);
                 *(uint32_t *)(buf + 0) = 0x31;
                 *(uint32_t *)(buf + 4) = 0;
                 *(uint32_t *)(buf + 0x14) = 0;
@@ -208,9 +207,9 @@ L1400777db:
 L1400777ea:
                     puVar1 = buf + 0x800;
                     bVar7 = 1;
-                    FUN_140102a90(puVar1, 0, 0x38);
-                    FUN_140102a90(buf, 0, 0x38);
-                    FUN_140102a90(lpOutBuffer, 0, 0x100);
+                    memset(puVar1, 0, 0x38);
+                    memset(buf, 0, 0x38);
+                    memset(lpOutBuffer, 0, 0x100);
                     *(uint32_t *)(buf + 0xc) = 0x100;
                     *(uint16_t *)(buf + 0) = 0x38;
                     *(uint8_t *)(buf + 6) = 6;
@@ -224,9 +223,9 @@ L1400777ea:
                     bVar3 = *(uint8_t *)(buf + 2);
                     /* CONCAT44 noise dropped: run is re-set below */
 
-                    FUN_140102a90(puVar1, 0, 4);
+                    memset(puVar1, 0, 4);
                     *(uint64_t *)(buf + 0x804) = 0;
-                    FUN_140102a90(buf, 0, 0x38);
+                    memset(buf, 0, 0x38);
                     *(uint8_t *)(buf + 6) = 6;
                     *(uint8_t *)(buf + 8) = 1;
                     *(uint32_t *)(buf + 0xc) = 0x100;

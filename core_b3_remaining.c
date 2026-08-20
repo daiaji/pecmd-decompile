@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "pecmd_defs.h"
 
@@ -533,7 +534,6 @@ extern uint8_t DAT_140127738[];
 extern uint8_t DAT_140127740[];
 
 extern int      FUN_14005f96c(HANDLE param_1, int param_2);        /* @0x14005f96c 扇区大小 */
-extern void     FUN_140102a90(uint64_t *param_1, uint64_t param_2, uint64_t param_3); /* == memset */
 extern uint32_t FUN_140065efc(LPCWSTR param_1, HANDLE param_2);    /* @0x140065efc */
 extern uint64_t FUN_1400c47f4(int64_t *param_1, HWND param_2, HWND param_3,
                               LPCWSTR param_4, WPARAM param_5, int64_t param_6); /* @0x1400c47f4 */
@@ -1373,7 +1373,7 @@ uint64_t PECMD_ShowScreenText(int64_t *param_1, WCHAR *param_2)
             if (cVar14 != '\0') goto LAB_14004727a;
         } else if (cVar14 != '\0') {
             memcpy(local_1b8, "** * *disable **,", 0x24);
-            FUN_140102a90(local_194, 0, 0x144);
+            memset(local_194, 0, 0x144);
             wsprintfW((LPWSTR)local_1b6, WSTR("0x%X"));
             PECMD_LaunchCommand(local_1b6);
             pHVar10 = g_hPelogonWnd;
@@ -1557,7 +1557,7 @@ uint64_t *PECMD_InitDrvInstallCtx(uint64_t *param_1, LPCWSTR param_2)
     *(uint32_t *)((char *)param_1 + 0x1a4) = 0;
     *(uint32_t *)(param_1 + 0x36) = 0;
     *(uint8_t *)((char *)param_1 + 0x192) = 0;
-    FUN_140102a90(param_1 + 0x3e, 0, 0x10);
+    memset(param_1 + 0x3e, 0, 0x10);
     return param_1;
 }
 
@@ -5166,7 +5166,7 @@ uint64_t PECMD_ParseVarExpressionElement(int *param_1, WCHAR **param_2, char *pa
     }
     if (*pwVar1 == L'\\') {
         *param_2 = pwVar1 + 1;
-        iVar2 = FUN_14010443c(pwVar1[1]);
+        iVar2 = isalpha(pwVar1[1]);
         if (iVar2 == 0) {
             uVar5 = FUN_140053be8(param_1, param_2);
             if (-1 < (int)uVar5) {
@@ -7700,7 +7700,7 @@ LAB_1400561c7:
                 memmove((uint8_t *)puVar26,
                               (uint8_t *)(uintptr_t)(uVar20 + (int64_t)(intptr_t)puVar26),
                               (int)(((int64_t)(intptr_t)lpBuffer_01 - (int64_t)(intptr_t)puVar26) - iVar7) + 1);
-                FUN_140102a90((uint64_t *)((int64_t)(intptr_t)lpBuffer_01 - uVar20), 0, uVar20);
+                memset((uint64_t *)((int64_t)(intptr_t)lpBuffer_01 - uVar20), 0, uVar20);
                 pWVar29 = local_140;
             }
             iVar24 = (int)(intptr_t)lpBuffer_01 - (int)(intptr_t)local_78;
@@ -7772,7 +7772,7 @@ LAB_140055f59:
     goto LAB_1400567e9;
 LAB_140056389:
     param_2[1] = lVar21;
-    FUN_140102a90((uint64_t *)(param_2[2] + *param_2 + lVar21), 0, 0x10);
+    memset((uint64_t *)(param_2[2] + *param_2 + lVar21), 0, 0x10);
     FUN_14005B104((WCHAR **)&local_168);
     if (_Var22 != 0xffffffffffffffffULL) {
         CloseHandle((HANDLE)_Var22);
@@ -7857,7 +7857,7 @@ DWORD PECMD_DiskInfo(int64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, LPCWSTR
     lpOutBuffer = local_148 + 1;
     local_140[0] = 0;
     local_158 = 0;
-    FUN_140102a90(local_148, 0, 0x28);
+    memset(local_148, 0, 0x28);
     *(uint32_t *)puVar13 = 5;
     if ((((*param_2 == L'\\') && (param_2[1] == L'\\')) &&
          ((param_2[2] == L'?' || (param_2[2] == L'.')))) && (param_2[3] == L'\\')) {
@@ -7969,14 +7969,14 @@ DWORD PECMD_DiskInfo(int64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, LPCWSTR
         if (bVar2) {
             *pWVar21 = L'\0';
         }
-        FUN_140102a90(&local_d8, 0, 0x90);
+        memset(&local_d8, 0, 0x90);
         pvVar11 = local_150;
         local_154 = 0;
         DeviceIoControl(local_150, 0x70048, (LPVOID)0, 0, &local_d8, 0x90, &local_154,
                         (void *)0);
         puVar17 = local_148;
         local_100 = local_d0;
-        FUN_140102a90(local_148, 0, 0x200);
+        memset(local_148, 0, 0x200);
         ReadFile(pvVar11, puVar17, 0x200, &local_154, (void *)0);
         if ((pvVar11 != (HANDLE)0) && (pvVar11 != (HANDLE)(uintptr_t)-1)) {
             CloseHandle(pvVar11);
@@ -8006,7 +8006,7 @@ DWORD PECMD_DiskInfo(int64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, LPCWSTR
     pWVar21 = local_108;
     uVar15 = local_158 * local_140[0];
     FUN_1400e6d74(local_108, (uint64_t)uVar15);
-    FUN_140102a90(local_148, 0, 0x100028);
+    memset(local_148, 0, 0x100028);
     *(uint32_t *)lpOutBuffer = 0x10000;
     BVar6 = DeviceIoControl(pvVar11, 0x90073, local_f0, 8, lpOutBuffer, 0x100020, &local_154,
                             (void *)0);
@@ -9044,7 +9044,7 @@ void PECMD_DigestUpdate(uint32_t *param_1, uint64_t param_2)
     iVar5 = 1;
     local_res10 = 0;
     uVar2 = 0xfee;
-    FUN_140102a90((uint64_t *)(param_1 + 3), (uint64_t)CONCAT71((int64_t)(param_2 >> 8), 0x20), 0xfee);
+    memset((uint64_t *)(param_1 + 3), (uint64_t)CONCAT71((int64_t)(param_2 >> 8), 0x20), 0xfee);
     uVar10 = (uint64_t)*(int8_t *)((char *)param_1 + 0x101d);
     uVar11 = uVar10;
     while ((uVar9 = (uint)uVar11, (int64_t)uVar10 < 0x12 &&
@@ -9296,9 +9296,9 @@ bool PECMD_ChangeDeviceProperty(uint32_t param_1, uint32_t param_2, void *param_
     uint32_t *plocal_30 = (uint32_t *)local_30;
 
     *(uint32_t *)local_48 = 8;
-    FUN_140102a90((uint64_t *)(local_48 + 4), 0, 0x10);
+    memset((uint64_t *)(local_48 + 4), 0, 0x10);
     plocal_30[0] = 0x20;       /* cbSize */
-    FUN_140102a90((uint64_t *)&local_30[4], 0, 0x1c);   /* ClassGuid 区 */
+    memset((uint64_t *)&local_30[4], 0, 0x1c);   /* ClassGuid 区 */
     pHVar3 = LoadCursorW((HINSTANCE)0x0, (LPCWSTR)0x7f02);
     pHVar3 = SetCursor(pHVar3);
     iVar1 = ((int (*)(void *, DWORD, void *))g_pSetupDiEnumDeviceInfo)(param_3, param_2,
@@ -10176,7 +10176,7 @@ uint64_t PECMD_MountVolumeToDir(LPCWSTR param_1, LPCWSTR param_2)
     short local_318[384];
 
     local_328 = 0;
-    FUN_140102a90((uint64_t *)&local_320, 0, 0x308);
+    memset((uint64_t *)&local_320, 0, 0x308);
     local_res18[0] = 0;
     BVar2 = CreateDirectoryW(param_1, (LPSECURITY_ATTRIBUTES)0);
     uVar5 = 1;
@@ -13000,7 +13000,7 @@ uint64_t PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2, uint32_t
     }
     uVar5 = (uint64_t)(int)param_4;
     iVar1 = (int)(((uint64_t)local_res18 * 0x80 + -1 + uVar5) / uVar5);
-    FUN_140102a90(param_2, 0, (uint64_t)((iVar1 + 4) * param_4));
+    memset(param_2, 0, (uint64_t)((iVar1 + 4) * param_4));
     local_res20[0] = 0;
     PECMD_SetFilePointer((HANDLE)*param_1, param_7, 0);
     ReadFile((HANDLE)*param_1, param_2, param_4, local_res20, (void *)0x0);
@@ -13020,7 +13020,7 @@ uint64_t PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2, uint32_t
     lpBuffer = (uint64_t *)((int64_t)(int)(param_4 * 2) + 0x10000 +
                             (int64_t)param_2);
     if (param_6 != (uint64_t *)0x0) {
-        FUN_140102a90(lpBuffer, 0, uVar5);
+        memset(lpBuffer, 0, uVar5);
         if (*puVar4 < 2) {
             *puVar4 = *(uint64_t *)((int64_t)(uVar5 + (int64_t)param_2) + 0x20);
         }
@@ -13050,7 +13050,7 @@ int PECMD_QueryDiskGeometry(HANDLE param_1, uint64_t *param_2, int param_3, int 
     if ((param_4 < 2) && (*(int *)((intptr_t)&g_aiDiskType + lVar4 * 4) != 0)) {
         iVar3 = (int)*(int16_t *)((intptr_t)&g_aiDiskType + lVar4 * 4);
     } else {
-        FUN_140102a90(param_2, 0, 0x18);
+        memset(param_2, 0, 0x18);
         BVar1 = DeviceIoControl(param_1, 0x70000, (LPVOID)0x0, 0, param_2, 0x18,
                                 local_res18, (void *)0x0);
         if (BVar1 == 0) {
@@ -15104,9 +15104,9 @@ int PECMD_EnumClassDevices(uint32_t param_1, LPCWSTR param_2, uint32_t param_3, 
         }
         iVar4 = lstrlenW(param_2);
         local_148.cbSize = 0x20;
-        FUN_140102a90((uint64_t *)&local_148.ClassGuid, 0, 0x1c);
+        memset((uint64_t *)&local_148.ClassGuid, 0, 0x1c);
         local_118[0] = 0;
-        FUN_140102a90((uint64_t *)(local_118 + 1), 0, 199);
+        memset((uint64_t *)(local_118 + 1), 0, 199);
         PECMD_AllocWStringBuffer(&local_150, 0x840b);
         local_res8 = 0;
         local_150[0x400] = L'\0';
@@ -16403,7 +16403,7 @@ void PECMD_EnumDrivesToTable(int64_t param_1, LPWSTR param_2, uint param_3)
                     query_dev:
                         WVar15 = *(WCHAR *)(lVar10 + param_1);
                         local_1d8[0] = 0;
-                        FUN_140102a90((uint64_t *)(uintptr_t)local_res10, 0, 0x90);
+                        memset((uint64_t *)(uintptr_t)local_res10, 0, 0x90);
                         local_res10[0xc] = L'\xffff';
                         local_res10[0xd] = L'\xffff';
                         BVar6 = DeviceIoControl(hDevice, 0x70048, (LPVOID)0x0, 0, local_res10, 0x90,
@@ -16709,14 +16709,14 @@ uint64_t *lpBuffer;
     FUN_1400633a8(&local_res20, 0x4008);
     lpBuffer = (uint64_t *)((int64_t)local_res20 + 0x800);
     local_res10[0] = 0;
-    FUN_140102a90(lpBuffer, 0, 0x800);
+    memset(lpBuffer, 0, 0x800);
     BVar3 = ReadFile(param_1, local_res20, 0x1000, local_res10, (void *)0x0);
     if (BVar3 == 0) goto LAB_14007874b;
     iVar4 = *(int *)((int64_t)local_res20 + 0x1b4);
     cVar9 = '\0';
     if ((iVar4 == 0x46424246) || (iVar4 == 0x534c5055)) {
         cVar9 = '\x01';
-        FUN_140102a90(lpBuffer, 0, 0x200);
+        memset(lpBuffer, 0, 0x200);
         PECMD_SetFilePointer(param_1, (LARGE_INTEGER){ .QuadPart = 0x8600 }, 0);
         BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
         if ((BVar3 == 0) || ((*(uint8_t *)((int64_t)local_res20 + 0x9f8) & 0xc0) != 0x40))
@@ -16726,7 +16726,7 @@ uint64_t *lpBuffer;
     else {
         if (((iVar4 != 0x5352424d) || (*(short *)((int64_t)local_res20 + 0x1fe) != -0x55ab)) ||
            (*(int *)((int64_t)local_res20 + 0x1c) != 0)) goto LAB_14007874b;
-        FUN_140102a90(lpBuffer, 0, 0x200);
+        memset(lpBuffer, 0, 0x200);
         PECMD_SetFilePointer(param_1, (LARGE_INTEGER){ .QuadPart = 0x4a00 }, 0);
         BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
         if (((BVar3 == 0) || (*(int *)((int64_t)local_res20 + 0x9b4) != 0x5352424d)) ||
@@ -16739,7 +16739,7 @@ uint64_t *lpBuffer;
         lVar6 = CONCAT44(*(uint32_t *)((int64_t)local_res20 + 0x860),
                          *(int *)((int64_t)local_res20 + 0x85c) + uVar7);
     }
-    FUN_140102a90(lpBuffer, 0, 0x200);
+    memset(lpBuffer, 0, 0x200);
     LVar5.QuadPart = lVar6 << 9;
     while (1) {
         PECMD_SetFilePointer(param_1, LVar5, 0);
@@ -16759,7 +16759,7 @@ uint64_t *lpBuffer;
         }
         if ((lVar6 == 0x41) || (cVar9 != (char)(intptr_t)plVar8)) break;
         lVar6 = 0x41;
-        FUN_140102a90(lpBuffer, 0, 0x200);
+        memset(lpBuffer, 0, 0x200);
         LVar5.QuadPart = 0x8200;
     }
 LAB_14007874b:
@@ -19463,7 +19463,7 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
     local_a4 = (WCHAR)g_u3212776c;
     (void)local_b0;
     (void)local_a8;
-    FUN_140102a90(local_a2, 0, 0x6a);
+    memset(local_a2, 0, 0x6a);
     cVar5 = (char)(uintptr_t)param_3;
     cVar1 = (char)-1;
     if ((uintptr_t)param_3 < 5) {
@@ -19717,7 +19717,7 @@ int64_t PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t 
     }
     local_4d8 = pWVar16;
     if (((int64_t)param_3 < 1) && (WVar19 == L'\0')) {
-        FUN_140102a90((uint64_t *)(uintptr_t)pWVar16, 0, 0x3960);
+        memset((uint64_t *)(uintptr_t)pWVar16, 0, 0x3960);
         pWVar16[0] = 0xfffe;
         pWVar16[1] = 0xffff;
     }
@@ -23113,7 +23113,7 @@ void PECMD_LoadObjectIcon(int64_t param_1, HBITMAP param_2, uint32_t param_3, ui
     local_23c = -1;
     cVar29 = -1;
     local_180 = 0;
-    FUN_140102a90(&local_178, 0, 0x20);
+    memset(&local_178, 0, 0x20);
     if ((int16_t)*(uint16_t *)(uintptr_t)param_2 == 0x3f) {
         param_2 = (HBITMAP)((char *)(uintptr_t)param_2 + 2);
         cVar29 = '\0';
@@ -23437,7 +23437,7 @@ LAB_1400b7ee1:
                 local_254 = 0x100;
             }
             memcpy((uint8_t *)(puVar9 + 7), (uint8_t *)(plVar10 + 7), 0xb8);
-            FUN_140102a90((uint64_t *)(plVar10 + 7), 0, 0xb8);
+            memset((uint64_t *)(plVar10 + 7), 0, 0xb8);
             puVar9[6] = plVar10[6];
             plVar10[6] = 0;
             puVar9[5] = plVar10[5];
@@ -24836,7 +24836,7 @@ uint64_t *PECMD_InitControl(uint64_t *param_1, uint64_t param_2, int64_t param_3
     if (((0.0 < param_14) || (*pWVar12 != L'\0')) || (WVar1 != L'\0')) {
         param_12 = (LPCWSTR)(intptr_t)param_14;
         local_a8 = 0;
-        FUN_140102a90((uint64_t *)local_a4, 0, 0x58);
+        memset((uint64_t *)local_a4, 0, 0x58);
         GetObjectW(h, 0x5c, &local_a8);
         if (0.0 < (double)(uintptr_t)param_10) {
             local_a8 = PECMD_DpiConvert((double)(uintptr_t)param_10);

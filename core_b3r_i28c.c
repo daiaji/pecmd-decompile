@@ -8,6 +8,7 @@
  */
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "win32_stub.h"
 #include "pecmd_defs.h"
@@ -115,7 +116,6 @@ extern uint8_t         *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
 extern void             PECMD_VarWriteLine(int64_t *script, LPCWSTR name, LPCWSTR v,
                                       int64_t len, int64_t *out, char flag);
 extern void             PECMD_AllocSmallObject(void *arr);          /* 小对象分配 */
-extern void             FUN_140102a90(void *buf, int val, uint64_t cnt); /* == memset */
 extern void            *FUN_1400547bc(void *ctx, int64_t *pp, int64_t *out,
                                       int sep, int flag);
 extern int64_t          FUN_14007a224(void *ctx, WCHAR *src, WCHAR **out,
@@ -524,7 +524,7 @@ LAB_1400af515:
         FUN_140063620(&local_98);
         local_160 = (LPWSTR)0;
         FUN_1400633a8((void **)&local_78, 0x10d2);
-        FUN_140102a90(local_78, 0, 0x10d2);
+        memset(local_78, 0, 0x10d2);
         *(uint8_t *)((intptr_t)local_78 + 2) = 0;
         local_158 = (uint64_t)((intptr_t)local_78 + 1);
         *(char *)local_158 = '\0';
