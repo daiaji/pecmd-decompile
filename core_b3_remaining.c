@@ -571,7 +571,7 @@ extern uint64_t FUN_140053be8(int *a, uint16_t **b);            /* @0x140053be8 
 /* ---- 恢复 FUN_140057940(百分比/字体控制消息) 所需的辅助 extern ---- */
 extern uint64_t FUN_140067b54(uint16_t **a, double *b);   /* @0x140067b54 解析数值 */
 extern void     FUN_140007bcc(uint16_t **a, int *b);      /* @0x140007bcc 解析整数 */
-extern void     FUN_140074838(uint16_t **a, int *b);      /* @0x140074838 解析整数 */
+extern int      FUN_140074838(uint16_t **a, int *b);      /* @0x140074838 解析整数 (link_stubs 为 void no-op) */
 extern double   DAT_1401237e0;
 extern double   DAT_1401237e8;
 extern double   DAT_1401237f0;
@@ -16076,11 +16076,232 @@ LAB_140076ab3:
     goto joined_r0x0001400766b4;
 }
 
+/* @0x140076b88 size=1541 — 枚举逻辑盘并回填磁盘信息表(盘符/类型/几何/卷名), 供 PECMD_LockVolumeByDevice 使用 */
+extern uint64_t u_____C__140126e88;     /* 140126e88 (4 WCHAR "\\??\\", link_stubs 定义) */
+extern uint64_t ram0x000140126e90;      /* 140126e90 (4 WCHAR 盘符占位模板, link_stubs 定义) */
 void FUN_140076b88(int64_t param_1, LPWSTR param_2, uint param_3)
 {
-    /* SKIP @0x140076b88 — 控件构造 helper，需多对象虚表/helper 未映射，保存桩 */
-/* @0x140076b88 size=1541 */
-    (void)param_1; (void)param_2; (void)param_3;
+    uint32_t *puVar1;
+    uint32_t uVar2;
+    HANDLE hDevice;
+    DWORD DVar4;
+    UINT UVar5;
+    BOOL BVar6;
+    int iVar7;
+    uint32_t uVar8;
+    uint64_t extraout_var = 0;      /* 反编译寄存器残留, 按 0 处理 */
+    int64_t lVar10;
+    uint16_t uVar11;
+    uint32_t uVar12;
+    int16_t sVar13;
+    int iVar14;
+    WCHAR WVar15;
+    uint32_t uVar16;
+    int bVar17;
+    LPWSTR local_res10;
+    uint32_t local_res20;
+    HANDLE local_230;
+    LPWSTR local_228;
+    LPCWSTR local_220;
+    int64_t local_218;
+    LPWSTR local_210;
+    WCHAR local_208[4];
+    uint64_t uStack_200;
+    uint64_t local_1f8;
+    uint64_t local_1f0;
+    uint32_t local_1e8;
+    LPWSTR local_1e0;
+    DWORD local_1d8[102];
+
+    (void)local_1e8;
+    uVar12 = param_3 & 0xffff;
+    iVar14 = 0;
+    uVar11 = (uint16_t)((param_3 & 0xffdf0020) >> 0x10);
+    if (((param_3 & 1) != 0) && ((param_3 & 8) != 0)) {
+        iVar14 = 8;
+        uVar12 = param_3 & 0xfff7;
+    }
+    /* 分配路径缓冲: 未给 param_2 时多留 0x200 */
+    FUN_1400633a8((void **)&local_210, (int64_t)(int)((~-(uint)(param_2 != (LPWSTR)0x0) & 0x200) + 0x800));
+    local_res10 = param_2;
+    if (param_2 == (LPWSTR)0x0) {
+        local_res10 = local_210 + 0x400;
+    }
+    local_220 = (LPCWSTR)0x0;
+    /* 符号链接枚举模板 "\\??\\" + [盘符占位, ':', 0, 0] (TODO(verify): 内容按用法推定) */
+    local_208[0] = (WCHAR)(u_____C__140126e88 & 0xFFFF);
+    local_208[1] = (WCHAR)((u_____C__140126e88 >> 0x10) & 0xFFFF);
+    local_208[2] = (WCHAR)((u_____C__140126e88 >> 0x20) & 0xFFFF);
+    local_208[3] = (WCHAR)((u_____C__140126e88 >> 0x30) & 0xFFFF);
+    uStack_200 = ram0x000140126e90;
+    local_1f8 = g_u6426e70;
+    local_1f0 = g_u646e78;
+    local_1e8 = g_u32126e80;
+    /* 清空 0x1b 个记录槽 (每条 0x220B), 预置 -77 哨兵值 */
+    for (lVar10 = 0x1b, puVar1 = (uint32_t *)(param_1 + 0xc); lVar10 != 0;
+         lVar10 = lVar10 - 1, puVar1 = puVar1 + 0x88) {
+        puVar1[2] = 0xffffffb3;
+        puVar1[0] = 0xffffffb3;
+        puVar1[-1] = 0xffffffb3;
+        puVar1[-3] = 0xffffffb3;
+        puVar1[-2] = 0xffffffb3;
+        puVar1[1] = 0;
+        *(uint16_t *)(puVar1 + 3) = 0;
+    }
+    DVar4 = GetLogicalDrives();
+    uVar16 = 0x19;
+    /* param_3 高位字节可指定起始盘符 */
+    if ((uint16_t)(uVar11 - 0x61) < 0x1a) {
+        uVar11 = (uint16_t)(uVar11 - 0x20);
+    }
+    local_res20 = 0;
+    if ((uint16_t)(uVar11 - 0x41) < 0x1a) {
+        uVar16 = uVar11 - 0x41;
+        local_res20 = uVar16;
+    }
+    uVar11 = (uint16_t)local_res20;
+    local_218 = (int64_t)iVar14;
+    for (;;) {
+        uVar2 = (uint32_t)(int16_t)uVar11;
+        if ((int32_t)uVar16 < (int32_t)uVar2) {
+            Sleep(0);
+            FUN_14005B104((WCHAR **)&local_220);
+            FUN_14005B104((WCHAR **)&local_210);
+            return;
+        }
+        sVar13 = (int16_t)local_res20;
+        if ((DVar4 >> (uVar2 & 0x1f) & 1) != 0) {
+            /* 盘符拼入驱动根路径 与 符号链接模板 */
+            local_1f0 = (local_1f0 & 0xFFFFFFFFFFFF0000ULL) | (uint16_t)(sVar13 + 0x41);
+            lVar10 = (int64_t)sVar13 * 0x220;
+            *(uint32_t *)(lVar10 + 0x10 + param_1) = uVar2 + 0x41;
+            UVar5 = GetDriveTypeW((LPCWSTR)&local_1f0);
+            if ((UVar5 == 3) || (UVar5 == 2)) {
+                bVar17 = 1;
+            } else {
+                puVar1 = (uint32_t *)(lVar10 + 0x10 + param_1);
+                *puVar1 = *puVar1 | 0xc000;
+                *(uint32_t *)(lVar10 + param_1) = 0;
+                bVar17 = 0;
+            }
+            uStack_200 = (uStack_200 & 0xFFFFFFFFFFFF0000ULL) | (uint16_t)(sVar13 + 0x41);
+            if (UVar5 != 1) {
+                if (uVar12 == 8) {
+                    bVar17 = (int)(UVar5 == 5);
+                } else if (uVar12 == 0x10) {
+                    bVar17 = (int)(UVar5 == 2);
+                } else if ((uVar12 != 4) && (!bVar17)) {
+                    if (local_218 == 0) goto next_drive;
+                    bVar17 = (int)(UVar5 == 5);
+                }
+                /* LAB_140076db9: 磁盘类型与请求不符则跳过本盘 */
+                if (!bVar17) goto next_drive;
+                if ((short)(param_3 & 0xffdf0020) != 0) {
+                    /* 查询盘符符号链接目标 (如 \Device\HarddiskVolumeN) 存入记录名 */
+                    PECMD_EnumNtSymbolicLink(local_208, (int64_t *)0x0, (int64_t *)0x0,
+                                             (int64_t *)&local_220);
+                    StrCpyNW((LPWSTR)(lVar10 + 0x18 + param_1), local_220, 0x104);
+                }
+                iVar14 = -1;
+                if ((((UVar5 != 2) || (iVar14 = -1, 1 < sVar13)) ||
+                     (*(int32_t *)((intptr_t)&g_aiDiskType + (int64_t)sVar13 * 4) == 0)) ||
+                    (((iVar14 = (int)*(int16_t *)((intptr_t)&g_aiDiskType + (int64_t)sVar13 * 4),
+                       uVar12 != 0x10 || (iVar14 != 0xb)) &&
+                      ((uVar12 == 4 || ((uVar12 == 0x10 || (iVar14 == 0xb)))))))) {
+                    local_230 = (HANDLE)0x0;
+                    PECMD_OpenFileHandle(&local_230, (LPCWSTR)&local_1f8, 0x80000000, 3,
+                                         (LPSECURITY_ATTRIBUTES)0x0, 3, 0x20000000, (HANDLE)0x0);
+                    hDevice = local_230;
+                    if (local_230 != (HANDLE)0x0) {
+                        if (iVar14 < 0) {
+                            iVar14 = PECMD_QueryDiskGeometry(local_230, (uint64_t *)0x0, 1, uVar2);
+                        }
+                        if (UVar5 == 2) {
+                            if (uVar12 == 0x10) {
+                                if (iVar14 != 0xb) goto close_dev;
+                            } else if ((uVar12 == 4) || (iVar14 == 0xb)) {
+                                goto query_dev;
+                            }
+                        } else {
+                            goto query_dev;
+                        }
+                        goto close_dev;
+                    query_dev:
+                        WVar15 = *(WCHAR *)(lVar10 + param_1);
+                        local_1d8[0] = 0;
+                        FUN_140102a90((uint64_t *)(uintptr_t)local_res10, 0, 0x90);
+                        local_res10[0xc] = L'\xffff';
+                        local_res10[0xd] = L'\xffff';
+                        BVar6 = DeviceIoControl(hDevice, 0x70048, (LPVOID)0x0, 0, local_res10, 0x90,
+                                                local_1d8, (void *)0x0);
+                        if (BVar6 != 0) {
+                            WVar15 = local_res10[0xc];
+                        }
+                        local_1d8[0] = 0;
+                        SetLastError(0);
+                        local_res10[2] = L'\xffff';
+                        local_res10[3] = L'\xffff';
+                        BVar6 = DeviceIoControl(hDevice, 0x2d1080, (LPVOID)0x0, 0, local_res10, 0xc,
+                                                local_1d8, (void *)0x0);
+                        GetLastError();
+                        if ((local_218 == 0) || (UVar5 != 5)) {
+                            if ((UVar5 == 2) && ((BVar6 == 0 || ((int16_t)local_res10[2] < 0)))) {
+                                /* 软驱/可移动: 解析 \Device\FloppyN 卷号 */
+                                FUN_140063620(&local_228);
+                                PECMD_EnumNtSymbolicLink(local_208, (int64_t *)&local_228,
+                                                         (int64_t *)0x0, (int64_t *)0x0);
+                                iVar7 = StrCmpNIW(local_228, WSTR("\\Device\\Floppy"), 0xe);
+                                if (iVar7 == 0) {
+                                    local_1e0 = local_228 + 0xe;
+                                    local_230 = (HANDLE)(((uint64_t)local_230 & 0xFFFFFFFF00000000ULL)
+                                                | (uint32_t)(*(uint32_t *)((uint8_t *)local_res10 + 4)));
+                                    bVar17 = FUN_140067d20((void **)&local_1e0, (int *)&local_230);
+                                    WVar15 = L'\0';
+                                    if ((int)CONCAT71(extraout_var, bVar17) != 0) {
+                                        *(uint32_t *)((uint8_t *)local_res10 + 4) = (uint32_t)local_230;
+                                        *(uint32_t *)(lVar10 + 4 + param_1) = (uint32_t)local_230;
+                                    }
+                                }
+                                FUN_14005B104((WCHAR **)&local_228);
+                            }
+                        write_record:
+                            *(int32_t *)(lVar10 + param_1) = (int32_t)WVar15;
+                            if (BVar6 != 0) {
+                                *(int32_t *)(lVar10 + 4 + param_1) = (int32_t)local_res10[2];
+                            }
+                            if (uVar12 == 4) {
+                                uVar8 = FUN_140065efc((LPCWSTR)0x0, hDevice);
+                                *(uint32_t *)(lVar10 + 0xc + param_1) = uVar8;
+                            }
+                            *(int32_t *)(lVar10 + 0x14 + param_1) = iVar14;
+                            *(UINT *)(lVar10 + 8 + param_1) = UVar5;
+                            if (hDevice != (HANDLE)0xffffffffffffffff) {
+                                CloseHandle(hDevice);
+                            }
+                            goto next_drive;
+                        }
+                        if (BVar6 != 0) {
+                            /* 卷 GUID 路径查询 */
+                            *local_210 = L'\0';
+                            PECMD_EnumDevices((LPCWSTR)(uintptr_t)(uint16_t)local_res10[2], local_210,
+                                              0, (GUID *)&g_bE880);
+                            if (*local_210 != L'\0') {
+                                *(uint32_t *)(lVar10 + 0x10 + param_1) = (uint32_t)(uint16_t)(WCHAR)local_1f0;
+                                goto write_record;
+                            }
+                        }
+                    close_dev:
+                        if (hDevice != (HANDLE)0xffffffffffffffff) {
+                            CloseHandle(hDevice);
+                        }
+                    }
+                }
+            }
+        }
+    next_drive:
+        uVar11 = (uint16_t)(sVar13 + 1);
+        local_res20 = (uint32_t)uVar11;
+    }
 }
 
 LPWSTR FUN_140077190(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4, LPWSTR param_5, uint32_t param_6, LPCWSTR param_7)
@@ -17396,11 +17617,276 @@ LAB_14007fe19:
 }
 
 
+/* @0x14007fe3c size=2043 — 窗口坐标/标题/选项串解析, 更新窗口对象布局(0x128/0x160/0x178/0x260...) */
+/* PECMD_ParseLtwhFlags / PECMD_CacheSysColors / FUN_140067d20: 沿用文件内隐式声明约定 */
+extern void     PECMD_CopyUpToChar(int64_t *pp, int64_t *out, int16_t sep); /* @0x140067748 */
+extern int      PECMD_ConvertValue(int value);                  /* @0x14005d6bc */
+extern uint32_t PECMD_ParseWindowOptions(uint16_t *s, uint8_t *opt, int *out); /* @0x1400734e4 */
 void FUN_14007fe3c(int64_t param_1, uint32_t param_2)
 {
-    /* SKIP @0x14007fe3c — 窗口定位函数，含 extraout 寄存器残留(反编译不全)+多 helper，保存桩 */
-/* @0x14007fe3c size=2043 */
-    (void)param_1; (void)param_2;
+    uint64_t uVar1;
+    int64_t lVar2;
+    LPCWSTR pWVar3;
+    int bVar4;
+    WCHAR WVar5;
+    uint32_t uVar6;
+    int iVar7;
+    int iVar8;
+    int64_t *plVar9;
+    int64_t *puVar10;
+    uint64_t extraout_var = 0;      /* 反编译寄存器残留, 按 0 处理 */
+    uint64_t extraout_var_00 = 0;
+    LPCWSTR pWVar11;
+    WCHAR *pWVar12;
+    char cVar13;
+    LPCWSTR local_res8;
+    LPCWSTR local_res18;
+    LPCWSTR local_res20;
+    uint64_t local_88;
+    uint32_t local_80;
+    uint32_t local_7c;
+    int64_t local_78;
+    int local_70;
+    int local_6c;
+    uint32_t local_68;
+    uint32_t local_64;
+    uint32_t local_60;
+    LPCWSTR local_58;
+    uint64_t local_50;
+    short *local_48[2];
+
+    (void)local_80; (void)local_7c; (void)local_60; (void)local_50;
+
+    if (*(int64_t *)(param_1 + 0x290) == 0) {
+        return;
+    }
+    if (*(int64_t *)(param_1 + 0x2a0) == 0) {
+        return;
+    }
+    *(int64_t *)(*(int64_t *)(param_1 + 0x200)) = *(int64_t *)(param_1 + 0x290);
+    FUN_140063620(&local_78);
+    local_res20 = (LPCWSTR)0x0;
+    local_res8 = (LPCWSTR)0x0;
+    cVar13 = '\0';
+    /* 取标记: (0x290 句柄, 输出串, 0x2a0 模板) */
+    FUN_14001b23c(*(int64_t *)(param_1 + 0x290), (void *)&local_res20,
+                  *(const uint16_t **)(param_1 + 0x2a0), (void *)&local_res8, '\0');
+    local_88 = 0;
+    local_80 = 0;
+    local_res8 = local_res20;
+    local_res18 = local_res20;
+    local_7c = 0;
+    FUN_14005B154((WCHAR **)&local_res18);
+    local_res18 = local_res18 + 2;      /* 跳过 2 个字符的命令名 */
+    FUN_14005B154((WCHAR **)&local_res18);
+    if (*local_res18 == L'\0') goto cleanup_early;
+    FUN_1400675b8((int64_t *)&local_res18, (int64_t *)(param_1 + 0x128), 0x2c);
+    uVar1 = *(int64_t *)(param_1 + 0x290);
+    local_res8 = local_res18;
+    FUN_140063620(&local_58);
+    local_48[0] = (short *)0x0;
+    local_50 = uVar1;
+    if (*local_res8 == L',') {
+        local_res8 = local_res8 + 1;
+        FUN_14005B154((WCHAR **)&local_res8);
+        plVar9 = FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+        local_res18 = (LPCWSTR)*plVar9;
+        if (*local_res18 == L'*') {
+            *(uint8_t *)(param_1 + 0x121) = 0xfe;
+            cVar13 = (char)-2;
+            *(uint8_t *)(param_1 + 0x122) = 3;
+        }
+        if (*local_res18 == L'#') {
+            *(uint8_t *)(param_1 + 0x121) = 0xfe;
+        }
+        if (-1 < *(char *)(param_1 + 0x121)) {
+            /* 解析 l/t/w/h 定位标志 */
+            local_70 = *(int *)(param_1 + 0x13c);
+            local_6c = *(int *)(param_1 + 0x140);
+            local_68 = *(uint32_t *)(param_1 + 0x144);
+            local_64 = *(uint32_t *)(param_1 + 0x148);
+            local_60 = 0;
+            uVar6 = PECMD_ParseLtwhFlags((int64_t *)&local_res18, (uint32_t *)&local_70);
+            if (uVar6 == 0) {
+                iVar7 = GetSystemMetrics(0x3d);   /* SM_CXSCREEN */
+                *(int *)(param_1 + 0x144) = iVar7;
+                iVar7 = GetSystemMetrics(0x3e);   /* SM_CYSCREEN */
+                *(uint32_t *)(param_1 + 0x13c) = 0;
+                *(uint32_t *)(param_1 + 0x140) = 0;
+                *(uint8_t *)(param_1 + 0x121) = 0xfe;
+                *(int *)(param_1 + 0x148) = iVar7;
+            }
+            iVar7 = GetSystemMetrics(0x3d);
+            iVar8 = GetSystemMetrics(0x3e);
+            *(uint32_t *)(param_1 + 0x144) = local_68;
+            *(int *)(param_1 + 0x13c) = local_70;
+            *(int *)(param_1 + 0x140) = local_6c;
+            *(uint32_t *)(param_1 + 0x148) = local_64;
+            if (((uVar6 & 4) == 0) && ((uVar6 & 1) == 0)) {
+                *(int *)(param_1 + 0x144) = iVar7;
+                *(uint32_t *)(param_1 + 0x13c) = 0;
+            } else if ((uVar6 & 4) == 0) {
+                *(int *)(param_1 + 0x144) = iVar7 + local_70 * -2;
+            } else if (((uVar6 & 1) == 0) && (*(int64_t *)(param_1 + 0x150) == 0)) {
+                *(uint32_t *)(param_1 + 0x13c) = 0x80000000;
+            }
+            if (((uVar6 & 8) == 0) && ((uVar6 & 2) == 0)) {
+                *(uint32_t *)(param_1 + 0x140) = 0;
+                *(int *)(param_1 + 0x144) = iVar8;
+            } else if ((uVar6 & 8) == 0) {
+                *(int *)(param_1 + 0x148) = iVar8 + local_6c * -2;
+            } else if (((uVar6 & 2) == 0) && (*(int64_t *)(param_1 + 0x150) == 0)) {
+                *(uint32_t *)(param_1 + 0x140) = 0x80000000;
+            }
+            if ((param_2 & 2) == 0) {
+                /* 限制在屏幕范围内 */
+                if (iVar7 <= *(int *)(param_1 + 0x144)) {
+                    *(int *)(param_1 + 0x144) = iVar7;
+                }
+                if (iVar8 <= *(int *)(param_1 + 0x148)) {
+                    *(int *)(param_1 + 0x148) = iVar8;
+                }
+            }
+        }
+        if (*local_res8 == L',') {
+            local_res8 = local_res8 + 1;
+            plVar9 = FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+            FUN_1400676e4(plVar9, (int64_t *)(param_1 + 0x160), 0);
+            if (*local_res8 == L',') {
+                local_res8 = local_res8 + 1;
+                FUN_14005B154((WCHAR **)&local_res8);
+                if (*local_res8 == L'=') {
+                    local_res8 = local_res8 + 1;
+                    FUN_14005B154((WCHAR **)&local_res8);
+                    *(uint32_t *)(param_1 + 0xd0) = *(uint32_t *)(param_1 + 0xd0) | 0x800;
+                }
+                if (cVar13 == '\0') {
+                    PECMD_CopyUpToChar((int64_t *)&local_res8, (int64_t *)(param_1 + 0x168), 0x2c);
+                    if (*local_res8 == L',') {
+                        local_res8 = local_res8 + 1;
+                        puVar10 = FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+                        local_48[0] = FUN_14001be14((short *)*puVar10);
+                        FUN_1400675b8((int64_t *)local_48, (int64_t *)(param_1 + 0x170), 0);
+                        if (*local_res8 == L',') {
+                            local_res8 = local_res8 + 1;
+                            FUN_14005B154((WCHAR **)&local_res8);
+                            puVar10 = FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+                            pWVar12 = (WCHAR *)*puVar10;
+                            WVar5 = *pWVar12;
+                            local_res18 = pWVar12;
+                        loop_sign:
+                            /* 统计前导 '-'/'#' 并切换对应标志位 */
+                            if (WVar5 == L'-') {
+                                do {
+                                    pWVar12 = pWVar12 + 1;
+                                    *(uint8_t *)(param_1 + 0x159) =
+                                        (uint8_t)(((*(char *)(param_1 + 0x15a)) == '\0') ? 0x11 : 1);
+                                    local_res18 = pWVar12;
+                                } while (*pWVar12 == L'-');
+                            } else if (WVar5 != L'#') {
+                                goto parse_num;
+                            }
+                            WVar5 = *pWVar12;
+                            if (WVar5 == L'#') {
+                                do {
+                                    pWVar12 = pWVar12 + 1;
+                                    *(uint8_t *)(param_1 + 0x15a) =
+                                        (uint8_t)(((*(char *)(param_1 + 0x159)) == '\0') ? 0x11 : 1);
+                                    WVar5 = *pWVar12;
+                                    local_res18 = pWVar12;
+                                } while (WVar5 == L'#');
+                            }
+                            goto loop_sign;
+                        }
+                    }
+                } else {
+                    FUN_1400703e4((int64_t *)(param_1 + 0x168), local_res8);
+                }
+            }
+        }
+    } else {
+        *(uint8_t *)(param_1 + 0x121) = 0xff;
+        *(uint8_t *)(param_1 + 0x122) = 3;
+    }
+    goto cleanup;
+parse_num:
+    WVar5 = *pWVar12;
+    if (WVar5 == L'$') {
+        local_res18 = pWVar12 + 1;
+    }
+    bVar4 = FUN_140074838((uint16_t **)&local_res18, (int *)&local_88);
+    if ((int)CONCAT71(extraout_var, bVar4) == 1) {
+        iVar7 = (int)local_88;
+        if (WVar5 != L'$') {
+            iVar7 = PECMD_ConvertValue((int)local_88);
+        }
+        *(int *)(param_1 + 0x178) = iVar7;
+    }
+    FUN_14005B154((WCHAR **)&local_res18);
+    pWVar3 = local_res18;
+    if (*local_res18 == L':') {
+        PECMD_CacheSysColors();
+        local_res18 = pWVar3 + 1;
+        *(uint32_t *)(param_1 + 0x2a8) = DAT_14013a34c;
+        bVar4 = FUN_140074838((uint16_t **)&local_res18, (int *)&local_88);
+        if ((int)CONCAT71(extraout_var_00, bVar4) == 1) {
+            *(int *)(param_1 + 0x2a8) = (int)local_88;
+        }
+    }
+    if ((*local_res8 == L',') && (local_res8 = local_res8 + 1, *local_res8 != L'\0')) {
+        /* 脚本片段: 支持 "%(...%" 形态, 拼接后存入 0x260 */
+        FUN_140063620(&local_88);
+        pWVar3 = local_res8;
+        iVar8 = 0;
+        iVar7 = 0;
+        if (*local_res8 == L'%') {
+            WVar5 = local_res8[1];
+            iVar7 = iVar8;
+            if (WVar5 == L'(') {
+                for (pWVar11 = local_res8 + 2; (WVar5 = *pWVar11) != L'\0' && (WVar5 != L',');
+                     pWVar11 = pWVar11 + 1) {
+                    if (WVar5 == L'%') goto found_pct;
+                }
+            } else if (((0x2f < (uint16_t)WVar5) && ((uint16_t)WVar5 < 0x3a)) ||
+                       ((0x60 < (uint16_t)(WVar5 | 0x20U)) && ((uint16_t)(WVar5 | 0x20U) < 0x67))) {
+                for (pWVar11 = local_res8 + 2; (WVar5 = *pWVar11) != L'%'; pWVar11 = pWVar11 + 1) {
+                    if ((((uint16_t)WVar5 < 0x30) || (0x39 < (uint16_t)WVar5)) &&
+                        (((uint16_t)(WVar5 | 0x20U) < 0x61 || (0x66 < (uint16_t)(WVar5 | 0x20U)))))
+                        goto skip_scan;
+                }
+            found_pct:
+                iVar7 = (int)(((uintptr_t)pWVar11 - (uintptr_t)local_res8 + 2) >> 1);
+            }
+        }
+    skip_scan:
+        lVar2 = (int64_t)iVar7 * 2;
+        local_res8 = local_res8 + iVar7;
+        FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+        iVar8 = lstrlenW(local_58);
+        PECMD_AllocString((WCHAR **)(param_1 + 0x260), (int64_t)(iVar8 + 1 + iVar7));
+        if (iVar7 != 0) {
+            memcpy(*(void **)(param_1 + 0x260), (const void *)pWVar3, (size_t)lVar2);
+        }
+        memcpy((void *)(*(int64_t *)(param_1 + 0x260) + lVar2), (const void *)local_58,
+               (size_t)((iVar8 + 1) * 2));
+        if (*local_res8 == L',') {
+            FUN_140063620(&local_res18);
+            local_res8 = local_res8 + 1;
+            plVar9 = FUN_14007f6e4((int64_t *)&local_58, (int64_t *)&local_res8, 0x2c, 1);
+            FUN_1400675b8(plVar9, (int64_t *)&local_res18, 0);
+            uVar6 = PECMD_ParseWindowOptions((uint16_t *)local_res18, (uint8_t *)(param_1 + 0x298),
+                                             (int *)(param_1 + 0x17c));
+            *(uint32_t *)(param_1 + 0xd0) = uVar6;
+            FUN_14005B104((WCHAR **)&local_res18);
+        }
+        FUN_14005B104((WCHAR **)&local_88);
+    }
+cleanup:
+    FUN_14005B104((WCHAR **)&local_58);
+cleanup_early:
+    FUN_14005B104((WCHAR **)&local_res20);
+    FUN_14005B104((WCHAR **)&local_78);
+    return;
 }
 
 
@@ -19723,12 +20209,174 @@ DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
     return 0;
 }
 
+/* @0x140097714 size=1372 — 注册表 Hive 加载/卸载 (REG 命令), 支持 -super/-quick/-u/-ws/-f 等开关 */
+extern void   PECMD_EnableBackupPrivileges(void);          /* @0x140060698 */
+extern void * DAT_14013d388;                              /* RegSaveKeyExW 函数指针槽 (link_stubs 定义) */
+/* FUN_14005c394: 沿用文件内隐式声明约定 (link_stubs no-op) */
 int64_t FUN_140097714(int64_t *param_1, uint16_t *param_2)
 {
-    /* SKIP @0x140097714 — 注册表 hive 载入，需多 helper 未映射(含调 097150)，保存桩 */
-/* @0x140097714 size=1372 */
-    (void)param_1; (void)param_2;
-    return 0;
+    uint16_t uVar1;
+    uint8_t bVar2;
+    char cVar3;
+    DWORD DVar4;
+    DWORD DVar5;
+    LPCWSTR lpFile;
+    char cVar6;
+    HKEY hKey;
+    char cVar7;
+    char cVar8;
+    char cVar9;
+    uint8_t bVar10;
+    uint16_t *local_res10;
+    LPCWSTR local_res20;
+    uint16_t *local_48;
+    HKEY local_40;
+
+    local_res10 = param_2;
+    FUN_14005B154((WCHAR **)&local_res10);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res20, 5);
+    PECMD_AllocWStringBuffer(&local_48, 0x14);
+    hKey = (HKEY)0xffffffff80000002;    /* HKEY_LOCAL_MACHINE */
+    cVar9 = '\0';
+    uVar1 = *local_res10;
+    cVar7 = cVar9;
+    cVar6 = cVar9;
+    cVar8 = cVar9;
+    bVar2 = 0xc0;
+    while (uVar1 == 0x2d) {
+        /* 逐项匹配开关 (ac 匹配则消费并前进) */
+        cVar3 = FUN_1400660ac("-super_r", (int64_t *)&local_res10, 8);
+        if ((cVar3 == '\0') && (cVar3 = FUN_1400660ac("-r", (int64_t *)&local_res10, 2), cVar3 == '\0'))
+        {
+            cVar3 = FUN_1400660ac("-super", (int64_t *)&local_res10, 6);
+            bVar10 = 0;
+            if (cVar3 == '\0') {
+                cVar3 = FUN_1400660ac("-quick", (int64_t *)&local_res10, 6);
+                if (cVar3 == '\0') {
+                    cVar3 = FUN_1400660ac("-u", (int64_t *)&local_res10, 2);
+                    bVar10 = bVar2;
+                    if (cVar3 == '\0') {
+                        cVar3 = FUN_1400660ac("-w", (int64_t *)&local_res10, 2);
+                        if (cVar3 == '\0') {
+                            cVar3 = FUN_1400660ac("-un", (int64_t *)&local_res10, 3);
+                            if (cVar3 == '\0') {
+                                cVar3 = FUN_1400660ac("-wun", (int64_t *)&local_res10, 4);
+                                if (cVar3 == '\0') {
+                                    cVar3 = FUN_1400660ac("-ws", (int64_t *)&local_res10, 3);
+                                    if (cVar3 == '\0') {
+                                        cVar3 = FUN_1400660ac("-f", (int64_t *)&local_res10, 2);
+                                        if (cVar3 == '\0') {
+                                            /* 未知开关: 跳过整个 token */
+                                            uVar1 = *local_res10;
+                                            while ((uVar1 != 0 &&
+                                                    (((uVar1 < 9 || (0xd < uVar1)) && (uVar1 != 0x20))))) {
+                                                local_res10 = local_res10 + 1;
+                                                uVar1 = *local_res10;
+                                            }
+                                            FUN_14005B154((WCHAR **)&local_res10);
+                                        } else {
+                                            cVar8 = '\x01';      /* -f */
+                                        }
+                                    } else {
+                                        cVar9 = '\x01';          /* -ws */
+                                        cVar7 = '\x01';
+                                    }
+                                } else {
+                                    cVar7 = '\x01';              /* -wun */
+                                    cVar6 = cVar7;
+                                }
+                            } else {
+                                cVar6 = '\x01';                  /* -un */
+                            }
+                        } else {
+                            cVar7 = '\x01';                      /* -w */
+                        }
+                    } else {
+                        hKey = (HKEY)0xffffffff80000003;         /* -u → HKEY_USERS */
+                    }
+                } else {
+                    bVar10 = 0xc0;                               /* -quick */
+                }
+            } else {
+                bVar10 = 0;                                      /* -super */
+            }
+        } else {
+            bVar10 = 1;                                          /* -super_r / -r */
+        }
+        bVar2 = bVar10;
+        uVar1 = *local_res10;
+    }
+    if (*local_res10 == 0x2a) {
+        local_res10 = local_res10 + 1;
+        cVar9 = '\x01';
+        FUN_14005B154((WCHAR **)&local_res10);
+    }
+    /* 两个逗号分隔 token: 键名 + 文件 */
+    FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_res20, L',', 0);
+    FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_48, L',', 0);
+    lpFile = (LPCWSTR)FUN_14001be14((short *)local_48);
+    PECMD_EnableBackupPrivileges();
+    DVar4 = 0;
+    if (cVar8 == '\0') {
+        if (cVar9 == '\0') {
+            if (((*lpFile != L'\0') || (-1 < (char)bVar2)) && (cVar6 == '\0')) {
+                if (*lpFile != L'\0') {
+                    DVar4 = RegLoadKeyW(hKey, local_res20, lpFile);
+                }
+                if (-1 < (char)bVar2) {
+                    FUN_140097150(local_res20, bVar2, (WIN32_FIND_DATAW *)0x0);
+                }
+                goto done;
+            }
+            DVar4 = RegUnLoadKeyW(hKey, local_res20);
+            cVar9 = '\x10';
+        } else {
+            /* '*' 压缩导出到文件 */
+            if (*lpFile == L'\0') {
+                FUN_14005B104((WCHAR **)&local_48);
+                FUN_14005B104((WCHAR **)&local_res20);
+                return -0x7ff8ffa9;
+            }
+            local_40 = (HKEY)0x0;
+            DVar5 = FUN_14005c394(hKey, local_res20, (void *)&local_40, 0x20019, 4);
+            DVar4 = 0;
+            if ((DVar5 != 0) && (DVar4 = RegOpenKeyExW(hKey, local_res20, 0, 0x20019, &local_40),
+                                 DVar4 != 0))
+                goto done;
+            DeleteFileW(lpFile);
+            FUN_14005c828("RegSaveKeyExW", "Advapi32.DLL", (void **)&DAT_14013d388,
+                          (uintptr_t *)0x0);
+            if (DAT_14013d388 != (void *)0x0) {
+                DVar4 = ((int64_t (*)(HKEY, LPCWSTR, DWORD))DAT_14013d388)(local_40, lpFile, 0);
+            }
+            RegCloseKey(local_40);
+        }
+    } else {
+        /* -f: 强制卸载并设置权限 */
+        DVar4 = FUN_140097150(local_res20, bVar2 | 0x40, (WIN32_FIND_DATAW *)local_48);
+    }
+    if ((((cVar9 != '\0') && (DVar4 == 0)) && (cVar7 != '\0')) && (*lpFile != L'\0')) {
+        /* 等待文件可锁定 (删除中) */
+        local_40 = (HKEY)0x0;
+        SetLastError(0);
+        while ((PECMD_OpenFileHandle(&local_40, lpFile, 0x80000000, 0,
+                                     (LPSECURITY_ATTRIBUTES)0x0, 3, 0x2000000, (HANDLE)0x0),
+                local_40 == (HKEY)0x0 &&
+                (PECMD_OpenFileHandle(&local_40, lpFile, 0x80000000, 0,
+                                      (LPSECURITY_ATTRIBUTES)0x0, 3, 0, (HANDLE)0x0),
+                 local_40 == (HKEY)0x0))) {
+            DVar5 = GetLastError();
+            if ((DVar5 != 0x20) && (DVar5 != 0x21)) goto done;
+            Sleep(1);
+        }
+        if (local_40 != (HKEY)0xffffffffffffffff) {
+            CloseHandle(local_40);
+        }
+    }
+done:
+    FUN_14005B104((WCHAR **)&local_48);
+    FUN_14005B104((WCHAR **)&local_res20);
+    return (int64_t)(int)DVar4;
 }
 
 

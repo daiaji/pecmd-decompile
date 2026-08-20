@@ -3418,3 +3418,11 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
   0693c0(缺LCMapStringA)/075c7c(缺01b4f8+05dff4) SKIP 登记。
 - b1 tier 9：代理判定多依赖全局映射存疑（01708c=CRT printf shim 等），b1_remaining 未落改，SKIP 登记。
 - 修 link_stubs `uint`(SetupDi桩)。build/link 全绿（git 64）。
+## 89. Item2 尾批（b3 tail 3 + helpers tail 1 + b1 tier 4 = 8 还原，git 67 后）
+- b3: 076b88 逻辑盘枚举/07fe3c 窗口几何选项解析/097714 REG Hive 加载卸载(RegSaveKeyExW 动态装载槽 d388)。
+- helpers: 0693c0 GBK↔BIG5 区码表重映射(LCMapStringA 两段式)；075c7c SKIP(缺 LCMapStringW+063224，SUB 判定取模非阻断)。
+- b1: 00397c WTS/Userenv 延迟加载器/0056bc 服务停等待+强杀/006660 DPI 字体缓存/01af7c Ramdriv 属性变更。
+- b1 SKIP 5：0060b8(受限令牌需 SID 表)/008d9c(服务名 .rdata)/00c764(PTR_PTR 表) —— 均需原二进制数据；
+  00cedc(缺 thunk)/01708c(CRT shim)。
+- 补 link_stubs：RegLoadKeyW/RegUnLoadKeyW/两个 .rdata 模板(u_____C__140126e88, ram0x000140126e90, TODO(verify))/d388 槽。
+- 全绿：build 0 FAIL / link 0 undef。累计还原真实现 ~33（新 8：076b88/07fe3c/097714/0693c0/00397c/0056bc/006660/01af7c）。

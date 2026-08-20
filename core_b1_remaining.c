@@ -423,6 +423,11 @@ extern int (*g_pWTSGetActiveConsoleSessionId)(void);                            
 extern BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *);                      /* WTSQueryUserToken 槽 */
 extern BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);                /* CreateEnvironmentBlock 槽 */
 extern void (*g_pDestroyEnvironmentBlock)(void);                                 /* DestroyEnvironmentBlock 槽 */
+/* FUN_140006660 还原所需: DPI/字体 helper 与字体缓存槽 (DAT_14013e2b8) */
+extern void PECMD_GetDpiCached(HWND hwnd);                        /* @0x140062950 core_exec.c */
+extern void PECMD_SetChildFont(HWND hwnd, int64_t font);          /* @0x140062994 core_exec.c */
+extern void FUN_1400E648C(void **pfont, UINT id);                 /* @0x1400e648c 按 lang 创建字体 */
+extern uintptr_t g_hFontE2B8;                                     /* DAT_14013e2b8 缓存字体槽 (link_stubs.c b1-tier deps) */
 
 /* 全局(槽/数据) extern */
 extern uint8_t  g_u8CA49;      /* CPU 计数 */
@@ -789,8 +794,21 @@ int64_t PECMD_DelayLoadOleaut32(void)
 
 void FUN_14000397c(void)
 {
-    /* UNIMPLEMENTED @0xFUN_14000397c — decompile-failed, body 未还原 */
-/* @0x14000397c size=161 (签名修正自反编译, 主体仍为 NO-OP stub) */
+    /* @0x14000397c size=161 — 延迟加载 WTS 会话/用户环境 API:
+     * 首次调用时装载 WTSSendMessageW/WTSQueryUserToken (Wtsapi32)
+     * 与 CreateEnvironmentBlock/DestroyEnvironmentBlock (Userenv) 到函数指针槽。 */
+    if (g_pWTSQueryUserToken == 0) {
+        FUN_14005C828("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
+                      (HMODULE *)0);
+        FUN_14005C828("WTSQueryUserToken", "Wtsapi32.DLL", (void **)&g_pWTSQueryUserToken,
+                      (HMODULE *)0);
+    }
+    if ((uintptr_t)g_pDestroyEnvironmentBlock == 0) {
+        FUN_14005C828("CreateEnvironmentBlock", "Userenv.DLL",
+                      (void **)&g_pCreateEnvironmentBlock, (HMODULE *)0);
+        FUN_14005C828("DestroyEnvironmentBlock", "Userenv.DLL",
+                      (void **)&g_pDestroyEnvironmentBlock, (HMODULE *)0);
+    }
 }
 
 uint32_t FUN_140003aac(LPCWSTR param_1, LPCWSTR param_2, uint32_t param_3, int param_4)
@@ -1728,8 +1746,30 @@ void PECMD_UnmapFileView(void)
 
 void FUN_1400056bc(void)
 {
-    /* UNIMPLEMENTED @0xFUN_1400056bc — decompile-failed, body 未还原 */
-/* @0x1400056bc size=121 */
+    /* @0x1400056bc size=121 — 服务停止等待: 等 g_pShutdownFlag 进程句柄消失,
+     * 超时(~200/300ms)后 TerminateProcess 强杀; g_flagA24F==2 时跳过初始等待,
+     * 结束时置 g_flagA24F=0xff。*/
+    HANDLE hProcess;
+    int iVar1;
+
+    if (g_flagA24F != 2) {
+        Sleep(0x14);
+    }
+    iVar1 = 0x14;
+    if ((uintptr_t)g_u64CA20 != 0) {
+        iVar1 = 0x1e;
+    }
+    hProcess = (HANDLE)0;
+    while ((iVar1 > 0) && (g_pShutdownFlag != NULL)) {
+        hProcess = (HANDLE)(uintptr_t)g_pShutdownFlag;
+        Sleep(10);
+        iVar1 = iVar1 - 1;
+    }
+    if (g_pShutdownFlag != NULL) {
+        g_pShutdownFlag = NULL;
+        TerminateProcess(hProcess, 0);
+    }
+    g_flagA24F = 0xff;
 }
 
 uint64_t FUN_140005818(int64_t *param_1, LPCWSTR param_2)
@@ -1984,8 +2024,10 @@ uint64_t PECMD_GetFileVersionInfo(LPCWSTR param_1, void *param_2, void *param_3,
 
 HANDLE FUN_1400060b8(HANDLE param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_1400060b8 — decompile-failed, body 未还原 */
-/* @0x1400060b8 size=282 (签名修正自反编译, 主体仍为 NO-OP stub) */
+    /* SKIP @0x1400060b8 size=282 — 受限令牌创建 (OpenProcessToken→AllocateAndInitializeSid
+     * (S-1-5-32-544)→CreateRestrictedToken 禁用 26 项特权→FreeSid→CloseHandle)。
+     * 依赖 DAT_14013a208 (SID authority) 与 DAT_14013a0d0 (26×LUID_AND_ATTRIBUTES 特权表)
+     * 均未映射且内容不可复原, 强行补桩会伪造安全数据, 故保存 NO-OP 桩。*/
     (void)param_1;
     return (HANDLE)0;
 }
@@ -2132,10 +2174,17 @@ void PECMD_ReleaseObjectResources(int64_t *p)
 
 uint64_t FUN_140006660(HWND param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140006660 — decompile-failed, body 未还原 */
-/* @0x140006660 size=86 (not in this batch; signature fixed from decompile) */
-    (void)param_1;
-    return 0;
+    /* @0x140006660 size=86 — 取 DPI 缓存字体: 缓存为空时按 lang 建字体 (id 0x3eb=1003),
+     * 创建失败返回 0; 成功后把字体下发给本窗口子控件 (PECMD_SetChildFont) 并返回字体句柄。*/
+    PECMD_GetDpiCached(param_1);
+    if (g_hFontE2B8 == 0) {
+        FUN_1400E648C((void **)&g_hFontE2B8, 0x3eb);
+        if (g_hFontE2B8 == 0) {
+            return 0;
+        }
+    }
+    PECMD_SetChildFont(param_1, (int64_t)g_hFontE2B8);
+    return (uint64_t)g_hFontE2B8;
 }
 
 void PECMD_ReleaseGdiObject(int64_t *obj, uint64_t unused, HGDIOBJ gdi)
@@ -3288,8 +3337,10 @@ LAB_140008d7f:
 
 void FUN_140008d9c(uint16_t *param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140008d9c — decompile-failed, body 未还原 */
-/* @0x140008d9c size=152 */
+    /* SKIP @0x140008d9c size=152 — 服务命令入共享内存: 以 u_service__14011d288 前缀 +
+     * 解析出的 token(≤1000 字符) 为名创建共享映射 (PECMD_CreateSharedMemoryMap)。
+     * 仅缺 u_service__14011d288 (20 字节服务名前缀 .rdata) 一处数据, 项目未映射
+     * 且无原始二进制可提取内容, 补桩会伪造映射名, 故保存 NO-OP 桩。*/
     (void)param_1;
 }
 
@@ -4284,16 +4335,20 @@ LAB_14000c705:
 
 uint8_t FUN_14000c764(LPWSTR param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_14000c764 — decompile-failed, body 未还原 */
-/* @0x14000c764 size=1909 (stub; 真实签名 undefined1(LPWSTR)) */
+    /* SKIP @0x14000c764 size=1909 — 注册文件关联/INI 解析 (依模块名登记 *.exe/*.com/*.ntr/
+     * *.cmd/*.bat/*.dll 等关联表, 解析 INDATA 中 LOAD: 项, 写命令表5)。
+     * 依赖 PTR_PTR_14013a050/090/070 三张数据表(文件关联槽表)未定义于任何文件,
+     * 按任务规则 SKIP, 保存 NO-OP 桩。*/
     (void)param_1;
     return 0;
 }
 
 void FUN_14000cedc(WCHAR *param_1, int64_t *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14000cedc — decompile-failed, body 未还原 */
-/* @0x14000cedc size=961 (stub; 真实签名 void(WCHAR*, int64_t*)) */
+    /* SKIP @0x14000cedc size=961 — 注册表/环境变量项注册: 解析 "opt 名=值"、
+     * 处理 CALL $ 子串展开、在临界区 g_csInit 内更新命令表5 (g_cmdTable5)。
+     * 依赖 thunk_FUN_1400f429c (分隔符扫描 thunk) 未定义(项目仅 FUN_1400f429c),
+     * 按任务规则 SKIP, 保存 NO-OP 桩。*/
     (void)param_1;
     (void)param_2;
 }
@@ -4937,12 +4992,13 @@ code_r0x000140016cec:
     goto LAB_140016ccb;
 }
 
-/* SKIP(CRT): FUN_14001708c 是 printf-family 包装
-   (pthreadlocinfo/pthreadmbcinfo/va_list -> 转调 FUN_140103014)，
-   按任务要求不实现，保留正确签名空桩。 */
+/* SKIP(CRT): FUN_14001708c 是 vswprintf 风格 CRT 包装 —
+   反编译体仅构造 localeinfo_struct{locinfo, mbcinfo} 并把 va_list 透传给
+   FUN_140103014(= _vswprintf_l(param_1,param_2,NULL,locinfo,va_list), 见
+   core_b9_remaining.c SKIP(CRT) 标注),不实现,保留正确签名空桩。 */
 void FUN_14001708c(WCHAR *param_1, size_t param_2, void *param_3, void *param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_14001708c — decompile-failed, body 未还原 */
+    /* SKIP(CRT) @0x14001708c size=33 — vswprintf-style 包装 (见上方说明) */
 (void)param_1;
     (void)param_2;
     (void)param_3;
@@ -6941,10 +6997,32 @@ uint64_t PECMD_EnumerateDeviceList(void)
 
 bool FUN_14001af7c(uint32_t param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_14001af7c — decompile-failed, body 未还原 */
-/* @0x14001af7c size=104 (not in this batch; signature fixed from decompile) */
-    (void)param_1;
-    return 0;
+    /* @0x14001af7c size=104 — Ramdriv 设备属性变更: 组 SP_PROPCHANGE_PARAMS
+     * {cbSize=8, InstallFunction=DIF_PROPERTYCHANGE(0x12), StateChange=param_1,
+     *  Scope=2(DICS_FLAG_GLOBAL), HwProfile=0} 调 SetupDiSetClassInstallParamsW,
+     * 成功后再调 SetupDiCallClassInstaller(0x12) 完成启用/禁用 (param_1=1/2)。*/
+    int iVar1;
+    bool bVar2;
+    uint32_t local_28;
+    uint32_t local_24;
+    uint32_t local_20;
+    uint32_t local_1c;
+    uint32_t local_18;
+
+    local_18 = 0;
+    local_28 = 8;
+    local_24 = 0x12;
+    local_1c = 2;
+    local_20 = param_1;
+    iVar1 = ((BOOL (*)(int, void *, void *, DWORD))g_pSetupDiSetClassInstallParamsW)(
+                g_ramdrivFlag, &g_u64CB60, &local_28, 0x14);
+    bVar2 = false;
+    if (iVar1 != 0) {
+        iVar1 = ((BOOL (*)(DWORD, int, void *))g_pSetupDiCallClassInstaller)(
+                    0x12, g_ramdrivFlag, &g_u64CB60);
+        bVar2 = iVar1 != 0;
+    }
+    return bVar2;
 }
 
 uint64_t PECMD_SetRamdrivDiskSize(int param_1, LPCWSTR param_2)

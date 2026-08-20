@@ -1036,6 +1036,22 @@ uint64_t DAT_14013e2a8;
 uint64_t g_pFontBase;
 
 /* ============================================================
+   ---- 新增叶依赖数据/桩 (FUN_140076b88 / FUN_140097714 恢复所需) ----
+   ※ 本批仅添加真正缺失的 DAT_ 全局 与 缺失的 WinAPI 导入桩;
+     内容按原二进制用法推定, 以待数据迁移后核对.
+   ============================================================ */
+/* DAT_140126e88 (4 WCHAR, "\\??\\" 符号链接前缀前段) — 与 g_u6426e70/e78/e80 同区 */
+uint64_t u_____C__140126e88 = 0x005C003F003F005CULL;
+/* DAT_140126e90 (4 WCHAR: [盘符占位, ':', 0, 0] 符号链接模板后段, 低 16 位被盘符覆盖) */
+uint64_t ram0x000140126e90 = 0x00000000003A0000ULL;
+/* DAT_14013d388 — RegSaveKeyExW 延迟加载函数指针槽 */
+void    *DAT_14013d388;
+
+/* RegLoadKeyW / RegUnLoadKeyW — Advapi32 直接导入, 原 refactor 未引用故缺桩 (house no-op 模式) */
+uint64_t RegLoadKeyW(void) { return 0; }
+uint64_t RegUnLoadKeyW(void) { return 0; }
+
+/* ============================================================
    ---- 新增叶依赖桩 (FUN_14004e488 行解析器恢复所需) ----
    仅供链接满足符号, 无真实逻辑.
    ============================================================ */
@@ -1112,3 +1128,6 @@ int SetupDiClassNameFromGuidA(const void *guid, char *buf, uint32_t buflen, uint
 
 /* 图标资源 (FUN_140073934) 缺失 WinAPI 桩 */
 uint64_t CreateIconFromResourceEx(void){ return 0; }
+
+/* b1-tier deps — core_b1_remaining.c FUN_140006660 还原所需的最小数据槽 */
+uintptr_t g_hFontE2B8;   /* DAT_14013e2b8 缓存字体 (HFONT, 初值 0, 惰性创建) */

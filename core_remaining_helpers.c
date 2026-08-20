@@ -177,11 +177,22 @@ int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
     return len;
 }
 
-uint64_t FUN_1400693c0(void)
+/* @0x1400693c0 size=161 — GBK↔BIG5 区码表重映射 (LCMapStringA, locale 0x20804):
+ *   len=-1 试探求目标长 → 扩容 *out 字节缓冲 → 正式映射回填并补 '\0', 返回缓冲指针。
+ *   isBIG5=0 → LCMAP_UPPERCASE(0x2000000); isBIG5≠0 → 叠加 LCMAP_LOWERCASE(0x4000000)。 */
+uint64_t FUN_1400693c0(LPCSTR src, void **out, uint32_t isBIG5)
 {
-    /* SKIP @0x1400693c0 — body 需 LCMapStringA, 未在任何 core_*.c/link_stubs.c 定义, 保持桩 */
-/* @0x1400693c0 size=161 */
-    return 0;
+    LPSTR lpDestStr;
+    DWORD cchDest;
+    DWORD dwMapFlags;
+
+    dwMapFlags = (DWORD)(-(uint32_t)(isBIG5 != 0) & 0x2000000u) + 0x2000000u;
+    cchDest = LCMapStringA(0x20804, dwMapFlags, src, -1, NULL, 0);
+    PECMD_GrowByteBuffer(out, (int64_t)(cchDest + 1));
+    lpDestStr = (LPSTR)*out;
+    LCMapStringA(0x20804, dwMapFlags, src, -1, lpDestStr, cchDest);
+    lpDestStr[cchDest] = '\0';
+    return (uint64_t)(uintptr_t)*out;
 }
 
 /* @0x140075148 按行写变量 (查表/建新项 + 写值/截断 + 关键段保护) */
@@ -243,10 +254,13 @@ LAB_done:
     return;
 }
 
+/* @0x140075c7c size=797 — BIG5 字符名表解码/重排: 按 uVar19 切行, PRNG(FUN_14005dff4) 选行,
+ * 行内 XOR uVar19 解密 + LCMapStringW 大小写映射, 写回 *param_2 输出串。
+ * SKIP: 依赖 FUN_140063224(输出串扩容)、LCMapStringW 全项目无定义 (link_stubs.c 仅备
+ * LCMapStringA), FUN_14001d78c 亦仅注释注明为 memcpy 库替换; SUB168/SUB164 实为
+ * 64 位取模伪影可普通书写, 但缺符号硬阻断链接, 保持桩不误报. */
 uint64_t FUN_140075c7c(void)
 {
-    /* SKIP @0x140075c7c — body 需 FUN_14001b4f8 / FUN_14005dff4, 项目未定义, 保持桩 */
-/* @0x140075c7c size=797 */
     return 0;
 }
 
