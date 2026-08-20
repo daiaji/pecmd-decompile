@@ -4,6 +4,8 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14003e16c | FUN_14003e16c | PECMD_WndProcForward |
+| 0x140063118 | FUN_140063118 | PECMD_HeapRealloc |
 | 0x14007fcd4 | FUN_14007fcd4 | PECMD_ParseSubWindowFlags |
 | 0x14001ed5c | FUN_14001ed5c | PECMD_WriteBackTextCRLF |
 | 0x140066f64 | FUN_140066f64 | PECMD_ReleaseObjectSlots |

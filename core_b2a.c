@@ -11,7 +11,7 @@
  *   文件大小包装     FUN_140035b24 @0x140035b24
  *   窗口过程转发     FUN_140037b84 @0x140037b84
  *   窗口过程转发     PECMD_ScriptWndProc @0x14003892c
- *   窗口过程转发     FUN_14003e16c @0x14003e16c
+ *   窗口过程转发     PECMD_WndProcForward @0x14003e16c
  *
  * 约定:
  *   - 未实现内部函数 extern 挂起 + TODO(verify), 不臆造语义
@@ -166,10 +166,10 @@ void PECMD_ScriptWndProc(HWND hwnd, uint32_t msg, HDC hdc, void *p4)
     FUN_140037BA8(g_Script, hwnd, msg, hdc, p4);
 }
 
-/* ========== FUN_14003e16c @0x14003e16c ==========
+/* ========== PECMD_WndProcForward @0x14003e16c ==========
  * 窗口过程转发到 FUN_14002EE44((uintptr_t)g_Script, ...)。
  */
-LRESULT FUN_14003e16c(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT PECMD_WndProcForward(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     /* UNIMPLEMENTED @0xFUN_14003e16c — decompile-failed, body 未还原 */
 FUN_14002EE44((uintptr_t)g_Script, hwnd, msg,
@@ -519,7 +519,7 @@ void PECMD_RegisterCallbackWindowClass(HINSTANCE hInstance)
     WNDCLASSEXW wc;
     wc.cbSize = 0x50;
     wc.style = 3;
-    wc.lpfnWndProc = FUN_14003e16c;
+    wc.lpfnWndProc = PECMD_WndProcForward;
     wc.cbClsExtra = 0;
     wc.cbWndExtra = 0;
     wc.hIcon = (HICON)0;

@@ -809,5 +809,7 @@
   "FUN_1400048c4": "PECMD_EnsureTempDirPath",
   "FUN_1400091e0": "PECMD_LoadFileMappingExec",
   "FUN_14005e61c": "PECMD_RegisterHotkeyCmd",
-  "FUN_14005efac": "PECMD_ExpandStringMarkers"
+  "FUN_14005efac": "PECMD_ExpandStringMarkers",
+  "FUN_14003e16c": "PECMD_WndProcForward",
+  "FUN_140063118": "PECMD_HeapRealloc"
 }

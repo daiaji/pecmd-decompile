@@ -2,8 +2,8 @@
  * core_string.c — PECMD 字符串/内存工具族
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   FUN_140063118  @0x140063118
- *   FUN_140063620     @0x140063720  (调用 FUN_140063118)
+ *   PECMD_HeapRealloc  @0x140063118
+ *   FUN_140063620     @0x140063720  (调用 PECMD_HeapRealloc)
  *   FUN_14006375C       @0x14006375c  (追加)
  *   PECMD_StrDupAlloc       @0x1400700c4
  *   FUN_1400702B0    @0x1400702b0  (直接覆盖指针, 不释放旧值)
@@ -34,7 +34,7 @@ void FUN_14005B21C(int code);    /* @0x14005b21c (TODO: 待重构确认) */
 /* ========== 内存分配器 @0x140063118 ========== */
 /* 分配/重分配带 8 字节头 (size+magic) 的内存块, 返回数据指针
  * 失败弹窗: 选 Retry(4)/Ignore(5) 重试, 否则退出+int3 */
-void *FUN_140063118(void *ptr, size_t size)
+void *PECMD_HeapRealloc(void *ptr, size_t size)
 {
     /* UNIMPLEMENTED @0xFUN_140063118 — decompile-failed, body 未还原 */
 if (ptr == NULL) {
@@ -75,7 +75,7 @@ if (ptr == NULL) {
 /* 确保 *ps 容量 >= count 个 WCHAR (含结尾 0), 返回 *ps */
 WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count)
 {
-    WCHAR *p = (WCHAR *)FUN_140063118(*ps, count * 2 + 2);
+    WCHAR *p = (WCHAR *)PECMD_HeapRealloc(*ps, count * 2 + 2);
     *ps = p;
     if (p != NULL) {
         p[count] = 0;
@@ -95,7 +95,7 @@ WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src)
         old = (size_t)lstrlenW(*ps);
     }
     size_t slen = (size_t)lstrlenW(src);
-    WCHAR *p = (WCHAR *)FUN_140063118(*ps, (old + slen + 1) * 2);
+    WCHAR *p = (WCHAR *)PECMD_HeapRealloc(*ps, (old + slen + 1) * 2);
     *ps = p;
     if (p != NULL) {
         memcpy((uint8_t *)p + old * 2, src, slen * 2 + 2);
