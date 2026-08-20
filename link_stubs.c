@@ -1,3 +1,4 @@
+typedef unsigned int uint;   /* 兼容 setupdi 桩 */
 /* Auto-generated link stubs for undefined symbols (weak/no-op). */
 #include <stdint.h>
 typedef unsigned long DWORD;
