@@ -1131,3 +1131,7 @@ uint64_t CreateIconFromResourceEx(void){ return 0; }
 
 /* b1-tier deps — core_b1_remaining.c FUN_140006660 还原所需的最小数据槽 */
 uintptr_t g_hFontE2B8;   /* DAT_14013e2b8 缓存字体 (HFONT, 初值 0, 惰性创建) */
+/* ---- 075c7c/00cedc 依赖 ---- */
+uint64_t LCMapStringW(void){ return 0; }
+uint64_t FUN_140063224(void){ return 0; }
+uint64_t thunk_FUN_1400f429c(void){ return 0; }
