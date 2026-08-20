@@ -2064,7 +2064,7 @@ static BOOL CreateRestrictedToken(HANDLE existingToken, DWORD flags,
 static uint16_t *FUN_14000531c(uint16_t *param_1)
 {
     /* @0x14000531c size=38 — 跳过前导空白 (0x9-0xD / 0x20) */
-    while (*param_1 > 8 && *param_1 < 0xe || *param_1 == 0x20) {
+    while ((*param_1 > 8 && *param_1 < 0xe) || *param_1 == 0x20) {
         param_1 = param_1 + 1;
     }
     return param_1;
