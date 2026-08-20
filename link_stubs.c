@@ -1043,7 +1043,7 @@ uint64_t g_pFontBase;
 /* DAT_140126e88 (4 WCHAR, "\\??\\" 符号链接前缀前段) — 与 g_u6426e70/e78/e80 同区 */
 uint64_t u_____C__140126e88 = 0x005C003F003F005CULL;
 /* DAT_140126e90 (4 WCHAR: [盘符占位, ':', 0, 0] 符号链接模板后段, 低 16 位被盘符覆盖) */
-uint64_t ram0x000140126e90 = 0x00000000003A0000ULL;
+uint64_t ram0x000140126e90 = 0x00000000003A0043ULL;   /* "C:\\0%c:\\0" 前8字节(LE) */
 /* DAT_14013d388 — RegSaveKeyExW 延迟加载函数指针槽 */
 void    *DAT_14013d388;
 
@@ -1114,8 +1114,8 @@ int64_t (*DAT_14013ce10)(void) = 0;
 int64_t (*DAT_14013ce28)(void) = 0;
 int64_t (*DAT_14013ce30)(void) = 0;
 /* GDI+ 渲染默认色 / 插值矩阵数据 */
-uint32_t DAT_14013a34c;
-uint8_t  DAT_14013a838[8];
+uint32_t DAT_14013a34c = 0x80000000;   /* 默认色 CLR_NONE */
+uint8_t DAT_14013a838[16] = {0x6d,0xbd,0xed,0x6a,0xb5,0x3f,0x8a,0x41,0x83,0xa6,0x7f,0x45,0x22,0x9d,0xc8,0x72};   /* GDI+ 格式 GUID(自.raw) */
 
 /* SetupDi 设备枚举 (FUN_140072924) 缺失 helper 桩 */
 uint64_t FUN_140062ec8(const uint16_t *src, const uint16_t *devid, int len, uint flags)
