@@ -116,7 +116,7 @@ extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @
 extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
                               uint64_t s4, uint32_t flag, void *p6,
                               uint64_t s7, void *p8);                 /* @0x14000e26c 脚本执行 */
-extern void FUN_140006554(void *hDrop, int64_t *a, int64_t *b);       /* @0x140006554 取拖放路径 */
+extern void PECMD_EnumDropFiles(void *hDrop, int64_t *a, int64_t *b);       /* @0x140006554 取拖放路径 */
 extern void FUN_140103a20(void);                                      /* @0x140103a20 */
 extern int wcscmp(const WCHAR *a, const WCHAR *b);                    /* 宽串比较 */
 extern WCHAR g_szEmpty[];                                             /* g_szEmpty 空串 */
@@ -9423,7 +9423,7 @@ void PECMD_HandleDropFile(int64_t param_1, void *param_2, char param_3)
     LPCWSTR local_res20 = NULL;
 
     PECMD_AllocStrSlot((WCHAR **)&local_res20);
-    FUN_140006554(param_2, (int64_t *)&local_res20, (int64_t *)0);
+    PECMD_EnumDropFiles(param_2, (int64_t *)&local_res20, (int64_t *)0);
     PECMD_WriteBackTextCRLF(param_1, (LPCWSTR)local_res20);
     if (param_3 != '\0') {
         PECMD_ExecLoadCommand((LPCWSTR)local_res20, (LPCWSTR)0);

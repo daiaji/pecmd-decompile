@@ -458,7 +458,7 @@ uint64_t ExpandEnvironmentStringsW(void) { return 0; }
 uint64_t ExtTextOutW(void) { return 0; }
 uint64_t PECMD_RunCommandLine(void) { return 0; }
 /* @0x140006554 size=— 拖放文件枚举(直移) */
-void FUN_140006554(void *param_1, longlong *param_2, longlong *param_3)
+void PECMD_EnumDropFiles(void *param_1, longlong *param_2, longlong *param_3)
 {
   unsigned int n = DragQueryFileW((uint64_t)(uintptr_t)param_1,0xffffffff,0,0);
   unsigned int i = 0;
@@ -2067,7 +2067,7 @@ void *PECMD_BuildFontFromObject(int64_t a, void *b, const void *c)
 }
 uint64_t PECMD_ShowContextMenu(void) { return 0; }
 /* @0x1400e57c0 size=— 窗口对象基构造(直移) */
-uint64_t *FUN_1400e57c0(uint64_t *param_1)
+uint64_t *PECMD_InitWinObjBase(uint64_t *param_1)
 {
   *param_1 = (uint64_t)&PTR_FUN_14012b240;
   param_1[4] = 0; param_1[7] = 0; param_1[0x18] = 0;
@@ -2117,7 +2117,7 @@ longlong PECMD_GetWinIdLocked(longlong *param_1)
 /* @0x1400ece2c size=— 对象槽初始化(C)(直移) */
 uint64_t *PECMD_InitObjectSlotC(uint64_t *param_1, uint64_t param_2)
 {
-  FUN_1400e57c0(param_1);
+  PECMD_InitWinObjBase(param_1);
   *param_1 = (uint64_t)&PTR_FUN_14012bad0;
   PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x1b));
   param_1[0x1d] = param_2;
@@ -2161,7 +2161,7 @@ uint64_t PECMD_InitWindowObjectF(void) { return 0; }
 /* @0x1400f0648 size=— 对象槽 WebView 初始化(直移) */
 uint64_t *PECMD_InitWebViewObj(uint64_t *param_1, uint64_t param_2)
 {
-  FUN_1400e57c0(param_1);
+  PECMD_InitWinObjBase(param_1);
   param_1[0x1a] = param_2;
   *(uint16_t *)((long long)param_1 + 0xa2) = 0xffff;
   *param_1 = (uint64_t)&PTR_FUN_14012bfb0;
@@ -2222,7 +2222,7 @@ bool PECMD_CreateCustomChildControl(longlong *param_1, uint param_2, int *param_
 /* @0x1400fbfe0 size=81 — 控件对象O初始化(直移) */
 uint64_t *PECMD_InitControlObjO(uint64_t *param_1,uint64_t param_2)
 {
-  FUN_1400e57c0(param_1);
+  PECMD_InitWinObjBase(param_1);
   param_1[0x1a] = param_2;
   *param_1 = (uint64_t)&PTR_FUN_14012ca50;
   (void)PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x1b));
@@ -2233,7 +2233,7 @@ uint64_t *PECMD_InitControlObjO(uint64_t *param_1,uint64_t param_2)
 /* @0x1400fcf44 size=— 对象槽初始化(B)(直移) */
 uint64_t *PECMD_InitScrollObj(uint64_t *a, uint64_t b)
 {
-  FUN_1400e57c0(a);
+  PECMD_InitWinObjBase(a);
   a[0x1b] = b;
   *(uint8_t *)((long long)a + 0x61) = 1;
   *(uint8_t *)((long long)a + 0xd2) = 0;
@@ -2968,7 +2968,7 @@ void FUN_1400ef078(int64_t a, uint64_t b){ (void)a;(void)b; }
 /* @0x1400fec9c size=93 — 控件对象Q初始化(直移) */
 uint64_t *PECMD_InitControlObjQ(uint64_t *param_1,uint64_t param_2,uint64_t param_3)
 {
-  FUN_1400e57c0(param_1);
+  PECMD_InitWinObjBase(param_1);
   param_1[0x1a] = param_3;
   *(uint8_t *)(param_1 + 0x14) = 0;
   param_1[0x1b] = 0;
@@ -5421,9 +5421,9 @@ ulonglong PECMD_EvalParenStripped(longlong *param_1,ulonglong *param_2)
 
 /* ---- wave-current support: 0731d8 ---- */
 /* @0x1400e9048 size=— 对象槽 0x2a 系列初始化(直移) */
-uint64_t *FUN_1400e9048(uint64_t *param_1, uint param_2, uint64_t param_3)
+uint64_t *PECMD_InitObjSlot2A(uint64_t *param_1, uint param_2, uint64_t param_3)
 {
-  FUN_1400e57c0(param_1);
+  PECMD_InitWinObjBase(param_1);
   *param_1 = (uint64_t)&PTR_FUN_14012b430;
   param_1[0x1b] = 0;
   *(uint32_t *)((long long)param_1 + 0xec) = 0;
@@ -5465,7 +5465,7 @@ undefined8 * PECMD_InitControlObjField(undefined8 *param_1,undefined8 param_2,ui
   void *pHVar2;
   longlong local_res8;
 
-  FUN_1400e9048(param_1,param_3,param_2);
+  PECMD_InitObjSlot2A(param_1,param_3,param_2);
   *param_1 = (undefined8)(uintptr_t)&PTR_FUN_140126b20;
   PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x2c));
   PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x2d));

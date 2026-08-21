@@ -235,7 +235,7 @@ extern void PECMD_ForwardCall_6838(int64_t obj, int64_t key);          /* @0x140
 extern HWND PECMD_GetOwnerWindow(HWND param_1);                      /* @0x1400e5788 */
 extern int64_t PECMD_ControlWindowProc(HDC param_1, uint64_t param_2, HDC param_3,
                              int64_t *param_4);               /* @0x1400e5b0c */
-extern void FUN_140006554(void *param_1, int64_t *param_2, int64_t *param_3); /* @0x140006554 */
+extern void PECMD_EnumDropFiles(void *param_1, int64_t *param_2, int64_t *param_3); /* @0x140006554 */
 extern uint64_t PECMD_ComboBoxControl(int64_t param_1, uint64_t param_2, LPCWSTR param_3,
                               short param_4, LPCWSTR param_5, int param_6); /* @0x14009d4b8 */
 extern int64_t FUN_1400b0380(int64_t *param_1, uint64_t param_2, uint64_t *param_3); /* @0x1400b0380 */
@@ -444,7 +444,7 @@ extern LRESULT PECMD_GetControlFont(int64_t param_1);               /* @0x1400e5
 extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);     /* @0x140053c5c */
 extern void PECMD_SetWindowTheme(uint64_t hwnd);                    /* @0x140066054 设置窗口主题 */
 extern void FUN_1400A9650(int64_t obj, HWND hwnd, int id, LPCWSTR text, uint8_t unused); /* @0x1400a9650 发送标题消息 */
-extern uint64_t *FUN_1400e57c0(uint64_t *param_1);           /* @0x1400e57c0 构造返回指针 */
+extern uint64_t *PECMD_InitWinObjBase(uint64_t *param_1);           /* @0x1400e57c0 构造返回指针 */
 extern uint64_t *PECMD_InitObjectSlotC(uint64_t *param_1, uint64_t param_2); /* @0x1400ece2c */
 extern int64_t  *PECMD_ReplaceStringSlot(int64_t *ps, uint64_t *src);  /* @0x140070398 */
 extern int64_t  *FUN_140063B64(int64_t *arr);                /* @0x140063b64 数组初始化/清空 */
@@ -23710,7 +23710,7 @@ uint64_t *PECMD_ConstructControlObject(uint64_t *param_1, int64_t param_2, uint 
     iStack_4c = iVar3;
     plVar4 = (int64_t *)operator_new(0xe8);
     if (plVar4 != (int64_t *)0x0) {
-        FUN_1400e57c0((uint64_t *)plVar4);
+        PECMD_InitWinObjBase((uint64_t *)plVar4);
         *plVar4 = (int64_t)(uintptr_t)PTR_FUN_140125be0;
         plVar4[0x1c] = (int64_t)(param_1 + 0xb);
         plVar4[0x1a] = (int64_t)param_1;
@@ -24101,7 +24101,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     }
     else {
         local_68 = plVar9;
-        FUN_1400e57c0((uint64_t *)plVar9);
+        PECMD_InitWinObjBase((uint64_t *)plVar9);
         *plVar9 = (int64_t)(uintptr_t)PTR_FUN_140126080;
         plVar10 = plVar9;
     }
@@ -24345,7 +24345,7 @@ POINT PECMD_ListViewDropHandler(HDC param_1, uint param_2, HDROP param_3, HWND p
     if (param_2 == 0x233) {
         if (*(char *)(param_1 + 0x36) != '\0') {
             PECMD_AllocStrSlot(&sbuf);
-            FUN_140006554((void *)param_3, (int64_t *)&sbuf, (int64_t *)0x0);
+            PECMD_EnumDropFiles((void *)param_3, (int64_t *)&sbuf, (int64_t *)0x0);
             if (*(uint16_t *)sbuf != 0) {
                 PECMD_ComboBoxControl(*(int64_t *)(param_1 + 0x34),
                               *(uint64_t *)(*(int64_t *)(param_1 + 0x34) + 0x50),
@@ -25451,7 +25451,7 @@ LAB_1400b8207:
         bVar38 = FUN_140101e70(*(LPCWSTR *)(param_1 + 0x88));
         iVar3 = 0;
         if (bVar38 != 0) {
-            FUN_1400e57c0(local_138);
+            PECMD_InitWinObjBase(local_138);
             iVar28 = 0;
             lVar26 = g_i64D170;
             if (g_i64D170 == 0) {
@@ -25478,7 +25478,7 @@ LAB_1400b8207:
                 plVar23 = (int64_t *)operator_new(0xe0);
                 plVar10 = (int64_t *)0x0;
                 if (plVar23 != (int64_t *)0x0) {
-                    FUN_1400e57c0((uint64_t *)plVar23);
+                    PECMD_InitWinObjBase((uint64_t *)plVar23);
                     plVar23[0x1a] = param_1 + 0x58;
                     plVar23[0x1b] = 0;
                     *(uint8_t *)(plVar23 + 0x14) = 0;

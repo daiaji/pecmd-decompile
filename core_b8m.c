@@ -120,7 +120,7 @@ extern double g_dbl2b380;
 extern double g_dbl2b378;
 extern double g_dbl2b370;
 extern double g_dbl2b368;
-extern void FUN_140006554(void *hDrop, int64_t *a, int64_t *b);
+extern void PECMD_EnumDropFiles(void *hDrop, int64_t *a, int64_t *b);
 extern void FUN_14007D0AC(int64_t **ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern void PECMD_AdjustEditScrollRect(int64_t obj);
 extern BOOL SystemParametersInfoW(UINT uiAction, UINT uiParam, void *pvParam, UINT fWinIni);
@@ -1897,9 +1897,9 @@ uint64_t FUN_1400F1C8C(int64_t obj, uint64_t msg, int64_t wParam,
             if ((*(uint8_t *)(b + 0xac) & 0x30) != 0) {
                 PECMD_AllocStrSlot(&drop);
                 if ((*(uint8_t *)(b + 0xac) & 0x10) == 0) {
-                    FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
+                    PECMD_EnumDropFiles((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
                 } else {
-                    FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&top, (int64_t *)&drop);
+                    PECMD_EnumDropFiles((void *)(uintptr_t)wParam, (int64_t *)&top, (int64_t *)&drop);
                 }
                 if (drop != NULL && *drop != L'\0') {
                     LPCWSTR key = *(LPCWSTR *)(*(int64_t *)(b + 0xe0) + 0x10);
@@ -1992,9 +1992,9 @@ uint64_t FUN_1400FB654(int64_t obj, uint64_t msg, int64_t wParam,
         if ((*(uint8_t *)(b + 0xac) & 0x30) != 0) {
             PECMD_AllocStrSlot(&drop);
             if ((*(uint8_t *)(b + 0xac) & 0x10) == 0) {
-                FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
+                PECMD_EnumDropFiles((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
             } else {
-                FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&top, (int64_t *)&drop);
+                PECMD_EnumDropFiles((void *)(uintptr_t)wParam, (int64_t *)&top, (int64_t *)&drop);
             }
             if (drop != NULL && *drop != L'\0') {
                 LPCWSTR key = *(LPCWSTR *)(*(int64_t *)(b + 0xe0) + 0x10);
