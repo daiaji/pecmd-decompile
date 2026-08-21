@@ -54,7 +54,7 @@ extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_WideStrLen(void *p);
 extern uint64_t PECMD_SetDesktopWallpaper(void *p, int mode);
-extern void FUN_14001b888(int n);
+extern void PECMD_InitRamdataRegistry(int n);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
 extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);
 extern void FUN_140017F54(int *p);
@@ -342,7 +342,7 @@ int PECMD_IsSysStartuped(void)
 {
     uint32_t u;
     if (g_sysStartuped == 0) {
-        FUN_14001b888(0);
+        PECMD_InitRamdataRegistry(0);
         u = PECMD_ReadRamdataDword(WSTR("SysStartuped"));
         g_sysStartuped = (uint8_t)(u == 0);
     }

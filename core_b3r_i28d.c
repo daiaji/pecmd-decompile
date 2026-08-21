@@ -46,10 +46,10 @@ extern uint64_t  PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *flags, uint64_t p3
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);   /* 扫描整数 token */
 
 /* ---- 脚本/执行 helpers ---- */
-extern void      FUN_14001b3a0(void *script, void *a2);   /* 默认参数/上下文 */
+extern void      PECMD_ResetScriptChain(void *script, void *a2);   /* 默认参数/上下文 */
 extern void      FUN_1400b1724(void *script, LPCWSTR p);  /* 脚本执行循环 */
 extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符串设置 */
-extern uint32_t  FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
+extern uint32_t  PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *p, char c);   /* 清空串 */
 extern void      FUN_140067F90(int64_t *ps);              /* '&' -> '&&' 转义 */
@@ -200,7 +200,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     local_70 = param_4;
     FUN_140063620(&local_60);
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (void *)0);
+        PECMD_ResetScriptChain(param_1, (void *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             FUN_14005b104(&local_60);
@@ -378,7 +378,7 @@ LAB_1400b5137:
         }
     }
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (void *)0);
+        PECMD_ResetScriptChain(param_1, (void *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             return (uint64_t)0xffffffff80070057;
@@ -444,7 +444,7 @@ int64_t PECMD_SetControlCommandTrigger(LARGE_INTEGER param_1, short *param_2, LP
         *(void ***)((char *)base + 0x78) = (void **)&local_res10;
         lpString = (LPCWSTR)local_res10;
         *(LPCWSTR *)((char *)base + 0x80) = lpString;
-        FUN_140073ccc((int64_t *)(uintptr_t)param_1.QuadPart, param_3, 1);
+        PECMD_ArgTokenize((int64_t *)(uintptr_t)param_1.QuadPart, param_3, 1);
         iVar4 = lstrlenW(lpString);
         lVar5 = *(int64_t *)((char *)base + 0x40);
         *(uint8_t *)((char *)base + 0xe) = 0;
@@ -527,7 +527,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     local_res10 = (WCHAR *)param_2;
     local_res18 = param_3;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (void *)0);
+        PECMD_ResetScriptChain(param_1, (void *)0);
         local_res18 = param_1[8];
         if (local_res18 == 0) {
             return (uint64_t)0xffffffff80070057;

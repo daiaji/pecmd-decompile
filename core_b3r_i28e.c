@@ -32,7 +32,7 @@ extern void    *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
 extern void     PECMD_ScaleQuadByFactor(int64_t param_1, int *param_2, int *param_3,
                               int *param_4, int *param_5); /* @0x14005daf8 */
 extern void     PECMD_DialogBeepNotify(int64_t param_1, int param_2); /* @0x14005d9a8 */
-extern void     FUN_14001b3a0(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
+extern void     PECMD_ResetScriptChain(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
 extern void     FUN_1400b9340(int64_t script, int64_t ctx, void *str, int a,
                               int b, int c, int d, void *e, uint32_t f,
                               int *g, LPCWSTR h);          /* 窗口构造/执行 */
@@ -42,7 +42,7 @@ extern uint64_t *PECMD_ConstructControl(uint64_t *param_1, int64_t param_2, uint
                                uint64_t *param_10, uint64_t *param_11, uint32_t param_12,
                                LPCWSTR param_13, HWND param_14, int *param_15,
                                uint64_t param_16);         /* 构造器 @0x1400baef4 */
-extern void     FUN_14008293c(int64_t *param_1, int64_t *pp, int64_t *out,
+extern void     PECMD_TokenWithRef(int64_t *param_1, int64_t *pp, int64_t *out,
                               int64_t *out2);              /* 颜色/字体/整数解析 */
 extern void     PECMD_PositionMessageWindow(HWND h, LPCWSTR a, LPARAM b, uint32_t c, uint32_t d,
                               int e, uint32_t f, uint32_t g, uint64_t h2); /* 工具提示显示 */
@@ -79,7 +79,7 @@ extern void     PECMD_SetConfigString(LPCWSTR, int);
 extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);     /* RegSetValue */
 extern int64_t  FUN_1400a9a84(int64_t *a, uint64_t *b);    /* 解析长度/句柄 */
-extern uint64_t FUN_1400745c8(int64_t *pp, uint64_t *out); /* 解析整数 */
+extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out); /* 解析整数 */
 extern int64_t  PECMD_ParseNumber(int64_t *pp, int *out);
 extern void    *PECMD_ReadTipDummyConfig(void);
 extern int64_t  FUN_1400e8644(int64_t *a);
@@ -125,7 +125,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
 
     local_res10 = param_2;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, 0);
+        PECMD_ResetScriptChain(param_1, 0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
             return 0xffffffff80070057ULL;
@@ -509,7 +509,7 @@ icon_parse_ba800:
         if (cVar21 != '\0') {
             /* 复用/装载位图的非线程路径 */
             if (param_3 == 0) {
-                FUN_14001b3a0(param_1, 0);
+                PECMD_ResetScriptChain(param_1, 0);
                 param_3 = param_1[8];
                 if (param_3 == 0) {
                     FUN_14005b104(&local_98);
@@ -654,7 +654,7 @@ icon_after_load_ba6aa:
     if (*local_res10 == L'#') {
         local_res10 = local_res10 + 1;
     }
-    FUN_1400745c8((int64_t *)&local_res10, &local_res8);
+    PECMD_EvalParenStripped((int64_t *)&local_res10, &local_res8);
     if (uVar19 == 0) {
         goto icon_apply_baedb;
     }
@@ -815,7 +815,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
     local_res10 = param_2;
     local_res20 = param_4;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, 0);
+        PECMD_ResetScriptChain(param_1, 0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
             return 0xffffffff80070057ULL;
@@ -902,7 +902,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                     local_c8 = 0;
                                                                     FUN_140063620(&local_b8);
                                                                     local_res10 = local_res10 + 7;
-                                                                    FUN_14008293c(param_1, (int64_t *)&local_res10,
+                                                                    PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                                   &local_c8, (int64_t *)&local_b8);
                                                                     sVar1 = (short)PECMD_ParseHashNumbers(&local_c8,
                                                                                                 (int64_t)&local_a0);
@@ -921,14 +921,14 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                 }
                                                                 /* -font: */
                                                                 local_res10 = puVar15 + 6;
-                                                                FUN_14008293c(param_1, (int64_t *)&local_res10,
+                                                                PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                               (int64_t *)&local_a8, (int64_t *)&local_70);
                                                             } else {
                                                                 /* -b: */
                                                                 local_c8 = 0;
                                                                 FUN_140063620(&local_80);
                                                                 local_res10 = local_res10 + 3;
-                                                                FUN_14008293c(param_1, (int64_t *)&local_res10,
+                                                                PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                               &local_c8, (int64_t *)&local_80);
                                                                 local_c0_hwnd = 0;
                                                                 iVar3 = (int)FUN_1400a9a84(&local_c8,

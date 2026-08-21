@@ -42,13 +42,13 @@ extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern char      FUN_1400660ac(const char *tok, void *pp, int n);
 extern bool      PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size); /* parse numeric/expr */
 extern void      PECMD_ParseHexOrDecBool(LPWSTR *pp, int *out);        /* parse integer */
-extern uint64_t  FUN_1400745c8(int64_t *pp, uint64_t *out);  /* parse integer */
+extern uint64_t  PECMD_EvalParenStripped(int64_t *pp, uint64_t *out);  /* parse integer */
 extern uint64_t  PECMD_DispatchControlConstruct(WPARAM, uint64_t, int64_t, LPCWSTR, int, int, int, int,
                                uint64_t *, int64_t *, LPCWSTR, uint64_t, double,
                                uint64_t, uint64_t);          /* 构造派发 */
 
 /* ---- object / window helpers ---- */
-extern void      FUN_14001b3a0(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
+extern void      PECMD_ResetScriptChain(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
 extern void      FUN_1400bd620(WPARAM, LPCWSTR, void *, int, int, int, int, void *,
                                void *, int *, uint32_t, uint32_t); /* 构造派发(size 版) */
 extern void      PECMD_ClipboardCommand(WCHAR *);                       /* 直接挂图像 */
@@ -363,7 +363,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
     (void)local_120;
     PECMD_SkipLeadingControlChars(&local_res10);
     if (param_3 == 0) {
-        FUN_14001b3a0((int64_t *)param_1, 0);
+        PECMD_ResetScriptChain((int64_t *)param_1, 0);
         param_3 = *(WPARAM *)((char *)(uintptr_t)param_1 + 0x20);
         if (param_3 == 0) {
             lVar18 = (int64_t)0xffffffff80070057ULL;
@@ -420,7 +420,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                                                     if ((char)lVar18 == '\0') { /* -numbmp 未命中 */
                                                         if ((char)PECMD_AsciiPrefixICmp("-num:", (const WCHAR *)pWVar20, 5) != '\0') {
                                                             local_res10 = pWVar20 + 5;
-                                                            FUN_1400745c8((int64_t *)&local_res10, &local_res20);
+                                                            PECMD_EvalParenStripped((int64_t *)&local_res10, &local_res20);
                                                             pWVar14 = (LPCWSTR)(uintptr_t)(uVar16 | 0x100000);
                                                             pWVar20 = local_res10;
                                                         }

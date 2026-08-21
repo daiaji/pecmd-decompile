@@ -30,7 +30,7 @@ void FUN_1400669C4(void *s, uint64_t v, LPCWSTR k);  /* @0x1400669c4 设置变�
 void PECMD_OpenSharedMapping(int a, const char *s);            /* @0x140005738 */
 void PECMD_DetectCodePage(void);            /* @0x14000500c */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 */
-void FUN_140008834(LPCWSTR cmd);     /* @0x140008834 执行命令文本 */
+void PECMD_InstallWindowsService(LPCWSTR cmd);     /* @0x140008834 执行命令文本 */
 void FUN_140016ae0(void);            /* @0x140016ae0 服务主过程 */
 
 /* ---- 全局 (core_globals.c) ---- */
@@ -166,7 +166,7 @@ void PECMD_ServiceEntry(LPCWSTR cmd)
     table[0].lpServiceName = (LPWSTR)WSTR("Service");
     table[0].lpServiceProc = (void *)FUN_140016ae0;
     StartServiceCtrlDispatcherW(table);
-    FUN_140008834(cmd);
+    PECMD_InstallWindowsService(cmd);
 }
 
 /* ========== 父进程 PID @0x140006988 ========== */

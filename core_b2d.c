@@ -59,7 +59,7 @@ extern void PECMD_ParseIntThenSkip(int64_t *a1, int *a2);
 extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
-extern void FUN_14001708c(WCHAR *out, uint64_t a2, LPCWSTR a3,
+extern void PECMD_CrtShim(WCHAR *out, uint64_t a2, LPCWSTR a3,
                           void *a4);
 extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
 extern int64_t *PECMD_SkipWsByte(int64_t *a1);
@@ -93,8 +93,8 @@ extern uint64_t PECMD_ExecLoadCommand(LPCWSTR a1, LPCWSTR a2);
 extern void PECMD_HandleDropFile(uint8_t *a1, void *a2, char a3);
 extern HICON PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
 extern uint32_t PECMD_ParseVkKeyName(LPCWSTR a1, char a2);
-extern void FUN_14002286c(void);
-extern void FUN_140022e94(void);
+extern void PECMD_FixKnownDlls32(void);
+extern void PECMD_RegisterHotkeyEntry(void);
 extern void PECMD_RunShutdownScript(LPCWSTR a1, uint32_t a2);
 extern WCHAR *PECMD_RemoveDuplicateChar(LPCWSTR a1, WCHAR a2);
 extern LPCWSTR PECMD_TrimTrailingSeparator(int64_t *a1, LPCWSTR a2, WCHAR a3);
@@ -1205,7 +1205,7 @@ label_02c489:
 
 /* ========== FUN_14002E3D4 @0x14002e3d4 ==========
  * PELOGON 初始化扩展：解析 -dummy/-dummyx、FirstUsb、钩子选项并安装 shell 组件。
- * TODO(verify): 反编译 in_stack 残留按 0 处理；FUN_14001708c 的 0x140120784
+ * TODO(verify): 反编译 in_stack 残留按 0 处理；PECMD_CrtShim 的 0x140120784
  *               是 .rdata 字符串地址/格式串参数，保持原样。
  */
 uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
@@ -1230,7 +1230,7 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
     (void)uVar13;
     local_178[0] = L'\0';
     local_res10 = cmd;
-    FUN_14002286c();
+    PECMD_FixKnownDlls32();
     PECMD_SkipLeadingControls(&local_res10);
     cVar6 = FUN_1400660AC("-dummy", (int64_t *)&local_res10, 6);
     cVar7 = FUN_1400660AC("-dummyx", (int64_t *)&local_res10, 7);
@@ -1280,19 +1280,19 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
     }
     FUN_14002cc30(ctx, local_178, 0, 0x24, NULL);
     if (bVar10 == 0) {
-        FUN_14001708c(local_178, 0x140120784,
+        PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $SHELL32.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
         FUN_14000e26c((void *)ctx, (void *)local_178, (void *)ctx,
                       (void *)local_res18, 0, NULL, NULL, NULL);
-        FUN_14001708c(local_178, 0x140120784,
+        PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $BROWSEUI.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
         FUN_14000e26c((void *)ctx, (void *)local_178, (void *)ctx,
                       (void *)local_res18, 0, NULL, NULL, NULL);
-        FUN_14001708c(local_178, 0x140120784,
+        PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $SHDOCVW.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
@@ -1351,7 +1351,7 @@ int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
             local_34[0] = 0;
             local_34[1] = 100000;
             local_28.QuadPart = LVar3.QuadPart;
-            FUN_14001708c(local_20, 0x140120458,
+            PECMD_CrtShim(local_20, 0x140120458,
                           (LPCWSTR)(uintptr_t)((uint64_t)(uintptr_t)wParam & 0xffffffff),
                           ptVar5);
             *(WCHAR *)(uintptr_t)LVar3.QuadPart = L'\0';
@@ -1398,7 +1398,7 @@ int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
             }
             goto label_02effd;
         }
-        FUN_140022e94();
+        PECMD_RegisterHotkeyEntry();
         return 0;
     }
     if (msg == 0x219) {

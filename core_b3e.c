@@ -61,7 +61,7 @@ extern uint64_t FUN_140063060(uint32_t *buf);
 extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char *out,
                           uint64_t ctx, int mode);
 extern void FUN_14005CC4C(void);
-extern uint64_t FUN_1400745c8(int64_t *pp, uint64_t *out);
+extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out);
 extern void *FUN_140070154(LPCWSTR src);
 extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
                           DWORD *readCount);
@@ -546,7 +546,7 @@ uint64_t PECMD_ParseSignedNumber(int16_t *s)
             local_res8 = s;
         } while (*s == 0x2d);
     }
-    FUN_1400745c8((int64_t *)&local_res8, local_res10);
+    PECMD_EvalParenStripped((int64_t *)&local_res8, local_res10);
     return (local_res10[0] & 0xffffffffffff7fffULL) | uVar1;
 }
 

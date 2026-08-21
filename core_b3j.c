@@ -62,7 +62,7 @@ extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3,
 extern int64_t FUN_1400E5B0C(int64_t a1, uint64_t a2, HDC a3,
                              int64_t *a4);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
-extern uint64_t FUN_1400745c8(int64_t *a1, uint64_t *a2);
+extern uint64_t PECMD_EvalParenStripped(int64_t *a1, uint64_t *a2);
 extern uint8_t PECMD_EjectDrive(WCHAR a1, int a2);
 extern void PECMD_DefineDosDevice(uint8_t *a1, WCHAR *a2);
 extern uint64_t *PECMD_CreateGlobalMutex(LPCWSTR a1, char a2, uint32_t *a3);
@@ -787,7 +787,7 @@ uint64_t FUN_1400746B0(int64_t *pp, uint64_t *out,
         }
         uVar2 = (uint64_t)(uVar2 != 0);
     } else {
-        uVar2 = FUN_1400745c8(pp, out);
+        uVar2 = PECMD_EvalParenStripped(pp, out);
     }
     return uVar2;
 }

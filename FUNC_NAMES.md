@@ -4,6 +4,36 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400987ec | FUN_1400987ec | PECMD_PinStartMenuTask |
+| 0x140070da8 | FUN_140070da8 | PECMD_ExpressionArithmetic |
+| 0x140097150 | FUN_140097150 | PECMD_SetAclPermission |
+| 0x1400e91f0 | FUN_1400e91f0 | PECMD_ModalDialogPump |
+| 0x140073ccc | FUN_140073ccc | PECMD_ArgTokenize |
+| 0x140082520 | FUN_140082520 | PECMD_CloseRestartByName |
+| 0x140081238 | FUN_140081238 | PECMD_ParseWindowCommandOpts |
+| 0x1400731d8 | FUN_1400731d8 | PECMD_InitControlObjField |
+| 0x140018220 | FUN_140018220 | PECMD_BindDelayImports |
+| 0x1400545f8 | FUN_1400545f8 | PECMD_TokenizeQuotedField |
+| 0x140008834 | FUN_140008834 | PECMD_InstallWindowsService |
+| 0x1400e4f14 | FUN_1400e4f14 | PECMD_MenuItemWithIcon |
+| 0x14002286c | FUN_14002286c | PECMD_FixKnownDlls32 |
+| 0x140022e94 | FUN_140022e94 | PECMD_RegisterHotkeyEntry |
+| 0x140060b5c | FUN_140060b5c | PECMD_CountNewlines |
+| 0x14001b3a0 | FUN_14001b3a0 | PECMD_ResetScriptChain |
+| 0x14005be68 | FUN_14005be68 | PECMD_ReclaimPages |
+| 0x1400e95f4 | FUN_1400e95f4 | PECMD_ModalMsgPumpEx |
+| 0x140072d8c | FUN_140072d8c | PECMD_AdapterMacIpLookup |
+| 0x1400745c8 | FUN_1400745c8 | PECMD_EvalParenStripped |
+| 0x14008293c | FUN_14008293c | PECMD_TokenWithRef |
+| 0x14001b888 | FUN_14001b888 | PECMD_InitRamdataRegistry |
+| 0x1400690c0 | FUN_1400690c0 | PECMD_ReadRegBinaryGuarded |
+| 0x140009068 | FUN_140009068 | PECMD_LoadPluginPecmdTbl |
+| 0x140018c6c | FUN_140018c6c | PECMD_DebugScriptString |
+| 0x1400e5120 | FUN_1400e5120 | PECMD_MenuRegisterCommand |
+| 0x1400060b8 | FUN_1400060b8 | PECMD_RestrictedTokenSetup |
+| 0x140077190 | FUN_140077190 | PECMD_AppendDriveLetter |
+| 0x14005c394 | FUN_14005c394 | PECMD_RegOpenWithRetryPriv |
+| 0x14001708c | FUN_14001708c | PECMD_CrtShim |
 | 0x140004fd4 | FUN_140004fd4 | PECMD_TrimWorkingSetAndExec |
 | 0x140006a4c | FUN_140006a4c | PECMD_IsDevicePathPrefix |
 | 0x140017724 | FUN_140017724 | PECMD_SwitchToDefaultDesktop |

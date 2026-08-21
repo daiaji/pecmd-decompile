@@ -11,7 +11,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp);              /* @0x14005b154 */
 /* --- helper symbols referenced by restored bodies below --- */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 分配清零槽数组 */
 extern bool  PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);                   /* @0x1400c11c0 */
-extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
+extern uint64_t PECMD_EvalParenStripped(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
 extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                              int namelen, void **found);            /* @0x140018978 */
 extern int64_t *PECMD_AddVarDefault(int64_t *script, LPCWSTR name, LPCWSTR text,
@@ -445,12 +445,12 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
 }
 
 /* @0x1400a9a84 size=36 — 解析一个值(成功时推进 *pp)再越过 1 个字符;
- * 返回值沿用 FUN_1400745c8 的解析结果(ABI: ret 时 RAX 未改) */
+ * 返回值沿用 PECMD_EvalParenStripped 的解析结果(ABI: ret 时 RAX 未改) */
 uint64_t FUN_1400a9a84(int64_t *pp, uint64_t *out)
 {
     uint64_t v;
 
-    v = FUN_1400745c8((WCHAR **)pp, out);
+    v = PECMD_EvalParenStripped((WCHAR **)pp, out);
     if (*(short *)(uintptr_t)*pp != 0) {
         *pp = (int64_t)((short *)(uintptr_t)*pp + 1);
     }

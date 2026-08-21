@@ -47,10 +47,10 @@ extern void PECMD_PatchInfDirectives(LPCWSTR path);                 /* @0x140021
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_140063620(void *ps);
 extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
-extern int FUN_14001708c(WCHAR *out, uint64_t fmt, void *ctx, void *name);
+extern int PECMD_CrtShim(WCHAR *out, uint64_t fmt, void *ctx, void *name);
 extern void PECMD_CreateMutexSlot(void *out, LPCWSTR name);
 extern void PECMD_ReleaseMutex(void *out);
-extern void FUN_14001b888(uint32_t mode);
+extern void PECMD_InitRamdataRegistry(uint32_t mode);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *a, int64_t *b, char c);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
@@ -270,7 +270,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
     }
 
     PECMD_CreateMutexSlot(&lockObj, WSTR("Global\\PECMD:main:lock"));
-    FUN_14001b888(2);
+    PECMD_InitRamdataRegistry(2);
     idHigh = (uint32_t)PECMD_ParseHotkeyCode((int64_t *)&keyName, idLow, script, '\0');
     FUN_140063620(&expanded);
     FUN_14007BF44(script, keyName, &expanded, 0, 1);
@@ -291,7 +291,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
             valueLen = 0x3000;
             valueEnd = valueBuf[0] + 0x12;
             *valueEnd = L'\0';
-            FUN_14001708c(valueBuf[0], 0x140120458,
+            PECMD_CrtShim(valueBuf[0], 0x140120458,
                           (void *)(uintptr_t)scanIdx, NULL);
             i = ((int (*)(HKEY, LPCWSTR, LPCWSTR, DWORD *, LPVOID, DWORD *))
                  (uintptr_t)g_pSHGetValueW)(
@@ -332,7 +332,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
                 bestIdx = (int32_t)g_hotkeyIdx;
             }
             if (bestIdx < 0x3e9) {
-                FUN_14001708c(valueBuf[0], 0x140120458,
+                PECMD_CrtShim(valueBuf[0], 0x140120458,
                               (void *)(uintptr_t)bestIdx, NULL);
                 c = '*';
                 if (*keyName == L'-') {
@@ -358,7 +358,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
                     }
                     i = lstrlenW(keyName);
                     PECMD_AllocWStringBuffer(&newVal, (int64_t)i + 0x3c);
-                    FUN_14001708c(newVal, 0x1401204c8,
+                    PECMD_CrtShim(newVal, 0x1401204c8,
                                   (void *)(uintptr_t)idLow[0],
                                   (void *)(uintptr_t)idHigh);
                     lv = PECMD_WideStrLen(newVal);
@@ -926,7 +926,7 @@ after_reg:
                         PECMD_AllocWStringBuffer(&newEntry, (int64_t)(nCharLen + 0x3c));
                         {
                             WCHAR *pw = newEntry;
-                            int k = FUN_14001708c(newEntry, 0x140120b48, cmd, NULL);
+                            int k = PECMD_CrtShim(newEntry, 0x140120b48, cmd, NULL);
                             WCHAR *pW = FUN_1400E6D38(pw + k, minSize, WSTR("%I64d "));
                             FUN_1400E6D68(pW, maxSize);
                             i = lstrlenW(newEntry);

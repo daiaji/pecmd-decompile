@@ -50,11 +50,11 @@ extern int64_t PECMD_WideStrToInt64(const WCHAR *p);                         /* 
 extern WCHAR  *PECMD_SkipLeadingControlChars(WCHAR **pp);                            /* 跳空白 */
 extern char    FUN_1400660ac(const char *tok, WCHAR **pp, int n);     /* 前缀匹配 */
 extern void    PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);          /* 串赋值 */
-extern int64_t FUN_1400545f8(int64_t *ctx, int64_t *pp, int64_t *out,
+extern int64_t PECMD_TokenizeQuotedField(int64_t *ctx, int64_t *pp, int64_t *out,
                              int16_t c1, int16_t c2);
 extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);
 extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 */
-extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);
+extern uint64_t PECMD_EvalParenStripped(WCHAR **pp, uint64_t *out);
 extern void    FUN_14005b104(void *ps);                               /* 释放字符串槽 */
 extern void    FUN_1400633a8(void **ps, int64_t len);                 /* 分配槽 */
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);              /* 分配串 (StrAlloc) */
@@ -101,7 +101,7 @@ extern void    PECMD_AppendFormattedI64(int64_t *list, int64_t pos);            
 extern void    FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);     /* SetVarD */
 extern void    PECMD_JoinTokensAndResolve(int64_t *ctx, int64_t *pp, int64_t *out);
 extern void    PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
-extern uint64_t FUN_140060b5c(uint64_t *a, int b, void *c, int d);    /* 位置计算 */
+extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d);    /* 位置计算 */
 extern void    PECMD_SetEndOfFileWrap(void *a, LARGE_INTEGER b);
 extern int64_t PECMD_AllocConsoleBuffers(int64_t a);                              /* __chkstk/刷新 */
 extern WCHAR  *FUN_14001be14(WCHAR *s);                              /* 串标签查找 */
@@ -739,7 +739,7 @@ LAB_0a13ff:
                                 iVar7 = (int)(intptr_t)local_f0;
                             }
                             if (local_80 != 0) {
-                                iVar7 = (int)FUN_140060b5c((uint64_t *)pWVar16,
+                                iVar7 = (int)PECMD_CountNewlines((uint64_t *)pWVar16,
                                                           (int)ppWVar21, (void *)(intptr_t)local_e0,
                                                           iVar7);
                                 PECMD_AppendFormattedI64((int64_t *)&local_70, (int64_t)iVar7);
@@ -774,7 +774,7 @@ LAB_0a13ff:
                                 iVar9 = (int)(intptr_t)local_f0;
                             }
                             if (local_80 != 0) {
-                                iVar9 = (int)FUN_140060b5c((uint64_t *)pWVar16, (int)ppWVar21,
+                                iVar9 = (int)PECMD_CountNewlines((uint64_t *)pWVar16, (int)ppWVar21,
                                                           (void *)(intptr_t)local_e0, iVar9);
                                 PECMD_AppendFormattedI64((int64_t *)&local_70, (int64_t)iVar9);
                             }
@@ -815,7 +815,7 @@ LAB_0a13ff:
                                     PECMD_AppendFormattedI64((int64_t *)&local_58, (int64_t)ppWVar20);
                                 }
                                 if (local_80 != 0) {
-                                    iVar15 = (int)FUN_140060b5c((uint64_t *)pWVar16,
+                                    iVar15 = (int)PECMD_CountNewlines((uint64_t *)pWVar16,
                                                                (int)ppWVar21,
                                                                (void *)(intptr_t)local_e0, iVar9);
                                     PECMD_AppendFormattedI64((int64_t *)&local_70, (int64_t)iVar15);
@@ -850,7 +850,7 @@ LAB_0a13ff:
                                 PECMD_AppendFormattedI64((int64_t *)&local_58, (int64_t)ppWVar20);
                             }
                             if (local_80 != 0) {
-                                iVar10 = (int)FUN_140060b5c((uint64_t *)pWVar16, (int)ppWVar21,
+                                iVar10 = (int)PECMD_CountNewlines((uint64_t *)pWVar16, (int)ppWVar21,
                                                             (void *)(intptr_t)local_e0, iVar9);
                                 PECMD_AppendFormattedI64((int64_t *)&local_70, (int64_t)iVar10);
                             }
@@ -876,7 +876,7 @@ LAB_0a13ff:
     if (*local_70 == L'\0') {
         if (*local_a8 != L'\0') {
             if (0 < (int64_t)ppWVar21) {
-                uVar11 = (uint32_t)FUN_140060b5c((uint64_t *)pWVar16, (int)ppWVar21,
+                uVar11 = (uint32_t)PECMD_CountNewlines((uint64_t *)pWVar16, (int)ppWVar21,
                                                  (void *)(intptr_t)local_e0, iVar8);
             }
             FUN_1400669c4(param_1, (uint64_t)uVar11, pWVar13);
@@ -1083,7 +1083,7 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
   local_98.QuadPart = 1;
   local_d8.QuadPart = 1;
   local_d0 = 0;
-  local_res10 = (uint64_t)FUN_1400545f8(param_1, (int64_t *)&local_res10,
+  local_res10 = (uint64_t)PECMD_TokenizeQuotedField(param_1, (int64_t *)&local_res10,
                                         (int64_t *)&local_90, L',', 0);
   pWVar17 = local_90;
 
@@ -1134,10 +1134,10 @@ LAB_14009dd92:
         if ((char)uVar8 == '\0') {
           uVar8 = PECMD_AsciiWideICmp("*", (const WCHAR *)(uintptr_t)LVar10.QuadPart);
           if ((char)uVar8 == '\0') {
-            FUN_1400745c8((WCHAR **)&local_a8.QuadPart, (uint64_t *)&local_88);
+            PECMD_EvalParenStripped((WCHAR **)&local_a8.QuadPart, (uint64_t *)&local_88);
             if (*(int16_t *)(uintptr_t)local_a8.QuadPart == 0x2b) {
               local_a8.QuadPart = local_a8.QuadPart + 2;
-              FUN_1400745c8((WCHAR **)&local_a8.QuadPart, (uint64_t *)&local_d8.QuadPart);
+              PECMD_EvalParenStripped((WCHAR **)&local_a8.QuadPart, (uint64_t *)&local_d8.QuadPart);
               local_98 = local_d8;
             }
             local_e0 = local_88;

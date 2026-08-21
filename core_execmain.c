@@ -31,7 +31,7 @@
  *   3. &__MAIN__ 初始化：未定义置 "1"，值≠"0" 置 "0"（反编译原样）
  *   4. ENTER:/LEAVE: 调试日志（g_logEnter>0 且 script+0x10 位0/3 允许）
  *   5. 窗口模式：显示窗口后调执行循环 FUN_1400b1724；忙则
- *      PostMessage(WM_CLOSE)+FUN_1400e91f0
+ *      PostMessage(WM_CLOSE)+PECMD_ModalDialogPump
  *   6. 非窗口模式：直接调执行循环；满足条件时对旧窗口
  *      PostMessage(WM_CLOSE) 并清 script+0x40
  *   7. 收尾：恢复保存字段或 TaskClear；窗口引用计数 ±1；
@@ -70,12 +70,12 @@ extern int32_t g_logEnter;               /* g_i64CCB8 ENTER:/LEAVE: 日志开关
 extern WCHAR g_szEmpty[];                /* g_szEmpty .rdata 空串 */
 
 /* 未实现（TODO(verify) 挂起） */
-extern void FUN_14001b3a0(void *script, void *a2);        /* @0x14001b3a0 脚本重置 */
+extern void PECMD_ResetScriptChain(void *script, void *a2);        /* @0x14001b3a0 脚本重置 */
 extern void FUN_1400e67e8(void);                          /* @0x1400e67e8 窗口系统准备 */
-extern void *FUN_1400731d8(void *obj, HWND parent, uint32_t msg,
+extern void *PECMD_InitControlObjField(void *obj, HWND parent, uint32_t msg,
                            void *a4);                     /* @0x1400731d8 窗口对象构造 */
-extern void FUN_1400e95f4(void *win, int a2);             /* @0x1400e95f4 窗口销毁 */
-extern void FUN_1400e91f0(void *win, uint32_t msg);       /* @0x1400e91f0 窗口消息处理 */
+extern void PECMD_ModalMsgPumpEx(void *win, int a2);             /* @0x1400e95f4 窗口销毁 */
+extern void PECMD_ModalDialogPump(void *win, uint32_t msg);       /* @0x1400e91f0 窗口消息处理 */
 extern void FUN_1400b1724(void *script, LPCWSTR p);       /* @0x1400b1724 脚本执行循环 */
 extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
                           void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
@@ -146,7 +146,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         g_bInitWin |= 0x80;
         if (prevInit != 0 || (flags & 0x100) != 0) {
             g_bInitWin = 0;
-            FUN_14001b3a0(pScript, NULL);
+            PECMD_ResetScriptChain(pScript, NULL);
         }
     }
 
@@ -196,7 +196,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         if (obj == NULL) {
             pWinNew = NULL;
         } else {
-            pWinNew = FUN_1400731d8(obj, GetDesktopWindow(), 0x271c, NULL);
+            pWinNew = PECMD_InitControlObjField(obj, GetDesktopWindow(), 0x271c, NULL);
         }
     }
     pWin = pWinOld;
@@ -317,7 +317,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
     if (hasWin && pWinNew != NULL) {
         if (cInitFlag == '\0') {
             *(uint8_t *)((char *)pWin + 0x120) = 0;
-            FUN_1400e95f4(pWin, 0);
+            PECMD_ModalMsgPumpEx(pWin, 0);
         } else {
             void *vtbl;
             *(uint8_t *)((char *)pWin + 0x121) = 0x81;
@@ -334,7 +334,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
                 **(int32_t **)((char *)pWin + 0x1c0) > 0) {
                 *(uint8_t *)((char *)pWin + 0x121) = 0xff;
                 PostMessageW(*(HWND *)((char *)pWin + 0x20), 0x10, 0, 0); /* WM_CLOSE */
-                FUN_1400e91f0(pWin, 0x20);
+                PECMD_ModalDialogPump(pWin, 0x20);
                 *(uint8_t *)((char *)pWin + 0x121) = 0x81;
             }
         }

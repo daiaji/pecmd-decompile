@@ -58,7 +58,7 @@ extern uint32_t PECMD_ReadPhysMemSlot(uint64_t a);
 extern BOOL PECMD_WritePhysicalMem(uint64_t a, uint32_t b);
 extern void PECMD_FreeNtdll(void);
 extern LPCWSTR FUN_140062EC8(LPCWSTR s, LPCWSTR sep, int mode, uint32_t flags);
-extern void FUN_14002286c(void);
+extern void PECMD_FixKnownDlls32(void);
 extern void FUN_1400DFB14(void *script, WCHAR *cmd, uintptr_t flag);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
@@ -66,7 +66,7 @@ extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
 extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
                               uint64_t e, uint32_t f, uint64_t g, int64_t h,
                               int i);
-extern void FUN_14001708c(WCHAR *out, size_t size, void *ctx, void *name);
+extern void PECMD_CrtShim(WCHAR *out, size_t size, void *ctx, void *name);
 extern uint64_t FUN_1400E9724(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern uint64_t PECMD_SetRamdrivDiskSize(int size, LPCWSTR name);
@@ -79,7 +79,7 @@ extern uint16_t *FUN_140024C48(int64_t *pp, int64_t *len, uint32_t flags);
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
-extern void FUN_14001b888(uint32_t mode);
+extern void PECMD_InitRamdataRegistry(uint32_t mode);
 extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 
@@ -859,9 +859,9 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
         local_78[0] = 0;
     }
     if (local_78[0] < 0x31) {
-        FUN_14002286c();
+        PECMD_FixKnownDlls32();
         if (PECMD_CheckSystemStartOptions() == 0) {
-            FUN_14001b888(0);
+            PECMD_InitRamdataRegistry(0);
             ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)
                 ((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("OnlyApp"),
                  1, g_wsz20c64, 2);
@@ -1111,7 +1111,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
     if (local_res18 != 0) {
         do {
             if ((local_268.dwFileAttributes & 0x10) == 0) {
-                FUN_14001708c(local_res20, 0x208, (void *)dir,
+                PECMD_CrtShim(local_res20, 0x208, (void *)dir,
                               (void *)local_268.cFileName);
                 if (remove == 0) {
                     iVar1 = AddFontResourceW(local_res20);
@@ -1259,7 +1259,7 @@ void PECMD_WriteSysAck(uint32_t ack, int mode)
     uint64_t local_a4[19];
 
     local_res8[0] = ack & 1;
-    FUN_14001b888(0);
+    PECMD_InitRamdataRegistry(0);
     ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)
         ((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("SysShel.ack"),
          4, local_res8, 4);

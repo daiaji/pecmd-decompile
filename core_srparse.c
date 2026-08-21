@@ -48,7 +48,7 @@ extern void FUN_140063620(WCHAR **ps);   /* @0x140063620 分配引用串容器 *
 extern int32_t g_sysinitState;           /* DAT_14013d058 sysinit 状态 */
 
 /* 2sysinit 窗口隐藏链（未实现, 仅声明 + TODO(verify)） */
-extern void FUN_14001b3a0(void *script, void *arg2);   /* @0x14001b3a0 */
+extern void PECMD_ResetScriptChain(void *script, void *arg2);   /* @0x14001b3a0 */
 extern uint64_t PECMD_GetObjField20(void *script);           /* @0x14005dec4 取窗口句柄 */
 extern void PECMD_BringWindowToFront(HWND hwnd);                  /* @0x14005ded4 */
 
@@ -132,7 +132,7 @@ int64_t PECMD_SrParsePrefix(void *script, WCHAR **pp, int *flags, int *flags2,
         }
         if (FUN_1400660AC("2sysinit", pp, 8)) { /* 227 */
             g_sysinitState = 1;                     /* 229 */
-            FUN_14001b3a0(script, NULL);            /* 230 TODO(verify) */
+            PECMD_ResetScriptChain(script, NULL);            /* 230 TODO(verify) */
             {
                 HWND hwnd = (HWND)PECMD_GetObjField20(script);    /* 231 TODO(verify) */
                 PECMD_BringWindowToFront(hwnd);                /* 232 TODO(verify) */

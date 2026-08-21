@@ -79,7 +79,7 @@ typedef uint16_t ushort;
 typedef int64_t  longlong;
 typedef uint64_t ulonglong;
 typedef HKEY *PHKEY;
-undefined8 *FUN_1400731d8(undefined8 *param_1, undefined8 param_2, uint param_3, undefined8 *param_4);   /* 控件对象构造 (定义见文件尾) */
+undefined8 *PECMD_InitControlObjField(undefined8 *param_1, undefined8 param_2, uint param_3, undefined8 *param_4);   /* 控件对象构造 (定义见文件尾) */
 
 /* ---- P4 wave-4 统一前置声明 (确保早放置的恢复体调用可正确编译) ---- */
 typedef void *HGDIOBJ_H;
@@ -136,7 +136,7 @@ uint64_t FUN_14004fb44(longlong *a, ulonglong b);
 void FUN_14005d9a8(int64_t a, int b);
 uint64_t FUN_1400630d0(int a);
 void FUN_14006e8f4(int64_t a);
-DWORD FUN_14005c394(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
+DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
 void *DAT_14013e1f8; void *DAT_14013e200;
@@ -554,7 +554,7 @@ uint64_t PECMD_AddVarDefault(void) { return 0; }
 uint64_t PECMD_FindVarValue(void) { return 0; }
 uint64_t PECMD_SetVarCore(void) { return 0; }
 uint8_t *FUN_14001ea18(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return (uint8_t*)0; }
-/* FUN_14002286c — KnownDlls32 环境修复: 首个调用时读取系统模式标志, 在 64 位
+/* PECMD_FixKnownDlls32 — KnownDlls32 环境修复: 首个调用时读取系统模式标志, 在 64 位
    系统中注册 \\KnownDlls32 路径(经 ntdll 函数指针槽), 仅执行一次. */
 uint FUN_14000e0bc(void) { return 0; }           /* 操作系统位宽探测 (no-op) */
 uint64_t FUN_14006042c(void) { return 0; }       /* 系统目录盘符 (no-op) */
@@ -564,7 +564,7 @@ void (*DAT_14013cb48)(...) = 0;                  /* RtlInitUnicodeString 类槽 
 int  (*DAT_14013cd30)(...) = 0;                  /* ZwOpenKey 类槽 */
 int  (*DAT_14013cd38)(...) = 0;                  /* ZwQueryKey 类槽 */
 void (*DAT_14013cd40)(...) = 0;                  /* ZwClose 类槽 */
-void FUN_14002286c(void)
+void PECMD_FixKnownDlls32(void)
 {
     uint uVar1;
     int iVar2;
@@ -738,7 +738,7 @@ DWORD PECMD_QueryRegValueWithRetry(HKEY param_1, const WCHAR *param_2, const WCH
     DWORD DVar1; uint uVar2; intptr_t hlocal[2];
     uVar2=4; hlocal[0]=0;
     do {
-        DVar1=FUN_14005c394(param_1,param_2,(HKEY*)hlocal,0x20019,uVar2);
+        DVar1=PECMD_RegOpenWithRetryPriv(param_1,param_2,(HKEY*)hlocal,0x20019,uVar2);
         if (DVar1!=5) {
             if (DVar1!=0) return DVar1;
             DVar1=RegQueryValueExW((void*)(uintptr_t)hlocal[0],param_3,(DWORD*)0,param_4,param_5,param_6);
@@ -755,7 +755,7 @@ unsigned long PECMD_RegSetValueWithOpen(void *k, const unsigned short *a, const 
 {
   uint64_t r;
   void *lk = 0;
-  if (a == 0 || (r = FUN_14005c394((HKEY)k, (LPCWSTR)a, (PHKEY)&lk, 0x20006, 4), k = lk, r == 0)) {
+  if (a == 0 || (r = PECMD_RegOpenWithRetryPriv((HKEY)k, (LPCWSTR)a, (PHKEY)&lk, 0x20006, 4), k = lk, r == 0)) {
     r = RegSetValueExW((HKEY)k, (LPCWSTR)b, 0, c, d, e);
     if (lk != 0) RegCloseKey((HKEY)lk);
   }
@@ -1141,7 +1141,7 @@ HWND FUN_1400e8574(undefined8 *param_1, longlong param_2){
         FUN_1400e67e8(); pHVar2=0;
         if ((void*)param_1!=(void*)&DAT_14013d130) pHVar2=GetDesktopWindow();
         puVar3=operator_new(0xa98); pHVar4=(HWND)0;
-        if (puVar3!=(void*)0) pHVar4=(HWND)FUN_1400731d8(puVar3,(undefined8)(uintptr_t)pHVar2,0x271b,(undefined8*)0);
+        if (puVar3!=(void*)0) pHVar4=(HWND)PECMD_InitControlObjField(puVar3,(undefined8)(uintptr_t)pHVar2,0x271b,(undefined8*)0);
         pb=(uint8_t*)pHVar4; lVar1=*(longlong*)pHVar4;
         pb[0x121]=1; *(undefined8**)(pb+0x290)=param_1; pb[0x122]=1; pb[0x120]=0x10;
         *(longlong*)(pb+0x2a0)=param_2;
@@ -1150,9 +1150,9 @@ HWND FUN_1400e8574(undefined8 *param_1, longlong param_2){
     return pHVar4;
 }
 
-undefined4 FUN_1400e91f0(longlong *param_1, ulonglong param_2);
+undefined4 PECMD_ModalDialogPump(longlong *param_1, ulonglong param_2);
 /* @0x1400e95f4 模态对话框消息泵 (decompiled.c 直移) */
-longlong FUN_1400e95f4(longlong *param_1,ulonglong param_2)
+longlong PECMD_ModalMsgPumpEx(longlong *param_1,ulonglong param_2)
 {
   bool bVar1;
   bool bVar2;
@@ -1193,7 +1193,7 @@ longlong FUN_1400e95f4(longlong *param_1,ulonglong param_2)
       }
     }
   }
-  iVar6 = FUN_1400e91f0(param_1,0x10000);
+  iVar6 = PECMD_ModalDialogPump(param_1,0x10000);
   if (bVar1) {
     BVar5 = IsWindowEnabled(hWnd);
     if (BVar5 == 0) {
@@ -1956,7 +1956,7 @@ int CM_Reenumerate_DevNode(uint32_t a, uint32_t b){ (void)a;(void)b; return 1; }
 #include <stdarg.h>
 uint64_t SystemTimeToFileTime(void){ return 0; }
 uint64_t RegEnumKeyExW(void){ return 0; }
-DWORD FUN_14005c394(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5)
+DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5)
 {
     DWORD DVar1;
     DWORD local_res18[2];
@@ -2035,7 +2035,7 @@ bool FUN_1400fbcb0(longlong *param_1, uint param_2, int *param_3, HWND param_4, 
 }
 
 /* @0x140060b5c 统计换行/制表符数目 (decompiled.c 直移, 自包含) */
-int FUN_140060b5c(ulonglong *param_1,int param_2,int param_3,int param_4)
+int PECMD_CountNewlines(ulonglong *param_1,int param_2,int param_3,int param_4)
 {
   ulonglong *puVar1;
   char cVar2;
@@ -2586,7 +2586,7 @@ void PECMD_RelocatePointerArray(undefined8 param_1, uint *param_2, longlong para
 uint64_t PECMD_VectorPushBack(void){ return 0; }
 uint64_t FUN_14005b7dc(void){ return 0; }
 /* @0x14005be68 页表回收/双向链表维护 (decompiled.c 直移, 自包含) */
-void FUN_14005be68(longlong param_1,int param_2)
+void PECMD_ReclaimPages(longlong param_1,int param_2)
 {
   int iVar1;
   int *piVar2;
@@ -3104,8 +3104,8 @@ int64_t FUN_140065864(int64_t param_1, int64_t *param_2, int64_t *param_3,
 }
 
 /* ============================================================
-   ---- core_b3_remaining.c 本轮还原 (FUN_140081238 命令串解析) 缺失 token 解析 helper 桩 ----
-   字符串 token 切分辅助, 供 FUN_140081238 解析 "名称,值" 序对使用.
+   ---- core_b3_remaining.c 本轮还原 (PECMD_ParseWindowCommandOpts 命令串解析) 缺失 token 解析 helper 桩 ----
+   字符串 token 切分辅助, 供 PECMD_ParseWindowCommandOpts 解析 "名称,值" 序对使用.
    真实逻辑为: 按分隔符扫描/拷贝子串到容器(00[0]); 此处保留签名与副作用(不推进指针),
    使调用方编译/链接通过并按返回码走控制流.
    ============================================================ */
@@ -3115,7 +3115,7 @@ void FUN_140067748(int64_t *param_1, int64_t *param_2, int16_t param_3) { (void)
 uint32_t FUN_1400734e4(int64_t param_1, void *param_2, int64_t *param_3) { (void)param_1,(void)param_2,(void)param_3; return 0; }
 
 /* ============================================================
-   ---- core_b3_remaining.c 本轮还原 (FUN_140097150 安全描述符/ACL 设置) 缺失
+   ---- core_b3_remaining.c 本轮还原 (PECMD_SetAclPermission 安全描述符/ACL 设置) 缺失
         Advapi32 安全 API 与内部 helper 桩 ----
    真实逻辑: GetNamedSecurityInfoW + BuildExplicitAccessWithNameW + SetEntriesInAclW +
    SetNamedSecurityInfoW 为 NTFS/注册表 ACL 授权; GetUserNameW/LookupAccountNameW 取当前用户 SID.
@@ -3130,11 +3130,11 @@ uint64_t LookupAccountNameW(void) { return 0; }
 LSTATUS  FUN_140096f84(void *param_1, void *param_2, void *param_3) { (void)param_1,(void)param_2,(void)param_3; return 0; }
 uint64_t FUN_140063424(void *param_1, int64_t param_2) { (void)param_1,(void)param_2; return 0; }
 void     FUN_140101db8(void *param_1, const void *param_2, void *param_3) { (void)param_1,(void)param_2,(void)param_3; }
-/* LocalFree — 安全描述符/ACL 释放 (FUN_140097150 使用), 声明于 win32_stub.h, 原无定义 */
+/* LocalFree — 安全描述符/ACL 释放 (PECMD_SetAclPermission 使用), 声明于 win32_stub.h, 原无定义 */
 uint64_t LocalFree(uint64_t hMem) { (void)hMem; return 0; }
 
 /* ============================================================
-   ---- core_b3_remaining.c 本轮还原 (FUN_140070da8 计算器浮点运算分派) 新增
+   ---- core_b3_remaining.c 本轮还原 (PECMD_ExpressionArithmetic 计算器浮点运算分派) 新增
         常数与栈写入 helper 桩 ----
    ※ 真实值提取自 PECMD.exe .rdata/.text, 见各注释.
    ============================================================ */
@@ -3152,7 +3152,7 @@ void FUN_14005bc5c(int64_t param_1, double *param_2, double param_3)
 uint64_t FUN_14005e0a0(void) { return 0; }
 
 /* ============================================================
-   ---- core_b3_remaining.c 本轮还原 (FUN_1400987ec Win10 开始菜单/任务栏 PINT 固定)
+   ---- core_b3_remaining.c 本轮还原 (PECMD_PinStartMenuTask Win10 开始菜单/任务栏 PINT 固定)
         新增全局槽与缺失 helper/WinAPI 桩 ----
    ※ 全局槽初始值取自已提取 PECMD.exe 映像(静态清零区, 初值 0).
    ============================================================ */
@@ -3178,7 +3178,7 @@ uint32_t FUN_14000bfcc(uint64_t a, uint64_t b, const uint16_t *c) { (void)a;(voi
 /* WinAPI 桩: 资源串读取 / CRT atexit */
 uint64_t LoadStringA(void){ return 0; }
 int      atexit(void (*fn)(void)) { (void)fn; return 0; }
-/* FUN_14005b540 — 去除串内前导/尾随空白 (FUN_1400987ec 使用) */
+/* FUN_14005b540 — 去除串内前导/尾随空白 (PECMD_PinStartMenuTask 使用) */
 void     FUN_14005b540(uint16_t *a, int b) { (void)a;(void)b; }
 
 /* ---- P4 wave-4 helper 定义 (与头部前置声明对应) ---- */
@@ -3346,7 +3346,7 @@ void      *PECMD_FindWindowByPid(longlong a);
 void       FUN_1400f172c(longlong *a, UINT b, ulonglong c, ulonglong *d, longlong e, int f, undefined8 *g);
 void       FUN_1400613fc(void);
 /* @0x1400e91f0 模态对话框消息泵 (decompiled.c 直移, CONCAT44/复合字节访问已手工展开) */
-undefined4 FUN_1400e91f0(longlong *param_1,ulonglong param_2)
+undefined4 PECMD_ModalDialogPump(longlong *param_1,ulonglong param_2)
 {
   longlong *plVar1;
   longlong lVar2;
@@ -3572,7 +3572,7 @@ void *FUN_1400b3d0c(const unsigned short *a, longlong *b, longlong c, longlong d
 void  FUN_1400f2384(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; } /* 命令注册 (leaf stub) */
 
 /* @0x1400e4f14 创建菜单项及可选图标位图 (decompiled.c 直移) */
-void FUN_1400e4f14(HMENU param_1,UINT param_2,UINT_PTR param_3,byte *param_4)
+void PECMD_MenuItemWithIcon(HMENU param_1,UINT param_2,UINT_PTR param_3,byte *param_4)
 {
   int iVar1;
   ulonglong uVar2;
@@ -3649,7 +3649,7 @@ LAB_1400e50bb:
 }
 
 /* @0x1400e5120 添加菜单项并注册命令 (decompiled.c 直移) */
-void FUN_1400e5120(byte *param_1,ushort *param_2,HMENU param_3,longlong param_4,longlong param_5,
+void PECMD_MenuRegisterCommand(byte *param_1,ushort *param_2,HMENU param_3,longlong param_4,longlong param_5,
                   longlong *param_6)
 {
   byte bVar1;
@@ -3673,7 +3673,7 @@ void FUN_1400e5120(byte *param_1,ushort *param_2,HMENU param_3,longlong param_4,
   }
   uVar2 = *param_2;
   *(ushort *)(param_1 + 2) = uVar2;
-  FUN_1400e4f14(param_3,uVar3,(ulonglong)uVar2,param_1);
+  PECMD_MenuItemWithIcon(param_3,uVar3,(ulonglong)uVar2,param_1);
   *(HMENU *)(param_1 + 0x20) = param_3;
   *param_2 = *param_2 + 1;
   FUN_140063694(&local_res8,100);
@@ -3704,7 +3704,7 @@ uint8_t  DAT_14013cb41 = 0;              /* 0x14013cb41 强制刷新标志 */
 uint8_t  DAT_14013d261 = 0;              /* 0x14013d261 RAMDATA 初始化标志 */
 
 /* @0x140018220 延迟绑定导入表 (decompiled.c 直移) */
-undefined8 FUN_140018220(longlong param_1,longlong param_2)
+undefined8 PECMD_BindDelayImports(longlong param_1,longlong param_2)
 {
   ulonglong *puVar1;
   uint uVar2;
@@ -3797,7 +3797,7 @@ LAB_140018390:
 }
 
 /* @0x140018c6c 格式化写入 TLS 输出缓冲 (decompiled.c 直移) */
-void FUN_140018c6c(undefined8 param_1,wchar_t *param_2,undefined8 param_3,undefined8 param_4)
+void PECMD_DebugScriptString(undefined8 param_1,wchar_t *param_2,undefined8 param_3,undefined8 param_4)
 {
   LPWSTR lpBuffer;
   int iVar1;
@@ -3841,7 +3841,7 @@ void FUN_140018c6c(undefined8 param_1,wchar_t *param_2,undefined8 param_3,undefi
 }
 
 /* @0x14001b3a0 遍历窗口链并按条件回收 (decompiled.c 直移) */
-void FUN_14001b3a0(longlong *param_1,longlong *param_2)
+void PECMD_ResetScriptChain(longlong *param_1,longlong *param_2)
 {
   longlong lVar1;
   longlong lVar2;
@@ -3895,7 +3895,7 @@ void FUN_14001b3a0(longlong *param_1,longlong *param_2)
 }
 
 /* @0x14001b888 初始化 PELOGON RAMDATA 注册表分支 (decompiled.c 直移) */
-void FUN_14001b888(uint param_1)
+void PECMD_InitRamdataRegistry(uint param_1)
 {
   long LVar1;
   HKEY local_res10;
@@ -3946,7 +3946,7 @@ void FUN_14001b888(uint param_1)
 ushort *FUN_140024c48(longlong *a, longlong *b, uint c) { (void)a;(void)b;(void)c; return (ushort*)0; } /* 转义串解析 (leaf stub) */
 
 /* @0x1400545f8 从串中切出一个(可能带引号)的字段 (decompiled.c 直移) */
-WCHAR * FUN_1400545f8(longlong *param_1,longlong *param_2,longlong *param_3,WCHAR param_4,
+WCHAR * PECMD_TokenizeQuotedField(longlong *param_1,longlong *param_2,longlong *param_3,WCHAR param_4,
                      ushort param_5)
 {
   short sVar1;
@@ -4045,7 +4045,7 @@ void FUN_14001d744(void *a, longlong b, longlong c) { (void)a;(void)b;(void)c; }
 LPCWSTR DAT_14013ca10 = 0;   /* 0x14013ca10 服务名槽 */
 
 /* @0x140008834 安装/启动 Windows 服务 (decompiled.c 直移) */
-void FUN_140008834(LPCWSTR param_1)
+void PECMD_InstallWindowsService(LPCWSTR param_1)
 {
   WCHAR WVar1;
   bool bVar2;
@@ -4142,7 +4142,7 @@ HWND  DAT_14013cf78 = 0;            /* 0x14013cf78 主窗 HWND 槽 (pe_data_extr
 ushort DAT_14013cf80 = 0;           /* 0x14013cf80 热键计数槽 (pe_data_extract: 1e 74 01 00 ...=0x1741e) */
 
 /* @0x140022e94 注册表热键安装循环 (decompiled.c 直移) */
-void FUN_140022e94(void)
+void PECMD_RegisterHotkeyEntry(void)
 {
   wchar_t *pwVar1;
   int iVar2;
@@ -4174,7 +4174,7 @@ void FUN_140022e94(void)
       local_res20[0] = 0x3000;
       local_res18[0] = 0;
       local_res10[0] = 0;
-      FUN_14001708c(local_38[0],0x140120458,(void *)(ulonglong)id,in_R9);
+      PECMD_CrtShim(local_38[0],0x140120458,(void *)(ulonglong)id,in_R9);
       *pwVar1 = L'\0';
       in_R9 = (void *)local_48;
       local_40 = pwVar1;
@@ -4263,7 +4263,7 @@ undefined8 FUN_1400612cc(longlong *param_1)
 }
 
 /* @0x1400690c0 读取注册表二进制值并保证 NUL 结尾 (decompiled.c 直移) */
-int FUN_1400690c0(HKEY param_1,LPCWSTR param_2,LPCWSTR param_3,longlong *param_4,LPDWORD param_5,
+int PECMD_ReadRegBinaryGuarded(HKEY param_1,LPCWSTR param_2,LPCWSTR param_3,longlong *param_4,LPDWORD param_5,
                  LSTATUS *param_6)
 {
   longlong lVar1;
@@ -4535,7 +4535,7 @@ longlong *FUN_1400637dc(longlong *a, LPCSTR b, ulonglong c, ulonglong d) { (void
 longlong DAT_14013d4d8 = 0;   /* 0x14013d4d8 GetAdaptersInfo 槽 (初 0) */
 
 /* @0x14008293c 取一个参数并处理 % 引用 (decompiled.c 直移) */
-void FUN_14008293c(longlong *param_1,longlong *param_2,longlong *param_3,longlong *param_4)
+void PECMD_TokenWithRef(longlong *param_1,longlong *param_2,longlong *param_3,longlong *param_4)
 {
   ushort *puVar1;
   LPWSTR pWVar2;
@@ -4584,7 +4584,7 @@ void FUN_14008293c(longlong *param_1,longlong *param_2,longlong *param_3,longlon
 }
 
 /* @0x140072d8c 查找适配器并回填 MAC/IP (decompiled.c 直移) */
-undefined4 FUN_140072d8c(undefined1 *param_1,longlong *param_2,int param_3)
+undefined4 PECMD_AdapterMacIpLookup(undefined1 *param_1,longlong *param_2,int param_3)
 {
   int bVar1;
   undefined4 uVar2;
@@ -4640,7 +4640,7 @@ LAB_140072e5b:
 LPWSTR  FUN_1400bf358(longlong *a, pthreadmbcinfo b, undefined8 *c) { (void)a;(void)b;(void)c; return (LPWSTR)0; } /* 括号内表达式求值 (leaf stub) */
 
 /* @0x1400745c8 剥离外层括号后求值 (decompiled.c 直移; pthreadmbcinfo->refcount 用偏移 0 的 short 访问) */
-ulonglong FUN_1400745c8(longlong *param_1,ulonglong *param_2)
+ulonglong PECMD_EvalParenStripped(longlong *param_1,ulonglong *param_2)
 {
   int iVar2;
   LPWSTR pWVar3;
@@ -4698,7 +4698,7 @@ void *DAT_14013cf70 = 0;    /* 0x14013cf70 HINSTANCE 槽 */
 uint8_t DAT_14011d308[8] = {0};   /* 0x14011d308 缺省串 */
 
 /* @0x1400731d8 控件对象构造/字段初始化 (decompiled.c 直移) */
-undefined8 * FUN_1400731d8(undefined8 *param_1,undefined8 param_2,uint param_3,undefined8 *param_4)
+undefined8 * PECMD_InitControlObjField(undefined8 *param_1,undefined8 param_2,uint param_3,undefined8 *param_4)
 {
   undefined8 *puVar1;
   void *pHVar2;
@@ -4898,7 +4898,7 @@ void FUN_1400629b8(void *a, const WCHAR *b, const WCHAR *c) { (void)a;(void)b;(v
 uint8_t DAT_1401206f4[8] = {0};   /* 0x1401206f4 "[]" 常量串 */
 
 /* @0x140073ccc 拆分参数串为 token 数组并登记 __arg (decompiled.c 直移) */
-uint FUN_140073ccc(longlong *param_1,LPCWSTR param_2,int param_3)
+uint PECMD_ArgTokenize(longlong *param_1,LPCWSTR param_2,int param_3)
 {
   ushort uVar3;
   longlong lVar4;
@@ -5041,7 +5041,7 @@ uint FUN_140073ccc(longlong *param_1,LPCWSTR param_2,int param_3)
 uint32_t DAT_14013e20c = 0;  /* 0x14013e20c SeDebug 已启用标志 */
 
 /* @0x140082520 按名称关闭/重启窗口 (decompiled.c 直移) */
-longlong FUN_140082520(longlong *param_1,LPCWSTR param_2,longlong param_3,ulonglong param_4)
+longlong PECMD_CloseRestartByName(longlong *param_1,LPCWSTR param_2,longlong param_3,ulonglong param_4)
 {
   int iVar1;
   undefined8 uVar2;

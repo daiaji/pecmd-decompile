@@ -106,7 +106,7 @@ extern longlong  PECMD_EnumNtSymbolicLink(LPWSTR a, longlong *b, longlong *c, lo
 extern WCHAR    *PECMD_NextToken(longlong *a, longlong *b, uint32_t c); /* @0x140024c48           */
 extern longlong  PECMD_RunCommand(longlong *a, pthreadmbcinfo b);      /* @0x140031454 执行命令    */
 extern void      FUN_14003c06c(void *a, void *b, uint c);           /* @0x14003c06c             */
-extern WCHAR    *FUN_1400545f8(longlong *a, longlong *b, longlong *c,
+extern WCHAR    *PECMD_TokenizeQuotedField(longlong *a, longlong *b, longlong *c,
                                WCHAR d, ushort e);                  /* @0x1400545f8 切分        */
 extern void      PECMD_ParseSkipSeparator(longlong *a, longlong *b, int c, int d); /* @0x140054840       */
 extern DWORD     PECMD_ExpandDrivePath(LPCWSTR path, uint32_t a, LPWSTR buf, LPWSTR *out);
@@ -946,7 +946,7 @@ LAB_140097f1d:
         goto LAB_140097cfe;
     }
 LAB_140097f33:
-    FUN_1400545f8(param_1, (longlong *)local_res10, (longlong *)&local_90, L',', 8);
+    PECMD_TokenizeQuotedField(param_1, (longlong *)local_res10, (longlong *)&local_90, L',', 8);
     uVar26 = 0;
     local_b8 = 0;
     memset(&local_b0, 0, sizeof(RECT));

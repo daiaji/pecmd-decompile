@@ -85,10 +85,10 @@ extern void  PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern void  FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);
 extern void  PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim);
 extern void  PECMD_AppendFormattedI64(int64_t *list, int64_t pos);
-extern uint64_t FUN_140060b5c(uint64_t *a, int b, void *c, int d);
+extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d);
 extern WCHAR *PECMD_SkipWCharUntil(void *pp, uint16_t ch);
 extern void  PECMD_ExpandVarDispatch(void *, LPCWSTR, void *, int, int);
-extern uint64_t FUN_1400745c8(void *pp, uint64_t *out);
+extern uint64_t PECMD_EvalParenStripped(void *pp, uint64_t *out);
 extern bool  PECMD_ParseUIntValue(void *pp, int *out);
 extern void  PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern int64_t *PECMD_SplitTokenAssignVar(void *out, void *pp, uint32_t sep, int flag);
@@ -99,7 +99,7 @@ extern void  FUN_140061c44(void);
 extern int64_t PECMD_DelayLoadOleaut32(void);
 extern void  PECMD_UpdateTrayIcon(void *pc, uint64_t hwnd, LPCWSTR s, void *hicon, uint32_t flag);
 extern void  PECMD_ScaleWindowPos(int64_t param_1, uint32_t param_2, int *param_3);
-extern void  FUN_14001b3a0(void *script, void *a2);
+extern void  PECMD_ResetScriptChain(void *script, void *a2);
 extern WCHAR *PECMD_NextToken(void *param_1, void *param_2, uint32_t param_3);
 extern void  PECMD_ParseNumSkipChar_01f8(void *pp, int *out);
 extern void  FUN_140067d20(void *pp, int *out);
@@ -121,7 +121,7 @@ extern char  FUN_140062fc4(LPCWSTR param_1, void *param_2, int param_3);
 extern void  PECMD_ForwardCall_6838(int64_t obj, int64_t key);
 extern void  PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2);
 extern char  PECMD_MatchAndPad(const void *key, WCHAR **pp, int len);
-extern uint32_t FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
+extern uint32_t PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void  PECMD_JoinTokensAndResolve(void *ctx, void *pp, void *out);
 extern int   PECMD_ParseCommaNumbers(WCHAR **pp, uint16_t *year, uint8_t flag);
 extern int   PECMD_CalcDayOfYear(uint16_t *a1);
@@ -140,8 +140,8 @@ extern void  PECMD_ClearTaskTable(int64_t script, int mode);
 extern LPCWSTR PECMD_ParseCommandPath(int64_t *script, WCHAR *key, uint32_t *mode, int64_t *out);
 extern void  PECMD_NotifyMainWindowRefresh(int64_t *param_1, int flag);
 extern void  FUN_1400e5248(int64_t a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
-extern void  FUN_1400e5120(void *a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
-extern void  FUN_1400e4f14(HMENU menu, UINT flags, uintptr_t item, void *data);
+extern void  PECMD_MenuRegisterCommand(void *a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
+extern void  PECMD_MenuItemWithIcon(HMENU menu, UINT flags, uintptr_t item, void *data);
 extern void *PECMD_CreateNamedLock(LPCWSTR s, char c, uint32_t *mode);
 extern void  PECMD_ArrayAppend(int64_t script, int64_t obj);
 extern bool  PECMD_ParseHexOrDecBool(void *pp, int *out);
@@ -399,7 +399,7 @@ LAB_1400a1e3b:
               PECMD_AppendFormattedI64((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (uVar4 != 0) {
-              iVar9 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar9 = (int)PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               PECMD_AppendFormattedI64((longlong *)&local_68, iVar9);
             }
             pWVar15 = local_c8;
@@ -423,7 +423,7 @@ LAB_1400a1e3b:
               PECMD_AppendFormattedI64((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (local_70 != 0) {
-              iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar8 = (int)PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               PECMD_AppendFormattedI64((longlong *)&local_68, iVar8);
             }
             pWVar15 = local_c8;
@@ -456,7 +456,7 @@ LAB_1400a1e3b:
                 PECMD_AppendFormattedI64((longlong *)&local_50, (longlong)ppWVar14);
               }
               if (local_70 != 0) {
-                iVar8 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
+                iVar8 = (int)PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
                 PECMD_AppendFormattedI64((longlong *)&local_68, iVar8);
               }
               if (bVar2) break;
@@ -486,7 +486,7 @@ LAB_1400a1e3b:
               PECMD_AppendFormattedI64((longlong *)&local_50, (longlong)ppWVar14);
             }
             if (local_70 != 0) {
-              iVar10 = (int)FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
+              iVar10 = (int)PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
               PECMD_AppendFormattedI64((longlong *)&local_68, iVar10);
             }
             if (bVar2) break;
@@ -499,7 +499,7 @@ LAB_1400a1e3b:
   if (*local_68 == L'\0') {
     if (*local_a0 != L'\0') {
       if (0 < (longlong)ppWVar18) {
-        uVar11 = FUN_140060b5c((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
+        uVar11 = PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
       }
       FUN_1400669c4(param_1, uVar11, pWVar17);
     }
@@ -731,7 +731,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
   lVar9 = param_1[8];
   LVar11.QuadPart = 0;
   if (lVar9 == 0) {
-    FUN_14001b3a0(param_1, (longlong *)0x0);
+    PECMD_ResetScriptChain(param_1, (longlong *)0x0);
     lVar9 = param_1[8];
     if (lVar9 == 0) {
       LVar11.QuadPart = -0x7ff8ffa9;
@@ -829,7 +829,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
         *(undefined1 **)(uintptr_t)(LVar5.QuadPart + 0x18) = puVar6;
         *(uint *)(uintptr_t)(LVar5.QuadPart + 0x24) = local_res18 + 1;
         *(longlong *)(uintptr_t)(LVar5.QuadPart + 0x28) = param_1[5];
-        FUN_140073ccc((longlong *)(uintptr_t)LVar5.QuadPart, g_szEmpty, 0);
+        PECMD_ArgTokenize((longlong *)(uintptr_t)LVar5.QuadPart, g_szEmpty, 0);
         lVar9 = param_1[8];
         *(longlong *)(uintptr_t)(LVar5.QuadPart + 0x40) = lVar9;
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -853,7 +853,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
                       *(longlong **)(lVar9 + 0x290));
         hMenu = local_60;
         *(short *)(param_1[8] + 0x218) = *(short *)(param_1[8] + 0x218) + 1;
-        FUN_1400e4f14(local_60, 0x10, (uintptr_t)pHVar8, (void *)(uintptr_t)LVar10.QuadPart);
+        PECMD_MenuItemWithIcon(local_60, 0x10, (uintptr_t)pHVar8, (void *)(uintptr_t)LVar10.QuadPart);
       }
     }
     if ((param_1[3] == 0) && (param_1[8] != 0)) {
@@ -871,7 +871,7 @@ LAB_1400a6576:
 LAB_1400a657f:
         if (cVar2 == '\0') {
           lVar9 = param_1[8];
-          FUN_1400e5120((void *)(uintptr_t)LVar10.QuadPart, (ushort *)(lVar9 + 0x218), hMenu,
+          PECMD_MenuRegisterCommand((void *)(uintptr_t)LVar10.QuadPart, (ushort *)(lVar9 + 0x218), hMenu,
                         *(longlong *)(lVar9 + 0x20), *(longlong *)(lVar9 + 0x200),
                         *(longlong **)(lVar9 + 0x290));
         }
@@ -991,7 +991,7 @@ LAB_1400a344b:
       uVar8 = PECMD_AsciiPrefixICmp("gmt:", (ushort *)(pWVar13 + 1), 4);
       if ((char)uVar8 != '\0') {
         local_res10[0] = (WCHAR *)(pWVar13 + 5);
-        uVar9 = FUN_1400745c8((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
+        uVar9 = PECMD_EvalParenStripped((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
         if ((int)uVar9 < 1) goto LAB_1400a34a9;
         local_1908.QuadPart = (local_1908.QuadPart + 0x2b6109100) * 10000000;
         goto LAB_1400a36ff;
@@ -1066,7 +1066,7 @@ LAB_1400a3551:
     }
     else {
       local_res10[0] = (WCHAR *)(pWVar13 + 5);
-      uVar9 = FUN_1400745c8((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
+      uVar9 = PECMD_EvalParenStripped((longlong *)local_res10, (uint64_t *)&local_1908.QuadPart);
       if ((int)uVar9 < 1) {
 LAB_1400a34a9:
         iVar16 = -0x7ff8ffa9;

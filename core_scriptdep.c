@@ -52,8 +52,8 @@ extern void *FUN_140070154(LPCWSTR src);            /* @0x140070154 带 -8 头�
 extern void FUN_14001b660(void *script);            /* @0x14001b660 sysinit 前置 */
 extern void FUN_1400250f0(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
 extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析到分隔符 */
-extern int64_t FUN_1400745c8(WCHAR **pp, int64_t *val);    /* @0x1400745c8 数字解析 */
-extern void FUN_140082520(void *script, LPCWSTR path, void *win, int mode); /* @0x140082520 */
+extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *val);    /* @0x1400745c8 数字解析 */
+extern void PECMD_CloseRestartByName(void *script, LPCWSTR path, void *win, int mode); /* @0x140082520 */
 extern void FUN_1400e3cd4(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 */
 extern void FUN_14004EAA8(void *script, int mode);   /* @0x14004eaa8 脚本结构清理 */
 extern uint32_t PECMD_ParseScriptSegments(void *script, int a, int b, WCHAR **pc, void *sub, uint32_t flags); /* @0x140030420 */
@@ -450,7 +450,7 @@ WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src)
 bool PECMD_ParseUIntValue(WCHAR **ps, int *out)
 {
     int64_t val = *out;
-    int64_t n = FUN_1400745c8(ps, &val);    /* TODO(verify) @0x1400745c8 数字解析 */
+    int64_t n = PECMD_EvalParenStripped(ps, &val);    /* TODO(verify) @0x1400745c8 数字解析 */
 
     if (n > 0) {
         *out = (int)val;
@@ -462,7 +462,7 @@ bool PECMD_ParseUIntValue(WCHAR **ps, int *out)
 /* ========== FUN_14009BB28 @0x14009bb28 ==========
  * 通知主窗口刷新 (PostMessage 0x43d)。
  *   script   : 宿主脚本表
- *   withPath : 非 0 时先向主窗口对象追加路径并调 FUN_140082520
+ *   withPath : 非 0 时先向主窗口对象追加路径并调 PECMD_CloseRestartByName
  * 受 g_csInit 临界区保护。
  */
 void FUN_14009BB28(void *script, int withPath)
@@ -477,7 +477,7 @@ void FUN_14009BB28(void *script, int withPath)
             *(int32_t *)(win + 0x1d0) != 0) {
             bs[0] = L'\\';
             bs[1] = 0;
-            FUN_140082520(script, bs, (void *)(intptr_t)win, 1);   /* TODO(verify) @0x140082520 */
+            PECMD_CloseRestartByName(script, bs, (void *)(intptr_t)win, 1);   /* TODO(verify) @0x140082520 */
         }
         PostMessageW(*(HWND *)(win + 0x20), 0x43d, 0, 0);  /* 0x43d = PECMD 内部刷新消息 */
     }

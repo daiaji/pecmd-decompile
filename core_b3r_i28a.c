@@ -55,7 +55,7 @@ extern void      PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int para
                                LPCWSTR param_4, char param_5);
 extern void      PECMD_SendTitleMessage(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, int param_5);
-extern void      FUN_14001b3a0(int64_t *script, int64_t *a2);   /* default params */
+extern void      PECMD_ResetScriptChain(int64_t *script, int64_t *a2);   /* default params */
 extern ushort   *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2,
                                longlong *param_3);
 
@@ -268,7 +268,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
     local_res20 = param_4;
     FUN_140063620(&local_68);
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             uVar12 = 0xffffffff80070057;
@@ -428,7 +428,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
     local_res10 = param_2;
     local_res20 = param_4;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             return 0xffffffff80070057;
@@ -574,7 +574,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
 
     local_res10 = param_2;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             return 0xffffffff80070057;

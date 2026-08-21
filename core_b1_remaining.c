@@ -147,7 +147,7 @@ extern short *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
 extern uint64_t FUN_140001188(void);                           /* @0x140001188 */
 extern bool PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);         /* @0x1400c1194 */
 extern bool PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);               /* @0x1400c11c0 */
-extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);      /* @0x1400745c8 */
+extern uint64_t PECMD_EvalParenStripped(WCHAR **pp, uint64_t *out);      /* @0x1400745c8 */
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);          /* @0x1400f429c */
 extern void FUN_140061C44(void);                               /* @0x140061c44 */
 extern void FUN_140025f10(int64_t ctx, LPCWSTR fmt, uint32_t a,
@@ -390,9 +390,9 @@ extern int64_t PECMD_ParseVolumeGuid(int64_t *param_1, uint32_t *param_2, int pa
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);        /* @0x14007034c */
 extern void FUN_1400e6d68(LPCWSTR param_1, uint64_t param_2);             /* @0x1400e6d68 */
 extern DWORD PECMD_EnumDevices(LPCWSTR param_1, LPWSTR param_2, uint32_t param_3, GUID *param_4); /* @0x140076554 */
-extern LPWSTR FUN_140077190(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4,
+extern LPWSTR PECMD_AppendDriveLetter(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4,
                             LPWSTR param_5, uint32_t param_6, LPCWSTR param_7); /* @0x140077190 */
-extern int     FUN_1400690c0(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3, int64_t *param_4,
+extern int     PECMD_ReadRegBinaryGuarded(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3, int64_t *param_4,
                              DWORD *param_5, void *param_6);               /* @0x1400690c0 */
 extern uint32_t PECMD_EnumPartitionsMapDriveLetter(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4); /* @0x14008ba90 */
 extern uint32_t PECMD_IsDevicePathPrefix(LPCWSTR param_1);                            /* @0x140006a4c */
@@ -402,7 +402,7 @@ extern uint64_t FUN_1400e3cd4(LPCWSTR param_1, uint64_t *param_2, int64_t *param
 extern uint16_t *PECMD_NextToken(int64_t *param_1, int64_t *param_2, uint32_t param_3); /* @0x140024c48 */
 extern void PECMD_LoadWtsUserEnvApis(void);                                              /* @0x14000397c */
 extern void FUN_14005e7dc(uint64_t *param_1);                                 /* @0x14005e7dc */
-extern HANDLE FUN_1400060b8(HANDLE param_1);                                  /* @0x1400060b8 */
+extern HANDLE PECMD_RestrictedTokenSetup(HANDLE param_1);                                  /* @0x1400060b8 */
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR param_1, int64_t *param_2, int64_t *param_3,
                              int64_t *param_4);                            /* @0x14001d8c8 (本文件定义) */
 extern uint64_t PECMD_EnsureTempDirPath(int64_t *param_1);                              /* @0x1400048c4 取串长度 */
@@ -2049,7 +2049,7 @@ static BOOL CreateRestrictedToken(HANDLE existingToken, DWORD flags,
                                   DWORD privilegesToDeleteCount, PECMD_LUID_AND_ATTRIBUTES *privilegesToDelete,
                                   DWORD restrictedSidCount, void *sidsToRestrict, HANDLE *newToken)
 {
-    /* SKIP: link_stubs.c 缺 CreateRestrictedToken, 本地桩 (仅 FUN_1400060b8 引用) */
+    /* SKIP: link_stubs.c 缺 CreateRestrictedToken, 本地桩 (仅 PECMD_RestrictedTokenSetup 引用) */
     (void)existingToken; (void)flags; (void)sidsToDisableCount; (void)sidsToDisable;
     (void)privilegesToDeleteCount; (void)privilegesToDelete;
     (void)restrictedSidCount; (void)sidsToRestrict;
@@ -2125,7 +2125,7 @@ static void FUN_140070310(LPCWSTR *dst, LPCWSTR *src)
  * 对每个非目录文件加载 DLL, 取 "PECMDTBL" 导出(前 4B 为条目数), 把其后的
  * 条目表(每条 0x18 字节)追加进命令表1 (param_1→&g_cmdTable1Count, 偏移 0x08 为
  * &g_cmdTable1 表指针槽)。 */
-static void FUN_140009068(int *param_1, LPCWSTR param_2, LPCWSTR param_3)
+static void PECMD_LoadPluginPecmdTbl(int *param_1, LPCWSTR param_2, LPCWSTR param_3)
 {
     BOOL BVar1;
     HMODULE hModule;
@@ -2308,7 +2308,7 @@ static PECMD_ASSOC_TABLE PTR_PTR_14013a070 = { g_desc_14011d2b8, 0, 0, NULL };
 /* ====================================================================
  * 恢复: @0x1400060b8 受限令牌创建
  * ==================================================================== */
-HANDLE FUN_1400060b8(HANDLE param_1)
+HANDLE PECMD_RestrictedTokenSetup(HANDLE param_1)
 {
     /* 受限管理员令牌: 打开当前进程令牌(或复用调用方令牌) → 建立 S-1-5-32-544
      * (Authority=SECURITY_NT_AUTHORITY, SubAuthority[0]=0x20, [1]=0x220) SID →
@@ -2935,7 +2935,7 @@ LAB_1400070f7:
                         *pWVar11 = L'\0';
                         local_148 = (LPCWSTR)((int64_t)(pWVar11 - pWVar12) >> 1);
                         if (local_res18 == L'\0') {
-                            pWVar12 = FUN_140077190(pWVar11, (int64_t)iVar6,
+                            pWVar12 = PECMD_AppendDriveLetter(pWVar11, (int64_t)iVar6,
                                                     (int64_t)*(int *)(local_c0 + 0x918),
                                                     (int *)local_a0, NULL, 0x20, pWVar18);
                         } else {
@@ -2960,7 +2960,7 @@ LAB_1400070f7:
                                     local_124 = 0;
                                     PECMD_AllocSmallObject((uint64_t *)&local_100);
                                     pWVar15[1] = L'?';
-                                    FUN_1400690c0((HKEY)0xffffffff80000002,
+                                    PECMD_ReadRegBinaryGuarded((HKEY)0xffffffff80000002,
                                                   WSTR("SYSTEM\\MountedDevices"), pWVar15,
                                                   &local_100, &local_124, NULL);
                                     lVar13 = local_100;
@@ -3396,7 +3396,7 @@ LAB_140007e89:
         if ((param_11 & 2) == 0) {
             if (param_12 != NULL) goto LAB_140007fcb;
         } else {
-            pvVar4 = FUN_1400060b8(local_b0);
+            pvVar4 = PECMD_RestrictedTokenSetup(local_b0);
             lpStartupInfo = param_9;
             if (pvVar4 == (HANDLE)0) goto LAB_140007fcb;
             CloseHandle(local_b0);
@@ -3444,7 +3444,7 @@ LAB_140007fcb:
                                             lpStartupInfo, lpProcessInformation);
         }
     } else {
-        local_b8 = FUN_1400060b8((HANDLE)0);
+        local_b8 = PECMD_RestrictedTokenSetup((HANDLE)0);
         BVar2 = CreateProcessAsUserW(local_b8, param_1, param_2, param_3, param_4, param_5,
                                      dwCreationFlags, lpEnvironment, param_8, lpStartupInfo,
                                      lpProcessInformation);
@@ -4743,7 +4743,7 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
         puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".pecmdplugin.*.PEI"));
-        FUN_140009068((int *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
+        PECMD_LoadPluginPecmdTbl((int *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
         puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dll"));
@@ -5281,7 +5281,7 @@ DCA1:
                             PECMD_ParseHexOrDec(&p, &local_138);
                             if (*p != 0) p++;
                         }
-                        FUN_1400745c8(&p, &moff);
+                        PECMD_EvalParenStripped(&p, &moff);
                         if (*p != 0) p++;
                         optr = (uint8_t *)&DAT_140147001[0] + (uintptr_t)moff;
                         if (bVar15) {
@@ -5407,7 +5407,7 @@ uint32_t PECMD_DetectMinintBoot(void)
         local_res8[0] = 0xffffffff;
         uVar5 = PECMD_GetPackedSystemVersion();
         uVar3 = (uint32_t)(uVar5 >> 0x10);
-        iVar4 = FUN_1400690c0((HKEY)0xffffffff80000002,
+        iVar4 = PECMD_ReadRegBinaryGuarded((HKEY)0xffffffff80000002,
                               WSTR("SYSTEM\\CurrentControlSet\\Control"),
                               WSTR("SystemStartOptions"),
                               (int64_t *)&local_res18, local_res8, (void *)0);
@@ -5632,11 +5632,11 @@ code_r0x000140016cec:
     goto LAB_140016ccb;
 }
 
-/* SKIP(CRT): FUN_14001708c 是 vswprintf 风格 CRT 包装 —
+/* SKIP(CRT): PECMD_CrtShim 是 vswprintf 风格 CRT 包装 —
    反编译体仅构造 localeinfo_struct{locinfo, mbcinfo} 并把 va_list 透传给
    FUN_140103014(= _vswprintf_l(param_1,param_2,NULL,locinfo,va_list), 见
    core_b9_remaining.c SKIP(CRT) 标注),不实现,保留正确签名空桩。 */
-void FUN_14001708c(WCHAR *param_1, size_t param_2, void *param_3, void *param_4)
+void PECMD_CrtShim(WCHAR *param_1, size_t param_2, void *param_3, void *param_4)
 {
     /* SKIP(CRT) @0x14001708c size=33 — vswprintf-style 包装 (见上方说明) */
 (void)param_1;
@@ -9555,9 +9555,9 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
                         iVar2 = lstrlenW((LPCWSTR)local_300);
                         iVar3 = lstrlenW(local_288.cFileName);
                         PECMD_AllocWStringBuffer(&local_2f0, (int64_t)iVar3 + 0x1e + (int64_t)iVar2);
-                        /* 注: FUN_14001708c 为 SKIP(CRT) 的格式包装,
+                        /* 注: PECMD_CrtShim 为 SKIP(CRT) 的格式包装,
                            此处路径串不会真正生成(已接受限制) */
-                        FUN_14001708c(local_2f0, (size_t)0x140120040, (void *)local_300,
+                        PECMD_CrtShim(local_2f0, (size_t)0x140120040, (void *)local_300,
                                       (void *)local_288.cFileName);
                         g_hGdiPlus = LoadLibraryW(local_2f0);
                         FUN_14005B104((WCHAR **)&local_2f0);

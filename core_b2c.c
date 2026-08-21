@@ -112,7 +112,7 @@ extern int64_t PECMD_ValidatePeHeader(int64_t ctx, short *path, uint64_t flags);
 extern uint64_t PECMD_ComputeSectionMapSize(int64_t ctx);
 extern void PECMD_CollectPESections(int64_t ctx, void *base, int64_t path);
 extern int64_t PECMD_RelocateImage(int64_t ctx, int64_t base);
-extern int64_t FUN_140018220(int64_t ctx, int64_t base);
+extern int64_t PECMD_BindDelayImports(int64_t ctx, int64_t base);
 extern int64_t PECMD_FindResourceByNameOrId(int64_t ctx, LPCSTR name);
 extern void PECMD_HandleDropFile(void *ctx, HDROP drop, char flag);
 extern void PECMD_PatchInfDirectives(LPCWSTR path);
@@ -130,7 +130,7 @@ extern void FUN_140063BE8(int64_t *arr, int32_t mode);
 extern void FUN_140063B64(int64_t *arr);
 extern void FUN_1400195F0(void *script, int a, int b, void *c);
 extern void FUN_14002CA30(void);
-extern void FUN_14001b3a0(void *script, void *a2);
+extern void PECMD_ResetScriptChain(void *script, void *a2);
 extern void PECMD_FreeRecordChain(int64_t ctx);
 extern LPCWSTR FUN_14002FD88(int64_t *script, WCHAR *s, uint32_t *flags,
                              int64_t *out);
@@ -161,7 +161,7 @@ extern DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR path, uint32_t flags);
 extern uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR path, LPCWSTR name, int mode);
 extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR name);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
-extern void FUN_14001b888(uint32_t mode);
+extern void PECMD_InitRamdataRegistry(uint32_t mode);
 extern int64_t FUN_14003D608(uint32_t a, uint32_t b, LPCWSTR menu);
 extern void PECMD_RunShutdownScript(LPCWSTR menu, uint32_t mode);
 extern LRESULT CallWindowProcW(void *prev, HWND hWnd, UINT msg, WPARAM wParam,
@@ -465,7 +465,7 @@ uint64_t FUN_1400282D4(int *pe, short *args, uint64_t flag)
         if ((*(int *)(*(int64_t *)((char *)pe + 40) + 0xb0) == 0) ||
             (*(int *)(*(int64_t *)((char *)pe + 40) + 0xb4) == 0) ||
             ((uVar3 = PECMD_RelocateImage((int64_t)pe, (int64_t)lpAddress), (int)uVar3 != 0))) {
-            uVar3 = FUN_140018220((int64_t)pe, (int64_t)lpAddress);
+            uVar3 = PECMD_BindDelayImports((int64_t)pe, (int64_t)lpAddress);
             if ((int)uVar3 == 0) {
                 VirtualFree(lpAddress, 0, 0x8000);
             } else {
@@ -856,7 +856,7 @@ int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
     WVar7 = L'\0';
     local_res10 = cmd;
     if (*cmd == L'\0') {
-        FUN_14001b3a0(script, (void *)0);
+        PECMD_ResetScriptChain(script, (void *)0);
         return 0;
     }
     g_flag16a = 0;
@@ -1311,7 +1311,7 @@ int64_t FUN_14003D92C(void)
         }
         wsprintfW(local_a8, WSTR("MENU:0x%X:0x%X"), g_ShowWindow, (uint64_t)uVar1);
         if ((uVar6 & 0x70) != 0) {
-            FUN_14001b888(0);
+            PECMD_InitRamdataRegistry(0);
             ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD))g_pSHSetValueW)
                 (HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("LOCKDOWN"), 4);
         }

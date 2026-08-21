@@ -84,7 +84,7 @@ extern uint64_t  PECMD_ProcessControlCommand(int64_t *param_1, int64_t *param_2,
                                uint64_t param_4, int64_t param_5, uint32_t param_6,
                                int16_t *param_7, int64_t *param_8, int param_9,
                                uint64_t param_10);
-extern void      FUN_14001b3a0(int64_t *param_1, int64_t *param_2); /* default params */
+extern void      PECMD_ResetScriptChain(int64_t *param_1, int64_t *param_2); /* default params */
 extern int64_t   PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
                                LPCWSTR extra, uint32_t flags);
 
@@ -301,7 +301,7 @@ undefined8 PECMD_ParseControlCenterArgs(longlong *param_1, ushort *param_2, WPAR
     (void)local_48;
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (longlong *)0x0);
+        PECMD_ResetScriptChain(param_1, (longlong *)0x0);
         param_3 = param_1[8];
         if (param_3 == 0) {
             uVar9 = 0xffffffff80070057;

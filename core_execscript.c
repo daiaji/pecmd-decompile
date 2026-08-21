@@ -31,11 +31,11 @@ void PECMD_InitDynamicImports(void);                     /* @0x140017908 初始�
 int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词比较+推进 (非0=匹配) */
 void FUN_14005e7dc(LPVOID *psd);              /* @0x14005e7dc 安全描述符初始化 */
 void FUN_140026338(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
-void FUN_140018c6c(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
+void PECMD_DebugScriptString(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
 void FUN_140018d8c(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
 void PECMD_TruncateDebugLog(void);                     /* @0x140023544 */
-void FUN_14001b888(int n);                    /* @0x14001b888 */
-void FUN_14002286c(void);                     /* @0x14002286c */
+void PECMD_InitRamdataRegistry(int n);                    /* @0x14001b888 */
+void PECMD_FixKnownDlls32(void);                     /* @0x14002286c */
 void PECMD_SwitchToDefaultDesktop(void);                     /* @0x140017724 */
 void FUN_14002cc30(void *script, LPCWSTR s, int64_t a, int64_t b, LPCWSTR c); /* @0x14002cc30 */
 void LoadEnvi(LPCWSTR a, LPCWSTR b);          /* @0x140069f0 环境初始化 */
@@ -44,11 +44,11 @@ void FUN_14003e1f0(void);                     /* @0x14003e1f0 */
 DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data, DWORD size); /* @0x14005c5a0 注册表值写入 */
 void FUN_1400e8574(void *script, int flag);   /* @0x1400e8574 */
 void FUN_140063620(WCHAR **ps);               /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
-void FUN_1400545f8(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
+void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
 int FUN_14001ab84(LPCWSTR s);                 /* @0x14001ab84 命令行类型检测 */
 void FUN_14001b850(void);                     /* @0x14001b850 */
 void FUN_14002e30c(void);                     /* @0x14002e30c */
-void FUN_140022e94(void);                     /* @0x140022e94 */
+void PECMD_RegisterHotkeyEntry(void);                     /* @0x140022e94 */
 void FUN_140077358(void);                     /* @0x140077358 */
 void FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
                    DWORD *tid, LPSECURITY_ATTRIBUTES sa);  /* @0x14005b228 线程创建 */
@@ -199,9 +199,9 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
     /* ---- 调试日志 ---- */
     if (g_logFlag != 0) {
         r = (uint64_t)(uint32_t)g_runFlag;
-        FUN_140018c6c(&g_Script, WSTR("{MAIN [%s]} 0x%X\r\n"), cmdline, r);
+        PECMD_DebugScriptString(&g_Script, WSTR("{MAIN [%s]} 0x%X\r\n"), cmdline, r);
         if (g_logFlag != 0) {
-            FUN_140018c6c(&g_Script, WSTR("MAIN: pecmd::RegDeleteKeyExW=0x%p\r\n"),
+            PECMD_DebugScriptString(&g_Script, WSTR("MAIN: pecmd::RegDeleteKeyExW=0x%p\r\n"),
                           (void *)g_pRegDeleteKeyExW, r);
         }
     }
@@ -211,7 +211,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
     }
     if (!bUser) {
         if (p[0] == 0) goto after_init;
-        FUN_14001b888(3);
+        PECMD_InitRamdataRegistry(3);
         r = 0;
         hKey = (HKEY)0;
         RegCreateKeyExW(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), 0, (LPWSTR)0, 0, 1,
@@ -222,7 +222,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
         if (g_logFlag != 0) {
             FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1c, r);
         }
-        FUN_14002286c();
+        PECMD_FixKnownDlls32();
         if (g_logFlag != 0) {
             FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1e, r);
         }
@@ -293,7 +293,7 @@ after_init:
     if ((sVar1 != 0) || bUser) {
         FUN_14002e30c();
     }
-    FUN_140022e94();
+    PECMD_RegisterHotkeyEntry();
     FUN_140077358();
     if ((p[0] != 0) || bUser) {
         if (g_logFlag != 0) {
@@ -328,7 +328,7 @@ after_init:
             bStar = false;
             pSaved = p;                 /* 命令行快照 */
             FUN_140063620(&pPath);
-            FUN_1400545f8(script, &pSaved, &pPath, 0x1000, 0);
+            PECMD_TokenizeQuotedField(script, &pSaved, &pPath, 0x1000, 0);
             PECMD_AllocWStringBuffer(&pContent, 0x400);
             pContent[0] = 0;
             pContent2 = pContent;
@@ -376,7 +376,7 @@ after_init:
                 i = lstrlenW(pBuf + 900);
                 wsprintfW(pBuf + 900 + i, WSTR("LOAD *sysinit %s"), p, pExeName);
                 if (pBuf[0] != 0) {     /* 反编译恒假分支, 原样保留 */
-                    FUN_14001b888(1);
+                    PECMD_InitRamdataRegistry(1);
                     dwVal = 1;
                     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"),
                                   WSTR("SysStartuped"), 4, (BYTE *)&dwVal, 4);

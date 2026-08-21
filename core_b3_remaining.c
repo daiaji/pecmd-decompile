@@ -7,7 +7,7 @@
 
 #include "pecmd_defs.h"
 
-/* ---- Windows 安全描述符类型最小本地镜像 (FUN_140097150 ACL 授权还原所需; 对应 API 在 link_stubs 以 no-op 桩提供) ---- */
+/* ---- Windows 安全描述符类型最小本地镜像 (PECMD_SetAclPermission ACL 授权还原所需; 对应 API 在 link_stubs 以 no-op 桩提供) ---- */
 typedef int      SE_OBJECT_TYPE;            /* Win SDK 兼容 */
 typedef void    *PACL;                      /* 访问控制表 */
 typedef void    *PSECURITY_DESCRIPTOR;      /* 安全描述符 */
@@ -56,7 +56,7 @@ static POINT b3_po_from_u64(uint64_t v)
     return p;
 }
 
-/* IEEE754 double <-> uint64 位模式互转 (FUN_140070da8 计算器位运算需直接操纵 double 位) */
+/* IEEE754 double <-> uint64 位模式互转 (PECMD_ExpressionArithmetic 计算器位运算需直接操纵 double 位) */
 static uint64_t b3_d2u(double d) { uint64_t u; memcpy(&u, &d, 8); return u; }
 static double  b3_u2d(uint64_t u) { double d; memcpy(&d, &u, 8); return d; }
 
@@ -210,7 +210,7 @@ extern LPCWSTR PECMD_ConvertLfToCrlf(LPCWSTR a, int64_t *b);         /* @0x14000
 extern void FUN_1400a9a84(int64_t *a, uint64_t *b);           /* @0x1400a9a84 */
 extern void PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3,
                           LPCWSTR param_4, char param_5);    /* @0x1400a96e4 (定义于 core_b3r_e.c) */
-extern uint64_t FUN_1400745c8(int64_t *a, uint64_t *b);       /* @0x1400745c8 */
+extern uint64_t PECMD_EvalParenStripped(int64_t *a, uint64_t *b);       /* @0x1400745c8 */
 extern void PECMD_ParseIntThenSkip(int64_t *a, int *b);                /* @0x140007bcc */
 extern void FUN_1400547bc(int64_t *a, int64_t *b, int64_t *c, int d, int e);
 extern void FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);
@@ -288,22 +288,22 @@ extern uint8_t PTR_FUN_140120a60[];         /* 对象 vtable 0x140120a60 */
 extern uint8_t PTR_FUN_140120a70[];         /* 对象 vtable 0x140120a70 */
 
 /* ---- extern 由 PECMD_CreateWindow/140082448/140083bf4/1400846a4/14009d4b8 所需 ---- */
-extern void     FUN_14001b3a0(int64_t *param_1, int64_t *param_2);   /* @0x14001b3a0 */
+extern void     PECMD_ResetScriptChain(int64_t *param_1, int64_t *param_2);   /* @0x14001b3a0 */
 extern uint8_t  PECMD_ParseSubWindowFlags(int64_t *param_1, uint32_t *param_2);  /* @0x14007fcd4 */
-extern uint32_t FUN_140081238(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4); /* @0x140081238 */
-extern uint64_t *FUN_1400731d8(uint64_t *param_1, uint64_t param_2, uint32_t param_3, uint64_t *param_4); /* @0x1400731d8 */
+extern uint32_t PECMD_ParseWindowCommandOpts(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4); /* @0x140081238 */
+extern uint64_t *PECMD_InitControlObjField(uint64_t *param_1, uint64_t param_2, uint32_t param_3, uint64_t *param_4); /* @0x1400731d8 */
 extern uint64_t *PECMD_ScriptCopy(uint64_t *param_1, uint64_t *param_2);/* @0x140017cdc */
 extern void     PECMD_ScriptInit(uint64_t *param_1, int64_t param_2);   /* @0x1400186bc */
-extern uint32_t FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3); /* @0x140073ccc */
+extern uint32_t PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3); /* @0x140073ccc */
 extern void     PECMD_ParseWindowCommand(int64_t param_1, uint32_t param_2);    /* @0x14007fe3c */
 extern void     PECMD_CopyFlags(int64_t param_1, uint32_t *param_2);   /* @0x14005e36c */
 extern uint16_t *PECMD_ParsePrefixColon(LPCWSTR param_1, int64_t *param_2);   /* @0x14007443c */
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);    /* @0x14007034c */
 extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);                      /* @0x14005b77c */
 extern void     PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2, uint64_t param_3, uint32_t *param_4); /* @0x14005e3ac */
-extern int64_t  FUN_1400e95f4(int64_t *param_1, uint64_t param_2);   /* @0x1400e95f4 */
+extern int64_t  PECMD_ModalMsgPumpEx(int64_t *param_1, uint64_t param_2);   /* @0x1400e95f4 */
 extern void     FUN_1400668ec(int64_t *param_1, uint64_t param_2, LPCWSTR param_3, LPCWSTR param_4); /* @0x1400668ec */
-extern uint32_t FUN_1400e91f0(int64_t *param_1, uint64_t param_2);   /* @0x1400e91f0 */
+extern uint32_t PECMD_ModalDialogPump(int64_t *param_1, uint64_t param_2);   /* @0x1400e91f0 */
 extern void     PECMD_ClearTaskTable(int64_t script, int mode);             /* @0x14004eaa8 */
 extern void     FUN_140061470(void);                                 /* @0x140061470 */
 extern uint64_t PECMD_ParseAndSkipSpace_7f90(int64_t *param_1, double *param_2);    /* @0x140077f90 */
@@ -342,7 +342,7 @@ extern void   PECMD_StartOnlyApp(LPCWSTR);                    /* @0x14002ae88 */
 extern uint64_t PECMD_ReadValidWindowHandle(LPCWSTR);                  /* @0x14001acbc */
 extern void   FUN_1400458a8(LPCWSTR);                    /* @0x1400458a8 */
 extern void   PECMD_WriteSysAck(int a, int b);               /* @0x14003e694 */
-extern void   FUN_14001b888(int a);                       /* @0x14001b888 */
+extern void   PECMD_InitRamdataRegistry(int a);                       /* @0x14001b888 */
 extern HWND   g_hwndC9C8;                             /* @0x14013c9c8 */
 extern WCHAR  PTR_u_Shell_14011ddb8_2_14013a290[];       /* @0x14013a290 */
 extern uint64_t PECMD_GetPackedSystemVersion(void);                     /* @0x14005ea5c */
@@ -370,7 +370,7 @@ extern int    PECMD_OnDeleteCommand(uint64_t *p, LPCWSTR a, void *h); /* @0x1400
 extern void   PECMD_ParseShortStore(int64_t **pp, int *out, short delim); /* @0x1400679b0 */
 extern void   PECMD_InitTable(int64_t p);                  /* @0x14005bccc */
 extern void   PECMD_TrieInsertNode(int64_t p, int idx);         /* @0x14005bcfc */
-extern void   FUN_14005be68(int64_t p, uint idx);        /* @0x14005be68 */
+extern void   PECMD_ReclaimPages(int64_t p, uint idx);        /* @0x14005be68 */
 extern void   FUN_140103068(short *dst, LPCWSTR src);    /* @0x140103068 */
 extern void  *g_pWIMMountImage;                             /* WIMG fnptr slot */
 extern void  *g_pWIMUnmountImage;
@@ -506,9 +506,9 @@ extern double DAT_140124110;  /* 数字解析常数(link_stubs.c 定义) */
 extern double DAT_140124118;  /* 数字解析常数 */
 extern double DAT_1401263a0;  /* 数字解析常数(乘10) */
 extern double DAT_1401261a0;  /* 数字解析常数(1.0) */
-extern double DAT_140124120;  /* π/2 (link_stubs.c 定义, FUN_140070da8 用) */
-extern double DAT_1401268f0;  /* 180.0 弧度↔角度 (link_stubs.c 定义, FUN_140070da8 用) */
-/* ---- FUN_1400987ec (PINT 固定) 全局槽 (link_stubs.c 定义) ---- */
+extern double DAT_140124120;  /* π/2 (link_stubs.c 定义, PECMD_ExpressionArithmetic 用) */
+extern double DAT_1401268f0;  /* 180.0 弧度↔角度 (link_stubs.c 定义, PECMD_ExpressionArithmetic 用) */
+/* ---- PECMD_PinStartMenuTask (PINT 固定) 全局槽 (link_stubs.c 定义) ---- */
 extern uint32_t DAT_14013a848;   /* PINT 方向/标志 */
 extern uint32_t DAT_14013e1f0;   /* PINT 一次性清理注册标志 */
 extern int64_t  DAT_14013e1e8, DAT_14013e1e0, DAT_14013e1d8, DAT_14013e1d0;
@@ -567,7 +567,7 @@ extern uint64_t PECMD_ParseControlMessage(int64_t *param_1, HWND param_2, HWND p
 extern uint64_t FUN_1400db648(HWND param_1, uint16_t *param_2, int64_t param_3,
                               int64_t *param_4, HWND param_5, COLORREF param_6,
                               int64_t param_7);                   /* @0x1400db648 */
-extern int      FUN_1400690c0(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3,
+extern int      PECMD_ReadRegBinaryGuarded(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3,
                               int64_t *param_4, DWORD *param_5, void *param_6); /* @0x1400690c0 */
 extern int      FUN_14005b184(char *param_1, int64_t param_2, int64_t param_3); /* @0x14005b184 */
 extern int64_t  PECMD_EnumNtSymbolicLink(LPWSTR param_1, int64_t *param_2, int64_t *param_3,
@@ -666,7 +666,7 @@ extern int64_t g_i64D170;            /* @0x14013d170 */
 extern uint64_t PECMD_ParsePercentControl(WPARAM param_1, HWND param_2, uint16_t *param_3);
 extern int      PECMD_FindPartitionByGeometry(int64_t param_1, int64_t param_2, int param_3, int param_4, int param_5);
 extern int      PECMD_FindPartitionByGeometryV2(char *param_1, int64_t param_2, int param_3, int param_4, int param_5);
-extern LPWSTR   FUN_140077190(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4,
+extern LPWSTR   PECMD_AppendDriveLetter(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4,
                               LPWSTR param_5, uint32_t param_6, LPCWSTR param_7);
 extern int64_t  PECMD_FindPartitionStartSector(HANDLE param_1, int *param_2, int64_t *param_3);
 extern uint32_t PECMD_EnumPartitionsMapDriveLetter(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4);
@@ -1165,7 +1165,7 @@ LAB_140045ad2:
     (*g_pSHSetValueW)((HKEY)(intptr_t)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), pwVar11, 1,
                      local_res8, CONCAT44(uVar13, (int)lVar8 * 2));
     DVar3 = GetTickCount();
-    FUN_14001b888(0);
+    PECMD_InitRamdataRegistry(0);
     while (1) {
         local_res10[0] = 0;
         local_res18[0] = 4;
@@ -5810,7 +5810,7 @@ LAB_14005257c:
 LAB_140052bde:
                                     if (lVar41 < 0) goto LAB_140052be3;
                                 } else {
-                                    iVar9 = FUN_140060b5c((uint64_t *)local_c18, (int)lVar27 + 1, local_ba0, (int)local_a88);
+                                    iVar9 = PECMD_CountNewlines((uint64_t *)local_c18, (int)lVar27 + 1, local_ba0, (int)local_a88);
                                     if (-1 < lVar41) {
                                         if (local_af0 == 0) {
                                             FUN_1400e6d74(local_ae8, (int64_t)iVar9);
@@ -6308,7 +6308,7 @@ LAB_140052d2e:
                         if (local_b90 < 1) {
                             if (*local_ae8 != L'\0') goto LAB_140053001;
                         } else {
-                            iVar9 = FUN_140060b5c((uint64_t *)local_bc8, (int)lVar34, local_ba0, (int)local_a88);
+                            iVar9 = PECMD_CountNewlines((uint64_t *)local_bc8, (int)lVar34, local_ba0, (int)local_a88);
                         }
                         FUN_1400e6d74(local_ae8, (int64_t)iVar9);
                     }
@@ -8612,7 +8612,7 @@ uint64_t PECMD_ExecuteWait(int64_t *param_1, int param_2, uint64_t param_3, LPCW
             local_res18 = 0;
             local_e8[2] = param_3;
             puVar6 = local_e8 + 3;
-            while ((uVar4 = FUN_1400745c8((int64_t *)&local_res20, &local_res18), (int)uVar4 != 0)) {
+            while ((uVar4 = PECMD_EvalParenStripped((int64_t *)&local_res20, &local_res18), (int)uVar4 != 0)) {
                 if (local_res18 != 0) {
                     *puVar6 = local_res18;
                     puVar6 = puVar6 + 1;
@@ -9128,7 +9128,7 @@ void PECMD_DigestUpdate(uint32_t *param_1, uint64_t param_2)
                     iVar1 = (*(int (*)(void))(**(int64_t **)(param_1 + 0x350e) + 8))();
                     uVar7 = (uint8_t)iVar1;
                     if (iVar1 == -1) break;
-                    FUN_14005be68((int64_t)param_1, local_res10);
+                    PECMD_ReclaimPages((int64_t)param_1, local_res10);
                     *(uint8_t *)((char *)param_1 + (int)local_res10 + 0xc) = uVar7;
                     if (local_res10 < 0x11) {
                         *(uint8_t *)((char *)param_1 + (int)local_res10 + 0x100c) = uVar7;
@@ -9148,7 +9148,7 @@ void PECMD_DigestUpdate(uint32_t *param_1, uint64_t param_2)
             if ((int)uVar8 < (int)uVar9) {
                 uVar10 = (uint64_t)(uVar9 - uVar8);
                 do {
-                    FUN_14005be68((int64_t)param_1, local_res10);
+                    PECMD_ReclaimPages((int64_t)param_1, local_res10);
                     uVar2 = (uVar2 + 1) & 0xfff;
                     local_res10 = (local_res10 + 1) & 0xfff;
                     uVar9 = (uint)((int)uVar11 - 1);
@@ -14897,7 +14897,7 @@ FUN_140070710_flag:
     return 0;
 }
 
-void FUN_140070da8(int64_t param_1, double *param_2, uint8_t param_3, double *param_4)
+void PECMD_ExpressionArithmetic(int64_t param_1, double *param_2, uint8_t param_3, double *param_4)
 {
     /* @0x140070da8 size=2630 — PECMD 计算器/表达式算术引擎核心分派: 按操作码 param_3 对两个操作数
      *   (param_2 左 / param_4 右, 即栈顶与次顶)执行 + - * / % 位运算 与 三角/指数/取整/比较 等 ~80 种
@@ -15464,7 +15464,7 @@ DWORD PECMD_DeleteRegistryKeyRecursive(HKEY param_1,LPCWSTR param_2)
   local_38 = (HKEY)0x0;
   pWVar4 = StrRChrW(param_2,(LPCWSTR)0x0,WSTR("\\")[0]);
   if (pWVar4 == (LPWSTR)0x0) {
-    DVar2 = FUN_14005c394(param_1,param_2,&local_38,0x2001b,4);
+    DVar2 = PECMD_RegOpenWithRetryPriv(param_1,param_2,&local_38,0x2001b,4);
     if (DVar2 == 0) {
       local_44 = 0;
       local_res18 = 0;
@@ -15516,7 +15516,7 @@ DWORD PECMD_DeleteRegistryKeyRecursive(HKEY param_1,LPCWSTR param_2)
   else {
     FUN_1400702d4((int64_t *)&local_res18,param_2,
                   (int64_t)(int)(((int64_t)pWVar4 - (int64_t)param_2) >> 1));
-    DVar2 = FUN_14005c394(param_1,(LPCWSTR)CONCAT44(uStackX_1c,local_res18),&local_38,2,4);
+    DVar2 = PECMD_RegOpenWithRetryPriv(param_1,(LPCWSTR)CONCAT44(uStackX_1c,local_res18),&local_38,2,4);
     if (DVar2 == 0) {
       DVar2 = (*g_pSHDeleteKeyW)(local_38,pWVar4 + 1);
       RegCloseKey(local_38);
@@ -17040,7 +17040,7 @@ void PECMD_EnumDrivesToTable(int64_t param_1, LPWSTR param_2, uint param_3)
     }
 }
 
-LPWSTR FUN_140077190(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4, LPWSTR param_5, uint32_t param_6, LPCWSTR param_7)
+LPWSTR PECMD_AppendDriveLetter(LPWSTR param_1, int64_t param_2, int64_t param_3, int *param_4, LPWSTR param_5, uint32_t param_6, LPCWSTR param_7)
 {
     /* @0x140077190 size=188 — 遍历磁盘信息表(param_4, 每项 0x220B, 26 项), 匹配项(按盘符号 param_2+param_3 或卷名 param_7)追加 "%c:" 驱动号到 param_1 输出缓冲
      * 已处理 Ghidra 残留: 无 CONCAT/extraout; wsprintfW 的 %c 实参(piVar2[3] 盘符字符值)按 asm 补全 */
@@ -18001,7 +18001,7 @@ uint64_t PECMD_ParseExpression(int *param_1, LPWSTR param_2)
                     if (*psVar6 == 0x29) {
                         local_d0 = local_d0 - 1;
                     }
-                    FUN_140070da8((int64_t)(intptr_t)param_1, &local_98, bpak, pdVar5);
+                    PECMD_ExpressionArithmetic((int64_t)(intptr_t)param_1, &local_98, bpak, pdVar5);
                     *param_1 = *param_1 + -1;
                     psVar6 = (short *)PECMD_GrowArrayWrap((int64_t)*param_1, (int64_t *)(param_1 + 4),
                                                     (int64_t *)(param_1 + 6), (uint8_t *)(param_1 + 10), 2);
@@ -18046,7 +18046,7 @@ uint64_t PECMD_ParseExpression(int *param_1, LPWSTR param_2)
                                                          (int64_t *)(param_1 + 0xe), (uint8_t *)(param_1 + 0x12), 8);
                         pbVar11 = (uint8_t *)PECMD_GrowArrayWrap((int64_t)iVar4, (int64_t *)(param_1 + 4),
                                                            (int64_t *)(param_1 + 6), (uint8_t *)(param_1 + 10), 2);
-                        FUN_140070da8((int64_t)(intptr_t)param_1, &local_90, *pbVar11, pdVar5);
+                        PECMD_ExpressionArithmetic((int64_t)(intptr_t)param_1, &local_90, *pbVar11, pdVar5);
                         uVar16 = local_res18;
                         iVar4 = PECMD_MathCheckOperatorToken(param_1, (uint8_t)local_res18);
                         if (-1 < iVar4) break;
@@ -18223,7 +18223,7 @@ uint64_t PECMD_ParseExpression(int *param_1, LPWSTR param_2)
             PECMD_NegateDouble((int64_t)(intptr_t)param_1, pdVar5);
             goto LAB_14007ef4d;
         }
-        FUN_140070da8((int64_t)(intptr_t)param_1, (double *)&local_res10, bVar1, pdVar5);
+        PECMD_ExpressionArithmetic((int64_t)(intptr_t)param_1, (double *)&local_res10, bVar1, pdVar5);
     } while (true);
 }
 
@@ -18745,7 +18745,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         puVar10 = (uint64_t *)operator_new(0xa98);
         if (puVar10 != (uint64_t *)0x0) {
             pHVar11 = GetDesktopWindow();
-            plVar12 = (int64_t *)FUN_1400731d8(puVar10, (uint64_t)pHVar11, 0x271b,
+            plVar12 = (int64_t *)PECMD_InitControlObjField(puVar10, (uint64_t)pHVar11, 0x271b,
                                                (uint64_t *)0x0);
         }
         PECMD_ScriptCopy((uint64_t *)&local_138, (uint64_t *)plVar4);
@@ -18778,7 +18778,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         (void)local_5e;
         (void)local_12b;
         local_100 = plVar13;
-        FUN_140073ccc(&local_138, local_190, 0);
+        PECMD_ArgTokenize(&local_138, local_190, 0);
         plVar12[0x54] = local_140;
         plVar12[0x52] = (int64_t)&local_138;
         PECMD_ParseWindowCommand((int64_t)plVar12, 1);
@@ -18828,7 +18828,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
                 CloseHandle(hHandle);
             }
         }
-        FUN_1400e95f4((int64_t *)plVar12, 0);
+        PECMD_ModalMsgPumpEx((int64_t *)plVar12, 0);
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         local_f8 = (int64_t *)0x0;
         (void)local_f8;
@@ -18862,7 +18862,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
     return uVar9;
 }
 
-uint32_t FUN_140081238(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4)
+uint32_t PECMD_ParseWindowCommandOpts(int64_t *param_1, WCHAR *param_2, uint32_t param_3, uint32_t *param_4)
 {
     /* @0x140081238 size=826 — 命令串解析: 按 ',' 分隔成多段, 校验 "-"/"#" 符号与窗口选项, 返回状态码
      *   (0x271c=参数不足/L'\0', 0x271d=仅'#'不合, 0x271e=仅'-'不合); 最右段经 FUN_1400734e4 解析窗口选项写入 *param_4。
@@ -19082,7 +19082,7 @@ int64_t PECMD_ExecWindowThread(int64_t *param_1, uint64_t param_2, int64_t *para
             local_88 = (HWND)(uintptr_t)local_res20;
             local_80 = plVar19;
             if (((WVar1 != L'+') && (local_80 = param_3, param_3 == (int64_t *)0x0)) &&
-                (local_80 = param_3, FUN_14001b3a0(param_1, (int64_t *)0x0), param_1[8] == 0)) {
+                (local_80 = param_3, PECMD_ResetScriptChain(param_1, (int64_t *)0x0), param_1[8] == 0)) {
                 return -0x7ff8ffa9;
             }
             FUN_1400633a8((void **)&local_78, 0xa8);
@@ -19150,7 +19150,7 @@ int64_t PECMD_ExecWindowThread(int64_t *param_1, uint64_t param_2, int64_t *para
         plVar18 = plVar19;
         if (puVar5 != (uint64_t *)0x0) {
             pHVar6 = GetDesktopWindow();
-            plVar18 = (int64_t *)FUN_1400731d8(puVar5, (uint64_t)(uintptr_t)pHVar6, 0x271b,
+            plVar18 = (int64_t *)PECMD_InitControlObjField(puVar5, (uint64_t)(uintptr_t)pHVar6, 0x271b,
                                                (uint64_t *)0x0);
         }
         plVar7 = (int64_t *)operator_new(0xf0);
@@ -19163,7 +19163,7 @@ int64_t PECMD_ExecWindowThread(int64_t *param_1, uint64_t param_2, int64_t *para
         pWVar2 = local_res20;
         *(uint8_t *)((int64_t)plVar19 + 0xd9) = 3;
         *(int *)((int64_t)plVar19 + 0x24) = param_5;
-        FUN_140073ccc(plVar19, local_res20, 0);
+        PECMD_ArgTokenize(plVar19, local_res20, 0);
         plVar18[0x54] = local_res10[0];
         plVar18[0x2a] = (int64_t)(uintptr_t)plVar14;
         plVar18[0x52] = (int64_t)(uintptr_t)plVar19;
@@ -19213,7 +19213,7 @@ LAB_140081a5a:
     plVar7 = plVar19;
     if (puVar5 != (uint64_t *)0x0) {
         pHVar6 = GetDesktopWindow();
-        plVar7 = (int64_t *)FUN_1400731d8(puVar5, (uint64_t)(uintptr_t)pHVar6, 0x271b,
+        plVar7 = (int64_t *)PECMD_InitControlObjField(puVar5, (uint64_t)(uintptr_t)pHVar6, 0x271b,
                                           (uint64_t *)0x0);
     }
     LVar8.QuadPart = (int64_t)operator_new(0xf0);
@@ -19227,7 +19227,7 @@ LAB_140081a5a:
     pWVar2 = local_res20;
     *(uint8_t *)(_Memory.QuadPart + 0xd9) = 3;
     *(int *)(_Memory.QuadPart + 0x24) = param_5;
-    FUN_140073ccc((int64_t *)(uintptr_t)_Memory.QuadPart, local_res20, 0);
+    PECMD_ArgTokenize((int64_t *)(uintptr_t)_Memory.QuadPart, local_res20, 0);
     plVar7[0x54] = local_res10[0];
     plVar7[0x2a] = (int64_t)(uintptr_t)plVar14;
     ((LARGE_INTEGER *)(plVar7 + 0x52))->QuadPart = _Memory.QuadPart;
@@ -19267,7 +19267,7 @@ LAB_1400817c9:
     }
     PECMD_PositionWindowDispatchCommand(plVar7, uVar4, (uint64_t)(uintptr_t)local_80, &local_70);
     FUN_1400668ec(param_1, (uint64_t)plVar7[4], WSTR("&&__LastWinID"), WSTR("0x%I64X"));
-    uVar4 = FUN_1400e91f0(plVar7, 0);
+    uVar4 = PECMD_ModalDialogPump(plVar7, 0);
     local_90 = (int64_t *)(uintptr_t)(uint32_t)uVar4;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     *(uint64_t *)(_Memory.QuadPart + 0x40) = 0;
@@ -19330,7 +19330,7 @@ uint64_t PECMD_CreatePopupMenu(uint64_t *param_1, LPCWSTR param_2, uint64_t para
     *(int *)(_Memory.QuadPart + 0x24) = param_5 + 1;
     *(char **)(_Memory.QuadPart + 0x18) = local_408;
     *(uint64_t *)(_Memory.QuadPart + 0x28) = param_1[5];
-    FUN_140073ccc((int64_t *)_Memory.QuadPart, g_szEmpty, 0);
+    PECMD_ArgTokenize((int64_t *)_Memory.QuadPart, g_szEmpty, 0);
     lVar1 = (int64_t)param_1[8];
     *(int64_t *)(_Memory.QuadPart + 0x40) = lVar1;
     LVar3.QuadPart = LVar4.QuadPart;
@@ -19341,7 +19341,7 @@ uint64_t PECMD_CreatePopupMenu(uint64_t *param_1, LPCWSTR param_2, uint64_t para
     lVar1 = *(int64_t *)(_Memory.QuadPart + 0x40);
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-    FUN_140073ccc((int64_t *)_Memory.QuadPart, pWVar5, 0);
+    PECMD_ArgTokenize((int64_t *)_Memory.QuadPart, pWVar5, 0);
     PECMD_ParseAndExecuteLine(_Memory.QuadPart, param_2, *(uint64_t *)(_Memory.QuadPart + 0x40), 1);
     if (0 < local_404) {
         *(POINT **)(_Memory.QuadPart + 0x18) = &local_res8;
@@ -19413,7 +19413,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     uint8_t local_5f;
 
     local_res20 = param_4;
-    FUN_14001b3a0(param_1, (int64_t *)0);
+    PECMD_ResetScriptChain(param_1, (int64_t *)0);
     local_res18[0] = 0;
     DVar4 = GetCurrentThreadId();
     bVar1 = true;
@@ -19443,7 +19443,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     if (bVar16) {
         local_res8 = 0x271c;
     } else {
-        local_res8 = FUN_140081238(param_1, param_2, 0x271b, local_168);
+        local_res8 = PECMD_ParseWindowCommandOpts(param_1, param_2, 0x271b, local_168);
     }
     pHVar7 = GetDesktopWindow();
     pHVar11 = pHVar7;
@@ -19453,7 +19453,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     puVar8 = (uint64_t *)operator_new(0xa98);
     plVar9 = (int64_t *)0;
     if (puVar8 != (uint64_t *)0) {
-        plVar9 = (int64_t *)FUN_1400731d8(puVar8, (uint64_t)pHVar11, local_res8, (uint64_t *)0);
+        plVar9 = (int64_t *)PECMD_InitControlObjField(puVar8, (uint64_t)pHVar11, local_res8, (uint64_t *)0);
     }
     lVar12 = 0;
     if (bVar16) {
@@ -19475,7 +19475,7 @@ int64_t PECMD_CreateWindow(int64_t *param_1, WCHAR *param_2, int64_t param_3, LP
     PECMD_ScriptInit((uint64_t *)&local_138, (int64_t)param_1);
     pWVar2 = local_res20;
     local_f8 = plVar9;
-    FUN_140073ccc(&local_138, local_res20, 0);
+    PECMD_ArgTokenize(&local_138, local_res20, 0);
     local_5f = 3;
     (void)local_5f;
     plVar9[0x54] = (int64_t)(uintptr_t)param_2;
@@ -19521,11 +19521,11 @@ LAB_140082261:
     if ((local_res10 == 0) && (*(char *)((int64_t)plVar9 + 0x121) == '\0')) {
         *(uint8_t *)((int64_t)plVar9 + 0x123) = *(uint8_t *)((int64_t)plVar9 + 0x123) | 0x20;
         PECMD_PositionWindowDispatchCommand(plVar9, 0, (uint64_t)pHVar14, &local_158);
-        lVar12 = FUN_1400e95f4(plVar9, (uint64_t)((int)local_148 != 0));
+        lVar12 = PECMD_ModalMsgPumpEx(plVar9, (uint64_t)((int)local_148 != 0));
     } else {
         PECMD_PositionWindowDispatchCommand(plVar9, local_res8, (uint64_t)pHVar14, &local_158);
         FUN_1400668ec(param_1, plVar9[4], WSTR("&&__LastWinID"), WSTR("0x%I64X"));
-        iVar6 = FUN_1400e91f0(plVar9, 0);
+        iVar6 = PECMD_ModalDialogPump(plVar9, 0);
         lVar12 = (int64_t)iVar6;
     }
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -20202,7 +20202,7 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
                 local_res10[0] = 0;
                 local_res20[1] = L'?';
                 PECMD_AllocSmallObject((uint64_t *)&local_res18);
-                FUN_1400690c0((HKEY)(intptr_t)0xffffffff80000002,
+                PECMD_ReadRegBinaryGuarded((HKEY)(intptr_t)0xffffffff80000002,
                               (LPCWSTR)WSTR("SYSTEM\\MountedDevices"), local_res20,
                               &local_res18, local_res10, (void *)0x0);
                 if (((local_res10[0] == 0x18) &&
@@ -20909,7 +20909,7 @@ LAB_14008cdc1:
                         if (bVar4 != 0) {
                             pWVar23 = pWVar16;
                         }
-                        pWVar16 = FUN_140077190(pWVar16, (int64_t)(uintptr_t)local_res10,
+                        pWVar16 = PECMD_AppendDriveLetter(pWVar16, (int64_t)(uintptr_t)local_res10,
                                                 (int64_t)(int)local_4f8, (int *)local_4d8,
                                                 (LPWSTR)0x0, 1, (LPCWSTR)0x0);
                     }
@@ -21079,7 +21079,7 @@ LARGE_INTEGER PECMD_ExecCommandLine(int64_t *param_1, LPCWSTR param_2)
 
 
 /* @0x140097150 */
-DWORD FUN_140097150(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
+DWORD PECMD_SetAclPermission(LPCWSTR param_1, uint8_t param_2, WIN32_FIND_DATAW *param_3)
 {
     /* @0x140097150 size=1473 — 设置对象安全描述符(ACL 授权): 参数 param_2 的 bit0x40 区分
      *   注册表(RegOpenKeyExW+SetEntriesInAclW) vs 文件系统(GetUserNameW/LookupAccountNameW 取当前用户
@@ -21223,7 +21223,7 @@ LAB_140097333:
                                     wsprintfW(p_Var6[2].cFileName + 0xd4, WSTR("%s\\%s"),
                                               local_100, p_Var6->cFileName);
                                     p_Var6[4].cFileName[0x95] = L'\0';
-                                    FUN_140097150(p_Var6[2].cFileName + 0xd4, param_2, param_3);
+                                    PECMD_SetAclPermission(p_Var6[2].cFileName + 0xd4, param_2, param_3);
                                 }
                                 BVar2 = FindNextFileW(local_f0, p_Var6);
                             } while (BVar2 != 0);
@@ -21288,7 +21288,7 @@ LAB_1400972d0:
 /* @0x140097714 size=1372 — 注册表 Hive 加载/卸载 (REG 命令), 支持 -super/-quick/-u/-ws/-f 等开关 */
 extern void   PECMD_EnableBackupPrivileges(void);          /* @0x140060698 */
 extern void * DAT_14013d388;                              /* RegSaveKeyExW 函数指针槽 (link_stubs 定义) */
-/* FUN_14005c394: 沿用文件内隐式声明约定 (link_stubs no-op) */
+/* PECMD_RegOpenWithRetryPriv: 沿用文件内隐式声明约定 (link_stubs no-op) */
 int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
 {
     uint16_t uVar1;
@@ -21388,8 +21388,8 @@ int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
         FUN_14005B154((WCHAR **)&local_res10);
     }
     /* 两个逗号分隔 token: 键名 + 文件 */
-    FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_res20, L',', 0);
-    FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_48, L',', 0);
+    PECMD_TokenizeQuotedField(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_res20, L',', 0);
+    PECMD_TokenizeQuotedField(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_48, L',', 0);
     lpFile = (LPCWSTR)FUN_14001be14((short *)local_48);
     PECMD_EnableBackupPrivileges();
     DVar4 = 0;
@@ -21400,7 +21400,7 @@ int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
                     DVar4 = RegLoadKeyW(hKey, local_res20, lpFile);
                 }
                 if (-1 < (char)bVar2) {
-                    FUN_140097150(local_res20, bVar2, (WIN32_FIND_DATAW *)0x0);
+                    PECMD_SetAclPermission(local_res20, bVar2, (WIN32_FIND_DATAW *)0x0);
                 }
                 goto done;
             }
@@ -21414,7 +21414,7 @@ int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
                 return -0x7ff8ffa9;
             }
             local_40 = (HKEY)0x0;
-            DVar5 = FUN_14005c394(hKey, local_res20, (void *)&local_40, 0x20019, 4);
+            DVar5 = PECMD_RegOpenWithRetryPriv(hKey, local_res20, (void *)&local_40, 0x20019, 4);
             DVar4 = 0;
             if ((DVar5 != 0) && (DVar4 = RegOpenKeyExW(hKey, local_res20, 0, 0x20019, &local_40),
                                  DVar4 != 0))
@@ -21429,7 +21429,7 @@ int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
         }
     } else {
         /* -f: 强制卸载并设置权限 */
-        DVar4 = FUN_140097150(local_res20, bVar2 | 0x40, (WIN32_FIND_DATAW *)local_48);
+        DVar4 = PECMD_SetAclPermission(local_res20, bVar2 | 0x40, (WIN32_FIND_DATAW *)local_48);
     }
     if ((((cVar9 != '\0') && (DVar4 == 0)) && (cVar7 != '\0')) && (*lpFile != L'\0')) {
         /* 等待文件可锁定 (删除中) */
@@ -21457,7 +21457,7 @@ done:
 
 
 
-LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
+LPCWSTR PECMD_PinStartMenuTask(int64_t *param_1, LPCWSTR param_2)
 {
     /* @0x1400987ec size=5930 — Win10 开始菜单/任务栏"PINT"固定操作: 解析命令串并启动 PECMD 子过程,
      *   把快捷方式固定到 StartMenu/TaskBand (或按 NODELAYEXPLORER/NOTMPEXPLORER 等注册表策略重建
@@ -21593,7 +21593,7 @@ LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
                                 iVar8_2 = StrCmpNIW(WSTR("-p:"), local_res10, 3);
                                 if (iVar8_2 == 0) {
                                     local_res10 = local_res10 + 3;
-                                    FUN_1400545f8(param_1, &local_res10, &local_118, L',', 0x1000);
+                                    PECMD_TokenizeQuotedField(param_1, &local_res10, &local_118, L',', 0x1000);
                                     lstrcpyW(pWVar14, local_118);
                                     bVar28 = true;
                                     *local_118 = L'\0';
@@ -21623,7 +21623,7 @@ LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
                                         }
                                     }
                                     else {
-                                        FUN_1400545f8(param_1, &local_res10, &local_118, 0x1000, 0);
+                                        PECMD_TokenizeQuotedField(param_1, &local_res10, &local_118, 0x1000, 0);
                                         lstrcpyW((uint16_t *)(uintptr_t)local_100, local_118);
                                         local_res20 = (uint64_t)(uint32_t)-1;   /* CONCAT44(…,1) 低字节置 1 */
                                         *local_118 = L'\0';
@@ -21652,11 +21652,11 @@ LPCWSTR FUN_1400987ec(int64_t *param_1, LPCWSTR param_2)
             local_108 = uVar7;
             if (*local_res10 == L'*') {
                 local_res10 = local_res10 + 1;
-                FUN_1400545f8(param_1, &local_res10, &local_118, L',', 0);
+                PECMD_TokenizeQuotedField(param_1, &local_res10, &local_118, L',', 0);
                 local_78 = local_118;
                 PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
             }
-            FUN_1400545f8(param_1, &local_res10, &local_e0, L',', 0);
+            PECMD_TokenizeQuotedField(param_1, &local_res10, &local_e0, L',', 0);
             local_a8 = local_e0;
             PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
             pWVar18 = local_res10;
@@ -22961,7 +22961,7 @@ LAB_1400a4faa:
             if (param_6 != 0) {
                 *(int64_t *)(_Memory.QuadPart + 0x28) = param_6;
             }
-            FUN_140073ccc((int64_t *)_Memory.QuadPart, pWVar15, 0);
+            PECMD_ArgTokenize((int64_t *)_Memory.QuadPart, pWVar15, 0);
             lVar3 = param_1[8];
             *(int64_t *)(_Memory.QuadPart + 0x40) = lVar3;
             EnterCriticalSection(&g_csInit);
@@ -23002,7 +23002,7 @@ LAB_1400a4faa:
         *plVar1 = 0;
         PECMD_AllocString((WCHAR **)plVar1, 0x10);
         param_1[0xd] = (int64_t)(uintptr_t)plVar1;
-        FUN_140073ccc(param_1, pWVar15, 0);
+        PECMD_ArgTokenize(param_1, pWVar15, 0);
         PECMD_ParseAndExecuteLine((int64_t)(uintptr_t)param_1, local_res20, (uint64_t)param_1[8], (uint64_t)uVar14);
         param_1[0xd] = lVar11;
         param_1[5] = (int64_t)(uintptr_t)local_res10[0];
@@ -23176,7 +23176,7 @@ LAB_1400a5424:
             *(uint16_t *)(local_80.QuadPart + 200) = 0;
         }
         if (bVar5) {
-            FUN_140073ccc((int64_t *)local_80.QuadPart, local_60, 0);
+            PECMD_ArgTokenize((int64_t *)local_80.QuadPart, local_60, 0);
         } else {
             *(uint64_t *)(local_80.QuadPart + 0x68) = *(uint64_t *)(param_1.QuadPart + 0x68);
             *(uint32_t *)(local_80.QuadPart + 0x60) = *(uint32_t *)(param_1.QuadPart + 0x60);
@@ -24561,7 +24561,7 @@ uint64_t PECMD_TrayIconLoadThread(int64_t param_1)
             SetEvent(hEvent);
         }
         *(uint8_t *)(plVar13 + 0x24) = 0;
-        FUN_1400e95f4((int64_t *)plVar13, 0);
+        PECMD_ModalMsgPumpEx((int64_t *)plVar13, 0);
         (**(void (**)(int64_t *, int))(*plVar13 + 0x18))(plVar13, 1);
     }
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);

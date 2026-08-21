@@ -71,7 +71,7 @@ extern int  (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **); /
 extern void      PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void     *PECMD_GrowByteBuffer(void **ps, int64_t len);
 extern void      FUN_14005b104(void *ps);
-extern int       FUN_140072d8c(void *a, int64_t *b, int c);
+extern int       PECMD_AdapterMacIpLookup(void *a, int64_t *b, int c);
 extern int64_t   PECMD_ParseVolumeGuid(int64_t *param_1, uint32_t *param_2, int param_3);
 extern void      FUN_140061c44(void);
 extern void      PECMD_AllocMagicBlock(void **p, int64_t len);
@@ -93,7 +93,7 @@ extern HBITMAP   PECMD_CaptureScreenRegion(RECT *, HDC *, LPCWSTR);
 extern DWORD     PECMD_SaveBitmap(HBITMAP, LPCWSTR, int, LPCWSTR);
 extern HICON     PECMD_LoadIcon(LPCWSTR, uint64_t *);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);
-extern void      FUN_14001b3a0(int64_t *, int64_t *);
+extern void      PECMD_ResetScriptChain(int64_t *, int64_t *);
 extern void      PECMD_ExpandVarDispatch(int64_t *, WCHAR *, WCHAR **, int, int);
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);
 extern void      FUN_1400547bc(int64_t *, WCHAR **, WCHAR **, uint32_t, int);
@@ -323,7 +323,7 @@ uint32_t *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2, uint64_t *para
     }
 LAB_14007f219:
     if (cVar9 == '\x03') {
-        iVar4 = FUN_140072d8c(local_a0, (int64_t *)param_2, 0);
+        iVar4 = PECMD_AdapterMacIpLookup(local_a0, (int64_t *)param_2, 0);
         if (iVar4 == 0) {
             FUN_14005b104((int64_t *)&local_90);
             return (uint32_t *)0;
@@ -490,7 +490,7 @@ LAB_14007f55f:
     *pCVar8 = '\0';
     PECMD_AllocString((WCHAR **)param_2, 0x32);
     PECMD_GuidToString((LPWSTR)(uintptr_t)*param_2, local_a8, 1);
-    iVar4 = FUN_140072d8c(local_a0, (int64_t *)param_2, 1);
+    iVar4 = PECMD_AdapterMacIpLookup(local_a0, (int64_t *)param_2, 1);
     if (-1 < iVar4) {
         int bi = 0;
         do {
@@ -632,7 +632,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     local_58 = param_1;
     (void)local_50; (void)local_58;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = (WPARAM)param_1[8];
         local_res18 = param_3;
         if (param_3 == 0) {

@@ -52,7 +52,7 @@ extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);     /* @0x140
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);     /* @0x14007034c 追加串 */
 extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);   /* @0x1400703e4 拷贝串 */
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);          /* 定位分隔符 (thunk) */
-extern void      FUN_14001b3a0(int64_t *, int64_t *);             /* 默认参数获取 */
+extern void      PECMD_ResetScriptChain(int64_t *, int64_t *);             /* 默认参数获取 */
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);            /* 数字写串 */
 
 /* ---- 字符串比较/解析 ---- */
@@ -77,7 +77,7 @@ extern int64_t   PECMD_ExpandCommandLine(void *ctx, WCHAR *src, WCHAR **out,
 /* ---- 参数拆分/数值 ---- */
 extern WCHAR    *FUN_1400547bc(void *ctx, int64_t *pp, int64_t *out,
                                int c1, int c2);                       /* 拆分到串 */
-extern void      FUN_1400545f8(void *script, WCHAR **p1, WCHAR **p2,
+extern void      PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2,
                                uint64_t c, int64_t d);                /* 路由解析 */
 extern void      PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, short c);  /* 按字符切分 */
 extern void      PECMD_ExtractTokenByDelim(int64_t *, int64_t *, int);            /* 数值转串 */
@@ -86,7 +86,7 @@ extern void      PECMD_ParseHashNumbers(int64_t *, int64_t);                   /
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void      PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);
 extern uint64_t  PECMD_ParseSignedNumber(short *);                              /* 解析数字 */
-extern int64_t   FUN_1400745c8(WCHAR **pp, int64_t *out);            /* 解析整数 */
+extern int64_t   PECMD_EvalParenStripped(WCHAR **pp, int64_t *out);            /* 解析整数 */
 extern uint64_t  FUN_1400a9a84(WCHAR **pp, uint64_t *out);            /* 解析长度 */
 extern uint16_t *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);   /* 路径扩展 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *, char);                  /* 清空串 */
@@ -192,7 +192,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     local_58 = 0;
     local_60 = param_1;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0x0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0x0);
         param_3 = (WPARAM)param_1[8];
         local_res18 = param_3;
         if (param_3 == 0) {
@@ -348,7 +348,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
         }
         if (*local_res10 != L'\0') {
             local_res10 = local_res10 + 1;
-            FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_80, L',', 0);
+            PECMD_TokenizeQuotedField(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_80, L',', 0);
             if (*local_res10 != L'\0') {
                 puVar6 = (uint32_t *)PECMD_SplitTokenAssignVar((WCHAR **)&local_68, (WCHAR **)&local_res10,
                                                    0x2c, 1);
@@ -437,7 +437,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
     local_48 = param_1;
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0x0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0x0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
             uVar6 = (uint64_t)(int64_t)(int32_t)0xffffffff80070057;
@@ -558,7 +558,7 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
     local_48 = param_1;
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0x0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0x0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
             uVar6 = (uint64_t)(int64_t)(int32_t)0xffffffff80070057;
@@ -893,9 +893,9 @@ LAB_140085e5d:
                                                 pWVar19 = local_128;
                                                 local_100 = local_128;
                                                 local_158 = local_128;
-                                                FUN_1400745c8((WCHAR **)&local_1a0,
+                                                PECMD_EvalParenStripped((WCHAR **)&local_1a0,
                                                               (int64_t *)&local_158);
-                                                FUN_1400745c8((WCHAR **)&local_1a0, (int64_t *)&local_110);
+                                                PECMD_EvalParenStripped((WCHAR **)&local_1a0, (int64_t *)&local_110);
                                                 if ((int64_t)local_110 < 1) {
                                                     local_110 = 1;
                                                 }
@@ -998,7 +998,7 @@ LAB_140085eeb:
         if (bVar28) {
             local_168 = local_f0 + 1;
         }
-        uVar11 = FUN_1400745c8((WCHAR **)&local_168, (int64_t *)&local_a8);
+        uVar11 = PECMD_EvalParenStripped((WCHAR **)&local_168, (int64_t *)&local_a8);
         if (((int)uVar11 != 0) && ((int64_t)local_a8 < 0)) {
             bVar28 = !bVar28;
             local_a8 = (uint64_t)(-((int64_t)local_a8));
@@ -1010,7 +1010,7 @@ LAB_140085eeb:
         if (bVar29) {
             local_168 = local_168 + 1;
         }
-        uVar11 = FUN_1400745c8((WCHAR **)&local_168, (int64_t *)&local_a0);
+        uVar11 = PECMD_EvalParenStripped((WCHAR **)&local_168, (int64_t *)&local_a0);
         if (((int)uVar11 != 0) && ((int64_t)local_a0 < 0)) {
             bVar29 = !bVar29;
             local_a0 = (uint64_t)(-((int64_t)local_a0));
@@ -1455,8 +1455,8 @@ LAB_140086c8f:
     }
 LAB_140086cae:
     if (*local_d4c8 == L'\"') {
-        FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_d598, L',', 0);
-        FUN_1400545f8(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_d590, L',', 0);
+        PECMD_TokenizeQuotedField(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_d598, L',', 0);
+        PECMD_TokenizeQuotedField(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_d590, L',', 0);
         pWVar9 = local_d590;
         lpString2 = local_d598;
     }
@@ -2128,7 +2128,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
     local_res10[0] = FUN_1400547bc(param_1, (int64_t *)local_res10, (int64_t *)&local_50, 0x3d, 0);
     if (*local_res10[0] == L'=') {
         local_res10[0] = local_res10[0] + 1;
-        FUN_1400545f8(param_1, (WCHAR **)local_res10, (WCHAR **)local_48, L'\0', 0);
+        PECMD_TokenizeQuotedField(param_1, (WCHAR **)local_res10, (WCHAR **)local_48, L'\0', 0);
     }
     pWVar12 = (LPWSTR)PECMD_StripDevicePrefix(local_48[0]);
     if ((*local_50 == L'\0') || (*pWVar12 == L'\0')) {

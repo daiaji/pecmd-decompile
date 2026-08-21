@@ -52,7 +52,7 @@ extern uint64_t        *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_
                                       uint64_t param_7, uint32_t param_8);
 extern void             PECMD_ScriptCopy(uint64_t *obj, uint64_t *p);
 extern void             PECMD_ScriptInit(uint64_t *obj, int64_t p);
-extern uint32_t         FUN_140073ccc(int64_t *param_1, LPCWSTR param_2, int param_3);
+extern uint32_t         PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void             PECMD_ExpandScriptVariables(int64_t *param_1, int64_t *param_2,
                                       int64_t *param_3);
 extern void             PECMD_ImportEnvironment(int64_t *param_1, int64_t *param_2, int param_3);
@@ -1157,7 +1157,7 @@ LAB_1400b10dd:
                 *(long long *)(uintptr_t)(_Memory_00.QuadPart + 0x80) = lVar18;
                 local_90 = _Memory_00;
                 (void)local_90;
-                FUN_140073ccc((int64_t *)(uintptr_t)_Memory_00.QuadPart, local_d8, 0);
+                PECMD_ArgTokenize((int64_t *)(uintptr_t)_Memory_00.QuadPart, local_d8, 0);
                 iVar9 = (uint32_t)local_f0;
                 ((LARGE_INTEGER *)(uintptr_t)(_Memory_00.QuadPart + 0x78))->QuadPart = (int64_t)_Memory.QuadPart;
                 plVar19 = param_1;
@@ -1325,7 +1325,7 @@ uint64_t PECMD_PcipDispatch(int64_t *param_1, ushort *param_2, WPARAM param_3,
     local_48 = 0;
     local_50 = param_1;
     if (param_3 == 0) {
-        FUN_14001b3a0(param_1, (int64_t *)0);
+        PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
             FUN_14005b104(&local_58);

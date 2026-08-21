@@ -62,7 +62,7 @@ extern bool PECMD_ParseNumSkipWs(WCHAR **pp, int64_t *out);
     /* @0x140067cf4 数字解析, 非0=成功 */
 extern int64_t FUN_1400a9a84(WCHAR **pp, int64_t *out);
     /* @0x1400a9a84 数字解析, >0=成功 */
-extern int64_t FUN_1400745c8(WCHAR **pp, int64_t *out);
+extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *out);
     /* @0x1400745c8 数字解析 (core_scriptdep.c 同签名) */
 extern int64_t PECMD_SetFilePointer(HANDLE h, int64_t offset, DWORD method);
     /* @0x14005c674 SetFilePointer 包装, 返回新位置 */
@@ -782,14 +782,14 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             if (bNeg) pCur++;
 
             /* ---- 元素大小 / @步长 / /块大小 / 数量 ---- */
-            if (FUN_1400745c8(&pCur, &nLen) > 0 && nLen > 0) {
+            if (PECMD_EvalParenStripped(&pCur, &nLen) > 0 && nLen > 0) {
                 if (*pCur == 0x40) {
                     pCur++;
-                    FUN_1400745c8(&pCur, &nSize2);
+                    PECMD_EvalParenStripped(&pCur, &nSize2);
                 }
                 if (*pCur == 0x2f) {
                     pCur++;
-                    FUN_1400745c8(&pCur, &nChunk);
+                    PECMD_EvalParenStripped(&pCur, &nChunk);
                 }
                 if (*pCur != 0) pCur++;
                 FUN_1400a9a84(&pCur, &srcOff);

@@ -48,8 +48,8 @@ extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);            /* @0x1400
 extern void FUN_140053e78(void);                           /* @0x140053e78 PECMD_Empty */
 extern void PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2, uint64_t param_3,
                           uint32_t *param_4);             /* @0x14005e3ac */
-extern uint32_t FUN_1400e91f0(int64_t *param_1, uint64_t param_2); /* @0x1400e91f0 */
-extern int64_t  FUN_1400e95f4(int64_t *param_1, uint64_t param_2); /* @0x1400e95f4 */
+extern uint32_t PECMD_ModalDialogPump(int64_t *param_1, uint64_t param_2); /* @0x1400e91f0 */
+extern int64_t  PECMD_ModalMsgPumpEx(int64_t *param_1, uint64_t param_2); /* @0x1400e95f4 */
 extern void *operator_new(size_t size);                   /* 全局 new 包装 */
 
 /* ================================================================
@@ -385,11 +385,11 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         puVar1[4] = puVar1[4] & 0xfffffff3;
         PECMD_PositionWindowDispatchCommand(plVar6, 0, (uint64_t)param_13, puVar1);
         if (uVar9 == 0x40) {
-            FUN_1400e91f0(plVar6, 0);
+            PECMD_ModalDialogPump(plVar6, 0);
         } else if (uVar9 == 0xc0) {
             SendMessageW((HWND)plVar6[4], 0x110, 0, 0);
         } else {
-            FUN_1400e95f4(plVar6, 0);
+            PECMD_ModalMsgPumpEx(plVar6, 0);
         }
         if (pHVar7 != 0) {
             SendMessageW(pHVar7, 0x451, 1, 0);
