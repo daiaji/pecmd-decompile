@@ -94,6 +94,8 @@ DWORD   GetWindowThreadProcessId(HWND w, DWORD *pid);
 void   *LoadLibraryA(const char *m);
 FARPROC GetProcAddress(void *hm, const char *name);
 unsigned long GetTickCount(void);
+uint64_t GetProcessHeap(void);
+int64_t *PECMD_AssignString(int64_t *, const uint16_t *);
 uint16_t *StrChrW(const uint16_t *s, uint16_t c);
 void *PECMD_BuildFontFromObject(int64_t a, void *b, const void *c);
 const uint16_t *PECMD_LoadLocalizedString(void *hinst, uint32_t id, uint16_t *buf, int len);
@@ -147,6 +149,8 @@ DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, R
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
 HMODULE LoadLibraryW(const WCHAR *name);
+unsigned int DragQueryFileW(uint64_t a, uint32_t b, void *c, uint32_t d);
+uint16_t *PECMD_AllocStrSlot(uint16_t **out);
 uint8_t *PECMD_MemMoveSafe(void *a, longlong b, longlong c);
 void *DAT_14013cb10; void *DAT_14013ccf8;
 void (*DAT_14013cb48)(...); void *DAT_14013cd18; void *DAT_14013cd20; void *DAT_14013cd28;
@@ -453,7 +457,28 @@ uint64_t ExitWindowsEx_exref(void) { return 0; }
 uint64_t ExpandEnvironmentStringsW(void) { return 0; }
 uint64_t ExtTextOutW(void) { return 0; }
 uint64_t PECMD_RunCommandLine(void) { return 0; }
-void FUN_140006554(void *param_1, int64_t *param_2, int64_t *param_3) { (void)param_1; (void)param_2; (void)param_3; }
+/* @0x140006554 size=— 拖放文件枚举(直移) */
+void FUN_140006554(void *param_1, longlong *param_2, longlong *param_3)
+{
+  unsigned int n = DragQueryFileW((uint64_t)(uintptr_t)param_1,0xffffffff,0,0);
+  unsigned int i = 0;
+  if ((int)n > 0) {
+    for (;;) {
+      unsigned int len = DragQueryFileW((uint64_t)(uintptr_t)param_1,i,0,0);
+      void *heap = (void *)(uintptr_t)GetProcessHeap();
+      uint16_t *f = (uint16_t *)(uintptr_t)HeapAlloc(heap,8,(long long)(int)(len * 2 + 0x13));
+      if ((uintptr_t)f == 0) break;
+      DragQueryFileW((uint64_t)(uintptr_t)param_1,i,f,len * 2 + 9);
+      if ((uintptr_t)param_2 != 0 && i == 0) PECMD_AssignString((int64_t *)param_2,(const uint16_t *)f);
+      if ((uintptr_t)param_3 != 0) {
+      }
+      HeapFree(heap,8,f);
+      if ((uintptr_t)param_3 == 0) return;
+      i++;
+      if ((int)n <= (int)i) return;
+    }
+  }
+}
 void FUN_1400083c0(void){
     void *hModule; char local_118[272];
     FUN_140005738(0,"PECMD:MSGSVR:HWND");
@@ -1763,6 +1788,7 @@ void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags) { (
 int SetThreadDesktop(void *d) { (void)d; return 1; }
 int SwitchDesktop(void *d) { (void)d; return 1; }
 int CloseDesktop(void *d) { (void)d; return 1; }
+unsigned int DragQueryFileW(uint64_t a, uint32_t b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 /* @0x1400e63c8 size=— 枚举窗口回调(直移) */
 bool PECMD_EnumWindowFindProc(POINT param_1, POINT *param_2)
 {
@@ -2040,7 +2066,37 @@ void *PECMD_BuildFontFromObject(int64_t a, void *b, const void *c)
   return (void *)(uintptr_t)PECMD_CreateFont((int *)lp,(double *)b,(void *)c);
 }
 uint64_t PECMD_ShowContextMenu(void) { return 0; }
-uint64_t *FUN_1400e57c0(uint64_t *a) { (void)a; return a; }
+/* @0x1400e57c0 size=— 窗口对象基构造(直移) */
+uint64_t *FUN_1400e57c0(uint64_t *param_1)
+{
+  *param_1 = (uint64_t)&PTR_FUN_14012b240;
+  param_1[4] = 0; param_1[7] = 0; param_1[0x18] = 0;
+  *(uint8_t *)(param_1 + 0xf) = *(uint8_t *)(param_1 + 0xf) & 0xfc;
+  *(uint8_t *)(param_1 + 0x14) = 0xff; *(uint8_t *)(param_1 + 0x17) = 0xff;
+  *(uint16_t *)((long long)param_1 + 0xa2) = 0xffff;
+  param_1[0x19] = 0;
+  *(uint32_t *)(param_1 + 8) = 0x80000000;
+  param_1[6] = 0; param_1[5] = 0;
+  *(uint8_t *)((long long)param_1 + 0x61) = 0;
+  param_1[0x11] = 0; param_1[0x10] = 0;
+  *(uint32_t *)(param_1 + 0x15) = 0x80000000;
+  *(uint8_t *)((long long)param_1 + 0xac) = 0; *(uint8_t *)((long long)param_1 + 0xa4) = 0;
+  *(uint32_t *)((long long)param_1 + 0x9c) = 0x80000000;
+  *(uint32_t *)(param_1 + 0x13) = 0x80000000;
+  *(uint32_t *)((long long)param_1 + 0x94) = 0x80000000;
+  *(uint32_t *)(param_1 + 0x12) = 0x80000000;
+  *(uint8_t *)((long long)param_1 + 0xa5) = 0;
+  *(uint8_t *)((long long)param_1 + 0xad) = 0; *(uint8_t *)((long long)param_1 + 0xa1) = 0;
+  *(uint32_t *)((long long)param_1 + 0x44) = 0x80000000;
+  param_1[9] = 0;
+  *(uint32_t *)((long long)param_1 + 0x54) = 0x80000000;
+  *(uint32_t *)(param_1 + 0xb) = 0xdefbac;
+  *(uint32_t *)((long long)param_1 + 0x5c) = 0xff0000;
+  *(uint32_t *)(param_1 + 10) = 0xbf800000;
+  *(uint8_t *)(param_1 + 0xc) = 0x4c;
+  param_1[0xe] = 0; param_1[0xd] = 0;
+  return param_1;
+}
 uint64_t PECMD_GetControlFont(void) { return 0; }
 int PECMD_UpdateWindowStyleBits(int64_t a, unsigned int b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }
 /* @0x1400e8644 size=— 临界区保护的窗口对象获取(直移) */
@@ -5364,7 +5420,39 @@ ulonglong PECMD_EvalParenStripped(longlong *param_1,ulonglong *param_2)
 
 
 /* ---- wave-current support: 0731d8 ---- */
-undefined8 *FUN_1400e9048(undefined8 *a, uint b, undefined8 c) { (void)a;(void)b;(void)c; return a; } /* 表项初始化 (leaf stub) */
+/* @0x1400e9048 size=— 对象槽 0x2a 系列初始化(直移) */
+uint64_t *FUN_1400e9048(uint64_t *param_1, uint param_2, uint64_t param_3)
+{
+  FUN_1400e57c0(param_1);
+  *param_1 = (uint64_t)&PTR_FUN_14012b430;
+  param_1[0x1b] = 0;
+  *(uint32_t *)((long long)param_1 + 0xec) = 0;
+  *(uint32_t *)(param_1 + 0x1f) = 0;
+  *(uint32_t *)((long long)param_1 + 0xfc) = 0;
+  param_1[0x20] = (uint64_t)param_2;
+  param_1[0x21] = 0; param_1[0x22] = 0;
+  param_1[0x23] = param_3;
+  *(uint8_t *)(param_1 + 0x24) = 0;
+  *(uint8_t *)((long long)param_1 + 0x121) = 0;
+  *(uint8_t *)((long long)param_1 + 0x122) = 0;
+  *(uint8_t *)((long long)param_1 + 0x123) = 0;
+  (void)PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x25));
+  param_1[0x2a] = 0;
+  *(uint8_t *)(param_1 + 0x2b) = 0;
+  *(uint32_t *)(param_1 + 0x29) = 0x80000000;
+  *(uint32_t *)((long long)param_1 + 0x144) = 0x80000000;
+  *(uint32_t *)(param_1 + 0x28) = 0x80000000;
+  *(uint32_t *)((long long)param_1 + 0x13c) = 0x80000000;
+  param_1[0x26] = 0;
+  *(uint32_t *)(param_1 + 0x27) = 0;
+  param_1[0x1c] = 0;
+  *(uint32_t *)(param_1 + 0x1d) = 0;
+  *(uint8_t *)((long long)param_1 + 0x159) = 0;
+  *(uint8_t *)((long long)param_1 + 0x15a) = 0;
+  *(uint8_t *)((long long)param_1 + 0xd4) = 0;
+  param_1[0x1e] = 0;
+  return param_1;
+}
 undefined1 *FUN_14005b848(undefined1 *a) { (void)a; return a; }                                       /* 串清零 (leaf stub) */
 longlong *FUN_140070398(longlong *a, undefined8 *b) { (void)a;(void)b; return (longlong*)0; }        /* 缓冲复制 (leaf stub) */
 void *DAT_14013cf70 = 0;    /* 0x14013cf70 HINSTANCE 槽 */
