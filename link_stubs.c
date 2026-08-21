@@ -328,6 +328,7 @@ int64_t (*DAT_14013ce30)(void);
 void *DAT_14013d3b8 = 0;
 int64_t DAT_14013a24f = 0;
 int64_t DAT_14013a24c = 0;
+longlong DAT_14013e118 = 0; longlong DAT_14013e120 = 0; longlong DAT_14013e128 = 0;
 typedef struct tagRECT { LONG left; LONG top; LONG right; LONG bottom; } RECT, tagRECT, *LPRECT;
 typedef struct tagMSG { HWND hwnd; UINT message; ulonglong wParam; longlong lParam; DWORD time; POINT pt; } MSG, tagMSG;
 typedef void *pthreadlocinfo;
@@ -1112,7 +1113,7 @@ void PECMD_WaitTickCount(void)
 }
 void FUN_140061c44(void) { }
 /* @0x140061ffc size=117 — 全局互斥锁(带安全描述符)(直移) */
-void FUN_140061ffc(uint64_t a, int b, uint16_t *c)
+uint64_t FUN_140061ffc(uint64_t a, int b, uint16_t *c)
 {
   SECURITY_ATTRIBUTES local_48; uint8_t sd[0x27+1]; long long res[4];
   PECMD_EnableTokenPrivilege((const unsigned short *)L"SeCreateGlobalPrivilege",2,0x20);
@@ -1964,7 +1965,7 @@ int _snwprintf(WCHAR *buf, size_t n, const WCHAR *fmt, ...) { (void)buf;(void)n;
 uint64_t _time64(void) { return 0; }
 uint64_t keybd_event(void) { return 0; }
 uint64_t lstrcatW(void *a, uint64_t b) { (void)a;(void)b; return 1; }
-uint64_t lstrcmpW(void) { return 0; }
+uint64_t lstrcmpW(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }
 int lstrcmpiA(const char *a, const char *b) { (void)a;(void)b; return 0; }
 int lstrcmpiW(const WCHAR *a, const WCHAR *b) { (void)a;(void)b; return 0; }
 unsigned short *lstrcpyW(unsigned short *dst, const unsigned short *src) { (void)dst;(void)src; return dst; }
@@ -4009,7 +4010,49 @@ void    *FUN_14006e74c(const WCHAR *a, char b, uint32_t *c) { (void)a;(void)b;(v
 void    *FUN_14009c720(void *a, longlong b, int c, void *d, int e, int f, int g, int h, uint16_t *i, void *j, uint32_t k) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k; return (void*)0; }
 void    *FUN_14009cacc(void *a, longlong b, int c, void *d, int e, int f, int g, int h, void *i, void *j, uint32_t k, WCHAR *l) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k;(void)l; return (void*)0; }
 uint64_t FUN_14009d4b8(uint64_t a, uint64_t b, const WCHAR *c, int16_t d, const WCHAR *e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
-void *FUN_1400a41fc(const uint16_t *a) { (void)a; return (void*)(uintptr_t)1; }
+/* @0x1400a41fc size=— 命名对象注册表查找/登记(直移) */
+void *FUN_1400a41fc(const uint16_t *a)
+{
+  EnterCriticalSection((void *)&DAT_14013e190);
+  longlong base = DAT_14013e118;
+  longlong cnt = (longlong)DAT_14013e128;
+  uint64_t *found = 0;
+  longlong i = 0;
+  if (cnt > 0) {
+    for (; i < cnt; i++) {
+      longlong e = *(longlong *)(base + i * 8);
+      if (e != 0) {
+        if (lstrcmpW((const uint16_t *)a,*(const uint16_t **)(e + 8)) == 0) {
+          int *p = (int *)(*(longlong *)(base + i * 8) + 0x10);
+          *p = *p + 1;
+          found = *(uint64_t **)(base + i * 8);
+          goto Ldone;
+        }
+      }
+    }
+  }
+  uint64_t *nw = (uint64_t *)(uintptr_t)operator_new(0x18);
+  if ((uintptr_t)nw == 0) nw = 0;
+  else {
+    *nw = 0;
+    PECMD_StrDupAssign((uint16_t **)(nw + 1),(const uint16_t *)a);
+    *(uint32_t *)(nw + 2) = 1;
+    *nw = (uint64_t)FUN_140061ffc(0,0,0);
+  }
+  longlong j = 0;
+  if (cnt > 0) {
+    for (; j < cnt; j++) {
+      if (*(longlong *)(base + j * 8) == 0) { *(uint64_t **)(base + j * 8) = nw; goto Ldone; }
+    }
+  }
+  { uint64_t *slot = nw;
+    PECMD_VectorAppendGen(&DAT_14013e118,&DAT_14013e120,&DAT_14013e128,(uint8_t *)&slot,8,1);
+  }
+  found = nw;
+Ldone:
+  LeaveCriticalSection((void *)&DAT_14013e190);
+  return found;
+}
 /* @0x1400a43c4 size=— 命名对象构造(直移) */
 void *PECMD_CreateNamedWaitObj(const WCHAR *a, char b)
 {
