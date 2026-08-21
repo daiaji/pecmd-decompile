@@ -25,7 +25,7 @@ extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);            /* @0x140
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);        /* @0x140070398 */
 extern void FUN_14005B104(WCHAR **ps);                             /* @0x14005b104 */
 extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 (本批构造函数调用用小写) */
-extern uint64_t *FUN_1400fcf44(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
+extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
 extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
 extern int64_t *FUN_1400702f0(int64_t *out, char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
@@ -280,7 +280,7 @@ uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2)
     /* @0x140102184 size=190 对象构造函数 */
     int64_t local_res8;
 
-    FUN_1400fcf44(param_1, param_2);
+    PECMD_InitScrollObj(param_1, param_2);
     *param_1 = (uint64_t)(uintptr_t)&PTR_FUN_140124e50;
     PECMD_AllocStrSlot((WCHAR **)(param_1 + 0x1e));
     param_1[0x20] = 0;

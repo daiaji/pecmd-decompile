@@ -306,7 +306,7 @@ extern void * g_pGdipGetFontCollectionFamilyList;          /* GdipGetFontCollect
 extern void * g_pGdipGetFamilyName;          /* GdipGetFamilyName */
 
 /* ---- B1 剩余 15 个业务函数还原所需: 额外 helper extern ---- */
-extern void FUN_1400e6860(WPARAM param_1, int param_2);          /* @0x1400e6860 */
+extern void PECMD_EndDialogDeferred(WPARAM param_1, int param_2);          /* @0x1400e6860 */
 extern uint64_t PECMD_ProcessWindowObjMessage(HDC param_1, uint64_t param_2, HDC param_3,
                               int64_t *param_4);                 /* @0x1400e89fc */
 extern uint64_t FUN_140004e34(int param_1, int64_t param_2);     /* @0x140004e34 */
@@ -566,7 +566,7 @@ uint64_t PECMD_WndProcDispatch(HDC param_1, uint32_t param_2, HDC param_3, int64
             }
             KillTimer(*(HWND *)(p + 8), 1);
             p[0xc9] = 0;
-            FUN_1400e6860((WPARAM)param_1, 2);
+            PECMD_EndDialogDeferred((WPARAM)param_1, 2);
             return 1;
         }
         if (param_2 == 0x400) {
@@ -589,7 +589,7 @@ uint64_t PECMD_WndProcDispatch(HDC param_1, uint32_t param_2, HDC param_3, int64
         *(int64_t *)(p + 0x54) = 0;
         SendMessageW((HWND)0x0, 0x466, 2, *(LPARAM *)(p + 8));
     }
-    FUN_1400e6860((WPARAM)param_1, 2);
+    PECMD_EndDialogDeferred((WPARAM)param_1, 2);
     return 0;
 }
 

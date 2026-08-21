@@ -159,7 +159,7 @@ skip_prefix:
     ps[1] = len;
     iVar3 = len / 2;
     if (skipN != 0) {
-        /* 原 FUN_14001d744（memmove 等价） */
+        /* 原 PECMD_MemMoveSafe（memmove 等价） */
         memmove((uint8_t *)(intptr_t)ps[0], (uint8_t *)(intptr_t)ps[0] + skipN,
                 (size_t)(len - skipN) + 6);
     }

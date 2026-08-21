@@ -150,7 +150,7 @@ WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
     nb = PECMD_ReallocBuffer(*(void **)pbuf, (int64_t)(seglen + linelen + (size_t)off) * 2 + 0x12);
     ins = (WCHAR *)((uint8_t *)nb + (size_t)off * 2);
     *(void **)pbuf = nb;
-    /* 旧段 (原 off 起 seglen 字符) 后移 linelen 字符 (FUN_14001d744 memmove) */
+    /* 旧段 (原 off 起 seglen 字符) 后移 linelen 字符 (PECMD_MemMoveSafe memmove) */
     memmove((uint8_t *)nb + (linelen + (size_t)off) * 2, ins, seglen * 2);
     /* 新行拷到插入点 (PECMD_MemMoveForward; 反编译按字符计) */
     memcpy(ins, tmp, linelen * 2);

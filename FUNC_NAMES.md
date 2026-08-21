@@ -4,6 +4,12 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400fcf44 | FUN_1400fcf44 | PECMD_InitScrollObj |
+| 0x1400e6860 | FUN_1400e6860 | PECMD_EndDialogDeferred |
+| 0x1400e8940 | FUN_1400e8940 | PECMD_DestroyWindowObj |
+| 0x1400a43c4 | FUN_1400a43c4 | PECMD_CreateNamedWaitObj |
+| 0x14005c898 | FUN_14005c898 | PECMD_LazyLoadProc |
+| 0x14001d744 | FUN_14001d744 | PECMD_MemMoveSafe |
 | 0x1400e66d4 | FUN_1400e66d4 | PECMD_BuildResourceFont |
 | 0x1400e6350 | FUN_1400e6350 | PECMD_EnumChildFindProc |
 | 0x14005b184 | FUN_14005b184 | PECMD_AnsiStrNCompare |

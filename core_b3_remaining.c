@@ -456,7 +456,7 @@ extern void PECMD_Send423ToWindow(int64_t param_1, int64_t param_2, uint64_t par
                           uint8_t *param_4, uint64_t param_5); /* @0x1400ec6a8 */
 extern void FUN_14006fd1c(int64_t *param_1, int64_t *param_2, int64_t *param_3,
                           int64_t *param_4, int64_t *param_5, int64_t *param_6); /* @0x14006fd1c */
-extern uint64_t *FUN_1400fcf44(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
+extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
 extern uint64_t *PECMD_InitStaticCtl(uint64_t *param_1, uint64_t param_2); /* @0x1400fe130 */
 extern bool PECMD_InitStaticControl(int64_t *param_1, DWORD param_2, LPCWSTR param_3, uint32_t param_4,
                           int *param_5, HWND param_6, uint32_t param_7); /* @0x1400fd220 */
@@ -469,7 +469,7 @@ extern int64_t PECMD_QueryFontInfo(HANDLE param_1, int *param_2, LPCWSTR param_3
 extern HFONT PECMD_BuildFontFromObject(HANDLE param_1, void *param_2, LPCWSTR param_3); /* @0x1400b89dc */
 
 /* ---- batch37 (core_b3_remaining 21 函数) 所需辅助 extern ---- */
-extern void FUN_1400e8940(uint64_t *param_1);              /* @0x1400e8940 */
+extern void PECMD_DestroyWindowObj(uint64_t *param_1);              /* @0x1400e8940 */
 extern void *PECMD_FreeResourceObject(void *param_1, unsigned int param_2); /* @0x14005b888 */
 extern void PECMD_ReleaseObject_2f74(int64_t *param_1);               /* @0x140062f74 */
 extern uint64_t FUN_140061ffc(uint64_t param_1, BOOL param_2, LPCWSTR param_3); /* @0x140061ffc */
@@ -11206,7 +11206,7 @@ void PECMD_ReleaseComObject(uint64_t *param_1)
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csCom);
     }
-    FUN_1400e8940(param_1);
+    PECMD_DestroyWindowObj(param_1);
 }
 
 
@@ -25473,7 +25473,7 @@ LAB_1400b8207:
             if (bVar38 != 0) {
                 iVar3 = PECMD_SendCtrlMessage_18f8((int64_t)(uintptr_t)local_138, *(LPARAM *)(param_1 + 0x88));
             }
-            FUN_1400e8940(local_138);
+            PECMD_DestroyWindowObj(local_138);
             if (iVar3 != 0) {
                 plVar23 = (int64_t *)operator_new(0xe0);
                 plVar10 = (int64_t *)0x0;
@@ -25529,7 +25529,7 @@ LAB_1400b8871:
                 puVar21 = (uint64_t *)operator_new(0x100);
                 puVar9 = (uint64_t *)0x0;
                 if (puVar21 != (uint64_t *)0x0) {
-                    FUN_1400fcf44(puVar21, (uint64_t)(param_1 + 0x58));
+                    PECMD_InitScrollObj(puVar21, (uint64_t)(param_1 + 0x58));
                     puVar21[0x1e] = 0;
                     *puVar21 = (uint64_t)(uintptr_t)PTR_FUN_140125d00;
                     *(uint32_t *)(puVar21 + 0x1f) = 0;
@@ -25558,7 +25558,7 @@ LAB_1400b8786:
                     puVar9 = (uint64_t *)operator_new(0xf0);
                     puVar21 = (uint64_t *)0x0;
                     if (puVar9 != (uint64_t *)0x0) {
-                        puVar21 = FUN_1400fcf44(puVar9, (uint64_t)(param_1 + 0x58));
+                        puVar21 = PECMD_InitScrollObj(puVar9, (uint64_t)(param_1 + 0x58));
                     }
                     *(uint64_t **)(param_1 + 0x38) = puVar21;
                     goto LAB_1400b8786;
@@ -25798,7 +25798,7 @@ uint64_t *PECMD_CreateControlObject(uint64_t *param_1, int64_t param_2, uint32_t
     puVar9 = (uint64_t *)0x0;
     if ((uVar7 & 0x30000a0) == 0) {
         if (puVar8 != (uint64_t *)0x0) {
-            puVar9 = FUN_1400fcf44(puVar8, (uint64_t)(param_1 + 0xb));
+            puVar9 = PECMD_InitScrollObj(puVar8, (uint64_t)(param_1 + 0xb));
         }
     }
     else if (puVar8 != (uint64_t *)0x0) {

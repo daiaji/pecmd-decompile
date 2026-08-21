@@ -1116,5 +1116,11 @@
   "FUN_14005b184": "PECMD_AnsiStrNCompare",
   "FUN_1400633a8": "PECMD_AllocStringSlot2",
   "FUN_1400f0648": "PECMD_InitWebViewObj",
-  "FUN_140062fc4": "PECMD_MatchTokPrefixAdv"
+  "FUN_140062fc4": "PECMD_MatchTokPrefixAdv",
+  "FUN_1400fcf44": "PECMD_InitScrollObj",
+  "FUN_1400e6860": "PECMD_EndDialogDeferred",
+  "FUN_1400e8940": "PECMD_DestroyWindowObj",
+  "FUN_1400a43c4": "PECMD_CreateNamedWaitObj",
+  "FUN_14005c898": "PECMD_LazyLoadProc",
+  "FUN_14001d744": "PECMD_MemMoveSafe"
 }
