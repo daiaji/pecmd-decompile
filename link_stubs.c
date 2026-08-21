@@ -41,6 +41,29 @@ typedef LONG LPARAM;
 typedef const WCHAR *PCWSTR;
 /* _snwprintf 等 CRT 宽字符格式化辅助型 (仅需指针宽度兼容) */
 typedef char *pthreadmbcinfo;
+/* --- wave-3 P4 restored-helper extra Win32/minimal types --- */
+typedef void *HGDIOBJ;
+typedef void *HDROP;
+typedef void *HGLOBAL;
+typedef void *HRSRC;
+typedef void *HACCEL;
+typedef void *HHOOK;
+typedef void *HCRYPTPROV;
+typedef void *SC_HANDLE;
+typedef void *PSID;
+typedef void *HLOCAL;
+typedef void *HDESK;
+typedef void *HSERVICE;
+typedef uintptr_t UINT_PTR;
+typedef unsigned long ULONG_PTR;
+typedef uint32_t ACCESS_MASK;
+typedef uint16_t WORD;
+typedef int16_t SHORT;
+typedef struct _SECURITY_ATTRIBUTES { ULONG nLength; void *lpSecurityDescriptor; BOOL bInheritHandle; } SECURITY_ATTRIBUTES;
+typedef SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;
+typedef struct _OVERLAPPED { ULONG_PTR Internal; ULONG_PTR InternalHigh; union { struct { ULONG Offset; ULONG OffsetHigh; } s; void *Pointer; } u; void *hEvent; } OVERLAPPED;
+typedef OVERLAPPED *LPOVERLAPPED;
+typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } FILETIME, *LPFILETIME;
 
 /* ---- wave-2 restored-helper 内部 FUN_ 前置声明 (定义在文件后部, 需先声明供 new 桩调用) ---- */
 void        FUN_1400166b4(void);
@@ -51,6 +74,17 @@ long long   FUN_140064a34(uint16_t *);
 long long   FUN_140064a88(uint16_t *);
 long long   FUN_14006b8fc(long long *);
 void        FUN_1400ef91c(long long, uint, uint64_t);
+void        FUN_140005344(void);
+uint16_t   *FUN_14000531c(uint16_t *);
+uint8_t    *FUN_14001d78c(uint8_t *, uint8_t *, int);
+void        FUN_140008b2c(uint16_t *);
+void        FUN_140017048(const WCHAR *);
+void        FUN_140021144(const WCHAR *);
+void        FUN_140019da8(long long, const WCHAR *, int);
+void        FUN_140063694(void *, long long);
+void        FUN_140025f10(long long, const WCHAR *, uint32_t, char *, char *, long long *);
+void        FUN_140020fd4(long long, char, const WCHAR *, const WCHAR *);
+extern uint8_t DAT_14011c638[64];
 
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
@@ -233,7 +267,7 @@ uint64_t FUN_140022e94(void) { return 0; }
 uint64_t FUN_140023544(void) { return 0; }
 uint16_t *FUN_140024c48(int64_t *a, int64_t *b, uint32_t c) { (void)a;(void)b;(void)c; return (uint16_t *)0; }
 uint64_t FUN_1400250f0(void) { return 0; }
-uint64_t FUN_140025f10(void) { return 0; }
+void FUN_140025f10(long long p1, const WCHAR *p2, uint32_t p3, char *p4, char *p5, long long *p6) { (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; }
 uint64_t FUN_140026338(void) { return 0; }
 uint64_t FUN_14002ca30(void) { return 0; }
 uint64_t FUN_14002cc30(void) { return 0; }
@@ -468,7 +502,7 @@ uint64_t GetModuleHandleW(void) { return 0; }
 uint64_t GetObjectW(void) { return 0; }
 uint64_t GetParent(void) { return 0; }
 uint64_t GetPixel(void) { return 0; }
-uint64_t GetProcAddress(void) { return 0; }
+FARPROC GetProcAddress(HMODULE h, const char *name) { (void)h;(void)name; return (FARPROC)0; }
 uint64_t GetProcessAffinityMask(void) { return 0; }
 uint64_t GetProcessHeap(void) { return 0; }
 uint64_t GetProcessTimes(void) { return 0; }
@@ -520,7 +554,7 @@ uint64_t LoadEnvi(void) { return 0; }
 uint64_t LoadIconW(void) { return 0; }
 uint64_t LoadLibraryA(void) { return 0; }
 uint64_t LoadLibraryExW(void) { return 0; }
-uint64_t LoadLibraryW(void) { return 0; }
+HMODULE LoadLibraryW(const WCHAR *name) { (void)name; return (HMODULE)0; }
 uint64_t LoadMenuW(void) { return 0; }
 uint64_t LoadResource(void) { return 0; }
 uint64_t LoadStringW(void) { return 0; }
@@ -685,7 +719,7 @@ uint64_t WriteFile(void) { return 0; }
 uint64_t WriteProcessMemory(void) { return 0; }
 uint64_t _UNK_140121ff6(void) { return 0; }
 uint64_t _localtime64(void) { return 0; }
-uint64_t _snwprintf(void) { return 0; }
+int _snwprintf(WCHAR *buf, size_t n, const WCHAR *fmt, ...) { (void)buf;(void)n;(void)fmt; return 0; }
 uint64_t _time64(void) { return 0; }
 uint64_t keybd_event(void) { return 0; }
 uint64_t lstrcatW(void) { return 0; }
@@ -990,7 +1024,80 @@ void FUN_1400fbcb0(int64_t *p, uint32_t a, int *b, void *c, uint32_t d){ (void)p
 uint64_t FUN_140060b5c(uint64_t *a, int b, void *c, int d){ (void)a;(void)b;(void)c;(void)d; return 0; }
 void FUN_14006cc70(int64_t *a, int64_t b){ (void)a;(void)b; }
 void *FUN_14002c8a4(void *p){ return p; }
-uint64_t FUN_14002b7f8(int64_t a, void *b, void *c, unsigned d, int e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
+void FUN_140021144(const WCHAR *p) { (void)p; }        /* 设备驱动安装后端 (no-op) */
+void FUN_140019da8(long long p1, const WCHAR *p2, int p3) { (void)p1;(void)p2;(void)p3; }  /* 字体/安装回调 (no-op) */
+void FUN_140020fd4(long long p1, char c, const WCHAR *p2, const WCHAR *p3) { (void)p1;(void)c;(void)p2;(void)p3; }  /* 记录安装结果 (no-op) */
+/* FUN_14002b7f8 — 经 UpdateDriverForPlugAndPlayDevicesW 安装驱动并打印结果日志,
+   返回错误码 (0=失败置 1). */
+uint FUN_14002b7f8(long long param_1, LPCWSTR param_2, LPCWSTR param_3, uint param_4,
+                  int param_5, uint8_t *param_6)
+{
+    int      iVar1;
+    DWORD    DVar2;
+    HMODULE  pHVar3;
+    FARPROC  pFVar4;
+    WCHAR   *pwVar5;
+    WCHAR   *pwVar6;
+    int      local_res8[2] = {0};
+    WCHAR   *local_38[2] = {0};
+
+    if (*(char *)(param_1 + 0x157) != '\0') {
+        return 0;
+    }
+    if (param_6 == (uint8_t *)0) {
+        param_6 = (uint8_t *)(param_1 + 0x152);
+    }
+    DVar2 = 0;
+    local_res8[0] = 0;
+    if (*(long long *)(param_1 + 0x138) == 0) {
+        pHVar3 = LoadLibraryW((LPCWSTR)L"NewDev.dll");
+        *(HMODULE *)(param_1 + 0x138) = pHVar3;
+    }
+    SetLastError(0);
+    if (*(HMODULE *)(param_1 + 0x138) != (HMODULE)0) {
+        if (*(long long *)(param_1 + 0x140) == 0) {
+            pFVar4 = GetProcAddress(*(HMODULE *)(param_1 + 0x138), "UpdateDriverForPlugAndPlayDevicesW");
+            *(FARPROC *)(param_1 + 0x140) = pFVar4;
+            if (pFVar4 == (FARPROC)0) goto LAB_14002b91f;
+        }
+        if ((param_4 & 0x30000) != 0) {
+            FUN_140021144(param_3);
+        }
+        iVar1 = ((int (*)(void *, LPCWSTR, LPCWSTR, uint32_t, int *))(*(void **)(param_1 + 0x140)))
+                    (0, param_2, param_3, param_4 & 0xffff, local_res8);
+        if (param_6 != (uint8_t *)0) {
+            *param_6 = (uint8_t)local_res8[0];
+        }
+        if (*(long long *)(param_1 + 0x110) != 0) {
+            if (iVar1 == 0) goto LAB_14002b91f;
+            if (param_5 != -0x10) {
+                FUN_140019da8(param_1, param_2, param_5);
+            }
+        }
+        if (iVar1 != 0) goto LAB_14002b931;
+    }
+LAB_14002b91f:
+    DVar2 = GetLastError();
+    if (DVar2 == 0) {
+        DVar2 = 1;
+    }
+LAB_14002b931:
+    pwVar6 = (WCHAR *)L"(null)";
+    if (param_2 != (LPCWSTR)0) {
+        pwVar6 = (WCHAR *)param_2;
+    }
+    FUN_140063694(local_38, 0x2800);
+    pwVar5 = (WCHAR *)DAT_14011c638;
+    if (local_res8[0] != 0) {
+        pwVar5 = (WCHAR *)L"Reboot";
+    }
+    _snwprintf(local_38[0], 0x27ff, L"PECMD安装驱动【%s】[%s][%s]", pwVar6, param_3, pwVar5);
+    FUN_140025f10(param_1 + 8, local_38[0], DVar2, (pthreadmbcinfo)0x1100, (pthreadmbcinfo)0,
+                  (long long *)0);
+    FUN_14005b104((long long *)local_38);
+    FUN_140020fd4(param_1, 'I', pwVar6, param_3);
+    return DVar2;
+}
 void FUN_14004fd6c(void *a, unsigned b, int c){ (void)a;(void)b;(void)c; }
 void FUN_140078be8(void *a, int64_t *b){ (void)a;(void)b; }
 void *FUN_14002b2ec(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }
@@ -1027,7 +1134,7 @@ uint64_t FUN_1400282d4(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return 
 /* ---- P0 补缺失符号桩 ---- */
 /* ---- 批1-01ed5c 依赖桩 ---- */
 uint64_t FUN_14001ebdc(void){ return 0; }
-uint64_t FUN_140063694(void){ return 0; }
+void FUN_140063694(void *p, long long n) { (void)p;(void)n; }
 uint64_t FUN_140063344(void){ return 0; }
 void *DAT_14013ca68;   /* HINSTANCE 资源句柄 */
 
@@ -1186,7 +1293,7 @@ uint8_t *FUN_14001d78c(uint8_t *a, uint8_t *b, int n) { (void)a;(void)b;(void)n;
 void FUN_140008b2c(uint16_t *s) { (void)s; }                          /* 移除服务(子树) */
 void FUN_140017048(const WCHAR *s) { (void)s; }                       /* 服务安装处理 */
 uint32_t DAT_14013c9fc;   /* GetTickCount 结果槽 (PECMD.exe 静态清零区, 初 0) */
-void *DAT_14013d130;      /* 传 FUN_14007a224 的输出槽 */
+long long DAT_14013d130;   /* 传 FUN_14007a224 的输出槽 */
 uint64_t FUN_1400084d0(short *param_1)
 {
     uint16_t sVar1;
