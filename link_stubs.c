@@ -151,6 +151,12 @@ void FUN_140063694(void *p, long long n);
 void FUN_14005b104(void *ps);
 void PECMD_DialogBeepNotify(int64_t a, int b);
 void FUN_14005daf8(int64_t a, int *b, int *c, int *d, int *e);
+/* ---- 早期放置的 wave-current 还原体所需 Win32 前置声明 (定义见字母桩区) ---- */
+void     GetStartupInfoW(void *d);
+uint64_t SetActiveWindow(void *h);
+int      SetEndOfFile(void *h);
+uint64_t SetForegroundWindow(void *h);
+uint64_t BringWindowToTop(void *h);
 
 /* ---- P4 wave-4 (p4_wave1.json[120:160]) 支持块 (并发迁移后重建): 全局真值 + 内部 helper 前置声明 ----
  * 全局初值(真值)来源: python3 tools/pe_data_extract.py ../PECMD.exe <addr> <n> */
@@ -271,7 +277,7 @@ uint64_t AttachThreadInput(void) { return 0; }
 uint64_t Beep(void) { return 0; }
 uint64_t BeginPaint(void) { return 0; }
 uint64_t BitBlt(void) { return 0; }
-uint64_t BringWindowToTop(void) { return 0; }
+uint64_t BringWindowToTop(void *h) { (void)h; return 0; }
 uint64_t CM_Get_Parent(void) { return 0; }
 uint64_t CallNextHookEx(void) { return 0; }
 uint64_t CallWindowProcW(void) { return 0; }
@@ -618,7 +624,16 @@ void FUN_14002286c(void)
         }
     }
 }
-uint64_t FUN_140023544(void) { return 0; }
+/* @0x140023544 size=107 — 清空 D:\DebugPeMainU.LOG 调试日志(直移) */
+void FUN_140023544(void)
+{
+  void *h[4]; h[0] = 0;
+  FUN_140003864((void **)h,(const unsigned short *)L"D:\\DebugPeMainU.LOG",0xc0000000,7,0,3,0x80,0);
+  if ((uintptr_t)h[0] != 0) {
+    SetEndOfFile(h[0]);
+    if ((uintptr_t)h[0] != (uintptr_t)-1) CloseHandle((void *)(uintptr_t)h[0]);
+  }
+}
 uint16_t *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c) { (void)a;(void)b;(void)c; return (uint16_t *)0; }
 uint64_t FUN_1400250f0(void) { return 0; }
 void FUN_140025f10(long long p1, const WCHAR *p2, uint32_t p3, char *p4, char *p5, long long *p6) { (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; }
@@ -802,7 +817,20 @@ uint64_t FUN_14005dec4(longlong param_1)
     return *(uint64_t *)(*(longlong *)(param_1 + 0x40) + 0x20);
   return 0;
 }
-uint64_t FUN_14005ded4(void) { return 0; }
+/* @0x14005ded4 size=157 — 启动时前台化窗口(直移) */
+void FUN_14005ded4(void *param_1)
+{
+  STARTUPINFOW local_78; memset(&local_78,0,0x68);
+  local_78.cb = 0x68;
+  GetStartupInfoW((void *)&local_78);
+  if ((((uint8_t)local_78.dwFlags & 1) == 0) || (local_78.wShowWindow != 0)) {
+    ShowWindow(param_1,5);
+    SetWindowPos(param_1,0,0,0,0,0,3);
+    SetActiveWindow(param_1);
+    SetForegroundWindow(param_1);
+    BringWindowToTop(param_1);
+  }
+}
 uint64_t PECMD_NextRandomSeed(void) { return 0; }
 void FUN_14005e7dc(uint64_t *param_1) { (void)param_1; }
 uint64_t FUN_140061470(void) { return 0; }
@@ -1183,7 +1211,7 @@ uint64_t GetProcessTimes(void) { return 0; }
 uint64_t GetScrollInfo(void) { return 0; }
 int GetScrollPos(void *w, int n) { (void)w;(void)n; return 0; }
 uint64_t GetScrollRange(void) { return 0; }
-uint64_t GetStartupInfoW(void) { return 0; }
+void GetStartupInfoW(void *d) { (void)d; }
 uint64_t GetStdHandle(void) { return 0; }
 void *GetStockObject(int i) { (void)i; return (void *)0; }
 uint64_t GetSubMenu(void) { return 0; }
@@ -1308,7 +1336,7 @@ uint64_t SearchPathW(void) { return 0; }
 uint64_t SelectObject(void) { return 0; }
 uint64_t SendMessageTimeoutW(void) { return 0; }
 intptr_t SendMessageW(void *h, UINT m, uint64_t w, uint64_t l) { (void)h;(void)m;(void)w;(void)l; return 0; }
-uint64_t SetActiveWindow(void) { return 0; }
+uint64_t SetActiveWindow(void *h) { (void)h; return 0; }
 uint64_t SetBkColor(void) { return 0; }
 uint64_t SetBkMode(void) { return 0; }
 uint64_t SetClipboardData(void) { return 0; }
@@ -1318,13 +1346,13 @@ uint64_t SetCursor(void) { return 0; }
 uint64_t SetCursorPos(void) { return 0; }
 uint64_t SetDIBits(void) { return 0; }
 uint64_t SetDlgItemTextW(void) { return 0; }
-uint64_t SetEndOfFile(void) { return 0; }
+int SetEndOfFile(void *h) { (void)h; return 1; }
 int SetEnvironmentVariableW(const WCHAR *n, const WCHAR *v) { (void)n;(void)v; return 0; }
 int SetEvent(void *h) { (void)h; return 0; }
 uint64_t SetFilePointer(void) { return 0; }
 uint64_t SetFilePointerEx(void) { return 0; }
 uint64_t SetFocus(void) { return 0; }
-uint64_t SetForegroundWindow(void) { return 0; }
+uint64_t SetForegroundWindow(void *h) { (void)h; return 0; }
 void SetLastError(DWORD e) { (void)e; }
 uint64_t SetLayeredWindowAttributes(void) { return 0; }
 uint64_t SetLocalTime(void) { return 0; }
@@ -2526,7 +2554,14 @@ ulonglong PECMD_IsVisibleKeyword(ushort *param_1){    ushort uVar1; ulonglong uV
 }
 
 uint64_t FUN_140062fc4(void){ return 0; }
-uint64_t FUN_140060a74(void){ return 0; }
+/* @0x140060a74 size=31 — 相邻双字节对换(直移) */
+void FUN_140060a74(uint8_t *param_1,int param_2)
+{
+  uint8_t *end = param_1 + (long long)param_2 - 1;
+  for (; param_1 < end; param_1 += 2) {
+    uint8_t u = *param_1; *param_1 = param_1[1]; param_1[1] = u;
+  }
+}
 uint64_t PECMD_ShowWindowMode(void){ return 0; }
 uint64_t PECMD_SendPingPacket(void){ return 0; }
 uint64_t PECMD_InitWinsockOnce(void){ return 0; }
@@ -4241,7 +4276,13 @@ LAB_140078d61:
 
 
 /* ---- wave-current support: 07d0ac/07e01c ---- */
-int  FUN_14005d534(undefined8 param_1, LPCWSTR param_2, LPCWSTR param_3) { (void)param_1;(void)param_2;(void)param_3; return 0; }  /* 脚本串入队 (leaf stub) */
+/* @0x14005d534 size=34 — 非空名则设置环境变量(直移) */
+int FUN_14005d534(undefined8 param_1, LPCWSTR param_2, LPCWSTR param_3)
+{
+  (void)param_1;
+  if (*param_2 == 0) return 0;
+  return SetEnvironmentVariableW(param_2,param_3);
+}
 void FUN_14001e6bc(longlong *param_1, LPCWSTR param_2, LPCWSTR param_3, longlong param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; }  /* 内联命令执行 (leaf stub) */
 
 /* @0x14007d0ac 预处理 &/&& 命令前缀后入队执行 (decompiled.c 直移) */
