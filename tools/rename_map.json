@@ -1129,5 +1129,6 @@
   "FUN_1400705ac": "PECMD_DispatchGlobalMessage",
   "FUN_1400e57c0": "PECMD_InitWinObjBase",
   "FUN_1400e9048": "PECMD_InitObjSlot2A",
-  "FUN_140006554": "PECMD_EnumDropFiles"
+  "FUN_140006554": "PECMD_EnumDropFiles",
+  "FUN_140025ce0": "PECMD_ParseScopeKeywords"
 }

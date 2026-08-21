@@ -186,7 +186,7 @@ extern void FUN_14004c0bc(uint64_t param_1, uint64_t param_2, void *param_3,
 extern void PECMD_ReleaseSlotObject(int64_t *param_1);                  /* @0x1400e56e4 */
 /* ---- 本批次(12函数)还原新增 extern 声明 ---- */
 extern WCHAR *PECMD_SkipLeadingControls(WCHAR **pp);                     /* @0x1400170b0 */
-extern void FUN_140025ce0(int64_t *a, char *b, uint8_t *c, char *d, char *e, char *f);
+extern void PECMD_ParseScopeKeywords(int64_t *a, char *b, uint8_t *c, char *d, char *e, char *f);
 extern void PECMD_ReportPelogonStatus(int64_t *a, int b, int c);          /* 等待/刷新 (TODO: 与核心b1签名核对) */
 extern HWND g_hPelogonWnd;                                 /* 镜像/加载完成指针 */
 extern uint8_t g_u8CF83;
@@ -1219,7 +1219,7 @@ uint64_t PECMD_LaunchCommand(uint16_t *param_1)
     local_37[0] = 1;
     local_res10[0] = '\0';
     g_flagCF86 = (uint8_t)cVar6;
-    FUN_140025ce0((int64_t *)&local_res8, &local_38, local_res20, local_37, local_res18,
+    PECMD_ParseScopeKeywords((int64_t *)&local_res8, &local_38, local_res20, local_37, local_res18,
                   local_res10);
     cVar3 = local_res10[0];
     if (*local_res8 == 0) {

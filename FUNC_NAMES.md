@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140025ce0 | FUN_140025ce0 | PECMD_ParseScopeKeywords |
 | 0x1400e57c0 | FUN_1400e57c0 | PECMD_InitWinObjBase |
 | 0x1400e9048 | FUN_1400e9048 | PECMD_InitObjSlot2A |
 | 0x140006554 | FUN_140006554 | PECMD_EnumDropFiles |

@@ -2771,7 +2771,7 @@ char *PTR_s__AutoDisverify_14013a2c0;
 uint64_t SetupDiGetDeviceInstallParamsW(void){ return 0; }
 uint64_t PECMD_UpdateDriverSigning(int a, int b){ (void)a;(void)b; return 0; }
 /* @0x140025ce0 size=— 位置/状态关键字分派(直移) */
-void FUN_140025ce0(int64_t *param_1, uint8_t *param_2, uint8_t *param_3, uint8_t *param_4, char *param_5, uint8_t *param_6)
+void PECMD_ParseScopeKeywords(int64_t *param_1, uint8_t *param_2, uint8_t *param_3, uint8_t *param_4, char *param_5, uint8_t *param_6)
 {
   uint8_t local_res8[8]; uint8_t *puVar5 = local_res8;
   if ((uintptr_t)param_6 != 0) puVar5 = param_6;
