@@ -1765,7 +1765,7 @@ int PostMessageW(void *w, unsigned int m, uint64_t a, uint64_t b) { (void)w;(voi
 uint64_t PostQuitMessage(void) { return 0; }
 uint64_t Process32FirstW(void) { return 0; }
 uint64_t Process32NextW(void) { return 0; }
-int PtInRect(const void *r, void *p) { (void)r;(void)p; return 0; }
+int PtInRect(const void *r, POINT p) { (void)r;(void)p; return 0; }
 uint64_t QueryDosDeviceW(void) { return 0; }
 uint64_t SetVolumeMountPointW(void) { return 0; }
 uint64_t GetVolumeNameForVolumeMountPointW(void) { return 0; }
@@ -2451,8 +2451,8 @@ void PECMD_TrimWorkingSetAndExec(LPCWSTR param_1)
 {
   extern void *DAT_14013cf70;
   extern int64_t FUN_14004EB34(void *, uint64_t, const WCHAR *);
-  FUN_14004EB34(DAT_14013cf70,0,param_1);
   SetProcessWorkingSetSize((void *)(uintptr_t)GetCurrentProcess(),(uint64_t)-1,(uint64_t)-1);
+  FUN_14004EB34(DAT_14013cf70,0,param_1);
 }
 
 /* 数据 / 虚表 / API 槽符号桩 */
@@ -4247,7 +4247,7 @@ undefined4 PECMD_ModalDialogPump(longlong *param_1,ulonglong param_2)
               GetWindowRect(pHVar9,&local_98);
               pt.y = local_res8.y;
               pt.x = local_res8.x;
-              BVar8 = PtInRect(&local_98,&pt);
+              BVar8 = PtInRect(&local_98,pt);
               if (BVar8 != 0) {
                 SendMessageW(pHVar9,0x44e,(WPARAM)&local_68,param_1[4]);
               }
@@ -4307,7 +4307,7 @@ undefined4 PECMD_WindowRectHitTest(HWND a, POINT b)
 {
   RECT r; memset(&r,0,4*4);
   GetWindowRect((void *)a,&r);
-  return PtInRect(&r,(void *)&b);
+  return PtInRect(&r,b);
 }
 /* @0x1400e6458 size=49 — 枚举窗口找当前进程首个命中(直移) */
 void *PECMD_FindWindowByPid(longlong param_1)

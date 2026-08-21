@@ -3527,3 +3527,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
   3) CRT 142(0x14010-11): 多为无调用自定义(数学内联), 对调用点影响≈0; wchar 族 2B 专属按项目语义保留。
   4) 登记巨型 4: 084a5c/0b2ca8/0bb718/034788(type-not-settling/C++vtable, 需 Windows 运行时对照)。
 - 工具: tools/p5_residue.json(清单) + pe_registry/asm 归档, 可续译。
+## 121. w1 延迟报告复核: 3 处保真修正并入(全绿)
+- 06a7f4 ParseSizeAndSkipWs: 换真结构(用参数而非&pp, 条件跳空白, 返回真值)并签名(int64_t*,uint64_t*)对齐 core extern。
+- 0e6314 WindowRectHitTest + PtInRect 桩改按值 POINT(真 Win32 签名), 两处调用点同步。
+- 004fd4 TrimWorkingSetAndExec: 语句序与 decompiled 一致(先压缩后执行)。
