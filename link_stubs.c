@@ -139,6 +139,7 @@ void FUN_14006e8f4(int64_t a);
 DWORD FUN_14005c394(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
+void *DAT_14013e1f8; void *DAT_14013e200;
 int SetThreadDesktop(void *d); int SwitchDesktop(void *d); int CloseDesktop(void *d);
 DWORD GetCurrentDirectoryW(DWORD n, WCHAR *buf);
 DWORD GetEnvironmentVariableW(const WCHAR *n, WCHAR *buf, DWORD sz);
@@ -703,7 +704,7 @@ short *FUN_1400547bc(longlong *param_1, longlong *param_2, longlong *param_3, sh
     FUN_140003a20(param_1, param_3, 1);
     return psVar1;
 }
-uint64_t FUN_14005b0b8(void) { return 0; }
+uint64_t FUN_14005b0b8(void *a) { (void)a; return 0; }
 void FUN_14005b104(void *ps) { (void)ps; }
 int FUN_14005b184(char *a, int64_t b, int64_t c) { (void)a;(void)b;(void)c; return 0; }
 undefined8 PECMD_MatchPrefixN(ushort *param_1, undefined8 *param_2, int param_3){
@@ -1113,9 +1114,16 @@ uint64_t PECMD_SetCheckVariable(void) { return 0; }
 uint64_t PECMD_NotifyMainWindowRefresh(void) { return 0; }
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_1400b1724(void) { return 0; }
-uint64_t PECMD_CreateFont(void) { return 0; }
-uint64_t PECMD_ParseHexOrDec(void) { return 0; }
-uint64_t FUN_1400c11c0(void) { return 0; }
+uint64_t PECMD_CreateFont(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
+int PECMD_ParseHexOrDec(long long *a, uint64_t *b) { (void)a; (void)b; return 1; }
+/* @0x1400c11c0 size=52 — 十六进制/十进制解析 bool 封装(直移) */
+bool FUN_1400c11c0(long long *param_1, int *param_2)
+{
+  uint64_t res[3]; res[0] = (uint64_t)*param_2;
+  bool b = PECMD_ParseHexOrDec(param_1,res);
+  if ((int)b > 0) { *param_2 = (int)res[0]; return 1; }
+  return 0;
+}
 uint64_t FUN_1400d2e90(void) { return 0; }
 uint64_t FUN_1400e3cd4(const uint16_t *param_1, uint64_t *param_2, int64_t *param_3) { (void)param_1;(void)param_2;(void)param_3; return 0; }
 uint64_t FUN_1400e3f80(void) { return 0; }
@@ -1254,7 +1262,7 @@ int GetMessageW(void *m, void *w, unsigned int a, unsigned int b) { (void)m;(voi
 unsigned long GetModuleFileNameW(void *h, WCHAR *buf, unsigned long n) { (void)h;(void)buf;(void)n; return 0; }
 void *GetModuleHandleA(const char *m) { (void)m; return (void *)0; }
 HMODULE GetModuleHandleW(const WCHAR *m) { (void)m; return (HMODULE)0; }
-uint64_t GetObjectW(void) { return 0; }
+uint64_t GetObjectW(uint64_t a, uint64_t b, void *c) { (void)a;(void)b;(void)c; return 0; }
 HWND GetParent(HWND w) { (void)w; return (HWND)0; }
 HWND GetActiveWindow(void) { return (HWND)0; }
 uint64_t GetPixel(void) { return 0; }
@@ -1669,7 +1677,18 @@ uint64_t FUN_1400540a8(void) { return 0; }
 uint64_t PECMD_InitDragDrop(void) { return 0; }
 uint64_t PECMD_IsSetupClass(void) { return 0; }
 uint64_t PECMD_SetControlState(void) { return 0; }
-uint64_t FUN_1400b89dc(int64_t a, void *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
+/* @0x1400b89dc size=139 — 基于字体对象构建 LOGFONT 并建新字体(直移) */
+void *FUN_1400b89dc(int64_t a, void *b, const void *c)
+{
+  uint8_t lb[0x5c]; uint8_t *lp = lb;
+  memset(lp,0,0x5c);
+  FUN_14005b0b8((uint64_t *)lp);
+  *(uint32_t *)(lp + 16) = 400;
+  GetObjectW((uint64_t)a,0x5c,lp);
+  *(uint32_t *)(lp + 4) = 0;
+  *(uint8_t *)(lp + 0x17) = 1;
+  return (void *)(uintptr_t)PECMD_CreateFont((int *)lp,(double *)b,(void *)c);
+}
 uint64_t PECMD_ShowContextMenu(void) { return 0; }
 uint64_t *FUN_1400e57c0(uint64_t *a) { (void)a; return a; }
 uint64_t PECMD_GetControlFont(void) { return 0; }
@@ -2717,7 +2736,13 @@ undefined8 *PECMD_CreateNamedLock(const WCHAR *param_1, char param_2, uint32_t *
 
 uint64_t FUN_1400e4d84(void) { return 0; }
 uint64_t PECMD_LoadRasApi(void) { return 0; }
-uint64_t FUN_1400e4e94(void) { return 0; }
+/* @0x1400e4e94 size=71 — 设虚表并关句柄(直移) */
+void FUN_1400e4e94(uint64_t *param_1)
+{
+  *param_1 = (uint64_t)&PTR_FUN_14012b1c0;
+  if (DAT_14013e1f8 != 0) { CloseHandle(DAT_14013e1f8); DAT_14013e1f8 = 0; }
+  if (DAT_14013e200 != 0) { CloseHandle(DAT_14013e200); DAT_14013e200 = 0; }
+}
 uint64_t FUN_1400e5248(void) { return 0; }
 uint64_t PECMD_FindRasConnection(void) { return 0; }
 uint64_t PECMD_EnumRasConnections(void) { return 0; }
@@ -3444,7 +3469,13 @@ undefined4 FUN_1400e91f0(longlong *param_1,ulonglong param_2)
 
 /* ---- wave-current p4 restore support globals + leaf stubs ---- */
 int DAT_14013d7fc = 0x22a6e;   /* 0x14013d7fc 原始: 6e 2a 02 00 (字符串表/虚拟键偏移表基址) */
-undefined4 FUN_1400e6314(HWND a, POINT b) { (void)a;(void)b; return 0; }      /* 命中判定 (leaf stub) */
+/* @0x1400e6314 size=59 — 窗口矩形命中判定(直移) */
+undefined4 FUN_1400e6314(HWND a, POINT b)
+{
+  RECT r; memset(&r,0,4*4);
+  GetWindowRect((void *)a,&r);
+  return PtInRect(&r,(void *)&b);
+}
 void      *FUN_1400e6458(longlong a) { (void)a; return (void*)0; }            /* 命中窗口查找 (leaf stub) */
 void       FUN_1400f172c(longlong *a, UINT b, ulonglong c, ulonglong *d, longlong e, int f, undefined8 *g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; } /* 消息派发 (leaf stub) */
 void       FUN_1400613fc(void) { }                                            /* 键状态刷新 (leaf stub) */
