@@ -3792,7 +3792,7 @@ const uint16_t *FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, ch
 int      FUN_1400510e8(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
 int      FUN_1400512f4(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
 /* @0x1400513b8 size=— 正则式括号组解析(直移) */
-int FUN_1400513b8(int *a, uint16_t **b, char *c)
+int PECMD_ParseRegexGroup(int *a, uint16_t **b, char *c)
 {
   *c = 0;
   uint16_t *p = *b;

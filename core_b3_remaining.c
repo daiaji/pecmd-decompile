@@ -590,7 +590,7 @@ extern LPCWSTR  FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, ch
 /* ---- 恢复 PECMD_ParseVarExpressionElement(表达式/参数解析) 所需的辅助 extern ---- */
 extern int      FUN_1400510e8(int *a, uint16_t **b, char *c);   /* @0x1400510e8 花括号表达式 */
 extern int      FUN_1400512f4(int *a, uint16_t **b, char *c);   /* @0x1400512f4 圆括号表达式 */
-extern int      FUN_1400513b8(int *a, uint16_t **b, char *c);   /* @0x1400513b8 方括号表达式 */
+extern int      PECMD_ParseRegexGroup(int *a, uint16_t **b, char *c);   /* @0x1400513b8 方括号表达式 */
 extern uint64_t PECMD_MatchKeywordTable(int *a, uint16_t **b);            /* @0x140053be8 转义解析 */
 
 /* ---- 恢复 PECMD_ParsePercentControl(百分比/字体控制消息) 所需的辅助 extern ---- */
@@ -5186,7 +5186,7 @@ uint64_t PECMD_ParseVarExpressionElement(int *param_1, WCHAR **param_2, char *pa
     }
     if (*pwVar1 == L'[') {
         *param_2 = pwVar1 + 1;
-        iVar2 = FUN_1400513b8(param_1, param_2, param_3);
+        iVar2 = PECMD_ParseRegexGroup(param_1, param_2, param_3);
         return (uint32_t)iVar2;
     }
     if (*pwVar1 == L'\\') {
