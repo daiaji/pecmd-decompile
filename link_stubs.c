@@ -1200,7 +1200,7 @@ uint64_t PECMD_ParseIntegerString(long long *param_1, uint64_t *param_2)
     char      cVar5;
 
     plVar4 = param_1;
-    PECMD_SkipLeadingControlChars(param_1);
+    PECMD_SkipLeadingControlChars((long long *)param_1);
     puVar2 = (uint16_t *)*plVar4;
     cVar5 = '\0';
     if (*puVar2 == 0x2d) { puVar2 = puVar2 + 1; cVar5 = (char)-1; }
@@ -1294,7 +1294,27 @@ void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2)
     GetEnvironmentVariableW(param_1,(uint16_t *)(uintptr_t)*param_2,n + 1);
   }
 }
-void FUN_14006fd1c(int64_t *a,int64_t *b,int64_t *c,int64_t *d,int64_t *e,int64_t *f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
+/* @0x14006fd1c size=— 冒号分隔字段切分(直移) */
+void FUN_14006fd1c(longlong *param_1,longlong *param_2,longlong *param_3,longlong *param_4,longlong *param_5,longlong *param_6)
+{
+  longlong *pl = param_1;
+  PECMD_SkipLeadingControlChars((long long *)param_1);
+  *(uint16_t *)*param_6 = 0;
+  PECMD_SplitTokenTrimWs(pl,param_6,0x3b);
+  if (*(short *)*param_1 == 0x3b) *param_1 = (longlong)((short *)*param_1 + 1);
+  PECMD_SkipLeadingControlChars(param_1);
+  longlong v = *param_6;
+  *param_2 = v; *param_3 = v; *param_4 = v;
+  short *p = (short *)*param_3;
+  while (*p != 0 && *(short *)*param_3 != 0x3a) { p = (short *)*param_3 + 1; *param_3 = (longlong)p; }
+  if (*(short *)*param_3 != 0) { *(short *)*param_3 = 0; *param_3 = *param_3 + 2; }
+  p = (short *)*param_3;
+  while ((*param_4 = (longlong)p, *p != 0 && *(short *)*param_4 != 0x3a)) { p = (short *)*param_4 + 1; }
+  if (*(short *)*param_4 != 0) { *(short *)*param_4 = 0; *param_4 = *param_4 + 2; }
+  p = (short *)*param_4;
+  while ((*param_5 = (longlong)p, *p != 0 && *(short *)*param_5 != 0x3a)) { p = (short *)*param_5 + 1; }
+  if (*(short *)*param_5 != 0) { *(short *)*param_5 = 0; *param_5 = *param_5 + 2; }
+}
 /* @0x140070154 size=— 堆分配 0xaa55 魔法串(直移) */
 longlong *PECMD_AllocMagicString(LPCWSTR param_1)
 {
