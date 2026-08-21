@@ -4,6 +4,8 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400a41fc | FUN_1400a41fc | PECMD_NamedObjLookupOrCreate |
+| 0x140061ffc | FUN_140061ffc | PECMD_CreateNamedMutex |
 | 0x140018d8c | FUN_140018d8c | PECMD_TlsLogWrite |
 | 0x14001ea18 | FUN_14001ea18 | PECMD_LoadEncodedResource |
 | 0x140025ce0 | FUN_140025ce0 | PECMD_ParseScopeKeywords |

@@ -1132,5 +1132,7 @@
   "FUN_140006554": "PECMD_EnumDropFiles",
   "FUN_140025ce0": "PECMD_ParseScopeKeywords",
   "FUN_14001ea18": "PECMD_LoadEncodedResource",
-  "FUN_140018d8c": "PECMD_TlsLogWrite"
+  "FUN_140018d8c": "PECMD_TlsLogWrite",
+  "FUN_1400a41fc": "PECMD_NamedObjLookupOrCreate",
+  "FUN_140061ffc": "PECMD_CreateNamedMutex"
 }

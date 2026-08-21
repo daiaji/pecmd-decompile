@@ -1113,7 +1113,7 @@ void PECMD_WaitTickCount(void)
 }
 void FUN_140061c44(void) { }
 /* @0x140061ffc size=117 — 全局互斥锁(带安全描述符)(直移) */
-uint64_t FUN_140061ffc(uint64_t a, int b, uint16_t *c)
+uint64_t PECMD_CreateNamedMutex(uint64_t a, int b, uint16_t *c)
 {
   SECURITY_ATTRIBUTES local_48; uint8_t sd[0x27+1]; long long res[4];
   PECMD_EnableTokenPrivilege((const unsigned short *)L"SeCreateGlobalPrivilege",2,0x20);
@@ -4011,7 +4011,7 @@ void    *FUN_14009c720(void *a, longlong b, int c, void *d, int e, int f, int g,
 void    *FUN_14009cacc(void *a, longlong b, int c, void *d, int e, int f, int g, int h, void *i, void *j, uint32_t k, WCHAR *l) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k;(void)l; return (void*)0; }
 uint64_t FUN_14009d4b8(uint64_t a, uint64_t b, const WCHAR *c, int16_t d, const WCHAR *e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
 /* @0x1400a41fc size=— 命名对象注册表查找/登记(直移) */
-void *FUN_1400a41fc(const uint16_t *a)
+void *PECMD_NamedObjLookupOrCreate(const uint16_t *a)
 {
   EnterCriticalSection((void *)&DAT_14013e190);
   longlong base = DAT_14013e118;
@@ -4037,7 +4037,7 @@ void *FUN_1400a41fc(const uint16_t *a)
     *nw = 0;
     PECMD_StrDupAssign((uint16_t **)(nw + 1),(const uint16_t *)a);
     *(uint32_t *)(nw + 2) = 1;
-    *nw = (uint64_t)FUN_140061ffc(0,0,0);
+    *nw = (uint64_t)PECMD_CreateNamedMutex(0,0,0);
   }
   longlong j = 0;
   if (cnt > 0) {
@@ -4065,7 +4065,7 @@ void *PECMD_CreateNamedWaitObj(const WCHAR *a, char b)
     *(uint32_t *)((long long)p + 0x14) = 0;
     *(uint8_t *)(p + 2) = 0;
     *p = (uint64_t)&PTR_FUN_140128ed0;
-    uint64_t *p2 = (uint64_t *)FUN_1400a41fc(a);
+    uint64_t *p2 = (uint64_t *)PECMD_NamedObjLookupOrCreate(a);
     p[3] = (uint64_t)(uintptr_t)p2;
     p[1] = *p2;
   }

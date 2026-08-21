@@ -472,7 +472,7 @@ extern HFONT PECMD_BuildFontFromObject(HANDLE param_1, void *param_2, LPCWSTR pa
 extern void PECMD_DestroyWindowObj(uint64_t *param_1);              /* @0x1400e8940 */
 extern void *PECMD_FreeResourceObject(void *param_1, unsigned int param_2); /* @0x14005b888 */
 extern void PECMD_ReleaseObject_2f74(int64_t *param_1);               /* @0x140062f74 */
-extern uint64_t FUN_140061ffc(uint64_t param_1, BOOL param_2, LPCWSTR param_3); /* @0x140061ffc */
+extern uint64_t PECMD_CreateNamedMutex(uint64_t param_1, BOOL param_2, LPCWSTR param_3); /* @0x140061ffc */
 extern uint8_t *PECMD_LoadEncodedResource(HMODULE param_1, LPCWSTR param_2, LPCWSTR param_3,
                               int64_t *param_4, uint *param_5);   /* @0x14001ea18 */
 extern uint32_t *PECMD_ClearStructFields(uint32_t *param_1);         /* @0x140017f34 */
@@ -14440,7 +14440,7 @@ uint64_t *PECMD_CreateGlobalMutex(LPCWSTR param_1, char param_2, uint *param_3)
             *(uint32_t *)((int64_t)puVar2 + 0x14) = 0;
             *(uint8_t *)(puVar2 + 2) = 0;
             *puVar2 = (uint64_t)(uintptr_t)PTR_FUN_140126060;
-            uVar3 = FUN_140061ffc(0, 0, param_1);
+            uVar3 = PECMD_CreateNamedMutex(0, 0, param_1);
             puVar2[1] = uVar3;
         }
     }
@@ -14457,7 +14457,7 @@ uint64_t *PECMD_CreateGlobalMutex(LPCWSTR param_1, char param_2, uint *param_3)
         }
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         SetLastError(0);
-        uVar3 = FUN_140061ffc(0, 0, param_1);
+        uVar3 = PECMD_CreateNamedMutex(0, 0, param_1);
         puVar2[1] = uVar3;
         DVar1 = GetLastError();
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -14473,7 +14473,7 @@ uint64_t *PECMD_CreateGlobalMutex(LPCWSTR param_1, char param_2, uint *param_3)
     lVar4 = (int64_t)puVar2[1];
     while (lVar4 == 0) {
         PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0x0);
-        lVar4 = (int64_t)FUN_140061ffc(0, 0, param_1);
+        lVar4 = (int64_t)PECMD_CreateNamedMutex(0, 0, param_1);
         puVar2[1] = (uint64_t)lVar4;
     }
     if (param_2 != '\0') {
