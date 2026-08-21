@@ -3497,3 +3497,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: 前向声明模式固化(先调用后定义→顶部 fwd decl)、RegSetValueExW 补桩、HKEY/LPCWSTR 类型实参。
 ## 108. P4 自直移批3：4 个(023544 清调试日志/05d534 环境变量/05ded4 前台化/060a74 字节对换)绿
 - 修复: GetStartupInfoW/SetActiveWindow/SetEndOfFile/SetForegroundWindow 桩改带参签名; CloseHandle (void*) 强转。
+## 109. P4 自直移批4：4 个(061ffc 全局互斥/063b00 向量槽/064a88 数字解析/0679b0 short解析)绿
+- 修复: CreateMutexW 桩带参、05e7dc (uint64_t*) 实参; 补 FUN_140063978/0678f0 桩。

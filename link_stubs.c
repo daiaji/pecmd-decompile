@@ -151,6 +151,8 @@ void FUN_140063694(void *p, long long n);
 void FUN_14005b104(void *ps);
 void PECMD_DialogBeepNotify(int64_t a, int b);
 void FUN_14005daf8(int64_t a, int *b, int *c, int *d, int *e);
+void FUN_140063978(int64_t *a, int64_t *b, unsigned int c, unsigned int d) { (void)a;(void)b;(void)c;(void)d; }
+int FUN_1400678f0(void *a, long long *b, short c) { (void)a;(void)b;(void)c; return 0; }
 /* ---- 早期放置的 wave-current 还原体所需 Win32 前置声明 (定义见字母桩区) ---- */
 void     GetStartupInfoW(void *d);
 uint64_t SetActiveWindow(void *h);
@@ -307,7 +309,7 @@ uint64_t CreateFileA(void) { return 0; }
 uint64_t CreateFontW(void) { return 0; }
 uint64_t CreateHardLinkW(void) { return 0; }
 uint64_t CreateMutexA(void) { return 0; }
-uint64_t CreateMutexW(void) { return 0; }
+uint64_t CreateMutexW(void *a, int b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 uint64_t CreatePen(void) { return 0; }
 uint64_t CreatePopupMenu(void) { return 0; }
 uint64_t CreateProcessW(void) { return 0; }
@@ -835,7 +837,19 @@ uint64_t PECMD_NextRandomSeed(void) { return 0; }
 void FUN_14005e7dc(uint64_t *param_1) { (void)param_1; }
 uint64_t FUN_140061470(void) { return 0; }
 void FUN_140061c44(void) { }
-uint64_t FUN_140061ffc(uint64_t a, int b, uint16_t *c) { (void)a;(void)b;(void)c; return 0; }
+/* @0x140061ffc size=117 — 全局互斥锁(带安全描述符)(直移) */
+void FUN_140061ffc(uint64_t a, int b, uint16_t *c)
+{
+  SECURITY_ATTRIBUTES local_48; uint8_t sd[0x27+1]; long long res[4];
+  PECMD_EnableTokenPrivilege((const unsigned short *)L"SeCreateGlobalPrivilege",2,0x20);
+  memset(res,0,0x27); sd[0]=0;
+  local_48.bInheritHandle = 0;
+  local_48.lpSecurityDescriptor = sd;
+  local_48.nLength = 0x18;
+  FUN_14005e7dc((uint64_t *)&local_48.lpSecurityDescriptor);
+  CreateMutexW(&local_48,b,c);
+  (void)a;
+}
 void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c) { (void)a;(void)b;(void)c; }
 void FUN_1400633a8(void **ps, int64_t len) { (void)ps;(void)len; }
 uint16_t *FUN_140063620(uint16_t **out) { (void)out; return (uint16_t *)0; }
@@ -843,7 +857,14 @@ uint16_t *FUN_14006375c(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src
 WCHAR *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b){ (void)ps;(void)src;(void)a;(void)b; return (WCHAR*)0; } /* @0x1400637dc 字符串追加 */
 void FUN_1400639f0(int64_t *a, int64_t *b, int64_t *c, void *d, int e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
 void FUN_140063a6c(uint64_t *param_1, int64_t *param_2, uint64_t *param_3, uint param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; }
-int64_t FUN_140063b00(int64_t param_1, int64_t *param_2, int64_t *param_3, unsigned int param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
+/* @0x140063b00 size=98 — 向量槽指针计算(必要时扩容)(直移) */
+int64_t FUN_140063b00(int64_t param_1, int64_t *param_2, int64_t *param_3, unsigned int param_4)
+{
+  if (param_1 < 0) param_1 = 0;
+  if (*param_3 - 1 <= param_1)
+    FUN_140063978(param_2,param_3,param_4,(unsigned int)(param_1 - *param_3) + 2);
+  return (uint64_t)param_4 * (uint64_t)param_1 + *param_2;
+}
 longlong *FUN_140063b64(longlong *param_1){
     longlong lVar1,lVar4; int iVar2; undefined8 *puVar3;
     param_1[2]=0; *param_1=0; param_1[1]=1;
@@ -873,7 +894,13 @@ void FUN_14006764c(longlong *param_1, longlong *param_2, short param_3, short pa
     *(undefined2*)(uintptr_t)(*param_2+(longlong)iVar4*2)=0;
 }
 
-uint64_t FUN_1400679b0(void) { return 0; }
+/* @0x1400679b0 size=43 — short 解析并写回(直移) */
+void FUN_1400679b0(uint64_t *param_1, int *param_2, short param_3)
+{
+  long long res[3]; res[0] = (long long)*param_2;
+  int r = FUN_1400678f0(param_1,res,param_3);
+  if (r > 0) *param_2 = (int)res[0];
+}
 /* PECMD_ParseIntegerString — 解析带符号/进制前缀 (0x/0o/0b) 的十进制-整数字串.
    跳过前导空白后解析并写回 *param_2; 失败返回 0. */
 /* @0x14005b154 size=48 — 跳过前导控制/空白字符(直移) */
@@ -2618,7 +2645,14 @@ void PECMD_InsertControlObject(WPARAM param_1, longlong param_2, undefined8 *par
     }
 }
 
-long long FUN_140064a88(uint16_t *s) { (void)s; return 0; } /* 解析十进制数字串 */
+/* @0x140064a88 size=47 — 宽串十进制数字解析(直移) */
+long long FUN_140064a88(uint16_t *s)
+{
+  long long v = 0;
+  for (; (uint16_t)(*s - 0x30) < 10; s++)
+    v = (long long)(int)(*s - 0x30) + v * 10;
+  return v;
+}
 uint64_t PECMD_StreamClose(void) { return 0; }
 uint64_t PECMD_ConvertStringEncoding(void) { return 0; }
 uint64_t PECMD_DeviceCheckReady(void) { return 0; }
