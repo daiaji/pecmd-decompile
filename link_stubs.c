@@ -96,6 +96,8 @@ FARPROC GetProcAddress(void *hm, const char *name);
 unsigned long GetTickCount(void);
 uint64_t GetProcessHeap(void);
 int64_t *PECMD_AssignString(int64_t *, const uint16_t *);
+void *TlsGetValue(unsigned long idx);
+unsigned long DAT_14013c934; longlong DAT_14013cb18[8];
 uint64_t SizeofResource(uint64_t a, uint64_t b);
 uint64_t PECMD_EncodeDet(long long a, uint64_t b);
 uint64_t *PECMD_AssignAnsiString(uint64_t *, char *);
@@ -593,7 +595,36 @@ void PECMD_ReleaseCallbackObj(int *param_1)
   }
 }
 uint64_t PECMD_ScriptInit(void) { return 0; }
-void FUN_140018d8c(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b) { (void)ctx;(void)fmt;(void)a;(void)b; }
+/* FUN_140018d8c 前置: TLS 日志全局槽 (定义见后部 0x14013c934/0x14013cb18/0x14013cb41 区) */
+extern unsigned long DAT_14013c934;
+extern longlong DAT_14013cb18[8];
+extern uint8_t  DAT_14013cb41;
+void *TlsGetValue(unsigned long idx);
+/* @0x140018d8c size=— TLS 调试日志写者(直移) */
+void FUN_140018d8c(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b)
+{
+  (void)ctx;
+  uint64_t local_res18 = a, local_res20 = b;
+  longlong *plVar2 = (longlong *)(uintptr_t)TlsGetValue((uint64_t)DAT_14013c934);
+  longlong *plVar3 = (longlong *)&DAT_14013cb18;
+  if ((uintptr_t)plVar2 != 0 && *plVar2 != 0) plVar3 = plVar2;
+  if (*plVar3 != 0) {
+    EnterCriticalSection((void *)&DAT_14013e190);
+    if (*plVar3 != 0) {
+      if ((int)plVar3[3] - (int)plVar3[2] < 0x896) {
+        plVar3[3] = plVar3[2] + 0x10896;
+        PECMD_AllocString((uint64_t *)(plVar3 + 1),plVar3[2] + 0x10896);
+      }
+            va_list ap; memset(&ap,0,sizeof(ap)); memcpy(&ap,&local_res18,sizeof(ap));
+      int n = _vsnwprintf((uint16_t *)(plVar3[1] + plVar3[2] * 2),0x7fd,fmt,ap);
+      if (n < 0) n = 0;
+      plVar3[2] = plVar3[2] + (longlong)n;
+      *(uint16_t *)(plVar3[1] + plVar3[2] * 2) = 0;
+      if ((0x10000 < plVar3[2]) || DAT_14013cb41 != 0) PECMD_FlushLogBuffer(1,plVar3);
+    }
+    LeaveCriticalSection((void *)&DAT_14013e190);
+  }
+}
 uint64_t PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3, uint64_t *param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
 void FUN_14001a56c(int param_1)   /* @0x14001a56c 经 NTDLL.NtShutdownSystem 关机 (decompiled.c 直移) */
 {
