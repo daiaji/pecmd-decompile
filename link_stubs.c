@@ -49,6 +49,8 @@ int         lstrlenW(const WCHAR *);
 long long  *FUN_14005b154(long long *);
 long long   FUN_140064a34(uint16_t *);
 long long   FUN_140064a88(uint16_t *);
+long long   FUN_14006b8fc(long long *);
+void        FUN_1400ef91c(long long, uint, uint64_t);
 
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
@@ -113,7 +115,7 @@ uint64_t DefWindowProcW_exref(void) { return 0; }
 uint64_t DefineDosDeviceW(void) { return 0; }
 uint64_t DeleteDC(void) { return 0; }
 uint64_t DeleteFileW(void) { return 0; }
-uint64_t DeleteObject(void) { return 0; }
+int DeleteObject(void *obj) { (void)obj; return 1; }
 uint64_t DeleteService(void) { return 0; }
 uint64_t DestroyIcon(void) { return 0; }
 uint64_t DestroyMenu(void) { return 0; }
@@ -141,7 +143,7 @@ uint64_t EnumChildWindows(void) { return 0; }
 uint64_t EnumDisplayDevicesW(void) { return 0; }
 uint64_t EnumDisplaySettingsW(void) { return 0; }
 uint64_t EnumWindows(void) { return 0; }
-uint64_t ExitProcess(void) { return 0; }
+void ExitProcess(uint32_t code) { (void)code; }
 uint64_t ExitWindowsEx(void) { return 0; }
 uint64_t ExitWindowsEx_exref(void) { return 0; }
 uint64_t ExpandEnvironmentStringsW(void) { return 0; }
@@ -282,7 +284,7 @@ uint64_t FUN_140063a6c(void) { return 0; }
 int64_t FUN_140063b00(int64_t param_1, int64_t *param_2, int64_t *param_3, unsigned int param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
 uint64_t FUN_140063b64(void) { return 0; }
 uint64_t FUN_14006459c(void) { return 0; }
-uint64_t FUN_1400660ac(void) { return 0; }
+char FUN_1400660ac(char *a, long long *b, int c) { (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_1400668ec(void) { return 0; }
 uint64_t FUN_14006764c(void) { return 0; }
 uint64_t FUN_1400679b0(void) { return 0; }
@@ -370,13 +372,13 @@ void FUN_1400702b0(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; }
 uint16_t *FUN_1400702d4(uint16_t **out, const uint16_t *src, int64_t len) { (void)out;(void)src;(void)len; return (uint16_t *)0; }
 int64_t *FUN_1400702f0(int64_t *a, char *b, uint64_t c) { (void)a;(void)b;(void)c; return a; }
 int64_t *FUN_14007034c(int64_t *param_1, const uint16_t *param_2) { (void)param_1;(void)param_2; return (int64_t *)0; }
-uint64_t FUN_1400703e4(void) { return 0; }
+void FUN_1400703e4(long long *a, const WCHAR *b) { (void)a;(void)b; }
 uint64_t FUN_1400731d8(void) { return 0; }
 uint64_t FUN_14007443c(void) { return 0; }
 uint64_t FUN_1400745c8(void) { return 0; }
 uint64_t FUN_140077358(void) { return 0; }
 uint64_t FUN_140079f50(void) { return 0; }
-uint64_t FUN_14007a224(void) { return 0; }
+long long FUN_14007a224(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
 uint64_t FUN_14007bda8(void) { return 0; }
 uint64_t FUN_14007bf44(void) { return 0; }
 uint64_t FUN_14007d0ac(void) { return 0; }
@@ -482,7 +484,7 @@ uint64_t GetSystemMenu(void) { return 0; }
 uint64_t GetSystemMetrics(void) { return 0; }
 uint64_t GetSystemTimeAsFileTime(void) { return 0; }
 uint64_t GetThreadContext_exref(void) { return 0; }
-uint64_t GetTickCount(void) { return 0; }
+DWORD GetTickCount(void) { return 0; }
 uint64_t GlobalMemoryStatusEx(void) { return 0; }
 uint64_t GetTokenInformation(void) { return 0; }
 uint64_t GetVersion(void) { return 0; }
@@ -629,7 +631,7 @@ uint64_t SetSystemPowerState(void) { return 0; }
 uint64_t SetTextColor(void) { return 0; }
 uint64_t SetThreadContext_exref(void) { return 0; }
 uint64_t SetThreadPriority(void) { return 0; }
-uint64_t SetTimer(void) { return 0; }
+uint64_t SetTimer(HWND h, uint64_t id, UINT ms, TIMERPROC proc) { (void)h;(void)id;(void)ms;(void)proc; return 0; }
 uint64_t SetWindowLongPtrW(void) { return 0; }
 uint64_t SetWindowLongW(void) { return 0; }
 uint64_t SetWindowPos(void) { return 0; }
@@ -649,7 +651,7 @@ uint64_t SleepEx(void) { return 0; }
 uint64_t StartServiceCtrlDispatcherW(void) { return 0; }
 LPWSTR StrChrW(const WCHAR *s, WCHAR c) { (void)s;(void)c; return (LPWSTR)0; }
 uint64_t StrCmpNIA(void) { return 0; }
-uint64_t StrCmpNIW(void) { return 0; }
+int StrCmpNIW(const WCHAR *a, const WCHAR *b, int n) { (void)a;(void)b;(void)n; return 0; }
 uint64_t StrCmpNW(void) { return 0; }
 uint64_t StrCpyNW(void) { return 0; }
 uint64_t StrRChrW(void) { return 0; }
@@ -1087,7 +1089,75 @@ uint64_t SHGetPathFromIDListW(void){ return 0; }
 uint64_t StrCmpIW(void){ return 0; }
 
 /* --- r41 follow-up stubs (main-agent closure) --- */
-int FUN_1400efb08(int64_t *a, const uint16_t *b, uint64_t c, int *d, void *e, uint32_t f, unsigned long g){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; return 1; }
+/* FUN_1400efb08 — 创建 BUTTON 控件窗口并按其样式/标志初始化 (func: 按钮/超链接样式).
+   依赖: FUN_14006b8fc (控件尺寸计算), FUN_1400ef91c (按钮状态初始化, 内绕坐标/标志). */
+long long FUN_14006b8fc(long long *param_1) { (void)param_1; return 1; } /* 控件尺寸计算 (no-op) */
+void FUN_1400ef91c(long long param_1, uint param_2, uint64_t param_3) { (void)param_1;(void)param_2;(void)param_3; } /* 按钮状态初始化 (no-op) */
+bool FUN_1400efb08(long long *param_1, LPCWSTR param_2, uint64_t param_3, int *param_4,
+                  HWND param_5, uint param_6, DWORD param_7)
+{
+    int     iVar1, iVar2, iVar3, iVar4;
+    bool    bVar5, bVar6, bVar7;
+    LONG    LVar8;
+    LPWSTR  pWVar9;
+    HWND    pHVar10;
+    HRGN    hRgn;
+    uint64_t uVar11;
+    uint    uVar12, uVar13;
+
+    uVar12 = (uint)param_3;
+    uVar11 = 0;
+    bVar6 = false;
+    bVar5 = false;
+    if (((param_3 & 0x40) != 0) || ((*(uint8_t *)(param_1 + 0x1d) & 8) != 0)) {
+        bVar5 = true;
+    }
+    iVar1 = param_4[2];
+    iVar2 = *param_4;
+    iVar3 = param_4[3];
+    iVar4 = param_4[1];
+    LVar8 = GetWindowLongW(param_5, -6);
+    if ((-1 < (int)param_1[0x12]) || (-1 < (int)param_1[0x13])) {
+        bVar6 = true;
+    }
+    bVar7 = false;
+    uVar13 = (uint)(-((uint)(((uint8_t)(uVar12 & 0xfffffbbf) & 0xb) != 0xb)) & 2);
+    if ((!bVar5) &&
+       (((uVar13 != 0 && (bVar7 = bVar6, bVar6)) ||
+        (pWVar9 = StrStrW(param_2, (LPCWSTR)L"\r\n"), pWVar9 != (LPWSTR)0)))) {
+        bVar5 = true;
+    }
+    if (((-1 < *(int *)((long long)param_1 + 0x94)) || (-1 < *(int *)((long long)param_1 + 0x9c)) ) &&
+       (pWVar9 = StrChrW(param_2, (WCHAR)L'&'), pWVar9 != (LPWSTR)0)) {
+        uVar11 = (uint64_t)(uVar13 | 1);
+    }
+    if (param_7 == 0) { param_7 = 0; }
+    pHVar10 = CreateWindowExW(param_7, (LPCWSTR)L"BUTTON", param_2, uVar12 & 0xfffffbbf,
+                              *param_4, param_4[1], iVar1 - iVar2, iVar3 - iVar4, param_5,
+                              (HMENU)(uintptr_t)param_6, (HINSTANCE)(intptr_t)LVar8, (LPVOID)0);
+    param_1[4] = (long long)pHVar10;
+    FUN_14006b8fc(param_1);
+    if ((*(uint8_t *)(param_1 + 0x1d) & 1) != 0) {
+        hRgn = CreateEllipticRgn(0, 0, iVar1 - iVar2, iVar3 - iVar4);
+        SetWindowRgn((HWND)param_1[4], hRgn, 1);
+        DeleteObject(hRgn);
+    }
+    if (bVar5) {
+        *(uint8_t *)(param_1 + 0x1d) = *(uint8_t *)(param_1 + 0x1d) & 0xef;
+        *(uint8_t *)(param_1 + 0x1d) = *(uint8_t *)(param_1 + 0x1d) | ((uint8_t)(param_3 >> 10) & 1) << 4;
+        FUN_1400ef91c((long long)param_1, (uVar12 & 0x400) * 2, uVar11);
+        if ((bVar7) && (param_1[0x22] != 0)) {
+            *(long long **)(param_1[0x22] + 0xe0) = param_1;
+        }
+        if (((*(uint8_t *)(param_1 + 0x1d) & 8) != 0)) {
+            *(int *)(param_1[0x22] + 0x50) = 0;
+            if ((uVar12 >> 0x1c & 1) != 0) {
+                SetTimer((HWND)param_1[4], 0x2715, 10, (TIMERPROC)0);
+            }
+        }
+    }
+    return param_1[4] != 0;
+}
 void FUN_1400ef078(int64_t a, uint64_t b){ (void)a;(void)b; }
 uint64_t *FUN_1400fec9c(uint64_t *a, uint64_t b, uint64_t c){ (void)a;(void)b;(void)c; return (uint64_t*)0; }
 int FUN_1400ff080(int64_t *a, unsigned long b, int *c, void *d, uint32_t e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 1; }
@@ -1108,7 +1178,83 @@ uint64_t GetLastInputInfo(void){ return 0; }
 /* --- batch r42: B1/B3/B9 remaining restore link stubs --- */
 uint64_t GetDiskFreeSpaceW(void){ return 0; }
 uint64_t GetVolumeInformationW(void){ return 0; }
-uint64_t FUN_1400084d0(void){ return 0; }
+/* FUN_1400084d0 — 命令行后处理: 识别 /InstallService 等开关并把 argv 元素改写
+   为服务名(前缀 ~+类型字母), 随后启动服务安装流程并 Exit. */
+void FUN_140005344(void) { /* no-op */ }
+uint16_t *FUN_14000531c(uint16_t *s) { (void)s; return s; }          /* 跳过空白 */
+uint8_t *FUN_14001d78c(uint8_t *a, uint8_t *b, int n) { (void)a;(void)b;(void)n; return a; } /* 元组填充 */
+void FUN_140008b2c(uint16_t *s) { (void)s; }                          /* 移除服务(子树) */
+void FUN_140017048(const WCHAR *s) { (void)s; }                       /* 服务安装处理 */
+uint32_t DAT_14013c9fc;   /* GetTickCount 结果槽 (PECMD.exe 静态清零区, 初 0) */
+void *DAT_14013d130;      /* 传 FUN_14007a224 的输出槽 */
+uint64_t FUN_1400084d0(short *param_1)
+{
+    uint16_t sVar1;
+    WCHAR    WVar2;
+    char     cVar3;
+    int      iVar4;
+    WCHAR   *pWVar5;
+    WCHAR   *local_res8;
+    WCHAR   *local_res10;
+    WCHAR   *local_res18;
+    WCHAR   *local_res20;
+
+    sVar1 = (uint16_t)*param_1;
+    local_res8 = (WCHAR *)(param_1 + 4);
+    if ((((uint16_t)*local_res8 < 9) || (0xd < (uint16_t)*local_res8)) && (*local_res8 != L' ')) {
+        local_res8 = (WCHAR *)(param_1 + 5);
+    }
+    FUN_140005344();
+    DAT_14013c9fc = GetTickCount();
+    local_res18 = (WCHAR *)0;
+    FUN_1400702b0(&local_res20, local_res8);
+    FUN_140063620(&local_res10);
+    FUN_14007a224(&DAT_14013d130, local_res20, &local_res10, 0, 1);
+    FUN_1400703e4((long long *)&local_res18, local_res10);
+    local_res8 = local_res18;
+    FUN_14005b104((long long *)&local_res10);
+    FUN_14005b104((long long *)&local_res20);
+    pWVar5 = (WCHAR *)FUN_14000531c((uint16_t *)local_res8);
+    local_res8 = pWVar5;
+    iVar4 = StrCmpNIW((LPCWSTR)L"/InstallService", pWVar5, 0xf);
+    if ((iVar4 == 0) &&
+       (((WVar2 = pWVar5[0xf], 8 < (uint16_t)WVar2 && ((uint16_t)WVar2 < 0xe)) ||
+         ((WVar2 == L' ') || (WVar2 == L'\0'))))) {
+        cVar3 = 'I';
+        FUN_14001d78c((uint8_t *)local_res8, (uint8_t *)L"/Service       ", 0x1e);
+        local_res8 = (WCHAR *)FUN_14000531c((uint16_t *)(local_res8 + 0xf));
+    }
+    else {
+        cVar3 = FUN_1400660ac("/Service", (long long *)&local_res8, 8);
+        if (cVar3 == '\0') {
+            cVar3 = FUN_1400660ac("/RemoveService", (long long *)&local_res8, 0xe);
+            if (cVar3 != '\0') {
+                FUN_140008b2c((uint16_t *)local_res8);
+                ExitProcess(0);
+            }
+            FUN_14005b104((long long *)&local_res18);
+            return 0;
+        }
+        cVar3 = 'S';
+    }
+    if (sVar1 == 0x22) {
+        iVar4 = lstrlenW(local_res8);
+        for (pWVar5 = local_res8 + (long long)iVar4 + -1; local_res8 < pWVar5; pWVar5 = pWVar5 + -1) {
+            if ((((uint16_t)*pWVar5 < 9) || (0xd < (uint16_t)*pWVar5)) && (*pWVar5 != L' ')) {
+                if ((local_res8 < pWVar5) && (*pWVar5 == L'\"')) {
+                    *pWVar5 = L'\0';
+                }
+                break;
+            }
+        }
+    }
+    local_res8[-1] = (WCHAR)cVar3;
+    local_res8 = local_res8 + -2;
+    *local_res8 = L'~';
+    FUN_140017048(local_res8);
+    ExitProcess(0);
+    return 0;
+}
 uint64_t FUN_1400458a8(void){ return 0; }
 uint64_t FUN_140045c90(void){ return 0; }
 uint64_t FUN_14004f948(void){ return 0; }
