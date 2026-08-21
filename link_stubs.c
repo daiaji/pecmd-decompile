@@ -137,6 +137,9 @@ void FUN_14005d9a8(int64_t a, int b);
 uint64_t FUN_1400630d0(int a);
 void FUN_14006e8f4(int64_t a);
 DWORD FUN_14005c394(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
+void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
+LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
+int SetThreadDesktop(void *d); int SwitchDesktop(void *d); int CloseDesktop(void *d);
 DWORD GetCurrentDirectoryW(DWORD n, WCHAR *buf);
 DWORD GetEnvironmentVariableW(const WCHAR *n, WCHAR *buf, DWORD sz);
 int   SetEnvironmentVariableW(const WCHAR *n, const WCHAR *v);
@@ -442,7 +445,15 @@ void FUN_140016ae0(undefined8 param_1, undefined8 *param_2){
 }
 
 void FUN_1400171a4(int64_t a) { (void)a; }
-uint64_t FUN_140017724(void) { return 0; }
+/* @0x140017724 size=76 — 切换到 Default 桌面(直移) */
+void FUN_140017724(void)
+{
+  void *hDesktop = OpenDesktopW((const WCHAR *)L"Default",0,1,0x10000000);
+  if ((uintptr_t)hDesktop != 0) {
+    if (SetThreadDesktop(hDesktop) != 0) SwitchDesktop(hDesktop);
+    CloseDesktop(hDesktop);
+  }
+}
 void FUN_140017f54(int *p) { (void)p; }
 uint64_t PECMD_ScriptInit(void) { return 0; }
 void FUN_140018d8c(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b) { (void)ctx;(void)fmt;(void)a;(void)b; }
@@ -720,7 +731,17 @@ DWORD PECMD_QueryRegValueWithRetry(HKEY param_1, const WCHAR *param_2, const WCH
     } while (1);
 }
 
-unsigned long FUN_14005c5a0(void *k, const unsigned short *a, const unsigned short *b, unsigned long c, unsigned char *d, unsigned long e) { (void)k;(void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
+/* @0x14005c5a0 size=123 — 注册表值写入(带打开/成功关闭)(直移) */
+unsigned long FUN_14005c5a0(void *k, const unsigned short *a, const unsigned short *b, unsigned long c, unsigned char *d, unsigned long e)
+{
+  uint64_t r;
+  void *lk = 0;
+  if (a == 0 || (r = FUN_14005c394((HKEY)k, (LPCWSTR)a, (PHKEY)&lk, 0x20006, 4), k = lk, r == 0)) {
+    r = RegSetValueExW((HKEY)k, (LPCWSTR)b, 0, c, d, e);
+    if (lk != 0) RegCloseKey((HKEY)lk);
+  }
+  return r;
+}
 uint64_t PECMD_RegDeleteValue(void) { return 0; }
 longlong FUN_14005c72c(char *param_1, ushort *param_2, int param_3){
     char cVar1; ushort uVar2; uint uVar3; longlong lVar4;
@@ -827,7 +848,18 @@ void FUN_14006764c(longlong *param_1, longlong *param_2, short param_3, short pa
 uint64_t FUN_1400679b0(void) { return 0; }
 /* PECMD_ParseIntegerString — 解析带符号/进制前缀 (0x/0o/0b) 的十进制-整数字串.
    跳过前导空白后解析并写回 *param_2; 失败返回 0. */
-long long *FUN_14005b154(long long *param_1) { (void)param_1; return param_1; } /* 跳前导空白 */
+/* @0x14005b154 size=48 — 跳过前导控制/空白字符(直移) */
+long long *FUN_14005b154(long long *param_1)
+{
+  if (*param_1 != 0) {
+    for (;;) {
+      uint16_t *p = (uint16_t *)*param_1;
+      if (!((8 < *p && *p < 0xe) || *p == 0x20)) break;
+      *param_1 = (long long)(p + 1);
+    }
+  }
+  return param_1;
+}
 long long FUN_140064a34(uint16_t *s) { (void)s; return 0; } /* 解析 16 进制数字串 */
 uint64_t PECMD_ParseIntegerString(long long *param_1, uint64_t *param_2)
 {
@@ -1328,6 +1360,11 @@ uint64_t StartServiceCtrlDispatcherW(void) { return 0; }
 LPWSTR StrChrW(const WCHAR *s, WCHAR c) { (void)s;(void)c; return (LPWSTR)0; }
 uint64_t StrCmpNIA(void) { return 0; }
 int StrCmpNIW(const WCHAR *a, const WCHAR *b, int n) { (void)a;(void)b;(void)n; return 0; }
+void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags) { (void)n;(void)f;(void)acc;(void)flags; return (void*)(uintptr_t)1; }
+int SetThreadDesktop(void *d) { (void)d; return 1; }
+int SwitchDesktop(void *d) { (void)d; return 1; }
+int CloseDesktop(void *d) { (void)d; return 1; }
+LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c) { (void)k;(void)n;(void)r;(void)t;(void)d;(void)c; return 1; }
 uint64_t StrCmpNW(void) { return 0; }
 uint64_t StrCpyNW(void) { return 0; }
 LPWSTR StrRChrW(const WCHAR *start, const WCHAR *end, WCHAR c) { (void)start;(void)end;(void)c; return (LPWSTR)0; }
@@ -2291,7 +2328,15 @@ uint64_t GetVolumeInformationW(void){ return 0; }
    为服务名(前缀 ~+类型字母), 随后启动服务安装流程并 Exit. */
 void FUN_140005344(void) { /* no-op */ }
 uint16_t *FUN_14000531c(uint16_t *s) { (void)s; return s; }          /* 跳过空白 */
-uint8_t *FUN_14001d78c(uint8_t *a, uint8_t *b, int n) { (void)a;(void)b;(void)n; return a; } /* 元组填充 */
+/* @0x14001d78c size=36 — 重叠安全前向拷贝 memmove 封装(直移) */
+uint8_t *FUN_14001d78c(uint8_t *a, uint8_t *b, int n)
+{
+  if (a != b && n - 1 >= 0) {
+    uint8_t *d = a;
+    do { *d = d[(long long)b - (long long)a]; d++; n--; } while (n - 1 >= 0);
+  }
+  return a;
+}
 void FUN_140008b2c(uint16_t *s) { (void)s; }                          /* 移除服务(子树) */
 void FUN_140017048(const WCHAR *s) { (void)s; }                       /* 服务安装处理 */
 uint32_t DAT_14013c9fc;   /* GetTickCount 结果槽 (PECMD.exe 静态清零区, 初 0) */
