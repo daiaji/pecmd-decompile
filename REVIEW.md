@@ -3464,3 +3464,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 从 decompiled 直移 40 个被调 helper 真体到 link_stubs（含 base64/hex 解码 140078d8c 等）。
 - 修 3 处：link_stubs 补 CHAR/LPCSTR/LPCWSTR/HANDLE/HDC 局部 typedef、lstrlenA 桩改带参签名、633a8 实参 (void**)强转。
 - build 0 / link(-lm) 0 绿，提交。P4 循环起步：剩余可直移 ~248。
+## 97. P4 wave-2：下一批 40 helper 直移（[40:80]）
+- 从 decompiled 直移 40 个被调 helper 真体；build/link(-lm) 绿。累计 P4 直移 ~80/288。

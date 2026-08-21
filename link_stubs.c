@@ -1,6 +1,7 @@
 typedef unsigned int uint;   /* 兼容 setupdi 桩 */
 /* Auto-generated link stubs for undefined symbols (weak/no-op). */
 #include <stdint.h>
+#include <stddef.h>
 typedef unsigned long DWORD;
 typedef uint16_t WCHAR;
 typedef uint32_t REGSAM;
@@ -10,8 +11,35 @@ typedef const WCHAR *LPCWSTR;
 typedef void *HANDLE;
 typedef void *HDC;
 typedef uint8_t BYTE;
-typedef const uint16_t *LPCWSTR;
 typedef void *HKEY;
+/* --- wave-2 P4 restored-helper Win32/minimal types --- */
+typedef void *HWND;
+typedef void *HMODULE;
+typedef void *HINSTANCE;
+typedef void *HICON;
+typedef void *HMENU;
+typedef void *HRGN;
+typedef void *HBRUSH;
+typedef void *HCURSOR;
+typedef void *LPVOID;
+typedef void *FARPROC;
+typedef void *TIMERPROC;
+typedef void *PVOID;
+typedef long LONG;
+typedef LONG *LPLONG;
+typedef int BOOL;
+typedef unsigned int UINT;
+typedef unsigned long ULONG;
+typedef unsigned long DWORD_PTR;
+typedef unsigned long long ULONGLONG;
+typedef long long LONGLONG;
+typedef WCHAR *LPWSTR;
+typedef WCHAR *PWSTR;
+typedef UINT WPARAM;
+typedef LONG LPARAM;
+typedef const WCHAR *PCWSTR;
+/* _snwprintf 等 CRT 宽字符格式化辅助型 (仅需指针宽度兼容) */
+typedef char *pthreadmbcinfo;
 
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
@@ -114,7 +142,57 @@ void FUN_140006554(void *param_1, int64_t *param_2, int64_t *param_3) { (void)pa
 uint64_t FUN_1400083c0(void) { return 0; }
 uint64_t FUN_140008834(void) { return 0; }
 uint64_t FUN_14000e26c(void) { return 0; }
-uint64_t FUN_1400169bc(void) { return 0; }
+/* FUN_1400169bc — 按参数序号在 argv 表中定位 VALUE (形如 "id=value|id=value|...")
+   定位到匹配 id 时返回其值指针(跳过 '|' 前缀); 未命中返回 NULL.
+   依赖: FUN_1400166b4 初始化 argv 表; FUN_140067d20 数值解析; lstrlenW. */
+LPCWSTR DAT_14013ca78;   /* argv 表指针 (由 FUN_1400166b4 惰性初始化, 初 0) */
+int64_t DAT_14013ca80;   /* argv 表末端字节偏移 (初 0) */
+void FUN_1400166b4(void) { /* 初始化 argv 表 (缺失 helper, no-op 桩) */ }
+LPCWSTR FUN_1400169bc(int param_1, LPCWSTR *param_2)
+{
+    int   iVar2;
+    WCHAR WVar3;
+    LPCWSTR pWVar4;
+    int   local_res18[2] = {0};
+    LPCWSTR local_res20;
+
+    if (DAT_14013ca78 == (LPCWSTR)0) {
+        FUN_1400166b4();
+    }
+    if (*DAT_14013ca78 != L'\0') {
+        pWVar4 = (LPCWSTR)((int64_t)DAT_14013ca80 + (int64_t)DAT_14013ca78);
+        local_res20 = DAT_14013ca78;
+        while (local_res20 < pWVar4) {
+            local_res18[0] = (int)0x80000000u;
+            if (FUN_140067d20((long long *)&local_res20, local_res18) &&
+                (local_res18[0] == param_1)) {
+                local_res20 = local_res20 + 1;
+                WVar3 = *local_res20;
+                pWVar4 = local_res20;
+                while (1) {
+                    if (WVar3 == L'\0') {
+                        return local_res20;
+                    }
+                    if (WVar3 == L'|') break;
+                    pWVar4 = pWVar4 + 1;
+                    WVar3 = *pWVar4;
+                }
+                if (param_2 != (LPCWSTR *)0) {
+                    *param_2 = local_res20;
+                }
+                return pWVar4 + 1;
+            }
+            iVar2 = lstrlenW(local_res20);
+            for (local_res20 = local_res20 + (long long)iVar2 + 1; *local_res20 == L'\0';
+                 local_res20 = local_res20 + 1) {
+                if (pWVar4 <= local_res20) {
+                    return (LPCWSTR)0;
+                }
+            }
+        }
+    }
+    return (LPCWSTR)0;
+}
 uint64_t FUN_140016ae0(void) { return 0; }
 void FUN_1400171a4(int64_t a) { (void)a; }
 uint64_t FUN_140017724(void) { return 0; }
@@ -201,7 +279,7 @@ uint64_t FUN_1400668ec(void) { return 0; }
 uint64_t FUN_14006764c(void) { return 0; }
 uint64_t FUN_1400679b0(void) { return 0; }
 uint64_t FUN_140067b78(void) { return 0; }
-uint64_t FUN_140067d20(void) { return 0; }
+int FUN_140067d20(long long *param_1, int *param_2) { (void)param_1;(void)param_2; return 0; }
 uint64_t FUN_14006a7f4(int64_t *a, uint64_t *b) { (void)a;(void)b; return 0; }
 uint64_t FUN_14006b1e8(void) { return 0; }
 uint64_t FUN_14006f884(void) { return 0; }
@@ -534,7 +612,7 @@ uint64_t lstrcmpiW(void) { return 0; }
 uint64_t lstrcpyW(void) { return 0; }
 uint64_t lstrcpynW(void) { return 0; }
 int32_t lstrlenA(const char *s) { (void)s; return 0; }
-uint64_t lstrlenW(void) { return 0; }
+int lstrlenW(const WCHAR *s) { (void)s; return 0; }
 int main(void) { return 0; }
 uint64_t mouse_event(void) { return 0; }
 void *operator_new(uint64_t n) { (void)n; return 0; }
