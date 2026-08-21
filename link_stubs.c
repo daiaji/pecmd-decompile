@@ -146,6 +146,7 @@ DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, R
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
 HMODULE LoadLibraryW(const WCHAR *name);
+uint8_t *FUN_14001d744(void *a, longlong b, longlong c);
 void *DAT_14013cb10; void *DAT_14013ccf8;
 void (*DAT_14013cb48)(...); void *DAT_14013cd18; void *DAT_14013cd20; void *DAT_14013cd28;
 int (*DAT_14013cd30)(...); int (*DAT_14013cd38)(...); void (*DAT_14013cd40)(...);
@@ -1787,7 +1788,7 @@ uint64_t VirtualProtect(void) { return 0; }
 uint64_t VirtualProtectEx(void) { return 0; }
 uint64_t VirtualQueryEx(void) { return 0; }
 unsigned long WaitForMultipleObjects(unsigned long n, void **h, int all, unsigned long ms) { (void)n;(void)h;(void)all;(void)ms; return 0; }
-uint64_t WaitForSingleObject(void) { return 0; }
+uint64_t WaitForSingleObject(void *h, uint64_t ms) { (void)h;(void)ms; return 0; }
 uint64_t WaitNamedPipeW(void) { return 0; }
 uint64_t WideCharToMultiByte(void) { return 0; }
 uint64_t WinExec(void) { return 0; }
@@ -2139,7 +2140,31 @@ uint64_t *PECMD_InitControlObjO(uint64_t *param_1,uint64_t param_2)
   *(uint32_t *)(param_1 + 0x1c) = 0x80000000;
   return param_1;
 }
-uint64_t *FUN_1400fcf44(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
+/* @0x1400fcf44 size=— 对象槽初始化(B)(直移) */
+uint64_t *FUN_1400fcf44(uint64_t *a, uint64_t b)
+{
+  FUN_1400e57c0(a);
+  a[0x1b] = b;
+  *(uint8_t *)((long long)a + 0x61) = 1;
+  *(uint8_t *)((long long)a + 0xd2) = 0;
+  a[0x11] = 0; a[0x10] = 0;
+  *a = (uint64_t)&PTR_FUN_14012ccc0;
+  *(uint32_t *)(a + 0x15) = 0x80000000;
+  *(uint8_t *)(a + 0x14) = 0;
+  *(uint16_t *)((long long)a + 0xa2) = 0xffff;
+  *(uint8_t *)((long long)a + 0xac) = 0;
+  *(uint8_t *)((long long)a + 0xa4) = 0;
+  *(uint32_t *)((long long)a + 0x9c) = 0x80000000;
+  *(uint32_t *)(a + 0x13) = 0x80000000;
+  *(uint32_t *)((long long)a + 0x94) = 0x80000000;
+  *(uint32_t *)(a + 0x12) = 0x80000000;
+  *(uint8_t *)((long long)a + 0xa5) = 0;
+  *(uint8_t *)(a + 0x1a) = 0;
+  *(uint8_t *)((long long)a + 0xad) = 0;
+  *(uint8_t *)((long long)a + 0xd1) = 0;
+  a[0x1c] = 0;
+  return a;
+}
 void *DAT_14013a858;   /* 默认画笔/色刷缓存 (GetStockObject, PECMD.exe 静态区, 初 0) */
 /* PECMD_SetControlColors — 应用 param_2 的 4×RGBA 调色板与前景/背景/边框刷子到控件 struct 偏移槽. */
 void PECMD_SetControlColors(long long param_1, int *param_2)
@@ -2222,7 +2247,27 @@ uint64_t PECMD_CreateProgressCtl(void) { return 0; }
 uint64_t thunk_FUN_140064b78(void) { return 0; }
 
 /* B1 业务还原新增 helper 桩 (core_b1_remaining.c 中按真实签名 extern 调用) */
-uint64_t FUN_1400e6860(void) { return 0; }
+/* @0x1400e6860 size=— 对话框结束编排(直移) */
+void FUN_1400e6860(uint64_t param_1, int param_2)
+{
+  uint8_t b = *(uint8_t *)(param_1 + 0x120);
+  if ((b & 1) == 0) {
+    void *h;
+    if (b == 0) h = *(void **)(param_1 + 0x20);
+    else {
+      *(uint8_t *)(param_1 + 0x120) = b | 0x80;
+      PostMessageW(*(void **)(param_1 + 0x20),0,param_1,(long long)param_2);
+      h = *(void **)(param_1 + 0x20);
+    }
+    EndDialog((uint64_t)(uintptr_t)h,(long long)param_2);
+  } else {
+    void *h = *(void **)(param_1 + 0x20);
+    if ((uintptr_t)h != 0) {
+      *(uint64_t *)(param_1 + 0x20) = 0;
+      if (IsWindow(h) != 0) DestroyWindow((void *)h);
+    }
+  }
+}
 uint64_t PECMD_ProcessWindowObjMessage(void) { return 0; }
 undefined8 FUN_140004e34(int param_1, longlong param_2){
     unsigned int DVar1,DVar3; int BVar2; uint16_t local_38[32];
@@ -2374,7 +2419,22 @@ DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, R
     return DVar1;
 }
 int wnsprintfW(uint16_t *b, int n, const uint16_t *f, ...){ (void)b;(void)n;(void)f; return 0; }
-void FUN_1400e8940(uint64_t *a){ (void)a; }
+/* @0x1400e8940 size=— 窗口对象销毁(直移) */
+void FUN_1400e8940(uint64_t *a)
+{
+  void *h = (void *)(uintptr_t)a[4];
+  *a = (uint64_t)&PTR_FUN_14012b240;
+  if ((uintptr_t)h != 0) {
+    a[4] = 0;
+    if (IsWindow(h) != 0) {
+      SetWindowLongPtrW(h,-4,0x140001188);
+      DestroyWindow((void *)(uintptr_t)h);
+      if ((uintptr_t)a[7] != 0) { DeleteObject((void *)(uintptr_t)a[7]); a[7] = 0; }
+      if ((uintptr_t)a[0xd] != 0) { DeleteObject((void *)(uintptr_t)a[0xd]); a[0xd] = 0; }
+      if ((uintptr_t)a[0x18] != 0) PECMD_ReleaseGdiObjects((uint64_t *)(a + 0x18),(void *)(uintptr_t)a[4]);
+    }
+  }
+}
 void *PECMD_FreeResourceObject(void *a, unsigned int b){ (void)a;(void)b; return a; }
 
 /* ---- 新增辅助桩 (core_b3 12 函数依赖; 签名与 decompiled 一致, 基类型等价) ---- */
@@ -3683,7 +3743,30 @@ void    *FUN_14006e74c(const WCHAR *a, char b, uint32_t *c) { (void)a;(void)b;(v
 void    *FUN_14009c720(void *a, longlong b, int c, void *d, int e, int f, int g, int h, uint16_t *i, void *j, uint32_t k) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k; return (void*)0; }
 void    *FUN_14009cacc(void *a, longlong b, int c, void *d, int e, int f, int g, int h, void *i, void *j, uint32_t k, WCHAR *l) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k;(void)l; return (void*)0; }
 uint64_t FUN_14009d4b8(uint64_t a, uint64_t b, const WCHAR *c, int16_t d, const WCHAR *e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
-void    *FUN_1400a43c4(const WCHAR *a, char b) { (void)a;(void)b; return (void*)0; }
+void *FUN_1400a41fc(const uint16_t *a) { (void)a; return (void*)(uintptr_t)1; }
+/* @0x1400a43c4 size=— 命名对象构造(直移) */
+void *FUN_1400a43c4(const WCHAR *a, char b)
+{
+  longlong ls[2];
+  PECMD_StrDupAssign((uint16_t **)ls,a);
+  uint64_t *p = (uint64_t *)(uintptr_t)operator_new(0x20);
+  if ((uintptr_t)p == 0) p = 0;
+  else {
+    p[1] = 0;
+    *(uint32_t *)((long long)p + 0x14) = 0;
+    *(uint8_t *)(p + 2) = 0;
+    *p = (uint64_t)&PTR_FUN_140128ed0;
+    uint64_t *p2 = (uint64_t *)FUN_1400a41fc(a);
+    p[3] = (uint64_t)(uintptr_t)p2;
+    p[1] = *p2;
+  }
+  if ((uintptr_t)p != 0 && b != 0) {
+    (void)WaitForSingleObject((void *)(uintptr_t)p[1],0xffffffff);
+    *(uint8_t *)(p + 2) = 1;
+    return p;
+  }
+  return p;
+}
 void    *FUN_1400aa144(void *a, longlong b, int c, void *d, int e, int f, int g, int h, uint32_t i, WCHAR *j, uint8_t k) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k; return (void*)0; }
 void    *FUN_1400b8f10(void *a, longlong b, int c, void *d, int e, int f, int g, int h, void *i, uint32_t j, int *k, const WCHAR *l) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k;(void)l; return (void*)0; }
 void    *FUN_1400bca60(void *a, longlong b, int c, void *d, int e, int f, int g, int h, void *i, void *j, uint32_t *k, uint32_t l, uint32_t m, uint32_t n) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;(void)i;(void)j;(void)k;(void)l;(void)m;(void)n; return (void*)0; }
@@ -4051,7 +4134,23 @@ longlong FUN_1400e7758(longlong *param_1)
 
 /* ---- wave-current support: e4f14/e5120 deps ---- */
 code *DAT_14013e238;   /* 0x14013e238 UxTheme!IsAppThemed 槽 (pe_data_extract) */
-void  FUN_14005c898(const char *name, const char *dll, longlong **slot, longlong *x) { (void)name;(void)dll;(void)slot;(void)x; }  /* GetProcAddress 包装 (leaf stub) */
+/* @0x14005c898 size=— 延迟加载 GetProcAddress 包装(直移) */
+void FUN_14005c898(const char *name, const char *dll, longlong **slot, longlong *x)
+{
+  longlong ls[2]; ls[0]=0;
+  if (*slot != 0) return;
+  longlong *p = ls;
+  if ((uintptr_t)x != 0) p = x;
+  void *hm = (void *)(uintptr_t)*p;
+  if ((uintptr_t)hm == 0) {
+    hm = (void *)(uintptr_t)LoadLibraryA(dll);
+    *p = (longlong)(uintptr_t)hm;
+    if ((uintptr_t)hm == 0) { return; }
+  }
+  void *fn = (void *)(uintptr_t)GetProcAddress(hm,name);
+  if ((uintptr_t)fn != 0) *slot = (longlong *)(uintptr_t)fn;
+}
+
 void *FUN_1400b3d0c(const unsigned short *a, longlong *b, longlong c, longlong d, unsigned int *e, undefined8 *f, int g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; return (void*)0; } /* 位图绘制 (leaf stub) */
 void  FUN_1400f2384(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; } /* 命令注册 (leaf stub) */
 
@@ -4525,7 +4624,27 @@ LAB_140054760:
 
 /* ---- wave-current support: 008834 ---- */
 int StartServiceW(void *svc, unsigned long argc, const unsigned short **argv) { (void)svc;(void)argc;(void)argv; return 0; }
-void FUN_14001d744(void *a, longlong b, longlong c) { (void)a;(void)b;(void)c; }   /* 串移动 (leaf stub) */
+/* @0x14001d744 size=— 双向安全串移动(直移) */
+uint8_t *FUN_14001d744(void *a, longlong b, longlong c)
+{
+  uint8_t *d = (uint8_t *)a;
+  int diff = (int)d - (int)b;
+  if (diff < 0) {
+    int n = (int)c - 1;
+    if (n >= 0) {
+      uint8_t *p = d;
+      do { *p = p[b - (long long)d]; p++; n--; } while (n >= 0);
+    }
+  } else if (diff > 0) {
+    int n = (int)c - 1;
+    uint8_t *p = d + c;
+    if (n >= 0) {
+      do { p--; *p = p[b - (long long)d]; n--; } while (n >= 0);
+    }
+  }
+  return d;
+}
+
 LPCWSTR DAT_14013ca10 = 0;   /* 0x14013ca10 服务名槽 */
 
 /* @0x140008834 安装/启动 Windows 服务 (decompiled.c 直移) */
