@@ -696,7 +696,7 @@ uint64_t PECMD_AddVarDefault(void) { return 0; }
 uint64_t PECMD_FindVarValue(void) { return 0; }
 uint64_t PECMD_SetVarCore(void) { return 0; }
 /* @0x14001ea18 size=— 资源数据加载/解码(直移) */
-uint8_t *FUN_14001ea18(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e)
+uint8_t *PECMD_LoadEncodedResource(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e)
 {
   uint32_t local_38[2]; local_38[0] = 0x20;
   uint8_t *puVar6 = 0;

@@ -473,7 +473,7 @@ extern void PECMD_DestroyWindowObj(uint64_t *param_1);              /* @0x1400e8
 extern void *PECMD_FreeResourceObject(void *param_1, unsigned int param_2); /* @0x14005b888 */
 extern void PECMD_ReleaseObject_2f74(int64_t *param_1);               /* @0x140062f74 */
 extern uint64_t FUN_140061ffc(uint64_t param_1, BOOL param_2, LPCWSTR param_3); /* @0x140061ffc */
-extern uint8_t *FUN_14001ea18(HMODULE param_1, LPCWSTR param_2, LPCWSTR param_3,
+extern uint8_t *PECMD_LoadEncodedResource(HMODULE param_1, LPCWSTR param_2, LPCWSTR param_3,
                               int64_t *param_4, uint *param_5);   /* @0x14001ea18 */
 extern uint32_t *PECMD_ClearStructFields(uint32_t *param_1);         /* @0x140017f34 */
 extern uint64_t PECMD_ManualMapPeImage(int *param_1, int16_t *param_2, uint64_t param_3); /* @0x1400282d4 */
@@ -14746,7 +14746,7 @@ int64_t PECMD_InitComState(void)
     local_28 = (int16_t *)0x0;
     local_20 = 0;
     local_18 = 0;
-    FUN_14001ea18((HMODULE)0x0, (LPCWSTR)0x18, WSTR("INDATA"), (int64_t *)&local_28,
+    PECMD_LoadEncodedResource((HMODULE)0x0, (LPCWSTR)0x18, WSTR("INDATA"), (int64_t *)&local_28,
                   (uint *)0x0);
     if ((int64_t)local_20 < 0x200) {
         FUN_14005B104((WCHAR **)&local_28);
@@ -15907,7 +15907,7 @@ LAB_140073b28:
         *puVar8 = *puVar8 | 0x41;
         FUN_140063344((uint64_t *)local_a0);
         local_98 = 0;
-        presbits = (int *)FUN_14001ea18(param_1, (uint16_t *)param_2, (uint16_t *)0x3,
+        presbits = (int *)PECMD_LoadEncodedResource(param_1, (uint16_t *)param_2, (uint16_t *)0x3,
                                         (int64_t *)local_a0, (uint *)0x0);
         dwResSize = (DWORD)local_98;
         if ((0xf < (int)dwResSize) && (presbits != (int *)0x0)) {
@@ -25303,7 +25303,7 @@ LAB_1400b7a65:
                 pHVar16 = local_220;
                 local_1a0 = 0;
                 local_198 = 0;
-                piVar18 = (int *)FUN_14001ea18(local_220, (LPCWSTR)pHVar36, (LPCWSTR)pHVar17,
+                piVar18 = (int *)PECMD_LoadEncodedResource(local_220, (LPCWSTR)pHVar36, (LPCWSTR)pHVar17,
                                                &local_1a8, (uint *)0x0);
                 local_180 = local_1a0;
                 uVar5 = PECMD_IsBitmapResource((uint16_t *)(uintptr_t)local_1e8);
