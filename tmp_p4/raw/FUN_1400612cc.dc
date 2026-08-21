@@ -1,0 +1,60 @@
+/* ========== FUN_1400612cc @ 1400612cc  size=302 ========== */
+/* signature: undefined8 __fastcall FUN_1400612cc(longlong * param_1) */
+
+undefined8 FUN_1400612cc(longlong *param_1)
+
+{
+  int iVar1;
+  LPCWSTR lpText;
+  LPCWSTR lpCaption;
+  longlong lVar2;
+  BOOL BVar3;
+  uint uVar4;
+  undefined8 uVar5;
+  int iVar6;
+  longlong *local_res8;
+  
+  if (*param_1 < 1) {
+    uVar5 = 0x80070057;
+  }
+  else {
+    lVar2 = param_1[1];
+    lpText = (LPCWSTR)param_1[2];
+    lpCaption = (LPCWSTR)param_1[3];
+    uVar4 = *(uint *)(param_1 + 4);
+    *(undefined4 *)((longlong)param_1 + 0x2c) = 0;
+    local_res8 = param_1;
+    if ((HANDLE)param_1[7] != (HANDLE)0x0) {
+      SetEvent((HANDLE)param_1[7]);
+    }
+    SetLastError(0);
+    if ((int)lVar2 == 2) {
+      FUN_14001c2cc(L"SeShutdownPrivilege",2,0);
+      BVar3 = InitiateSystemShutdownW((LPWSTR)0x0,lpText,0x12cc02f6,0,1);
+      *(BOOL *)((longlong)param_1 + 0x34) = BVar3;
+    }
+    else {
+      uVar4 = MessageBoxW((HWND)0x0,lpText,lpCaption,uVar4 | 0x200000);
+      *(uint *)((longlong)param_1 + 0x34) = uVar4 & 0xffff;
+    }
+    GetLastError();
+    iVar1 = (int)param_1[6];
+    iVar6 = 1000;
+    while ((iVar1 != 0 && (iVar6 = iVar6 + -1, -1 < iVar6))) {
+      Sleep(10);
+      iVar1 = (int)param_1[6];
+    }
+    EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    *param_1 = *param_1 + -1;
+    if (0 < *param_1) {
+      local_res8 = (longlong *)0x0;
+    }
+    LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    FUN_14005b104((longlong *)&local_res8);
+    uVar5 = 0;
+  }
+  return uVar5;
+}
+
+
+

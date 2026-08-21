@@ -46,7 +46,7 @@ extern char      FUN_1400660ac(const char *tok, void *pp, int n);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
+extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 extern void      PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
 extern void      FUN_140063b64(void *out);                  /* @0x140063b64 array init */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 */
@@ -56,9 +56,9 @@ extern int64_t   PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out
 extern void      FUN_14007033c(int64_t *param_1, LPCWSTR param_2);  /* @0x14007033c */
 extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);     /* StrCpyW2 */
 extern int64_t  *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);  /* @0x14007034c */
-extern uint64_t  FUN_14001c270(LPCWSTR param_1, uint64_t *param_2); /* @0x14001c270 */
+extern uint64_t  PECMD_ExpandDrivePathAlloc(LPCWSTR param_1, uint64_t *param_2); /* @0x14001c270 */
 extern void      FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);  /* SetVarD */
-extern void      FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
+extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
 extern WCHAR    *FUN_14001be14(WCHAR *s);                           /* tag lookup */
 extern void      FUN_1400639f0(int64_t *, int64_t *, int64_t *, void *, int, int);
 extern int64_t   FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d);

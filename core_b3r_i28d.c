@@ -41,7 +41,7 @@ extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, 
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan (thunk) */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
+extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 extern uint64_t  PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *flags, uint64_t p3, char p4);
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);   /* 扫描整数 token */
 
@@ -402,7 +402,7 @@ LAB_1400b5137:
         iVar8 = 0;
         iVar5 = (int)uVar3;
         if (((WVar9 == *pWVar2) && (pWVar2[1] != L'\0')) &&
-            (FUN_14005c7c4("del", pWVar2 + 2) != iVar8)) {
+            (PECMD_AsciiWideICmp("del", pWVar2 + 2) != iVar8)) {
             PECMD_RemoveObjectByType(param_3, iVar5, local_48, (int)cVar6);
         } else if ((*pWVar2 != (WCHAR)iVar8) && (iVar8 < iVar5)) {
             if (bVar10 == false) {

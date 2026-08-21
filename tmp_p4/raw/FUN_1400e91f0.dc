@@ -1,0 +1,159 @@
+/* ========== FUN_1400e91f0 @ 1400e91f0  size=1026 ========== */
+/* signature: undefined4 __fastcall FUN_1400e91f0(longlong * param_1, ulonglong param_2) */
+
+undefined4 FUN_1400e91f0(longlong *param_1,ulonglong param_2)
+
+{
+  longlong *plVar1;
+  longlong lVar2;
+  POINT pt;
+  bool bVar3;
+  LONG LVar4;
+  int iVar5;
+  uint uVar6;
+  DWORD DVar7;
+  BOOL BVar8;
+  HWND pHVar9;
+  ulonglong uVar10;
+  uint uVar11;
+  int iVar12;
+  int iVar13;
+  longlong lVar14;
+  longlong lVar15;
+  byte bVar16;
+  tagPOINT local_res8;
+  byte local_res10;
+  DWORD local_res18 [2];
+  tagRECT local_98;
+  POINT local_88;
+  UINT local_80;
+  tagMSG local_68;
+  
+  bVar16 = *(byte *)(param_1 + 0x24);
+  *(undefined1 *)(param_1 + 0x24) = 0x10;
+  local_res10 = bVar16;
+  if ((param_2 & 0x20) == 0) {
+    UpdateWindow((HWND)param_1[4]);
+  }
+  local_68.hwnd = (HWND)0x0;
+  FUN_140102a90((ulonglong *)&local_68.message,0,0x28);
+  local_res8.x = GetCurrentThreadId();
+  if ((param_2 & 0x20) == 0) {
+    SendMessageW((HWND)param_1[4],0x110,0,(LPARAM)param_1);
+  }
+  iVar5 = GetMessageW(&local_68,(HWND)0x0,0,0);
+  LVar4 = local_res8.x;
+  do {
+    if ((iVar5 == 0) || (bVar16 = local_res10, (char)param_1[0x24] < '\0')) {
+      if (((HWND)param_1[4] != (HWND)0x0) && ((bVar16 & 0x20) == 0)) {
+        SetWindowLongPtrW((HWND)param_1[4],-4,*(LONG_PTR *)(*param_1 + 8));
+        DestroyWindow((HWND)param_1[4]);
+      }
+      return (undefined4)local_68.lParam;
+    }
+    uVar10 = 0;
+    bVar3 = false;
+    local_res18[0] = 0;
+    if ((local_68.message == 0x20a) || (local_68.message == 0x20e)) {
+      GetScrollPos((HWND)0x0,1);
+      local_80 = local_68.message;
+      GetCursorPos(&local_88);
+      uVar6 = GetWindowLongW(local_68.hwnd,-0x10);
+      uVar11 = 0x100000;
+      if (local_68.message == 0x20a) {
+        uVar11 = 0x200000;
+      }
+      if (((uVar11 & uVar6) == 0) || (iVar5 = FUN_1400e6314(local_68.hwnd,local_88), iVar5 == 0)) {
+        pHVar9 = (HWND)FUN_1400e6458((longlong)&local_88);
+        if (pHVar9 != (HWND)0x0) {
+          local_68.hwnd = pHVar9;
+        }
+      }
+      else {
+        uVar10 = 1;
+      }
+    }
+    pHVar9 = GetActiveWindow();
+    if (((pHVar9 != (HWND)0x0) &&
+        (DVar7 = GetWindowThreadProcessId(pHVar9,local_res18), LVar4 == DVar7)) &&
+       (BVar8 = IsDialogMessageW(pHVar9,&local_68), BVar8 != 0)) {
+      bVar3 = true;
+    }
+    if (local_68.message != 0x448) {
+      uVar10 = SendMessageW(local_68.hwnd,0x448,(WPARAM)&local_68,param_1[4]);
+      if (((uint)uVar10 >> 0x10 & 1) != 0) {
+        FUN_1400f172c((longlong *)param_1[0x40],local_68.message,
+                      CONCAT44(local_68.wParam._4_4_,(int)local_68.wParam),
+                      (ulonglong *)CONCAT44(local_68.lParam._4_4_,(undefined4)local_68.lParam),
+                      param_1[4],0x80,(undefined8 *)0x0);
+      }
+      if (0 < (int)param_1[0x1d]) {
+        local_98.left = 0;
+        local_98.top = 0;
+        local_98.right = 0;
+        local_98.bottom = 0;
+        GetCursorPos(&local_res8);
+        iVar5 = 0;
+        if (0 < (int)param_1[0x1d]) {
+          lVar14 = 0;
+          do {
+            pHVar9 = *(HWND *)(lVar14 + param_1[0x1c]);
+            if ((pHVar9 != (HWND)0x0) && (pHVar9 != local_68.hwnd)) {
+              GetWindowRect(pHVar9,&local_98);
+              pt.y = local_res8.y;
+              pt.x = local_res8.x;
+              BVar8 = PtInRect(&local_98,pt);
+              if (BVar8 != 0) {
+                SendMessageW(pHVar9,0x44e,(WPARAM)&local_68,param_1[4]);
+              }
+            }
+            iVar5 = iVar5 + 1;
+            lVar14 = lVar14 + 8;
+          } while (iVar5 < (int)param_1[0x1d]);
+        }
+      }
+      iVar5 = (int)local_68.wParam;
+      if ((HWND)param_1[4] != local_68.hwnd) {
+        if (((uint)uVar10 >> 8 & 1) == 0) {
+          uVar6 = (**(code **)(*param_1 + 0xe0))(param_1,&local_68);
+          uVar10 = (ulonglong)uVar6;
+        }
+        else if ((0 < *(int *)((longlong)param_1 + 0xec)) &&
+                ((local_68.message == 0x100 || (local_68.message == 0x104)))) {
+          plVar1 = (longlong *)param_1[0x37];
+          iVar13 = 0;
+          if (0 < *(int *)((longlong)param_1 + 0xec)) {
+            lVar14 = *plVar1;
+            lVar15 = 0;
+            iVar12 = DAT_14013d7fc;
+            do {
+              lVar2 = *(longlong *)(lVar15 + lVar14);
+              if (((*(int *)(lVar2 + 8) == 10) && (*(int *)(lVar2 + 0x70) == iVar5)) &&
+                 (*(int *)(lVar2 + 0x78) == iVar12)) {
+                FUN_1400613fc();
+                lVar14 = *plVar1;
+                iVar12 = DAT_14013d7fc;
+                if (*(int *)(*(longlong *)(lVar15 + lVar14) + 0x78) == DAT_14013d7fc) {
+                  PostMessageW(*(HWND *)(*(longlong *)(param_1[0x52] + 0x40) + 0x20),0x442,
+                               (longlong)iVar13,(longlong)iVar13);
+                  break;
+                }
+              }
+              iVar13 = iVar13 + 1;
+              lVar15 = lVar15 + 8;
+            } while (iVar13 < *(int *)((longlong)param_1 + 0xec));
+          }
+        }
+      }
+    }
+    if ((!bVar3) && ((uVar10 & 1) == 0)) {
+      TranslateMessage(&local_68);
+      DispatchMessageW(&local_68);
+    }
+    iVar5 = GetMessageW(&local_68,(HWND)0x0,0,0);
+    bVar16 = local_res10;
+  } while( true );
+}
+
+
+

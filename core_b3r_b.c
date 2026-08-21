@@ -48,7 +48,7 @@ extern void    FUN_14005b104(WCHAR **ps);
 extern WCHAR  *FUN_14006375c(WCHAR **ps, LPCWSTR src);
 
 /* ASCII / wide case-insensitive equality: non-zero = equal. */
-extern int32_t FUN_14005c7c4(const char *a, const WCHAR *w);
+extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 
 /* packed system version: (major<<32 | minor<<16 | build). */
 extern uint64_t PECMD_GetPackedSystemVersion(void);
@@ -432,7 +432,7 @@ void *PECMD_EnumDeviceList(uint64_t param_1, LPCWSTR param_2, LPCWSTR param_3, i
                         goto LAB_140075ae2;
                     }
                     if ((param_5 != (uint16_t *)0x0) &&
-                        (uVar4 = (uint64_t)FUN_14005c7c4("rw", (const WCHAR *)param_5),
+                        (uVar4 = (uint64_t)PECMD_AsciiWideICmp("rw", (const WCHAR *)param_5),
                          (char)uVar4 != '\0')) {
                         pWVar5 = WSTR("0");
                         if (*(int *)((char *)local_b0 + (int64_t)iVar2 * 0x418 + 0x414) != 0) {

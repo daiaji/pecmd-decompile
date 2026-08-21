@@ -1,0 +1,52 @@
+/* ========== FUN_1400690c0 @ 1400690c0  size=342 ========== */
+/* signature: int __fastcall FUN_1400690c0(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3, longlong * param_4, LPDWORD param_5, LSTATUS * param_6) */
+
+int FUN_1400690c0(HKEY param_1,LPCWSTR param_2,LPCWSTR param_3,longlong *param_4,LPDWORD param_5,
+                 LSTATUS *param_6)
+
+{
+  longlong lVar1;
+  LSTATUS LVar2;
+  longlong lVar3;
+  int iVar4;
+  DWORD local_28 [2];
+  HKEY local_20;
+  
+  local_28[0] = 0xffffffff;
+  local_20 = (HKEY)0x0;
+  iVar4 = 0;
+  LVar2 = RegOpenKeyExW(param_1,param_2,0,0x20019,&local_20);
+  if (LVar2 == 0) {
+    *param_5 = 0xffa;
+    FUN_140063424(param_4,0x1000);
+    *(undefined1 *)*param_4 = 0;
+    LVar2 = RegQueryValueExW(local_20,param_3,(LPDWORD)0x0,local_28,(LPBYTE)*param_4,param_5);
+    if (LVar2 == 0xea) {
+      *param_5 = *param_5 + 10;
+      FUN_140063424(param_4,(longlong)(int)(*param_5 + 6));
+      LVar2 = RegQueryValueExW(local_20,param_3,(LPDWORD)0x0,local_28,(LPBYTE)*param_4,param_5);
+    }
+    RegCloseKey(local_20);
+    iVar4 = -1;
+    if (LVar2 == 0) {
+      if ((int)*param_5 < 0) {
+        *param_5 = 0;
+      }
+      *(undefined1 *)((longlong)(int)*param_5 + *param_4) = 0;
+      lVar3 = (longlong)(int)((longlong)(int)*param_5 + 1U >> 1);
+      lVar1 = *param_4;
+      *(undefined2 *)(lVar1 + 2 + lVar3 * 2) = 0;
+      *(undefined2 *)(lVar1 + lVar3 * 2) = 0;
+      FUN_140063424(param_4,(longlong)(int)(*param_5 + 5));
+      return local_28[0];
+    }
+  }
+  *param_5 = 0;
+  if (param_6 != (LSTATUS *)0x0) {
+    *param_6 = LVar2;
+  }
+  return iVar4 + -1;
+}
+
+
+

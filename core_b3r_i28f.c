@@ -51,7 +51,7 @@ extern uint64_t  PECMD_DispatchControlConstruct(WPARAM, uint64_t, int64_t, LPCWS
 extern void      FUN_14001b3a0(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
 extern void      FUN_1400bd620(WPARAM, LPCWSTR, void *, int, int, int, int, void *,
                                void *, int *, uint32_t, uint32_t); /* 构造派发(size 版) */
-extern void      FUN_1400bef64(WCHAR *);                       /* 直接挂图像 */
+extern void      PECMD_ClipboardCommand(WCHAR *);                       /* 直接挂图像 */
 extern void     *PECMD_EncodeStringId(LPCWSTR, void *, char);         /* 装载图像 */
 extern void     *PECMD_DecodeBase64ToWideStr(byte *, ulonglong *);           /* 装载图像(串) */
 extern void      PECMD_PushStringToken(HMODULE, LPCWSTR, LPWSTR, LONG_PTR); /* 资源名回调 */
@@ -60,7 +60,7 @@ extern char      PECMD_LoadImageListApi(void);                          /* 图/�
 /* ---- image / var helpers ---- */
 extern HICON     PECMD_LoadIcon(LPCWSTR, uint64_t *);           /* 加载图标 */
 extern LPCWSTR   FUN_14001be14(LPCWSTR);                       /* 串标签/前缀查询 */
-extern void      FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
+extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
 extern int64_t   PECMD_RunCommand(int64_t *script, LPCWSTR cmd);  /* 执行脚本行 */
 
 /* ================================================================
@@ -521,7 +521,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 }
                 /* TODO(verify): Ghidra 丢弃了 wsprintfW 实参, 宽度/高度来自图像尺寸 */
                 wsprintfW(local_e8, WSTR("%d %d"), local_res18[0], (int)(uint32_t)local_res8);
-                FUN_1400629b8((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
+                PECMD_SetVariable((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
                 FUN_14005b104(&local_150);
                 FUN_14005b104(&local_160);
                 FUN_14005b104(&local_158);
@@ -589,7 +589,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 /* TODO(verify): Ghidra 丢弃了 wsprintfW 实参, 计数来自资源枚举回调 */
                 wsprintfW(local_e8, WSTR("%d %d"), (int)(uint32_t)local_108,
                           (int)(uint32_t)local_f8);
-                FUN_1400629b8((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
+                PECMD_SetVariable((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
             }
             FUN_14005b104(&local_150);
             FUN_14005b104(&local_160);
@@ -705,9 +705,9 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
     } else {
         *local_res10 = L' ';
         if (*(WCHAR *)local_res18 == L'\0') {
-            FUN_1400bef64(local_res10);
+            PECMD_ClipboardCommand(local_res10);
         } else {
-            FUN_1400629b8(param_1, (LPCWSTR)local_res18, local_res10 + 1);
+            PECMD_SetVariable(param_1, (LPCWSTR)local_res18, local_res10 + 1);
         }
     }
     FUN_14005b104(&local_res10);

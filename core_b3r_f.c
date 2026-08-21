@@ -33,8 +33,8 @@ extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg);   /* @0x
 extern void FUN_1400f072c(int64_t *param_1, LPCWSTR param_2, DWORD param_3,
                           int *param_4, HWND param_5, uint32_t param_6, DWORD param_7);
 extern LRESULT PECMD_GetControlFont(int64_t param_1);       /* @0x1400e5890 取对象字体 */
-extern void FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
-extern void FUN_14007df90(int64_t param_1, int param_2);   /* @0x14007df90 */
+extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
+extern void PECMD_SetCheckVariable(int64_t param_1, int param_2);   /* @0x14007df90 */
 extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);   /* @0x140053c5c */
 extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);        /* @0x140053cec */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x140063694 */
@@ -92,7 +92,7 @@ uint64_t *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_2, uint32_t pa
     /* TODO(verify): 反编译仅剩格式串, 无格式化实参 */
     wsprintfW(local_48, WSTR("%ld"));
     if (*(const WCHAR *)(uintptr_t)param_1[2] != 0) {
-        FUN_14007d0ac((int64_t *)(uintptr_t)param_1[10],
+        PECMD_SetVariableWithPrefix((int64_t *)(uintptr_t)param_1[10],
                       (LPCWSTR)(uintptr_t)param_1[2], local_48);
     }
     if ((((param_8 >> 0x1c) & 6U) != 0) && ((int)uVar2 > 0)) {
@@ -209,12 +209,12 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     /* 虚调用 FUN_ 0x108 (设置字体/资源) */
     ((void (*)(int64_t *, LRESULT, int))*(uint64_t *)(*plVar5 + 0x108))(plVar5, LVar7, 0);
     if (*(const WCHAR *)(uintptr_t)param_1[2] != 0) {
-        FUN_14007d0ac((int64_t *)(uintptr_t)param_1[10],
+        PECMD_SetVariableWithPrefix((int64_t *)(uintptr_t)param_1[10],
                       (LPCWSTR)(uintptr_t)param_1[2], (LPCWSTR)(uintptr_t)param_1[4]);
     }
     /* 虚调用 FUN_ 0x118 */
     ((void (*)(int64_t *, int))*(uint64_t *)(*plVar5 + 0x118))(plVar5, (int)(int16_t)uVar8);
-    FUN_14007df90((int64_t)param_1, (int)(int16_t)uVar8);
+    PECMD_SetCheckVariable((int64_t)param_1, (int)(int16_t)uVar8);
     PECMD_SetObjectEnable((int64_t)param_1, (uint32_t)((int16_t)param_11 == 0));
     PECMD_SetObjectVisibleVar((int64_t)param_1, (uVar9 >> 0x1c) & 1);
     DragAcceptFiles((HWND)plVar5[4], 1);

@@ -81,7 +81,7 @@ extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
                           void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
 extern void FUN_140061470(void);                          /* @0x140061470 */
 extern void FUN_14001a640(WCHAR *buf);                    /* @0x14001a640 恢复当前目录 */
-extern void FUN_14001e2cc(void);                          /* @0x14001e2cc */
+extern void PECMD_SyncWorkingDirectory(void);                          /* @0x14001e2cc */
 extern void FUN_14009BB28(void *script, int flag);        /* @0x14009bb28 脚本清理 */
 
 /* ========== FUN_1400B638C @0x1400b638c ==========
@@ -442,7 +442,7 @@ ref_done:
         }
         if ((flags & 0x40) == 0) {
             FUN_14001a640(savedCwd);
-            FUN_14001e2cc();
+            PECMD_SyncWorkingDirectory();
         }
         LeaveCriticalSection(&g_csInit);
     }

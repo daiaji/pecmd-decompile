@@ -31,7 +31,7 @@ extern void    *operator_new(size_t size);                 /* global new wrapper
 extern void    *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
 extern void     FUN_14005daf8(int64_t param_1, int *param_2, int *param_3,
                               int *param_4, int *param_5); /* @0x14005daf8 */
-extern void     FUN_14005d9a8(int64_t param_1, int param_2); /* @0x14005d9a8 */
+extern void     PECMD_DialogBeepNotify(int64_t param_1, int param_2); /* @0x14005d9a8 */
 extern void     FUN_14001b3a0(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
 extern void     FUN_1400b9340(int64_t script, int64_t ctx, void *str, int a,
                               int b, int c, int d, void *e, uint32_t f,
@@ -63,7 +63,7 @@ extern void     PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, u
 extern WCHAR   *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);    /* delimiter scan */
 extern int64_t  FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t  PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int       FUN_1400677b0(int64_t *, int64_t);         /* 数值写, 返回写入个数 */
+extern int       PECMD_ParseHashNumbers(int64_t *, int64_t);         /* 数值写, 返回写入个数 */
 extern WCHAR   *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
 extern void     PECMD_ExpandBackslashNewline(const WCHAR *p, char c);     /* 清空串 */
 extern int64_t  PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
@@ -71,7 +71,7 @@ extern int64_t  PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out,
 extern int64_t  PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
                               uint8_t flag);
 extern char     FUN_140062fc4(LPCWSTR param_1, void *param_2, int param_3);
-extern void     FUN_14005b7e8(char *param_1);
+extern void     PECMD_DestroyTrayIcon(char *param_1);
 extern void     PECMD_DestroyWindowLocked(void);
 extern void     PECMD_ShakeTrayCursor(void);
 extern void     PECMD_ReleaseResources(int64_t param_1);
@@ -210,7 +210,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
                             puVar2 = local_res10 + 2;
                         }
                         local_res10 = puVar2;
-                        FUN_1400677b0((int64_t *)&local_res10, (int64_t)local_60);
+                        PECMD_ParseHashNumbers((int64_t *)&local_res10, (int64_t)local_60);
                         if (sVar9 != 0) {
                             local_60[0] = -1;
                         }
@@ -393,7 +393,7 @@ HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_
         iVar4 = lstrcmpW(WSTR("*"), lpStr2);
         if (iVar4 == 0) {
             if (cVar21 == '\0') {
-                FUN_14005b7e8((char *)DAT_14013d8a0);
+                PECMD_DestroyTrayIcon((char *)DAT_14013d8a0);
                 PECMD_DestroyWindowLocked();
                 goto icon_cleanup_ba6aa;
             }
@@ -491,7 +491,7 @@ icon_parse_ba800:
         local_res10 = pWVar6;
         if (uVar19 == 0) {
             if (cVar21 == '\0') {
-                FUN_14005b7e8((char *)DAT_14013d8a0);
+                PECMD_DestroyTrayIcon((char *)DAT_14013d8a0);
                 pHVar20 = (HICON)pHVar8b;
                 goto icon_release_ba9ad;
             }
@@ -758,7 +758,7 @@ void PECMD_ConstructControlObjectEx(WPARAM param_1, int64_t param_2, uint64_t *p
                                    (uint64_t)*(int *)((char *)(uintptr_t)param_1 + 0x17c));
         }
         *puVar2 = (uint64_t)puVar4;
-        FUN_14005d9a8((int64_t)param_1, 0);
+        PECMD_DialogBeepNotify((int64_t)param_1, 0);
     }
     return;
 }
@@ -904,7 +904,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                     local_res10 = local_res10 + 7;
                                                                     FUN_14008293c(param_1, (int64_t *)&local_res10,
                                                                                   &local_c8, (int64_t *)&local_b8);
-                                                                    sVar1 = (short)FUN_1400677b0(&local_c8,
+                                                                    sVar1 = (short)PECMD_ParseHashNumbers(&local_c8,
                                                                                                 (int64_t)&local_a0);
                                                                     pHVar6 = (HWND)(uintptr_t)&local_a0;
                                                                     if (sVar1 == 0) {

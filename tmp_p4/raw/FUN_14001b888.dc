@@ -1,0 +1,55 @@
+/* ========== FUN_14001b888 @ 14001b888  size=433 ========== */
+/* signature: undefined __fastcall FUN_14001b888(uint param_1) */
+
+void FUN_14001b888(uint param_1)
+
+{
+  LSTATUS LVar1;
+  HKEY local_res10;
+  
+  if ((DAT_14013d261 == '\0') || (param_1 != 0)) {
+    local_res10 = (HKEY)0x0;
+    FUN_140017908();
+    if ((param_1 & 1) != 0) {
+      local_res10 = (HKEY)0x0;
+      LVar1 = RegCreateKeyExW((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA\\__PECMD_TEST",0
+                              ,(LPWSTR)0x0,0,1,(LPSECURITY_ATTRIBUTES)0x0,&local_res10,(LPDWORD)0x0)
+      ;
+      if (local_res10 != (HKEY)0x0) {
+        RegCloseKey(local_res10);
+      }
+      if (LVar1 != 0x3fd) {
+        FUN_1400717f0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA");
+      }
+    }
+    local_res10 = (HKEY)0x0;
+    RegCreateKeyExW((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA",0,(LPWSTR)0x0,1,1,
+                    (LPSECURITY_ATTRIBUTES)0x0,&local_res10,(LPDWORD)0x0);
+    if (local_res10 != (HKEY)0x0) {
+      RegCloseKey(local_res10);
+    }
+    DAT_14013d261 = '\x01';
+    if ((param_1 & 2) != 0) {
+      local_res10 = (HKEY)0x0;
+      LVar1 = RegCreateKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\PELOGON\\RAMDATA\\HOTKEY\\__PECMD_TEST",0,(LPWSTR)0x0,0,1,
+                              (LPSECURITY_ATTRIBUTES)0x0,&local_res10,(LPDWORD)0x0);
+      if (local_res10 != (HKEY)0x0) {
+        RegCloseKey(local_res10);
+      }
+      if (LVar1 != 0x3fd) {
+        FUN_1400717f0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA\\HOTKEY");
+      }
+    }
+    local_res10 = (HKEY)0x0;
+    RegCreateKeyExW((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA\\HOTKEY",0,(LPWSTR)0x0,1,1
+                    ,(LPSECURITY_ATTRIBUTES)0x0,&local_res10,(LPDWORD)0x0);
+    if (local_res10 != (HKEY)0x0) {
+      RegCloseKey(local_res10);
+    }
+  }
+  return;
+}
+
+
+

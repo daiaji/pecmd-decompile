@@ -91,12 +91,12 @@ extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src);
 extern uint8_t  *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                                int64_t len, void **out);
-extern void      FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value);
+extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern void      FUN_14005b104(void *ps);
 extern HWND      PECMD_QueryState_f414(int64_t a);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern void      FUN_1400702f0(void *out, const char *src, uint64_t len);
-extern void      FUN_14001e2cc(void);
+extern void      PECMD_SyncWorkingDirectory(void);
 extern void      FUN_14005C904(void);                    /* @0x14005c904 (core_b3f.c) */
 extern int64_t  *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
 extern short    *PECMD_LastPathSeparator(short *s);
@@ -115,7 +115,7 @@ extern void      PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
 extern void      PECMD_QueryDevice(HANDLE h, uint64_t drive, WCHAR *buf, int mode);
 extern uint64_t *PECMD_GetDiskLayoutInfo(HANDLE h, uint64_t *buf, uint32_t *out);
 extern LPWSTR    PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
-extern int64_t   FUN_14005fbd4(HANDLE h, void *out);
+extern int64_t   PECMD_GetDiskGeometrySize(HANDLE h, void *out);
 extern int       FUN_14005f96c(HANDLE h, int size);
 extern uint64_t  PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2,
                                uint32_t param_3, DWORD param_4,
@@ -590,7 +590,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     if ((((*(byte *)((longlong)param_1 + 0xd) & 0xf) == 0) && (*local_590 != L'&')) ||
         (lVar8 = (longlong)PECMD_VarLookup((void *)param_1, local_590, (void *)0x0,
                                          -1, (void **)0x0), lVar8 == 0)) {
-        FUN_1400629b8(param_1, local_590, (LPCWSTR)g_szEmpty);
+        PECMD_SetVariable(param_1, local_590, (LPCWSTR)g_szEmpty);
     } else {
         uVar18 = *(ulonglong *)(lVar8 + 0x18) & 0x3fffffffffffffff;
         if (uVar18 == 1) {
@@ -611,7 +611,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
             if (lVar8 != 0) goto LAB_140087be8;
         } else {
 LAB_140087be8:
-            FUN_1400629b8(param_1, pWVar11, WSTR("0"));
+            PECMD_SetVariable(param_1, pWVar11, WSTR("0"));
         }
         FUN_14005b104((void *)&local_5a0);
     }
@@ -811,14 +811,14 @@ LAB_140088096:
 LAB_14008822f:
         if (param_4 == (longlong *)0x0) {
             PECMD_StrDupAssign(&local_588, local_5b0);
-            FUN_1400629b8(param_1, local_590, (LPCWSTR)local_588);
+            PECMD_SetVariable(param_1, local_590, (LPCWSTR)local_588);
             FUN_14005b104((void *)&local_588);
         } else {
             FUN_1400703e4(param_4, local_5b0);
         }
     }
     SetCurrentDirectoryW(local_568);
-    FUN_14001e2cc();
+    PECMD_SyncWorkingDirectory();
     FUN_14005b104((void *)&local_5b0);
     FUN_14005b104((void *)&local_580);
 LAB_14008829d:
@@ -975,7 +975,7 @@ LAB_14008aeda:
                     }
                     local_2a0 = 0;
                     memset(auStack_29c, 0, 0x24);
-                    local_2a8 = FUN_14005fbd4(hObject, (void *)&local_2a0);
+                    local_2a8 = PECMD_GetDiskGeometrySize(hObject, (void *)&local_2a0);
                     DVar4 = FUN_14005f96c(hObject, 0x200);
                     if (iVar16 == 1) {
                         PECMD_ReadDiskSectorScan((uint64_t *)&local_2f8, local_2e8,

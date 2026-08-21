@@ -24,7 +24,7 @@ static const uint8_t DAT_140124130[] = { 0xEF, 0xBB, 0xBF }; /* UTF-8 BOM */
 /* ---- 本文件引用但未声明的辅助函数 (均为 extern, 不在本文件定义) ---- */
 
 /* 文件大小 @0x1400e693c GetFileSize */
-extern uint32_t FUN_1400e693c(HANDLE hFile);
+extern uint32_t PECMD_GetFileSize(HANDLE hFile);
 /* 分配字符串槽 @0x140063720 PECMD_StrAlloc */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);
 /* 跳过前导空白 @0x14005b154 */
@@ -50,10 +50,10 @@ extern void   PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWOR
                             HANDLE tmpl);
 extern int64_t PECMD_GetDirectorySize(LPCWSTR param_1);                                 /* @0x14006b254 递归统计目录大小 */
 extern void    FUN_1400e6d74(LPCWSTR param_1, uint64_t param_2);               /* %I64u 格式化 */
-extern void    FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value);     /* @0x1400629b8 SetVar */
+extern void    PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);     /* @0x1400629b8 SetVar */
 
 /* ---- PECMD_DispatchListboxCommand / PECMD_DispatchListWriteCommand 的 helper ---- */
-extern int  FUN_14005b2c0(uint64_t *param_1, LPCWSTR param_2, HWND param_3); /* 列表接受检查 */
+extern int  PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2, HWND param_3); /* 列表接受检查 */
 extern int  PECMD_DispatchControlCommand(WPARAM a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
                           uint64_t f, int64_t *g, HWND h, int64_t i);
 extern void FUN_14006764c(int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* 按分隔符切分 */
@@ -79,7 +79,7 @@ uint64_t PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t p
     int64_t local_res20;
 
     uVar4 = param_3 & 1;
-    DVar1 = FUN_1400e693c(param_1);
+    DVar1 = PECMD_GetFileSize(param_1);
     if (0 < (int)DVar1) {
         PECMD_AllocString((WCHAR **)param_2, (int64_t)(int)(DVar1 + 0xc));
         lpBuffer = (char *)*param_2;
@@ -224,7 +224,7 @@ LAB_14006b539:
     }
     local_348[0] = L'\0';
     FUN_1400e6d74(local_348, (uint64_t)LVar4.QuadPart);
-    FUN_1400629b8(param_1, local_res20, local_348);
+    PECMD_SetVariable(param_1, local_res20, local_348);
     if ((local_368 != (HANDLE)0) && (local_368 != (HANDLE)(uintptr_t)-1)) {
         FindClose(local_368);
     }
@@ -269,7 +269,7 @@ uint64_t PECMD_DispatchListboxCommand(uint64_t *param_1, int64_t *param_2, int64
     hWnd = *(HWND *)(uintptr_t)(lVar4 + 0x20);
     pHVar5 = *(HWND *)(uintptr_t)(*(int64_t *)(uintptr_t)(param_1[10] + 0x40) + 0x20);
     local_res8 = pHVar5;
-    bVar6 = (FUN_14005b2c0(param_1, param_4, pHVar5) != 0);
+    bVar6 = (PECMD_OnDeleteCommand(param_1, param_4, pHVar5) != 0);
     if (bVar6 == 0) {    /* CONCAT71(extraout_var,bVar6) == 0 */
         return 0;
     }
@@ -357,7 +357,7 @@ uint64_t PECMD_DispatchListWriteCommand(uint64_t *param_1, int64_t *param_2, LPC
     pHVar1 = *(HWND *)(uintptr_t)(param_1[7] + 0x20);
     pHVar2 = *(HWND *)(uintptr_t)(*(int64_t *)(uintptr_t)(param_1[10] + 0x40) + 0x20);
     if ((*(char *)(param_1 + 0x10) == '\0') &&
-        (bVar3 = (FUN_14005b2c0(param_1, param_4, pHVar2) != 0), bVar3 == 0)) {
+        (bVar3 = (PECMD_OnDeleteCommand(param_1, param_4, pHVar2) != 0), bVar3 == 0)) {
         return 0;
     }
     lpCriticalSection = (void *)*param_6;

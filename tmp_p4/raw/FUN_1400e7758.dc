@@ -1,0 +1,48 @@
+/* ========== FUN_1400e7758 @ 1400e7758  size=230 ========== */
+/* signature: longlong __fastcall FUN_1400e7758(longlong * param_1) */
+
+longlong FUN_1400e7758(longlong *param_1)
+
+{
+  undefined2 *puVar1;
+  longlong lVar2;
+  int iVar3;
+  undefined2 *puVar4;
+  int iVar5;
+  int iVar6;
+  int local_res8 [2];
+  undefined4 local_res10 [2];
+  undefined4 *local_res18;
+  
+  FUN_1400633a8(&local_res18,0x21e30);
+  *local_res18 = 0x56c;
+  local_res8[0] = 0;
+  local_res10[0] = 0x21e30;
+  (*DAT_14013e290)(local_res18,local_res10,local_res8);
+  iVar5 = 0;
+  iVar6 = 0;
+  if (0 < local_res8[0]) {
+    do {
+      iVar3 = lstrlenW((LPCWSTR)(local_res18 + (longlong)iVar6 * 0x15b + 3));
+      FUN_140063720(param_1,(longlong)(iVar3 + 3 + iVar5));
+      puVar1 = (undefined2 *)(*param_1 + (longlong)iVar5 * 2);
+      puVar4 = puVar1;
+      if (iVar6 != 0) {
+        *puVar1 = 0xd;
+        puVar4 = puVar1 + 2;
+        puVar1[1] = 10;
+        iVar5 = iVar5 + 2;
+      }
+      FUN_14001d78c((undefined1 *)puVar4,(undefined1 *)(local_res18 + (longlong)iVar6 * 0x15b + 3),
+                    (iVar3 + 1) * 2);
+      iVar6 = iVar6 + 1;
+      iVar5 = iVar5 + iVar3;
+    } while (iVar6 < local_res8[0]);
+  }
+  lVar2 = *param_1;
+  FUN_14005b104((longlong *)&local_res18);
+  return lVar2;
+}
+
+
+

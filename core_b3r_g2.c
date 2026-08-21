@@ -42,7 +42,7 @@ extern int      (*g_precvfrom)(uintptr_t, void *, int,
 
 /* ---- 本文件引用的辅助函数 (extern, 不在此定义) ---- */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);   /* @0x140063720 字符串扩容 */
-extern void    FUN_14005d30c(int param_1);               /* @0x14005d30c 组发送包 */
+extern void    PECMD_SendPingPacket(int param_1);               /* @0x14005d30c 组发送包 */
 extern void    PECMD_SetSystemTimeFromUnix(int *param_1);              /* @0x14005d390 设置本地时间 */
 
 /* ---- 本文件使用、桩中未声明的 Win32/SetupAPI ---- */
@@ -220,7 +220,7 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
                 local_22e = 0;
                 local_22a = 0;
                 local_res8[0] = 0x10;
-                FUN_14005d30c(iVar3);
+                PECMD_SendPingPacket(iVar3);
                 local_res14 = 0;
                 local_228[0] = 1;
                 local_res10 = 1;

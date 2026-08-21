@@ -1,0 +1,47 @@
+/* ========== FUN_1400e3d60 @ 1400e3d60  size=215 ========== */
+/* signature: undefined8 __fastcall FUN_1400e3d60(LPCWSTR param_1, char param_2, char param_3, HWND param_4, undefined4 param_5, undefined4 param_6, undefined8 param_7, undefined8 param_8) */
+
+undefined8
+FUN_1400e3d60(LPCWSTR param_1,char param_2,char param_3,HWND param_4,undefined4 param_5,
+             undefined4 param_6,undefined8 param_7,undefined8 param_8)
+
+{
+  LPCWSTR local_58;
+  undefined8 local_50;
+  HWND local_48;
+  int local_40;
+  int local_3c;
+  int local_38;
+  undefined4 local_34;
+  undefined4 local_30;
+  undefined8 local_28;
+  undefined4 local_20;
+  undefined8 local_18;
+  
+  if (param_1 == (LPCWSTR)0x0) {
+    local_50 = 0;
+  }
+  else {
+    local_3c = lstrlenW(param_1);
+    local_20 = 0;
+    local_40 = (int)param_2;
+    local_38 = (int)param_3;
+    local_50 = 0;
+    local_34 = param_5;
+    local_30 = param_6;
+    local_28 = param_7;
+    local_18 = param_8;
+    local_58 = param_1;
+    local_48 = param_4;
+    if (param_4 == (HWND)0x0) {
+      EnumWindows(FUN_1400748a0,(LPARAM)&local_58);
+    }
+    else {
+      EnumChildWindows(param_4,FUN_1400748a0,(LPARAM)&local_58);
+    }
+  }
+  return local_50;
+}
+
+
+

@@ -103,9 +103,9 @@ extern uint64_t         PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE
                                       short *param_7);
 extern uint64_t         PECMD_ProcessCommandLine(LPCSTR a, int b, LPCSTR c, char *d, LPBYTE e,
                                       LPBYTE f, int g);
-extern int64_t          FUN_140078c68(LPCSTR s, int64_t a, uint64_t b);
+extern int64_t          PECMD_EnumNetworkDevices(LPCSTR s, int64_t a, uint64_t b);
 extern void             PECMD_NotifyMainWindowRefresh(int64_t *param_1, int flag);
-extern void             FUN_1400629b8(int64_t *script, LPCWSTR key, LPCWSTR value);
+extern void             PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern uint32_t        *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2,
                                       uint64_t *param_3, int64_t *param_4,
                                       uint64_t param_5, LPWSTR param_6,
@@ -628,7 +628,7 @@ LAB_1400af515:
                             }
                         } else {
 LAB_1400b00d9:
-                            FUN_140078c68(local_b8, -1, (local_164 & 0xff) | (uint64_t)(uint8_t)local_187);
+                            PECMD_EnumNetworkDevices(local_b8, -1, (local_164 & 0xff) | (uint64_t)(uint8_t)local_187);
                         }
                     }
                 } else {
@@ -641,7 +641,7 @@ LAB_1400afff3:
                     if (local_150 == 8) {
                         uVar19 = 0xffffffff;
                     }
-                    iVar8 = (int)FUN_140078c68(local_b8, (int64_t)uVar19, (uVar23 & 0xff) | (uint64_t)(uint8_t)local_187);
+                    iVar8 = (int)PECMD_EnumNetworkDevices(local_b8, (int64_t)uVar19, (uVar23 & 0xff) | (uint64_t)(uint8_t)local_187);
                     if (iVar8 == 0) {
                         DVar26 = GetLastError();
                     }
@@ -650,15 +650,15 @@ LAB_1400afff3:
             }
         } else {
             if (*local_138 != L'\0') {
-                FUN_1400629b8(param_1, local_138, local_170);
+                PECMD_SetVariable(param_1, local_138, local_170);
             }
             if (*local_c0 != L'\0') {
                 plVar11 = FUN_1400702f0((int64_t *)&local_res20, local_e0, 0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, local_c0, (LPCWSTR)*plVar11);
+                PECMD_SetVariable(param_1, local_c0, (LPCWSTR)*plVar11);
                 FUN_14005b104(&local_res20);
             }
             if (*local_f8 != L'\0') {
-                FUN_1400629b8(param_1, local_f8, local_a8);
+                PECMD_SetVariable(param_1, local_f8, local_a8);
             }
             local_res20 = (LPBYTE)((intptr_t)local_78 + 0x654);
             pBVar1 = (BYTE *)((intptr_t)local_78 + 0x97e);
@@ -675,17 +675,17 @@ LAB_1400afff3:
             if (*local_e8 != L'\0') {
                 PECMD_StrDupA((WCHAR **)&local_170, (LPCSTR)(intptr_t)local_158, 0xffffffffffffffffULL,
                               0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, local_e8, local_170);
+                PECMD_SetVariable(param_1, local_e8, local_170);
             }
             if (*pWVar24 != L'\0') {
                 PECMD_StrDupA((WCHAR **)&local_170, (LPCSTR)((intptr_t)local_78 + 0x32a),
                               0xffffffffffffffffULL, 0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, pWVar24, local_170);
+                PECMD_SetVariable(param_1, pWVar24, local_170);
             }
             if (*local_f0 != L'\0') {
                 PECMD_StrDupA((WCHAR **)&local_170, (LPCSTR)local_res20, 0xffffffffffffffffULL,
                               0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, local_f0, local_170);
+                PECMD_SetVariable(param_1, local_f0, local_170);
             }
             BVar2 = *pBVar1;
             pBVar15 = pBVar1;
@@ -699,27 +699,27 @@ LAB_1400afff3:
             if (*local_d8 != L'\0') {
                 PECMD_StrDupA((WCHAR **)&local_170, (LPCSTR)pBVar1, 0xffffffffffffffffULL,
                               0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, local_d8, local_170);
+                PECMD_SetVariable(param_1, local_d8, local_170);
             }
             if (*local_c8 != L'\0') {
                 PECMD_StrDupA((WCHAR **)&local_170, (LPCSTR)local_48, 0xffffffffffffffffULL,
                               0xffffffffffffffffULL);
-                FUN_1400629b8(param_1, local_c8, local_170);
+                PECMD_SetVariable(param_1, local_c8, local_170);
             }
             if (*local_b0 != L'\0') {
-                FUN_1400629b8(param_1, local_b0, local_50);
+                PECMD_SetVariable(param_1, local_b0, local_50);
             }
             if (*local_d0 != L'\0') {
-                FUN_1400629b8(param_1, local_d0, local_58);
+                PECMD_SetVariable(param_1, local_d0, local_58);
             }
             if (*local_88 != L'\0') {
-                FUN_1400629b8(param_1, local_88, local_60);
+                PECMD_SetVariable(param_1, local_88, local_60);
             }
             if (*local_80 != L'\0') {
-                FUN_1400629b8(param_1, local_80, local_98);
+                PECMD_SetVariable(param_1, local_80, local_98);
             }
             if (*local_90 != L'\0') {
-                FUN_1400629b8(param_1, local_90, local_70);
+                PECMD_SetVariable(param_1, local_90, local_70);
             }
             bVar6 = local_160 != (LPCWSTR)0x0;
             local_160 = (LPWSTR)(intptr_t)-(intptr_t)local_160;

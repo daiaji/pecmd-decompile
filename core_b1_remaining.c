@@ -38,7 +38,7 @@ extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);       /* @0x14005c5a0 */
 extern DWORD FUN_14005C4E0(HKEY root, LPCWSTR subkey, LPCWSTR name, DWORD *type,
                            BYTE *data, DWORD *size);      /* @0x14005c4e0 */
-extern DWORD FUN_14005c61c(HKEY root, LPCWSTR subkey, LPCWSTR name); /* @0x14005c61c 删注册表值 */
+extern DWORD PECMD_RegDeleteValue(HKEY root, LPCWSTR subkey, LPCWSTR name); /* @0x14005c61c 删注册表值 */
 extern void FUN_1400E6D74(WCHAR *dst, uint64_t v);        /* @0x1400e6d74 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len); /* @0x1400702d4 */
@@ -96,7 +96,7 @@ extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd)
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                            HANDLE tmpl);                     /* @0x140003864 CreateFileW 包装(exec2 定义, 返回句柄) */
-extern uint32_t FUN_1400e693c(HANDLE hFile);                    /* @0x1400e693c GetFileSize */
+extern uint32_t PECMD_GetFileSize(HANDLE hFile);                    /* @0x1400e693c GetFileSize */
 extern uint64_t PECMD_EncodeDet(int64_t buf, int len);            /* @0x14005f33c 编码检测 */
 extern uint32_t PECMD_ResDecode(int64_t *ps, uint32_t flag);      /* @0x1400e7d58 卸载/释放缓冲 */
 extern LPWSTR PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode); /* @0x14005fc90 GUID->字符串 */
@@ -134,7 +134,7 @@ extern WCHAR *FUN_14005B154(WCHAR **ps);                       /* @0x14005b154 �
 extern WCHAR *FUN_140063620(WCHAR **out);                      /* @0x140063620 初始化串缓冲 */
 extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out,
                              int mode, uint8_t flag);          /* @0x14007a224 */
-extern short FUN_1400677b0(WCHAR **pp, int64_t val);           /* @0x1400677b0 */
+extern short PECMD_ParseHashNumbers(WCHAR **pp, int64_t val);           /* @0x1400677b0 */
 extern uint32_t PECMD_TokenizeList(int64_t *ctx, short *src, int mode); /* @0x14007403c */
 extern void PECMD_SetClipboardUnicode(LPCWSTR s);                          /* @0x140060718 */
 extern WCHAR *FUN_140078E90(WCHAR **ps);                       /* @0x140078e90 */
@@ -396,7 +396,7 @@ extern int     FUN_1400690c0(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3, int
                              DWORD *param_5, void *param_6);               /* @0x1400690c0 */
 extern uint32_t PECMD_EnumPartitionsMapDriveLetter(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4); /* @0x14008ba90 */
 extern uint32_t FUN_140006a4c(LPCWSTR param_1);                            /* @0x140006a4c */
-extern int64_t FUN_14001d810(uint64_t param_1, uint64_t param_2, uint64_t param_3); /* @0x14001d810 */
+extern int64_t PECMD_OpenFileExisting(uint64_t param_1, uint64_t param_2, uint64_t param_3); /* @0x14001d810 */
 extern int     FUN_14005b184(char *param_1, int64_t param_2, int64_t param_3);       /* @0x14005b184 */
 extern uint64_t FUN_1400e3cd4(LPCWSTR param_1, uint64_t *param_2, int64_t *param_3); /* @0x1400e3cd4 */
 extern uint16_t *PECMD_NextToken(int64_t *param_1, int64_t *param_2, uint32_t param_3); /* @0x140024c48 */
@@ -2782,7 +2782,7 @@ LAB_140007647:
             if ((param_4 == NULL) || (iVar2 = (int)FUN_140006a4c(pWVar15), iVar2 == 0)) {
                 pvVar9 = CreateFileW(pWVar15, 0x80000000, 7, NULL, 3, 0x2000080, (HANDLE)0);
             } else {
-                pvVar9 = (HANDLE)FUN_14001d810((uint64_t)pWVar15, 0x80000000, 7);
+                pvVar9 = (HANDLE)PECMD_OpenFileExisting((uint64_t)pWVar15, 0x80000000, 7);
             }
             if ((pvVar9 != (HANDLE)-1) && (pvVar9 != (HANDLE)0)) {
                 memset(lpOutBuffer, 0, 0xc);
@@ -5111,7 +5111,7 @@ uint8_t PECMD_ParseEnvSwitches(const WCHAR *s, int64_t *param_2, short param_3)
                     g_helpWord = local_res18[0];
                 }
                 v120 = ((uint64_t)g_helpHi32 << 32) | (uint32_t)g_u32A22C;
-                FUN_1400677b0(&p, (int64_t)(uintptr_t)&v120);
+                PECMD_ParseHashNumbers(&p, (int64_t)(uintptr_t)&v120);
                 g_u32A22C = (uint32_t)v120;
                 g_helpHi32 = (uint32_t)(v120 >> 32);
                 FUN_14005B104(&pbuf);
@@ -6870,7 +6870,7 @@ void PECMD_RunFbwfHookScript(void)
                           WSTR("fbwf.hook"),
                           type, (BYTE *)&local_res18, size);
     if ((DVar1 == 0) && (*(int16_t *)&local_res18 != 0)) {
-        FUN_14005c61c((HKEY)(intptr_t)0xffffffff80000002,
+        PECMD_RegDeleteValue((HKEY)(intptr_t)0xffffffff80000002,
                       WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("fbwf.hook"));
         FUN_14004c0bc(0x14013d130, local_res18, 0, 0, 0);
     }
@@ -7985,7 +7985,7 @@ void PECMD_ReportPelogonStatus(int64_t *param_1, int param_2, int param_3)
     }
     *param_1 = lVar2;
 LAB_14001bceb:
-    FUN_14005c61c((HKEY)(intptr_t)0xffffffff80000002,
+    PECMD_RegDeleteValue((HKEY)(intptr_t)0xffffffff80000002,
                   WSTR("SOFTWARE\\PELOGON"), WSTR("LogohWnd"));
     LeaveCriticalSection((void *)&g_csInit);
     SendMessageW(hWnd, 0x111,
@@ -9251,7 +9251,7 @@ uint32_t PECMD_ReadFileStr(LPCWSTR param_1, int64_t *param_2)
     if (hFile == (HANDLE)0) {
         uVar1 = 0xfffffffe;
     } else {
-        nNumberOfBytesToRead = FUN_1400e693c(hFile);
+        nNumberOfBytesToRead = PECMD_GetFileSize(hFile);
         PECMD_SetFilePointer(hFile, (LARGE_INTEGER){0}, 0);
         PECMD_GrowByteBuffer((void **)param_2, (int64_t)nNumberOfBytesToRead + 0xc);
         local_res20[0] = 0;

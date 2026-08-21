@@ -1,0 +1,98 @@
+/* ========== FUN_140018220 @ 140018220  size=475 ========== */
+/* signature: undefined8 __fastcall FUN_140018220(longlong param_1, longlong param_2) */
+
+undefined8 FUN_140018220(longlong param_1,longlong param_2)
+
+{
+  ulonglong *puVar1;
+  uint uVar2;
+  uint uVar3;
+  bool bVar4;
+  WCHAR WVar5;
+  int iVar6;
+  HMODULE hModule;
+  undefined8 uVar7;
+  code *pcVar8;
+  ulonglong uVar9;
+  longlong lVar10;
+  uint *puVar11;
+  LPCSTR lpString2;
+  longlong lVar12;
+  ulonglong *puVar13;
+  WCHAR local_248 [8];
+  short local_238;
+  
+  uVar9 = (ulonglong)*(uint *)(*(longlong *)(param_1 + 0x28) + 0x90);
+  if (uVar9 != 0) {
+    puVar11 = (uint *)(uVar9 + param_2);
+    while( true ) {
+      lVar12 = 0;
+      if (*puVar11 == 0) break;
+      uVar2 = puVar11[4];
+      uVar3 = puVar11[3];
+      puVar13 = (ulonglong *)((ulonglong)*puVar11 + param_2);
+      local_248[0] = L'\0';
+      lVar10 = lVar12;
+      do {
+        WVar5 = (WCHAR)*(byte *)(lVar10 + (ulonglong)uVar3 + param_2);
+        local_248[lVar10] = WVar5;
+        if (WVar5 == L'\0') break;
+        lVar10 = lVar10 + 1;
+      } while (lVar10 < 0x104);
+      hModule = GetModuleHandleW(local_248);
+      if ((hModule == (HMODULE)0x0) && (hModule = LoadLibraryW(local_248), hModule == (HMODULE)0x0))
+      {
+        return 0;
+      }
+      uVar7 = FUN_14005c788("KERNEL32",(ushort *)local_248,8);
+      bVar4 = false;
+      if (((char)uVar7 != '\0') && ((local_238 == 0 || (local_238 == 0x2e)))) {
+        bVar4 = true;
+      }
+      uVar9 = *puVar13;
+      puVar1 = puVar13;
+      lVar10 = lVar12;
+      while (uVar9 != 0) {
+        uVar9 = *puVar1;
+        if ((uVar9 & 0x8000000000000000) == 0) {
+          lpString2 = (LPCSTR)(uVar9 + 2 + param_2);
+          if (!bVar4) goto LAB_140018390;
+          iVar6 = lstrcmpiA("GetProcAddress",lpString2);
+          if (iVar6 == 0) {
+            pcVar8 = FUN_140018148;
+          }
+          else {
+            iVar6 = lstrcmpiA("GetModuleFileNameW",lpString2);
+            if (iVar6 == 0) {
+              pcVar8 = FUN_140018178;
+            }
+            else {
+              iVar6 = lstrcmpiA("GetModuleHandleW",lpString2);
+              if (iVar6 != 0) goto LAB_140018390;
+              pcVar8 = FUN_1400181b8;
+            }
+          }
+          if (pcVar8 == (FARPROC)0x0) goto LAB_140018390;
+        }
+        else {
+          lpString2 = (LPCSTR)(uVar9 & 0xffff);
+LAB_140018390:
+          pcVar8 = GetProcAddress(hModule,lpString2);
+          if (pcVar8 == (FARPROC)0x0) {
+            return 0;
+          }
+        }
+        lVar12 = lVar12 + 1;
+        *(code **)(lVar10 + (ulonglong)uVar2 + param_2) = pcVar8;
+        lVar10 = lVar12 * 8;
+        puVar1 = puVar13 + lVar12;
+        uVar9 = *puVar1;
+      }
+      puVar11 = puVar11 + 5;
+    }
+  }
+  return 1;
+}
+
+
+

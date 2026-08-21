@@ -68,7 +68,7 @@ extern void     PECMD_LoadSetupApiFunctions(void);                          /* @
 extern bool     FUN_1400c11c0(WCHAR **pp, int *out);          /* @0x1400c11c0 */
 extern bool     PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
 extern uint32_t PECMD_GetDiskGeometry(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
-extern BOOL     FUN_14006f908(char param_1, int param_2);     /* @0x14006f908 */
+extern BOOL     PECMD_OpenCloseDrive(char param_1, int param_2);     /* @0x14006f908 */
 extern void     PECMD_CheckDriveType(WCHAR param_1, int param_2);    /* @0x14007c7ec */
 extern short   *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
                               short c, short f);              /* @0x1400547bc 拆串 */
@@ -117,7 +117,7 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
 /* ================================================================
  * @0x14007c88c
  * 驱动器/CD 字母设置：解析 C- / U- 开关与显式盘符，枚举逻辑盘并调用
- * FUN_14006f908 / PECMD_CheckDriveType。盘符路径前缀用 CONCAT62 拼接（已规范化）。
+ * PECMD_OpenCloseDrive / PECMD_CheckDriveType。盘符路径前缀用 CONCAT62 拼接（已规范化）。
  */
 uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
 {
@@ -194,7 +194,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
             iVar4 = local_res18[0];
             if (UVar3 == 5) {
                 if ((cVar7 != '\x02') || (iVar5 != 7)) {
-                    FUN_14006f908((char)WVar9, (uint)(cVar7 != '\x01'));
+                    PECMD_OpenCloseDrive((char)WVar9, (uint)(cVar7 != '\x01'));
                     return 0;
                 }
                 iVar4 = -1;
@@ -262,7 +262,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
                     /* TODO(verify): CONCAT62 仅替换低位 WCHAR(盘符) */
                     local_68 = (local_68 & 0xFFFFFFFFFFFF0000ULL)
                                | (uint8_t)(cVar6 + 0x41);
-                    FUN_14006f908((char)(cVar6 + 0x41), (uint)(cVar7 != '\x01'));
+                    PECMD_OpenCloseDrive((char)(cVar6 + 0x41), (uint)(cVar7 != '\x01'));
                 } else if (*pcVar10 == 'E') {
                     PECMD_CheckDriveType((WCHAR)((uint16_t)(uint8_t)cVar6 + L'A'), -1);
                 }

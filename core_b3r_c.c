@@ -24,7 +24,7 @@ extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);        /* @0x14001f1d4 */
 extern uint64_t PECMD_LoadImageStream(uint8_t *p, size_t n, uint64_t *p3); /* @0x140061e98 */
 extern int64_t FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
 extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr, uint32_t flag); /* @0x14001c2cc EnablePrivilege */
-extern uint64_t FUN_1400612cc(uint64_t *param_1);           /* @0x1400612cc thread proc */
+extern uint64_t PECMD_TaskShowMessage(uint64_t *param_1);           /* @0x1400612cc thread proc */
 extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d, DWORD e, DWORD f, DWORD g); /* @0x1400e3d60 */
 extern DWORD PECMD_EncodeImageToStream(int64_t param_1, LPCWSTR param_2, LPCWSTR param_3, int param_4); /* @0x14007d340 */
 
@@ -428,7 +428,7 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
     lpParameter = local_60;
     local_48 = local_60;
     FUN_14005b0b8(local_60);
-    local_50 = CreateThread(0, 0x20000, (void *)FUN_1400612cc, lpParameter, 0x10004,
+    local_50 = CreateThread(0, 0x20000, (void *)PECMD_TaskShowMessage, lpParameter, 0x10004,
                             (DWORD *)&g_lastThreadId);
     if (local_50 == (HANDLE)0) {
         DVar4 = GetLastError();

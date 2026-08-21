@@ -86,7 +86,7 @@ extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern void      FUN_140063620(void *out);
 extern int       PECMD_ParseUIntValue(LPCWSTR *, int *);
-extern void      FUN_14005e198(HWND, uint32_t *, int);
+extern void      PECMD_ShowWindowMode(HWND, uint32_t *, int);
 extern void      FUN_14006764c(int64_t *, int64_t *, short, short);
 extern void      PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);
 extern HBITMAP   PECMD_CaptureScreenRegion(RECT *, HDC *, LPCWSTR);
@@ -102,7 +102,7 @@ extern void      PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint
 extern void      PECMD_ExtractTokenByDelim(int64_t *, int64_t *, int);
 extern void      PECMD_CopyUpToChar(int64_t *, int64_t *, uint32_t);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
-extern void      FUN_1400677b0(int64_t *, int64_t);
+extern void      PECMD_ParseHashNumbers(int64_t *, int64_t);
 extern void      PECMD_SplitTokenTrimWs(int64_t *, int64_t *, short);
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *, char);
 extern void      PECMD_ReadFileToWide(WCHAR *, int64_t *);
@@ -564,7 +564,7 @@ uint32_t PECMD_QueryWindowState(int64_t *param_1, HWND param_2, LPCWSTR param_3,
     if (iVar2 == 0) {
         PECMD_ParseUIntValue((LPCWSTR *)&local_res18, (int *)local_res20);
         if (local_res20[0] != 0xf8000009) {
-            FUN_14005e198(param_2, local_res20, iVar4);
+            PECMD_ShowWindowMode(param_2, local_res20, iVar4);
             if (local_res20[0] == 0) {
                 return 1;
             }
@@ -816,7 +816,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
                     if (*local_res10 == L',') {
                         local_res10 = local_res10 + 1;
                         plVar6 = PECMD_SplitTokenAssignVar((WCHAR **)&local_60, (WCHAR **)&local_res10, 0x2c, 1);
-                        FUN_1400677b0(plVar6, (int64_t)local_78);
+                        PECMD_ParseHashNumbers(plVar6, (int64_t)local_78);
                         if (*local_res10 == L',') {
                             local_res10 = local_res10 + 1;
                             plVar6 = PECMD_SplitTokenAssignVar((WCHAR **)&local_60, (WCHAR **)&local_res10, 0x2c, 1);

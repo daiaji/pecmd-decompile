@@ -1,0 +1,51 @@
+/* ========== FUN_140018c6c @ 140018c6c  size=288 ========== */
+/* signature: undefined __fastcall FUN_140018c6c(undefined8 param_1, wchar_t * param_2, undefined8 param_3, undefined8 param_4) */
+
+void FUN_140018c6c(undefined8 param_1,wchar_t *param_2,undefined8 param_3,undefined8 param_4)
+
+{
+  LPWSTR lpBuffer;
+  int iVar1;
+  longlong *plVar2;
+  longlong *plVar3;
+  undefined8 local_res18;
+  undefined8 local_res20;
+  
+  local_res18 = param_3;
+  local_res20 = param_4;
+  plVar2 = TlsGetValue(DAT_14013c934);
+  plVar3 = &DAT_14013cb18;
+  if ((plVar2 != (longlong *)0x0) && (*plVar2 != 0)) {
+    plVar3 = plVar2;
+  }
+  if (*plVar3 != 0) {
+    EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+    if (*plVar3 != 0) {
+      if ((int)plVar3[3] - (int)plVar3[2] < 0xc96) {
+        plVar3[3] = plVar3[2] + 0x10c96;
+        FUN_140063720(plVar3 + 1,plVar3[2] + 0x10c96);
+      }
+      lpBuffer = (LPWSTR)(plVar3[1] + 0x1000 + plVar3[2] * 2);
+      *lpBuffer = L'\0';
+      if (param_2 < (wchar_t *)0x10000) {
+        LoadStringW(DAT_14013ca68,(UINT)param_2,lpBuffer,0x400);
+        param_2 = lpBuffer;
+      }
+      iVar1 = _vsnwprintf((wchar_t *)(plVar3[1] + plVar3[2] * 2),0x7fd,param_2,(va_list)&local_res18
+                         );
+      if (iVar1 < 0) {
+        iVar1 = 0;
+      }
+      plVar3[2] = plVar3[2] + (longlong)iVar1;
+      *(undefined2 *)(plVar3[1] + plVar3[2] * 2) = 0;
+      if ((0x10000 < plVar3[2]) || (DAT_14013cb41 != '\0')) {
+        FUN_1400185c8('\x01',plVar3);
+      }
+    }
+    LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  }
+  return;
+}
+
+
+

@@ -1,0 +1,50 @@
+/* ========== FUN_14006f908 @ 14006f908  size=317 ========== */
+/* signature: BOOL __fastcall FUN_14006f908(char param_1, int param_2) */
+
+BOOL FUN_14006f908(char param_1,int param_2)
+
+{
+  BOOL BVar1;
+  HANDLE hObject;
+  DWORD local_res8 [2];
+  HANDLE local_res18;
+  WCHAR local_28 [4];
+  short local_20;
+  undefined2 local_1e;
+  undefined2 local_1c;
+  undefined2 local_1a;
+  undefined2 local_18;
+  undefined2 local_16;
+  
+  builtin_memcpy(local_28,L"\\\\.\\",8);
+  local_20 = (short)param_1;
+  local_1e = 0x3a;
+  local_res18 = (HANDLE)0x0;
+  local_res8[0] = 0;
+  local_1c = 0;
+  local_1a = 0;
+  local_18 = 0;
+  local_16 = 0;
+  FUN_140003864(&local_res18,local_28,0xc0000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
+  if (local_res18 == (HANDLE)0x0) {
+    FUN_140003864(&local_res18,local_28,0x80000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
+    hObject = local_res18;
+    if (local_res18 != (HANDLE)0x0) goto LAB_14006f9e1;
+  }
+  else {
+LAB_14006f9e1:
+    hObject = local_res18;
+    BVar1 = DeviceIoControl(local_res18,(-(uint)(param_2 != 0) & 0xfffffffc) + 0x2d480c,(LPVOID)0x0,
+                            0,(LPVOID)0x0,0,local_res8,(LPOVERLAPPED)0x0);
+    if (BVar1 != 0) goto LAB_14006fa1d;
+  }
+  BVar1 = 0;
+LAB_14006fa1d:
+  if ((hObject != (HANDLE)0x0) && (hObject != (HANDLE)0xffffffffffffffff)) {
+    CloseHandle(hObject);
+  }
+  return BVar1;
+}
+
+
+

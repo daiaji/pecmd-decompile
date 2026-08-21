@@ -1,0 +1,97 @@
+/* ========== FUN_140008834 @ 140008834  size=759 ========== */
+/* signature: undefined __fastcall FUN_140008834(LPCWSTR param_1) */
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void FUN_140008834(LPCWSTR param_1)
+
+{
+  WCHAR WVar1;
+  bool bVar2;
+  int iVar3;
+  int iVar4;
+  DWORD DVar5;
+  longlong lVar6;
+  SC_HANDLE hSCManager;
+  SC_HANDLE pSVar7;
+  LPCWSTR lpString;
+  uint uVar8;
+  LPCWSTR pWVar9;
+  bool bVar10;
+  LPCWSTR local_res8;
+  LPCWSTR local_res10;
+  LPCWSTR local_res18;
+  WCHAR local_858 [1040];
+  
+  bVar10 = false;
+  _DAT_14013ca10 = param_1;
+  lpString = param_1;
+  if (*param_1 == L'~') {
+    _DAT_14013ca10 = param_1 + 1;
+    bVar10 = *_DAT_14013ca10 == L'I';
+    param_1 = param_1 + 2;
+    lpString = param_1;
+  }
+  for (; (WVar1 = *param_1, WVar1 != L'\0' &&
+         ((((ushort)WVar1 < 9 || (0xd < (ushort)WVar1)) && (WVar1 != L' ')))); param_1 = param_1 + 1
+      ) {
+  }
+  iVar4 = (int)((longlong)param_1 - (longlong)lpString >> 1);
+  if (0x400 < iVar4) {
+    iVar4 = 0x400;
+  }
+  local_res10 = param_1;
+  FUN_14005b154((longlong *)&local_res10);
+  lVar6 = FUN_14005c72c("--gui-",(ushort *)local_res10,6);
+  uVar8 = 0x100;
+  if ((char)lVar6 != '\0') {
+    local_res18 = local_res10 + 6;
+    FUN_14005b154((longlong *)&local_res18);
+    iVar3 = lstrlenW(local_res18);
+    FUN_14001d744((undefined1 *)local_res10,(longlong)local_res18,(iVar3 + 1) * 2);
+    uVar8 = 0;
+  }
+  FUN_14001d78c((undefined1 *)local_858,(undefined1 *)lpString,iVar4 * 2);
+  local_858[iVar4] = L'\0';
+  DAT_140147000 = 0;
+  iVar4 = lstrlenW(lpString);
+  FUN_140063694(&local_res8,(longlong)(iVar4 + 0x227));
+  DVar5 = GetModuleFileNameW((HMODULE)0x0,local_res8 + 1,0x1cc);
+  if (0 < (int)DVar5) {
+    bVar2 = false;
+    local_res8[(longlong)(int)DVar5 + 1] = L'\0';
+    *local_res8 = L'\"';
+    pWVar9 = local_res8;
+    while (pWVar9 = pWVar9 + 1, pWVar9 < local_res8 + (longlong)(int)DVar5 + 1) {
+      if (((8 < (ushort)*pWVar9) && ((ushort)*pWVar9 < 0xe)) || (*pWVar9 == L' ')) {
+        bVar2 = true;
+      }
+    }
+    pWVar9 = local_res8 + 1;
+    if (bVar2) {
+      local_res8[(longlong)(int)DVar5 + 1] = L'\"';
+      DVar5 = DVar5 + 2;
+      pWVar9 = local_res8;
+    }
+    FUN_14001d78c((undefined1 *)(pWVar9 + (int)DVar5),(undefined1 *)L" EXEC /Service ",0x1e);
+    FUN_14001d78c((undefined1 *)(pWVar9 + (int)DVar5 + 0xf),(undefined1 *)lpString,(iVar4 + 1) * 2);
+    hSCManager = OpenSCManagerW((LPCWSTR)0x0,(LPCWSTR)0x0,0xf003f);
+    if (((hSCManager != (SC_HANDLE)0x0) &&
+        (pSVar7 = CreateServiceW(hSCManager,local_858,local_858,0xf01ff,uVar8 | 0x10,2,0,pWVar9,
+                                 (LPCWSTR)0x0,(LPDWORD)0x0,(LPCWSTR)0x0,(LPCWSTR)0x0,(LPCWSTR)0x0),
+        pSVar7 != (SC_HANDLE)0x0)) && (bVar10)) {
+      CloseServiceHandle(pSVar7);
+      pSVar7 = OpenServiceW(hSCManager,local_858,0x20000000);
+      if (pSVar7 != (SC_HANDLE)0x0) {
+        StartServiceW(pSVar7,0,(LPCWSTR *)0x0);
+        CloseServiceHandle(pSVar7);
+      }
+    }
+    CloseServiceHandle(hSCManager);
+  }
+  FUN_14005b104((longlong *)&local_res8);
+  return;
+}
+
+
+

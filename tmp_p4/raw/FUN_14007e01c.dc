@@ -1,0 +1,62 @@
+/* ========== FUN_14007e01c @ 14007e01c  size=318 ========== */
+/* signature: undefined __fastcall FUN_14007e01c(longlong param_1, uint param_2, LPWSTR param_3) */
+
+void FUN_14007e01c(longlong param_1,uint param_2,LPWSTR param_3)
+
+{
+  longlong lVar1;
+  HWND hWnd;
+  bool bVar2;
+  int iVar3;
+  LPWSTR pWVar4;
+  undefined7 extraout_var;
+  int nCmdShow;
+  LPWSTR local_res8;
+  int local_res10 [2];
+  WCHAR local_58 [24];
+  
+  if (param_2 != 0xf8000009) {
+    *(uint *)(param_1 + 0x70) = param_2;
+  }
+  lVar1 = *(longlong *)(param_1 + 0x38);
+  nCmdShow = 0;
+  hWnd = *(HWND *)(lVar1 + 0x20);
+  if (param_3 != (LPWSTR)0x0) {
+    if (*param_3 == L'#') {
+      pWVar4 = StrChrW(param_3,L':');
+      if (pWVar4 != (LPWSTR)0x0) {
+        local_res8 = param_3 + 1;
+        *pWVar4 = L'\0';
+        local_res10[0] = -0x80000000;
+        param_3 = pWVar4 + 1;
+        bVar2 = FUN_140074838((longlong *)&local_res8,local_res10);
+        if ((int)CONCAT71(extraout_var,bVar2) != 0) {
+          iVar3 = local_res10[0];
+          if (local_res10[0] < 0) {
+            iVar3 = -0x80000000;
+          }
+          *(int *)(lVar1 + 0xe0) = iVar3;
+        }
+      }
+    }
+    FUN_1400703e4((longlong *)(lVar1 + 0xd8),param_3);
+  }
+  if (-1 < *(int *)(param_1 + 0x70)) {
+    nCmdShow = 5;
+  }
+  ShowWindow(hWnd,nCmdShow);
+  if (param_2 < 0x65) {
+    SendMessageW(hWnd,0x402,(longlong)*(int *)(param_1 + 0x70),0);
+  }
+  if (param_3 != (LPCWSTR)0x0) {
+    InvalidateRect(hWnd,(RECT *)0x0,1);
+  }
+  wsprintfW(local_58,L"%ld");
+  if (**(LPCWSTR *)(param_1 + 0x10) != L'\0') {
+    FUN_14007d0ac(*(longlong **)(param_1 + 0x50),*(LPCWSTR *)(param_1 + 0x10),local_58);
+  }
+  return;
+}
+
+
+

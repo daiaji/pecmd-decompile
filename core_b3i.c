@@ -50,7 +50,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern void FUN_14001a640(WCHAR *buf);
-extern void FUN_14001e2cc(void);
+extern void PECMD_SyncWorkingDirectory(void);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
 extern uint64_t FUN_14004c0bc(uint64_t a1, uint64_t a2,
                               void *p3, void *p4, void *p5);
@@ -103,7 +103,7 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
     if (*s == 0x40) {
         WCHAR *pWVar2 = FUN_14001BE14((WCHAR *)(s + 1));
         FUN_14001a640(pWVar2);
-        FUN_14001e2cc();
+        PECMD_SyncWorkingDirectory();
     } else if (*s != 0x23) {
         if (*s != 0) {
             return PECMD_CreateDirectory((uint64_t)pp, (WCHAR *)s);

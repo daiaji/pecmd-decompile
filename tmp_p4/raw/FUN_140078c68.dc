@@ -1,0 +1,45 @@
+/* ========== FUN_140078c68 @ 140078c68  size=290 ========== */
+/* signature: int __fastcall FUN_140078c68(LPCSTR param_1, int param_2, uint param_3) */
+
+int FUN_140078c68(LPCSTR param_1,int param_2,uint param_3)
+
+{
+  LPCWSTR pWVar1;
+  int iVar2;
+  LPCWSTR local_res20;
+  LPCWSTR local_28 [2];
+  
+  FUN_140063620(local_28);
+  local_res20 = (LPCWSTR)0x0;
+  iVar2 = 0;
+  if (-1 < param_2) {
+    iVar2 = param_2;
+  }
+  if ((param_3 & 2) == 0) {
+    if (*param_1 != '\0') {
+      thunk_FUN_140072814(param_1,(longlong *)local_28,"PnpInstanceID");
+    }
+    FUN_14006355c((longlong *)&local_res20,local_28[0],-1,0xffffffffffffffff);
+    pWVar1 = local_res20;
+    if ((char)*local_res20 != '\0') {
+      iVar2 = FUN_140072924((uint)(iVar2 != 0),local_res20,param_3 & 1,(longlong *)0x0,(ushort *)0x0
+                           );
+      if (param_2 < 0) {
+        FUN_1400195f0(&DAT_14013d130,0x32,0,(undefined8 *)0x0);
+        FUN_140072924(1,pWVar1,param_3 & 1,(longlong *)0x0,(ushort *)0x0);
+      }
+      goto LAB_140078d61;
+    }
+  }
+  iVar2 = FUN_1400664dc(0xffffffff,iVar2);
+  if (param_2 < 0) {
+    FUN_1400664dc(0xffffffff,1);
+  }
+LAB_140078d61:
+  FUN_14005b104((longlong *)&local_res20);
+  FUN_14005b104((longlong *)local_28);
+  return iVar2;
+}
+
+
+

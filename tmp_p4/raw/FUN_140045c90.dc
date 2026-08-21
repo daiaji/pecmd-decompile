@@ -1,0 +1,337 @@
+/* ========== FUN_140045c90 @ 140045c90  size=2989 ========== */
+/* signature: longlong __fastcall FUN_140045c90(longlong * param_1, pthreadlocinfo param_2) */
+
+longlong FUN_140045c90(longlong *param_1,pthreadlocinfo param_2)
+
+{
+  short sVar1;
+  bool bVar2;
+  char cVar3;
+  bool bVar4;
+  ushort uVar5;
+  DWORD DVar6;
+  int iVar7;
+  BOOL BVar8;
+  HANDLE pvVar9;
+  undefined7 extraout_var;
+  pthreadlocinfo ptVar10;
+  LPWSTR pWVar11;
+  WCHAR WVar12;
+  ulonglong uVar13;
+  pthreadmbcinfo lpFilename;
+  pthreadmbcinfo ptVar14;
+  char *lpName;
+  undefined8 uVar15;
+  undefined8 uVar16;
+  LARGE_INTEGER *lpNumberOfBytesRead;
+  char cVar17;
+  wchar_t *pwVar18;
+  bool bVar19;
+  pthreadlocinfo local_res10;
+  LARGE_INTEGER local_res18;
+  DWORD local_res20 [2];
+  pthreadlocinfo local_118;
+  pthreadlocinfo local_110;
+  pthreadlocinfo local_108;
+  short *local_100;
+  LPCWSTR local_f8;
+  HANDLE local_f0;
+  _SECURITY_ATTRIBUTES local_e8;
+  MSG local_d0;
+  undefined1 local_a0;
+  ulonglong local_9f [4];
+  undefined1 local_78 [8];
+  WCHAR local_70 [3];
+  WCHAR local_6a [14];
+  undefined2 local_4e;
+  
+  cVar17 = '\0';
+  local_res10 = param_2;
+  FUN_140017908();
+  DAT_14013c96a = 0;
+  uVar5 = (ushort)local_res10->refcount;
+  uVar13 = 0x2a;
+  bVar19 = uVar5 == 0x2a;
+  while ((uVar5 != 0 && (((uVar5 < 9 || (0xd < uVar5)) && (uVar5 != 0x20))))) {
+    local_res10 = (pthreadlocinfo)((longlong)&local_res10->refcount + 2);
+    uVar5 = (ushort)local_res10->refcount;
+  }
+  FUN_1400170b0(&local_res10);
+  uVar13 = uVar13 & 0xff;
+  bVar2 = false;
+  if ((short)local_res10->refcount == 0x2d) {
+    uVar13 = 0x2d;
+    bVar2 = false;
+  }
+  while( true ) {
+    while ((local_110 = local_res10, cVar3 = FUN_1400660ac("-user",(longlong *)&local_res10,5),
+           cVar3 != '\0' || (cVar3 = FUN_1400660ac("-u",(longlong *)&local_res10,2), cVar3 != '\0'))
+          ) {
+      bVar2 = true;
+    }
+    if (((int)(char)uVar13 != (uint)(ushort)local_110->refcount) ||
+       ((int)(char)uVar13 != (uint)*(ushort *)((longlong)&local_110->refcount + 2))) break;
+    local_110 = (pthreadlocinfo)&local_110->lc_codepage;
+    cVar3 = FUN_1400660ac("user",(longlong *)&local_110,4);
+    if ((cVar3 == '\0') && (cVar3 = FUN_1400660ac("u",(longlong *)&local_110,1), cVar3 == '\0')) {
+      cVar3 = FUN_1400660ac("wait",(longlong *)&local_110,4);
+      if (cVar3 == '\0') break;
+      cVar17 = '\x01';
+    }
+    else {
+      bVar2 = true;
+    }
+    local_res10 = local_110;
+  }
+  pwVar18 = (wchar_t *)PTR_u_CallBackhWnd_14011e668_2_14013a288;
+  if (bVar2) {
+    pwVar18 = L"UCallBackhWnd";
+  }
+  SetLastError(0);
+  local_a0 = 0;
+  FUN_140102a90(local_9f,0,0x27);
+  local_e8.lpSecurityDescriptor = &local_a0;
+  local_e8.nLength = 0x18;
+  local_e8.bInheritHandle = 0;
+  FUN_14005e7dc(&local_e8.lpSecurityDescriptor);
+  lpName = "Global\\PECMD:main";
+  if (bVar2) {
+    lpName = "Global\\PECMD:main_u";
+  }
+  pvVar9 = CreateMutexA(&local_e8,1,lpName);
+  DVar6 = GetLastError();
+  if ((pvVar9 != (HANDLE)0x0) && (DVar6 == 0xb7)) {
+    return 0xb7;
+  }
+  if (bVar2) {
+    DAT_140147000 = ' ';
+  }
+  else {
+    DAT_140147000 = ((short)local_res10->refcount != 0) + '\x10';
+  }
+  memcpy(local_78,L"LOGS * D:\\DebugPeMain2.log",0x36);
+  if (bVar2) {
+    local_4e = 0x55;
+  }
+  if ((DAT_14013cb18 == 0) &&
+     (bVar4 = FUN_140101e70(local_6a), (int)CONCAT71(extraout_var,bVar4) != 0)) {
+    FUN_140026338(&DAT_14013d130,local_70,(pthreadmbcinfo)0xffffffffffffffff);
+  }
+  if (DAT_14013ccb1 != '\0') {
+    uVar13 = (ulonglong)(uint)(int)DAT_140147000;
+    FUN_140018c6c(&DAT_14013d130,L"{MAIN [%s]} 0x%X\r\n",param_2,uVar13);
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018c6c(&DAT_14013d130,L"MAIN: pecmd::RegDeleteKeyExW=0x%p\r\n",DAT_14013d408,uVar13);
+    }
+  }
+  FUN_140023544();
+  if (bVar19) {
+    DAT_140147003 = 1;
+  }
+  if (!bVar2) {
+    if ((short)local_res10->refcount == 0) goto LAB_1400460d4;
+    FUN_14001b888(3);
+    uVar16 = 0;
+    local_res18.QuadPart = 0;
+    RegCreateKeyExW((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON",0,(LPWSTR)0x0,0,1,
+                    (LPSECURITY_ATTRIBUTES)0x0,(PHKEY)&local_res18,(LPDWORD)0x0);
+    if ((HKEY)local_res18.QuadPart != (HKEY)0x0) {
+      RegCloseKey((HKEY)local_res18);
+    }
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f1c,uVar16);
+    }
+    FUN_14002286c();
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f1e,uVar16);
+    }
+    FUN_140017724();
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f20,uVar16);
+    }
+  }
+  if ((short)local_res10->refcount != 0) {
+    FUN_14002cc30(param_1,&DAT_14011c638,0,0x24,(WCHAR *)0x0);
+  }
+LAB_1400460d4:
+  sVar1 = (short)local_res10->refcount;
+  if ((sVar1 == 0x2a) &&
+     (ptVar10 = (pthreadlocinfo)((longlong)&local_res10->refcount + 2),
+     (short)ptVar10->refcount != 0x23)) {
+    local_res10 = ptVar10;
+    FUN_1400170b0(&local_res10);
+  }
+  LoadEnvi(&DAT_14011c638,&DAT_14011c638);
+  if ((short)local_res10->refcount == 0) {
+    DAT_14013d6f7 = 1;
+  }
+  FUN_14005b9a0();
+  FUN_14003e1f0();
+  local_res20[0] = GetCurrentProcessId();
+  uVar16 = 4;
+  FUN_14005c5a0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON",L"MainPECMDPID",4,(BYTE *)local_res20,
+                4);
+  if (DAT_14013ccb1 != '\0') {
+    FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f2a,uVar16);
+  }
+  FUN_1400e8574(&DAT_14013d130,0);
+  if (param_1[0xf] == 0) {
+    if ((DAT_14013d2a0 & 1) == 0) {
+      DAT_14013d2a0 = DAT_14013d2a0 | 1;
+      DAT_14013d298 = (longlong *)0x0;
+      atexit((_func_5014 *)&LAB_14011ab90);
+    }
+    param_1[0xf] = (longlong)&DAT_14013d298;
+    FUN_14006159c((longlong)param_1,0x10000);
+    FUN_140063620(&local_res18);
+    FUN_1400a4020((longlong *)&DAT_14013d298,local_res18);
+    local_res18.QuadPart = 0;
+    param_1[0x10] = *DAT_14013d298;
+    FUN_140073ccc(param_1,(LPCWSTR)param_2,1);
+    *(undefined4 *)((longlong)param_1 + 0x8c) = 0;
+    FUN_14005b104(&local_res18.QuadPart);
+  }
+  if (DAT_14013ccb1 != '\0') {
+    FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f36,uVar16);
+  }
+  if (!bVar2) {
+    local_res18.s.LowPart._0_1_ = DAT_140147000;
+    uVar16 = 3;
+    FUN_14005c5a0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON",L"bInMain",3,
+                  (BYTE *)&local_res18.QuadPart,1);
+  }
+  if (DAT_14013ccb1 != '\0') {
+    FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f3a,uVar16);
+  }
+  if ((short)local_res10->refcount != 0) {
+    FUN_14001b850();
+  }
+  uVar16 = 0xb;
+  FUN_14005c5a0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON",pwVar18,0xb,(BYTE *)&DAT_14013cf78,8);
+  if ((sVar1 != 0) || (bVar2)) {
+    FUN_14002e30c();
+  }
+  FUN_140022e94();
+  FUN_140077358();
+  if (((short)local_res10->refcount != 0) || (bVar2)) {
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f45,uVar16);
+    }
+    FUN_14005b228(FUN_140045868,(LPVOID)0x0,0x80000,0x10000,(LPDWORD)&DAT_14013c96c,
+                  (LPSECURITY_ATTRIBUTES)0x0);
+  }
+  uVar16 = 0x2a;
+  if ((short)local_res10->refcount == 0x2a) {
+    uVar15 = 0x23;
+    do {
+      ptVar10 = (pthreadlocinfo)((longlong)&local_res10->refcount + 2);
+      if ((short)uVar15 == (short)ptVar10->refcount) break;
+      local_res10 = ptVar10;
+      FUN_1400170b0(&local_res10);
+    } while ((short)local_res10->refcount == (short)uVar16);
+  }
+  if ((short)local_res10->refcount != 0) {
+    if (DAT_14013ccb1 != '\0') {
+      FUN_140018d8c(&DAT_14013d130,L"MAIN_DBG:%d\r\n",0x2f4d,uVar16);
+    }
+    iVar7 = lstrlenW((LPCWSTR)local_res10);
+    FUN_140063694(&local_100,(longlong)(iVar7 + 0x5c8));
+    *local_100 = 0;
+    lpFilename = (pthreadmbcinfo)(local_100 + 0x140);
+    GetModuleFileNameW((HMODULE)0x0,(LPWSTR)lpFilename,0x104);
+    pWVar11 = StrRChrW((LPCWSTR)lpFilename,(LPCWSTR)0x0,L'\\');
+    ptVar14 = lpFilename;
+    if (pWVar11 != (LPWSTR)0x0) {
+      ptVar14 = (pthreadmbcinfo)(pWVar11 + 1);
+    }
+    iVar7 = FUN_14001ab84((LPCWSTR)local_res10);
+    if (iVar7 == 0) {
+      bVar19 = false;
+      local_118 = local_res10;
+      FUN_140063620(&local_f8);
+      FUN_1400545f8(param_1,(longlong *)&local_118,(longlong *)&local_f8,L'က',0);
+      FUN_140063694(&local_108,0x400);
+      *(WCHAR *)&local_108->refcount = L'\0';
+      local_118 = local_108;
+      local_res18.QuadPart = local_res18.QuadPart & 0xffffffff00000000;
+      local_f0 = (HANDLE)0x0;
+      FUN_140003864(&local_f0,local_f8,0x80000000,7,(LPSECURITY_ATTRIBUTES)0x0,3,0,(HANDLE)0x0);
+      pvVar9 = local_f0;
+      lpNumberOfBytesRead = &local_res18;
+      ReadFile(local_f0,local_108,0x7fe,(LPDWORD)&lpNumberOfBytesRead->QuadPart,(LPOVERLAPPED)0x0);
+      *(undefined2 *)
+       ((longlong)local_118->lc_category +
+       ((ulonglong)local_res18.QuadPart >> 1 & 0x7fffffff) * 2 + -0x10) = 0;
+      if ((WCHAR)local_118->refcount == L'\xfeff') {
+        local_118 = (pthreadlocinfo)((longlong)&local_118->refcount + 2);
+      }
+      iVar7 = StrCmpNIW(L"#!pecmd",(LPCWSTR)local_118,7);
+      if (iVar7 == 0) {
+        local_118 = (pthreadlocinfo)((longlong)&local_118->lc_time_cp + 2);
+        do {
+          WVar12 = (WCHAR)local_118->refcount;
+          if (WVar12 == L'\0') goto LAB_14004669c;
+          do {
+            lpNumberOfBytesRead = (LARGE_INTEGER *)&DAT_0000000d;
+            if (((8 < (ushort)WVar12) && ((ushort)WVar12 < 0xe)) || (WVar12 == L' ')) break;
+            local_118 = (pthreadlocinfo)((longlong)&local_118->refcount + 2);
+            WVar12 = (WCHAR)local_118->refcount;
+          } while (WVar12 != L'\0');
+          for (; ((WCHAR)local_118->refcount == L' ' || ((WCHAR)local_118->refcount == L'\t'));
+              local_118 = (pthreadlocinfo)((longlong)&local_118->refcount + 2)) {
+          }
+          if (((WCHAR)local_118->refcount == L'\n') || ((WCHAR)local_118->refcount == L'\r'))
+          goto LAB_14004669c;
+          uVar16 = FUN_14005b1a8((ushort *)L"--inline-main",&local_118,0xd);
+        } while ((int)uVar16 == 0);
+        bVar19 = true;
+      }
+LAB_14004669c:
+      if ((pvVar9 != (HANDLE)0x0) && (pvVar9 != (HANDLE)0xffffffffffffffff)) {
+        CloseHandle(pvVar9);
+      }
+      FUN_14005b104((longlong *)&local_108);
+      FUN_14005b104((longlong *)&local_f8);
+      if (bVar19) {
+        FUN_14001708c(local_100 + 900,0x140122980,local_res10,
+                      (pthreadmbcinfo)&lpNumberOfBytesRead->s);
+        DAT_14013d032 = 1;
+        FUN_14004c0bc((LARGE_INTEGER)param_1,(LARGE_INTEGER)(local_100 + 900),(longlong *)0x0,
+                      (longlong *)0x0,(pthreadmbcinfo)0x0);
+      }
+      else {
+        FUN_14001708c(local_100 + 900,0x140122958,(pthreadlocinfo)lpFilename,ptVar14);
+        iVar7 = lstrlenW(local_100 + 900);
+        FUN_14001708c(local_100 + (longlong)iVar7 + 900,0x140122980,local_res10,ptVar14);
+        if (*local_100 != 0) {
+          FUN_14001b888(1);
+          local_res20[0] = 1;
+          FUN_14005c5a0((HKEY)0xffffffff80000002,L"SOFTWARE\\PELOGON\\RAMDATA",L"SysStartuped",4,
+                        (BYTE *)local_res20,4);
+        }
+        FUN_14000e26c(param_1,(_FILETIME)(local_100 + 900),param_1,(_FILETIME)0x0,(int)cVar17,
+                      (_FILETIME *)0x0,(_FILETIME)0x0,(undefined8 *)0x0);
+      }
+    }
+    else {
+      FUN_1400702b0(&local_res18,(LPCWSTR)local_res10);
+      uVar16 = FUN_14005c788("LOAD",(ushort *)local_res10,4);
+      if ((char)uVar16 != '\0') {
+        DAT_14013d032 = 1;
+      }
+      FUN_14004c0bc((LARGE_INTEGER)param_1,local_res18,(longlong *)0x0,(longlong *)0x0,
+                    (pthreadmbcinfo)0x0);
+      FUN_14005b104(&local_res18.QuadPart);
+    }
+    FUN_14005b104((longlong *)&local_100);
+  }
+  while (BVar8 = GetMessageW(&local_d0,(HWND)0x0,0,0), BVar8 != 0) {
+    TranslateMessage(&local_d0);
+    DispatchMessageW(&local_d0);
+  }
+  UnhookWindowsHookEx(DAT_14013cf58);
+  return (longlong)(int)local_d0.wParam;
+}
+
+
+

@@ -1,0 +1,83 @@
+/* ========== FUN_1400e4f14 @ 1400e4f14  size=522 ========== */
+/* signature: undefined __fastcall FUN_1400e4f14(HMENU param_1, UINT param_2, UINT_PTR param_3, byte * param_4) */
+
+void FUN_1400e4f14(HMENU param_1,UINT param_2,UINT_PTR param_3,byte *param_4)
+
+{
+  int iVar1;
+  ulonglong uVar2;
+  HBITMAP hBitmapUnchecked;
+  byte bVar3;
+  int iVar4;
+  int local_res20 [2];
+  int local_48 [2];
+  LPCWSTR local_40;
+  longlong local_38 [2];
+  
+  if ((*param_4 & 8) != 0) {
+    return;
+  }
+  AppendMenuW(param_1,param_2,param_3,*(LPCWSTR *)(param_4 + 8));
+  local_40 = *(LPCWSTR *)(param_4 + 0x30);
+  iVar4 = 0;
+  if (*local_40 == L'\0') {
+    return;
+  }
+  local_38[0] = 0;
+  local_48[0] = 0;
+  local_res20[0] = 0;
+  for (; *local_40 == L'?'; local_40 = local_40 + 1) {
+    iVar4 = iVar4 + 1;
+  }
+  if (*local_40 == L'*') {
+    while (local_40 = local_40 + 1, *local_40 == L'?') {
+      iVar4 = iVar4 + 1;
+    }
+    FUN_140067d20((longlong *)&local_40,local_48);
+    local_res20[0] = local_48[0];
+    if (*local_40 == L':') {
+      local_40 = local_40 + 1;
+      FUN_140067d20((longlong *)&local_40,local_res20);
+    }
+    if ((*local_40 == L'*') || (*local_40 == L':')) {
+      local_40 = local_40 + 1;
+    }
+  }
+  if (iVar4 != 0) {
+    uVar2 = FUN_14005ea5c();
+    if (0x5ffff < (uint)(uVar2 >> 0x10)) {
+      if (DAT_14013e238 == (code *)0x0) {
+        FUN_14005c898("IsAppThemed","UxTheme.dll",(longlong *)&DAT_14013e238,(longlong *)0x0);
+      }
+      bVar3 = 0;
+      if (DAT_14013e238 + -1 < (code *)0xfffffffffffffffe) {
+        iVar1 = (*DAT_14013e238)();
+        bVar3 = -(iVar1 != 0) & 0x10U | 1;
+      }
+      if ((bVar3 == 0x11) && (iVar4 != 2)) {
+        local_48[0] = 0;
+        local_res20[0] = 0;
+        goto LAB_1400e50bb;
+      }
+    }
+    if (local_48[0] == 0) {
+      local_48[0] = GetSystemMetrics(0x47);
+    }
+    if (local_res20[0] == 0) {
+      local_res20[0] = GetSystemMetrics(0x48);
+    }
+  }
+LAB_1400e50bb:
+  local_48[1] = 0;
+  hBitmapUnchecked =
+       FUN_1400b3d0c(local_40,local_38,(longlong)local_48[0],(longlong)local_res20[0],
+                     (uint *)(local_48 + 1),(undefined8 *)0x0,0);
+  *(HBITMAP *)(param_4 + 0x38) = hBitmapUnchecked;
+  if (hBitmapUnchecked != (HBITMAP)0x0) {
+    SetMenuItemBitmaps(param_1,(UINT)param_3,0,hBitmapUnchecked,hBitmapUnchecked);
+  }
+  return;
+}
+
+
+

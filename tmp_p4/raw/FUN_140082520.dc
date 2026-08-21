@@ -1,0 +1,142 @@
+/* ========== FUN_140082520 @ 140082520  size=1052 ========== */
+/* signature: longlong __fastcall FUN_140082520(longlong * param_1, LPCWSTR param_2, longlong param_3, ulonglong param_4) */
+
+longlong FUN_140082520(longlong *param_1,LPCWSTR param_2,longlong param_3,ulonglong param_4)
+
+{
+  int iVar1;
+  undefined8 uVar2;
+  longlong lVar3;
+  undefined8 *puVar4;
+  UINT Msg;
+  WCHAR *pWVar5;
+  HWND hWnd;
+  LPCWSTR pWVar6;
+  int iVar7;
+  bool bVar8;
+  LPCWSTR local_res10 [2];
+  int local_res20 [2];
+  LPCWSTR local_48;
+  LPCWSTR local_40;
+  
+  local_res10[0] = param_2;
+  FUN_140063620(&local_48);
+  lVar3 = 0;
+  iVar7 = -1;
+  if ((param_4 & 1) != 0) {
+    iVar7 = 1;
+  }
+  if ((param_4 & 2) != 0) {
+    iVar7 = 0;
+  }
+  FUN_1400660ac("*svr",(longlong *)local_res10,-1);
+  bVar8 = (DAT_14013e20c & 4) == 0;
+  if (bVar8) {
+    DAT_14013e20c = DAT_14013e20c | 4;
+    FUN_14001c2cc(L"SeDebugPrivilege",2,0);
+  }
+  if (*local_res10[0] == L'@') {
+    if (local_res10[0][1] != L'@') {
+      if (*local_res10[0] != L'@') goto LAB_14008278b;
+      FUN_14007bf44(param_1,local_res10[0] + 1,&local_48,0,1);
+      FUN_140063620(local_res10);
+      local_40 = local_48;
+      FUN_1400675b8((longlong *)&local_40,(longlong *)local_res10,0);
+      FUN_140003a20(param_1,local_res10,0);
+      pWVar6 = local_res10[0];
+      uVar2 = FUN_14005c7c4("this",(ushort *)local_res10[0]);
+      if (((char)uVar2 == '\0') && (*pWVar6 != L'\0')) {
+        EnterCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+        do {
+          param_3 = param_1[8];
+          if (((param_3 != 0) && (param_3 != lVar3)) &&
+             (iVar1 = lstrcmpiW(*(LPCWSTR *)(param_3 + 0x128),local_res10[0]), iVar1 == 0)) {
+            LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+            FUN_14005b104((longlong *)local_res10);
+            goto LAB_14008283d;
+          }
+          param_1 = (longlong *)param_1[7];
+          lVar3 = param_3;
+        } while (param_1 != (longlong *)0x0);
+        LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+        FUN_14005b104((longlong *)local_res10);
+        lVar3 = 1;
+        if (bVar8) {
+          DAT_14013e20c = DAT_14013e20c & 0xfffb;
+          FUN_14001c2cc(L"SeDebugPrivilege",4,0);
+        }
+        goto LAB_140082878;
+      }
+      FUN_14005b104((longlong *)local_res10);
+      goto LAB_1400827d0;
+    }
+    FUN_14007bf44(param_1,local_res10[0] + 2,&local_48,0,1);
+    local_res10[0] = local_48;
+    local_res20[0] = 0;
+    FUN_140074838((longlong *)local_res10,local_res20);
+    hWnd = (HWND)(longlong)local_res20[0];
+    if (hWnd == (HWND)0x0) {
+      if (bVar8) {
+        DAT_14013e20c = DAT_14013e20c & 0xfffb;
+        FUN_14001c2cc(L"SeDebugPrivilege",4,0);
+      }
+      lVar3 = -0x7ff8ffa9;
+      goto LAB_140082878;
+    }
+  }
+  else {
+LAB_14008278b:
+    pWVar5 = local_res10[0] + 1;
+    if (((*pWVar5 == L'\\') && (local_res10[0][2] == L'\0')) &&
+       (pWVar5 = local_res10[0] + 2, iVar7 < 0)) {
+      iVar7 = 1;
+    }
+    FUN_14007bf44(param_1,pWVar5,&local_48,0,1);
+    if (*local_48 == L'\0') {
+LAB_1400827d0:
+      if (param_3 != 0) {
+        while ((*(uint *)(param_3 + 0xd0) >> 0xf & 1) != 0) {
+          for (puVar4 = *(undefined8 **)(*(longlong *)(param_3 + 0x290) + 0x38);
+              ((puVar4 != (undefined8 *)0x0 && (puVar4 != &DAT_14013d130)) &&
+              ((puVar4[8] == 0 || (param_3 == puVar4[8])))); puVar4 = (undefined8 *)puVar4[7]) {
+          }
+          if (puVar4[8] == 0) break;
+          param_3 = puVar4[8];
+        }
+        SetWindowPos(*(HWND *)(param_3 + 0x20),(HWND)0x0,0,0,0,0,0x97);
+LAB_14008283d:
+        hWnd = *(HWND *)(param_3 + 0x20);
+        Msg = 0x43c;
+        goto LAB_1400828dc;
+      }
+      if (*local_48 == L'\0') {
+        if (bVar8) {
+          DAT_14013e20c = DAT_14013e20c & 0xfffb;
+          FUN_14001c2cc(L"SeDebugPrivilege",4,0);
+        }
+LAB_140082878:
+        FUN_14005b104((longlong *)&local_48);
+        return lVar3;
+      }
+    }
+    hWnd = (HWND)FUN_1400e3d60(local_48,'\0','\0',(HWND)0x0,0,0,0,0);
+  }
+  SetWindowPos(hWnd,(HWND)0x0,0,0,0,0,0x97);
+  Msg = 0x10;
+LAB_1400828dc:
+  if (iVar7 < 1) {
+    SendMessageW(hWnd,Msg,0,0);
+  }
+  else {
+    PostMessageW(hWnd,Msg,0,0);
+  }
+  if (bVar8) {
+    DAT_14013e20c = DAT_14013e20c & 0xfffb;
+    FUN_14001c2cc(L"SeDebugPrivilege",4,0);
+  }
+  FUN_14005b104((longlong *)&local_48);
+  return 0;
+}
+
+
+

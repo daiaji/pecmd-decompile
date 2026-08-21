@@ -16,7 +16,7 @@ extern LPCWSTR FUN_14001be14(LPCWSTR);                       /* string tag/prefi
 extern void    PECMD_SkipWCharUntil(void *, int);                   /* delimiter scan ('#') */
 extern int     PECMD_ParseNumSkipChar_0224(void *, int *);                 /* parse int field */
 extern int     PECMD_ParseNumSkipChar_de4c(void *, double *);              /* parse double field */
-extern int     FUN_14005b2c0(void *, LPCWSTR, HWND);         /* list-control accept check */
+extern int     PECMD_OnDeleteCommand(void *, LPCWSTR, HWND);         /* list-control accept check */
 extern int     PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
 extern int     PECMD_ParseUIntValue(LPCWSTR *, int *);              /* scan list token */
 extern void    FUN_140063620(void *);                        /* string release/cleanup */
@@ -105,7 +105,7 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
     hWnd = *(HWND *)((char *)param_1[7] + 0x20);
     pHVar1 = *(HWND *)(*(int64_t *)((char *)param_1[10] + 0x40) + 0x20);
     local_res20 = param_4;
-    bVar3 = FUN_14005b2c0(param_1, param_5, pHVar1);
+    bVar3 = PECMD_OnDeleteCommand(param_1, param_5, pHVar1);
     if (bVar3 == 0) {
         return 0;
     }

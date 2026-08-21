@@ -1,0 +1,55 @@
+/* ========== FUN_14008293c @ 14008293c  size=278 ========== */
+/* signature: undefined __fastcall FUN_14008293c(longlong * param_1, longlong * param_2, longlong * param_3, longlong * param_4) */
+
+void FUN_14008293c(longlong *param_1,longlong *param_2,longlong *param_3,longlong *param_4)
+
+{
+  ushort *puVar1;
+  LPWSTR pWVar2;
+  longlong lVar3;
+  ushort *local_res10;
+  
+  lVar3 = 0;
+  *param_3 = *param_2;
+  puVar1 = (ushort *)*param_2;
+  if (*puVar1 == 0x22) {
+    *param_2 = (longlong)(puVar1 + 1);
+    *param_3 = (longlong)(puVar1 + 1);
+    thunk_FUN_1400f429c(param_2,0x22);
+    if (*(short *)*param_2 != 0) {
+      *(short *)*param_2 = 0;
+      *param_2 = *param_2 + 2;
+    }
+  }
+  else {
+    do {
+      while ((*param_2 = (longlong)puVar1, *puVar1 != 0 &&
+             (((puVar1 = (ushort *)*param_2, *puVar1 < 9 || (0xd < *puVar1)) && (*puVar1 != 0x20))))
+            ) {
+        puVar1 = puVar1 + 1;
+      }
+      local_res10 = (ushort *)*param_2;
+      FUN_14005b154((longlong *)&local_res10);
+      if (lVar3 == 0) {
+        lVar3 = *param_2;
+      }
+    } while ((*local_res10 != 0) && (puVar1 = local_res10, *local_res10 != 0x2d));
+    if (*(short *)*param_2 == 0) {
+      *param_2 = lVar3;
+    }
+  }
+  if (*(short *)*param_2 != 0) {
+    *(short *)*param_2 = 0;
+    *param_2 = *param_2 + 2;
+  }
+  FUN_14005b154(param_2);
+  pWVar2 = StrChrW((LPCWSTR)*param_3,L'%');
+  if (pWVar2 != (LPWSTR)0x0) {
+    FUN_14007bf44(param_1,(WCHAR *)*param_3,param_4,0,1);
+    *param_3 = *param_4;
+  }
+  return;
+}
+
+
+

@@ -1,0 +1,59 @@
+/* ========== FUN_14005be68 @ 14005be68  size=289 ========== */
+/* signature: undefined __fastcall FUN_14005be68(longlong param_1, int param_2) */
+
+void FUN_14005be68(longlong param_1,int param_2)
+
+{
+  int iVar1;
+  int *piVar2;
+  longlong lVar3;
+  int iVar4;
+  longlong lVar5;
+  
+  lVar5 = (longlong)param_2;
+  if (*(int *)(param_1 + 0x9430 + lVar5 * 4) != 0x1000) {
+    iVar4 = *(int *)(param_1 + 0x502c + lVar5 * 4);
+    if (iVar4 == 0x1000) {
+      iVar4 = *(int *)(param_1 + 0x1028 + lVar5 * 4);
+    }
+    else {
+      iVar1 = *(int *)(param_1 + 0x1028 + lVar5 * 4);
+      lVar3 = (longlong)iVar1;
+      if (iVar1 != 0x1000) {
+        piVar2 = (int *)(param_1 + 0x502c + lVar3 * 4);
+        iVar4 = iVar1;
+        if (*piVar2 != 0x1000) {
+          do {
+            iVar4 = *piVar2;
+            lVar3 = (longlong)iVar4;
+            piVar2 = (int *)(param_1 + 0x502c + lVar3 * 4);
+          } while (*piVar2 != 0x1000);
+          *(undefined4 *)(param_1 + 0x502c + (longlong)*(int *)(param_1 + 0x9430 + lVar3 * 4) * 4) =
+               *(undefined4 *)(param_1 + 0x1028 + lVar3 * 4);
+          *(undefined4 *)(param_1 + 0x9430 + (longlong)*(int *)(param_1 + 0x1028 + lVar3 * 4) * 4) =
+               *(undefined4 *)(param_1 + 0x9430 + lVar3 * 4);
+          *(undefined4 *)(param_1 + 0x1028 + lVar3 * 4) =
+               *(undefined4 *)(param_1 + 0x1028 + lVar5 * 4);
+          *(int *)(param_1 + 0x9430 + (longlong)*(int *)(param_1 + 0x1028 + lVar5 * 4) * 4) = iVar4;
+        }
+        *(undefined4 *)(param_1 + 0x502c + lVar3 * 4) =
+             *(undefined4 *)(param_1 + 0x502c + lVar5 * 4);
+        *(int *)(param_1 + 0x9430 + (longlong)*(int *)(param_1 + 0x502c + lVar5 * 4) * 4) = iVar4;
+      }
+    }
+    *(undefined4 *)(param_1 + 0x9430 + (longlong)iVar4 * 4) =
+         *(undefined4 *)(param_1 + 0x9430 + lVar5 * 4);
+    lVar3 = (longlong)*(int *)(param_1 + 0x9430 + lVar5 * 4);
+    if (*(int *)(param_1 + 0x502c + lVar3 * 4) == param_2) {
+      *(int *)(param_1 + 0x502c + lVar3 * 4) = iVar4;
+    }
+    else {
+      *(int *)(param_1 + 0x1028 + lVar3 * 4) = iVar4;
+    }
+    *(undefined4 *)(param_1 + 0x9430 + lVar5 * 4) = 0x1000;
+  }
+  return;
+}
+
+
+

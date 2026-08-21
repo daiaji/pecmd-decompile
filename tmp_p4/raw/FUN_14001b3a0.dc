@@ -1,0 +1,60 @@
+/* ========== FUN_14001b3a0 @ 14001b3a0  size=244 ========== */
+/* signature: undefined __fastcall FUN_14001b3a0(longlong * param_1, longlong * param_2) */
+
+void FUN_14001b3a0(longlong *param_1,longlong *param_2)
+
+{
+  longlong lVar1;
+  longlong lVar2;
+  longlong lVar3;
+  longlong *plVar4;
+  int iVar5;
+  longlong local_res8;
+  
+  if (param_1[8] == 0) {
+    FUN_1400633a8(&local_res8,0x3ffff0);
+    iVar5 = 0;
+    plVar4 = param_1;
+    if (param_2 != (longlong *)0x0) {
+      lVar2 = 0;
+      plVar4 = param_2;
+      do {
+        if (plVar4 == param_1) break;
+        *(longlong **)(local_res8 + lVar2 * 8) = plVar4;
+        plVar4 = (longlong *)plVar4[7];
+        lVar2 = lVar2 + 1;
+        iVar5 = iVar5 + 1;
+      } while (lVar2 < 0x7fffe);
+    }
+    lVar2 = (longlong)iVar5;
+    while ((lVar2 < 0x7fffe &&
+           (((*(byte *)((longlong)plVar4 + 0xd9) & 1) == 0 ||
+            ((((*(byte *)((longlong)plVar4 + 0xd9) & 0x48) == 0 && (plVar4[8] == 0)) &&
+             (*(longlong *)(plVar4[7] + 0x40) == 0))))))) {
+      *(longlong **)(local_res8 + lVar2 * 8) = plVar4;
+      plVar4 = (longlong *)plVar4[7];
+      iVar5 = iVar5 + 1;
+      lVar2 = lVar2 + 1;
+    }
+    if ((*(byte *)((longlong)plVar4 + 0xd9) & 1) != 0) {
+      if (plVar4[8] == 0) {
+        FUN_1400e8644(plVar4);
+      }
+      lVar2 = plVar4[8];
+      if ((lVar2 != 0) && (lVar3 = (longlong)(iVar5 + -1), -1 < iVar5 + -1)) {
+        do {
+          lVar1 = *(longlong *)(local_res8 + lVar3 * 8);
+          if (*(longlong *)(lVar1 + 0x40) == 0) {
+            *(longlong *)(lVar1 + 0x40) = lVar2;
+          }
+          lVar3 = lVar3 + -1;
+        } while (-1 < lVar3);
+      }
+    }
+    FUN_14005b104(&local_res8);
+  }
+  return;
+}
+
+
+

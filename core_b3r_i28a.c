@@ -43,14 +43,14 @@ extern char      FUN_1400660ac(const char *tok, void *pp, int n);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
+extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 
 /* list-control / dialog helpers */
-extern int       FUN_14005b2c0(void *p, LPCWSTR w, HWND hwnd);   /* accept check */
+extern int       PECMD_OnDeleteCommand(void *p, LPCWSTR w, HWND hwnd);   /* accept check */
 extern int       PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
                                void *f, int64_t *g, HWND h, int64_t i);
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);           /* scan int token */
-extern void      FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value);
+extern void      PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value);
 extern void      PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, char param_5);
 extern void      PECMD_SendTitleMessage(int64_t param_1, HWND param_2, int param_3,
@@ -62,7 +62,7 @@ extern ushort   *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2,
 /* object-construction helpers (called by the functions below) */
 extern void      FUN_14005daf8(int64_t param_1, int *param_2, int *param_3,
                                int *param_4, int *param_5);
-extern void      FUN_14005d9a8(int64_t param_1, int param_2);
+extern void      PECMD_DialogBeepNotify(int64_t param_1, int param_2);
 extern void     *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
 extern uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t param_3,
                                uint64_t *param_4, uint32_t param_5, uint32_t param_6,
@@ -103,7 +103,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
     iVar1 = *(int *)((char *)param_1[7] + 0x118);
     hWnd = *(HWND *)((char *)param_1[7] + 0x20);
     pHVar2 = *(HWND *)(*(int64_t *)((char *)param_1[10] + 0x40) + 0x20);
-    bVar4 = FUN_14005b2c0(param_1, param_4, pHVar2);
+    bVar4 = PECMD_OnDeleteCommand(param_1, param_4, pHVar2);
     if (bVar4 == 0) {
         return 0;
     }
@@ -115,7 +115,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
     if (PECMD_AsciiPrefixICmp("Title", (const WCHAR *)param_4, 5) == 0) {
         if (PECMD_AsciiPrefixICmp("Tip", (const WCHAR *)param_4, 3) == 0) {
             local_res8 = (uint64_t)(int32_t)-1;
-            if (FUN_14005c7c4("Select", (const WCHAR *)param_4) == 0) {
+            if (PECMD_AsciiWideICmp("Select", (const WCHAR *)param_4) == 0) {
                 /* "Select" query handler */
                 PECMD_DispatchControlCommand((void *)param_1[7], param_4, param_5, hWnd, param_3,
                               (void *)param_1[10], param_2, pHVar2, (int64_t)param_1);
@@ -134,7 +134,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
             FUN_14006375c((WCHAR **)&local_res8, (LPCWSTR)param_1[2]);
             FUN_14006375c((WCHAR **)&local_res8, WSTR(".Select"));
             if (*(short *)param_1[2] != 0) {
-                FUN_14007d0ac((int64_t *)param_1[10],
+                PECMD_SetVariableWithPrefix((int64_t *)param_1[10],
                               (LPCWSTR)(uintptr_t)local_res8, local_98);
             }
             FUN_14005b104(&local_res8);
@@ -222,7 +222,7 @@ void PECMD_CreateControlItem(WPARAM param_1, int64_t param_2, uint64_t *param_3,
                                    param_12);
         }
         *puVar3 = (uint64_t)puVar5;
-        FUN_14005d9a8(param_1, 0);
+        PECMD_DialogBeepNotify(param_1, 0);
     }
 }
 
