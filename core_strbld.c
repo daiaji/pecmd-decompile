@@ -19,7 +19,7 @@
  * 说明:
  *   FUN_1400E6960 (StringValidateDestW + StringVPrintfWorkerW) 简化为
  *   swprintf(dst, 0x3e, ...) (0x3e=62 字符上限).
- *   FUN_14001d78c/14001d744 = MSVC 内联 memcpy/memmove, 库替换.
+ *   PECMD_MemMoveForward/14001d744 = MSVC 内联 memcpy/memmove, 库替换.
  */
 #include <string.h>
 #include <stdbool.h>

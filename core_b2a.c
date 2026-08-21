@@ -36,7 +36,7 @@ extern HGDIOBJ FUN_140037BA8(void *script, HWND hwnd, uint32_t msg, HDC hdc, voi
 extern int64_t FUN_14002EE44(uintptr_t script, HWND hwnd, uint32_t msg, void *wParam,
                              int64_t lParam);
 extern uint32_t PECMD_ParseSize(LPWSTR s, int a, int b, int c);
-extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);
 extern uint64_t PECMD_ServiceControl(void *script, LPCWSTR name);
 extern void PECMD_RunFbwfHookScript(void);
@@ -189,7 +189,7 @@ int64_t PECMD_SetFbwfThreshold(uint64_t unused, LPWSTR spec)
     uint32_t val[4];
     (void)unused;
     val[0] = PECMD_ParseSize(spec, 4, 0x400, 0x20);
-    FUN_14005c5a0((HKEY)0xffffffff80000002,
+    PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
                   WSTR("SYSTEM\\ControlSet001\\Services\\FBWF"),
                   WSTR("WinPECacheThreshold"), 4, (BYTE *)val, 4);
     PECMD_ServiceControl(g_Script, WSTR("FBWF"));
@@ -328,7 +328,7 @@ uint64_t PECMD_ApplyWallpaper(WCHAR *path)
     ps = FUN_14001BE14(path);
     ps = FUN_14001C270(ps, &local_res10);
     len = PECMD_WideStrLen(ps);
-    FUN_14005c5a0((HKEY)0xffffffff80000001, WSTR("Control Panel\\Desktop"),
+    PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, WSTR("Control Panel\\Desktop"),
                   WSTR("Wallpaper.PECMD"), 1, (BYTE *)ps, (int)len * 2);
     r = PECMD_SetDesktopWallpaper(ps, 1);
     FUN_14005B104(&local_res10);
@@ -508,7 +508,7 @@ void PECMD_SetPELogonParamText(uint64_t value, LPCWSTR text, HWND hwnd)
         FUN_14002A508(value, text);
     } else {
         len = lstrlenW(text);
-        FUN_14005c5a0((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),
+        PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),
                       WSTR("Text.Paramd"), 1, (BYTE *)text, len * 2 + 2);
         SendMessageW(hwnd, 0x453, 0, 0);
     }

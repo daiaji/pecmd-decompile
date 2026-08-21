@@ -128,14 +128,14 @@ extern uint64_t FUN_14004c0bc(uint64_t a1, uint64_t a2, void *p3,
                               void *p4, void *p5);
 extern void FUN_14005B900(void *a1, uint64_t a2, LPCWSTR a3,
                           HICON a4, uint32_t a5);
-extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
                                    DWORD a3);
 extern void PECMD_TrimWorkingSet(char a1);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
-extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
+extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
 extern uint16_t *FUN_14006B1E8(LPCWSTR a1, uint64_t *a2, char a3);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
 extern BOOL PECMD_DosDeviceMount(LPCWSTR a1, LPCWSTR a2, WCHAR *a3,
@@ -1242,7 +1242,7 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_188, 0x2c);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
-        FUN_1400679b0(&local_res10, &g_tooltipTimeout, 0x2c);
+        PECMD_ParseShortStore(&local_res10, &g_tooltipTimeout, 0x2c);
     }
     if (g_tooltipTimeout < 1000) {
         g_tooltipTimeout = 5000;
@@ -1543,7 +1543,7 @@ label_038b2f:
     FUN_1400e3cd4(local_238, &local_260, NULL);
     iVar5 = lstrlenW(local_260);
     if (uVar6 != uVar4) {
-        FUN_14005c5a0(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("LogoFile"), 1,
+        PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("LogoFile"), 1,
                       (BYTE *)local_260, iVar5 * 2 + 2);
     }
     pHVar1 = g_hPelogonWnd;

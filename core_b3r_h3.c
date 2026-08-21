@@ -46,8 +46,8 @@ extern int64_t FUN_14005c72c(const char *a, const WCHAR *w, int n);   /* 前缀�
 extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);          /* 后缀/封装比较 */
 extern uint64_t PECMD_AsciiPrefixICmp(const char *a, const uint16_t *w, int n); /* 固定长度比较 */
 extern uint32_t PECMD_ParseStringToken(int64_t *a, int64_t *b, int64_t *c);    /* 分隔符选项解析 */
-extern int64_t FUN_140064a88(const WCHAR *p);                         /* WtoI */
-extern WCHAR  *FUN_14005b154(WCHAR **pp);                            /* 跳空白 */
+extern int64_t PECMD_WideStrToInt64(const WCHAR *p);                         /* WtoI */
+extern WCHAR  *PECMD_SkipLeadingControlChars(WCHAR **pp);                            /* 跳空白 */
 extern char    FUN_1400660ac(const char *tok, WCHAR **pp, int n);     /* 前缀匹配 */
 extern void    PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);          /* 串赋值 */
 extern int64_t FUN_1400545f8(int64_t *ctx, int64_t *pp, int64_t *out,
@@ -80,9 +80,9 @@ extern char    PECMD_ReadFileLine(void *a, int64_t *b, DWORD c, uint8_t d,
 extern LPCWSTR PECMD_ConvertStringEncoding(void *a, DWORD b);                      /* 取串槽内容 */
 extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len);  /* 取串槽 */
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void    FUN_140060a74(uint8_t *param_1, int param_2);         /* 大小写转换 */
+extern void    PECMD_SwapBytePairs(uint8_t *param_1, int param_2);         /* 大小写转换 */
 extern int64_t PECMD_WideToAnsiConvert(void *a);                               /* UTF8 长度 */
-extern uint32_t FUN_140006a4c(LPCWSTR param_1);                      /* 路径/句柄检查 */
+extern uint32_t PECMD_IsDevicePathPrefix(LPCWSTR param_1);                      /* 路径/句柄检查 */
 extern int64_t PECMD_OpenFileExisting(uint64_t param_1, uint64_t param_2, uint64_t param_3);
 extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                              LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
@@ -93,14 +93,14 @@ extern void    FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern WCHAR  *FUN_1400703e4(int64_t *out, LPCWSTR src);             /* StrCpyW2 */
 extern int64_t PECMD_FindVarValue(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
                              int param_4);                            /* 变量插值 */
-extern void    FUN_14006f884(LPCWSTR a, void *b);                     /* 输出/插值 */
+extern void    PECMD_GetEnvVarToStr(LPCWSTR a, void *b);                     /* 输出/插值 */
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);
-extern void    FUN_14007bf44(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
+extern void    PECMD_ExpandVarDispatch(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
                              int param_4, int param_5);
 extern void    PECMD_AppendFormattedI64(int64_t *list, int64_t pos);             /* 记录命中位置 */
 extern void    FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);     /* SetVarD */
 extern void    PECMD_JoinTokensAndResolve(int64_t *ctx, int64_t *pp, int64_t *out);
-extern void    FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
+extern void    PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
 extern uint64_t FUN_140060b5c(uint64_t *a, int b, void *c, int d);    /* 位置计算 */
 extern void    PECMD_SetEndOfFileWrap(void *a, LARGE_INTEGER b);
 extern int64_t PECMD_AllocConsoleBuffers(int64_t a);                              /* __chkstk/刷新 */
@@ -110,7 +110,7 @@ extern uint32_t FUN_140063060(uint32_t *buf);                         /* 取 BUF
 extern WCHAR  *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out,
                              int16_t c1, int16_t c2);
 extern void    PECMD_RunCommandLine(int64_t *ctx, void *key, int mode);      /* 变量取值 */
-extern bool    FUN_1400c11c0(WCHAR **pp, int *out);
+extern bool    PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);
 extern uint64_t PECMD_IsNumericString(const WCHAR *p);                        /* 数解析 */
 extern int64_t PECMD_FindTokenIndex(LPCWSTR a, WCHAR *b, uint32_t c, int d, uint16_t e);
 
@@ -196,9 +196,9 @@ uint64_t PECMD_WriteVarEncoded(int64_t *param_1, LPCWSTR param_2)
     WCHAR local_98[56];
 
     local_res10 = param_2;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     PECMD_StrDupAssign((WCHAR **)&local_res20, g_szEmpty);
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     cVar1 = FUN_1400660ac("*", (WCHAR **)&local_res10, 1);
     cVar2 = FUN_1400660ac("-m", (WCHAR **)&local_res10, 2);
     cVar3 = FUN_1400660ac("-bin", (WCHAR **)&local_res10, 4);
@@ -246,7 +246,7 @@ LAB_0a058a:
             goto LAB_0a0508;
         }
 LAB_0a050d:
-        plVar6 = FUN_14005b154((WCHAR **)&local_res10);
+        plVar6 = PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         PECMD_StrDupAssign((WCHAR **)&local_a0, (LPCWSTR)(uintptr_t)*plVar6);
         PECMD_RunCommandLine(param_1, &local_a0, 1);
         PECMD_VarLookup(param_1, local_a0, (void *)0, -1, (uint64_t *)0);
@@ -281,9 +281,9 @@ uint64_t PECMD_WriteVarTruncated(int64_t *param_1, LPCWSTR param_2)
     LPCWSTR local_20;
 
     local_res10[0] = param_2;
-    FUN_14005b154((WCHAR **)local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)local_res10);
     PECMD_StrDupAssign((WCHAR **)&local_38, g_szEmpty);
-    FUN_14005b154((WCHAR **)local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)local_res10);
     cVar1 = FUN_1400660ac("*", (WCHAR **)local_res10, 1);
     uVar6 = 0;
     if (*local_res10[0] == L'\0') {
@@ -309,7 +309,7 @@ uint64_t PECMD_WriteVarTruncated(int64_t *param_1, LPCWSTR param_2)
                     local_res10[0] = local_28;
                 }
                 local_20 = local_30;
-                FUN_14005b154((WCHAR **)&local_20);
+                PECMD_SkipLeadingControlChars((WCHAR **)&local_20);
                 if (*local_20 != L'(') {
                     pWVar4 = local_20;
                     if ((*local_20 == L'-') && ((uint16_t)(local_20[1] + 0xffd0) < 10)) {
@@ -323,7 +323,7 @@ uint64_t PECMD_WriteVarTruncated(int64_t *param_1, LPCWSTR param_2)
                         local_30 = pWVar4;
                     }
                 }
-                FUN_1400c11c0((WCHAR **)&local_30, local_res20);
+                PECMD_ParseHexOrDecBool((WCHAR **)&local_30, local_res20);
                 iVar2 = lstrlenW(local_res10[0]);
                 if ((local_res20[0] < 1) || (iVar2 < local_res20[0])) {
                     local_res20[0] = iVar2;
@@ -362,7 +362,7 @@ uint64_t PECMD_SetVarRange(int64_t *param_1, LPCWSTR param_2)
 
     local_res10[0] = param_2;
     PECMD_StrDupAssign((WCHAR **)&local_38, g_szEmpty);
-    FUN_14005b154((WCHAR **)local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)local_res10);
     cVar1 = FUN_1400660ac("*", (WCHAR **)local_res10, 1);
     uVar6 = 0;
     if (*local_res10[0] == L'\0') {
@@ -388,7 +388,7 @@ uint64_t PECMD_SetVarRange(int64_t *param_1, LPCWSTR param_2)
                     local_res10[0] = local_28;
                 }
                 local_20 = local_30;
-                FUN_14005b154((WCHAR **)&local_20);
+                PECMD_SkipLeadingControlChars((WCHAR **)&local_20);
                 if (*local_20 != L'(') {
                     pWVar4 = local_20;
                     if ((*local_20 == L'-') && ((uint16_t)(local_20[1] + 0xffd0) < 10)) {
@@ -402,7 +402,7 @@ uint64_t PECMD_SetVarRange(int64_t *param_1, LPCWSTR param_2)
                         local_30 = pWVar4;
                     }
                 }
-                FUN_1400c11c0((WCHAR **)&local_30, local_res20);
+                PECMD_ParseHexOrDecBool((WCHAR **)&local_30, local_res20);
                 iVar2 = lstrlenW(local_res10[0]);
                 if ((local_res20[0] < 1) || (iVar2 < local_res20[0])) {
                     local_res20[0] = iVar2;
@@ -513,7 +513,7 @@ LPCWSTR *PECMD_SearchStringAndLocate(int64_t *param_1, WCHAR *param_2, uint64_t 
         local_res10 = local_res10 + 1;
         WVar18 = *local_res10;
     }
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res10);
     cVar3 = FUN_1400660ac("*", (WCHAR **)&local_res10, 1);
     cVar4 = '\0';
     if (cVar3 != '\0') {
@@ -545,7 +545,7 @@ LPCWSTR *PECMD_SearchStringAndLocate(int64_t *param_1, WCHAR *param_2, uint64_t 
                         local_res10 = pWVar17;
                         WVar18 = *pWVar17;
                     }
-                    FUN_14005b154(&local_res10);
+                    PECMD_SkipLeadingControlChars(&local_res10);
                 }
                 else {
                     ppWVar20 = (uintptr_t)0x1;
@@ -640,7 +640,7 @@ LAB_0a0f9b:
     local_res10 = (WCHAR *)pWVar13;
     if (param_4 == 0) {
         local_f0 = pWVar16;
-        FUN_14005b154((WCHAR **)&local_f0);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_f0);
         if ((*local_f0 != L'\0') &&
             (((8 < (uint16_t)*pWVar16 && ((uint16_t)*pWVar16 < 0xe)) || (*pWVar16 == L' ')))) {
             local_e8 = local_f0;
@@ -659,7 +659,7 @@ LAB_0a0f9b:
         }
     }
     FUN_140063620((WCHAR **)&local_c0);
-    FUN_14007bf44(param_1, local_e8, (int64_t *)&local_c0, 0, 1);
+    PECMD_ExpandVarDispatch(param_1, local_e8, (int64_t *)&local_c0, 0, 1);
     local_e8 = local_c0;
     if (cVar4 != '\0') {
         local_f0 = local_c0;
@@ -681,10 +681,10 @@ LAB_0a0f9b:
         if ((local_e8[1] == L'\0') || (param_4 = param_4 | 1, local_e8[1] == L'\0')) {
             param_4 = param_4 & 0xfe;
         }
-        FUN_14007bf44(param_1, local_res10, (int64_t *)&local_90, 0, 1);
+        PECMD_ExpandVarDispatch(param_1, local_res10, (int64_t *)&local_90, 0, 1);
         local_res10 = (WCHAR *)local_90;
         local_c8[0] = 1;
-        FUN_1400679b0(&local_res10, local_c8, 0x2c);
+        PECMD_ParseShortStore(&local_res10, local_c8, 0x2c);
         if (*local_res10 != L',') {
             FUN_14005b104((int64_t *)&local_c0);
 LAB_0a12fd:
@@ -1014,7 +1014,7 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
                       (_Var24 = (uint64_t)((int64_t)pp + 2),
                        (uint16_t)(*(uint16_t *)(uintptr_t)_Var24 - 0x30) < 10)) {
                     local_res10 = _Var24;
-                    LVar10.QuadPart = FUN_140064a88((const WCHAR *)(uintptr_t)_Var24);
+                    LVar10.QuadPart = PECMD_WideStrToInt64((const WCHAR *)(uintptr_t)_Var24);
                     pp = _Var24;
                   }
                 }
@@ -1055,7 +1055,7 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
     pp = local_res10;
   }
 
-  FUN_14005b154((WCHAR **)&local_res10);
+  PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
   bVar29 = 0;
   while (*(uint16_t *)(uintptr_t)local_res10 == 0x2a) {
     cVar4 = FUN_1400660ac("*fix", (WCHAR **)&local_res10, 4);
@@ -1262,7 +1262,7 @@ LAB_14009dd92:
 LAB_14009e301:
       local_e0 = 0;
       if (local_d0 != 0) {
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         _Var15 = local_res10;
         WVar12 = *(WCHAR *)(uintptr_t)local_res10;
         _Var24 = local_res10;
@@ -1494,7 +1494,7 @@ LAB_14009ebed:
       hObject.QuadPart = LVar19.QuadPart;
       if (cVar4 != '\x02') {
         LVar23.QuadPart = 0;
-        iVar13 = FUN_140006a4c(local_90);
+        iVar13 = PECMD_IsDevicePathPrefix(local_90);
         if (iVar13 == 0) {
           PECMD_OpenFileHandle((HANDLE *)&local_b0, local_90, 0x80000000, 7,
                         (LPSECURITY_ATTRIBUTES)0, 3, 0x2000000, (HANDLE)0);
@@ -1881,7 +1881,7 @@ LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
                                         ((param_2.QuadPart = param_2.QuadPart + 2),
                                          (uint16_t)((int16_t)*(const int16_t *)(uintptr_t)param_2.QuadPart - 0x30u) < 10)) {
                                         local_res10.QuadPart = param_2.QuadPart;
-                                        lVar17 = FUN_140064a88((const WCHAR *)(uintptr_t)param_2.QuadPart);
+                                        lVar17 = PECMD_WideStrToInt64((const WCHAR *)(uintptr_t)param_2.QuadPart);
                                         uVar11 = (uint32_t)lVar17;
                                         if (-1 < (int)(uint32_t)lVar17) goto LAB_14009f25f;
                                     }
@@ -1912,7 +1912,7 @@ LAB_14009f25f:
         param_2.QuadPart = param_2.QuadPart + 2;
         local_res10.QuadPart = param_2.QuadPart;
     }
-    FUN_14005b154((WCHAR **)&local_res10.QuadPart);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
     local_res20 = 0;
     bVar1 = false;
     bVar2 = false;
@@ -1942,7 +1942,7 @@ LAB_14009f25f:
                                         local_res10.QuadPart = local_res10.QuadPart + 2;
                                         uVar26 = (uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart;
                                     }
-                                    FUN_14005b154((WCHAR **)&local_res10.QuadPart);
+                                    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
                                 } else {
                                     bVar5 = true;
                                 }
@@ -1984,7 +1984,7 @@ LAB_14009f25f:
     uVar27 = 0x2c;
     if ((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart == 0x2c) {
         local_res10.QuadPart = local_res10.QuadPart + 2;
-        FUN_14005b154((WCHAR **)&local_res10.QuadPart);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
         if ((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart != uVar26) {
             plVar14 = PECMD_SplitTokenAssignVar((WCHAR **)&local_58, (WCHAR **)&local_res10.QuadPart, uVar26, 1);
             PECMD_SplitTokenTrimWs(plVar14, (int64_t *)&local_98, 0);
@@ -2002,13 +2002,13 @@ LAB_14009f52b:
         cVar29 = (char)*local_98;
         local_res10.QuadPart = (int64_t)(uintptr_t)(local_98 + 1);
     }
-    FUN_14005b154((WCHAR **)&local_res10.QuadPart);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
     if (((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart == 0x2b) ||
         ((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart == 0x2d)) {
         local_c8 = *(const char *)(uintptr_t)local_res10.QuadPart;
         local_res10.QuadPart = local_res10.QuadPart + 2;
     }
-    FUN_14005b154((WCHAR **)&local_res10.QuadPart);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
     LVar25.QuadPart = LVar30.QuadPart;
     if ((uint16_t)((uint16_t)*(const uint16_t *)(uintptr_t)local_res10.QuadPart - 0x30) < 10) {
         PECMD_ParseSignedNumberStr((void **)&local_res10, (void *)&local_a8.QuadPart, (short)uVar27);
@@ -2028,12 +2028,12 @@ LAB_14009f5ef:
                 }
                 LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
             } else {
-                FUN_14006f884(pWVar20, (void *)&local_b8);
+                PECMD_GetEnvVarToStr(pWVar20, (void *)&local_b8);
             }
         } else if (cVar29 == '\0') {
             PECMD_AssignString(&local_b8.QuadPart, pWVar20);
         } else {
-            FUN_14007bf44(local_res8, pWVar20, &local_b8.QuadPart, 0, 1);
+            PECMD_ExpandVarDispatch(local_res8, pWVar20, &local_b8.QuadPart, 0, 1);
         }
         local_res10.QuadPart = local_res10.QuadPart & 0xffffffffffffff00;
         bWriteMode = 0;
@@ -2067,7 +2067,7 @@ LAB_14009fa02:
             lVar17 = (int64_t)iVar10 * 2;
             if (uVar11 != 0x4b0) {
                 if (uVar11 == 0x4b1) {
-                    FUN_140060a74((uint8_t *)(uintptr_t)local_b8.QuadPart, (int)lVar17);
+                    PECMD_SwapBytePairs((uint8_t *)(uintptr_t)local_b8.QuadPart, (int)lVar17);
                 } else if (uVar11 == 0xfde9) {
                     lVar17 = PECMD_WideToAnsiConvert((void *)&local_b8.QuadPart);
                 } else {
@@ -2099,7 +2099,7 @@ LAB_14009fa02:
                         }
                         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
                     } else {
-                        FUN_14006f884(local_78, (void *)&local_res20);
+                        PECMD_GetEnvVarToStr(local_78, (void *)&local_res20);
                     }
                     pWVar20 = (WCHAR *)*(WCHAR **)(void *)&local_res20;
                     uVar11 = lstrlenW(pWVar20);
@@ -2382,7 +2382,7 @@ LAB_1400a0366:
                 PECMD_AllocConsoleBuffers(0x100);
                 cVar7 = '\0';
             }
-            iVar10 = FUN_140006a4c(pWVar20);
+            iVar10 = PECMD_IsDevicePathPrefix(pWVar20);
             if ((((iVar10 == 0) ||
                   (local_c0.QuadPart = PECMD_OpenFileExisting((uint64_t)(uintptr_t)pWVar20, 0xffffffffc0000000, 7),
                    local_c0.QuadPart == 0)) &&

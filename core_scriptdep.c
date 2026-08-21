@@ -51,7 +51,7 @@ extern void *PECMD_ReallocBuffer(void *ptr, int64_t len); /* @0x140063224 重分
 extern void *FUN_140070154(LPCWSTR src);            /* @0x140070154 带 -8 头的串复制 */
 extern void FUN_14001b660(void *script);            /* @0x14001b660 sysinit 前置 */
 extern void FUN_1400250f0(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
-extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析到分隔符 */
+extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析到分隔符 */
 extern int64_t FUN_1400745c8(WCHAR **pp, int64_t *val);    /* @0x1400745c8 数字解析 */
 extern void FUN_140082520(void *script, LPCWSTR path, void *win, int mode); /* @0x140082520 */
 extern void FUN_1400e3cd4(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 */
@@ -152,7 +152,7 @@ WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
     *(void **)pbuf = nb;
     /* 旧段 (原 off 起 seglen 字符) 后移 linelen 字符 (FUN_14001d744 memmove) */
     memmove((uint8_t *)nb + (linelen + (size_t)off) * 2, ins, seglen * 2);
-    /* 新行拷到插入点 (FUN_14001d78c; 反编译按字符计) */
+    /* 新行拷到插入点 (PECMD_MemMoveForward; 反编译按字符计) */
     memcpy(ins, tmp, linelen * 2);
     /* 新行尾写 key 分隔 (PECMD_FillChar6 = 写 ushort) */
     *(uint16_t *)((uint8_t *)nb + (linelen + seglen + (size_t)off) * 2) = (uint16_t)key;
@@ -402,7 +402,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
  */
 void FUN_1400679DC(WCHAR **pp, int *out, WCHAR sep)
 {
-    FUN_1400679b0(pp, out, sep);    /* TODO(verify) @0x1400679b0 解析到分隔符 */
+    PECMD_ParseShortStore(pp, out, sep);    /* TODO(verify) @0x1400679b0 解析到分隔符 */
     if (**pp != 0) {
         (*pp)++;
     }

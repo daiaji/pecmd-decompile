@@ -47,7 +47,7 @@ extern WCHAR    *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);       /* @0x140063720 PECMD_StrAlloc */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern void      FUN_14005b104(void *ps);                         /* @0x14005b104 释放串槽 */
-extern WCHAR    *FUN_14005b154(WCHAR **pp);                       /* @0x14005b154 跳过空白 */
+extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                       /* @0x14005b154 跳过空白 */
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);     /* @0x1400702b0 赋值串 */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);     /* @0x14007034c 追加串 */
 extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);   /* @0x1400703e4 拷贝串 */
@@ -69,7 +69,7 @@ extern void      PECMD_RunCommandLine(void *script, WCHAR **str, int mode);  /* 
 extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
 extern int64_t   PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                                int64_t len, void *p5);                /* 变量查找 */
-extern void      FUN_14007bf44(void *ctx, WCHAR *src, WCHAR **out,
+extern void      PECMD_ExpandVarDispatch(void *ctx, WCHAR *src, WCHAR **out,
                                int mode, int flag);                   /* 变量替换 read */
 extern int64_t   PECMD_ExpandCommandLine(void *ctx, WCHAR *src, WCHAR **out,
                                int mode, uint8_t flag);               /* 变量写入 */
@@ -226,7 +226,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
         local_res10 = local_res10 + 1;
     }
     uVar8 = uVar8 ^ 0x18000000;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     iVar7 = 0x2c;
     local_70 = local_res10;
     uVar11 = uVar11 & 0xffffffff;
@@ -272,7 +272,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
                             local_res10 = pWVar14 + 9;
                             uVar8 = uVar8 | 0x2000000;
                             FUN_140063620(&local_c8);
-                            FUN_14007bf44(param_1, local_res10, (WCHAR **)&local_c8, 0, 1);
+                            PECMD_ExpandVarDispatch(param_1, local_res10, (WCHAR **)&local_c8, 0, 1);
                             local_98 = local_c8;
                             PECMD_ParseNumSkipWs((int64_t *)&local_98, &local_88);
                             local_88 = (uint64_t)(char)local_88;
@@ -301,7 +301,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
                 local_res10 = pWVar14;
                 WVar1 = *pWVar14;
             }
-            FUN_14005b154((WCHAR **)&local_res10);
+            PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         } while (WVar13 == *local_res10);
         param_3 = local_res18;
         WVar1 = (WCHAR)local_res8[0];
@@ -327,7 +327,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     WVar13 = *local_res10;
     if (WVar13 == L'*') {
         local_res10 = local_res10 + 1;
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     }
     FUN_1400547bc(param_1, (int64_t *)&local_res10, (int64_t *)&local_a0, 0x2c, 0);
     if (*local_res10 == L'\0') {
@@ -435,7 +435,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
     uVar6 = 0;
     local_40 = 0;
     local_48 = param_1;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     if (param_3 == 0) {
         FUN_14001b3a0(param_1, (int64_t *)0x0);
         param_3 = (WPARAM)param_1[8];
@@ -458,7 +458,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
             local_res10 = puVar5;
             uVar1 = *puVar5;
         }
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         puVar5 = local_res10;
     }
     *puVar7 = (uint16_t)uVar4;
@@ -475,7 +475,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
     local_60 = (int64_t)param_4;
     if (uVar1 == 0x2a) {
         local_res10 = puVar5 + 1;
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     }
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, &local_80, 0x2c);
     PECMD_RunCommandLine(param_1, (WCHAR **)&local_80, 1);
@@ -556,7 +556,7 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
     uVar6 = 0;
     local_40 = 0;
     local_48 = param_1;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     if (param_3 == 0) {
         FUN_14001b3a0(param_1, (int64_t *)0x0);
         param_3 = (WPARAM)param_1[8];
@@ -579,7 +579,7 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
             local_res10 = puVar5;
             uVar1 = *puVar5;
         }
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         puVar5 = local_res10;
     }
     *puVar7 = (uint16_t)uVar4;
@@ -596,7 +596,7 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
     local_60 = (int64_t)param_4;
     if (uVar1 == 0x2a) {
         local_res10 = puVar5 + 1;
-        FUN_14005b154((WCHAR **)&local_res10);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     }
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, &local_80, 0x2c);
     PECMD_RunCommandLine(param_1, (WCHAR **)&local_80, 1);
@@ -738,7 +738,7 @@ uint64_t PECMD_GenerateTextContent(int64_t *param_1, int64_t param_2)
     local_170 = 0;
     local_f8 = 0;
     local_108 = 0;
-    plVar9 = (WCHAR **)FUN_14005b154((WCHAR **)&local_res10);
+    plVar9 = (WCHAR **)PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     local_1a8 = (WCHAR *)*plVar9;
     WVar5 = L'*';
     cVar21 = '*';
@@ -859,7 +859,7 @@ LAB_140085e5d:
                                                         } while (WVar5 != L'\0');
                                                         pWVar13 = (LPWSTR)(uintptr_t)local_170;
                                                     }
-                                                    FUN_14005b154((WCHAR **)&local_1a8);
+                                                    PECMD_SkipLeadingControlChars((WCHAR **)&local_1a8);
                                                 }
                                                 else {
                                                     uVar6 = uVar6 | 4;
@@ -881,7 +881,7 @@ LAB_140085e5d:
                                                     } while (WVar5 != L'\0');
                                                     pWVar13 = (LPWSTR)(uintptr_t)local_170;
                                                 }
-                                                FUN_14005b154((WCHAR **)&local_1a8);
+                                                PECMD_SkipLeadingControlChars((WCHAR **)&local_1a8);
                                                 local_1a8[-1] = L'\0';
                                                 PECMD_ExpandCommandLine(param_1, pWVar22, (WCHAR **)&local_178,
                                                               0, 1);
@@ -960,7 +960,7 @@ LAB_140085eeb:
         local_e0 = local_178;
         local_80 = (uint64_t)(int)uVar6;
         local_58 = local_160;
-        plVar9 = (WCHAR **)FUN_14005b154((WCHAR **)&local_1a8);
+        plVar9 = (WCHAR **)PECMD_SkipLeadingControlChars((WCHAR **)&local_1a8);
         pWVar20 = (WCHAR *)*plVar9;
         sVar15 = 0x2c;
         local_1a8 = (WCHAR *)pWVar20;
@@ -988,7 +988,7 @@ LAB_140085eeb:
         FUN_140063620(&local_148);
         FUN_140063620(&local_130);
         FUN_140063620(&local_150);
-        FUN_14007bf44(param_1, pWVar20, (WCHAR **)&local_f0, 0, 1);
+        PECMD_ExpandVarDispatch(param_1, pWVar20, (WCHAR **)&local_f0, 0, 1);
         if (*local_f0 == 0x3f) {
             local_f0 = local_f0 + 1;
             local_98[0] = 0x3f;
@@ -1330,7 +1330,7 @@ uint64_t PECMD_ProcessEncodedFile(int64_t *param_1, WCHAR *param_2)
     (void)local_48; (void)local_50; (void)local_d490; (void)local_d498;
     (void)local_d508; (void)local_d510; (void)local_d540; (void)local_d550;
     local_res10 = param_2;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     iVar22 = 0;
     if (*local_res10 == L'\0') {
         return 0;
@@ -1412,14 +1412,14 @@ uint64_t PECMD_ProcessEncodedFile(int64_t *param_1, WCHAR *param_2)
                                     local_res20[0] = 1;
                                     local_res10 = local_res10 + 2;
 LAB_140086c8f:
-                                    FUN_14005b154((WCHAR **)&local_res10);
+                                    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
                                     cVar2 = cVar28;
                                 }
                             }
                             else {
                                 local_res10 = pWVar26 + 3;
                                 cVar28 = '\x10';
-                                FUN_14005b154((WCHAR **)&local_res10);
+                                PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
                                 local_d4c8 = local_res10;
                                 if (*local_res10 == L'\0') break;
                                 *local_res10 = L'\0';
@@ -1792,7 +1792,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
 
     local_res10 = param_2;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     PECMD_AllocWStringBuffer((WCHAR **)&local_128, 5);
     PECMD_AllocWStringBuffer((WCHAR **)&local_130, 0x14);
     FUN_140063620(&local_120);
@@ -1826,7 +1826,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
                                 local_res10 = local_res10 + 1;
                                 WVar1 = *local_res10;
                             }
-                            FUN_14005b154((WCHAR **)&local_res10);
+                            PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
                         }
                         else {
                             bVar2 = true;
@@ -2031,7 +2031,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
     int64_t local_48[2];
 
     local_res10[0] = (LPWSTR)param_2;
-    FUN_14005b154((WCHAR **)local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)local_res10);
     PECMD_AllocWStringBuffer((WCHAR **)&local_50, 5);
     PECMD_AllocWStringBuffer((WCHAR **)local_48, 0x14);
     cVar14 = '\x01';
@@ -2072,7 +2072,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
                                                          (WVar1 != L' '))));
                                                      local_res10[0] = local_res10[0] + 1) {
                                                 }
-                                                FUN_14005b154((WCHAR **)local_res10);
+                                                PECMD_SkipLeadingControlChars((WCHAR **)local_res10);
                                             }
                                             else {
                                                 bVar5 = true;

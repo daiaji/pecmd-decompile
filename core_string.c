@@ -16,7 +16,7 @@
  * 内存块布局 (HeapAlloc, 全局堆 g_hHeap = g_hHeap):
  *   [-8] size_t 容量(字节)  [-4] 魔数 0xaa55  [+0] 数据起始
  *
- * FUN_14001d78c/14001d744 = MSVC 内联 memcpy/memmove, 库替换
+ * PECMD_MemMoveForward/14001d744 = MSVC 内联 memcpy/memmove, 库替换
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>

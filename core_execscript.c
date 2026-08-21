@@ -33,15 +33,15 @@ void FUN_14005e7dc(LPVOID *psd);              /* @0x14005e7dc 安全描述符初
 void FUN_140026338(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
 void FUN_140018c6c(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
 void FUN_140018d8c(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
-void FUN_140023544(void);                     /* @0x140023544 */
+void PECMD_TruncateDebugLog(void);                     /* @0x140023544 */
 void FUN_14001b888(int n);                    /* @0x14001b888 */
 void FUN_14002286c(void);                     /* @0x14002286c */
-void FUN_140017724(void);                     /* @0x140017724 */
+void PECMD_SwitchToDefaultDesktop(void);                     /* @0x140017724 */
 void FUN_14002cc30(void *script, LPCWSTR s, int64_t a, int64_t b, LPCWSTR c); /* @0x14002cc30 */
 void LoadEnvi(LPCWSTR a, LPCWSTR b);          /* @0x140069f0 环境初始化 */
 void FUN_14005B9A0(void);                     /* @0x14005b9a0 */
 void FUN_14003e1f0(void);                     /* @0x14003e1f0 */
-DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data, DWORD size); /* @0x14005c5a0 注册表值写入 */
+DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data, DWORD size); /* @0x14005c5a0 注册表值写入 */
 void FUN_1400e8574(void *script, int flag);   /* @0x1400e8574 */
 void FUN_140063620(WCHAR **ps);               /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
 void FUN_1400545f8(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
@@ -205,7 +205,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
                           (void *)g_pRegDeleteKeyExW, r);
         }
     }
-    FUN_140023544();
+    PECMD_TruncateDebugLog();
     if (bStar) {
         ((uint8_t *)&g_runFlag)[3] = 1;   /* DAT_140147003 = 1 */
     }
@@ -226,7 +226,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
         if (g_logFlag != 0) {
             FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1e, r);
         }
-        FUN_140017724();
+        PECMD_SwitchToDefaultDesktop();
         if (g_logFlag != 0) {
             FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f20, r);
         }
@@ -248,7 +248,7 @@ after_init:
     FUN_14003e1f0();
     pid = GetCurrentProcessId();
     r = 4;
-    FUN_14005c5a0(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("MainPECMDPID"), 4,
+    PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("MainPECMDPID"), 4,
                   (BYTE *)&pid, 4);
     if (g_logFlag != 0) {
         FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f2a, r);
@@ -278,7 +278,7 @@ after_init:
     if (!bUser) {
         bInMain = (BYTE)g_runFlag;
         r = 3;
-        FUN_14005c5a0(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("bInMain"), 3,
+        PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("bInMain"), 3,
                       &bInMain, 1);
     }
     if (g_logFlag != 0) {
@@ -288,7 +288,7 @@ after_init:
         FUN_14001b850();
     }
     r = 0xb;
-    FUN_14005c5a0(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), pRegName, 0xb,
+    PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), pRegName, 0xb,
                   (BYTE *)&g_hCallBackWnd, 8);
     if ((sVar1 != 0) || bUser) {
         FUN_14002e30c();
@@ -378,7 +378,7 @@ after_init:
                 if (pBuf[0] != 0) {     /* 反编译恒假分支, 原样保留 */
                     FUN_14001b888(1);
                     dwVal = 1;
-                    FUN_14005c5a0(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"),
+                    PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"),
                                   WSTR("SysStartuped"), 4, (BYTE *)&dwVal, 4);
                 }
                 FUN_14000e26c((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)(pBuf + 900),

@@ -22,7 +22,7 @@ extern void PECMD_AsciiTrimToWide(void **pp, const void *src, uint64_t len); /* 
 extern uint16_t *PECMD_DataToWideString(int64_t data, int start, int end, uint16_t *out); /* @0x14005fd7c */
 extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);        /* @0x14001f1d4 */
 extern uint64_t PECMD_LoadImageStream(uint8_t *p, size_t n, uint64_t *p3); /* @0x140061e98 */
-extern int64_t FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
+extern int64_t PECMD_VectorSlotPtr(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
 extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr, uint32_t flag); /* @0x14001c2cc EnablePrivilege */
 extern uint64_t PECMD_TaskShowMessage(uint64_t *param_1);           /* @0x1400612cc thread proc */
 extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d, DWORD e, DWORD f, DWORD g); /* @0x1400e3d60 */
@@ -856,7 +856,7 @@ L14007dc6e:
             ((void (*)(uint64_t, uint32_t, uint32_t, uint64_t))g_pGdipGetPropertyItem)(
                 (uint64_t)*plVar9, 0x5100, local_res20[0], local_38[0]);
             uVar15 = ((uint64_t)local_res20[0] - 0x18) >> 2;
-            FUN_140063b00((int64_t)(int)*puVar5, param_1, param_1 + 1, 4);
+            PECMD_VectorSlotPtr((int64_t)(int)*puVar5, param_1, param_1 + 1, 4);
             uVar10 = uVar12;
             if ((int)uVar15 != 0) {
                 uVar10 = uVar15 & 0xffffffff;
@@ -866,7 +866,7 @@ L14007dc6e:
                 do {
                     uVar7 = (uint32_t)(*(int *)(uVar14 + *(uint64_t *)(local_38[0] + 0x10)) * 10);
                     uVar12 = (uint64_t)uVar7;
-                    puVar5 = (uint32_t *)FUN_140063b00(uVar13, param_1, param_1 + 1, 4);
+                    puVar5 = (uint32_t *)PECMD_VectorSlotPtr(uVar13, param_1, param_1 + 1, 4);
                     uVar13 = uVar13 + 1;
                     uVar14 = uVar14 + 4;
                     uVar15 = uVar15 - 1;
@@ -875,7 +875,7 @@ L14007dc6e:
             }
             while (1) {
                 if (*(uint32_t *)(param_1 + 3) <= (uint32_t)uVar10) break;
-                puVar6 = (uint32_t *)FUN_140063b00(uVar10, param_1, param_1 + 1, 4);
+                puVar6 = (uint32_t *)PECMD_VectorSlotPtr(uVar10, param_1, param_1 + 1, 4);
                 uVar10 = (uint64_t)((uint32_t)uVar10 + 1);
                 *puVar6 = (int)uVar12;
             }

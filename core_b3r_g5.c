@@ -31,7 +31,7 @@ extern void    FUN_1400633a8(void **ps, int64_t len);                   /* @0x14
 extern void    FUN_14005b0b8(void *p);                                  /* @0x14005b0b8 缓冲区构造 */
 extern void    FUN_14005c828(const char *func, const char *dll,
                              void **out, uintptr_t *hmod);              /* @0x14005c828 GetProcAddress 包装 */
-extern uint64_t FUN_14006a7f4(int64_t *param_1, uint64_t *param_2);     /* @0x14006a7f4 尺寸换算 */
+extern uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2);     /* @0x14006a7f4 尺寸换算 */
 extern void    PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
                              DWORD share, LPSECURITY_ATTRIBUTES sa,
                              DWORD disp, DWORD flags, HANDLE tmpl);     /* @0x140003864 CreateFileW 包装 */
@@ -346,7 +346,7 @@ int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_
     } else {
         local_98[0] = 0;
         local_res10 = param_2;
-        FUN_14006a7f4(&local_res10, local_98);
+        PECMD_ParseSizeAndSkipWs(&local_res10, local_98);
         local_80 = g_u642d1c8;
         uStack_78 = _UNK_14012d1d0;
         local_a0 = (HANDLE)0xffffffffffffffff;

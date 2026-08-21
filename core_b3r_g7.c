@@ -57,7 +57,7 @@ extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out,
                                 undefined1 cp);               /* @0x140068984 */
 extern HANDLE   PECMD_LoadImageFromMemory(undefined8 *param_1, longlong *param_2); /* @0x14006eaac */
 extern void     FUN_14005b104(void *ps);                      /* @0x14005b104 释放字符串槽 */
-extern WCHAR   *FUN_14005b154(WCHAR **ps);                    /* @0x14005b154 跳过空白 */
+extern WCHAR   *PECMD_SkipLeadingControlChars(WCHAR **ps);                    /* @0x14005b154 跳过空白 */
 extern WCHAR   *FUN_14006375c(WCHAR **ps, LPCWSTR src);       /* @0x14006375c 串追加 */
 extern void     FUN_140063620(WCHAR **out);                   /* @0x140063620 初始化串缓冲 */
 extern WCHAR   *PECMD_AllocString(WCHAR **ps, int64_t count);     /* @0x140063720 串分配(计数) */
@@ -65,14 +65,14 @@ extern WCHAR   *PECMD_StrDupA(WCHAR **ps, LPCWSTR src,
                               int64_t a, int64_t b);          /* @0x1400637dc 串复制分配 */
 extern void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
 extern void     PECMD_LoadSetupApiFunctions(void);                          /* @0x140017b8c 初始化 */
-extern bool     FUN_1400c11c0(WCHAR **pp, int *out);          /* @0x1400c11c0 */
+extern bool     PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);          /* @0x1400c11c0 */
 extern bool     PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
 extern uint32_t PECMD_GetDiskGeometry(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
 extern BOOL     PECMD_OpenCloseDrive(char param_1, int param_2);     /* @0x14006f908 */
 extern void     PECMD_CheckDriveType(WCHAR param_1, int param_2);    /* @0x14007c7ec */
 extern short   *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
                               short c, short f);              /* @0x1400547bc 拆串 */
-extern DWORD    FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
+extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);        /* @0x14005c5a0 注册表查询 */
 extern int      PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c788 串前缀比较 */
 extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len); /* @0x1400702f0 取串槽 */
@@ -147,19 +147,19 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
 
     local_res10 = param_2;
     PECMD_LoadSetupApiFunctions();
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     local_b8 = StrChrW(local_res10, L',');
     WVar9 = L'\0';
     cVar7 = '\0';
     if (local_b8 != (LPWSTR)0) {
         *local_b8 = L'\0';
         local_b8 = local_b8 + 1;
-        FUN_14005b154((WCHAR **)&local_b8);
+        PECMD_SkipLeadingControlChars((WCHAR **)&local_b8);
         if ((*local_b8 & 0xffdfU) == 0x52) {
             cVar7 = '\x02';
         } else {
             local_res20[0] = 0;
-            FUN_1400c11c0(&local_b8, local_res20);
+            PECMD_ParseHexOrDecBool(&local_b8, local_res20);
             cVar7 = '\0';
             if (local_res20[0] != 0) {
                 cVar7 = '\x01';
@@ -177,7 +177,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
             WVar9 = *local_res10;
         }
         if ((0x2f < (ushort)*local_res10) && ((ushort)*local_res10 < 0x3a)) {
-            FUN_1400c11c0((WCHAR **)&local_res10, local_res18);
+            PECMD_ParseHexOrDecBool((WCHAR **)&local_res10, local_res18);
         }
     }
     local_70 = g_u6426e70;
@@ -306,7 +306,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
 
     uVar7 = 0;
     local_res10 = param_2;
-    FUN_14005b154((WCHAR **)&local_res10);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     FUN_140063620((WCHAR **)&local_58);
     local_48 = 0x8000000000000000ULL;
     FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
@@ -359,9 +359,9 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
                         lpString[(int64_t)iVar10 + -1] = L'\0';
                     }
                     lstrcpynW(pWVar2 + iVar4, lpString, 0x208);
-                    DVar8 = FUN_14005c5a0((HKEY)0xffffffff80000001, pWVar2,
+                    DVar8 = PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, pWVar2,
                                           WSTR("MaxCapacity"), 4, (BYTE *)local_res18, 4);
-                    DVar9 = FUN_14005c5a0((HKEY)0xffffffff80000001, pWVar2,
+                    DVar9 = PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, pWVar2,
                                           WSTR("NukeOnDelete"), 4, (BYTE *)local_res20, 4);
                     uVar7 = -(uint)(DVar9 != 0) & -(uint)(DVar8 != 0) & uVar7;
                 }
@@ -397,7 +397,7 @@ uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
     uint64_t local_res10;   /* Ghidra 的 _FILETIME 8 字节串槽 */
 
     local_res8 = param_1;
-    FUN_14005b154((WCHAR **)&local_res8);
+    PECMD_SkipLeadingControlChars((WCHAR **)&local_res8);
     pWVar2 = local_res8;
     sVar3 = 0;
     if (*local_res8 == L'$') {

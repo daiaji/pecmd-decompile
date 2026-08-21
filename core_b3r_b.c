@@ -25,7 +25,7 @@ extern char    FUN_1400660ac(char *tok, int64_t *pp, int n);
 extern int     PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
 
 /* skip leading whitespace in the wide string at *ps; returns pointer past it. */
-extern uint16_t *FUN_14005b154(uint16_t **ps);
+extern uint16_t *PECMD_SkipLeadingControlChars(uint16_t **ps);
 
 /* parse integer at *pp with rounding, write into *out; returns bool flag. */
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
@@ -140,7 +140,7 @@ uint32_t PECMD_ParseWindowOptions(uint16_t *param_1, uint8_t *param_2, int *para
                                                                                                     local_res8 = puVar6;
                                                                                                     uVar1 = *puVar6;
                                                                                                 }
-                                                                                                FUN_14005b154((uint16_t **)&local_res8);
+                                                                                                PECMD_SkipLeadingControlChars((uint16_t **)&local_res8);
                                                                                             } else {
                                                                                                 local_res8 = puVar6 + 7;
                                                                                                 local_res20[0] = 0;

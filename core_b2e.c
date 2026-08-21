@@ -82,7 +82,7 @@ extern WCHAR *FUN_1400E6D38(WCHAR *dst, uint64_t v, LPCWSTR fmt);
 extern void FUN_1400E6D68(LPCWSTR dst, uint64_t v);
 extern DWORD FUN_14005C4E0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD *type,
                            BYTE *data, DWORD *size);
-extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);
 extern DWORD FUN_14006459C(LPCWSTR path, uint32_t mode, LPWSTR buf,
                            LPWSTR *out);
@@ -133,7 +133,7 @@ extern DWORD FUN_1400195F0(uint64_t script, int64_t ms, int mode,
 extern void FUN_140018d8c(uint64_t script, LPCWSTR fmt, uint64_t a,
                           uint64_t b);
 extern HWND PECMD_ReadValidWindowHandle(void *p);
-extern void FUN_140023544(void);
+extern void PECMD_TruncateDebugLog(void);
 extern void PECMD_InitIfOldSystem(void);
 extern WCHAR *PECMD_SkipSwitches(WCHAR *s);
 extern WCHAR *PECMD_TruncateAtCommaSkipSpace(WCHAR *s);
@@ -969,7 +969,7 @@ append_done:
                                     if (i18 != 0) {
                                         entryList[(int)result * 2] = L'\0';
                                         entryList[(int)result * 2 + 1] = L'\0';
-                                        FUN_14005c5a0(
+                                        PECMD_RegSetValueWithOpen(
                                             (HKEY)(intptr_t)0xffffffff80000002,
                                             WSTR("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management"),
                                             WSTR("PagingFiles"), 7, (BYTE *)entryList,
@@ -2567,7 +2567,7 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
         FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ce, 0);
     }
     SleepEx(10, 1);
-    FUN_140023544();
+    PECMD_TruncateDebugLog();
     if ((DAT_140147003 != 0) && (DAT_140147002 == 0)) {
         DAT_140147002 = 1;
         PECMD_InitIfOldSystem();

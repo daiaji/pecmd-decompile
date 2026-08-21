@@ -24,7 +24,7 @@ extern double   g_dbl27190;              /* clamp 上界 */
 extern double   g_dbl27188;              /* clamp 下界 */
 
 /* ---- 本文件引用的内部辅助函数 (extern, 不在此定义) ---- */
-extern WCHAR    *FUN_14005b154(WCHAR **ps);                 /* @0x14005b154 trim 空白 */
+extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **ps);                 /* @0x14005b154 trim 空白 */
 extern void      FUN_14005b104(int64_t *ps);                /* @0x14005b104 释放字符串槽 */
 extern uint64_t  PECMD_GetPackedSystemVersion(void);                       /* @0x14005ea5c 版本号 */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, LPCWSTR src);    /* @0x14007034c 字符串赋值 */
@@ -33,7 +33,7 @@ extern void      FUN_140063620(WCHAR **out);                /* @0x140063620 字�
 extern void      PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, short delim); /* @0x1400675b8 按分隔切分 */
 extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern WCHAR    *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);    /* @0x140024c48 展转义 */
-extern void      FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);       /* @0x1400679b0 解析整数 */
+extern void      PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);       /* @0x1400679b0 解析整数 */
 extern WCHAR    *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);                /* @0x140070310 token 扫描 */
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);         /* @0x14005c7c4 (icmp) */
 extern int64_t   FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
@@ -106,7 +106,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
         local_res10 = param_2;
         WVar1 = *param_2;
     }
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res10);
     pWVar6 = local_res10;
 
     if (WVar11 == L'*') {
@@ -131,7 +131,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
                     local_res10 = pWVar6;
                     WVar11 = *pWVar6;
                 }
-                FUN_14005b154(&local_res10);
+                PECMD_SkipLeadingControlChars(&local_res10);
                 WVar11 = *local_res10;
                 pWVar6 = local_res10;
             } while (WVar11 == L'/');
@@ -159,7 +159,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
         }
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
-            FUN_14005b154(&local_res10);
+            PECMD_SkipLeadingControlChars(&local_res10);
             if (*local_res10 == L'\"') {
                 local_58 = local_res10;
                 local_res10 = (WCHAR *)pWVar9;
@@ -171,14 +171,14 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
             }
             if (*pWVar6 == L',') {
                 local_res10 = pWVar6 + 1;
-                FUN_1400679b0(&local_res10, &local_res20, 0x2c);
+                PECMD_ParseShortStore(&local_res10, &local_res20, 0x2c);
                 iVar15 = local_res20;
                 if (*local_res10 == L',') {
                     local_res10 = local_res10 + 1;
                     PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_68, 0x2c);
                     if (*local_res10 == L',') {
                         local_res10 = local_res10 + 1;
-                        FUN_1400679b0(&local_res10, &local_88, 0x2c);
+                        PECMD_ParseShortStore(&local_res10, &local_88, 0x2c);
                         iVar16 = local_88;
                     }
                 }
@@ -404,8 +404,8 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
     }
     local_res8 = (WCHAR *)param_1;
     local_res10 = (WCHAR *)param_2;
-    FUN_14005b154(&local_res8);
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res8);
+    PECMD_SkipLeadingControlChars(&local_res10);
     lpStr2 = local_res8;
     WVar2 = *local_res8;
     pWVar5 = local_res8;
@@ -440,7 +440,7 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
                 local_res10 = pWVar5;
                 WVar2 = *pWVar5;
             }
-            FUN_14005b154(&local_res10);
+            PECMD_SkipLeadingControlChars(&local_res10);
             iVar6 = iVar6 + 1;
         }
     } else {

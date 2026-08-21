@@ -10,7 +10,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp);              /* @0x14005b154 */
 
 /* --- helper symbols referenced by restored bodies below --- */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 分配清零槽数组 */
-extern bool  FUN_1400c11c0(WCHAR **pp, int *out);                   /* @0x1400c11c0 */
+extern bool  PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);                   /* @0x1400c11c0 */
 extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
 extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                              int namelen, void **found);            /* @0x140018978 */
@@ -25,7 +25,7 @@ extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);        /* @0x1400637
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern WCHAR *FUN_140063620(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
 extern void  FUN_14005b104(void *ps);                               /* @0x14005b104 释放引用串容器 */
-extern void  FUN_14007bf44(int64_t *script, LPCWSTR src, int64_t *out,
+extern void  PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
 
 /* ---- PECMD_DecodeBig5NameTable (BIG5 字符名表解码/重排) 依赖 ---- */
@@ -176,7 +176,7 @@ int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
             if ((uint16_t)((uint16_t)*p - 0x30) < 10) {
                 if (pEnd <= p)
                     break;
-                if (!FUN_1400c11c0(&p, &n))
+                if (!PECMD_ParseHexOrDecBool(&p, &n))
                     break;
                 *dst = (uint8_t)n;
                 dst++;
@@ -438,7 +438,7 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
 
     FUN_140063620(&tok);
     PECMD_ExtractTokenByDelim(pp, &tok, (int16_t)sep);
-    FUN_14007bf44((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
+    PECMD_ExpandVarDispatch((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
     cursor[2] = cursor[0];
     FUN_14005b104(&tok);
     return cursor + 2;

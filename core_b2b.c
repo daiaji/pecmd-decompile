@@ -48,7 +48,7 @@ extern uint64_t PECMD_IsDirectory(LPCWSTR s);
 extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern LARGE_INTEGER PECMD_ExecDashCommand(LPCWSTR path);
 extern uint32_t PECMD_ParseVirtualKeyCode(LPCWSTR s, int len);
-extern void FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
+extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
@@ -498,7 +498,7 @@ uint32_t PECMD_ParseVkKeyName(LPCWSTR s, char allowChar)
             return (uint32_t)(uint16_t)*local_res8 - 0x20;
         }
     }
-    FUN_1400679b0((WCHAR **)&local_res8, (int *)local_res18, 0x2c);
+    PECMD_ParseShortStore((WCHAR **)&local_res8, (int *)local_res18, 0x2c);
     return local_res18[0];
 }
 

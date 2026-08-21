@@ -46,7 +46,7 @@ extern void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn,
 extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);             /* @0x14005c5a0 */
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
@@ -966,7 +966,7 @@ LAB_33dc:
                     step = 5;
                     GetLastError();
                     if (iVar2 != 0) {
-                        FUN_14005c5a0((HKEY)0xffffffff80000002,
+                        PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
                                       WSTR("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup"),
                                       WSTR("PrivateHash"), 3, hash, 0x10);
                         goto LAB_365f;
@@ -994,12 +994,12 @@ LAB_365f:
     prov = 0;
     if (hashObj != 0)
         CryptDestroyHash(hashObj);
-    FUN_14005c5a0((HKEY)0xffffffff80000001, WSTR("Software\\Microsoft\\Driver Signing"),
+    PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, WSTR("Software\\Microsoft\\Driver Signing"),
                   WSTR("Policy"), uVar1, (BYTE *)regVal, uVar10);
-    FUN_14005c5a0((HKEY)0xffffffff80000002, WSTR("Software\\Microsoft\\Non-Driver Signing"),
+    PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("Software\\Microsoft\\Non-Driver Signing"),
                   WSTR("Policy"), uVar1, (BYTE *)regVal, uVar10);
     {
-        DWORD dw = FUN_14005c5a0((HKEY)0xffffffff80000002,
+        DWORD dw = PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
                                  WSTR("Software\\Microsoft\\Driver Signing"),
                                  WSTR("Policy"), uVar1, (BYTE *)regVal, uVar10);
         if (iVar2 != 0) {
@@ -1038,7 +1038,7 @@ skip_crypto:
 done:
     if (local_res8 == 0) {
         regVal[0] = 1;
-        FUN_14005c5a0((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),
+        PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),
                       WSTR("DEVIAutoDisverify"), 4, (BYTE *)regVal, 4);
     }
     return result;

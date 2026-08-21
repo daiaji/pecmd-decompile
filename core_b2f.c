@@ -3728,7 +3728,7 @@ extern char PECMD_DevAlignCheck(uint64_t a1, LPCWSTR a2, uint64_t a3);
 extern DWORD FUN_1400279D8(uint32_t a1, WCHAR *a2, LPCWSTR a3); /* @0x1400279d8 */
 extern uint64_t FUN_14002A508(uint64_t a1, LPCWSTR a2); /* @0x14002a508 */
 extern void FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR a2);
-extern DWORD FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR a2, DWORD type,
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR a2, DWORD type,
                            BYTE *data, DWORD size);
 extern void PECMD_IncTaskCount(void);
 extern void PECMD_DecrementInitRef(uint8_t a1);
@@ -4690,7 +4690,7 @@ LAB_14003858a:
         SetWindowLongPtrW(local_res10, -0x14, uVar14 | 0x8000000);
         EnterCriticalSection(&g_csInit);
         FUN_14005C61C((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), WSTR("LogohWnd"));
-        FUN_14005c5a0((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), WSTR("LogohWnd"),
+        PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), WSTR("LogohWnd"),
                       0xb, (BYTE *)&local_res10, 8);
         LeaveCriticalSection(&g_csInit);
         if ((g_bitFlags & 0xc) == 8) {

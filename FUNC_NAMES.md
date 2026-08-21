@@ -4,6 +4,33 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140004fd4 | FUN_140004fd4 | PECMD_TrimWorkingSetAndExec |
+| 0x140006a4c | FUN_140006a4c | PECMD_IsDevicePathPrefix |
+| 0x140017724 | FUN_140017724 | PECMD_SwitchToDefaultDesktop |
+| 0x14001d78c | FUN_14001d78c | PECMD_MemMoveForward |
+| 0x140023544 | FUN_140023544 | PECMD_TruncateDebugLog |
+| 0x14005b154 | FUN_14005b154 | PECMD_SkipLeadingControlChars |
+| 0x14005c5a0 | FUN_14005c5a0 | PECMD_RegSetValueWithOpen |
+| 0x14005d534 | FUN_14005d534 | PECMD_SetEnvIfNonEmpty |
+| 0x14005daf8 | FUN_14005daf8 | PECMD_ScaleQuadByFactor |
+| 0x14005dec4 | FUN_14005dec4 | PECMD_GetObjField20 |
+| 0x14005ded4 | FUN_14005ded4 | PECMD_BringWindowToFront |
+| 0x140060a74 | FUN_140060a74 | PECMD_SwapBytePairs |
+| 0x140063b00 | FUN_140063b00 | PECMD_VectorSlotPtr |
+| 0x140064a88 | FUN_140064a88 | PECMD_WideStrToInt64 |
+| 0x1400679b0 | FUN_1400679b0 | PECMD_ParseShortStore |
+| 0x14006a7f4 | FUN_14006a7f4 | PECMD_ParseSizeAndSkipWs |
+| 0x14006f884 | FUN_14006f884 | PECMD_GetEnvVarToStr |
+| 0x14007bf44 | FUN_14007bf44 | PECMD_ExpandVarDispatch |
+| 0x14007e34c | FUN_14007e34c | PECMD_InitFieldContainer |
+| 0x1400b89dc | FUN_1400b89dc | PECMD_BuildFontFromObject |
+| 0x1400c11c0 | FUN_1400c11c0 | PECMD_ParseHexOrDecBool |
+| 0x1400e4e94 | FUN_1400e4e94 | PECMD_DestroyEventSlots |
+| 0x1400e6314 | FUN_1400e6314 | PECMD_WindowRectHitTest |
+| 0x1400e6458 | FUN_1400e6458 | PECMD_FindWindowByPid |
+| 0x1400ec6a8 | FUN_1400ec6a8 | PECMD_Send423ToWindow |
+| 0x1400fbfe0 | FUN_1400fbfe0 | PECMD_InitControlObjO |
+| 0x1400fec9c | FUN_1400fec9c | PECMD_InitControlObjQ |
 | 0x1400169bc | FUN_1400169bc | PECMD_LangLookupById |
 | 0x14001c270 | FUN_14001c270 | PECMD_ExpandDrivePathAlloc |
 | 0x14001d810 | FUN_14001d810 | PECMD_OpenFileExisting |

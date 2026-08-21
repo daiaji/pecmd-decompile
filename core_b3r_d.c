@@ -68,7 +68,7 @@ extern int       PECMD_UpdateWindowStyleBits(int64_t a, uint32_t b, uint64_t c);
 extern int       PECMD_UpdateWindowExStyle(HWND a, uint32_t b, uint64_t c);
 /* PECMD_ParseQuotedArg helpers */
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);
-extern WCHAR    *FUN_14005b154(WCHAR **pp);
+extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);
 extern WCHAR    *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);
 extern int64_t   PECMD_ExpandVarsRecursive(void *script, WCHAR *line, WCHAR **out,
                                int mode, uint8_t opt);
@@ -83,7 +83,7 @@ extern void      PECMD_SplitTokenTrimWs(int64_t *src, WCHAR **dst, short delim);
 extern void      PECMD_RunCommandLine(void *script, WCHAR **str, int mode);
 extern void     *FUN_140063060(void *p);
 extern WCHAR    *FUN_14001be14(WCHAR *s);
-extern void      FUN_1400679b0(WCHAR **pp, int *out, WCHAR sep);
+extern void      PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
 extern void      PECMD_ParseSignedNumberStr(void **in, void *out, short delim);
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
@@ -368,7 +368,7 @@ ushort *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2, longlong *par
             *psVar1 = 0;
             *param_2 = *param_2 + 2;
             local_res8 = (ushort *)*param_2;
-            FUN_14005b154((WCHAR **)&local_res8);
+            PECMD_SkipLeadingControlChars((WCHAR **)&local_res8);
             *param_2 = (longlong)puVar3;
             puVar5 = local_res8;
             goto LAB_140083b8f;
@@ -490,7 +490,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     (void)local_548;
     local_550 = param_1;
     (void)local_550;
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res10);
     cVar5 = FUN_1400660ac("-fix", &local_res10, 4);
     PECMD_StrDupAssign(&local_590, (const WCHAR *)g_szEmpty);
     PECMD_StrDupAssign(&local_560, (const WCHAR *)g_szEmpty);
@@ -504,7 +504,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     bVar26 = ((char)lVar8 != '\0');
     if (bVar26) {
         local_res10 = puVar19 + 4;
-        FUN_14005b154(&local_res10);
+        PECMD_SkipLeadingControlChars(&local_res10);
     }
     plVar9 = PECMD_SplitTokenAssignVar((WCHAR **)&local_558, &local_res10, 0x2c, 1);
     PECMD_SplitTokenTrimWs(plVar9, &local_590, 0);
@@ -515,7 +515,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     if (*psVar10 == 0x2c) {
         local_res10 = puVar19 + 1;
     }
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res10);
     WVar2 = *local_res10;
     while (WVar2 != 0) {
         if (WVar2 == 0x26) {
@@ -527,7 +527,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
         local_res10 = local_res10 + 1;
         WVar2 = *local_res10;
     }
-    FUN_14005b154(&local_res10);
+    PECMD_SkipLeadingControlChars(&local_res10);
     plVar9 = PECMD_SplitTokenAssignVar((WCHAR **)&local_558, &local_res10, 0x2c, 1);
     PECMD_SplitTokenTrimWs(plVar9, &local_560, 0);
     pWVar11 = FUN_14001be14(local_560);
@@ -551,7 +551,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     if (*psVar10 == 0x2c) {
         local_res10 = puVar19 + 1;
         puVar12 = PECMD_SplitTokenAssignVar((WCHAR **)&local_558, &local_res10, 0x2c, 1);
-        FUN_1400679b0((WCHAR **)puVar12, (int *)local_598, 0x2c);
+        PECMD_ParseShortStore((WCHAR **)puVar12, (int *)local_598, 0x2c);
         puVar19 = local_res10;
         uVar25 = local_598[0];
     }
@@ -755,7 +755,7 @@ LAB_140088096:
                     uVar22 = 0;
                 }
                 local_588[(longlong)iVar6] = (WCHAR)uVar22;
-                FUN_14005b154(&local_5a8);
+                PECMD_SkipLeadingControlChars(&local_5a8);
                 if (*(WCHAR *)local_5a8 == L'\0') {
                     PECMD_AssignString(&local_5b0, (LPCWSTR)local_508);
                 } else {
@@ -776,7 +776,7 @@ LAB_140088096:
                         FUN_1400702d4(&local_540, (const WCHAR *)pBVar17,
                                       (int64_t)(pBVar4 - pBVar17));
                         FUN_14006375c(&local_5b0, (const WCHAR *)local_540);
-                        FUN_14005b154(&local_5a8);
+                        PECMD_SkipLeadingControlChars(&local_5a8);
                         FUN_14005b104((void *)&local_540);
                     } while (*(WCHAR *)local_5a8 != L'\0');
                 }

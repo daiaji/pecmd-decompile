@@ -28,14 +28,14 @@ extern uint32_t PECMD_GetFileSize(HANDLE hFile);
 /* 分配字符串槽 @0x140063720 PECMD_StrAlloc */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);
 /* 跳过前导空白 @0x14005b154 */
-extern int64_t *FUN_14005b154(int64_t *pp);
+extern int64_t *PECMD_SkipLeadingControlChars(int64_t *pp);
 /* 释放字符串槽 @0x14005b104 */
 extern void FUN_14005b104(void *ps);
 /* 匹配/比较字节串 @0x14005b184 */
 extern int FUN_14005b184(char *buf, int64_t a, int64_t b);
 /* memmove 类 @0x14001d744 */
 /* 转换/规范化小写 @0x140060a74 */
-extern void FUN_140060a74(uint8_t *param_1, int param_2);
+extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2);
 /* 编码转换函数指针 (DAT_14013c970 == g_pConvFunc, MultiByteToWideChar 类) */
 extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int, char *, int);
 
@@ -93,7 +93,7 @@ uint64_t PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t p
             while (1) {
                 iVar3 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_14012412c, 2);
                 if (iVar3 == 0) {
-                    FUN_140060a74((uint8_t *)lpBuffer, (int)uVar6);
+                    PECMD_SwapBytePairs((uint8_t *)lpBuffer, (int)uVar6);
                 }
                 iVar3 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_140124128, 2);
                 bVar9 = iVar3 == 0;
@@ -171,7 +171,7 @@ uint64_t PECMD_GetPathSizeToVar(int64_t *param_1, LARGE_INTEGER param_2)
     WIN32_FIND_DATAW local_278;
 
     local_res10[0] = param_2;
-    FUN_14005b154((int64_t *)&local_res10[0].QuadPart);
+    PECMD_SkipLeadingControlChars((int64_t *)&local_res10[0].QuadPart);
     LVar4.QuadPart = 0;
     cVar2 = (char)FUN_140062fc4(WSTR("-link"), (int64_t *)&local_res10[0].QuadPart, 5);
     FUN_140063620((WCHAR **)&local_res20);

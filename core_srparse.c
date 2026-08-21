@@ -49,8 +49,8 @@ extern int32_t g_sysinitState;           /* DAT_14013d058 sysinit 状态 */
 
 /* 2sysinit 窗口隐藏链（未实现, 仅声明 + TODO(verify)） */
 extern void FUN_14001b3a0(void *script, void *arg2);   /* @0x14001b3a0 */
-extern uint64_t FUN_14005dec4(void *script);           /* @0x14005dec4 取窗口句柄 */
-extern void FUN_14005ded4(HWND hwnd);                  /* @0x14005ded4 */
+extern uint64_t PECMD_GetObjField20(void *script);           /* @0x14005dec4 取窗口句柄 */
+extern void PECMD_BringWindowToFront(HWND hwnd);                  /* @0x14005ded4 */
 
 /* ========== 前缀指令解析（ScriptRunA 段1）@0x140031454 ==========
  * 解析命令行前缀指令并设置标志位。pp 为命令行游标（解析后推进）。
@@ -134,8 +134,8 @@ int64_t PECMD_SrParsePrefix(void *script, WCHAR **pp, int *flags, int *flags2,
             g_sysinitState = 1;                     /* 229 */
             FUN_14001b3a0(script, NULL);            /* 230 TODO(verify) */
             {
-                HWND hwnd = (HWND)FUN_14005dec4(script);    /* 231 TODO(verify) */
-                FUN_14005ded4(hwnd);                /* 232 TODO(verify) */
+                HWND hwnd = (HWND)PECMD_GetObjField20(script);    /* 231 TODO(verify) */
+                PECMD_BringWindowToFront(hwnd);                /* 232 TODO(verify) */
                 FUN_1400195F0(script, 5, 0, 0);    /* 233 */
                 ShowWindow(hwnd, 0);                /* 234 */
             }
