@@ -151,8 +151,9 @@ void FUN_140063694(void *p, long long n);
 void FUN_14005b104(void *ps);
 void PECMD_DialogBeepNotify(int64_t a, int b);
 void FUN_14005daf8(int64_t a, int *b, int *c, int *d, int *e);
-void FUN_140063978(int64_t *a, int64_t *b, unsigned int c, unsigned int d) { (void)a;(void)b;(void)c;(void)d; }
 int FUN_1400678f0(void *a, long long *b, short c) { (void)a;(void)b;(void)c; return 0; }
+void PECMD_ParseSizeNumber(int64_t *pp, int64_t *out) { (void)pp; *out = 0; }
+void FUN_1400706b4(uint32_t *a) { (void)a; }
 /* ---- 早期放置的 wave-current 还原体所需 Win32 前置声明 (定义见字母桩区) ---- */
 void     GetStartupInfoW(void *d);
 uint64_t SetActiveWindow(void *h);
@@ -862,7 +863,7 @@ int64_t FUN_140063b00(int64_t param_1, int64_t *param_2, int64_t *param_3, unsig
 {
   if (param_1 < 0) param_1 = 0;
   if (*param_3 - 1 <= param_1)
-    FUN_140063978(param_2,param_3,param_4,(unsigned int)(param_1 - *param_3) + 2);
+    PECMD_ArrayGrowRaw(param_2,param_3,param_4,(unsigned int)(param_1 - *param_3) + 2);
   return (uint64_t)param_4 * (uint64_t)param_1 + *param_2;
 }
 longlong *FUN_140063b64(longlong *param_1){
@@ -998,9 +999,27 @@ int FUN_140067d20(long long *param_1, int *param_2)   /* @0x140067d20 数值解�
     }
     return bVar1 != 0;
 }
-uint64_t FUN_14006a7f4(int64_t *a, uint64_t *b) { (void)a;(void)b; return 0; }
+/* @0x14006a7f4 size=38 — 解析大小数字并跳空白(直移; ParseSizeNumber 现为 void stub) */
+uint64_t FUN_14006a7f4(void *param_1, uint64_t *param_2)
+{
+  int64_t pp = (int64_t)(intptr_t)param_1, out = 0;
+  PECMD_ParseSizeNumber(&pp,&out);
+  FUN_14005b154((long long *)(intptr_t)param_1);
+  return 0;
+}
 uint64_t PECMD_EncodeStringId(void) { return 0; }
-uint64_t FUN_14006f884(void) { return 0; }
+/* @0x14006f884 size=131 — 读环境变量到动态串(直移) */
+void FUN_14006f884(LPCWSTR param_1, uint64_t *param_2)
+{
+  unsigned long n;
+  PECMD_AllocString(param_2,0x104);
+  *(uint16_t *)*param_2 = 0;
+  n = GetEnvironmentVariableW(param_1,(uint16_t *)(uintptr_t)*param_2,0x104);
+  if ((int)n > 0 && *(short *)*param_2 == 0) {
+    PECMD_AllocString(param_2,(long long)(int)(n + 2));
+    GetEnvironmentVariableW(param_1,(uint16_t *)(uintptr_t)*param_2,n + 1);
+  }
+}
 void FUN_14006fd1c(int64_t *a,int64_t *b,int64_t *c,int64_t *d,int64_t *e,int64_t *f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
 uint64_t FUN_140070154(void) { return 0; }
 void PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; }
@@ -1078,8 +1097,16 @@ LPCWSTR PECMD_ParseResourceStringRef(LPCWSTR *param_1, uint param_2)
     return pWVar2;
 }
 long long PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
-uint64_t PECMD_ExpandVarsRecursive(void) { return 0; }
-void FUN_14007bf44(longlong *a, WCHAR *b, undefined8 *c, int d, byte e) { (void)a;(void)b;(void)c;(void)d;(void)e; }
+long long PECMD_ExpandVarsRecursive(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
+/* @0x14007bf44 size=52 — 变量展开分派(递归/单趟)(直移) */
+void FUN_14007bf44(void *param_1, WCHAR *param_2, void *param_3, int param_4, uint8_t param_5)
+{
+  long long *p = (long long *)param_1;
+  if (*(char *)((long long)p + 0xda) == 0 && (*(uint8_t *)((long long)p + 0xd) & 0xf) == 0)
+    PECMD_ExpandVarsRecursive(p,param_2,param_3,param_4,param_5);
+  else
+    PECMD_ExpandCommandLine(p,param_2,param_3,param_4,param_5);
+}
 uint64_t PECMD_SetVariableWithPrefix(void) { return 0; }
 uint64_t FUN_14007de70(void) { return 0; }
 uint64_t PECMD_SetCheckVariable(void) { return 0; }
@@ -1612,7 +1639,18 @@ uint64_t PECMD_GetWindowObjectRef(void) { return 0; }
 uint64_t PECMD_EncodeDet(void) { return 0; }
 uint64_t PECMD_ParseHashNumbers(void) { return 0; }
 uint64_t PECMD_GetComboItemText(void) { return 0; }
-uint64_t FUN_14007e34c(void) { return 0; }
+/* @0x14007e34c size=87 — 容器/对象字段初始化(直移) */
+uint32_t *FUN_14007e34c(uint32_t *param_1, uint8_t param_2)
+{
+  *(uint8_t *)((long long)param_1 + 10) = param_2;
+  *(uint8_t *)(param_1 + 2) = 0;
+  *(uint8_t *)((long long)param_1 + 10) = 0;
+  FUN_140063a6c((uint64_t *)(param_1 + 4),(int64_t *)(param_1 + 6),(uint64_t *)(param_1 + 8),2);
+  *(uint8_t *)(param_1 + 0x12) = 0;
+  FUN_140063a6c((uint64_t *)(param_1 + 0xc),(int64_t *)(param_1 + 0xe),(uint64_t *)(param_1 + 0x10),8);
+  FUN_1400706b4(param_1);
+  return param_1;
+}
 uint64_t PECMD_SaveSelectionToVar(void) { return 0; }
 uint64_t PECMD_SkipWCharUntil(void) { return 0; }
 
@@ -2687,7 +2725,6 @@ uint64_t PECMD_EnumPhonebookEntries(void) { return 0; }
 uint64_t PECMD_ExecSpecialCommand(void) { return 0; }
 uint64_t PECMD_FreeCacheBlock(void) { return 0; }
 uint64_t PECMD_ShakeTrayCursor(void) { return 0; }
-uint64_t PECMD_ParseSizeNumber(void) { return 0; }
 uint64_t FUN_14007033c(void) { return 0; }
 undefined8 PECMD_PushStringToken(undefined8 param_1, undefined8 param_2, const WCHAR *param_3, undefined8 *param_4){
     longlong *plVar1; undefined8 uVar2;

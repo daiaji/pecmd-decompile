@@ -3499,3 +3499,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: GetStartupInfoW/SetActiveWindow/SetEndOfFile/SetForegroundWindow 桩改带参签名; CloseHandle (void*) 强转。
 ## 109. P4 自直移批4：4 个(061ffc 全局互斥/063b00 向量槽/064a88 数字解析/0679b0 short解析)绿
 - 修复: CreateMutexW 桩带参、05e7dc (uint64_t*) 实参; 补 FUN_140063978/0678f0 桩。
+## 110. P4 自直移批5：4 个(06a7f4 数字解析/06f884 环境变量/07bf44 展开分派/07e34c 字段初始化)绿
+- 修复: ParseSizeNumber 按 core 声明 void 签名补 def(其真体未移植)、0706b4 补桩、用改名后 PECMD_ExpandVarsRecursive/ExpandCommandLine/ArrayGrowRaw、int64_t vs long long 类型修正。
