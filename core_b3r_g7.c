@@ -39,7 +39,7 @@ typedef uint64_t            ulonglong;
 /* ---- globals (8-byte data) referenced by PECMD_DriveLetterSet ----
  * These four .rdata/.data terms are UTF-16LE path-prefix fragments that are
  * assembled (with a drive letter spliced in via CONCAT62) into drive-root
- * strings such as "C:\\..." for GetDriveTypeW / FUN_140065efc.  Content is
+ * strings such as "C:\\..." for GetDriveTypeW / PECMD_GetDiskGeometry.  Content is
  * provided elsewhere; here they are read as raw 8-byte/4-byte data. */
 extern uint64_t g_u6426e70;
 extern uint64_t g_u646e78;
@@ -51,7 +51,7 @@ extern uint32_t g_u3211ee98;
 /* ---- Helper function externs (bodies are NOT defined here) ---- */
 extern ulonglong PECMD_DetectFileEncoding(LPCWSTR param_1);              /* @0x1400688e0 */
 extern LPVOID   PECMD_ReadFileToBuffer(LPCWSTR, LPVOID, DWORD *);      /* @0x1400179f8 读文件 */
-extern void    *FUN_14007026c(void *out, LPCSTR s);           /* @0x14007026c 串构造 */
+extern void    *PECMD_AssignAnsiString(void *out, LPCSTR s);           /* @0x14007026c 串构造 */
 extern undefined8 *PECMD_AllocSmallObject(undefined8 *arr);            /* @0x140063344 小对象分配 */
 extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out,
                                 undefined1 cp);               /* @0x140068984 */
@@ -61,20 +61,20 @@ extern WCHAR   *FUN_14005b154(WCHAR **ps);                    /* @0x14005b154 �
 extern WCHAR   *FUN_14006375c(WCHAR **ps, LPCWSTR src);       /* @0x14006375c 串追加 */
 extern void     FUN_140063620(WCHAR **out);                   /* @0x140063620 初始化串缓冲 */
 extern WCHAR   *PECMD_AllocString(WCHAR **ps, int64_t count);     /* @0x140063720 串分配(计数) */
-extern WCHAR   *FUN_1400637dc(WCHAR **ps, LPCWSTR src,
+extern WCHAR   *PECMD_StrDupA(WCHAR **ps, LPCWSTR src,
                               int64_t a, int64_t b);          /* @0x1400637dc 串复制分配 */
 extern void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
 extern void     PECMD_LoadSetupApiFunctions(void);                          /* @0x140017b8c 初始化 */
 extern bool     FUN_1400c11c0(WCHAR **pp, int *out);          /* @0x1400c11c0 */
-extern bool     FUN_1400c1194(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
-extern uint32_t FUN_140065efc(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
+extern bool     PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
+extern uint32_t PECMD_GetDiskGeometry(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
 extern BOOL     FUN_14006f908(char param_1, int param_2);     /* @0x14006f908 */
-extern void     FUN_14007c7ec(WCHAR param_1, int param_2);    /* @0x14007c7ec */
+extern void     PECMD_CheckDriveType(WCHAR param_1, int param_2);    /* @0x14007c7ec */
 extern short   *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
                               short c, short f);              /* @0x1400547bc 拆串 */
 extern DWORD    FUN_14005c5a0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);        /* @0x14005c5a0 注册表查询 */
-extern int      FUN_14005c788(const char *a, const WCHAR *w, int n); /* @0x14005c788 串前缀比较 */
+extern int      PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c788 串前缀比较 */
 extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len); /* @0x1400702f0 取串槽 */
 extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
                               uint64_t s4, uint32_t flag, void *p6,
@@ -100,7 +100,7 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
         local_res10[0] = 0;
         local_20 = PECMD_ReadFileToBuffer(param_1, (LPVOID)0, local_res10);
         if (local_20 != (LPVOID)0) {
-            FUN_14007026c(&local_20, (LPCSTR)0);
+            PECMD_AssignAnsiString(&local_20, (LPCSTR)0);
             PECMD_AllocSmallObject((undefined8 *)local_38);
             local_38[1] = 0;
             local_38[2] = 0;
@@ -117,7 +117,7 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
 /* ================================================================
  * @0x14007c88c
  * 驱动器/CD 字母设置：解析 C- / U- 开关与显式盘符，枚举逻辑盘并调用
- * FUN_14006f908 / FUN_14007c7ec。盘符路径前缀用 CONCAT62 拼接（已规范化）。
+ * FUN_14006f908 / PECMD_CheckDriveType。盘符路径前缀用 CONCAT62 拼接（已规范化）。
  */
 uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
 {
@@ -190,7 +190,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
             local_68 = (g_u646e78 & 0xFFFFFFFFFFFF0000ULL)
                        | ((uint64_t)(uint8_t)WVar9 & 0xFFFF);
             UVar3 = GetDriveTypeW((LPCWSTR)&local_80);
-            iVar5 = (int)FUN_140065efc((LPCWSTR)&local_70, (HANDLE)0);
+            iVar5 = (int)PECMD_GetDiskGeometry((LPCWSTR)&local_70, (HANDLE)0);
             iVar4 = local_res18[0];
             if (UVar3 == 5) {
                 if ((cVar7 != '\x02') || (iVar5 != 7)) {
@@ -199,11 +199,11 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
                 }
                 iVar4 = -1;
             }
-            FUN_14007c7ec(WVar9, iVar4);
+            PECMD_CheckDriveType(WVar9, iVar4);
             return 0;
         }
     } else {
-        FUN_14007c7ec(WVar9, local_res18[0]);
+        PECMD_CheckDriveType(WVar9, local_res18[0]);
     }
     if (WVar11 == L'\0') {
         if (WVar13 == L'\0') {
@@ -236,7 +236,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
                     if ((UVar3 != 2) && (UVar3 != 3)) goto LAB_14007cb34;
                 }
                 if ((WVar11 == L'\0') || (UVar3 == 5)) {
-                    iVar4 = (int)FUN_140065efc((LPCWSTR)&local_58, (HANDLE)0);
+                    iVar4 = (int)PECMD_GetDiskGeometry((LPCWSTR)&local_58, (HANDLE)0);
                     if (WVar13 != L'\0') {
                         if ((iVar4 != 7) || ((UVar3 == 5 && (cVar7 != '\x02'))))
                             goto LAB_14007cb34;
@@ -264,7 +264,7 @@ uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
                                | (uint8_t)(cVar6 + 0x41);
                     FUN_14006f908((char)(cVar6 + 0x41), (uint)(cVar7 != '\x01'));
                 } else if (*pcVar10 == 'E') {
-                    FUN_14007c7ec((WCHAR)((uint16_t)(uint8_t)cVar6 + L'A'), -1);
+                    PECMD_CheckDriveType((WCHAR)((uint16_t)(uint8_t)cVar6 + L'A'), -1);
                 }
                 cVar6 = (char)(cVar6 + '\x01');
                 pcVar10 = pcVar10 + 1;
@@ -311,7 +311,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
     local_48 = 0x8000000000000000ULL;
     FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
     if ((*local_res10 == 0) ||
-        (bVar3 = FUN_1400c1194((WCHAR **)&local_res10, &local_48), !bVar3)) {
+        (bVar3 = PECMD_ParseHexOrDec((WCHAR **)&local_res10, &local_48), !bVar3)) {
         FUN_14005b104((void *)&local_58);
         lVar12 = -0x7ff8ffa9;
     } else {
@@ -331,7 +331,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
             local_58[2] = L'\\';
             local_58[3] = L'\0';
         }
-        FUN_1400637dc((WCHAR **)&local_50,
+        PECMD_StrDupA((WCHAR **)&local_50,
                       WSTR("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\BitBucket\\Volume\\"),
                       0xffffffffffffffffLL, 0xffffffffffffffffLL);
         iVar4 = lstrlenW(local_50);
@@ -349,7 +349,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
                         uVar7 = 1;
                     }
                 } else {
-                    uVar11 = FUN_14005c788("\\\\?\\Volume", (ushort *)local_40, 10);
+                    uVar11 = PECMD_AsciiPrefixICmp("\\\\?\\Volume", (ushort *)local_40, 10);
                     lpString = local_40;
                     if ((char)uVar11 != '\0') {
                         lpString = local_40 + 10;

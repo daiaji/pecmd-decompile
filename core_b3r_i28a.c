@@ -28,11 +28,11 @@ extern void    *operator_new(size_t size);  /* global new wrapper */
 /* string/var helpers */
 extern void      FUN_140063620(void *out);         /* @0x140063620 release slot */
 extern WCHAR    *FUN_14005b154(WCHAR **pp);        /* @0x14005b154 skip spaces */
-extern void      FUN_1400702b0(void *ps, const WCHAR *src);  /* @0x1400702b0 assign */
+extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* @0x1400702b0 assign */
 extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
 extern void      FUN_14005b104(void *ps);          /* @0x14005b104 free slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void      FUN_140003a20(void *script, void *str, int mode);   /* expand */
+extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void      PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
@@ -40,9 +40,9 @@ extern void      FUN_1400679b0(void *pp, int *out, WCHAR sep);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char      FUN_1400660ac(const char *tok, void *pp, int n);
-extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);   /* delimiter scan */
+extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
-extern int64_t   FUN_14005c788(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
 
 /* list-control / dialog helpers */
@@ -53,7 +53,7 @@ extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);           /* scan 
 extern void      FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value);
 extern void      PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, char param_5);
-extern void      FUN_1400a9650(int64_t param_1, HWND param_2, int param_3,
+extern void      PECMD_SendTitleMessage(int64_t param_1, HWND param_2, int param_3,
                                LPCWSTR param_4, int param_5);
 extern void      FUN_14001b3a0(int64_t *script, int64_t *a2);   /* default params */
 extern ushort   *PECMD_ParseQuotedArg(longlong *param_1, longlong *param_2,
@@ -73,7 +73,7 @@ extern void      PECMD_CreateControlItem(WPARAM param_1, int64_t param_2, uint64
                                int param_4, int param_5, int param_6, int param_7,
                                uint64_t *param_8, uint64_t *param_9, uint32_t param_10,
                                uint32_t param_11, WCHAR *param_12);
-extern void      FUN_1400aa53c(WPARAM param_1, int64_t param_2, WCHAR **param_3,
+extern void      PECMD_AddControlA(WPARAM param_1, int64_t param_2, WCHAR **param_3,
                                int param_4, int param_5, int param_6, int param_7,
                                WCHAR **param_8, WCHAR **param_9, uint32_t param_10,
                                LPCWSTR param_11);
@@ -112,8 +112,8 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
         *param_6 = 0;
         LeaveCriticalSection(lpCriticalSection);
     }
-    if (FUN_14005c788("Title", (const WCHAR *)param_4, 5) == 0) {
-        if (FUN_14005c788("Tip", (const WCHAR *)param_4, 3) == 0) {
+    if (PECMD_AsciiPrefixICmp("Title", (const WCHAR *)param_4, 5) == 0) {
+        if (PECMD_AsciiPrefixICmp("Tip", (const WCHAR *)param_4, 3) == 0) {
             local_res8 = (uint64_t)(int32_t)-1;
             if (FUN_14005c7c4("Select", (const WCHAR *)param_4) == 0) {
                 /* "Select" query handler */
@@ -130,7 +130,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
             }
             /* TODO(verify): Ghidra dropped the vararg of wsprintfW(L"%ld", ...) */
             wsprintfW(local_98, WSTR("%ld"));
-            FUN_1400702b0(&local_res8, WSTR("&&"));
+            PECMD_StrDupAssign(&local_res8, WSTR("&&"));
             FUN_14006375c((WCHAR **)&local_res8, (LPCWSTR)param_1[2]);
             FUN_14006375c((WCHAR **)&local_res8, WSTR(".Select"));
             if (*(short *)param_1[2] != 0) {
@@ -160,7 +160,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
             (iVar1 < (int)(uint32_t)local_res8)) {
             return 0x80070057;
         }
-        FUN_1400a9650((int64_t)param_1, hWnd, (int)(uint32_t)local_res8 + -1,
+        PECMD_SendTitleMessage((int64_t)param_1, hWnd, (int)(uint32_t)local_res8 + -1,
                       param_3, 0);
     }
     return 0;
@@ -282,7 +282,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
     uVar16 = 0;
     local_90 = (LPCWSTR)0;
     local_88 = (WCHAR *)0;
-    FUN_1400f429c(&local_80, 0x2c);
+    PECMD_SkipWCharUntil(&local_80, 0x2c);
     puVar3 = local_80;
     pWVar13 = g_szEmpty;
     uVar1 = *local_80;
@@ -301,7 +301,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
             lVar5 = FUN_14005c72c("-scale", (const WCHAR *)puVar11, 6);
             pWVar4 = pWVar13;
             if (((char)lVar5 != 0) ||
-                (uVar6 = FUN_14005c788("-scale:", (const WCHAR *)puVar11, 7),
+                (uVar6 = PECMD_AsciiPrefixICmp("-scale:", (const WCHAR *)puVar11, 7),
                  pWVar4 = local_90, (char)uVar6 == '\0'))
                 goto LAB_1400aac88;
             local_90 = (LPCWSTR)(puVar11 + 7);
@@ -329,9 +329,9 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
         uVar2 = *local_res10;
     }
     *puVar3 = uVar1;
-    FUN_1400702b0(&local_a0, (const WCHAR *)pWVar13);
-    FUN_1400702b0(&local_98, (const WCHAR *)g_szEmpty);
-    FUN_1400702b0(&local_78, (const WCHAR *)g_szEmpty);
+    PECMD_StrDupAssign(&local_a0, (const WCHAR *)pWVar13);
+    PECMD_StrDupAssign(&local_98, (const WCHAR *)g_szEmpty);
+    PECMD_StrDupAssign(&local_78, (const WCHAR *)g_szEmpty);
     local_a8 = 0;
     local_a4 = 0;
     local_res18[0] = 0;
@@ -343,7 +343,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
         FUN_14005b154(&local_res10);
     }
     PECMD_SplitTokenTrimWs(&local_res10, &local_a0, 0x2c);
-    FUN_140003a20(param_1, &local_a0, 1);
+    PECMD_RunCommandLine(param_1, &local_a0, 1);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
         plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
@@ -367,7 +367,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
         if (uVar1 != 0x2a) {
             param_1 = *(longlong **)(param_3 + 0x290);
         }
-        FUN_1400aa53c(param_3, (int64_t)param_1, &local_a0, local_a8, local_a4,
+        PECMD_AddControlA(param_3, (int64_t)param_1, &local_a0, local_a8, local_a4,
                       local_res18[0], local_res8[0], &local_98, &local_78,
                       (uVar14 & 0xffff) | uVar16, local_90);
         FUN_14005b104(&local_78);
@@ -442,7 +442,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
     uVar16 = 0;
     local_80 = (LPCWSTR)0;
     local_68 = (WCHAR *)0;
-    FUN_1400f429c(&local_70, 0x2c);
+    PECMD_SkipWCharUntil(&local_70, 0x2c);
     puVar3 = local_70;
     uVar1 = *local_70;
     *local_70 = 0;
@@ -451,9 +451,9 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
     do {
         if ((uint16_t)(sVar10 + 1U) != uVar2) {
             *puVar3 = uVar1;
-            FUN_1400702b0(&local_88, (const WCHAR *)pWVar12);
-            FUN_1400702b0(&local_78, (const WCHAR *)g_szEmpty);
-            FUN_1400702b0(&local_48, (const WCHAR *)g_szEmpty);
+            PECMD_StrDupAssign(&local_88, (const WCHAR *)pWVar12);
+            PECMD_StrDupAssign(&local_78, (const WCHAR *)g_szEmpty);
+            PECMD_StrDupAssign(&local_48, (const WCHAR *)g_szEmpty);
             uVar13 = 0;
             local_8c = 0;
             local_94 = 0;
@@ -467,7 +467,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
                 FUN_14005b154(&local_res10);
             }
             PECMD_SplitTokenTrimWs(&local_res10, &local_88, 0x2c);
-            FUN_140003a20(param_1, &local_88, 1);
+            PECMD_RunCommandLine(param_1, &local_88, 1);
             if (*local_res10 == 0x2c) {
                 local_res10 = local_res10 + 1;
                 plVar6 = PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, 1);
@@ -524,7 +524,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
             lVar5 = FUN_14005c72c("-scale", (const WCHAR *)puVar11, 6);
             pWVar4 = pWVar12;
             if (((char)lVar5 != 0) ||
-                (uVar9 = FUN_14005c788("-scale:", (const WCHAR *)puVar11, 7),
+                (uVar9 = PECMD_AsciiPrefixICmp("-scale:", (const WCHAR *)puVar11, 7),
                  pWVar4 = local_80, (char)uVar9 == '\0'))
                 goto LAB_1400ab134;
             local_80 = (LPCWSTR)(puVar11 + 7);
@@ -581,7 +581,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
         }
     }
     FUN_14005b154(&local_res10);
-    FUN_1400702b0(&local_48, (const WCHAR *)g_szEmpty);
+    PECMD_StrDupAssign(&local_48, (const WCHAR *)g_szEmpty);
     local_50[0] = 0;
     local_54 = 0;
     local_58 = 0;
@@ -595,7 +595,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
     }
     cVar2 = FUN_1400660ac("-smooth", &local_res10, 7);
     PECMD_SplitTokenTrimWs(&local_res10, &local_48, 0x2c);
-    FUN_140003a20(param_1, &local_48, 1);
+    PECMD_RunCommandLine(param_1, &local_48, 1);
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;
         PECMD_ParseLtwhParams((int64_t *)&local_res10, (uint32_t *)local_50, &local_54,

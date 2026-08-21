@@ -28,7 +28,7 @@ extern void   FUN_140061c44(void);                            /* @0x140061c44 OL
 extern HWND   FUN_14005B9C8(uint32_t flags, int maxWidth);   /* @0x14005b9c8 获取提示窗口 */
 extern void   PECMD_DestroyWindowLocked(void);                            /* @0x14005ba6c 销毁窗口 */
 extern void   PECMD_TimerMessage(HWND hwnd, uint64_t wParam, int timerId); /* @0x14005bb6c 定时器过程 */
-extern DWORD  FUN_1400195f0(uint64_t param_1, int64_t param_2, int param_3,
+extern DWORD  PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3,
                             uint64_t *param_4);               /* @0x1400195f0 消息泵/等待 */
 
 /* ================================================================
@@ -120,7 +120,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         while ((g_msgWndState[0] & 2) != 0) {
-            FUN_1400195f0((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
+            PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
         }
     }
 
@@ -210,7 +210,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
         while ((((sVar7 == (short)g_msgWndState[0]) && ('\0' < g_flagA24F)) &&
                 (0 < (int)param_7)) &&
                (DVar5 = GetTickCount(), DVar5 - DVar4 < param_7)) {
-            FUN_1400195f0((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
+            PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
         }
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csE138);

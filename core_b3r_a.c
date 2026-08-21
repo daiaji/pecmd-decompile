@@ -43,11 +43,11 @@ extern LPCVOID FUN_1400e3f80(HANDLE h, uint64_t size, uint64_t flags, uint64_t o
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* @0x140063424 分配槽数组 */
 extern int  FUN_14005b184(char *buf, int64_t a, int64_t b);        /* @0x14005b184 检索匹配 */
-extern void FUN_14006cc70(int64_t *list, int64_t pos);             /* @0x14006cc70 记录命中位置 */
+extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);             /* @0x14006cc70 记录命中位置 */
 extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 释放字符串槽 */
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
 extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len);   /* @0x1400702f0 取串槽 */
-extern uint64_t *FUN_14007026c(uint64_t *out, LPCSTR s);           /* @0x14007026c 串构造 */
+extern uint64_t *PECMD_AssignAnsiString(uint64_t *out, LPCSTR s);           /* @0x14007026c 串构造 */
 extern void FUN_14006345c(void **ps, LPCSTR s);                    /* @0x14006345c 缀接字符串 */
 extern int  PECMD_PadTrailingSpaces(char *s, int len);                       /* @0x14005cc04 校验/规范化 IP */
 extern int  PECMD_CountSeparators(char *s);                                /* @0x14005cbd8 计数 helper */
@@ -319,7 +319,7 @@ LAB_14006d_common:
                                 iVar3 = FUN_14005b184((char *)pcVar12, param_4, lVar10);
                                 if (iVar3 == 0) {
                                     if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
-                                    FUN_14006cc70(param_1, lVar5 + LVar15.QuadPart);
+                                    PECMD_AppendFormattedI64(param_1, lVar5 + LVar15.QuadPart);
                                     pcVar18 = pcVar12;
                                     if ((0 < (int64_t)uVar23) &&
                                         (uVar23 = uVar23 - 1, uVar23 == 0)) goto LAB_14006d4c3;
@@ -394,7 +394,7 @@ LAB_14006d_common:
                                                           param_4, lVar22);
                                     if (iVar4 == 0) {
                                         if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
-                                        FUN_14006cc70(param_1, lVar16 + lVar26);
+                                        PECMD_AppendFormattedI64(param_1, lVar16 + lVar26);
                                         puVar20 = puVar19;
                                         lVar16 = lVar5;
                                         lVar22 = lVar10;
@@ -444,7 +444,7 @@ LAB_14006d_common:
             iVar1 = FUN_14005b184((char *)pcVar12, param_4, lVar24);
             if (iVar1 == 0) {
                 if (param_1 == (int64_t *)0) goto LAB_14006d208;
-                FUN_14006cc70(param_1, lVar14 + lVar25);
+                PECMD_AppendFormattedI64(param_1, lVar14 + lVar25);
                 lVar24 = lVar10;
                 if ((0 < (int64_t)uVar23) && (uVar23 = uVar23 - 1, uVar23 == 0))
                     goto LAB_14006d1f0;
@@ -546,7 +546,7 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
     if ((*param_2 == '*') || (*param_2 == '?')) {
         CVar13 = *param_2;
     }
-    FUN_14007026c((uint64_t *)&local_4b8,
+    PECMD_AssignAnsiString((uint64_t *)&local_4b8,
                   "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\");
     FUN_14006345c((void **)&local_4b8, param_1);
     LVar2 = RegOpenKeyExA((HKEY)0xffffffff80000002, local_4b8, 0,

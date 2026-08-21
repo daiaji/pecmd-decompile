@@ -3477,3 +3477,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 ## 102. P4 wave-7（收官）：最后 ~48 helper 直移（[240:]）
 - build/link(-lm) 绿。**288 直移层全部完成**。累计 P4 直移 ~288。
 - 下一步 P4：25 asm（objdump→C）+ CRT 142（2 字节专属体）+ 重新评估剥出深层helper。
+## 103. P4 命名应用（120 helper，含 link_stubs 同步）
+- 应用 120 名：apply_rename(更新 rename_map) + 全库(含 link_stubs)词边界替换 FUN_→PECMD_。
+- **调用点 4424→3518(-906)**；rename_map 870→990；build/link(-lm) 全绿。
+- 关键教训：apply_rename 不改 link_stubs → 命名必须额外同步 link_stubs 定义，否则 undefined。

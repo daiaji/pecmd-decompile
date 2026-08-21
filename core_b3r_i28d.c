@@ -28,19 +28,19 @@ extern int      g_dblClickFlag;              /* 双击/触发标记 */
 /* ---- string/var/parse helpers (bodies live in other core_*.c files) ---- */
 extern void      FUN_140063620(void *out);         /* release/init slot */
 extern WCHAR    *FUN_14005b154(WCHAR **pp);        /* skip spaces */
-extern void      FUN_1400702b0(void *ps, const WCHAR *src);  /* assign string slot */
+extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* assign string slot */
 extern void      FUN_14005b104(void *ps);          /* free string slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void      FUN_140003a20(void *script, void *str, int mode);   /* expand */
+extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void      PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
 extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern int16_t   FUN_1400677B0(int64_t *pp, int64_t out);  /* 解析最多4个 # 分隔值 */
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
-extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);   /* delimiter scan (thunk) */
+extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan (thunk) */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
-extern int64_t   FUN_14005c788(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   FUN_14005c7c4(const char *a, const WCHAR *w);
 extern uint64_t  PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *flags, uint64_t p3, char p4);
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);   /* 扫描整数 token */
@@ -103,7 +103,7 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
     local_48 = 0;
     local_50 = param_1;
     (void)local_48; (void)local_50;
-    FUN_1400702b0(&local_70, g_szEmpty);
+    PECMD_StrDupAssign(&local_70, g_szEmpty);
     FUN_140063620(&local_68);
     FUN_140063620(&local_60);
     uVar1 = *param_2;
@@ -125,7 +125,7 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
         FUN_14005b154(&local_res10);
     }
     PECMD_SplitTokenTrimWs(&local_res10, &local_70, 0x2c);
-    FUN_140003a20((void *)param_1, &local_70, 1);
+    PECMD_RunCommandLine((void *)param_1, &local_70, 1);
     uVar4 = 1;
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
@@ -215,7 +215,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     /* 选项区（以 '-' 开头或为参数开始） */
     {
         opt = local_res10;
-        FUN_1400f429c(&opt, 0x2c);   /* 跳过第一个 ',' */
+        PECMD_SkipWCharUntil(&opt, 0x2c);   /* 跳过第一个 ',' */
         WVar2 = *opt;
         *opt = L'\0';
         WVar8 = (WCHAR)(iVar9 + 1);  /* '-' */
@@ -230,7 +230,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
                     if ((char)lVar3 == '\0') {
                         lVar3 = FUN_14005c72c("-h", pWVar10, 2);
                         if ((char)lVar3 == '\0') {
-                            uVar4 = FUN_14005c788("-vcenter:", pWVar10, iVar9 + -0x23);
+                            uVar4 = PECMD_AsciiPrefixICmp("-vcenter:", pWVar10, iVar9 + -0x23);
                             if ((char)uVar4 != '\0') {
                                 pWVar10 = pWVar10 + 9;
                                 local_res10 = pWVar10;
@@ -269,10 +269,10 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     local_res18 = (int)(uVar16 | (uint32_t)local_res18);
     /* 恢复选项区末尾被置空的逗号分隔符 */
     *opt = WVar2;
-    FUN_1400702b0(&local_90, g_szEmpty);
-    FUN_1400702b0((void *)&local_a0, g_szEmpty);
-    FUN_1400702b0((void *)&local_98, g_szEmpty);
-    FUN_1400702b0(&local_78, g_szEmpty);
+    PECMD_StrDupAssign(&local_90, g_szEmpty);
+    PECMD_StrDupAssign((void *)&local_a0, g_szEmpty);
+    PECMD_StrDupAssign((void *)&local_98, g_szEmpty);
+    PECMD_StrDupAssign(&local_78, g_szEmpty);
     uVar16 = 0;
     local_80 = 0;
     local_88 = 0;
@@ -286,7 +286,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
         uVar7 = 1;
     }
     PECMD_SplitTokenTrimWs(&local_res10, &local_90, 0x2c);
-    FUN_140003a20(param_1, &local_90, bVar11);
+    PECMD_RunCommandLine(param_1, &local_90, bVar11);
     if (*local_res10 == L',') {
         local_res10 = local_res10 + 1;
         plVar5 = PECMD_SplitTokenAssignVar(&local_60, &local_res10, 0x2c, bVar11);
@@ -395,7 +395,7 @@ LAB_1400b5137:
         uVar3 = PECMD_ParseHotkeyCode((int64_t *)&local_res10, (uint32_t *)&local_48,
                               (uint64_t)param_1, '\0');
         pWVar2 = local_res10;
-        FUN_1400702b0(&local_40, local_res10);
+        PECMD_StrDupAssign(&local_40, local_res10);
         if (*pWVar2 == L'-') {
             WVar9 = L'-';
         }
@@ -659,10 +659,10 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
         FUN_14005b154(&local_res10);
         uVar26 = uVar18;
     }
-    FUN_1400702b0(&local_78, g_szEmpty);
-    FUN_1400702b0(&local_90, g_szEmpty);
+    PECMD_StrDupAssign(&local_78, g_szEmpty);
+    PECMD_StrDupAssign(&local_90, g_szEmpty);
     FUN_140063620(&local_70);
-    FUN_1400702b0(&local_68, g_szEmpty);
+    PECMD_StrDupAssign(&local_68, g_szEmpty);
     local_98 = 0;
     local_84 = 0;
     local_88 = 0;
@@ -678,7 +678,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     local_40 = param_4;
     (void)local_40;
     PECMD_SplitTokenTrimWs(&local_res10, &local_78, 0x2c);
-    FUN_140003a20(param_1, &local_78, 1);
+    PECMD_RunCommandLine(param_1, &local_78, 1);
     iVar12 = -0x80000000;
     iVar25 = -0x80000000;
     iVar22 = -0x80000000;

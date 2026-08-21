@@ -29,13 +29,13 @@ extern uint64_t *PECMD_ConstructControlObjectB(uint64_t *obj, uint32_t type, uin
 extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *param_3,
                           int param_4, int64_t param_5);
 extern uint64_t *FUN_1400f0648(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
-extern uint64_t *FUN_1400ecf18(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
+extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
 extern void FUN_1400f072c(int64_t *param_1, LPCWSTR param_2, DWORD param_3,
                           int *param_4, HWND param_5, uint32_t param_6, DWORD param_7);
-extern LRESULT FUN_1400e5890(int64_t param_1);       /* @0x1400e5890 取对象字体 */
+extern LRESULT PECMD_GetControlFont(int64_t param_1);       /* @0x1400e5890 取对象字体 */
 extern void FUN_14007d0ac(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern void FUN_14007df90(int64_t param_1, int param_2);   /* @0x14007df90 */
-extern void FUN_140053c5c(int64_t param_1, int param_2);   /* @0x140053c5c */
+extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);   /* @0x140053c5c */
 extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);        /* @0x140053cec */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x140063694 */
 extern void FUN_14005b0b8(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
@@ -43,8 +43,8 @@ extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);            /* @0x1400
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
 extern void FUN_14005b104(int64_t *ps);                    /* @0x14005b104 */
 extern uint64_t *PECMD_CreateWindowObject(uint64_t *param_1, uint64_t param_2, uint32_t param_3);
-extern int64_t *FUN_14007034c(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
-extern uint64_t FUN_14005b77c(int64_t param_1);            /* @0x14005b77c */
+extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
+extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);            /* @0x14005b77c */
 extern void FUN_140053e78(void);                           /* @0x140053e78 PECMD_Empty */
 extern void PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2, uint64_t param_3,
                           uint32_t *param_4);             /* @0x14005e3ac */
@@ -185,7 +185,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         bVar10 = 0x80;
         puVar4 = (uint64_t *)operator_new(0x100);
         if (puVar4 != NULL) {
-            plVar5 = (int64_t *)FUN_1400ecf18(puVar4, param_1 + 0xb);
+            plVar5 = (int64_t *)PECMD_InitWindowObjectF(puVar4, param_1 + 0xb);
         }
         param_1[7] = (uint64_t)plVar5;
         plVar5[0x1e] = (int64_t)puVar6;
@@ -205,7 +205,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     }
     plVar5 = (int64_t *)param_1[7];
     *(uint8_t *)((char *)plVar5 + 0x61) = (uint8_t)(bVar10 | 6);
-    LVar7 = FUN_1400e5890(lVar1);
+    LVar7 = PECMD_GetControlFont(lVar1);
     /* 虚调用 FUN_ 0x108 (设置字体/资源) */
     ((void (*)(int64_t *, LRESULT, int))*(uint64_t *)(*plVar5 + 0x108))(plVar5, LVar7, 0);
     if (*(const WCHAR *)(uintptr_t)param_1[2] != 0) {
@@ -215,7 +215,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     /* 虚调用 FUN_ 0x118 */
     ((void (*)(int64_t *, int))*(uint64_t *)(*plVar5 + 0x118))(plVar5, (int)(int16_t)uVar8);
     FUN_14007df90((int64_t)param_1, (int)(int16_t)uVar8);
-    FUN_140053c5c((int64_t)param_1, (uint32_t)((int16_t)param_11 == 0));
+    PECMD_SetObjectEnable((int64_t)param_1, (uint32_t)((int16_t)param_11 == 0));
     PECMD_SetObjectVisibleVar((int64_t)param_1, (uVar9 >> 0x1c) & 1);
     DragAcceptFiles((HWND)plVar5[4], 1);
     LeaveCriticalSection(&g_csInit);
@@ -337,7 +337,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         }
         *(DWORD *)((char *)plVar6 + 0x2f4) = param_7;
         *(uint32_t *)((char *)plVar6 + 0x31c) = param_5;
-        FUN_14007034c(plVar6 + 0x5f, param_3);
+        PECMD_AssignString(plVar6 + 0x5f, param_3);
         lVar8 = (int64_t)(int)param_7;
         plVar6[0x60] = plVar6[0x5f];
         plVar6[0x62] = param_8;
@@ -349,13 +349,13 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         memcpy((uint8_t *)((char *)plVar6 + 0x164),
                       (const uint8_t *)param_4, param_7 * 2);
         *(uint16_t *)((char *)plVar6 + lVar8 * 2 + 0x164) = 0;
-        pHVar7 = (HWND)FUN_14005b77c((int64_t)param_2);
+        pHVar7 = (HWND)PECMD_GetWindowObjectRef((int64_t)param_2);
         FUN_140053e78();
         if (param_2 != NULL) {
             SetFocus((HWND)param_2[4]);
         }
         if (*(LPCWSTR *)(puVar1 + 6) != NULL) {
-            FUN_14007034c(plVar6 + 0x25, *(LPCWSTR *)(puVar1 + 6));
+            PECMD_AssignString(plVar6 + 0x25, *(LPCWSTR *)(puVar1 + 6));
         }
         *(uint8_t *)((char *)plVar6 + 0x121) = 0;
         plVar6[0x2a] = (int64_t)pHVar4;

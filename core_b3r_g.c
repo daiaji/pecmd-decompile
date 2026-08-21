@@ -79,11 +79,11 @@ extern int       FUN_14005b184(char *buf, int64_t a, int64_t b);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern LPWSTR    PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
 extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);
-extern int64_t   FUN_14005c788(const char *s, const WCHAR *w, int n);
+extern int64_t   PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern WCHAR    *FUN_14005b154(WCHAR **pp);
-extern void      FUN_1400702b0(WCHAR **ps, const WCHAR *src);
-extern WCHAR    *FUN_14007034c(WCHAR **ps, const WCHAR *src);
+extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
+extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern void      FUN_140063620(void *out);
 extern int       PECMD_ParseUIntValue(LPCWSTR *, int *);
 extern void      FUN_14005e198(HWND, uint32_t *, int);
@@ -92,7 +92,7 @@ extern void      PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);
 extern HBITMAP   PECMD_CaptureScreenRegion(RECT *, HDC *, LPCWSTR);
 extern DWORD     PECMD_SaveBitmap(HBITMAP, LPCWSTR, int, LPCWSTR);
 extern HICON     PECMD_LoadIcon(LPCWSTR, uint64_t *);
-extern WCHAR    *FUN_1400f429c(WCHAR **pp, uint16_t ch);
+extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);
 extern void      FUN_14001b3a0(int64_t *, int64_t *);
 extern void      FUN_14007bf44(int64_t *, WCHAR *, WCHAR **, int, int);
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);
@@ -349,7 +349,7 @@ LAB_14007f219:
     if (cVar9 != '\0') {
         param_1 = -1;
     }
-    FUN_14007034c((WCHAR **)param_2, pWVar10);
+    PECMD_AssignString((WCHAR **)param_2, pWVar10);
     pWVar10 = (LPCWSTR)*param_2;
     local_68 = pWVar10;
     PECMD_WideToAnsiStr((int64_t *)&local_90, pWVar10, -1, 0xffffffffffffffff);
@@ -451,7 +451,7 @@ LAB_14007f319:
                 }
             }
             else if (cVar9 == '\x01') {
-                uVar6 = (uint64_t)FUN_14005c788(local_90,
+                uVar6 = (uint64_t)PECMD_AsciiPrefixICmp(local_90,
                                                 (const WCHAR *)(uintptr_t)*(uint64_t *)((char *)puVar12 + 24),
                                                 iVar4);
                 if ((char)uVar6 != '\0') {
@@ -682,7 +682,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     local_68 = local_res10;
     uVar13 = uVar14 & 0xffffffff;
     uVar11 = (uint32_t)uVar14;
-    FUN_1400f429c(&local_68, 0x2c);
+    PECMD_SkipWCharUntil(&local_68, 0x2c);
     WVar1 = *local_68;
     *local_68 = (WCHAR)uVar14;
     local_90 = local_68;
@@ -699,7 +699,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
                     lVar4 = FUN_14005c72c("-vcenter:", (const WCHAR *)pWVar16, 8);
                     uVar10 = (uint32_t)uVar8;
                     if ((char)lVar4 == '\0') {
-                        uVar5 = (uint64_t)FUN_14005c788("-vcenter:", (const WCHAR *)pWVar16,
+                        uVar5 = (uint64_t)PECMD_AsciiPrefixICmp("-vcenter:", (const WCHAR *)pWVar16,
                                                         iVar9 + -0x23);
                         if ((char)uVar5 == '\0') {
                             lVar4 = FUN_14005c72c("-rich", (const WCHAR *)pWVar16, 5);
@@ -771,7 +771,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     FUN_140063620(&local_b8);
     FUN_140063620(&local_a0);
     FUN_140063620(&local_c0);
-    FUN_1400702b0(&local_88, (const WCHAR *)g_szEmpty);
+    PECMD_StrDupAssign(&local_88, (const WCHAR *)g_szEmpty);
     uVar5 = 0;
     local_80 = local_res20;
     (void)local_80;

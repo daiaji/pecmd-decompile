@@ -14,7 +14,7 @@ extern bool  FUN_1400c11c0(WCHAR **pp, int *out);                   /* @0x1400c1
 extern uint64_t FUN_1400745c8(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
 extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                              int namelen, void **found);            /* @0x140018978 */
-extern int64_t *FUN_14001e5b0(int64_t *script, LPCWSTR name, LPCWSTR text,
+extern int64_t *PECMD_AddVarDefault(int64_t *script, LPCWSTR name, LPCWSTR text,
                               int mode, int64_t flag);              /* @0x14001e5b0 */
 extern void PECMD_VarTruncateUpdate(void *node, const void *src,
                                     uint64_t len);                   /* @0x14005b708 */
@@ -234,7 +234,7 @@ void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
             pWVar7 = data;
             if (mode != '\0')
                 pWVar7 = g_szEmpty;
-            plVar4 = FUN_14001e5b0(script, pWVar5, pWVar7, -1, (int64_t)iVar8);
+            plVar4 = PECMD_AddVarDefault(script, pWVar5, pWVar7, -1, (int64_t)iVar8);
             if (plVar4 == (int64_t *)0)
                 goto LAB_done;
         } else {

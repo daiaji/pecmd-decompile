@@ -58,7 +58,7 @@ extern int  PECMD_DispatchControlCommand(WPARAM a, LPCWSTR b, WPARAM c, HWND d, 
                           uint64_t f, int64_t *g, HWND h, int64_t i);
 extern void FUN_14006764c(int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* 按分隔符切分 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);        /* @0x140066978 SetVarD */
-extern uint64_t FUN_1400641d4(uint16_t *param_1);                            /* 前缀字符检查 */
+extern uint64_t PECMD_IsVisibleKeyword(uint16_t *param_1);                            /* 前缀字符检查 */
 
 /* ==========================================================================
  * @0x1400685f4  读取文件(字节)并统一编码为宽字符串写回 param_2
@@ -367,7 +367,7 @@ uint64_t PECMD_DispatchListWriteCommand(uint64_t *param_1, int64_t *param_2, LPC
     }
     if (*(char *)(param_1 + 0x10) != '\0') {
         lpString1 = param_4;
-        uVar5 = FUN_1400641d4((uint16_t *)param_4);
+        uVar5 = PECMD_IsVisibleKeyword((uint16_t *)param_4);
         if ((char)uVar5 != '\0') {
             return 0;
         }

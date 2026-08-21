@@ -23,10 +23,10 @@ extern uint16_t *PECMD_DataToWideString(int64_t data, int start, int end, uint16
 extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);        /* @0x14001f1d4 */
 extern uint64_t PECMD_LoadImageStream(uint8_t *p, size_t n, uint64_t *p3); /* @0x140061e98 */
 extern int64_t FUN_140063b00(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
-extern int64_t FUN_14001c2cc(LPCWSTR priv, DWORD attr, uint32_t flag); /* @0x14001c2cc EnablePrivilege */
+extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr, uint32_t flag); /* @0x14001c2cc EnablePrivilege */
 extern uint64_t FUN_1400612cc(uint64_t *param_1);           /* @0x1400612cc thread proc */
 extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d, DWORD e, DWORD f, DWORD g); /* @0x1400e3d60 */
-extern DWORD FUN_14007d340(int64_t param_1, LPCWSTR param_2, LPCWSTR param_3, int param_4); /* @0x14007d340 */
+extern DWORD PECMD_EncodeImageToStream(int64_t param_1, LPCWSTR param_2, LPCWSTR param_3, int param_4); /* @0x14007d340 */
 
 /* Win32 API not present in headers */
 extern int StrCmpIW(LPCWSTR, LPCWSTR);
@@ -472,7 +472,7 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
         bVar9 = (g_privFlags & 4) == 0;
         if (bVar9) {
             g_privFlags = (uint16_t)(g_privFlags | 4);
-            FUN_14001c2cc(WSTR("SeDebugPrivilege"), 2, 0);
+            PECMD_EnableTokenPrivilege(WSTR("SeDebugPrivilege"), 2, 0);
         }
         iVar2 = 10;
         do {
@@ -547,7 +547,7 @@ L14007c326:
                 if (param_5 < 1) {
                     if (bVar9) {
                         g_privFlags = (uint16_t)(g_privFlags & 0xfffb);
-                        FUN_14001c2cc(WSTR("SeDebugPrivilege"), 4, 0);
+                        PECMD_EnableTokenPrivilege(WSTR("SeDebugPrivilege"), 4, 0);
                     }
                     goto L14007c5b0;
                 }
@@ -596,7 +596,7 @@ L14007c4e0:
         puVar7 = (uint64_t *)(uint64_t)local_64;
         if (bVar9) {
             g_privFlags = (uint16_t)(g_privFlags & 0xfffb);
-            FUN_14001c2cc(WSTR("SeDebugPrivilege"), 4, 0);
+            PECMD_EnableTokenPrivilege(WSTR("SeDebugPrivilege"), 4, 0);
         }
     }
 L14007c5b0:
@@ -677,7 +677,7 @@ L14007d581:
             iVar2 = StrCmpIW((LPCWSTR)lpStart, WSTR("bmp"));
             lpFileName = param_2;
             if (iVar2 != 0) {
-                DVar3 = FUN_14007d340((int64_t)param_1, param_2, (LPCWSTR)lpStart, param_3);
+                DVar3 = PECMD_EncodeImageToStream((int64_t)param_1, param_2, (LPCWSTR)lpStart, param_3);
                 return DVar3;
             }
         }

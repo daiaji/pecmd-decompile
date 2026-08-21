@@ -22,7 +22,7 @@
 extern char    FUN_1400660ac(char *tok, int64_t *pp, int n);
 
 /* ASCII prefix compare (case-insensitive against wide string): 1 = match, 0 = no. */
-extern int     FUN_14005c788(const char *s, const WCHAR *w, int n);
+extern int     PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
 
 /* skip leading whitespace in the wide string at *ps; returns pointer past it. */
 extern uint16_t *FUN_14005b154(uint16_t **ps);
@@ -32,7 +32,7 @@ extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
 
 /* read LogPixels / AppliedDPI; return the cached DPI value, or -1 if absent.
  * NOTE: project restores these two as void — used as int here (see TODO). */
-extern int     FUN_14005d770(void);
+extern int     PECMD_LoadLogPixelsDpi(void);
 extern int     PECMD_ReadAppliedDpi(void);
 
 /* grow string-ish buffer: ensure *ps capacity >= count units; returns *ps. */
@@ -130,7 +130,7 @@ uint32_t PECMD_ParseWindowOptions(uint16_t *param_1, uint8_t *param_2, int *para
                                                                                         if (cVar2 == '\0') {
                                                                                             /* "-scale:" prefix handling */
                                                                                             puVar6 = local_res8;
-                                                                                            uVar4 = FUN_14005c788("-scale:", (const WCHAR *)local_res8, 7);
+                                                                                            uVar4 = PECMD_AsciiPrefixICmp("-scale:", (const WCHAR *)local_res8, 7);
                                                                                             if ((char)uVar4 == '\0') {
                                                                                                 uVar1 = *puVar6;
                                                                                                 while ((uVar1 != 0 &&
@@ -151,7 +151,7 @@ uint32_t PECMD_ParseWindowOptions(uint16_t *param_1, uint8_t *param_2, int *para
                                                                                             }
                                                                                         } else {
                                                                                             /* matched "-scale" */
-                                                                                            iVar3 = FUN_14005d770();
+                                                                                            iVar3 = PECMD_LoadLogPixelsDpi();
                                                                                             if (iVar3 != -1) {
                                                                                                 *param_3 = -0x60;
                                                                                             }

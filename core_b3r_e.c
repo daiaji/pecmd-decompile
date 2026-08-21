@@ -13,7 +13,7 @@ extern double g_fontMinus0;
 /* internal helpers (bodies provided elsewhere; refactored PECMD_* aliases are
  * already declared in pecmd_defs.h and are used for the confirmed mappings) */
 extern LPCWSTR FUN_14001be14(LPCWSTR);                       /* string tag/prefix lookup */
-extern void    FUN_1400f429c(void *, int);                   /* delimiter scan ('#') */
+extern void    PECMD_SkipWCharUntil(void *, int);                   /* delimiter scan ('#') */
 extern int     PECMD_ParseNumSkipChar_0224(void *, int *);                 /* parse int field */
 extern int     PECMD_ParseNumSkipChar_de4c(void *, double *);              /* parse double field */
 extern int     FUN_14005b2c0(void *, LPCWSTR, HWND);         /* list-control accept check */
@@ -241,7 +241,7 @@ void PECMD_ParseFontOptions(int64_t param_1, LPWSTR param_2, uint32_t *param_3)
         }
         lpStart = local_res20;
         if (*local_res20 != L'\0') {
-            FUN_1400f429c(&local_res20, 0x23);
+            PECMD_SkipWCharUntil(&local_res20, 0x23);
             if (*local_res20 != L'\0') {
                 *local_res20 = L'\0';
                 local_res20 = local_res20 + 1;

@@ -33,7 +33,7 @@ extern LPWSTR  lstrcatW(LPWSTR, LPCWSTR);
 
 extern void    PECMD_InitWinsock(void *p);                 /* 懒加载 WS2_32 指针 */
 extern int32_t PECMD_QueryState_cfc0(void);                    /* 初始化成功? */
-extern void    FUN_14005d2a4(void *p);                 /* 附加初始化 */
+extern void    PECMD_InitWinsockOnce(void *p);                 /* 附加初始化 */
 extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                              uint64_t cap);            /* 复制/解析串 */
 extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
@@ -154,7 +154,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     if (PECMD_QueryState_cfc0() == 0) {
         return 0x80004005;
     }
-    FUN_14005d2a4(&local_res18);
+    PECMD_InitWinsockOnce(&local_res18);
     PECMD_SkipSpace((WCHAR **)&local_res10);
     g_timeServer = "time.windows.com";
     FUN_1400633a8((void **)local_48, 0x5dc);
