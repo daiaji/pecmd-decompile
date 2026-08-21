@@ -3511,3 +3511,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: 资源 API fwd+签名、HeapRealloc 返回强转、改名联动(01d78c→MemMoveForward/05b154→SkipLeadingControlChars)重命名调用、longlong vs long long。
 ## 115. P4 叶层自直移批3：5 个(070154 魔法串/0e3cd4 路径扩展/05f96c 设备控制/VectorPushBack/0607a4 硬链接)绿
 - 修复: ATL::→AtlThrowImpl、OomPrompt fwd、SetVectorSize/DeviceIoControl/CopyFileW 实参签名、VectorPushBack 真体入桩(原名已改名)。
+## 116. P4 叶层自直移批4：5 个(01d628 ntdll惰加载/0799f0 多字节转换/063620 串分配/01be14 去引号/AssignAnsiString)绿
+- 修复: 变参函数指针槽赋值((*)(...)转换)、LoadLibraryW fwd、GetProcAddress 实参、fn-ptr 槽调用强转。
