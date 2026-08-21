@@ -42,7 +42,7 @@ extern void  PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd
 extern LPCVOID FUN_1400e3f80(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* @0x140063424 分配槽数组 */
-extern int  FUN_14005b184(char *buf, int64_t a, int64_t b);        /* @0x14005b184 检索匹配 */
+extern int  PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);        /* @0x14005b184 检索匹配 */
 extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);             /* @0x14006cc70 记录命中位置 */
 extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 释放字符串槽 */
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
@@ -316,7 +316,7 @@ LAB_14006d_common:
                             lVar14 = lVar14 * lVar24;
                             while ((lVar24 = lVar24 - 1, -1 < lVar24)) {
                                 pcVar18 = pcVar12;
-                                iVar3 = FUN_14005b184((char *)pcVar12, param_4, lVar10);
+                                iVar3 = PECMD_AnsiStrNCompare((char *)pcVar12, param_4, lVar10);
                                 if (iVar3 == 0) {
                                     if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
                                     PECMD_AppendFormattedI64(param_1, lVar5 + LVar15.QuadPart);
@@ -390,7 +390,7 @@ LAB_14006d_common:
                                 lVar16 = lVar5;
                                 lVar22 = lVar10;
                                 do {
-                                    iVar4 = FUN_14005b184((char *)(puVar20 + lVar26),
+                                    iVar4 = PECMD_AnsiStrNCompare((char *)(puVar20 + lVar26),
                                                           param_4, lVar22);
                                     if (iVar4 == 0) {
                                         if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
@@ -441,7 +441,7 @@ LAB_14006d_common:
     lpBaseAddress = lpBaseAddress_00;
     if ((lVar14 <= lVar24) && (lVar24 = lVar10, -1 < lVar14)) {
         for (; lVar14 != lVar5; lVar14 = lVar14 + lVar13) {
-            iVar1 = FUN_14005b184((char *)pcVar12, param_4, lVar24);
+            iVar1 = PECMD_AnsiStrNCompare((char *)pcVar12, param_4, lVar24);
             if (iVar1 == 0) {
                 if (param_1 == (int64_t *)0) goto LAB_14006d208;
                 PECMD_AppendFormattedI64(param_1, lVar14 + lVar25);

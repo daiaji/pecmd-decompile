@@ -28,7 +28,7 @@ extern uint64_t *PECMD_ConstructControlObjectB(uint64_t *obj, uint32_t type, uin
                                uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10);
 extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *param_3,
                           int param_4, int64_t param_5);
-extern uint64_t *FUN_1400f0648(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
+extern uint64_t *PECMD_InitWebViewObj(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
 extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
 extern void FUN_1400f072c(int64_t *param_1, LPCWSTR param_2, DWORD param_3,
                           int *param_4, HWND param_5, uint32_t param_6, DWORD param_7);
@@ -174,7 +174,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
          (local_40 < 1) && (param_9 == NULL))) {
         puVar6 = (uint64_t *)operator_new(0xe8);
         if (puVar6 != NULL) {
-            plVar5 = (int64_t *)FUN_1400f0648(puVar6, param_1 + 0xb);
+            plVar5 = (int64_t *)PECMD_InitWebViewObj(puVar6, param_1 + 0xb);
         }
         param_1[7] = (uint64_t)plVar5;
         *(uint8_t *)((char *)plVar5 + 0xd8) = 4;

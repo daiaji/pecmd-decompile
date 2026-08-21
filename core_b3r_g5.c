@@ -27,7 +27,7 @@ extern void    PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);             
 extern void    FUN_14005b104(void *ps);                                 /* @0x14005b104 释放字符串槽 */
 extern void    PECMD_AllocStrSlot(WCHAR **out);                              /* @0x140063620 初始化串缓冲 */
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);                /* @0x140063720 分配串 */
-extern void    FUN_1400633a8(void **ps, int64_t len);                   /* @0x1400633a8 分配 */
+extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);                   /* @0x1400633a8 分配 */
 extern void    FUN_14005b0b8(void *p);                                  /* @0x14005b0b8 缓冲区构造 */
 extern void    FUN_14005c828(const char *func, const char *dll,
                              void **out, uintptr_t *hmod);              /* @0x14005c828 GetProcAddress 包装 */
@@ -430,7 +430,7 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
                       (LPSECURITY_ATTRIBUTES)0x0, 3, 0x22000000, (HANDLE)0x0);
         hObject = local_108;
         if (local_108 != (HANDLE)0x0) {
-            FUN_1400633a8((void **)&local_100, 0x7ff0);
+            PECMD_AllocStringSlot2((void **)&local_100, 0x7ff0);
             FUN_14005b0b8((void *)local_100);
             *(uint32_t *)local_100 = 2;
             local_f8[0] = 0;

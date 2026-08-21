@@ -32,7 +32,7 @@ extern int64_t *PECMD_SkipLeadingControlChars(int64_t *pp);
 /* 释放字符串槽 @0x14005b104 */
 extern void FUN_14005b104(void *ps);
 /* 匹配/比较字节串 @0x14005b184 */
-extern int FUN_14005b184(char *buf, int64_t a, int64_t b);
+extern int PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);
 /* memmove 类 @0x14001d744 */
 /* 转换/规范化小写 @0x140060a74 */
 extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2);
@@ -40,7 +40,7 @@ extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2);
 extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int, char *, int);
 
 /* ---- PECMD_GetPathSizeToVar 的 helper ---- */
-extern uint8_t FUN_140062fc4(LPCWSTR param_1, int64_t *param_2, int param_3); /* "-link" 等前缀比较 */
+extern uint8_t PECMD_MatchTokPrefixAdv(LPCWSTR param_1, int64_t *param_2, int param_3); /* "-link" 等前缀比较 */
 extern void   PECMD_AllocStrSlot(WCHAR **out);                                     /* @0x140063620 串容器初始化 */
 extern WCHAR *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* @0x1400547bc */
 extern WCHAR *PECMD_UnquoteString(WCHAR *s);                                         /* 串标签/前缀查找 */
@@ -91,11 +91,11 @@ uint64_t PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t p
             memset(lpBuffer + uVar6, 0, 10);          /* FUN_140102a90 */
             iVar8 = DVar1 + 10;
             while (1) {
-                iVar3 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_14012412c, 2);
+                iVar3 = PECMD_AnsiStrNCompare(lpBuffer, (int64_t)(uintptr_t)DAT_14012412c, 2);
                 if (iVar3 == 0) {
                     PECMD_SwapBytePairs((uint8_t *)lpBuffer, (int)uVar6);
                 }
-                iVar3 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_140124128, 2);
+                iVar3 = PECMD_AnsiStrNCompare(lpBuffer, (int64_t)(uintptr_t)DAT_140124128, 2);
                 bVar9 = iVar3 == 0;
                 if ((*lpBuffer != '\0') && (lpBuffer[1] == '\0')) {
                     memmove(lpBuffer + 2, (void *)lpBuffer, iVar8);
@@ -113,7 +113,7 @@ uint64_t PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t p
                     PECMD_AllocString((WCHAR **)param_2, (int64_t)iVar3);
                     uVar7 = 3;
                     *(uint16_t *)(uintptr_t)*param_2 = *(uint16_t *)DAT_140124128;
-                    iVar8 = FUN_14005b184(lpBuffer, (int64_t)(uintptr_t)DAT_140124130, 3);
+                    iVar8 = PECMD_AnsiStrNCompare(lpBuffer, (int64_t)(uintptr_t)DAT_140124130, 3);
                     if ((iVar8 != 0) && (uVar5 = 0, uVar7 = 0, uVar4 == 0)) {
                         goto LAB_1400687a7;
                     }
@@ -173,7 +173,7 @@ uint64_t PECMD_GetPathSizeToVar(int64_t *param_1, LARGE_INTEGER param_2)
     local_res10[0] = param_2;
     PECMD_SkipLeadingControlChars((int64_t *)&local_res10[0].QuadPart);
     LVar4.QuadPart = 0;
-    cVar2 = (char)FUN_140062fc4(WSTR("-link"), (int64_t *)&local_res10[0].QuadPart, 5);
+    cVar2 = (char)PECMD_MatchTokPrefixAdv(WSTR("-link"), (int64_t *)&local_res10[0].QuadPart, 5);
     PECMD_AllocStrSlot((WCHAR **)&local_res20);
     lpString = WSTR(".");
     if ((*(int16_t *)(uintptr_t)local_res10[0].QuadPart == 0x3d) ||

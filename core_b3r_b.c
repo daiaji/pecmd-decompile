@@ -39,7 +39,7 @@ extern int     PECMD_ReadAppliedDpi(void);
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);
 
 /* overallocate / allocate a buffer through *ps (allocation helper). */
-extern void    FUN_1400633a8(void **ps, int64_t len);
+extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);
 
 /* free a string buffer through *ps. */
 extern void    FUN_14005b104(WCHAR **ps);
@@ -309,7 +309,7 @@ int64_t *PECMD_CacheLookupInsert(LPCWSTR param_1, int64_t param_2, uint64_t para
         if (uVar4 != 0) {
             lVar7 = 0;
         }
-        FUN_1400633a8((void **)&local_48, lVar7 + 0x38 + (int64_t)uVar13);
+        PECMD_AllocStringSlot2((void **)&local_48, lVar7 + 0x38 + (int64_t)uVar13);
         puVar3 = (uint64_t *)local_48;
         plVar6 = (int64_t *)(lVar11 + lVar12 * 8);
         lVar7 = 0;
@@ -407,7 +407,7 @@ void *PECMD_EnumDeviceList(uint64_t param_1, LPCWSTR param_2, LPCWSTR param_3, i
     }
     local_b8[1] = 0;
     *puVar10 = 0;
-    FUN_1400633a8(&local_b0, 0x100020);
+    PECMD_AllocStringSlot2(&local_b0, 0x100020);
     local_b8[0] = 0x100000;
     iVar2 = (*g_pWIMGetMountedImages)(local_b0, local_b8);
     while (bVar1 = 0, iVar2 != 0) {

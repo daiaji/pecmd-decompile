@@ -90,7 +90,7 @@ extern int64_t   PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
 
 /* device / partition helpers (PECMD_AssignDriveLetter) */
 extern uint64_t  PECMD_FindFirstFreeDrive(LPCWSTR p);                    /* 驱动器盘符检测 */
-extern void      FUN_1400633a8(void **ps, int64_t len);       /* alloc */
+extern void      PECMD_AllocStringSlot2(void **ps, int64_t len);       /* alloc */
 extern void      PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                                LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 extern int       PECMD_QueryDeviceIoInfo(HANDLE h, int sz);             /* 扇区大小 */

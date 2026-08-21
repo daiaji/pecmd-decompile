@@ -70,7 +70,7 @@ extern int64_t  PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out,
                               uint8_t flag);
 extern int64_t  PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
                               uint8_t flag);
-extern char     FUN_140062fc4(LPCWSTR param_1, void *param_2, int param_3);
+extern char     PECMD_MatchTokPrefixAdv(LPCWSTR param_1, void *param_2, int param_3);
 extern void     PECMD_DestroyTrayIcon(char *param_1);
 extern void     PECMD_DestroyWindowLocked(void);
 extern void     PECMD_ShakeTrayCursor(void);
@@ -342,7 +342,7 @@ HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_
         local_res10 = local_80[0];
     }
     PECMD_SkipLeadingControlChars((WCHAR **)local_80);
-    local_res20 = FUN_140062fc4(WSTR("-dummy"), (void *)local_80, 6);
+    local_res20 = PECMD_MatchTokPrefixAdv(WSTR("-dummy"), (void *)local_80, 6);
     lpStr2 = local_80[0];
     pWVar6 = local_80[0];
 

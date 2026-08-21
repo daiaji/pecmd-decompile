@@ -397,7 +397,7 @@ extern int     PECMD_ReadRegBinaryGuarded(HKEY param_1, LPCWSTR param_2, LPCWSTR
 extern uint32_t PECMD_EnumPartitionsMapDriveLetter(uint32_t *param_1, int64_t param_2, uint16_t param_3, LPCWSTR param_4); /* @0x14008ba90 */
 extern uint32_t PECMD_IsDevicePathPrefix(LPCWSTR param_1);                            /* @0x140006a4c */
 extern int64_t PECMD_OpenFileExisting(uint64_t param_1, uint64_t param_2, uint64_t param_3); /* @0x14001d810 */
-extern int     FUN_14005b184(char *param_1, int64_t param_2, int64_t param_3);       /* @0x14005b184 */
+extern int     PECMD_AnsiStrNCompare(char *param_1, int64_t param_2, int64_t param_3);       /* @0x14005b184 */
 extern uint64_t PECMD_ExpandPathAlloc2(LPCWSTR param_1, uint64_t *param_2, int64_t *param_3); /* @0x1400e3cd4 */
 extern uint16_t *PECMD_NextToken(int64_t *param_1, int64_t *param_2, uint32_t param_3); /* @0x140024c48 */
 extern void PECMD_LoadWtsUserEnvApis(void);                                              /* @0x14000397c */
@@ -2858,7 +2858,7 @@ LAB_140007647:
                                 lVar10 = PECMD_ParseVolumeGuid((int64_t *)&local_148, local_60, 1);
                                 if (('\0' < (char)lVar10) && (iVar2 = 0, 0 < local_150)) {
                                     do {
-                                        iVar4 = FUN_14005b184(pcVar17, (int64_t)local_60, 0x10);
+                                        iVar4 = PECMD_AnsiStrNCompare(pcVar17, (int64_t)local_60, 0x10);
                                         if (iVar4 == 0) goto LAB_1400070f7;
                                         iVar2 = iVar2 + 1;
                                         pcVar17 = pcVar17 + 0x34;
@@ -2965,7 +2965,7 @@ LAB_1400070f7:
                                                   &local_100, &local_124, NULL);
                                     lVar13 = local_100;
                                     if ((local_124 == 0x18) &&
-                                        (iVar6 = FUN_14005b184("DMIO:ID:", local_100, 8), iVar6 == 0)) {
+                                        (iVar6 = PECMD_AnsiStrNCompare("DMIO:ID:", local_100, 8), iVar6 == 0)) {
                                         memcpy((uint8_t *)local_78,
                                                       (uint8_t *)(lVar13 + 8), 0x10);
                                         cVar16 = '\x02';
@@ -2979,7 +2979,7 @@ LAB_1400070f7:
                                     if (('\0' < cVar16) && (iVar6 = 0, 0 < local_150)) {
                                         piVar19 = (int *)(lVar10 + 0x18);
                                         do {
-                                            iVar5 = FUN_14005b184(pcVar17, (int64_t)local_78, 0x10);
+                                            iVar5 = PECMD_AnsiStrNCompare(pcVar17, (int64_t)local_78, 0x10);
                                             pWVar12 = pWVar11;
                                             if (iVar5 == 0) {
                                                 uVar7 = PECMD_EnumPartitionsMapDriveLetter(local_78, (int64_t)local_a0, 0, NULL);

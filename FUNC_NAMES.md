@@ -4,6 +4,12 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400e66d4 | FUN_1400e66d4 | PECMD_BuildResourceFont |
+| 0x1400e6350 | FUN_1400e6350 | PECMD_EnumChildFindProc |
+| 0x14005b184 | FUN_14005b184 | PECMD_AnsiStrNCompare |
+| 0x1400633a8 | FUN_1400633a8 | PECMD_AllocStringSlot2 |
+| 0x1400f0648 | FUN_1400f0648 | PECMD_InitWebViewObj |
+| 0x140062fc4 | FUN_140062fc4 | PECMD_MatchTokPrefixAdv |
 | 0x14001d628 | FUN_14001d628 | PECMD_LoadNtdllApis |
 | 0x1400ec084 | FUN_1400ec084 | PECMD_FillMsgEnvelope |
 | 0x1400ece2c | FUN_1400ece2c | PECMD_InitObjectSlotC |

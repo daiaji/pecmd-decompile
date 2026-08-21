@@ -82,7 +82,7 @@ extern WCHAR           *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern WCHAR           *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
 extern void             PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                                       uint64_t cap);
-extern void             FUN_1400633a8(void **ps, int64_t len);   /* alloc */
+extern void             PECMD_AllocStringSlot2(void **ps, int64_t len);   /* alloc */
 extern WCHAR           *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);   /* token 扫描 */
 extern WCHAR           *FUN_1400703e4(int64_t *out, const WCHAR *src);
 extern int64_t         *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len); /* 取串槽 */
@@ -523,7 +523,7 @@ LAB_1400af515:
         local_a8 = (LPCWSTR)PECMD_CopyStrToSlot((WCHAR **)&local_a8, (WCHAR **)&local_f8);
         PECMD_AllocStrSlot(&local_98);
         local_160 = (LPWSTR)0;
-        FUN_1400633a8((void **)&local_78, 0x10d2);
+        PECMD_AllocStringSlot2((void **)&local_78, 0x10d2);
         memset(local_78, 0, 0x10d2);
         *(uint8_t *)((intptr_t)local_78 + 2) = 0;
         local_158 = (uint64_t)((intptr_t)local_78 + 1);
@@ -1194,7 +1194,7 @@ LAB_1400b10dd:
                     *(uint8_t *)(uintptr_t)(_Memory_00.QuadPart + 0xd) = 1;
                 }
                 PECMD_StrDupAssign(&local_f0, pWVar17);
-                FUN_1400633a8((void **)&local_e8, 0x88);
+                PECMD_AllocStringSlot2((void **)&local_e8, 0x88);
                 lpParameter = (uint64_t *)(uintptr_t)local_e8;
                 FUN_14005b0b8(lpParameter);
                 lpParameter[1] = local_f0;

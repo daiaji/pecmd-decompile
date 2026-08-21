@@ -37,7 +37,7 @@ extern void    PECMD_InitWinsockOnce(void *p);                 /* 附加初始�
 extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                              uint64_t cap);            /* 复制/解析串 */
 extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
-extern void    FUN_1400633a8(void **ps, int64_t len);  /* 分配缓冲 */
+extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);  /* 分配缓冲 */
 extern void    PECMD_AllocStrSlot(void *ps);                /* 初始化串容器 */
 extern void    PECMD_NtpSyncLoop(uint32_t *addr);          /* IP 地址 → 串 */
 extern void    PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
@@ -157,7 +157,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     PECMD_InitWinsockOnce(&local_res18);
     PECMD_SkipSpace((WCHAR **)&local_res10);
     g_timeServer = "time.windows.com";
-    FUN_1400633a8((void **)local_48, 0x5dc);
+    PECMD_AllocStringSlot2((void **)local_48, 0x5dc);
     DAT_14013d5c0 = local_48[0];
     uVar8 = 1;
     PECMD_AllocStrSlot(&local_58);
@@ -192,7 +192,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
         *((WCHAR *)local_58) = L'\0';
         g_qOutBuf = (WCHAR *)local_58;
     }
-    FUN_1400633a8(&local_50, 0x14a);
+    PECMD_AllocStringSlot2(&local_50, 0x14a);
     PECMD_SkipSpace((WCHAR **)&local_res10);
     local_res20 = (WCHAR *)0;
     PECMD_WideToAnsiStr((int64_t *)&local_res20, local_res10, -1, 0xffffffffffffffffULL);

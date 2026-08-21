@@ -1110,5 +1110,11 @@
   "FUN_1400f2934": "PECMD_CreateIpAddressCtl",
   "FUN_14006ffdc": "PECMD_FreeResourceSet",
   "FUN_14005f96c": "PECMD_QueryDeviceIoInfo",
-  "FUN_1400540a8": "PECMD_SendColorMsg"
+  "FUN_1400540a8": "PECMD_SendColorMsg",
+  "FUN_1400e66d4": "PECMD_BuildResourceFont",
+  "FUN_1400e6350": "PECMD_EnumChildFindProc",
+  "FUN_14005b184": "PECMD_AnsiStrNCompare",
+  "FUN_1400633a8": "PECMD_AllocStringSlot2",
+  "FUN_1400f0648": "PECMD_InitWebViewObj",
+  "FUN_140062fc4": "PECMD_MatchTokPrefixAdv"
 }

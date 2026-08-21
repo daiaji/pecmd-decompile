@@ -12,7 +12,7 @@
 
 /* ---------- extern helpers / globals / Win32 APIs (not in headers) ---------- */
 /* helpers */
-extern void FUN_1400633a8(void **ps, int64_t len);          /* @0x1400633a8 alloc */
+extern void PECMD_AllocStringSlot2(void **ps, int64_t len);          /* @0x1400633a8 alloc */
 extern void FUN_14005b104(void *ps);                         /* @0x14005b104 free */
 extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
@@ -82,7 +82,7 @@ uint64_t PECMD_QueryDevice(HANDLE param_1, uint64_t param_2, uint16_t *param_3, 
     uint8_t *puVar1;
 
     local_54[0] = 0;
-    FUN_1400633a8((void **)&buf, 0x1410);
+    PECMD_AllocStringSlot2((void **)&buf, 0x1410);
     lpOutBuffer = buf + 0x400;
 
     memset(buf, 0, 0xc);
@@ -338,7 +338,7 @@ int64_t PECMD_ReadModifyWrite(HANDLE param_1, uint8_t *param_2, int64_t param_3,
     local_res20 = param_5 & 0xffff;
     uVar2 = local_res20 - 1;
     lVar5 = (int64_t)param_4;
-    FUN_1400633a8((void **)&local_50, 0xa0000);
+    PECMD_AllocStringSlot2((void **)&local_50, 0xa0000);
     local_res18[0] = 0;
     lpBuffer = (uint8_t *)((uintptr_t)(local_50 + 0x20000) & (uintptr_t)~0x1ffffULL);
     local_40 = param_3;
@@ -424,7 +424,7 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
     iVar2 = lstrlenW(param_2);
     lVar1 = (int64_t)iVar2 * 2 + 2;
     iVar3 = lstrlenW(param_3);
-    FUN_1400633a8((void **)&local_60, (int64_t)iVar3 * 2 + 0x42 + lVar1);
+    PECMD_AllocStringSlot2((void **)&local_60, (int64_t)iVar3 * 2 + 0x42 + lVar1);
     lpParameter = local_60;
     local_48 = local_60;
     FUN_14005b0b8(local_60);
@@ -841,7 +841,7 @@ L14007dc6e:
     if (*plVar9 != 0) {
         local_48[0] = 0;
         ((void (*)(uint64_t, uint32_t *))g_pGdipImageGetFrameDimensionsCount)((uint64_t)*plVar9, local_48);
-        FUN_1400633a8((void **)&local_40, (uint64_t)local_48[0] << 4);
+        PECMD_AllocStringSlot2((void **)&local_40, (uint64_t)local_48[0] << 4);
         ((void (*)(uint64_t, uint64_t, uint32_t))g_pGdipImageGetFrameDimensionsList)((uint64_t)*plVar9, local_40,
                                                                  local_48[0]);
         ((void (*)(uint64_t, uint64_t, uint32_t *))g_pGdipImageGetFrameCount)((uint64_t)*plVar9, local_40,
@@ -852,7 +852,7 @@ L14007dc6e:
             local_res20[0] = 0;
             ((void (*)(uint64_t, uint32_t, uint32_t *))g_pGdipGetPropertyItemSize)((uint64_t)*plVar9, 0x5100,
                                                                       local_res20);
-            FUN_1400633a8((void **)local_38, (int64_t)(int)local_res20[0]);
+            PECMD_AllocStringSlot2((void **)local_38, (int64_t)(int)local_res20[0]);
             ((void (*)(uint64_t, uint32_t, uint32_t, uint64_t))g_pGdipGetPropertyItem)(
                 (uint64_t)*plVar9, 0x5100, local_res20[0], local_38[0]);
             uVar15 = ((uint64_t)local_res20[0] - 0x18) >> 2;

@@ -106,7 +106,7 @@ extern void      FUN_14005c828(const char *func, const char *dll,
                                void **out, uintptr_t *hmod);
 extern intptr_t  PECMD_ControlMessage(HWND, UINT, LPARAM, LPARAM);
 /* PECMD_EnumeratePhysicalDrives helpers */
-extern void      FUN_1400633a8(void **ps, int64_t len);
+extern void      PECMD_AllocStringSlot2(void **ps, int64_t len);
 extern DWORD     PECMD_EnumDevices(LPCWSTR path, LPWSTR buf, uint32_t flags,
                                GUID *guid);
 extern void      PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
@@ -893,7 +893,7 @@ uint32_t PECMD_EnumeratePhysicalDrives(longlong *param_1, uint param_2)
     *(undefined2 *)*param_1 = 0;
     local_res18 = uVar14;
     local_res20 = uVar10;
-    FUN_1400633a8((void **)&local_2d8, 0x1100d8);
+    PECMD_AllocStringSlot2((void **)&local_2d8, 0x1100d8);
     local_2e8 = local_2d8 + 0x20002;
     local_308 = (WCHAR *)(local_2d8 + 0x21802);
     *local_308 = L'\0';

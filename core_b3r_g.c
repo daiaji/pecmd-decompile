@@ -75,7 +75,7 @@ extern int       PECMD_AdapterMacIpLookup(void *a, int64_t *b, int c);
 extern int64_t   PECMD_ParseVolumeGuid(int64_t *param_1, uint32_t *param_2, int param_3);
 extern void      FUN_140061c44(void);
 extern void      PECMD_AllocMagicBlock(void **p, int64_t len);
-extern int       FUN_14005b184(char *buf, int64_t a, int64_t b);
+extern int       PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern LPWSTR    PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
 extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);
@@ -444,7 +444,7 @@ LAB_14007f319:
         do {
             local_a8 = puVar12;
             if (cVar9 == '\x04') {
-                iVar4 = FUN_14005b184(local_60, (int64_t)puVar12, 0x10);
+                iVar4 = PECMD_AnsiStrNCompare(local_60, (int64_t)puVar12, 0x10);
                 bVar17 = iVar4 == 0;
                 if (bVar17) {
                     goto LAB_14007f55f;
