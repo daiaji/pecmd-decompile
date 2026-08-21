@@ -3509,3 +3509,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: fwd 声明模式(VirtualFree/lstrcatW/065864/DAT_13cf50/cfb0)、int64_t vs long long、pthreadmbcinfo 实参、01b608 (uintptr_t)。
 ## 114. P4 叶层自直移批2：6 个(0660ac token/0e67e8 对话框资源/0e8644 临界窗口/06345c・06375c 串追加/0639f0 向量追加)绿
 - 修复: 资源 API fwd+签名、HeapRealloc 返回强转、改名联动(01d78c→MemMoveForward/05b154→SkipLeadingControlChars)重命名调用、longlong vs long long。
+## 115. P4 叶层自直移批3：5 个(070154 魔法串/0e3cd4 路径扩展/05f96c 设备控制/VectorPushBack/0607a4 硬链接)绿
+- 修复: ATL::→AtlThrowImpl、OomPrompt fwd、SetVectorSize/DeviceIoControl/CopyFileW 实参签名、VectorPushBack 真体入桩(原名已改名)。

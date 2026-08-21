@@ -145,6 +145,7 @@ uint64_t lstrcatW(void *a, uint64_t b);
 int64_t FUN_140065864(int64_t a, int64_t *b, int64_t *c, uint8_t *d, uint32_t e);
 void *DAT_14013cf50;
 void *DAT_14013d868; uint64_t DAT_14013e2a8; void *DAT_14013ca68;
+uint64_t PECMD_OomPrompt(int a);
 uint64_t FindResourceW(void *a, void *b, void *c);
 uint64_t LoadResource(void *a, uint64_t b);
 uint64_t LockResource(uint64_t a);
@@ -317,7 +318,7 @@ uint64_t CloseClipboard(void) { return 0; }
 uint64_t CloseHandle(void *h) { (void)h; return 0; }
 int CloseServiceHandle(void *h) { (void)h; return 0; }
 uint64_t ControlService(void) { return 0; }
-uint64_t CopyFileW(void) { return 0; }
+uint64_t CopyFileW(uint64_t a, uint64_t b, int c) { (void)a;(void)b;(void)c; return 1; }
 uint64_t CopyImage(void) { return 0; }
 uint64_t CreateBitmap(void) { return 0; }
 uint64_t CreateCompatibleBitmap(void) { return 0; }
@@ -331,7 +332,7 @@ uint64_t CreateFileMappingW(void) { return 0; }
 uint64_t CreateFileW(void) { return 0; }
 uint64_t CreateFileA(void) { return 0; }
 uint64_t CreateFontW(void) { return 0; }
-uint64_t CreateHardLinkW(void) { return 0; }
+uint64_t CreateHardLinkW(uint64_t a, uint64_t b, void *c) { (void)a;(void)b;(void)c; return 1; }
 uint64_t CreateMutexA(void) { return 0; }
 uint64_t CreateMutexW(void *a, int b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 uint64_t CreatePen(void) { return 0; }
@@ -947,7 +948,7 @@ longlong *FUN_140063b64(longlong *param_1){
     return param_1;
 }
 
-uint64_t PECMD_ExpandDrivePath(void) { return 0; }
+uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 /* @0x1400660ac size=— 匹配 token 并前进(直移) */
 char FUN_1400660ac(char *param_1,void *param_2p,int param_3)
 {
@@ -1101,7 +1102,22 @@ void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2)
   }
 }
 void FUN_14006fd1c(int64_t *a,int64_t *b,int64_t *c,int64_t *d,int64_t *e,int64_t *f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
-uint64_t FUN_140070154(void) { return 0; }
+/* @0x140070154 size=— 堆分配 0xaa55 魔法串(直移) */
+longlong *FUN_140070154(LPCWSTR param_1)
+{
+  int n = lstrlenW(param_1);
+  longlong len = (longlong)n * 2 + 2;
+  longlong *p;
+  for (;;) {
+    p = (longlong *)(uintptr_t)HeapAlloc((void *)(uintptr_t)DAT_14013d328,0,(long long)n * 2 + 10);
+    if ((uintptr_t)p != 0) break;
+    if (PECMD_OomPrompt(2) != 4) break;
+  }
+  *(uint32_t *)((long long)p + 4) = 0xaa55;
+  *p = len;
+  PECMD_MemMoveForward((uint8_t *)(p + 1),(uint8_t *)(uintptr_t)param_1,(int)len);
+  return p + 1;
+}
 void PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; }
 uint16_t *FUN_1400702d4(uint16_t **out, const uint16_t *src, int64_t len) { (void)out;(void)src;(void)len; return (uint16_t *)0; }
 int64_t *FUN_1400702f0(int64_t *a, char *b, uint64_t c) { (void)a;(void)b;(void)c; return a; }
@@ -1204,7 +1220,20 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
   return 0;
 }
 uint64_t FUN_1400d2e90(void) { return 0; }
-uint64_t FUN_1400e3cd4(const uint16_t *param_1, uint64_t *param_2, int64_t *param_3) { (void)param_1;(void)param_2;(void)param_3; return 0; }
+/* @0x1400e3cd4 size=— 宽路径分配并展开(直移) */
+uint64_t FUN_1400e3cd4(LPCWSTR param_1, uint64_t *param_2, int64_t *param_3)
+{
+  int n = lstrlenW(param_1);
+  PECMD_AllocString(param_2,(long long)(n * 2 + 0x105));
+  longlong local_res10 = 0;
+  PECMD_ExpandDrivePath(param_1,n * 2 + 0x104,(uint16_t *)(uintptr_t)*param_2,(longlong *)&local_res10);
+  if (((uint64_t)(uintptr_t)param_3 & 1) == 0) {
+    if ((uintptr_t)param_3 != 0) *param_3 = (int64_t)local_res10;
+  } else if ((uintptr_t)local_res10 != 0) {
+    ((uint16_t *)(uintptr_t)local_res10)[-1] = 0;
+  }
+  return *param_2;
+}
 uint64_t FUN_1400e3f80(void) { return 0; }
 uint64_t PECMD_GetWindowTextAlloc(void) { return 0; }
 uint64_t PECMD_GetOwnerWindow(uint64_t param_1) { (void)param_1; return 0; }
@@ -2124,7 +2153,15 @@ uint64_t FUN_1400db648(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *p4, uin
 uint8_t DAT_140127738[8];
 uint8_t DAT_140127740[8];
 
-int FUN_14005f96c(uintptr_t h, int size){ (void)h;(void)size; return 0; }
+/* @0x14005f96c size=— 磁盘几何控制查询(直移) */
+int FUN_14005f96c(uintptr_t h, int size)
+{
+  uint32_t res[4]; uint32_t out; uint64_t buf[2]; int ret = 0x200;
+  res[0]=0; out=0; memset(buf,0,0x14);
+  int ok = DeviceIoControl((void *)h,0x70000,0,0,&out,0x18,(unsigned long *)res,0);
+  if (ok != 0 || size == 0) size = ret;
+  return size;
+}
 uint64_t *PECMD_GetDiskLayoutInfo(uintptr_t h, uint64_t *buf, uint32_t *out){ (void)h;(void)buf;(void)out; return (uint64_t*)0; }
 uint32_t PECMD_GetDiskGeometry(const uint16_t *p, uintptr_t h){ (void)p;(void)h; return 0; }
 
@@ -2738,7 +2775,22 @@ void PECMD_RelocatePointerArray(undefined8 param_1, uint *param_2, longlong para
         } while (uVar3 < *param_2);
     }
 }
-uint64_t PECMD_VectorPushBack(void){ return 0; }
+/* @0x14004fea4=PECMD_VectorPushBack — 向量尾插(直移) */
+uint64_t PECMD_VectorPushBack(longlong param_1, uint64_t param_2)
+{
+  *(long long *)(param_1 + 0x48) = *(long long *)(param_1 + 0x48) + 1;
+  if (*(uint64_t *)(param_1 + 0x30) <= (*(uint64_t *)(param_1 + 0x48) & 0xffffffff) &&
+      (char)PECMD_SetVectorSize((void *)(param_1 + 0x28),*(uint64_t *)(param_1 + 0x48) * 2 + 2,-1) == 0) {
+    *(long long *)(param_1 + 0x48) = *(long long *)(param_1 + 0x48) - 1;
+    return 0;
+  }
+  if (*(uint64_t *)(param_1 + 0x48) < *(uint64_t *)(param_1 + 0x30)) {
+    *(uint64_t *)(*(long long *)(param_1 + 0x28) + *(uint64_t *)(param_1 + 0x48) * 8) = param_2;
+    return 1;
+  }
+  AtlThrowImpl(-0x7ff8ffa9);
+  return 0;
+}
 uint64_t FUN_14005b7dc(void){ return 0; }
 /* @0x14005be68 页表回收/双向链表维护 (decompiled.c 直移, 自包含) */
 void PECMD_ReclaimPages(longlong param_1,int param_2)
@@ -3326,7 +3378,19 @@ void     FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void 
 void    *FUN_14005b374(void *a, int16_t b, int16_t c) { (void)a;(void)b;(void)c; return a; } /* 行切分 */
 void     PECMD_AppendQuotedString(int64_t *a, void *b, int c) { (void)a;(void)b;(void)c; }              /* 串填充 */
 uint64_t FUN_1400048c4(int64_t *a) { (void)a; return 0; }
-void     FUN_1400607a4(const uint16_t *a, const uint16_t *b, int c) { (void)a;(void)b;(void)c; }
+/* @0x1400607a4 size=— 同驱双路径处理: 硬链接或拷贝(直移) */
+void FUN_1400607a4(LPCWSTR param_1,LPCWSTR param_2,int param_3)
+{
+  if (2 < param_3) {
+    if (StrCmpNIW(param_1,param_2,param_3) == 0) goto Ldone;
+  }
+  if ((*param_1 == *param_2 && param_1[1] == param_2[1]) && param_2[1] == L':') param_3 = 2;
+  else param_3 = 0;
+Ldone:
+  PECMD_CreateSymbolicLink(param_2,(uint64_t)(uintptr_t)(param_1 + param_3),0);
+  CreateHardLinkW((uint64_t)param_2,(uint64_t)param_1,0);
+  CopyFileW((uint64_t)param_1,(uint64_t)param_2,1);
+}
 void    *FUN_140017770(void *a, const char *b) { (void)a;(void)b; return (void *)0; }        /* 命名互斥/事件 */
 void     FUN_1400177b8(void *a) { (void)a; }                                                 /* 释放互斥/事件 */
 uint32_t FUN_14000bfcc(uint64_t a, uint64_t b, const uint16_t *c) { (void)a;(void)b;(void)c; return 0; } /* 执行固定操作 */
