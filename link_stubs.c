@@ -1454,6 +1454,8 @@ void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags) { (
 int SetThreadDesktop(void *d) { (void)d; return 1; }
 int SwitchDesktop(void *d) { (void)d; return 1; }
 int CloseDesktop(void *d) { (void)d; return 1; }
+int FUN_1400e63c8(void *h, uint64_t l) { (void)h;(void)l; return 1; }
+void FUN_1400ec084(long long a, uint64_t *b, long long c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; }
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c) { (void)k;(void)n;(void)r;(void)t;(void)d;(void)c; return 1; }
 uint64_t StrCmpNW(void) { return 0; }
 uint64_t StrCpyNW(void) { return 0; }
@@ -1696,7 +1698,15 @@ int PECMD_UpdateWindowStyleBits(int64_t a, unsigned int b, uint64_t c) { (void)a
 longlong FUN_1400e8644(longlong *a) { (void)a; return 0; }
 uint64_t *FUN_1400ece2c(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
 uint64_t FUN_1400ec698(int64_t a, uint64_t b) { (void)a;(void)b; return 0; }
-void FUN_1400ec6a8(int64_t a,int64_t b,uint64_t c,unsigned char *d,uint64_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; }
+/* @0x1400ec6a8 size=115 — 构造本地结构并 SendMessageW 0x432(直移) */
+void FUN_1400ec6a8(long long param_1,long long param_2,uint64_t param_3,unsigned char *param_4,uint64_t param_5)
+{
+  uint64_t local_58[3]; uint8_t local_40[24]; uint64_t local_28;
+  FUN_1400ec084(param_1,local_58,param_2,param_5);
+  if ((uintptr_t)param_4 != 0) FUN_14001d78c(local_40,param_4,0x10);
+  local_28 = param_3;
+  SendMessageW((void *)*(void **)(param_1 + 0x20),0x432,0,(uint64_t)local_58);
+}
 undefined8 PECMD_AppendValueNode(longlong param_1, const WCHAR *param_2, undefined8 param_3){
     int iVar1; undefined8 *puVar2,*puVar3;
     iVar1=*(int*)(param_1+0x118);
@@ -1741,7 +1751,17 @@ bool PECMD_CreateCustomChildControl(longlong *param_1, uint param_2, int *param_
     return param_1[4]!=0;
 }
 
-uint64_t FUN_1400fbfe0(void) { return 0; }
+/* @0x1400fbfe0 size=81 — 控件对象O初始化(直移) */
+uint64_t *FUN_1400fbfe0(uint64_t *param_1,uint64_t param_2)
+{
+  FUN_1400e57c0(param_1);
+  param_1[0x1a] = param_2;
+  *param_1 = (uint64_t)&PTR_FUN_14012ca50;
+  (void)FUN_140063620((uint16_t **)(param_1 + 0x1b));
+  *(uint8_t *)((long long)param_1 + 0xe4) = 0;
+  *(uint32_t *)(param_1 + 0x1c) = 0x80000000;
+  return param_1;
+}
 uint64_t *FUN_1400fcf44(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
 void *DAT_14013a858;   /* 默认画笔/色刷缓存 (GetStockObject, PECMD.exe 静态区, 初 0) */
 /* PECMD_SetControlColors — 应用 param_2 的 4×RGBA 调色板与前景/背景/边框刷子到控件 struct 偏移槽. */
@@ -2384,7 +2404,18 @@ bool PECMD_CreateButtonSubCtl(long long *param_1, LPCWSTR param_2, uint64_t para
     return param_1[4] != 0;
 }
 void FUN_1400ef078(int64_t a, uint64_t b){ (void)a;(void)b; }
-uint64_t *FUN_1400fec9c(uint64_t *a, uint64_t b, uint64_t c){ (void)a;(void)b;(void)c; return (uint64_t*)0; }
+/* @0x1400fec9c size=93 — 控件对象Q初始化(直移) */
+uint64_t *FUN_1400fec9c(uint64_t *param_1,uint64_t param_2,uint64_t param_3)
+{
+  FUN_1400e57c0(param_1);
+  param_1[0x1a] = param_3;
+  *(uint8_t *)(param_1 + 0x14) = 0;
+  param_1[0x1b] = 0;
+  *(uint32_t *)(param_1 + 0x1c) = 0;
+  param_1[0x21] = param_2;
+  *param_1 = (uint64_t)&PTR_FUN_14012cf00;
+  return param_1;
+}
 int PECMD_CreateTreeViewControl(int64_t *a, unsigned long b, int *c, void *d, uint32_t e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 1; }
 bool PECMD_FindAndReleaseComObject(const WCHAR *param_1){
     int iVar1; longlong *plVar2;
@@ -3476,7 +3507,14 @@ undefined4 FUN_1400e6314(HWND a, POINT b)
   GetWindowRect((void *)a,&r);
   return PtInRect(&r,(void *)&b);
 }
-void      *FUN_1400e6458(longlong a) { (void)a; return (void*)0; }            /* 命中窗口查找 (leaf stub) */
+/* @0x1400e6458 size=49 — 枚举窗口找当前进程首个命中(直移) */
+void *FUN_1400e6458(longlong param_1)
+{
+  *(uint64_t *)(param_1 + 0x18) = 0;
+  *(uint32_t *)(param_1 + 0x10) = GetCurrentProcessId();
+  EnumWindows((WNDENUMPROC)FUN_1400e63c8,(LPARAM)param_1);
+  return (void *)(uintptr_t)*(uint64_t *)(param_1 + 0x18);
+}
 void       FUN_1400f172c(longlong *a, UINT b, ulonglong c, ulonglong *d, longlong e, int f, undefined8 *g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; } /* 消息派发 (leaf stub) */
 void       FUN_1400613fc(void) { }                                            /* 键状态刷新 (leaf stub) */
 
