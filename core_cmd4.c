@@ -577,7 +577,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 LPCWSTR wv = (LPCWSTR)pSplit;
                 if (srcType == 0) {
                     int r;
-                    FUN_140063620(&sStr);
+                    PECMD_AllocStrSlot(&sStr);
                     wv = sStr;
                     r = (*g_pConvFunc)((uint32_t)srcCp, 0, (LPCSTR)data, (int)datalen,
                                        sStr, (int)datalen + 10);

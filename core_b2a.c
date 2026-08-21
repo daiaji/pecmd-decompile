@@ -49,7 +49,7 @@ extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
 extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern int64_t PECMD_RegisterCallbackWnd(uint32_t mode);
-extern void FUN_140063620(WCHAR **ps);
+extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_WideStrLen(void *p);
@@ -324,7 +324,7 @@ uint64_t PECMD_ApplyWallpaper(WCHAR *path)
     WCHAR *ps;
     int64_t len;
     uint64_t r;
-    FUN_140063620(&local_res10);
+    PECMD_AllocStrSlot(&local_res10);
     ps = FUN_14001BE14(path);
     ps = FUN_14001C270(ps, &local_res10);
     len = PECMD_WideStrLen(ps);
@@ -467,7 +467,7 @@ void *PECMD_CreateVariableNode(void *node, LPCWSTR text)
 {
     WCHAR *local_res10 = (WCHAR *)text;
     WCHAR *local_res8;
-    FUN_140063620((WCHAR **)node);
+    PECMD_AllocStrSlot((WCHAR **)node);
     *(uint32_t *)((uint8_t *)node + 8) = 3;
     *(int64_t *)((uint8_t *)node + 16) = 0;
     PECMD_SkipLeadingControls(&local_res10);

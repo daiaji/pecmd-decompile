@@ -31,7 +31,7 @@ extern uint8_t PTR_FUN_14012cb90[];
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL FUN_1400E63C8(HWND hWnd, LONG_PTR lParam);
-extern int64_t *FUN_140070154(WCHAR *s);
+extern int64_t *PECMD_AllocMagicString(WCHAR *s);
 extern void FUN_1400F0FA8(uint64_t *obj, uint64_t wParam,
                           uint64_t lParam);
 extern void FUN_1400E8940(uint64_t *obj);
@@ -73,7 +73,7 @@ uint64_t *FUN_1400E96EC(uint64_t *out, uint64_t unused, uint64_t value)
     (void)unused;
     FUN_1400E6D68(buf, value);
     *out = 0;
-    *out = (uint64_t)(uintptr_t)FUN_140070154(buf);
+    *out = (uint64_t)(uintptr_t)PECMD_AllocMagicString(buf);
     return out;
 }
 

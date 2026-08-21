@@ -134,7 +134,7 @@ extern void PECMD_ResetScriptChain(void *script, void *a2);
 extern void PECMD_FreeRecordChain(int64_t ctx);
 extern LPCWSTR FUN_14002FD88(int64_t *script, WCHAR *s, uint32_t *flags,
                              int64_t *out);
-extern void FUN_1400e67e8(void);
+extern void PECMD_ShowAboutDialog(void);
 extern int64_t PECMD_CreateWindow(int64_t *script, LPCWSTR a4, int64_t *a3,
                              WCHAR *a2, int flags);
 extern int64_t PECMD_ExecWindowThread(int64_t *script, uint64_t a4, int64_t *a3,
@@ -960,7 +960,7 @@ after_modifier:
     if ((int)local_34 < (int)(uint32_t)(uintptr_t)pWVar9) {
         uVar6 = (uint32_t)(uintptr_t)pWVar9;
     }
-    FUN_1400e67e8();
+    PECMD_ShowAboutDialog();
     if (pWVar5 == (WCHAR *)0) {
         iVar2 = (int)(uVar6 & 0xbfffffff) + 1;
         if (WVar7 == L'\0') {

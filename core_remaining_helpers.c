@@ -23,15 +23,15 @@ extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap,
 
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);        /* @0x140063720 串扩容 */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
-extern WCHAR *FUN_140063620(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
+extern WCHAR *PECMD_AllocStrSlot(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
 extern void  FUN_14005b104(void *ps);                               /* @0x14005b104 释放引用串容器 */
 extern void  PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
 
 /* ---- PECMD_DecodeBig5NameTable (BIG5 字符名表解码/重排) 依赖 ---- */
 extern uint32_t FUN_14001b4f8(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
-extern void FUN_140063a6c(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
-extern void FUN_1400639f0(void **pdata, void **pend, int64_t *pcount,
+extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
+extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount,
                           void *tmp, int size, int grow);           /* @0x1400639f0 表追加行 */
 extern WCHAR *FUN_140063694(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
 extern uint64_t FUN_14005dff4(void);                                /* @0x14005dff4 PRNG */
@@ -270,7 +270,7 @@ LAB_done:
 }
 
 /* @0x140075c7c size=797 — BIG5 字符名表解码/重排: 以 uVar19(参4) 定位节首(puVar10),
- * 节内行以 (uVar19^10) 为分隔符经 FUN_1400639f0 收集入 0x28 字节行表(行串指针+行长),
+ * 节内行以 (uVar19^10) 为分隔符经 PECMD_VectorAppendGen 收集入 0x28 字节行表(行串指针+行长),
  * PRNG(FUN_14005dff4) 随机抽未处理行, 行串 XOR uVar19 解密, ASCII 前缀直拷 + 余段
  * LCMapStringW(zh-CN) 映射, 再 XOR 回密存入行表输出槽; 循环至全表处理完, 按表序级联
  * 写入 *param_2 并在尾部附 uVar19 封口返回。SUB168/SUB164 为 64 位取模伪影, 已按
@@ -313,14 +313,14 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
     puVar10 = (uint8_t *)&param_1[(size_t)uVar7];
     uVar17 = uVar7 & 0xffffffff;
     memset(&local_70, 0, 0x20);
-    FUN_140063a6c((void **)&local_90, (void **)&local_88, local_80, 0x28);
+    PECMD_InitTableSlots((void **)&local_90, (void **)&local_88, local_80, 0x28);
     uVar14 = 0x400;
     puVar13 = puVar10;
     if (param_4 != 0) goto LAB_140075d12;
     while (1) {
         local_68 = (int64_t)(int)uVar17;
         local_70 = (uint8_t *)param_1;
-        FUN_1400639f0((void **)&local_90, (void **)&local_88, (int64_t *)local_80,
+        PECMD_VectorAppendGen((void **)&local_90, (void **)&local_88, (int64_t *)local_80,
                       (void *)&local_78, 0x28, 0x400);
         (void)local_68;
         param_1 = (uint16_t *)puVar13;
@@ -436,7 +436,7 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
 {
     WCHAR *tok = NULL;
 
-    FUN_140063620(&tok);
+    PECMD_AllocStrSlot(&tok);
     PECMD_ExtractTokenByDelim(pp, &tok, (int16_t)sep);
     PECMD_ExpandVarDispatch((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
     cursor[2] = cursor[0];

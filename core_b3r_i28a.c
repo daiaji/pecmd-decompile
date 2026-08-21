@@ -26,10 +26,10 @@ extern WCHAR g_szEmpty[];            /* empty string (g_szEmpty) */
 extern void    *operator_new(size_t size);  /* global new wrapper */
 
 /* string/var helpers */
-extern void      FUN_140063620(void *out);         /* @0x140063620 release slot */
+extern void      PECMD_AllocStrSlot(void *out);         /* @0x140063620 release slot */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);        /* @0x14005b154 skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* @0x1400702b0 assign */
-extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
+extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
 extern void      FUN_14005b104(void *ps);          /* @0x14005b104 free slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
@@ -39,7 +39,7 @@ extern void      PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void      PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
-extern char      FUN_1400660ac(const char *tok, void *pp, int n);
+extern char      PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
@@ -131,8 +131,8 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
             /* TODO(verify): Ghidra dropped the vararg of wsprintfW(L"%ld", ...) */
             wsprintfW(local_98, WSTR("%ld"));
             PECMD_StrDupAssign(&local_res8, WSTR("&&"));
-            FUN_14006375c((WCHAR **)&local_res8, (LPCWSTR)param_1[2]);
-            FUN_14006375c((WCHAR **)&local_res8, WSTR(".Select"));
+            PECMD_AppendWideStr((WCHAR **)&local_res8, (LPCWSTR)param_1[2]);
+            PECMD_AppendWideStr((WCHAR **)&local_res8, WSTR(".Select"));
             if (*(short *)param_1[2] != 0) {
                 PECMD_SetVariableWithPrefix((int64_t *)param_1[10],
                               (LPCWSTR)(uintptr_t)local_res8, local_98);
@@ -266,7 +266,7 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
 
     local_res10 = param_2;
     local_res20 = param_4;
-    FUN_140063620(&local_68);
+    PECMD_AllocStrSlot(&local_68);
     if (param_3 == 0) {
         PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = param_1[8];
@@ -434,7 +434,7 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
             return 0xffffffff80070057;
         }
     }
-    FUN_140063620(&local_60);
+    PECMD_AllocStrSlot(&local_60);
     PECMD_SkipLeadingControlChars(&local_res10);
     puVar11 = local_res10;
     sVar10 = 0x2c;
@@ -593,7 +593,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
         local_res10 = local_res10 + 1;
         PECMD_SkipLeadingControlChars(&local_res10);
     }
-    cVar2 = FUN_1400660ac("-smooth", &local_res10, 7);
+    cVar2 = PECMD_MatchTokenAdvance("-smooth", &local_res10, 7);
     PECMD_SplitTokenTrimWs(&local_res10, &local_48, 0x2c);
     PECMD_RunCommandLine(param_1, &local_48, 1);
     if (*local_res10 == L',') {

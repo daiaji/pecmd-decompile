@@ -148,7 +148,7 @@ int FUN_1400084D0(WCHAR *msg)
     PECMD_CheckDebugMsg();
     g_LastTick = GetTickCount();
     FUN_1400702B0(&pCopy, p);
-    FUN_140063620(&pOut);
+    PECMD_AllocStrSlot(&pOut);
     FUN_14007A224(&g_Script, pCopy, &pOut, 0, 1);   /* 解析命令文本 */
     FUN_1400703E4(&pParsed, pOut);
     p = pParsed;

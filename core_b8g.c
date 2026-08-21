@@ -73,7 +73,7 @@ extern DWORD GetVersion(void);
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL PECMD_EnumWindowCallback(HWND hwnd, LPARAM lParam);
 extern uint32_t FUN_1400E6F18(void);
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern void FUN_1400EC0F0(int64_t a1, char a2);
 extern int64_t PECMD_ContainerAppend(uint64_t *a1);
 extern LRESULT FUN_1400E5890(int64_t a1);
@@ -321,7 +321,7 @@ uint64_t *FUN_1400E9048(uint64_t *obj, uint32_t hwnd, uint64_t data)
     *(uint8_t *)(p + 0x121) = 0;
     *(uint8_t *)(p + 0x122) = 0;
     *(uint8_t *)(p + 0x123) = 0;
-    FUN_140063620((WCHAR **)(obj + 0x25));
+    PECMD_AllocStrSlot((WCHAR **)(obj + 0x25));
     obj[0x2a] = 0;
     *(uint8_t *)(p + 0x158) = 0;
     *(uint32_t *)(p + 0x148) = 0x80000000;

@@ -37,7 +37,7 @@ void FUN_140027EAC(void *s, void *p, int a, int b, void *cb, int timeout, int c,
 void FUN_14004E2CC(void *s, void *item);  /* @0x14004e2cc 释放单项 */
 void FUN_14006E8F4(void *s);         /* @0x14006e8f4 清理结构 */
 void PECMD_CheckDebugMsg(void);            /* @0x140005344 */
-void PECMD_AllocString(WCHAR **ps, int64_t count);   /* @0x140063620 = FUN_140063620 别名 */
+void PECMD_AllocString(WCHAR **ps, int64_t count);   /* @0x140063620 = PECMD_AllocStrSlot 别名 */
 void FUN_14007A224(void *s, LPCWSTR a, LPCWSTR *b, int c, int d); /* @0x14007a224 */
 void FUN_1400703E4(WCHAR **ps, LPCWSTR src);  /* @0x1400703e4 */
 WCHAR *FUN_14000531C(WCHAR *p);      /* @0x14000531c 跳空白(返回指针) */

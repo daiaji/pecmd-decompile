@@ -48,7 +48,7 @@ extern void     PECMD_PositionMessageWindow(HWND h, LPCWSTR a, LPARAM b, uint32_
                               int e, uint32_t f, uint32_t g, uint64_t h2); /* 工具提示显示 */
 
 /* ---- string / var helpers ---- */
-extern void     FUN_140063620(void *out);                  /* release/init slot */
+extern void     PECMD_AllocStrSlot(void *out);                  /* release/init slot */
 extern WCHAR   *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
 extern void     PECMD_StrDupAssign(void *ps, const WCHAR *src); /* assign string slot */
 extern void     FUN_14005b104(void *ps);                   /* free string slot */
@@ -82,7 +82,7 @@ extern int64_t  FUN_1400a9a84(int64_t *a, uint64_t *b);    /* 解析长度/句�
 extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out); /* 解析整数 */
 extern int64_t  PECMD_ParseNumber(int64_t *pp, int *out);
 extern void    *PECMD_ReadTipDummyConfig(void);
-extern int64_t  FUN_1400e8644(int64_t *a);
+extern int64_t  PECMD_GetWinIdLocked(int64_t *a);
 extern HBITMAP  PECMD_LoadImageBitmap(LPCWSTR, int64_t *, int64_t, uint64_t, uint32_t *,
                               uint64_t *, uint64_t);       /* 图/图标装载 */
 extern uint     PECMD_DrawTrayIcon(uint8_t *, uint64_t, LPCWSTR, HICON, LPCWSTR,
@@ -173,7 +173,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
     PECMD_StrDupAssign(&local_78, g_szEmpty);
     PECMD_StrDupAssign(&local_68, g_szEmpty);
     PECMD_StrDupAssign(&local_40, g_szEmpty);
-    FUN_140063620(&local_70);
+    PECMD_AllocStrSlot(&local_70);
     local_60[2] = 0;
     local_60[3] = 0;
     local_60[0] = -0x80000000;
@@ -296,7 +296,7 @@ HICON PECMD_LoadIconAndTooltip(int64_t *param_1, LPCWSTR param_2, int64_t param_
     (void)pWVar2; (void)lpString;
     local_res10 = (WCHAR *)param_2;
     local_res18 = param_3;
-    FUN_140063620(&local_68);
+    PECMD_AllocStrSlot(&local_68);
     uVar18 = 0;
     local_58 = 0;
     (void)local_58;
@@ -499,7 +499,7 @@ icon_parse_ba800:
         }
         plVar7 = PECMD_SplitTokenAssignVar(&local_68, &local_res10, 0x2c, 1);
         PECMD_ExtractTokenByDelim(plVar7, &local_98, 0);
-        if ((g_i64D170 == 0) && (lVar11 = FUN_1400e8644((int64_t *)g_Script),
+        if ((g_i64D170 == 0) && (lVar11 = PECMD_GetWinIdLocked((int64_t *)g_Script),
                                      lVar11 == 0)) {
             DVar5 = GetLastError();
             pHVar17 = (HICON)(uint64_t)DVar5;
@@ -659,7 +659,7 @@ icon_after_load_ba6aa:
         goto icon_apply_baedb;
     }
     if (g_i64D170 == 0) {
-        lVar11 = FUN_1400e8644((int64_t *)g_Script);
+        lVar11 = PECMD_GetWinIdLocked((int64_t *)g_Script);
         if (lVar11 == 0) {
             goto icon_noop_badc4;
         }
@@ -900,7 +900,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                     }
                                                                     /* -color: */
                                                                     local_c8 = 0;
-                                                                    FUN_140063620(&local_b8);
+                                                                    PECMD_AllocStrSlot(&local_b8);
                                                                     local_res10 = local_res10 + 7;
                                                                     PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                                   &local_c8, (int64_t *)&local_b8);
@@ -926,7 +926,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                             } else {
                                                                 /* -b: */
                                                                 local_c8 = 0;
-                                                                FUN_140063620(&local_80);
+                                                                PECMD_AllocStrSlot(&local_80);
                                                                 local_res10 = local_res10 + 3;
                                                                 PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                               &local_c8, (int64_t *)&local_80);
@@ -978,7 +978,7 @@ bd_option_done:
         }
         *local_88p = uVar2;
     }
-    FUN_140063620(&local_68);
+    PECMD_AllocStrSlot(&local_68);
     local_58 = 0;
     local_60 = param_1;
     PECMD_StrDupAssign(&local_90, g_szEmpty);

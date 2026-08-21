@@ -24,7 +24,7 @@ extern int (*g_pGdipGetImageWidth)();     /* GdipGetImageWidth  (function ptr) *
 extern int (*g_pGdipGetImageHeight)();     /* GdipGetImageHeight (function ptr) */
 
 /* ---- string / var helpers ---- */
-extern void      FUN_140063620(void *out);                  /* init/release slot */
+extern void      PECMD_AllocStrSlot(void *out);                  /* init/release slot */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src); /* assign string slot */
 extern void      FUN_14005b104(void *ps);                   /* free string slot */
@@ -35,11 +35,11 @@ extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, 
 extern void      PECMD_CopyUpToChar(int64_t *pp, int64_t *out, uint32_t sep);
 extern void      PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);    /* delimiter scan */
-extern WCHAR    *FUN_14006375c(WCHAR **ps, const WCHAR *src); /* string append */
+extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* string append */
 extern int64_t  *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern char      FUN_1400660ac(const char *tok, void *pp, int n);
+extern char      PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern bool      PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size); /* parse numeric/expr */
 extern void      PECMD_ParseHexOrDecBool(LPWSTR *pp, int *out);        /* parse integer */
 extern uint64_t  PECMD_EvalParenStripped(int64_t *pp, uint64_t *out);  /* parse integer */
@@ -59,7 +59,7 @@ extern char      PECMD_LoadImageListApi(void);                          /* 图/�
 
 /* ---- image / var helpers ---- */
 extern HICON     PECMD_LoadIcon(LPCWSTR, uint64_t *);           /* 加载图标 */
-extern LPCWSTR   FUN_14001be14(LPCWSTR);                       /* 串标签/前缀查询 */
+extern LPCWSTR   PECMD_UnquoteString(LPCWSTR);                       /* 串标签/前缀查询 */
 extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
 extern int64_t   PECMD_RunCommand(int64_t *script, LPCWSTR cmd);  /* 执行脚本行 */
 
@@ -123,17 +123,17 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
     if (cVar6 < '\0') {
         return 0xffffffff80004001ULL;
     }
-    FUN_140063620(&local_58);
+    PECMD_AllocStrSlot(&local_58);
     local_48 = 0;
     (void)local_48;
     local_70 = (WCHAR *)g_szEmpty;
     local_50 = param_1;
     (void)local_50;
     PECMD_StrDupAssign(local_a0, g_szEmpty);
-    FUN_140063620(&local_80);
-    FUN_140063620(&local_78);
-    FUN_140063620(&local_68);
-    FUN_140063620(&local_88);
+    PECMD_AllocStrSlot(&local_80);
+    PECMD_AllocStrSlot(&local_78);
+    PECMD_AllocStrSlot(&local_68);
+    PECMD_AllocStrSlot(&local_88);
     uVar12 = 1;
     plVar8 = PECMD_SplitTokenAssignVar((WCHAR **)&local_58, &local_res10, 0x2c, 1);
     PECMD_SplitTokenTrimWs(plVar8, &local_88, 0);
@@ -354,7 +354,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
 
     local_res8 = (uint64_t)(uintptr_t)param_1;
     local_res10 = (WCHAR *)param_2;
-    FUN_140063620(&local_128);
+    PECMD_AllocStrSlot(&local_128);
     pWVar13 = (LPCWSTR)0;
     uVar5 = 0;
     local_118 = 0;
@@ -381,10 +381,10 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
     /* 保存逗号字符 (寄存器低16) */
     /* TODO(verify): CONCAT22 源自寄存器拼接, 仅低16位(逗号字符)被后续读取 */
     local_res18[0] = (int)((uint32_t)(local_res18[0] & 0xffff0000u) | WVar1);
-    cVar3 = FUN_1400660ac("-gui", &local_res10, iVar12 + -0x28);
+    cVar3 = PECMD_MatchTokenAdvance("-gui", &local_res10, iVar12 + -0x28);
     if (cVar3 == '\0') {
         /* ---- 非 -gui: 主解析路径 ---- */
-        bVar4 = FUN_1400660ac("-size", &local_res10, 5);
+        bVar4 = PECMD_MatchTokenAdvance("-size", &local_res10, 5);
         local_138 = (uint32_t)bVar4;          /* 低32 -size 标志 */
         WVar1 = *local_res10;
         pWVar14 = pWVar13;
@@ -505,7 +505,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 plVar8 = PECMD_SplitTokenAssignVar((WCHAR **)&local_128, &local_res10, 0x2c, 1);
                 PECMD_SplitTokenTrimWs(plVar8, &local_158, 0);
             }
-            pWVar13 = FUN_14001be14(local_158);
+            pWVar13 = PECMD_UnquoteString(local_158);
             if ((uint32_t)local_138 != 0) {     /* -size 分支 */
                 pHVar9 = PECMD_LoadIcon(local_158, (uint64_t *)0);
                 local_res18[0] = 0;
@@ -605,7 +605,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
     } else {
         /* ---- -gui 分支 ---- */
         PECMD_StrDupAssign(&local_res8, WSTR("#32:INDATA "));
-        FUN_14006375c((WCHAR **)&local_res8, local_res10);
+        PECMD_AppendWideStr((WCHAR **)&local_res8, local_res10);
         lVar18 = PECMD_RunCommand((int64_t *)param_1, (LPCWSTR)local_res8);
         pptVar11 = &local_res8;
     }
@@ -640,7 +640,7 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
     int64_t *local_50;
     uint64_t local_48;
 
-    FUN_140063620(&local_58);
+    PECMD_AllocStrSlot(&local_58);
     uVar7 = 0;
     local_48 = 0;
     (void)local_48;
@@ -671,8 +671,8 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
         }
         PECMD_SkipLeadingControlChars(&local_res8);
     }
-    FUN_140063620(&local_res20);
-    FUN_140063620(&local_res18);
+    PECMD_AllocStrSlot(&local_res20);
+    PECMD_AllocStrSlot(&local_res18);
     local_res10 = 0;
     plVar5 = PECMD_SplitTokenAssignVar((WCHAR **)&local_58, &local_res8, 0x2c, 1);
     PECMD_SplitTokenTrimWs(plVar5, &local_res20, 0);

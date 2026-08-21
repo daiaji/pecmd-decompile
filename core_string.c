@@ -3,7 +3,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   PECMD_HeapRealloc  @0x140063118
- *   FUN_140063620     @0x140063720  (调用 PECMD_HeapRealloc)
+ *   PECMD_AllocStrSlot     @0x140063720  (调用 PECMD_HeapRealloc)
  *   FUN_14006375C       @0x14006375c  (追加)
  *   PECMD_StrDupAlloc       @0x1400700c4
  *   FUN_1400702B0    @0x1400702b0  (直接覆盖指针, 不释放旧值)

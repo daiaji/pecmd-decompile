@@ -58,8 +58,8 @@ extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out,
 extern HANDLE   PECMD_LoadImageFromMemory(undefined8 *param_1, longlong *param_2); /* @0x14006eaac */
 extern void     FUN_14005b104(void *ps);                      /* @0x14005b104 释放字符串槽 */
 extern WCHAR   *PECMD_SkipLeadingControlChars(WCHAR **ps);                    /* @0x14005b154 跳过空白 */
-extern WCHAR   *FUN_14006375c(WCHAR **ps, LPCWSTR src);       /* @0x14006375c 串追加 */
-extern void     FUN_140063620(WCHAR **out);                   /* @0x140063620 初始化串缓冲 */
+extern WCHAR   *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);       /* @0x14006375c 串追加 */
+extern void     PECMD_AllocStrSlot(WCHAR **out);                   /* @0x140063620 初始化串缓冲 */
 extern WCHAR   *PECMD_AllocString(WCHAR **ps, int64_t count);     /* @0x140063720 串分配(计数) */
 extern WCHAR   *PECMD_StrDupA(WCHAR **ps, LPCWSTR src,
                               int64_t a, int64_t b);          /* @0x1400637dc 串复制分配 */
@@ -307,7 +307,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
     uVar7 = 0;
     local_res10 = param_2;
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
-    FUN_140063620((WCHAR **)&local_58);
+    PECMD_AllocStrSlot((WCHAR **)&local_58);
     local_48 = 0x8000000000000000ULL;
     FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
     if ((*local_res10 == 0) ||
@@ -408,7 +408,7 @@ uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
     if (sVar3 == 5) {
         *(uint16_t *)((char *)&local_res10 + 0x20) = 0x20;
     }
-    FUN_14006375c((WCHAR **)&local_res10, pWVar2);
+    PECMD_AppendWideStr((WCHAR **)&local_res10, pWVar2);
     local_res8 = (LPCWSTR)((uint64_t)(uintptr_t)local_res8 & 0xffffffffffff0000ULL);
     /* TODO(verify): 4/5/6/7/8 参为 Ghidra 成对残留；按原样传入 */
     _Var1 = FUN_14000e26c((uint64_t)(uintptr_t)g_Script,

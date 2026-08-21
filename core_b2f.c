@@ -102,7 +102,7 @@ extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern void PECMD_CreateDirectoryTree(LPCWSTR path);
 extern short PECMD_NextNonDelimChar(WCHAR **pp);
 extern void PECMD_GrowByteBuffer(void *pp, int64_t size);
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern uint64_t PECMD_ComparePrefixNoCaseLen(LPCWSTR a, LPCWSTR b);
 extern uint64_t *FUN_1400E96EC(uint64_t *a1, int a2, int64_t a3);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
@@ -437,7 +437,7 @@ label_020ae4:
                 PECMD_ServiceControl(script, (LPCWSTR)(uintptr_t)local_res18);
                 FUN_14005B104((WCHAR **)&local_res18);
             }
-            FUN_140063620(&local_1e0);
+            PECMD_AllocStrSlot(&local_1e0);
             SetLastError(0);
             uVar12 = 0;
             if (iVar6 >= 0) {
@@ -451,13 +451,13 @@ label_020ae4:
             puVar11 = &local_1e0;
         } else {
             /* 创建服务 */
-            FUN_140063620(&local_238);
-            FUN_140063620(&local_248);
-            FUN_140063620(&local_218);
-            FUN_140063620(&local_210);
-            FUN_140063620(&local_258);
-            FUN_140063620(&local_260);
-            FUN_140063620(&local_240);
+            PECMD_AllocStrSlot(&local_238);
+            PECMD_AllocStrSlot(&local_248);
+            PECMD_AllocStrSlot(&local_218);
+            PECMD_AllocStrSlot(&local_210);
+            PECMD_AllocStrSlot(&local_258);
+            PECMD_AllocStrSlot(&local_260);
+            PECMD_AllocStrSlot(&local_240);
             local_res18 &= 0xffffffff00000000ULL;
             local_268 = 0x10;
             local_264 = 3;
@@ -602,16 +602,16 @@ int64_t FUN_140021A4C(int64_t *script, LPCWSTR text)
     sVar6 = PECMD_NextNonDelimChar((WCHAR **)&local_res10);
     local_res10 = local_res10 + 1;
     PECMD_SkipLeadingControls((WCHAR **)&local_res10);
-    FUN_140063620(&local_2d0);
-    FUN_140063620(&local_280);
-    FUN_140063620(&local_260);
-    FUN_140063620(&local_298);
-    FUN_140063620(&local_270);
-    FUN_140063620(&local_278);
-    FUN_140063620(&local_2b0);
-    FUN_140063620(&local_268);
-    FUN_140063620(&local_2a0);
-    FUN_140063620(&local_290);
+    PECMD_AllocStrSlot(&local_2d0);
+    PECMD_AllocStrSlot(&local_280);
+    PECMD_AllocStrSlot(&local_260);
+    PECMD_AllocStrSlot(&local_298);
+    PECMD_AllocStrSlot(&local_270);
+    PECMD_AllocStrSlot(&local_278);
+    PECMD_AllocStrSlot(&local_2b0);
+    PECMD_AllocStrSlot(&local_268);
+    PECMD_AllocStrSlot(&local_2a0);
+    PECMD_AllocStrSlot(&local_290);
 
     local_2d8 = local_res10;
     pWVar11 = StrChrW(local_res10, L',');
@@ -1345,7 +1345,7 @@ label_029032:
 
             pHVar13 = GetDlgItem(hwnd, (uint32_t)*(uint16_t *)((uint8_t *)app + 0x112));
             PostMessageW(pHVar13, 0xb1, 0xffffffffffffffff, -1);
-            FUN_140063620(&local_208);
+            PECMD_AllocStrSlot(&local_208);
             pWVar10 = (LPWSTR)*(LPCWSTR *)(app + 0x22);
             local_1d8 = (HWND)(uintptr_t)(pWVar10 + app[0x24]);
             *(uint16_t *)(app + 0x32) = 0;
@@ -2098,7 +2098,7 @@ LAB_14002d791:
                 FUN_14006375C((WCHAR **)out, local_348);
                 {
                     double dVar2 = g_dbl1178 / (double)g_QPFreq;
-                    FUN_140063620(&local_440);
+                    PECMD_AllocStrSlot(&local_440);
                     FUN_1400E6CBC((int64_t *)&local_440, dVar2, WSTR("\t%lf"));
                     FUN_14006375C((WCHAR **)out, (LPCWSTR)(uintptr_t)local_440);
                     FUN_14005B104((WCHAR **)&local_440);
@@ -2359,7 +2359,7 @@ HMODULE FUN_14002F454(int64_t *fontList, WCHAR *spec, uint64_t unused,
     WCHAR *pWVar13 = NULL;
     LPWSTR pWVar9 = NULL;
 
-    FUN_140063620(&local_b0);
+    PECMD_AllocStrSlot(&local_b0);
     if (*(int16_t *)local_res10 == 0x2d) {
         HMODULE pHVar15 = 0;
         HMODULE pHVar19 = 0;
@@ -3866,7 +3866,7 @@ uint64_t FUN_1400369D0(int argc, int64_t *argv, int64_t *out)
             if (g_pImDiskGetVersion != NULL) {
                 ((void (*)(LPCWSTR *, uint64_t *))g_pImDiskGetVersion)(&local_198, &local_res20);
             }
-            FUN_140063620(&local_190);
+            PECMD_AllocStrSlot(&local_190);
             PECMD_EnumImDiskDrives(1, (int64_t *)&local_190, 0x3f);
             wsprintfW((LPWSTR)(uintptr_t)*out,
                       WSTR("*%X.%02X  %X.%X %s"),
@@ -5276,8 +5276,8 @@ LAB_140038e01:
   local_8a8.dmBitsPerPel = 4;
   local_8a8.dmDisplayFrequency = 1;
   local_a38 = 0;
-  FUN_140063620(&local_9c8);
-  FUN_140063620(&local_9e0);
+  PECMD_AllocStrSlot(&local_9c8);
+  PECMD_AllocStrSlot(&local_9e0);
   dVar6 = g_dbl21c80;
   local_a30 = 0;
   WVar2 = *local_res10;
@@ -6480,11 +6480,11 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
   local_b0.pFrom = (LPCWSTR)(uintptr_t)local_res10.QuadPart;
   local_b8 = 0;
   bVar2 = false;
-  FUN_140063620(&local_70);
+  PECMD_AllocStrSlot(&local_70);
   local_68 = 0;
   local_60 = 0;
   (void)local_60;
-  FUN_140063620(&local_58);
+  PECMD_AllocStrSlot(&local_58);
   local_50 = 0;
   local_48 = 0;
   (void)local_48;
@@ -6755,7 +6755,7 @@ LPCRITICAL_SECTION FUN_14003CD0C(int64_t *script, LPCRITICAL_SECTION name)
   local_a0 = (LPCRITICAL_SECTION)0x1;
   local_70 = (LPCRITICAL_SECTION)0x0;
   local_res10 = name;
-  FUN_140063620(&local_98);
+  PECMD_AllocStrSlot(&local_98);
   local_88 = GetCurrentProcessId();
   FUN_14007BF44(script,(WCHAR *)local_res10,&local_98,0,1);
   local_res10 = local_98;
@@ -7304,7 +7304,7 @@ LAB_14003efd6:
     return (int64_t)iVar11;
   }
   if (-1 < (int)local_4298[0]) {
-    FUN_140063620(&local_4228);
+    PECMD_AllocStrSlot(&local_4228);
     pwVar37 = WSTR("PressKey");
     if (*local_res10 != L'\0') {
       PECMD_SplitTokenTrimWs((int64_t *)&local_res10,(int64_t *)&local_4228,0x2c);
@@ -7393,7 +7393,7 @@ LAB_14003efd6:
     local_41c6 = 0;
   (void)local_41c6;
     local_41c8 = L'\0';
-    FUN_140063620(&local_4258);
+    PECMD_AllocStrSlot(&local_4258);
     pwVar37 = WSTR("PressKey");
     if (*local_res10 == L',') {
       local_res10 = local_res10 + 1;
@@ -7708,8 +7708,8 @@ LAB_140040046:
       local_4220 = 0;
       local_41e8 = local_res10;
       local_res10 = (LPCWSTR)FUN_140024C48((int64_t *)&local_41e8,&local_4220,1);
-      FUN_140063620(&local_4248);
-      FUN_140063620(&local_4208);
+      PECMD_AllocStrSlot(&local_4248);
+      PECMD_AllocStrSlot(&local_4208);
       PECMD_StrCopyW((int64_t *)&local_4208,local_41e8,local_4220);
       FUN_14001C270(local_4208,&local_4248);
       FUN_14005B104((int64_t *)&local_4208);

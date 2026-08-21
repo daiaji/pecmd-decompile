@@ -43,7 +43,7 @@ void FUN_14005B9A0(void);                     /* @0x14005b9a0 */
 void FUN_14003e1f0(void);                     /* @0x14003e1f0 */
 DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data, DWORD size); /* @0x14005c5a0 注册表值写入 */
 void FUN_1400e8574(void *script, int flag);   /* @0x1400e8574 */
-void FUN_140063620(WCHAR **ps);               /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
+void PECMD_AllocStrSlot(WCHAR **ps);               /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
 void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
 int FUN_14001ab84(LPCWSTR s);                 /* @0x14001ab84 命令行类型检测 */
 void FUN_14001b850(void);                     /* @0x14001b850 */
@@ -263,7 +263,7 @@ after_init:
         }
         pS[0xf] = (int64_t)(uintptr_t)&g_pMainArgStr;
         FUN_14006159C(script, 0x10000);
-        FUN_140063620(&pTmp);
+        PECMD_AllocStrSlot(&pTmp);
         FUN_1400A4020(&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
         pTmp = 0;
         pS[0x10] = (int64_t)(uintptr_t)*(WCHAR **)g_pMainArgStr;
@@ -327,7 +327,7 @@ after_init:
             /* ---- 文件模式: 读取内容, 检测 #!pecmd / --inline-main ---- */
             bStar = false;
             pSaved = p;                 /* 命令行快照 */
-            FUN_140063620(&pPath);
+            PECMD_AllocStrSlot(&pPath);
             PECMD_TokenizeQuotedField(script, &pSaved, &pPath, 0x1000, 0);
             PECMD_AllocWStringBuffer(&pContent, 0x400);
             pContent[0] = 0;

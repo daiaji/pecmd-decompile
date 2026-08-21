@@ -28,8 +28,8 @@ extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **ps);                 /* @
 extern void      FUN_14005b104(int64_t *ps);                /* @0x14005b104 释放字符串槽 */
 extern uint64_t  PECMD_GetPackedSystemVersion(void);                       /* @0x14005ea5c 版本号 */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, LPCWSTR src);    /* @0x14007034c 字符串赋值 */
-extern WCHAR    *FUN_14006375c(WCHAR **ps, LPCWSTR src);    /* @0x14006375c 字符串追加 */
-extern void      FUN_140063620(WCHAR **out);                /* @0x140063620 字符串清理 */
+extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);    /* @0x14006375c 字符串追加 */
+extern void      PECMD_AllocStrSlot(WCHAR **out);                /* @0x140063620 字符串清理 */
 extern void      PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, short delim); /* @0x1400675b8 按分隔切分 */
 extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern WCHAR    *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);    /* @0x140024c48 展转义 */
@@ -78,11 +78,11 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
     LPCWSTR pwVar8;
 
     local_res10 = param_2;
-    FUN_140063620((WCHAR **)&local_70);
-    FUN_140063620((WCHAR **)&local_60);
-    FUN_140063620((WCHAR **)&local_78);
-    FUN_140063620((WCHAR **)&local_68);
-    FUN_140063620(&local_80);
+    PECMD_AllocStrSlot((WCHAR **)&local_70);
+    PECMD_AllocStrSlot((WCHAR **)&local_60);
+    PECMD_AllocStrSlot((WCHAR **)&local_78);
+    PECMD_AllocStrSlot((WCHAR **)&local_68);
+    PECMD_AllocStrSlot(&local_80);
     iVar15 = 1;
     local_res20 = 1;
     iVar16 = 0;
@@ -110,13 +110,13 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
     pWVar6 = local_res10;
 
     if (WVar11 == L'*') {
-        FUN_14006375c(&local_80, local_res10);
+        PECMD_AppendWideStr(&local_80, local_res10);
         if ((!bVar2) && ((pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0))) {
-            FUN_14006375c(&local_80, WSTR(" /Y "));
+            PECMD_AppendWideStr(&local_80, WSTR(" /Y "));
         }
         pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/X"));
         if (pWVar5 == (LPWSTR)0) {
-            FUN_14006375c(&local_80, WSTR(" /X "));
+            PECMD_AppendWideStr(&local_80, WSTR(" /X "));
         }
         pWVar9 = local_70;
         if (!bVar2) goto LAB_140079428;
@@ -184,9 +184,9 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
                 }
             }
         }
-        FUN_14006375c(&local_80, local_70);
-        FUN_14006375c(&local_80, WSTR(" /FS:"));
-        FUN_14006375c(&local_80, local_60);
+        PECMD_AppendWideStr(&local_80, local_70);
+        PECMD_AppendWideStr(&local_80, WSTR(" /FS:"));
+        PECMD_AppendWideStr(&local_80, local_60);
         sVar10 = 0;
         if (*local_78 != L'\0') {
             PECMD_CopyStrToSlot(&local_res10, (WCHAR **)&local_78);
@@ -201,20 +201,20 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
                 pWVar6 = pWVar6 + 1;
                 WVar11 = *pWVar6;
             }
-            FUN_14006375c(&local_80, WSTR(" /V:"));
-            FUN_14006375c(&local_80, pWVar3);
+            PECMD_AppendWideStr(&local_80, WSTR(" /V:"));
+            PECMD_AppendWideStr(&local_80, pWVar3);
             FUN_14005b104((int64_t *)&local_res10);
         }
         if (*local_68 != L'\0') {
-            FUN_14006375c(&local_80, WSTR(" /A:"));
-            FUN_14006375c(&local_80, local_68);
+            PECMD_AppendWideStr(&local_80, WSTR(" /A:"));
+            PECMD_AppendWideStr(&local_80, local_68);
         }
         if (iVar15 != 0) {
-            FUN_14006375c(&local_80, WSTR(" /Q"));
+            PECMD_AppendWideStr(&local_80, WSTR(" /Q"));
         }
         uVar4 = (uint64_t)PECMD_AsciiWideICmp("NTFS", (const WCHAR *)local_60);
         if (((char)uVar4 != '\0') && (iVar16 != 0)) {
-            FUN_14006375c(&local_80, WSTR(" /C"));
+            PECMD_AppendWideStr(&local_80, WSTR(" /C"));
         }
 
         /* ---- u__Y__X_1401270d0 ("/Y /X " 宽串): CONCAT26 splice 折叠 ---- */
@@ -225,7 +225,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
             /* TODO(verify): bVar2 分支对尾部字节的小扰动 (local_50._2_2_ = 0x20) */
             local_50[2] = L' ';
         }
-        FUN_14006375c(&local_80, local_50);
+        PECMD_AppendWideStr(&local_80, local_50);
 
         pWVar9 = local_70;
         if (!bVar2) goto LAB_140079428;
@@ -444,7 +444,7 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
             iVar6 = iVar6 + 1;
         }
     } else {
-        FUN_140063620(&local_res8);
+        PECMD_AllocStrSlot(&local_res8);
         pWVar1 = local_res10;
         WVar2 = *local_res10;
         pWVar5 = local_res8;

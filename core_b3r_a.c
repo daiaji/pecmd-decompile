@@ -48,7 +48,7 @@ extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b1
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
 extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len);   /* @0x1400702f0 取串槽 */
 extern uint64_t *PECMD_AssignAnsiString(uint64_t *out, LPCSTR s);           /* @0x14007026c 串构造 */
-extern void FUN_14006345c(void **ps, LPCSTR s);                    /* @0x14006345c 缀接字符串 */
+extern void PECMD_AppendAnsiStr(void **ps, LPCSTR s);                    /* @0x14006345c 缀接字符串 */
 extern int  PECMD_PadTrailingSpaces(char *s, int len);                       /* @0x14005cc04 校验/规范化 IP */
 extern int  PECMD_CountSeparators(char *s);                                /* @0x14005cbd8 计数 helper */
 extern uint64_t PECMD_SetDHCPSettings(HKEY *h, LPCSTR p1, BYTE *p5);      /* @0x140071d00 删除注册项 */
@@ -548,7 +548,7 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
     }
     PECMD_AssignAnsiString((uint64_t *)&local_4b8,
                   "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\");
-    FUN_14006345c((void **)&local_4b8, param_1);
+    PECMD_AppendAnsiStr((void **)&local_4b8, param_1);
     LVar2 = RegOpenKeyExA((HKEY)0xffffffff80000002, local_4b8, 0,
                           (~-(uint32_t)(CVar13 != '\0') & 0x20006u) | 1,
                           &local_4d0);

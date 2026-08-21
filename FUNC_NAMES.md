@@ -4,6 +4,32 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14001d628 | FUN_14001d628 | PECMD_LoadNtdllApis |
+| 0x1400ec084 | FUN_1400ec084 | PECMD_FillMsgEnvelope |
+| 0x1400ece2c | FUN_1400ece2c | PECMD_InitObjectSlotC |
+| 0x1400799f0 | FUN_1400799f0 | PECMD_MultiByteConvert |
+| 0x140063620 | FUN_140063620 | PECMD_AllocStrSlot |
+| 0x14001be14 | FUN_14001be14 | PECMD_UnquoteString |
+| 0x140063a6c | FUN_140063a6c | PECMD_InitTableSlots |
+| 0x140070154 | FUN_140070154 | PECMD_AllocMagicString |
+| 0x1400e63c8 | FUN_1400e63c8 | PECMD_EnumWindowFindProc |
+| 0x1400e8644 | FUN_1400e8644 | PECMD_GetWinIdLocked |
+| 0x1400458a8 | FUN_1400458a8 | PECMD_ShowIdDialog |
+| 0x14006375c | FUN_14006375c | PECMD_AppendWideStr |
+| 0x1400639f0 | FUN_1400639f0 | PECMD_VectorAppendGen |
+| 0x1400e3cd4 | FUN_1400e3cd4 | PECMD_ExpandPathAlloc2 |
+| 0x1400250f0 | FUN_1400250f0 | PECMD_AutoMountStartup |
+| 0x1400e67e8 | FUN_1400e67e8 | PECMD_ShowAboutDialog |
+| 0x14006345c | FUN_14006345c | PECMD_AppendAnsiStr |
+| 0x1400607a4 | FUN_1400607a4 | PECMD_HardlinkOrCopy |
+| 0x1400e6790 | FUN_1400e6790 | PECMD_AboutDlgProc |
+| 0x140017f54 | FUN_140017f54 | PECMD_ReleaseCallbackObj |
+| 0x1400706b4 | FUN_1400706b4 | PECMD_InitContainerFields |
+| 0x1400660ac | FUN_1400660ac | PECMD_MatchTokenAdvance |
+| 0x1400f2934 | FUN_1400f2934 | PECMD_CreateIpAddressCtl |
+| 0x14006ffdc | FUN_14006ffdc | PECMD_FreeResourceSet |
+| 0x14005f96c | FUN_14005f96c | PECMD_QueryDeviceIoInfo |
+| 0x1400540a8 | FUN_1400540a8 | PECMD_SendColorMsg |
 | 0x1400987ec | FUN_1400987ec | PECMD_PinStartMenuTask |
 | 0x140070da8 | FUN_140070da8 | PECMD_ExpressionArithmetic |
 | 0x140097150 | FUN_140097150 | PECMD_SetAclPermission |

@@ -84,7 +84,7 @@ extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
-extern void      FUN_140063620(void *out);
+extern void      PECMD_AllocStrSlot(void *out);
 extern int       PECMD_ParseUIntValue(LPCWSTR *, int *);
 extern void      PECMD_ShowWindowMode(HWND, uint32_t *, int);
 extern void      FUN_14006764c(int64_t *, int64_t *, short, short);
@@ -572,7 +572,7 @@ uint32_t PECMD_QueryWindowState(int64_t *param_1, HWND param_2, LPCWSTR param_3,
         }
     }
     else {
-        FUN_140063620(&local_res18);
+        PECMD_AllocStrSlot(&local_res18);
         local_28[0] = pWVar1;
         FUN_14006764c((int64_t *)local_28, (int64_t *)&local_res18, 0x3b, 0x3a);
         uVar3 = IsWindowVisible(param_2);
@@ -627,7 +627,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     local_res10 = param_2;
     local_res18 = param_3;
     local_res20 = param_4;
-    FUN_140063620(&local_60);
+    PECMD_AllocStrSlot(&local_60);
     local_50 = 0;
     local_58 = param_1;
     (void)local_50; (void)local_58;
@@ -728,7 +728,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
                         else {
                             local_res10 = pWVar16 + 9;
                             uVar8 = (uint64_t)(uVar10 | 0x2000000);
-                            FUN_140063620(&local_c0);
+                            PECMD_AllocStrSlot(&local_c0);
                             PECMD_ExpandVarDispatch(param_1, local_res10, (WCHAR **)&local_c0, 0, 1);
                             local_a0 = local_c0;
                             PECMD_ParseNumSkipWs((int64_t *)&local_a0, &local_98);
@@ -767,10 +767,10 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
         WVar1 = (WCHAR)local_c4;
     }
     *local_90 = WVar1;
-    FUN_140063620(&local_a8);
-    FUN_140063620(&local_b8);
-    FUN_140063620(&local_a0);
-    FUN_140063620(&local_c0);
+    PECMD_AllocStrSlot(&local_a8);
+    PECMD_AllocStrSlot(&local_b8);
+    PECMD_AllocStrSlot(&local_a0);
+    PECMD_AllocStrSlot(&local_c0);
     PECMD_StrDupAssign(&local_88, (const WCHAR *)g_szEmpty);
     uVar5 = 0;
     local_80 = local_res20;

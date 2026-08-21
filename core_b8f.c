@@ -84,7 +84,7 @@ extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t FUN_1400E4064(int64_t value, uint32_t align);
 extern void *FUN_1400E57C0(void *obj);
-extern void FUN_140063620(WCHAR **ps);
+extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern void FUN_140063B64(int64_t *arr);
 extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                            uint32_t esize);
@@ -315,7 +315,7 @@ int64_t FUN_1400EC71C(int64_t obj, LPCWSTR text, uint64_t value)
         return 0;
     }
     node[0] = value;
-    FUN_140063620((WCHAR **)(node + 1));
+    PECMD_AllocStrSlot((WCHAR **)(node + 1));
     FUN_14007034C((WCHAR **)(node + 1), text);
     slot = (uint64_t *)FUN_140063B00((int64_t)count,
                                      (int64_t *)(obj + 0x108),
@@ -332,7 +332,7 @@ uint64_t *FUN_1400ECE2C(uint64_t *obj, uint64_t param2)
 {
     (void)FUN_1400E57C0(obj);
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012bad0;
-    FUN_140063620((WCHAR **)(obj + 0x1b));
+    PECMD_AllocStrSlot((WCHAR **)(obj + 0x1b));
     obj[0x1d] = param2;
     FUN_140063B64((int64_t *)(obj + 0x21));
     *(uint32_t *)((char *)obj + 0xfc) = 0xffffffffu;

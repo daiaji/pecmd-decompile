@@ -51,7 +51,7 @@ extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWO
 extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
@@ -551,9 +551,9 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
         ret = flags;
         FUN_1400703E4(&cmdCopy, *(WCHAR **)(e + 0x10));
         p = cmdCopy;
-        FUN_140063620(&varName);
-        FUN_140063620(&varVal);
-        FUN_140063620(&varKey);
+        PECMD_AllocStrSlot(&varName);
+        PECMD_AllocStrSlot(&varVal);
+        PECMD_AllocStrSlot(&varKey);
 
         if (*p == L':') {
             p++;
@@ -1068,7 +1068,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
 
     rc.left = rc.top = rc.right = rc.bottom = 0;
     GetClientRect(*(HWND *)(target + OBJ_HWND), &rc);
-    FUN_140063620(&text);
+    PECMD_AllocStrSlot(&text);
     if (overrideObj != 0)
         styleObj = overrideObj;
     FUN_1400E5730(*(HWND *)(styleObj + OBJ_HWND), (int64_t *)&text);
@@ -1895,7 +1895,7 @@ uint64_t FUN_1400F1C8C(int64_t obj, uint64_t msg, int64_t wParam,
         }
         if (msg == 0x233) {
             if ((*(uint8_t *)(b + 0xac) & 0x30) != 0) {
-                FUN_140063620(&drop);
+                PECMD_AllocStrSlot(&drop);
                 if ((*(uint8_t *)(b + 0xac) & 0x10) == 0) {
                     FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
                 } else {
@@ -1990,7 +1990,7 @@ uint64_t FUN_1400FB654(int64_t obj, uint64_t msg, int64_t wParam,
     }
     if (msg == 0x233) {
         if ((*(uint8_t *)(b + 0xac) & 0x30) != 0) {
-            FUN_140063620(&drop);
+            PECMD_AllocStrSlot(&drop);
             if ((*(uint8_t *)(b + 0xac) & 0x10) == 0) {
                 FUN_140006554((void *)(uintptr_t)wParam, (int64_t *)&drop, (int64_t *)&top);
             } else {
@@ -2071,9 +2071,9 @@ WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
 
     (void)fmt;
     PECMD_AllocWStringBuffer(out, 100);
-    FUN_140063620(&tmp);
-    FUN_140063620(&suffix);
-    FUN_140063620(&expBuf);
+    PECMD_AllocStrSlot(&tmp);
+    PECMD_AllocStrSlot(&suffix);
+    PECMD_AllocStrSlot(&expBuf);
 
     if ((int)prec < 0)
         p = 0xf;
@@ -2739,7 +2739,7 @@ void FUN_1400EF14C(int64_t obj, int64_t paintInfo)
     int16_t idx;
     uint64_t slot[3];
 
-    FUN_140063620(&text);
+    PECMD_AllocStrSlot(&text);
     FUN_1400E5730(*(HWND *)(b + OBJ_HWND), (int64_t *)&text);
     idx = *(int16_t *)(b + 0xa2);
     color = *(COLORREF *)(b + OBJ_COLOR);
@@ -3077,7 +3077,7 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
         }
         FUN_1400F429C(&p, L':');
         FUN_1400702D4(&name, text, (int64_t)(p - text) >> 1);
-        FUN_140063620(&expanded);
+        PECMD_AllocStrSlot(&expanded);
         q = name;
         FUN_14007BF44(script, q, &expanded, 0, 1);
         q = expanded;
@@ -3312,7 +3312,7 @@ void FUN_1400FE610(int64_t obj, HDC hdcIn)
             FUN_1400E68E0(hdc, &rc, *(COLORREF *)(b + OBJ_COLOR));
     }
 
-    FUN_140063620(&text);
+    PECMD_AllocStrSlot(&text);
     FUN_1400E5730(*(HWND *)(b + OBJ_HWND), (int64_t *)&text);
     if (mode == 0 && ((style >> 9) & 1) != 0) {
         if (StrChrW(text, L'\n') == NULL)
@@ -3527,7 +3527,7 @@ void FUN_1400EE3D0(int64_t obj, int64_t paintInfo)
     rc.top = *(int *)(paintInfo + 0x2c);
     rc.right = *(int *)(paintInfo + 0x30);
     rc.bottom = *(int *)(paintInfo + 0x34);
-    FUN_140063620(&text);
+    PECMD_AllocStrSlot(&text);
     FUN_1400E5730(*(HWND *)(b + OBJ_HWND), (int64_t *)&text);
     style = (uint32_t)GetWindowLongW(*(HWND *)(b + OBJ_HWND), -0x10);
 
@@ -3580,8 +3580,8 @@ LONG FUN_1400E3804(LPCWSTR path, short *flag)
     WCHAR first = *path;
     uint32_t stage;
 
-    FUN_140063620(&allPath);
-    FUN_140063620(&expanded);
+    PECMD_AllocStrSlot(&allPath);
+    PECMD_AllocStrSlot(&expanded);
     if (first != L'\0') {
         if (FUN_14005C788("HKCU\\", path, 5) != 0) {
             if (FUN_14005C788("HKEY_CURRENT_USER\\", path, 0x13) != 0) {

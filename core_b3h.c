@@ -49,7 +49,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t *PECMD_CreateVariableNode(int64_t **a1, LPCWSTR a2);
-extern void FUN_1400e67e8(void);
+extern void PECMD_ShowAboutDialog(void);
 extern intptr_t FUN_14003E220(HWND a1, int a2, int16_t a3);
 extern uint64_t PECMD_ParseRegexAlternation(int *a1, wchar_t **a2, uint8_t *a3);
 extern bool FUN_14005F1B0(uint64_t *a1, uint8_t *a2, uint64_t a3,
@@ -60,7 +60,7 @@ extern void PECMD_ReleaseWindowHooks(int64_t a1);
 extern void PECMD_ReleaseObjectListTail(int64_t a1, int a2);
 extern int64_t *FUN_14007034C(int64_t *a1, LPCWSTR a2);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
-extern void FUN_140063620(WCHAR **ps);
+extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern int16_t *FUN_1400547BC(int64_t *a1, int64_t *a2, int64_t *a3,
                               int16_t a4, int16_t a5);
 extern WCHAR *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3,
@@ -103,7 +103,7 @@ uint64_t FUN_1400458A8(LPCWSTR text)
     PECMD_CreateVariableNode(local_28, text);
     uint64_t uVar1 = 0;
     if (*local_28[0] != 0) {
-        FUN_1400e67e8();
+        PECMD_ShowAboutDialog();
         g_pAppData = local_28;
         uVar1 = (uint64_t)DialogBoxParamW(g_hInstance, (LPCWSTR)0x2727, (HWND)0,
                                           (void *)(uintptr_t)FUN_14003E220, 0);
@@ -577,7 +577,7 @@ uint64_t PECMD_ParseNumericField(int64_t obj, uint64_t unused, int16_t *start,
 int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out)
 {
     LPCWSTR local_res10 = NULL;
-    FUN_140063620((WCHAR **)&local_res10);
+    PECMD_AllocStrSlot((WCHAR **)&local_res10);
     FUN_1400547BC(ctx, pp, (int64_t *)&local_res10, 0x2c, 0);
     PECMD_ResolveVariable(ctx, local_res10, (uint64_t *)out, 0);
     int64_t lVar1 = *out;

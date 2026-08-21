@@ -143,7 +143,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             }
             (void)q1;
         }
-        PECMD_AllocWStringBuffer(&local_250, 0);   /* 反编译 FUN_140063620(&local_278)? 实为 local_250 构造 */
+        PECMD_AllocWStringBuffer(&local_250, 0);   /* 反编译 PECMD_AllocStrSlot(&local_278)? 实为 local_250 构造 */
         /* 199-210：命令名拷贝（token 长度 lVar32） */
         if (lVar32 >= 0) {
             PECMD_AllocWStringBuffer(&local_250, lVar32);

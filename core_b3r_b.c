@@ -19,7 +19,7 @@
 
 /* token prefix matcher: returns non-zero if the wide string at *pp matches the
  * ASCII token (first n chars) and consumes it (advances *pp); 0 otherwise. */
-extern char    FUN_1400660ac(char *tok, int64_t *pp, int n);
+extern char    PECMD_MatchTokenAdvance(char *tok, int64_t *pp, int n);
 
 /* ASCII prefix compare (case-insensitive against wide string): 1 = match, 0 = no. */
 extern int     PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
@@ -45,7 +45,7 @@ extern void    FUN_1400633a8(void **ps, int64_t len);
 extern void    FUN_14005b104(WCHAR **ps);
 
 /* string append: *ps keeps old content and appends src; returns *ps. */
-extern WCHAR  *FUN_14006375c(WCHAR **ps, LPCWSTR src);
+extern WCHAR  *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);
 
 /* ASCII / wide case-insensitive equality: non-zero = equal. */
 extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
@@ -86,47 +86,47 @@ uint32_t PECMD_ParseWindowOptions(uint16_t *param_1, uint8_t *param_2, int *para
     uVar1 = *param_1;
     local_res8 = param_1;
     while (uVar1 != 0) {
-        cVar2 = FUN_1400660ac("-top", (int64_t *)&local_res8, 4);
+        cVar2 = PECMD_MatchTokenAdvance("-top", (int64_t *)&local_res8, 4);
         if (cVar2 == '\0') {
-            cVar2 = FUN_1400660ac("-bottom", (int64_t *)&local_res8, -1);
+            cVar2 = PECMD_MatchTokenAdvance("-bottom", (int64_t *)&local_res8, -1);
             if (cVar2 == '\0') {
-                cVar2 = FUN_1400660ac("-forcenomin", (int64_t *)&local_res8, -1);
+                cVar2 = PECMD_MatchTokenAdvance("-forcenomin", (int64_t *)&local_res8, -1);
                 if (cVar2 == '\0') {
-                    cVar2 = FUN_1400660ac("-disminb", (int64_t *)&local_res8, -1);
+                    cVar2 = PECMD_MatchTokenAdvance("-disminb", (int64_t *)&local_res8, -1);
                     if (cVar2 == '\0') {
-                        cVar2 = FUN_1400660ac("-maxb", (int64_t *)&local_res8, -1);
+                        cVar2 = PECMD_MatchTokenAdvance("-maxb", (int64_t *)&local_res8, -1);
                         if (cVar2 == '\0') {
-                            cVar2 = FUN_1400660ac("-discloseb", (int64_t *)&local_res8, -1);
+                            cVar2 = PECMD_MatchTokenAdvance("-discloseb", (int64_t *)&local_res8, -1);
                             if (cVar2 == '\0') {
-                                cVar2 = FUN_1400660ac("-nosysmenu", (int64_t *)&local_res8, -1);
+                                cVar2 = PECMD_MatchTokenAdvance("-nosysmenu", (int64_t *)&local_res8, -1);
                                 if (cVar2 == '\0') {
-                                    cVar2 = FUN_1400660ac("-nocap", (int64_t *)&local_res8, -1);
+                                    cVar2 = PECMD_MatchTokenAdvance("-nocap", (int64_t *)&local_res8, -1);
                                     if (cVar2 == '\0') {
-                                        cVar2 = FUN_1400660ac("-disaltmv", (int64_t *)&local_res8, 9);
+                                        cVar2 = PECMD_MatchTokenAdvance("-disaltmv", (int64_t *)&local_res8, 9);
                                         if (cVar2 == '\0') {
-                                            cVar2 = FUN_1400660ac("-altmv", (int64_t *)&local_res8, 6);
+                                            cVar2 = PECMD_MatchTokenAdvance("-altmv", (int64_t *)&local_res8, 6);
                                             if (cVar2 == '\0') {
-                                                cVar2 = FUN_1400660ac("-mv", (int64_t *)&local_res8, 3);
+                                                cVar2 = PECMD_MatchTokenAdvance("-mv", (int64_t *)&local_res8, 3);
                                                 if (cVar2 == '\0') {
-                                                    cVar2 = FUN_1400660ac("-layer", (int64_t *)&local_res8, 6);
+                                                    cVar2 = PECMD_MatchTokenAdvance("-layer", (int64_t *)&local_res8, 6);
                                                     if (cVar2 == '\0') {
-                                                        cVar2 = FUN_1400660ac("-size", (int64_t *)&local_res8, 5);
+                                                        cVar2 = PECMD_MatchTokenAdvance("-size", (int64_t *)&local_res8, 5);
                                                         if (cVar2 == '\0') {
-                                                            cVar2 = FUN_1400660ac("-nfocus", (int64_t *)&local_res8, 7);
+                                                            cVar2 = PECMD_MatchTokenAdvance("-nfocus", (int64_t *)&local_res8, 7);
                                                             if (cVar2 == '\0') {
-                                                                cVar2 = FUN_1400660ac("-ntab", (int64_t *)&local_res8, 5);
+                                                                cVar2 = PECMD_MatchTokenAdvance("-ntab", (int64_t *)&local_res8, 5);
                                                                 if (cVar2 == '\0') {
-                                                                    cVar2 = FUN_1400660ac("-trap", (int64_t *)&local_res8, 5);
+                                                                    cVar2 = PECMD_MatchTokenAdvance("-trap", (int64_t *)&local_res8, 5);
                                                                     if (cVar2 == '\0') {
-                                                                        cVar2 = FUN_1400660ac("-csize", (int64_t *)&local_res8, 6);
+                                                                        cVar2 = PECMD_MatchTokenAdvance("-csize", (int64_t *)&local_res8, 6);
                                                                         if (cVar2 == '\0') {
-                                                                            cVar2 = FUN_1400660ac("-na", (int64_t *)&local_res8, 3);
+                                                                            cVar2 = PECMD_MatchTokenAdvance("-na", (int64_t *)&local_res8, 3);
                                                                             if (cVar2 == '\0') {
-                                                                                cVar2 = FUN_1400660ac("-nxp", (int64_t *)&local_res8, 4);
+                                                                                cVar2 = PECMD_MatchTokenAdvance("-nxp", (int64_t *)&local_res8, 4);
                                                                                 if (cVar2 == '\0') {
-                                                                                    cVar2 = FUN_1400660ac("-scalef", (int64_t *)&local_res8, 7);
+                                                                                    cVar2 = PECMD_MatchTokenAdvance("-scalef", (int64_t *)&local_res8, 7);
                                                                                     if (cVar2 == '\0') {
-                                                                                        cVar2 = FUN_1400660ac("-scale", (int64_t *)&local_res8, 6);
+                                                                                        cVar2 = PECMD_MatchTokenAdvance("-scale", (int64_t *)&local_res8, 6);
                                                                                         if (cVar2 == '\0') {
                                                                                             /* "-scale:" prefix handling */
                                                                                             puVar6 = local_res8;
@@ -438,17 +438,17 @@ void *PECMD_EnumDeviceList(uint64_t param_1, LPCWSTR param_2, LPCWSTR param_3, i
                         if (*(int *)((char *)local_b0 + (int64_t)iVar2 * 0x418 + 0x414) != 0) {
                             pWVar5 = WSTR("1");
                         }
-                        FUN_14006375c((WCHAR **)param_4, pWVar5);
+                        PECMD_AppendWideStr((WCHAR **)param_4, pWVar5);
                         goto LAB_140075ae2;
                     }
 LAB_1400759c5:
                     wsprintfW(local_a8, WSTR("\r\n%lu 0x%lX \""));
-                    FUN_14006375c((WCHAR **)param_4, local_a8);
+                    PECMD_AppendWideStr((WCHAR **)param_4, local_a8);
                     pWVar5 = (LPCWSTR)((char *)local_b0 + (int64_t)iVar2 * 0x418);
-                    FUN_14006375c((WCHAR **)param_4, pWVar5);
-                    FUN_14006375c((WCHAR **)param_4, WSTR("\" \""));
-                    FUN_14006375c((WCHAR **)param_4, pWVar5 + 0x104);
-                    FUN_14006375c((WCHAR **)param_4, WSTR("\""));
+                    PECMD_AppendWideStr((WCHAR **)param_4, pWVar5);
+                    PECMD_AppendWideStr((WCHAR **)param_4, WSTR("\" \""));
+                    PECMD_AppendWideStr((WCHAR **)param_4, pWVar5 + 0x104);
+                    PECMD_AppendWideStr((WCHAR **)param_4, WSTR("\""));
                     if (bVar1) goto LAB_140075ae2;
                 }
                 pvVar6 = (void *)(uintptr_t)(iVar2 + 1U);

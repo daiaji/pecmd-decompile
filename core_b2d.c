@@ -150,7 +150,7 @@ extern uint64_t PECMD_TokenizeExpression(int64_t a1, int64_t a2, WCHAR **a3,
 extern HFONT FUN_1400B1F34(int *a1, double *a2, LPCWSTR a3);
 extern int64_t FUN_1400B638C(void *script, LPCWSTR buf, LPCWSTR a3, LPCWSTR a4,
                              uint32_t flags, LPCWSTR a6, int64_t *a7);
-extern void FUN_1400e3cd4(LPCWSTR src, WCHAR **out, int64_t *pos);
+extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos);
 extern void FUN_1400E648C(uint64_t *a1, UINT a2);
 extern DWORD FUN_1400E693C(HANDLE a1);
 extern void *FUN_1400F429C(WCHAR **pp, WCHAR ch);
@@ -591,7 +591,7 @@ label_025783:
                 return uVar4;
             }
             memset(&local_res10, 0, sizeof(local_res10));
-            FUN_140063620(&local_res10);
+            PECMD_AllocStrSlot(&local_res10);
             if (bVar2) {
                 pWVar5 = (WCHAR *)PECMD_TrimTrailingSeparator((int64_t *)&local_res10, *pp, WVar12);
             } else {
@@ -1238,7 +1238,7 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
     if (cVar7 != '\0') {
         bVar10 = 3;
     }
-    FUN_140063620(&local_188);
+    PECMD_AllocStrSlot(&local_188);
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_188, 0x2c);
     if (*local_res10 == 0x2c) {
         local_res10 = local_res10 + 1;
@@ -1539,8 +1539,8 @@ label_038b2f:
             ((void (*)(HICON))g_pGdipDisposeImage)(pHVar2);
         }
     }
-    FUN_140063620(&local_260);
-    FUN_1400e3cd4(local_238, &local_260, NULL);
+    PECMD_AllocStrSlot(&local_260);
+    PECMD_ExpandPathAlloc2(local_238, &local_260, NULL);
     iVar5 = lstrlenW(local_260);
     if (uVar6 != uVar4) {
         PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("LogoFile"), 1,

@@ -46,15 +46,15 @@ extern void FUN_14006159C(void *script, uint64_t seed);           /* @0x14006159
 extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 core_token.c */
 
 /* ---- 未实现依赖 (extern + TODO(verify), 不编造) ---- */
-extern void FUN_140063620(void *ps);              /* @0x140063620 分配引用串容器 */
+extern void PECMD_AllocStrSlot(void *ps);              /* @0x140063620 分配引用串容器 */
 extern void *PECMD_ReallocBuffer(void *ptr, int64_t len); /* @0x140063224 重分配(带 OOM 处理) */
-extern void *FUN_140070154(LPCWSTR src);            /* @0x140070154 带 -8 头的串复制 */
+extern void *PECMD_AllocMagicString(LPCWSTR src);            /* @0x140070154 带 -8 头的串复制 */
 extern void FUN_14001b660(void *script);            /* @0x14001b660 sysinit 前置 */
-extern void FUN_1400250f0(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
+extern void PECMD_AutoMountStartup(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
 extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析到分隔符 */
 extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *val);    /* @0x1400745c8 数字解析 */
 extern void PECMD_CloseRestartByName(void *script, LPCWSTR path, void *win, int mode); /* @0x140082520 */
-extern void FUN_1400e3cd4(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 */
+extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 */
 extern void FUN_14004EAA8(void *script, int mode);   /* @0x14004eaa8 脚本结构清理 */
 extern uint32_t PECMD_ParseScriptSegments(void *script, int a, int b, WCHAR **pc, void *sub, uint32_t flags); /* @0x140030420 */
 extern uint32_t FUN_1400307C8(WCHAR **buf, int a, LPCWSTR b, WCHAR **c, void *sub, uint32_t flags); /* @0x1400307c8 */
@@ -130,7 +130,7 @@ WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
         /* 无内容直接返回插入点 (反编译: *pbuf + off*2 字节地址) */
         return *(WCHAR **)pbuf + off;
     }
-    FUN_140063620(&tmp);
+    PECMD_AllocStrSlot(&tmp);
     if (*line != 0) {
         FUN_14006375C(&tmp, WSTR("LOGS "));
         FUN_14006375C(&tmp, line);
@@ -166,7 +166,7 @@ WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
 void PECMD_RunSysInit(void *script, LPCWSTR name)
 {
     FUN_14001b660(script);        /* TODO(verify) @0x14001b660 */
-    FUN_1400250f0(script, name);  /* TODO(verify) @0x1400250f0 */
+    PECMD_AutoMountStartup(script, name);  /* TODO(verify) @0x1400250f0 */
 }
 
 /* ========== FUN_1400251AC @0x1400251ac ==========
@@ -310,7 +310,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     uint32_t v88 = 0;
     uint8_t swap90[0x2e] = {0};
 
-    FUN_140063620(&l198);
+    PECMD_AllocStrSlot(&l198);
     FUN_1400702B0(&l178, cmd);
     l180 = flags & 0xfffffff7;
     bVar1 = (flags & 0x200) ? -1 : 0;
@@ -323,7 +323,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     FUN_1400702B0(&l1a8, cmd);
     {
         int64_t pos2 = 0;
-        FUN_1400e3cd4(cmd, &l1a8, &pos2);   /* TODO(verify) @0x1400e3cd4 取目录分隔位置 */
+        PECMD_ExpandPathAlloc2(cmd, &l1a8, &pos2);   /* TODO(verify) @0x1400e3cd4 取目录分隔位置 */
         if (pos2 != 0) {
             *(uint16_t *)(pos2 - 2) = 0;    /* 截断到最后一个分隔符前 */
         }
@@ -426,7 +426,7 @@ void FUN_14006F884(LPCWSTR name, WCHAR **out)
 }
 
 /* ========== FUN_14007034C @0x14007034c ==========
- * 带头串赋值: 用 FUN_140070154 复制 src 覆盖 *ps, 并释放旧串 (-8 头)。
+ * 带头串赋值: 用 PECMD_AllocMagicString 复制 src 覆盖 *ps, 并释放旧串 (-8 头)。
  *   src 为 NULL 时仅释放旧值。
  * 与 FUN_1400702B0 (不释放旧值) 的区别: 本函数带 -8 长度头分配 + 释放旧值。
  */
@@ -436,7 +436,7 @@ WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src)
 
     *ps = NULL;
     if (src != NULL) {
-        *ps = (WCHAR *)FUN_140070154(src);  /* TODO(verify) @0x140070154 带头串复制 */
+        *ps = (WCHAR *)PECMD_AllocMagicString(src);  /* TODO(verify) @0x140070154 带头串复制 */
     }
     if (old != NULL) {
         HeapFree(g_hHeap, 0, (uint8_t *)old - 8);

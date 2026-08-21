@@ -26,7 +26,7 @@ extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);        /* 
 extern void FUN_14005B104(WCHAR **ps);                             /* @0x14005b104 */
 extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 (本批构造函数调用用小写) */
 extern uint64_t *FUN_1400fcf44(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
-extern void FUN_140063620(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
+extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
 extern int64_t *FUN_1400702f0(int64_t *out, char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
@@ -282,7 +282,7 @@ uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2)
 
     FUN_1400fcf44(param_1, param_2);
     *param_1 = (uint64_t)(uintptr_t)&PTR_FUN_140124e50;
-    FUN_140063620((WCHAR **)(param_1 + 0x1e));
+    PECMD_AllocStrSlot((WCHAR **)(param_1 + 0x1e));
     param_1[0x20] = 0;
     *((uint8_t *)param_1 + 0xf8) = 0;      /* *(undefined1 *)(param_1 + 0x1f) */
     *((uint8_t *)param_1 + 0xf9) = 0;

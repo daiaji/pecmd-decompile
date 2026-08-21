@@ -51,7 +51,7 @@ extern BOOL Polyline(HDC, const POINT *, int);
 extern void FUN_1400F2B6C(int64_t obj); /* @0x1400f2b6c */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern void *FUN_1400E57C0(uint64_t *obj);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400EC310(int64_t obj);
@@ -449,7 +449,7 @@ uint64_t *FUN_1400FBFE0(uint64_t *obj, uint64_t param2)
     FUN_1400E57C0(obj);
     obj[0x1a] = param2;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012ca50;
-    FUN_140063620(obj + 0x1b);
+    PECMD_AllocStrSlot(obj + 0x1b);
     *(uint8_t *)((char *)obj + 0xe4) = 0;
     *(uint32_t *)((char *)obj + OBJ_TEXTCOLOR) = 0x80000000;
     return obj;

@@ -60,7 +60,7 @@ extern int FUN_1400FEE24(int64_t obj, uint64_t param2,
 extern int64_t FUN_1400FF2BC(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
 extern void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1,
@@ -103,10 +103,10 @@ DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
     int extra = 0;
 
     (void)unused;
-    FUN_140063620(&expanded);
+    PECMD_AllocStrSlot(&expanded);
     FUN_14007BF44(script, p, &expanded, 0, 1);
     p = expanded;
-    FUN_140063620(&key);
+    PECMD_AllocStrSlot(&key);
     if (*p == L':') {
         p++;
         PECMD_ParseSkipSeparator((int64_t *)&p, (int64_t *)&key, 0x3b, 0x2c);

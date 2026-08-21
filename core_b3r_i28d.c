@@ -26,7 +26,7 @@ extern WCHAR g_szEmpty[];            /* empty string (g_szEmpty) */
 extern int      g_dblClickFlag;              /* 双击/触发标记 */
 
 /* ---- string/var/parse helpers (bodies live in other core_*.c files) ---- */
-extern void      FUN_140063620(void *out);         /* release/init slot */
+extern void      PECMD_AllocStrSlot(void *out);         /* release/init slot */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);        /* skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* assign string slot */
 extern void      FUN_14005b104(void *ps);          /* free string slot */
@@ -98,14 +98,14 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
     int64_t *puVar3;
 
     local_res10 = (WCHAR *)param_2;
-    FUN_140063620(&local_58);
+    PECMD_AllocStrSlot(&local_58);
     uVar5 = 0;
     local_48 = 0;
     local_50 = param_1;
     (void)local_48; (void)local_50;
     PECMD_StrDupAssign(&local_70, g_szEmpty);
-    FUN_140063620(&local_68);
-    FUN_140063620(&local_60);
+    PECMD_AllocStrSlot(&local_68);
+    PECMD_AllocStrSlot(&local_60);
     uVar1 = *param_2;
     local_74 = 0;
     local_78 = 0;
@@ -198,7 +198,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
     local_58 = param_1;
     (void)local_50; (void)local_58;
     local_70 = param_4;
-    FUN_140063620(&local_60);
+    PECMD_AllocStrSlot(&local_60);
     if (param_3 == 0) {
         PECMD_ResetScriptChain(param_1, (void *)0);
         param_3 = param_1[8];
@@ -234,7 +234,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
                             if ((char)uVar4 != '\0') {
                                 pWVar10 = pWVar10 + 9;
                                 local_res10 = pWVar10;
-                                FUN_140063620(&local_a0);
+                                PECMD_AllocStrSlot(&local_a0);
                                 PECMD_ExpandVarDispatch(param_1, pWVar10, (int64_t *)&local_a0, 0,
                                               bVar11);
                                 local_98 = local_a0;
@@ -534,7 +534,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
         }
     }
     plVar8 = (int64_t *)&local_50;
-    FUN_140063620(plVar8);
+    PECMD_AllocStrSlot(plVar8);
     local_40 = 0;
     uVar23 = 0;
     bVar2 = false;
@@ -661,7 +661,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     }
     PECMD_StrDupAssign(&local_78, g_szEmpty);
     PECMD_StrDupAssign(&local_90, g_szEmpty);
-    FUN_140063620(&local_70);
+    PECMD_AllocStrSlot(&local_70);
     PECMD_StrDupAssign(&local_68, g_szEmpty);
     local_98 = 0;
     local_84 = 0;
@@ -726,7 +726,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     }
     if (bStar) {
         WCHAR *pWVar4;
-        FUN_140063620(&local_b0);
+        PECMD_AllocStrSlot(&local_b0);
         pWVar4 = (WCHAR *)local_68;
         PECMD_ExpandVarDispatch(param_1, local_68, (int64_t *)&local_b0, 0, 1);
         local_68 = local_b0;

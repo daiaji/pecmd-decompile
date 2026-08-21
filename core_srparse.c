@@ -14,7 +14,7 @@
  * 签名说明（相对任务基线扩展 4 个输出参数, 段2 主展开路径消费）:
  *   p_m_flag   : local_res18 低字节 (m 前缀标志; 反编译 569 行消费)
  *   p_mem_flag : local_res20 低字节 (mem 前缀标志)
- *   p_outbuf   : local_258  (logs: 执行输出缓冲; 入口 FUN_140063620 初始化)
+ *   p_outbuf   : local_258  (logs: 执行输出缓冲; 入口 PECMD_AllocStrSlot 初始化)
  *   p_qkmode   : cVar6 (*qk 前缀匹配结果, 供段2 sysinit_end 逻辑)
  *
  * 返回码约定:
@@ -44,7 +44,7 @@ extern int FUN_1400660AC(const char *s, WCHAR **pp, int n);   /* @0x1400660ac co
 extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 core_token.c */
 extern int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt); /* @0x14007a224 core_execline.c */
 extern DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4); /* @0x1400195f0 core_thread.c */
-extern void FUN_140063620(WCHAR **ps);   /* @0x140063620 分配引用串容器 */
+extern void PECMD_AllocStrSlot(WCHAR **ps);   /* @0x140063620 分配引用串容器 */
 extern int32_t g_sysinitState;           /* DAT_14013d058 sysinit 状态 */
 
 /* 2sysinit 窗口隐藏链（未实现, 仅声明 + TODO(verify)） */
@@ -69,7 +69,7 @@ int64_t PECMD_SrParsePrefix(void *script, WCHAR **pp, int *flags, int *flags2,
 
     /* ---- 序言 (112-148 行) ---- */
     FUN_14005B154(pp);                            /* 115 PECMD_SkipLeadingControls */
-    FUN_140063620(p_outbuf);                        /* 121 local_258 */
+    PECMD_AllocStrSlot(p_outbuf);                        /* 121 local_258 */
     *p_sysinit = false;                             /* 122 bVar3 */
     *psysinit_name = NULL;                          /* 112 pwVar36 */
     *flags = 0;                                     /* 134-135 pwVar43 */

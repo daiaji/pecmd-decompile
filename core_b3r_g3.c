@@ -41,9 +41,9 @@ extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int, char *, int);
 
 /* ---- PECMD_GetPathSizeToVar 的 helper ---- */
 extern uint8_t FUN_140062fc4(LPCWSTR param_1, int64_t *param_2, int param_3); /* "-link" 等前缀比较 */
-extern void   FUN_140063620(WCHAR **out);                                     /* @0x140063620 串容器初始化 */
+extern void   PECMD_AllocStrSlot(WCHAR **out);                                     /* @0x140063620 串容器初始化 */
 extern WCHAR *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* @0x1400547bc */
-extern WCHAR *FUN_14001be14(WCHAR *s);                                         /* 串标签/前缀查找 */
+extern WCHAR *PECMD_UnquoteString(WCHAR *s);                                         /* 串标签/前缀查找 */
 extern void   PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);   /* @0x140101db8 查找入口 */
 extern void   PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                             LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
@@ -174,7 +174,7 @@ uint64_t PECMD_GetPathSizeToVar(int64_t *param_1, LARGE_INTEGER param_2)
     PECMD_SkipLeadingControlChars((int64_t *)&local_res10[0].QuadPart);
     LVar4.QuadPart = 0;
     cVar2 = (char)FUN_140062fc4(WSTR("-link"), (int64_t *)&local_res10[0].QuadPart, 5);
-    FUN_140063620((WCHAR **)&local_res20);
+    PECMD_AllocStrSlot((WCHAR **)&local_res20);
     lpString = WSTR(".");
     if ((*(int16_t *)(uintptr_t)local_res10[0].QuadPart == 0x3d) ||
         (local_res10[0].QuadPart = (int64_t)(uintptr_t)FUN_1400547bc((int64_t *)param_1,
@@ -182,7 +182,7 @@ uint64_t PECMD_GetPathSizeToVar(int64_t *param_1, LARGE_INTEGER param_2)
                                         (int64_t *)&local_res20, 0x3d, 0),
          *(int16_t *)(uintptr_t)local_res10[0].QuadPart == 0x3d)) {
         local_res10[0].QuadPart = local_res10[0].QuadPart + 2;
-        lpString = FUN_14001be14((WCHAR *)(uintptr_t)local_res10[0].QuadPart);
+        lpString = PECMD_UnquoteString((WCHAR *)(uintptr_t)local_res10[0].QuadPart);
     }
     if (*local_res20 == L'\0') goto LAB_14006b58f;
     iVar3 = lstrlenW(lpString);
@@ -287,7 +287,7 @@ uint64_t PECMD_DispatchListboxCommand(uint64_t *param_1, int64_t *param_2, int64
             return 0;
         }
         uVar3 = *(uint16_t *)(uintptr_t)param_3;
-        FUN_140063620((WCHAR **)&local_res8);
+        PECMD_AllocStrSlot((WCHAR **)&local_res8);
         local_68 = (int64_t)param_3 + 2;
         FUN_14006764c(&local_68, (int64_t *)&local_res8, 0x3b, 0x3a);
         PECMD_VarSetUInt(param_2, (uint64_t)uVar3, (LPCWSTR)local_res8);

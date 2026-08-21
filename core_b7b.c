@@ -29,7 +29,7 @@ extern BOOL DrawIcon(HDC, int, int, HICON);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);
-extern WCHAR *FUN_140063620(WCHAR **ps);
+extern WCHAR *PECMD_AllocStrSlot(WCHAR **ps);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern bool FUN_1400C11C0(int64_t *pp, int *out);
 extern int64_t FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
@@ -133,7 +133,7 @@ uint64_t FUN_1400C42AC(HKEY script, LPCWSTR args)
     int disableRegTools = 0;
     int disableHomePage = 0;
     WCHAR *expanded = NULL;
-    FUN_140063620(&expanded);
+    PECMD_AllocStrSlot(&expanded);
 
     if (p2 != NULL) {
         *expanded = L'\0';

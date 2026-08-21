@@ -12,14 +12,14 @@ extern double g_fontMinus0;
 
 /* internal helpers (bodies provided elsewhere; refactored PECMD_* aliases are
  * already declared in pecmd_defs.h and are used for the confirmed mappings) */
-extern LPCWSTR FUN_14001be14(LPCWSTR);                       /* string tag/prefix lookup */
+extern LPCWSTR PECMD_UnquoteString(LPCWSTR);                       /* string tag/prefix lookup */
 extern void    PECMD_SkipWCharUntil(void *, int);                   /* delimiter scan ('#') */
 extern int     PECMD_ParseNumSkipChar_0224(void *, int *);                 /* parse int field */
 extern int     PECMD_ParseNumSkipChar_de4c(void *, double *);              /* parse double field */
 extern int     PECMD_OnDeleteCommand(void *, LPCWSTR, HWND);         /* list-control accept check */
 extern int     PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
 extern int     PECMD_ParseUIntValue(LPCWSTR *, int *);              /* scan list token */
-extern void    FUN_140063620(void *);                        /* string release/cleanup */
+extern void    PECMD_AllocStrSlot(void *);                        /* string release/cleanup */
 extern void    PECMD_SplitTokenTrimWs(void *, void *, int);           /* split list string on delim */
 
 #ifndef SE_REGISTRY_KEY
@@ -127,12 +127,12 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
         if ((0 < iVar4) && (-1 < iVar7)) {
             iVar4 = -1;
         }
-        FUN_140063620((void *)&local_res8);
+        PECMD_AllocStrSlot((void *)&local_res8);
         if ((*local_res20 == L';') || (*local_res20 == L':')) {
             local_res20 = local_res20 + 1;
         }
         PECMD_SplitTokenTrimWs((void *)&local_res20, (void *)&local_res8, 0x3b);
-        FUN_140063620((void *)&local_78);
+        PECMD_AllocStrSlot((void *)&local_78);
         if (iVar4 < 1) {
             SendMessageW(hWnd, 0x462, (WPARAM)(long long)iVar7, (LPARAM)&local_78);
         }
@@ -235,7 +235,7 @@ void PECMD_ParseFontOptions(int64_t param_1, LPWSTR param_2, uint32_t *param_3)
             local_res20 = local_res20 + 1;
             WVar3 = *local_res20;
         }
-        lpString2 = FUN_14001be14(param_2);
+        lpString2 = PECMD_UnquoteString(param_2);
         if (lpString2 != param_2) {
             lstrcpyW(param_2, lpString2);
         }

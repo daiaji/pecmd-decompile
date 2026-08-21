@@ -145,7 +145,7 @@ run_script:
         /* 脚本执行分支 */
         {
             WCHAR *p2 = NULL;
-            FUN_140063620(&p2);
+            PECMD_AllocStrSlot(&p2);
             /* TODO(verify): 完整参数解析后执行 */
             FUN_14002452C(&g_Script, cmdline, 0);
             /* 执行主脚本 */

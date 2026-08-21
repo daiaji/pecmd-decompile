@@ -51,7 +51,7 @@ extern int FUN_1400F2384(int64_t obj, LPCWSTR cmd, int64_t *out,
                          int64_t script, int flag, uint16_t mode);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out);
-extern void FUN_140063620(WCHAR **ps);
+extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);
 extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
@@ -472,7 +472,7 @@ uint64_t *FUN_1400F5C74(uint64_t *obj)
     obj[0] = (uint64_t)&PTR_FUN_14012c550;
     FUN_140063B64((int64_t *)(obj + 0x1a));        /* 0xd0 */
     FUN_140063B64((int64_t *)(obj + 0x1d));        /* 0xe8 */
-    FUN_140063620((WCHAR **)(obj + 0x20));     /* 0x100 引用串容器 */
+    PECMD_AllocStrSlot((WCHAR **)(obj + 0x20));     /* 0x100 引用串容器 */
     *(uint32_t *)((uint8_t *)obj + 0x124) = 0;
     *(uint32_t *)((uint8_t *)obj + 0x118) = 0xab;
     *(uint32_t *)((uint8_t *)obj + 0x11c) = 199;

@@ -45,7 +45,7 @@ extern uint64_t PECMD_EnumDisplayModes(void **arr, int max, uint32_t flags,
 extern void PECMD_PatchInfDirectives(LPCWSTR path);                 /* @0x140021144 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
 extern int PECMD_CrtShim(WCHAR *out, uint64_t fmt, void *ctx, void *name);
 extern void PECMD_CreateMutexSlot(void *out, LPCWSTR name);
@@ -272,7 +272,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
     PECMD_CreateMutexSlot(&lockObj, WSTR("Global\\PECMD:main:lock"));
     PECMD_InitRamdataRegistry(2);
     idHigh = (uint32_t)PECMD_ParseHotkeyCode((int64_t *)&keyName, idLow, script, '\0');
-    FUN_140063620(&expanded);
+    PECMD_AllocStrSlot(&expanded);
     FUN_14007BF44(script, keyName, &expanded, 0, 1);
     keyName = expanded;
     PECMD_SkipLeadingControls(&keyName);
@@ -933,7 +933,7 @@ after_reg:
                             i = i + 1;
                             local_res18 = i;
                         }
-                        FUN_140063620(&entryList);
+                        PECMD_AllocStrSlot(&entryList);
                         uVar7 = result;
                         do {
                             int i6 = (int)result;
@@ -1746,7 +1746,7 @@ uint16_t *FUN_14002FD88(int64_t *ctx, WCHAR *text, uint32_t *flags,
     if (ctx[0x10] == 0) {
         return NULL;
     }
-    FUN_140063620(&expanded);
+    PECMD_AllocStrSlot(&expanded);
     if ((*(char *)((uint8_t *)ctx + 0xda) == '\0') &&
         ((*(uint8_t *)((uint8_t *)ctx + 0xd) & 0xf) == 0)) {
         FUN_14007BDA8(ctx, text, &expanded, 0, 1);
@@ -1765,7 +1765,7 @@ uint16_t *FUN_14002FD88(int64_t *ctx, WCHAR *text, uint32_t *flags,
         }
         p = p + 1;
     }
-    FUN_140063620(&argBuf);
+    PECMD_AllocStrSlot(&argBuf);
     FUN_14007443C(start, (int64_t *)&argBuf);
     stateFlags = *(uint32_t *)((uint8_t *)ctx + 0x24);
     last = NULL;

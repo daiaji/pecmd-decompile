@@ -109,7 +109,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                 WCHAR *qe = q;
                                 while (qe < tmp + n && *qe != L' ' && *qe != L';' && *qe != L'#' &&
                                        !(*qe > 8 && *qe < 0xe)) qe++;
-                                FUN_140063620(&fnbuf);
+                                PECMD_AllocStrSlot(&fnbuf);
                                 memcpy(fnbuf, q, (size_t)(qe - q) * 2);
                                 fnbuf[qe - q] = 0;
                                 FUN_140024A54(fnbuf, &fn, (void *)script);

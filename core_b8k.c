@@ -99,7 +99,7 @@ extern void FUN_1400EF654(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
 extern uint64_t *FUN_1400EFEC8(uint64_t *mem);
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
-extern void FUN_140063620(uint64_t *ps);
+extern void PECMD_AllocStrSlot(uint64_t *ps);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
@@ -279,7 +279,7 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
     PostMessageW(hwnd, 0, 0, 0);
 
     q.QuadPart = 0;
-    FUN_140063620((uint64_t *)&str);
+    PECMD_AllocStrSlot((uint64_t *)&str);
     if (sel > 0xff) {
         EnterCriticalSection(&g_csInit);
         FUN_1400E537C((int64_t)node, sel & 0xffff, &q.QuadPart, (int64_t *)&str);
@@ -757,7 +757,7 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
         *(uint8_t *)(child + 0xc) = 0x12;
     }
 
-    FUN_140063620(&local_res8);
+    PECMD_AllocStrSlot(&local_res8);
     if ((*(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) & 8) != 0)
         str = (LPCWSTR)g_szEmpty;
     FUN_1400E5730(*(HWND *)((uint8_t *)obj + OBJ_HWND), (int64_t *)&local_res8);
@@ -967,7 +967,7 @@ void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
             h = (HGDIOBJ)FUN_1400E5890((int64_t)obj);
         if (h != 0)
             old = SelectObject(hdc, h);
-        FUN_140063620((uint64_t *)&txt);
+        PECMD_AllocStrSlot((uint64_t *)&txt);
         FUN_1400E5730((HWND)obj[4], (int64_t *)&txt);
         SetBkMode(hdc, 1);
         if (*(int32_t *)((uint8_t *)obj + 0x5c) >= 0)

@@ -63,7 +63,7 @@ extern void FUN_140061C44(void);
 extern int64_t *PECMD_LoadImageFromFile(LPCWSTR a1);
 extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
@@ -1258,7 +1258,7 @@ uint64_t FUN_140080B0C(int64_t *script, HWND hwnd, HWND target,
             return 3;
         }
     } else {
-        FUN_140063620(&local_res20);
+        PECMD_AllocStrSlot(&local_res20);
         local_48 = (int64_t)(intptr_t)pWVar1;
         FUN_14006764C((int64_t *)&local_48, (int64_t *)&local_res20, 0x3b, 0x3a);
         uVar3 = IsWindowVisible(target);
@@ -1352,7 +1352,7 @@ int64_t PECMD_SetFileNameExtension(int64_t *script, uint16_t *spec)
     FUN_14005B154((WCHAR **)&local_res10);
     PECMD_AllocWStringBuffer(&local_res20, 5);
     PECMD_AllocWStringBuffer(&local_18, 0x14);
-    FUN_140063620(&local_10);
+    PECMD_AllocStrSlot(&local_10);
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d);
     FUN_140003A20(script, &local_res20, 0);
     if (*local_res10 == 0x3d) {

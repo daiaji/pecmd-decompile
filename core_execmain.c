@@ -71,7 +71,7 @@ extern WCHAR g_szEmpty[];                /* g_szEmpty .rdata 空串 */
 
 /* 未实现（TODO(verify) 挂起） */
 extern void PECMD_ResetScriptChain(void *script, void *a2);        /* @0x14001b3a0 脚本重置 */
-extern void FUN_1400e67e8(void);                          /* @0x1400e67e8 窗口系统准备 */
+extern void PECMD_ShowAboutDialog(void);                          /* @0x1400e67e8 窗口系统准备 */
 extern void *PECMD_InitControlObjField(void *obj, HWND parent, uint32_t msg,
                            void *a4);                     /* @0x1400731d8 窗口对象构造 */
 extern void PECMD_ModalMsgPumpEx(void *win, int a2);             /* @0x1400e95f4 窗口销毁 */
@@ -191,7 +191,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
     pWinRef2 = NULL;
     if (hasWin && (flags & 4) == 0) {
         void *obj;
-        FUN_1400e67e8();
+        PECMD_ShowAboutDialog();
         obj = calloc(1, 0xa98);          /* operator_new(0xa98) 窗口对象 */
         if (obj == NULL) {
             pWinNew = NULL;

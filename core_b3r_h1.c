@@ -42,7 +42,7 @@ extern BOOL    GetDiskFreeSpaceExW(LPCWSTR, ULARGE_INTEGER *, ULARGE_INTEGER *,
 extern DWORD   GetLongPathNameW(LPCWSTR, LPWSTR, DWORD);
 
 /* ---- 字符串容器辅助 ---- */
-extern void      FUN_140063620(void *out);                       /* @0x140063620 串容器初始化 */
+extern void      PECMD_AllocStrSlot(void *out);                       /* @0x140063620 串容器初始化 */
 extern WCHAR    *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @0x140063694 分配串槽 */
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);       /* @0x140063720 PECMD_StrAlloc */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
@@ -59,10 +59,10 @@ extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);            /* 数�
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n); /* icmp 前缀 */
 extern int64_t   PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n); /* 前缀比较 */
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);        /* 后缀比较 */
-extern char      FUN_1400660ac(const char *tok, WCHAR **pp, int n);   /* token 消费 */
+extern char      PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);   /* token 消费 */
 extern int64_t   PECMD_MatchPrefixN(uint16_t *a, WCHAR **pp, int n);       /* 前缀匹配 */
 extern LPCWSTR   PECMD_StripTrailingSpaces(LPCWSTR s);                            /* 尾部剥离 */
-extern WCHAR    *FUN_14001be14(WCHAR *s);                             /* 串标签/前缀查找 */
+extern WCHAR    *PECMD_UnquoteString(WCHAR *s);                             /* 串标签/前缀查找 */
 
 /* ---- 脚本/变量 ---- */
 extern void      PECMD_RunCommandLine(void *script, WCHAR **str, int mode);  /* 变量展开 */
@@ -188,7 +188,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     local_res10 = param_2;
     local_res18 = param_3;
     local_res20 = param_4;
-    FUN_140063620(&local_68);
+    PECMD_AllocStrSlot(&local_68);
     local_58 = 0;
     local_60 = param_1;
     if (param_3 == 0) {
@@ -271,7 +271,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
                         else {
                             local_res10 = pWVar14 + 9;
                             uVar8 = uVar8 | 0x2000000;
-                            FUN_140063620(&local_c8);
+                            PECMD_AllocStrSlot(&local_c8);
                             PECMD_ExpandVarDispatch(param_1, local_res10, (WCHAR **)&local_c8, 0, 1);
                             local_98 = local_c8;
                             PECMD_ParseNumSkipWs((int64_t *)&local_98, &local_88);
@@ -308,10 +308,10 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     }
     *local_90 = WVar1;
     uVar8 = uVar8 | uVar10;
-    FUN_140063620(&local_a0);
-    FUN_140063620(&local_c0);
-    FUN_140063620(&local_98);
-    FUN_140063620(&local_c8);
+    PECMD_AllocStrSlot(&local_a0);
+    PECMD_AllocStrSlot(&local_c0);
+    PECMD_AllocStrSlot(&local_98);
+    PECMD_AllocStrSlot(&local_c8);
     PECMD_StrDupAssign((WCHAR **)&local_80, g_szEmpty);
     uVar4 = 0;
     local_78 = (int64_t)local_res20;
@@ -431,7 +431,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
     int64_t local_40;
 
     local_res10 = param_2;
-    FUN_140063620(&local_50);
+    PECMD_AllocStrSlot(&local_50);
     uVar6 = 0;
     local_40 = 0;
     local_48 = param_1;
@@ -462,9 +462,9 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
         puVar5 = local_res10;
     }
     *puVar7 = (uint16_t)uVar4;
-    FUN_140063620(&local_80);
-    FUN_140063620(&local_78);
-    FUN_140063620(&local_70);
+    PECMD_AllocStrSlot(&local_80);
+    PECMD_AllocStrSlot(&local_78);
+    PECMD_AllocStrSlot(&local_70);
     PECMD_StrDupAssign((WCHAR **)&local_68, g_szEmpty);
     uVar9 = 0;
     local_88 = 0;
@@ -552,7 +552,7 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
     int64_t local_40;
 
     local_res10 = param_2;
-    FUN_140063620(&local_50);
+    PECMD_AllocStrSlot(&local_50);
     uVar6 = 0;
     local_40 = 0;
     local_48 = param_1;
@@ -583,9 +583,9 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
         puVar5 = local_res10;
     }
     *puVar7 = (uint16_t)uVar4;
-    FUN_140063620(&local_80);
-    FUN_140063620(&local_78);
-    FUN_140063620(&local_70);
+    PECMD_AllocStrSlot(&local_80);
+    PECMD_AllocStrSlot(&local_78);
+    PECMD_AllocStrSlot(&local_70);
     PECMD_StrDupAssign((WCHAR **)&local_68, g_szEmpty);
     uVar9 = 0;
     local_88 = 0;
@@ -768,19 +768,19 @@ uint64_t PECMD_GenerateTextContent(int64_t *param_1, int64_t param_2)
             uVar26 = (uint32_t)(uintptr_t)pWVar13;
             if ((int)cVar21 != (int)(uint32_t)(uint16_t)*local_1a8) break;
             local_1a8 = local_1a8 + 1;
-            cVar4 = FUN_1400660ac("ni", (WCHAR **)&local_1a8, 2);
+            cVar4 = PECMD_MatchTokenAdvance("ni", (WCHAR **)&local_1a8, 2);
             if (cVar4 == '\0') {
-                cVar4 = FUN_1400660ac("ex", (WCHAR **)&local_1a8, 2);
+                cVar4 = PECMD_MatchTokenAdvance("ex", (WCHAR **)&local_1a8, 2);
                 if (cVar4 == '\0') {
-                    cVar4 = FUN_1400660ac("l", (WCHAR **)&local_1a8, 1);
+                    cVar4 = PECMD_MatchTokenAdvance("l", (WCHAR **)&local_1a8, 1);
                     if (cVar4 == '\0') {
-                        cVar4 = FUN_1400660ac("f", (WCHAR **)&local_1a8, 1);
+                        cVar4 = PECMD_MatchTokenAdvance("f", (WCHAR **)&local_1a8, 1);
                         if (cVar4 == '\0') {
-                            cVar4 = FUN_1400660ac("t", (WCHAR **)&local_1a8, 1);
+                            cVar4 = PECMD_MatchTokenAdvance("t", (WCHAR **)&local_1a8, 1);
                             if (cVar4 == '\0') {
-                                cVar4 = FUN_1400660ac("ts1", (WCHAR **)&local_1a8, 3);
+                                cVar4 = PECMD_MatchTokenAdvance("ts1", (WCHAR **)&local_1a8, 3);
                                 if (cVar4 == '\0') {
-                                    cVar4 = FUN_1400660ac("ts", (WCHAR **)&local_1a8, 2);
+                                    cVar4 = PECMD_MatchTokenAdvance("ts", (WCHAR **)&local_1a8, 2);
                                     if (cVar4 == '\0') {
                                         if ((WCHAR)(*local_1a8 | 0x20U) == 0x78) {
                                             local_1a8 = local_1a8 + 1;
@@ -802,7 +802,7 @@ uint64_t PECMD_GenerateTextContent(int64_t *param_1, int64_t param_2)
                                                                              (const WCHAR *)local_1a8,
                                                                              1);
                                             if ((char)uVar10 == '\0') {
-                                                cVar4 = FUN_1400660ac("many", (WCHAR **)&local_1a8,
+                                                cVar4 = PECMD_MatchTokenAdvance("many", (WCHAR **)&local_1a8,
                                                                      4);
                                                 if (cVar4 == '\0') {
                                                     if ((WCHAR)(*local_1a8 | 0x20U) == 0x68) {
@@ -984,10 +984,10 @@ LAB_140085eeb:
             *local_188 = L'\0';
             local_188 = local_188 + 1;
         }
-        FUN_140063620(&local_f0);
-        FUN_140063620(&local_148);
-        FUN_140063620(&local_130);
-        FUN_140063620(&local_150);
+        PECMD_AllocStrSlot(&local_f0);
+        PECMD_AllocStrSlot(&local_148);
+        PECMD_AllocStrSlot(&local_130);
+        PECMD_AllocStrSlot(&local_150);
         PECMD_ExpandVarDispatch(param_1, pWVar20, (WCHAR **)&local_f0, 0, 1);
         if (*local_f0 == 0x3f) {
             local_f0 = local_f0 + 1;
@@ -1346,28 +1346,28 @@ uint64_t PECMD_ProcessEncodedFile(int64_t *param_1, WCHAR *param_2)
     WVar4 = *local_res10;
     cVar28 = ' ';
     while (local_d4c8 = local_res10, WVar4 != L'\0') {
-        cVar2 = FUN_1400660ac("-f", (WCHAR **)&local_res10, 2);
+        cVar2 = PECMD_MatchTokenAdvance("-f", (WCHAR **)&local_res10, 2);
         if (cVar2 == '\0') {
-            cVar2 = FUN_1400660ac("-m", (WCHAR **)&local_res10, 2);
+            cVar2 = PECMD_MatchTokenAdvance("-m", (WCHAR **)&local_res10, 2);
             if (cVar2 == '\0') {
-                cVar2 = FUN_1400660ac("-udm", (WCHAR **)&local_res10, 4);
+                cVar2 = PECMD_MatchTokenAdvance("-udm", (WCHAR **)&local_res10, 4);
                 if (cVar2 == '\0') {
-                    char cVar3 = FUN_1400660ac("-o", (WCHAR **)&local_res10, 2);
+                    char cVar3 = PECMD_MatchTokenAdvance("-o", (WCHAR **)&local_res10, 2);
                     cVar2 = '\x01';
                     if (cVar3 == '\0') {
-                        cVar2 = FUN_1400660ac("-u", (WCHAR **)&local_res10, 2);
+                        cVar2 = PECMD_MatchTokenAdvance("-u", (WCHAR **)&local_res10, 2);
                         if (cVar2 == '\0') {
                             pWVar26 = local_res10;
                             uVar23 = PECMD_AsciiPrefixICmp("-u:", (const WCHAR *)local_res10, 3);
                             if ((char)uVar23 == '\0') {
-                                cVar2 = FUN_1400660ac("-bin", (WCHAR **)&local_res10, 4);
+                                cVar2 = PECMD_MatchTokenAdvance("-bin", (WCHAR **)&local_res10, 4);
                                 if (cVar2 == '\0') {
                                     pWVar26 = local_res10;
                                     uVar23 = PECMD_AsciiPrefixICmp("-src", (const WCHAR *)local_res10, 4);
                                     if ((char)uVar23 == '\0') {
-                                        cVar2 = FUN_1400660ac("-utf8", (WCHAR **)&local_res10, 5);
+                                        cVar2 = PECMD_MatchTokenAdvance("-utf8", (WCHAR **)&local_res10, 5);
                                         if (cVar2 == '\0') {
-                                            cVar2 = FUN_1400660ac("--", (WCHAR **)&local_res10, 2);
+                                            cVar2 = PECMD_MatchTokenAdvance("--", (WCHAR **)&local_res10, 2);
                                             local_d4c8 = local_res10;
                                             if (((cVar2 == '\0') &&
                                                 (lVar11 = FUN_14005c72c("-", (const WCHAR *)local_res10, 1),
@@ -1465,7 +1465,7 @@ LAB_140086cae:
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
             PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_d590, 0x2c);
-            pWVar9 = FUN_14001be14((WCHAR *)local_d590);
+            pWVar9 = PECMD_UnquoteString((WCHAR *)local_d590);
             lpString2 = local_d598;
         }
         else {
@@ -1623,7 +1623,7 @@ LAB_14008702a:
                 bVar24 = 0x4d;
             }
         }
-        FUN_140063620(&local_d588);
+        PECMD_AllocStrSlot(&local_d588);
         uVar16 = local_d5a8;
         if ((((int)local_d5a8 < 0) && (bVar24 == 0x53)) || (local_res20[0] != 0)) {
 LAB_1400871d8:
@@ -1795,7 +1795,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     PECMD_AllocWStringBuffer((WCHAR **)&local_128, 5);
     PECMD_AllocWStringBuffer((WCHAR **)&local_130, 0x14);
-    FUN_140063620(&local_120);
+    PECMD_AllocStrSlot(&local_120);
     pWVar10 = (LPCWSTR)0x0;
     bVar3 = false;
     cVar11 = -1;
@@ -1803,17 +1803,17 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
     pWVar12 = (LPCWSTR)0x1;
     WVar1 = *local_res10;
     while (WVar1 == L'-') {
-        cVar4 = FUN_1400660ac("-userfree", (WCHAR **)&local_res10, 9);
+        cVar4 = PECMD_MatchTokenAdvance("-userfree", (WCHAR **)&local_res10, 9);
         if (cVar4 == '\0') {
-            cVar4 = FUN_1400660ac("-userall", (WCHAR **)&local_res10, 8);
+            cVar4 = PECMD_MatchTokenAdvance("-userall", (WCHAR **)&local_res10, 8);
             if (cVar4 == '\0') {
-                cVar4 = FUN_1400660ac("-free", (WCHAR **)&local_res10, 5);
+                cVar4 = PECMD_MatchTokenAdvance("-free", (WCHAR **)&local_res10, 5);
                 if (cVar4 == '\0') {
-                    cVar4 = FUN_1400660ac("-raw", (WCHAR **)&local_res10, 4);
+                    cVar4 = PECMD_MatchTokenAdvance("-raw", (WCHAR **)&local_res10, 4);
                     if (cVar4 == '\0') {
-                        cVar4 = FUN_1400660ac("-x", (WCHAR **)&local_res10, 2);
+                        cVar4 = PECMD_MatchTokenAdvance("-x", (WCHAR **)&local_res10, 2);
                         if (cVar4 == '\0') {
-                            cVar4 = FUN_1400660ac("-clear", (WCHAR **)&local_res10, 6);
+                            cVar4 = PECMD_MatchTokenAdvance("-clear", (WCHAR **)&local_res10, 6);
                             if (cVar4 != '\0') {
                                 memset((void *)&g_aiDiskType, 0, 8);
                                 pWVar12 = (LPCWSTR)0x0;
@@ -1857,7 +1857,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
     }
     local_res10 = local_128;
     local_128 = (LPWSTR)0x0;
-    pWVar8 = FUN_14001be14((WCHAR *)local_res10);
+    pWVar8 = PECMD_UnquoteString((WCHAR *)local_res10);
     PECMD_AssignString((WCHAR **)&local_128, pWVar8);
     FUN_14005b104((void *)&local_res10);
     for (pWVar8 = local_130; *pWVar8 != L'\0'; pWVar8 = pWVar8 + 1) {
@@ -2042,17 +2042,17 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
     bVar7 = false;
     bVar5 = false;
     while (*local_res10[0] == L'-') {
-        cVar8 = FUN_1400660ac("--fullfile", (WCHAR **)local_res10, -1);
+        cVar8 = PECMD_MatchTokenAdvance("--fullfile", (WCHAR **)local_res10, -1);
         if (cVar8 == '\0') {
-            cVar8 = FUN_1400660ac("--full", (WCHAR **)local_res10, -1);
+            cVar8 = PECMD_MatchTokenAdvance("--full", (WCHAR **)local_res10, -1);
             if (cVar8 == '\0') {
-                cVar8 = FUN_1400660ac("--short", (WCHAR **)local_res10, -1);
+                cVar8 = PECMD_MatchTokenAdvance("--short", (WCHAR **)local_res10, -1);
                 if (cVar8 == '\0') {
-                    cVar8 = FUN_1400660ac("--short+", (WCHAR **)local_res10, -1);
+                    cVar8 = PECMD_MatchTokenAdvance("--short+", (WCHAR **)local_res10, -1);
                     if (cVar8 == '\0') {
-                        cVar8 = FUN_1400660ac("--long", (WCHAR **)local_res10, -1);
+                        cVar8 = PECMD_MatchTokenAdvance("--long", (WCHAR **)local_res10, -1);
                         if (cVar8 == '\0') {
-                            cVar8 = FUN_1400660ac("--long+", (WCHAR **)local_res10, -1);
+                            cVar8 = PECMD_MatchTokenAdvance("--long+", (WCHAR **)local_res10, -1);
                             if (cVar8 == '\0') {
                                 uVar11 = PECMD_MatchPrefixN((uint16_t *)WSTR("--volume"),
                                                        (WCHAR **)local_res10, 8);

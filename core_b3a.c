@@ -53,7 +53,7 @@ extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t e
 extern void PECMD_TruncateObjectArray(int64_t *arr, int *count, int value);
 extern void PECMD_RemoveObjectByKey(int64_t *arr, int *count, int64_t key);
 extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void *FUN_140070154(LPCWSTR src);
+extern void *PECMD_AllocMagicString(LPCWSTR src);
 extern void FUN_14007DF90(int64_t ctx, int mode);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -360,7 +360,7 @@ int64_t *PECMD_InitStrContainer(int64_t *ps, LPCWSTR src, int64_t len,
  */
 uint64_t *PECMD_CopyStrToSlot(uint64_t *dst, uint64_t *src)
 {
-    int64_t *plVar1 = (int64_t *)FUN_140070154((LPCWSTR)*src);
+    int64_t *plVar1 = (int64_t *)PECMD_AllocMagicString((LPCWSTR)*src);
     *dst = (uint64_t)plVar1;
     return dst;
 }

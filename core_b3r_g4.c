@@ -38,7 +38,7 @@ extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                              uint64_t cap);            /* 复制/解析串 */
 extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
 extern void    FUN_1400633a8(void **ps, int64_t len);  /* 分配缓冲 */
-extern void    FUN_140063620(void *ps);                /* 初始化串容器 */
+extern void    PECMD_AllocStrSlot(void *ps);                /* 初始化串容器 */
 extern void    PECMD_NtpSyncLoop(uint32_t *addr);          /* IP 地址 → 串 */
 extern void    PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
 extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
@@ -160,8 +160,8 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     FUN_1400633a8((void **)local_48, 0x5dc);
     DAT_14013d5c0 = local_48[0];
     uVar8 = 1;
-    FUN_140063620(&local_58);
-    FUN_140063620(&local_res18);
+    PECMD_AllocStrSlot(&local_58);
+    PECMD_AllocStrSlot(&local_res18);
     pWVar6 = local_res10;
     local_res20 = (WCHAR *)local_res10;
     PECMD_SplitTokenTrimWs((int64_t *)&local_res20, (int64_t *)&local_res18, 0x2c);

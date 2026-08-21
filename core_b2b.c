@@ -71,7 +71,7 @@ extern uint64_t FUN_1400E9724(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern uint64_t PECMD_SetRamdrivDiskSize(int size, LPCWSTR name);
 extern void PECMD_QueryDiskSpace(LPCWSTR name);
-extern void FUN_140063620(void *ps);
+extern void PECMD_AllocStrSlot(void *ps);
 extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
 extern void PECMD_RunCommand(void *script, WCHAR *cmd);
 extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);
@@ -185,7 +185,7 @@ uint32_t PECMD_CheckSystemStartOptions(void)
     LPCWSTR local_res18;
 
     if (g_sysStartFlag == 0) {
-        FUN_140063620(&local_res10);
+        PECMD_AllocStrSlot(&local_res10);
         local_res8[0] = 0xffffffff;
         *((WCHAR *)local_res10) = L'\0';
         iVar3 = FUN_1400690C0((HKEY)0xffffffff80000002,
@@ -300,7 +300,7 @@ void PECMD_AppendParamToken(int64_t *list, LPCWSTR token, char filter)
         ((WCHAR *)lpString)[iVar3 - 1] = L'\0';
     }
     if (*lpString != L'\0') {
-        FUN_140063620(&local_res20);
+        PECMD_AllocStrSlot(&local_res20);
         FUN_14001C270(lpString, (WCHAR **)&local_res20);
         iVar3 = lstrlenW(local_res20);
         iVar3++;
@@ -1010,7 +1010,7 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
     WCHAR *local_30 = NULL;
     WCHAR *local_28[2];
 
-    FUN_140063620(&local_30);
+    PECMD_AllocStrSlot(&local_30);
     FUN_14006375C(&local_30, WSTR("!=devcon update  \""));
     FUN_14006375C(&local_30, inf);
     FUN_14006375C(&local_30, WSTR("\" \""));

@@ -62,7 +62,7 @@ extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char 
                           uint64_t ctx, int mode);
 extern void FUN_14005CC4C(void);
 extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out);
-extern void *FUN_140070154(LPCWSTR src);
+extern void *PECMD_AllocMagicString(LPCWSTR src);
 extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
                           DWORD *readCount);
 extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
@@ -504,7 +504,7 @@ int64_t *PECMD_ReplaceStringSlot(int64_t *ps, uint64_t *src)
     int64_t lVar1 = *ps;
     *ps = 0;
     if ((LPCWSTR)*src != NULL) {
-        int64_t *plVar2 = (int64_t *)FUN_140070154((LPCWSTR)*src);
+        int64_t *plVar2 = (int64_t *)PECMD_AllocMagicString((LPCWSTR)*src);
         *ps = (int64_t)plVar2;
     }
     if (lVar1 != 0) {

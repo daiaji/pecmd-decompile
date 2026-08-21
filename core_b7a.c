@@ -56,7 +56,7 @@ extern uint64_t *FUN_1400C3CF8(uint64_t *obj, int64_t a2, uint32_t a3,
                                uint64_t *a4, uint32_t a5, uint32_t a6,
                                uint32_t a7, uint32_t a8, uint16_t *a9,
                                uint64_t *a10, uint32_t a11, LPCWSTR a12);
-extern void FUN_140063620(WCHAR **ps);
+extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern void FUN_14006764C(int64_t *obj, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
@@ -370,7 +370,7 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
     }
     LPCWSTR s = spec;
     if (*spec == L'?') {
-        FUN_140063620((WCHAR **)&s);
+        PECMD_AllocStrSlot((WCHAR **)&s);
         LPCWSTR key = spec + 1;
         FUN_14006764C((int64_t *)&key, (int64_t *)&s, 0x3b, 0x3a);
         uint32_t enabled = (uint32_t)IsWindowEnabled(target);
