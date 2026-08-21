@@ -3474,3 +3474,6 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - build/link(-lm) 绿。累计 P4 直移 ~200/288。
 ## 101. P4 wave-6：下一批 40 helper 直移（[200:240]）
 - build/link(-lm) 绿。累计 P4 直移 ~240/288。
+## 102. P4 wave-7（收官）：最后 ~48 helper 直移（[240:]）
+- build/link(-lm) 绿。**288 直移层全部完成**。累计 P4 直移 ~288。
+- 下一步 P4：25 asm（objdump→C）+ CRT 142（2 字节专属体）+ 重新评估剥出深层helper。

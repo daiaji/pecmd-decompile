@@ -100,6 +100,8 @@ uint64_t    FUN_14005ea5c(void);
 uint        FUN_14000e0bc(void);
 uint64_t    FUN_14006042c(void);
 uint64_t    FUN_14001d628(void);
+LPWSTR      StrRChrW(const WCHAR *, const WCHAR *, WCHAR);
+uint64_t    thunk_FUN_1400f429c(void *, short);
 
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
@@ -277,7 +279,80 @@ uint64_t FUN_14001e5b0(void) { return 0; }
 uint64_t FUN_14001e69c(void) { return 0; }
 uint64_t FUN_14001e6bc(void) { return 0; }
 uint8_t *FUN_14001ea18(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return (uint8_t*)0; }
-uint64_t FUN_14002286c(void) { return 0; }
+/* FUN_14002286c — KnownDlls32 环境修复: 首个调用时读取系统模式标志, 在 64 位
+   系统中注册 \\KnownDlls32 路径(经 ntdll 函数指针槽), 仅执行一次. */
+uint FUN_14000e0bc(void) { return 0; }           /* 操作系统位宽探测 (no-op) */
+uint64_t FUN_14006042c(void) { return 0; }       /* 系统目录盘符 (no-op) */
+uint64_t FUN_14001d628(void) { return 0; }       /* (no-op) */
+uint8_t DAT_14013d270;                           /* 一次性初始化标志 (静区, 初 0) */
+void (*DAT_14013cb48)(...) = 0;                  /* RtlInitUnicodeString 类槽 (reroute, 初 0) */
+int  (*DAT_14013cd30)(...) = 0;                  /* ZwOpenKey 类槽 */
+int  (*DAT_14013cd38)(...) = 0;                  /* ZwQueryKey 类槽 */
+void (*DAT_14013cd40)(...) = 0;                  /* ZwClose 类槽 */
+void FUN_14002286c(void)
+{
+    uint uVar1;
+    int iVar2;
+    ulonglong uVar3;
+    undefined8 uVar4;
+    longlong local_res8;
+    longlong local_res10 [3];
+    undefined4 local_c8 [2];
+    undefined8 local_c0;
+    undefined1 *local_b8;
+    undefined4 local_b0;
+    undefined8 local_a8;
+    undefined8 local_a0;
+    undefined4 local_98 [2];
+    undefined8 local_90;
+    undefined1 *local_88;
+    undefined4 local_80;
+    undefined8 local_78;
+    undefined8 local_70;
+    undefined1 local_68 [16];
+    undefined1 local_58 [16];
+    undefined1 local_48 [16];
+    undefined2 local_38 [28];
+
+    if (DAT_14013d270 == 0) {
+        DAT_14013d270 = 1;
+        uVar3 = FUN_14005ea5c();
+        if (0x9ffffffffULL < uVar3) {
+            uVar1 = FUN_14000e0bc();
+            if (uVar1 != 0) {
+                memcpy(local_38, (const void *)L"X:\\Windows\\SysWow64", 0x28);
+                uVar4 = FUN_14006042c();
+                local_38[0] = (undefined2)uVar4;
+                FUN_14001d628();
+                (*DAT_14013cb48)(local_48, (void *)L"\\KnownDlls32");
+                (*DAT_14013cb48)(local_58, (void *)L"\\KnownDlls32\\KnownDllPath");
+                (*DAT_14013cb48)(local_68, local_38);
+                local_90 = 0;
+                local_78 = 0;
+                local_70 = 0;
+                local_c0 = 0;
+                local_a8 = 0;
+                local_a0 = 0;
+                local_res8 = 0;
+                local_res10[0] = 0;
+                local_88 = local_48;
+                local_b8 = local_58;
+                local_80 = 0x50;
+                local_b0 = 0x50;
+                local_98[0] = 0x30;
+                local_c8[0] = 0x30;
+                iVar2 = (*DAT_14013cd30)(&local_res8, 0xf000f, local_98);
+                if ((-1 < iVar2) && (local_res8 != 0)) {
+                    iVar2 = (*DAT_14013cd38)(local_res10, 0xf0001, local_c8, local_68);
+                    if ((-1 < iVar2) && (local_res10[0] != 0)) {
+                        (*DAT_14013cd40)();
+                    }
+                    (*DAT_14013cd40)(local_res8);
+                }
+            }
+        }
+    }
+}
 uint64_t FUN_140022e94(void) { return 0; }
 uint64_t FUN_140023544(void) { return 0; }
 uint16_t *FUN_140024c48(int64_t *a, int64_t *b, uint32_t c) { (void)a;(void)b;(void)c; return (uint16_t *)0; }
