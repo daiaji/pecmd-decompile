@@ -3,12 +3,14 @@ typedef unsigned int uint;   /* 兼容 setupdi 桩 */
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 typedef unsigned long DWORD;
 typedef uint16_t WCHAR;
 typedef uint32_t REGSAM;
 typedef char CHAR;
 typedef const CHAR *LPCSTR;
 typedef const WCHAR *LPCWSTR;
+typedef uint32_t COLORREF;
 typedef void *HANDLE;
 typedef void *HDC;
 typedef uint8_t BYTE;
@@ -64,6 +66,15 @@ typedef SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;
 typedef struct _OVERLAPPED { ULONG_PTR Internal; ULONG_PTR InternalHigh; union { struct { ULONG Offset; ULONG OffsetHigh; } s; void *Pointer; } u; void *hEvent; } OVERLAPPED;
 typedef OVERLAPPED *LPOVERLAPPED;
 typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } FILETIME, *LPFILETIME;
+/* --- Ghidra 反编译伪类型映射 (P4 wave-4 移植) --- */
+typedef uint64_t undefined8;
+typedef uint32_t undefined4;
+typedef uint16_t undefined2;
+typedef uint8_t  undefined1;
+typedef uint8_t  undefined;
+typedef uint16_t ushort;
+typedef int64_t  longlong;
+typedef uint64_t ulonglong;
 
 /* ---- wave-2 restored-helper 内部 FUN_ 前置声明 (定义在文件后部, 需先声明供 new 桩调用) ---- */
 void        FUN_1400166b4(void);
@@ -85,6 +96,10 @@ void        FUN_140063694(void *, long long);
 void        FUN_140025f10(long long, const WCHAR *, uint32_t, char *, char *, long long *);
 void        FUN_140020fd4(long long, char, const WCHAR *, const WCHAR *);
 extern uint8_t DAT_14011c638[64];
+uint64_t    FUN_14005ea5c(void);
+uint        FUN_14000e0bc(void);
+uint64_t    FUN_14006042c(void);
+uint64_t    FUN_14001d628(void);
 
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
@@ -134,7 +149,7 @@ uint64_t CreatePopupMenu(void) { return 0; }
 uint64_t CreateProcessW(void) { return 0; }
 uint64_t CreateRoundRectRgn(void) { return 0; }
 uint64_t CreateServiceW(void) { return 0; }
-uint64_t CreateSolidBrush(void) { return 0; }
+HBRUSH CreateSolidBrush(COLORREF color) { (void)color; return (HBRUSH)0; }
 uint64_t CreateThread(void) { return 0; }
 uint64_t CreateToolhelp32Snapshot(void) { return 0; }
 HWND CreateWindowExW(DWORD ex, const WCHAR *cls, const WCHAR *name, DWORD style, int x, int y, int w, int h, HWND parent, HMENU menu, void *inst, void *param) { (void)ex;(void)cls;(void)name;(void)style;(void)x;(void)y;(void)w;(void)h;(void)parent;(void)menu;(void)inst;(void)param; return (HWND)0; }
@@ -411,7 +426,73 @@ uint64_t FUN_1400731d8(void) { return 0; }
 uint64_t FUN_14007443c(void) { return 0; }
 uint64_t FUN_1400745c8(void) { return 0; }
 uint64_t FUN_140077358(void) { return 0; }
-uint64_t FUN_140079f50(void) { return 0; }
+/* FUN_140079f50 — 解析 "路径#索引" 形式的资源串引用: 定位 '#' 与数字索引并返回其
+   起始位置; 带引号时剥离引号. 未匹配返回 NULL. */
+LPCWSTR FUN_140079f50(LPCWSTR *param_1, uint param_2)
+{
+    WCHAR   WVar4;
+    WCHAR  *pWVar1;
+    WCHAR  *pWVar2;
+    WCHAR  *pWVar3;
+    WCHAR  *local_res8;
+    WCHAR  *local_res18[2];
+
+    pWVar2 = (WCHAR *)*param_1;
+    WVar4 = L'"';
+    if ((param_2 & 2) == 0) {
+        if (*pWVar2 != L'"') {
+            pWVar2 = StrRChrW(pWVar2, (LPCWSTR)0, L'\\');
+            if (pWVar2 == (WCHAR *)0) {
+                pWVar2 = (WCHAR *)*param_1;
+            }
+            pWVar3 = StrRChrW(pWVar2, (LPCWSTR)0, L'#');
+            if (pWVar3 == (WCHAR *)0) {
+                return (LPCWSTR)0;
+            }
+            if (*pWVar3 != L'#') {
+                return (LPCWSTR)0;
+            }
+            if (9 < (uint16_t)(pWVar3[1] + (WCHAR)0xF01F)) {
+                if ((param_2 & 1) == 0) {
+                    return (LPCWSTR)0;
+                }
+                if (pWVar3[1] != L'.') {
+                    return (LPCWSTR)0;
+                }
+                if (9 < (uint16_t)(pWVar3[2] + (WCHAR)0xF01F)) {
+                    return (LPCWSTR)0;
+                }
+                return pWVar3;
+            }
+            return pWVar3;
+        }
+        pWVar2 = pWVar2 + 1;
+    }
+    local_res8 = pWVar2;
+    thunk_FUN_1400f429c(&local_res8, 0x22);
+    pWVar1 = local_res8;
+    if (*local_res8 != L'\0') {
+        local_res8 = local_res8 + 1;
+    }
+    if (WVar4 == *local_res8) {
+        local_res8 = local_res8 + 1;
+    }
+    if (*local_res8 != L'#') {
+        return (LPCWSTR)0;
+    }
+    if (*pWVar1 != L'\0') {
+        *pWVar1 = L'\0';
+    }
+    *param_1 = pWVar2;
+    pWVar2 = local_res8;
+    local_res18[0] = local_res8;
+    thunk_FUN_1400f429c(local_res18, WVar4);
+    if (*local_res18[0] != L'\0') {
+        *local_res18[0] = L'\0';
+        return local_res8;
+    }
+    return pWVar2;
+}
 long long FUN_14007a224(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
 uint64_t FUN_14007bda8(void) { return 0; }
 uint64_t FUN_14007bf44(void) { return 0; }
@@ -511,7 +592,7 @@ uint64_t GetScrollPos(void) { return 0; }
 uint64_t GetScrollRange(void) { return 0; }
 uint64_t GetStartupInfoW(void) { return 0; }
 uint64_t GetStdHandle(void) { return 0; }
-uint64_t GetStockObject(void) { return 0; }
+void *GetStockObject(int i) { (void)i; return (void *)0; }
 uint64_t GetSubMenu(void) { return 0; }
 uint64_t GetSysColor(void) { return 0; }
 uint64_t GetSystemMenu(void) { return 0; }
@@ -651,7 +732,7 @@ uint64_t SetFilePointer(void) { return 0; }
 uint64_t SetFilePointerEx(void) { return 0; }
 uint64_t SetFocus(void) { return 0; }
 uint64_t SetForegroundWindow(void) { return 0; }
-uint64_t SetLastError(void) { return 0; }
+void SetLastError(DWORD e) { (void)e; }
 uint64_t SetLayeredWindowAttributes(void) { return 0; }
 uint64_t SetLocalTime(void) { return 0; }
 uint64_t SetMenuItemBitmaps(void) { return 0; }
@@ -688,7 +769,7 @@ uint64_t StrCmpNIA(void) { return 0; }
 int StrCmpNIW(const WCHAR *a, const WCHAR *b, int n) { (void)a;(void)b;(void)n; return 0; }
 uint64_t StrCmpNW(void) { return 0; }
 uint64_t StrCpyNW(void) { return 0; }
-uint64_t StrRChrW(void) { return 0; }
+LPWSTR StrRChrW(const WCHAR *start, const WCHAR *end, WCHAR c) { (void)start;(void)end;(void)c; return (LPWSTR)0; }
 uint64_t StrStrA(void) { return 0; }
 uint64_t StrStrIW(void) { return 0; }
 LPWSTR StrStrW(const WCHAR *a, const WCHAR *b) { (void)a;(void)b; return (LPWSTR)0; }
@@ -920,7 +1001,71 @@ uint64_t FUN_1400fbe58(void) { return 0; }
 uint64_t FUN_1400fbf00(void) { return 0; }
 uint64_t FUN_1400fbfe0(void) { return 0; }
 uint64_t *FUN_1400fcf44(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
-void FUN_1400fd014(int64_t a, int *b) { (void)a;(void)b; }
+void *DAT_14013a858;   /* 默认画笔/色刷缓存 (GetStockObject, PECMD.exe 静态区, 初 0) */
+/* FUN_1400fd014 — 应用 param_2 的 4×RGBA 调色板与前景/背景/边框刷子到控件 struct 偏移槽. */
+void FUN_1400fd014(long long param_1, int *param_2)
+{
+    int      iVar1;
+    COLORREF color;
+    HBRUSH   pHVar2;
+    long long lVar3;
+    uint64_t *puVar4;
+    uint     uVar5 = 0, uVar6;
+
+    if (param_2 != (int *)0) {
+        if ((((*param_2 < 0) && (param_2[1] < 0)) && (param_2[2] < 0)) && (param_2[3] < 0)) {
+            *(uint16_t *)(param_1 + 0xa2) = 0xffff;
+        }
+        else {
+            do {
+                uVar6 = uVar5 + 1;
+                iVar1 = *param_2;
+                param_2 = param_2 + 1;
+                *(int *)(param_1 +
+                    ((long long)(int)((uVar5 & 1 ^ (int)uVar5 >> 0x1f) - ((int)uVar5 >> 0x1f)) + 0x24 +
+                     (long long)((int)uVar5 / 2) * 2) * 4) = iVar1;
+                uVar5 = uVar6;
+            } while ((int)uVar6 < 4);
+            puVar4 = (uint64_t *)(param_1 + 0x80);
+            lVar3 = 2;
+            do {
+                if ((void *)*puVar4 != (void *)0) {
+                    DeleteObject((void *)*puVar4);
+                }
+                *puVar4 = 0;
+                puVar4 = puVar4 + 1;
+                lVar3 = lVar3 - 1;
+            } while (lVar3 != 0);
+            if (DAT_14013a858 == (void *)-1) {
+                DAT_14013a858 = GetStockObject(5);
+            }
+            color = *(COLORREF *)(param_1 + 0x94);
+            if (((int)color < 0) && (color != 0x80000000)) {
+                *(void **)(param_1 + 0x80) = DAT_14013a858;
+            }
+            if ((*(int *)(param_1 + 0x9c) < 0) && (*(int *)(param_1 + 0x9c) != -0x80000000)) {
+                *(void **)(param_1 + 0x88) = DAT_14013a858;
+            }
+            if (-1 < (int)color) {
+                pHVar2 = CreateSolidBrush(color);
+                *(HBRUSH *)(param_1 + 0x80) = pHVar2;
+            }
+            if (-1 < (int)*(COLORREF *)(param_1 + 0x9c)) {
+                pHVar2 = CreateSolidBrush(*(COLORREF *)(param_1 + 0x9c));
+                *(HBRUSH *)(param_1 + 0x88) = pHVar2;
+            }
+            if (*(short *)(param_1 + 0xa2) < 0) {
+                *(uint16_t *)(param_1 + 0xa2) = 0;
+            }
+            if ((((-1 < *(int *)(param_1 + 0x9c)) &&
+                 (*(int *)(param_1 + 0x9c) == *(int *)(param_1 + 0x94))) &&
+                (*(int *)(param_1 + 0x98) == *(int *)(param_1 + 0x90))) &&
+               ('\0' < (char)*(uint8_t *)(param_1 + 0xac))) {
+                *(uint8_t *)(param_1 + 0xac) = *(uint8_t *)(param_1 + 0xac) | 0x80;
+            }
+        }
+    }
+}
 int FUN_1400fd220(int64_t *a, uint64_t b, const void *c, unsigned int d, int *e, int64_t f, unsigned int g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; return 0; }
 void FUN_1400fd318(int64_t *a, const void *b, unsigned int c, uint64_t *d, int64_t e, unsigned int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
 uint64_t *FUN_1400fe130(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
@@ -1091,7 +1236,7 @@ LAB_14002b931:
     if (local_res8[0] != 0) {
         pwVar5 = (WCHAR *)L"Reboot";
     }
-    _snwprintf(local_38[0], 0x27ff, L"PECMD安装驱动【%s】[%s][%s]", pwVar6, param_3, pwVar5);
+    _snwprintf(local_38[0], 0x27ff, (const WCHAR *)L"PECMD安装驱动【%s】[%s][%s]", pwVar6, param_3, pwVar5);
     FUN_140025f10(param_1 + 8, local_38[0], DVar2, (pthreadmbcinfo)0x1100, (pthreadmbcinfo)0,
                   (long long *)0);
     FUN_14005b104((long long *)local_38);
@@ -1629,7 +1774,7 @@ uintptr_t g_hFontE2B8;   /* DAT_14013e2b8 缓存字体 (HFONT, 初值 0, 惰性�
 /* ---- 075c7c/00cedc 依赖 ---- */
 uint64_t LCMapStringW(void){ return 0; }
 uint64_t FUN_140063224(void){ return 0; }
-uint64_t thunk_FUN_1400f429c(void){ return 0; }
+uint64_t thunk_FUN_1400f429c(void *a, short b) { (void)a;(void)b; return 0; }
 
 /* ============================================================
    ---- core_b3_remaining.c 本轮还原 (FUN_140070710) 新增依赖 ----
