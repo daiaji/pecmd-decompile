@@ -93,6 +93,10 @@ DWORD   GetCurrentThreadId(void);
 DWORD   GetWindowThreadProcessId(HWND w, DWORD *pid);
 void   *LoadLibraryA(const char *m);
 FARPROC GetProcAddress(void *hm, const char *name);
+uint16_t *StrChrW(const uint16_t *s, uint16_t c);
+void *PECMD_BuildFontFromObject(int64_t a, void *b, const void *c);
+const uint16_t *PECMD_LoadLocalizedString(void *hinst, uint32_t id, uint16_t *buf, int len);
+const uint16_t *PECMD_LangLookupById(int a, const uint16_t **b);
 uint64_t EndDialog(uint64_t a, int b);
 
 void   *GetModuleHandleW(const WCHAR *m);
@@ -150,6 +154,7 @@ uint64_t VirtualFree(void *a, uint64_t b, uint64_t c);
 uint64_t lstrcatW(void *a, uint64_t b);
 int64_t FUN_140065864(int64_t a, int64_t *b, int64_t *c, uint8_t *d, uint32_t e);
 void *DAT_14013cf50;
+void *DAT_1401293c0;
 uint64_t FUN_140103020(const uint16_t *s) { (void)s; return 0; }
 void *FUN_1400170b0(void **p) { (void)p; return 0; }
 void *FUN_140070044(const char *s) { (void)s; return 0; }
@@ -186,8 +191,26 @@ void PECMD_InitContainerFields(uint32_t *param_1)
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
 long long FUN_14003e220(void *a, unsigned int b, uint64_t c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
 void FUN_140062950(void *a) { (void)a; }
-void FUN_1400e66d4(uint64_t *a, uint64_t b, void *c) { (void)a;(void)b;(void)c; }
-int FUN_1400e6350(void *a, uint64_t b) { (void)a;(void)b; return 1; }
+/* @0x1400e66d4 size=— 资源字体创建(直移) */
+void FUN_1400e66d4(longlong *param_1, UINT param_2, void *param_3)
+{
+  if (*param_1 != -1) {
+    uint64_t local_res8 = 0;
+    FUN_140063694(&local_res8,0x516);
+    *(uint16_t *)local_res8 = 0;
+    const uint16_t *w = (const uint16_t *)(uintptr_t)PECMD_LangLookupById(param_2,(const uint16_t **)0);
+    if ((uintptr_t)w == 0) {
+      PECMD_LoadLocalizedString((void *)(uintptr_t)DAT_14013ca68,param_2,(uint16_t *)(uintptr_t)local_res8,0x514);
+      const uint16_t *bar = StrChrW((const uint16_t *)local_res8,(uint16_t)'|');
+      w = (const uint16_t *)local_res8;
+      if ((uintptr_t)bar != 0) w = bar + 1;
+    }
+    double d = (double)(intptr_t)DAT_1401293c0;
+    void *h = (void *)(uintptr_t)PECMD_BuildFontFromObject((int64_t)(uintptr_t)param_3,&d,(const void *)w);
+    *param_1 = (longlong)(intptr_t)h;
+    FUN_14005b104(&local_res8);
+  }
+}
 void (*DAT_14013cd90)(...) = 0;
 /* @0x1400e6790 size=— 对话框回调 0x30/0x110(直移) */
 uint64_t PECMD_AboutDlgProc(void *param_1, int param_2, void *param_3)
@@ -277,6 +300,18 @@ typedef struct _STARTUPINFOW { DWORD cb; LPWSTR lpReserved; LPWSTR lpDesktop; LP
 typedef struct _WIN32_FIND_DATAW { DWORD dwFileAttributes; FILETIME ftCreationTime; FILETIME ftLastAccessTime; FILETIME ftLastWriteTime; DWORD nFileSizeHigh; DWORD nFileSizeLow; DWORD dwReserved0; DWORD dwReserved1; WCHAR cFileName[260]; WCHAR cAlternateFileName[14]; } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 typedef struct tagPOINT { LONG x; LONG y; } POINT, tagPOINT, *LPPOINT;
 unsigned int PECMD_WindowRectHitTest(HWND a, POINT b);
+/* @0x1400e6350 size=— 子窗口枚举回调(直移) */
+bool FUN_1400e6350(POINT param_1, POINT *param_2)
+{
+  int r = PECMD_WindowRectHitTest((void *)(uintptr_t)(uint64_t)param_1.x,*param_2);
+  if (r == 0) return 1;
+  uint64_t u = SendMessageW((void *)(uintptr_t)(uint64_t)param_1.x,0x45e,(int64_t)param_2[1].x,(uint64_t)(uintptr_t)param_1.x);
+  if ((u >> 0x11 & 1) != 0) param_2[3] = param_1;
+  EnumChildWindows((void *)(uintptr_t)(uint64_t)param_1.x,(WNDENUMPROC)FUN_1400e6350,(uint64_t)(uintptr_t)param_2);
+  return param_2[3].x == 0 && param_2[3].y == 0;
+}
+
+bool FUN_1400e6350(POINT a, POINT *b);
 int64_t (*DAT_14013ce30)(void);
 typedef struct tagRECT { LONG left; LONG top; LONG right; LONG bottom; } RECT, tagRECT, *LPRECT;
 typedef struct tagMSG { HWND hwnd; UINT message; ulonglong wParam; longlong lParam; DWORD time; POINT pt; } MSG, tagMSG;
@@ -808,7 +843,21 @@ short *FUN_1400547bc(longlong *param_1, longlong *param_2, longlong *param_3, sh
 }
 uint64_t FUN_14005b0b8(void *a) { (void)a; return 0; }
 void FUN_14005b104(void *ps) { (void)ps; }
-int FUN_14005b184(char *a, int64_t b, int64_t c) { (void)a;(void)b;(void)c; return 0; }
+/* @0x14005b184 size=— ANSI 串比较(直移) */
+int FUN_14005b184(char *param_1, longlong param_2, longlong param_3)
+{
+  longlong n = param_3 - 1;
+  if (n >= 0) {
+    longlong off = param_2 - (longlong)param_1;
+    do {
+      char *q = param_1 + off;
+      char c = *param_1; param_1++;
+      if ((char)(*q - c) != 0) return (int)(char)(*q - c);
+      n--;
+    } while (n >= 0);
+  }
+  return 0;
+}
 undefined8 PECMD_MatchPrefixN(ushort *param_1, undefined8 *param_2, int param_3){
     ushort uVar1,uVar2; ushort *local_res10[3];
     local_res10[0]=(ushort*)(uintptr_t)*param_2;
@@ -955,7 +1004,24 @@ void FUN_140061ffc(uint64_t a, int b, uint16_t *c)
   (void)a;
 }
 void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c) { (void)a;(void)b;(void)c; }
-void FUN_1400633a8(void **ps, int64_t len) { (void)ps;(void)len; }
+/* @0x1400633a8 size=— 动态串分配(直移) */
+void FUN_1400633a8(void **param_1, longlong param_2)
+{
+  *param_1 = 0;
+  if (param_2 >= 0) {
+    longlong *p;
+    for (;;) {
+      p = (longlong *)(uintptr_t)HeapAlloc((void *)(uintptr_t)DAT_14013d328,0,param_2 + 9);
+      if ((uintptr_t)p != 0) break;
+      if (PECMD_OomPrompt(2) != 4) break;
+    }
+    longlong *pl = p + 1;
+    *(uint32_t *)((long long)p + 4) = 0xaa55;
+    *p = param_2 + 1;
+    *param_1 = (void *)pl;
+    if ((uintptr_t)pl != 0) *(uint8_t *)pl = 0;
+  }
+}
 /* @0x140063620 size=— 动态串槽分配(直移) */
 uint16_t *PECMD_AllocStrSlot(uint16_t **out)
 {
@@ -2001,7 +2067,31 @@ undefined8 PECMD_AppendValueNode(longlong param_1, const WCHAR *param_2, undefin
 
 void PECMD_LayoutChildWindows(int64_t a, unsigned char b) { (void)a;(void)b; }
 uint64_t PECMD_InitWindowObjectF(void) { return 0; }
-uint64_t *FUN_1400f0648(uint64_t *a, uint64_t *b) { (void)a;(void)b; return a; }
+/* @0x1400f0648 size=— 对象槽 WebView 初始化(直移) */
+uint64_t *FUN_1400f0648(uint64_t *param_1, uint64_t param_2)
+{
+  FUN_1400e57c0(param_1);
+  param_1[0x1a] = param_2;
+  *(uint16_t *)((long long)param_1 + 0xa2) = 0xffff;
+  *param_1 = (uint64_t)&PTR_FUN_14012bfb0;
+  *(uint8_t *)(param_1 + 0x1b) = 0;
+  *(uint32_t *)(param_1 + 8) = 0x80000000;
+  *(uint8_t *)((long long)param_1 + 0x61) = 2;
+  *(uint8_t *)((long long)param_1 + 0xad) = 0;
+  *(uint32_t *)((long long)param_1 + 0x44) = 0x80000000;
+  param_1[9] = 0; param_1[0x1c] = 0; param_1[0x11] = 0; param_1[0x10] = 0;
+  *(uint32_t *)(param_1 + 0x15) = 0x80000000;
+  *(uint8_t *)(param_1 + 0x14) = 0;
+  *(uint8_t *)((long long)param_1 + 0xac) = 0;
+  *(uint8_t *)((long long)param_1 + 0xa4) = 0;
+  *(uint32_t *)((long long)param_1 + 0x9c) = 0x80000000;
+  *(uint32_t *)(param_1 + 0x13) = 0x80000000;
+  *(uint32_t *)((long long)param_1 + 0x94) = 0x80000000;
+  *(uint32_t *)(param_1 + 0x12) = 0x80000000;
+  *(uint8_t *)((long long)param_1 + 0xa5) = 0;
+  *(uint8_t *)((long long)param_1 + 0xa1) = 1;
+  return param_1;
+}
 bool FUN_1400f072c(longlong *param_1, const WCHAR *param_2, DWORD param_3, int *param_4, HWND param_5, uint param_6, DWORD param_7){
     int iVar1,iVar2,iVar3,iVar4; LONG LVar5; HWND pHVar6;
     iVar1=param_4[3]; iVar2=param_4[2]; iVar3=param_4[1]; iVar4=*param_4;
@@ -3018,7 +3108,22 @@ ulonglong PECMD_IsVisibleKeyword(ushort *param_1){    ushort uVar1; ulonglong uV
 
 }
 
-uint64_t FUN_140062fc4(void){ return 0; }
+/* @0x140062fc4 size=— token 前缀匹配并前进(直移) */
+uint8_t FUN_140062fc4(LPCWSTR param_1, longlong *param_2, int param_3)
+{
+  uint8_t r = 0;
+  if (param_3 < 0) param_3 = lstrlenW(param_1);
+  const uint16_t *p = (const uint16_t *)*param_2;
+  if (StrCmpNIW(param_1,p,param_3) == 0) {
+    uint16_t w = p[param_3];
+    if (((8 < w && w < 0xe) || w == L' ') || w == 0) {
+      *param_2 = *param_2 + (long long)param_3 * 2;
+      r = 1;
+      PECMD_SkipLeadingControlChars((long long *)param_2);
+    }
+  }
+  return r;
+}
 /* @0x140060a74 size=31 — 相邻双字节对换(直移) */
 void PECMD_SwapBytePairs(uint8_t *param_1,int param_2)
 {

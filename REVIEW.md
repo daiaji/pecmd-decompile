@@ -3517,3 +3517,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: fwd 位置规则(须在首次使用前)、函数指针槽精确类型、WNDENUMPROC/POINT 类型对齐。
 ## 118. P4 命名批3（26 个新真体叶函数）: 调用点 2622→**1862**（累计 -61.5%）
 - 模式实证: 自直移→命名 为降调用点引擎(每轮 -300~-760)。rename_map→1112。
+## 119. P4 叶层自直移批6：6 个(0e6350 子枚举/05b184 串比较/0633a8 串分配/062fc4 前缀/0e66d4 字体/0f0648 WebView 槽)绿
+- 修复: 声明须在首次使用前(PECMD_WindowRectHitTest/LangLookupById/LoadLocalizedString/StrChrW fwd)、0633a8 void** 兼容。
