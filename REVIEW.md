@@ -3466,3 +3466,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - build 0 / link(-lm) 0 绿，提交。P4 循环起步：剩余可直移 ~248。
 ## 97. P4 wave-2：下一批 40 helper 直移（[40:80]）
 - 从 decompiled 直移 40 个被调 helper 真体；build/link(-lm) 绿。累计 P4 直移 ~80/288。
+## 98. P4 wave-3：下一批 40 helper 直移（[80:120]）
+- build/link(-lm) 绿。累计 P4 直移 ~120/288。

@@ -2,6 +2,7 @@ typedef unsigned int uint;   /* 兼容 setupdi 桩 */
 /* Auto-generated link stubs for undefined symbols (weak/no-op). */
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 typedef unsigned long DWORD;
 typedef uint16_t WCHAR;
 typedef uint32_t REGSAM;
@@ -41,6 +42,14 @@ typedef const WCHAR *PCWSTR;
 /* _snwprintf 等 CRT 宽字符格式化辅助型 (仅需指针宽度兼容) */
 typedef char *pthreadmbcinfo;
 
+/* ---- wave-2 restored-helper 内部 FUN_ 前置声明 (定义在文件后部, 需先声明供 new 桩调用) ---- */
+void        FUN_1400166b4(void);
+int         FUN_140067d20(long long *, int *);
+int         lstrlenW(const WCHAR *);
+long long  *FUN_14005b154(long long *);
+long long   FUN_140064a34(uint16_t *);
+long long   FUN_140064a88(uint16_t *);
+
 uint64_t AbortSystemShutdownW(void) { return 0; }
 uint64_t AddFontMemResourceEx(void) { return 0; }
 uint64_t AddFontResourceW(void) { return 0; }
@@ -74,7 +83,7 @@ uint64_t CreateCompatibleBitmap(void) { return 0; }
 uint64_t CreateCompatibleDC(void) { return 0; }
 uint64_t CreateDialogParamW(void) { return 0; }
 uint64_t CreateDirectoryW(void) { return 0; }
-uint64_t CreateEllipticRgn(void) { return 0; }
+HRGN CreateEllipticRgn(int a, int b, int c, int d) { (void)a;(void)b;(void)c;(void)d; return (HRGN)0; }
 uint64_t CreateEventW(void) { return 0; }
 uint64_t CreateFileMappingA(void) { return 0; }
 uint64_t CreateFileMappingW(void) { return 0; }
@@ -92,7 +101,7 @@ uint64_t CreateServiceW(void) { return 0; }
 uint64_t CreateSolidBrush(void) { return 0; }
 uint64_t CreateThread(void) { return 0; }
 uint64_t CreateToolhelp32Snapshot(void) { return 0; }
-uint64_t CreateWindowExW(void) { return 0; }
+HWND CreateWindowExW(DWORD ex, const WCHAR *cls, const WCHAR *name, DWORD style, int x, int y, int w, int h, HWND parent, HMENU menu, void *inst, void *param) { (void)ex;(void)cls;(void)name;(void)style;(void)x;(void)y;(void)w;(void)h;(void)parent;(void)menu;(void)inst;(void)param; return (HWND)0; }
 uint64_t CryptAcquireContextW(void) { return 0; }
 uint64_t CryptCreateHash(void) { return 0; }
 uint64_t CryptDestroyHash(void) { return 0; }
@@ -239,7 +248,6 @@ uint64_t FUN_1400545f8(void) { return 0; }
 uint64_t FUN_1400547bc(void) { return 0; }
 uint64_t FUN_14005b0b8(void) { return 0; }
 void FUN_14005b104(void *ps) { (void)ps; }
-uint16_t *FUN_14005b154(uint16_t **ps) { (void)ps; return (uint16_t *)0; }
 int FUN_14005b184(char *a, int64_t b, int64_t c) { (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_14005b1a8(void) { return 0; }
 uint64_t FUN_14005b228(void) { return 0; }
@@ -278,7 +286,80 @@ uint64_t FUN_1400660ac(void) { return 0; }
 uint64_t FUN_1400668ec(void) { return 0; }
 uint64_t FUN_14006764c(void) { return 0; }
 uint64_t FUN_1400679b0(void) { return 0; }
-uint64_t FUN_140067b78(void) { return 0; }
+/* FUN_140067b78 — 解析带符号/进制前缀 (0x/0o/0b) 的十进制-整数字串.
+   跳过前导空白后解析并写回 *param_2; 失败返回 0. */
+long long *FUN_14005b154(long long *param_1) { (void)param_1; return param_1; } /* 跳前导空白 */
+long long FUN_140064a34(uint16_t *s) { (void)s; return 0; } /* 解析 16 进制数字串 */
+uint64_t FUN_140067b78(long long *param_1, uint64_t *param_2)
+{
+    uint64_t  uVar1;
+    uint16_t *puVar2;
+    uint16_t  uVar3;
+    long long *plVar4;
+    char      cVar5;
+
+    plVar4 = param_1;
+    FUN_14005b154(param_1);
+    puVar2 = (uint16_t *)*plVar4;
+    cVar5 = '\0';
+    if (*puVar2 == 0x2d) { puVar2 = puVar2 + 1; cVar5 = (char)-1; }
+    if (*puVar2 == 0x30) {
+        uVar3 = (uint16_t)(puVar2[1] | 0x20);
+        if (uVar3 == 0x78) {
+            *param_2 = 0;
+            puVar2 = puVar2 + 2;
+            uVar1 = FUN_140064a34(puVar2);
+            *param_2 = uVar1;
+            *param_1 = (long long)puVar2;
+            while (1) {
+                uVar3 = *(uint16_t *)*param_1;
+                if (((uVar3 < 0x30) || (0x39 < uVar3)) &&
+                    (5 < (uint16_t)((uVar3 | 0x20) - 0x61))) break;
+                *param_1 = (long long)((uint16_t *)*param_1 + 1);
+            }
+            goto LAB_140067cc9;
+        }
+        if (uVar3 == 0x6f) {
+            *param_2 = 0;
+            puVar2 = puVar2 + 2;
+            *param_1 = (long long)puVar2;
+            while ((0x2f < *puVar2 && (*(uint16_t *)*param_1 < 0x38))) {
+                *param_2 = (long long)(int)(*(uint16_t *)*param_1 - 0x30) | *param_2 << 3;
+                *param_1 = *param_1 + 2;
+                puVar2 = (uint16_t *)*param_1;
+            }
+            goto LAB_140067cc9;
+        }
+        if (uVar3 == 0x62) {
+            *param_2 = 0;
+            puVar2 = puVar2 + 2;
+            *param_1 = (long long)puVar2;
+            while ((0x2f < *puVar2 && (*(uint16_t *)*param_1 < 0x32))) {
+                *param_2 = (long long)(int)(*(uint16_t *)*param_1 - 0x30) | *param_2 * 2;
+                *param_1 = *param_1 + 2;
+                puVar2 = (uint16_t *)*param_1;
+            }
+            goto LAB_140067cc9;
+        }
+    }
+    if (9 < (uint16_t)(*puVar2 - 0x30)) {
+        return 0;
+    }
+    uVar1 = FUN_140064a88(puVar2);
+    *param_2 = uVar1;
+    *param_1 = (long long)puVar2;
+    uVar3 = *puVar2;
+    while ((0x2f < uVar3 && (*(uint16_t *)*param_1 < 0x3a))) {
+        puVar2 = (uint16_t *)*param_1 + 1;
+        *param_1 = (long long)puVar2;
+        uVar3 = *puVar2;
+    }
+LAB_140067cc9:
+    if (cVar5 != '\0') {
+        *param_2 = -*param_2;
+    }
+    return 1;
+}
 int FUN_140067d20(long long *param_1, int *param_2) { (void)param_1;(void)param_2; return 0; }
 uint64_t FUN_14006a7f4(int64_t *a, uint64_t *b) { (void)a;(void)b; return 0; }
 uint64_t FUN_14006b1e8(void) { return 0; }
@@ -408,7 +489,7 @@ uint64_t GetVersion(void) { return 0; }
 uint64_t GetVersionExW(void) { return 0; }
 uint64_t GetWindowDC(void) { return 0; }
 uint64_t GetWindowLongPtrW(void) { return 0; }
-uint64_t GetWindowLongW(void) { return 0; }
+LONG GetWindowLongW(HWND hWnd, int nIndex) { (void)hWnd;(void)nIndex; return 0; }
 uint64_t GetWindowRect(void) { return 0; }
 uint64_t GetWindowTextLengthW(void) { return 0; }
 uint64_t GetWindowTextW(void) { return 0; }
@@ -552,7 +633,7 @@ uint64_t SetTimer(void) { return 0; }
 uint64_t SetWindowLongPtrW(void) { return 0; }
 uint64_t SetWindowLongW(void) { return 0; }
 uint64_t SetWindowPos(void) { return 0; }
-uint64_t SetWindowRgn(void) { return 0; }
+int SetWindowRgn(HWND h, void *r, BOOL b) { (void)h;(void)r;(void)b; return 1; }
 uint64_t SetWindowTextW(void) { return 0; }
 uint64_t SetWindowsHookExW(void) { return 0; }
 uint64_t SetupDiCreateDeviceInfoList(void) { return 0; }
@@ -566,7 +647,7 @@ uint64_t SizeofResource(void) { return 0; }
 uint64_t Sleep(void) { return 0; }
 uint64_t SleepEx(void) { return 0; }
 uint64_t StartServiceCtrlDispatcherW(void) { return 0; }
-uint64_t StrChrW(void) { return 0; }
+LPWSTR StrChrW(const WCHAR *s, WCHAR c) { (void)s;(void)c; return (LPWSTR)0; }
 uint64_t StrCmpNIA(void) { return 0; }
 uint64_t StrCmpNIW(void) { return 0; }
 uint64_t StrCmpNW(void) { return 0; }
@@ -574,7 +655,7 @@ uint64_t StrCpyNW(void) { return 0; }
 uint64_t StrRChrW(void) { return 0; }
 uint64_t StrStrA(void) { return 0; }
 uint64_t StrStrIW(void) { return 0; }
-uint64_t StrStrW(void) { return 0; }
+LPWSTR StrStrW(const WCHAR *a, const WCHAR *b) { (void)a;(void)b; return (LPWSTR)0; }
 uint64_t StrToIntExW(void) { return 0; }
 uint64_t StretchBlt(void) { return 0; }
 uint64_t SystemParametersInfoW(void) { return 0; }
@@ -1081,7 +1162,7 @@ uint64_t FUN_140060a94(void) { return 0; }
 uint64_t FUN_140060ee0(void) { return 0; }
 uint64_t FUN_140063ed4(void) { return 0; }
 uint64_t FUN_140063ff0(void) { return 0; }
-uint64_t FUN_140064a88(void) { return 0; }
+long long FUN_140064a88(uint16_t *s) { (void)s; return 0; } /* 解析十进制数字串 */
 uint64_t FUN_14006849c(void) { return 0; }
 uint64_t FUN_14006ca94(void) { return 0; }
 uint64_t FUN_14006caf0(void) { return 0; }
