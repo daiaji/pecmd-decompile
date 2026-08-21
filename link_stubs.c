@@ -96,6 +96,10 @@ FARPROC GetProcAddress(void *hm, const char *name);
 unsigned long GetTickCount(void);
 uint64_t GetProcessHeap(void);
 int64_t *PECMD_AssignString(int64_t *, const uint16_t *);
+uint64_t SizeofResource(uint64_t a, uint64_t b);
+uint64_t PECMD_EncodeDet(long long a, uint64_t b);
+uint64_t *PECMD_AssignAnsiString(uint64_t *, char *);
+void *FUN_140063224(uint64_t *a, uint64_t b);
 uint16_t *StrChrW(const uint16_t *s, uint16_t c);
 void *PECMD_BuildFontFromObject(int64_t a, void *b, const void *c);
 const uint16_t *PECMD_LoadLocalizedString(void *hinst, uint32_t id, uint16_t *buf, int len);
@@ -629,7 +633,7 @@ undefined4 FUN_14001ab84(const WCHAR *param_1){
     return 1;
 }
 
-uint64_t PECMD_XorEncode(void) { return 0; }
+uint64_t PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }
 void FUN_14001b660(void *script)   /* @0x14001b660 定时清理注册表: 一次性 "ClearTmpMBROS" (decompiled.c) */
 {
     uint uVar1;
@@ -691,7 +695,53 @@ LAB_14001e3a7:
 uint64_t PECMD_AddVarDefault(void) { return 0; }
 uint64_t PECMD_FindVarValue(void) { return 0; }
 uint64_t PECMD_SetVarCore(void) { return 0; }
-uint8_t *FUN_14001ea18(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return (uint8_t*)0; }
+/* @0x14001ea18 size=— 资源数据加载/解码(直移) */
+uint8_t *FUN_14001ea18(void *a, uint16_t *b, uint16_t *c, int64_t *d, unsigned int *e)
+{
+  uint32_t local_38[2]; local_38[0] = 0x20;
+  uint8_t *puVar6 = 0;
+  uint32_t *puVar7 = local_38;
+  if ((uintptr_t)e != 0) puVar7 = e;
+  uint16_t uVar1 = *(uint16_t *)((long long)puVar7 + 2);
+  uint64_t ri = FindResourceW(a,b,c);
+  uint64_t uVar3 = 0;
+  if ((uintptr_t)ri != 0) uVar3 = SizeofResource((uint64_t)a,(uint64_t)ri);
+  uint64_t uVar8 = (uint64_t)uVar3;
+  uint8_t *hResData = puVar6;
+  if ((uintptr_t)ri != 0) hResData = (uint8_t *)(uintptr_t)LoadResource(a,(uint64_t)ri);
+  char cVar2 = 0;
+  if ((*puVar7 & 1) != 0) {
+    if ((uintptr_t)hResData == 0) goto Lbad;
+    hResData = (uint8_t *)(uintptr_t)LockResource((uint64_t)(uintptr_t)hResData);
+  }
+  if ((uintptr_t)hResData == 0 || uVar8 == 0) goto Lbad;
+  cVar2 = 0;
+  if ((*puVar7 & 0x40) == 0) {
+    uint64_t uVar4 = PECMD_EncodeDet((long long)hResData,uVar3);
+    cVar2 = (char)uVar4;
+    if (cVar2 == 0) goto Lb2f;
+    if (((*puVar7 & 0x20) != 0) && ((uVar4 & 2) != 0)) return 0;
+    PECMD_AssignAnsiString((uint64_t *)&local_38[0],0);
+    uint64_t local_30 = (uint64_t)(uintptr_t)hResData;
+    uint64_t local_28 = uVar8, local_20 = uVar8;
+    FUN_140068984((long long *)&local_30,d,(char)uVar1);
+    local_30 = 0;
+    FUN_14005b104((long long *)&local_30);
+  } else {
+Lb2f:
+    long long *p = (long long *)FUN_140063224((uint64_t *)*d,uVar8 + 0x411);
+    d[2] = uVar8; d[1] = uVar8; *d = (long long)p;
+    PECMD_MemMoveForward((uint8_t *)p,hResData,uVar3);
+    if (uVar1 != 0) PECMD_XorEncode((const uint16_t *)*d,(uint32_t)uVar1,(uVar8 + 1) >> 1);
+  }
+  puVar6 = (uint8_t *)*d;
+  d[2] = d[1] + 0x10;
+  memset(puVar6 + d[1],0,0x10);
+  memset(puVar6 + d[1],(uint64_t)uVar1,0xc);
+Lbad:
+  *puVar7 = *puVar7 | (int)cVar2 & 2U;
+  return puVar6;
+}
 /* PECMD_FixKnownDlls32 — KnownDlls32 环境修复: 首个调用时读取系统模式标志, 在 64 位
    系统中注册 \\KnownDlls32 路径(经 ntdll 函数指针槽), 仅执行一次. */
 uint FUN_14000e0bc(void) { return 0; }           /* 操作系统位宽探测 (no-op) */
@@ -1274,13 +1324,13 @@ int FUN_140067d20(long long *param_1, int *param_2)   /* @0x140067d20 数值解�
     }
     return bVar1 != 0;
 }
-/* @0x14006a7f4 size=38 — 解析大小数字并跳空白(直移; ParseSizeNumber 现为 void stub) */
-uint64_t PECMD_ParseSizeAndSkipWs(void *param_1, uint64_t *param_2)
+/* @0x14006a7f4 size=38 — 解析数值, 成功(非0)时跳过前导空白, 返回低32位 (直移; ParseSizeNumber 为叶桩) */
+uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2)
 {
-  int64_t pp = (int64_t)(intptr_t)param_1, out = 0;
-  PECMD_ParseSizeNumber(&pp,&out);
-  PECMD_SkipLeadingControlChars((long long *)(intptr_t)param_1);
-  return 0;
+  int64_t v = 0;
+  PECMD_ParseSizeNumber(param_1, &v);
+  if ((int)v != 0) PECMD_SkipLeadingControlChars((long long *)param_1);
+  return (uint64_t)v & 0xffffffff;
 }
 uint64_t PECMD_EncodeStringId(void) { return 0; }
 /* @0x14006f884 size=131 — 读环境变量到动态串(直移) */
@@ -1798,7 +1848,7 @@ uint64_t SetupDiSetDeviceRegistryPropertyW(void) { return 0; }
 uint64_t Shell_NotifyIconW(void) { return 0; }
 uint64_t ShowScrollBar(void) { return 0; }
 int ShowWindow(void *h, int c) { (void)h;(void)c; return 0; }
-uint64_t SizeofResource(void) { return 0; }
+uint64_t SizeofResource(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }
 void Sleep(unsigned long ms) { (void)ms; }
 uint64_t SleepEx(void) { return 0; }
 uint64_t StartServiceCtrlDispatcherW(void) { return 0; }
@@ -1810,6 +1860,7 @@ int SetThreadDesktop(void *d) { (void)d; return 1; }
 int SwitchDesktop(void *d) { (void)d; return 1; }
 int CloseDesktop(void *d) { (void)d; return 1; }
 unsigned int DragQueryFileW(uint64_t a, uint32_t b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 0; }
+void FUN_140068984(long long *a, long long *b, char c) { (void)a;(void)b;(void)c; }
 /* @0x1400e63c8 size=— 枚举窗口回调(直移) */
 bool PECMD_EnumWindowFindProc(POINT param_1, POINT *param_2)
 {
@@ -2034,7 +2085,7 @@ uint64_t FUN_140001188(void) { return 0; }
 uint64_t FUN_14000C764(void) { return 0; }
 uint64_t PECMD_ResizeBuffer(void) { return 0; }
 uint64_t PECMD_GetWindowObjectRef(void) { return 0; }
-uint64_t PECMD_EncodeDet(void) { return 0; }
+uint64_t PECMD_EncodeDet(long long a, uint64_t b) { (void)a;(void)b; return 1; }
 uint64_t PECMD_ParseHashNumbers(void) { return 0; }
 uint64_t PECMD_GetComboItemText(void) { return 0; }
 /* @0x14007e34c size=87 — 容器/对象字段初始化(直移) */
@@ -3798,7 +3849,7 @@ uint64_t CreateIconFromResourceEx(void){ return 0; }
 uintptr_t g_hFontE2B8;   /* DAT_14013e2b8 缓存字体 (HFONT, 初值 0, 惰性创建) */
 /* ---- 075c7c/00cedc 依赖 ---- */
 uint64_t LCMapStringW(void){ return 0; }
-uint64_t FUN_140063224(void){ return 0; }
+void *FUN_140063224(uint64_t *a, uint64_t b) { (void)a;(void)b; return 0; }
 uint64_t thunk_FUN_1400f429c(void *a, short b) { (void)a;(void)b; return 0; }
 
 /* ============================================================
