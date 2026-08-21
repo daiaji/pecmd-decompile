@@ -893,7 +893,25 @@ void FUN_140025f10(long long p1, const WCHAR *p2, uint32_t p3, char *p4, char *p
 uint64_t FUN_140026338(void) { return 0; }
 uint64_t FUN_14002ca30(void) { return 0; }
 uint64_t FUN_14002cc30(void) { return 0; }
-uint64_t FUN_14002e30c(void) { return 0; }
+/* @0x14002e30c size=— 资源串按行拆分入表(直移) */
+void FUN_14002e30c(void)
+{
+  uint16_t buf[4100]; uint64_t ls;
+  buf[0] = 0;
+  const uint16_t *p = PECMD_LoadLocalizedString((void *)(uintptr_t)DAT_14013ca68,0x271f,(uint16_t *)buf,0x1000);
+  uint16_t w = *p;
+  const uint16_t *line = p;
+  while ((line = p, w != 0)) {
+    const uint16_t *q = line;
+    for (; (w = *q, w != 0 && (w != L'\r')) && (w != L'\n'); q++) {}
+    if (*q != 0) { *(uint16_t *)q = 0; q++; }
+    if ((uintptr_t)q != 0) { for (; (*q == L'\n' || *q == L'\r'); q++) {} }
+    PECMD_StrDupAssign((uint16_t **)&ls,(const uint16_t *)line);
+    FUN_140023640((uint64_t)(uintptr_t)&DAT_14013d130,(uint64_t)ls,-1);
+    FUN_14005b104((long long *)&ls);
+    p = q; w = *q;
+  }
+}
 void PECMD_SendHotkeyKeyMessage(uint32_t a, int b, int c) { (void)a;(void)b;(void)c; }   /* 签名修正: uint32_t,int,int */
 uint64_t FUN_14003e1f0(void) { return 0; }
 void FUN_14004c0bc(uint64_t script, uint64_t cmd, void *p3, void *p4, void *p5) { (void)script;(void)cmd;(void)p3;(void)p4;(void)p5; }
@@ -1894,6 +1912,7 @@ int CloseDesktop(void *d) { (void)d; return 1; }
 unsigned int DragQueryFileW(uint64_t a, uint32_t b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 void FUN_140068984(long long *a, long long *b, char c) { (void)a;(void)b;(void)c; }
 int FUN_140050f58(void *a, void *b, uint c) { (void)a;(void)b;(void)c; return -2; }
+void FUN_140023640(uint64_t a, uint64_t b, int c) { (void)a;(void)b;(void)c; }
 /* @0x1400e63c8 size=— 枚举窗口回调(直移) */
 bool PECMD_EnumWindowFindProc(POINT param_1, POINT *param_2)
 {
