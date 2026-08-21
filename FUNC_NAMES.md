@@ -4,6 +4,10 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14005eefc | FUN_14005eefc | PECMD_ExpandPercentD |
+| 0x14007de70 | FUN_14007de70 | PECMD_StrSetOrConcat |
+| 0x140061470 | FUN_140061470 | PECMD_WaitTickCount |
+| 0x1400705ac | FUN_1400705ac | PECMD_DispatchGlobalMessage |
 | 0x1400fcf44 | FUN_1400fcf44 | PECMD_InitScrollObj |
 | 0x1400e6860 | FUN_1400e6860 | PECMD_EndDialogDeferred |
 | 0x1400e8940 | FUN_1400e8940 | PECMD_DestroyWindowObj |

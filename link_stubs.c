@@ -993,7 +993,7 @@ void PECMD_BringWindowToFront(void *param_1)
 uint64_t PECMD_NextRandomSeed(void) { return 0; }
 void FUN_14005e7dc(uint64_t *param_1) { (void)param_1; }
 /* @0x140061470 size=— 10ms 待标志/超时循环(直移) */
-void FUN_140061470(void)
+void PECMD_WaitTickCount(void)
 {
   uint32_t t0 = GetTickCount();
   for (;;) {
@@ -1373,7 +1373,7 @@ void PECMD_ExpandVarDispatch(void *param_1, WCHAR *param_2, void *param_3, int p
 }
 uint64_t PECMD_SetVariableWithPrefix(void) { return 0; }
 /* @0x14007de70 size=— 串覆盖或合并(直移) */
-uint64_t *FUN_14007de70(uint64_t *param_1,uint64_t *param_2,LPCWSTR param_3)
+uint64_t *PECMD_StrSetOrConcat(uint64_t *param_1,uint64_t *param_2,LPCWSTR param_3)
 {
   if ((uintptr_t)param_3 == 0) {
     PECMD_StrDupAssign((uint16_t **)param_2,(const uint16_t *)*param_1);
@@ -2965,7 +2965,7 @@ uint64_t EnumResourceNamesW(void){ return 0; }
 uint64_t CreateIconFromResource(void){ return 0; }
 uint64_t PECMD_ParseAngleNumbers(uint64_t *a, int64_t *b, int64_t *c, int64_t *d, int64_t *e){ (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
 /* @0x1400705ac size=— 全局消息分派(直移) */
-int64_t FUN_1400705ac(int64_t *a, const uint16_t *b, uint32_t c, uint64_t d, uint64_t e, uint32_t f, uint32_t g, uint64_t h)
+int64_t PECMD_DispatchGlobalMessage(int64_t *a, const uint16_t *b, uint32_t c, uint64_t d, uint64_t e, uint32_t f, uint32_t g, uint64_t h)
 {
   (void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h;
   if ((long long)DAT_14013d3b8 < 2) return 0;
@@ -3261,7 +3261,7 @@ uint64_t PTR_FUN_140126560;
 uint64_t FUN_14003c06c(void) { return 0; }
 uint64_t PECMD_LzDecompress(void) { return 0; }
 /* @0x14005eefc size=173 — 展开 %% 与 %d(直移) */
-uint16_t *FUN_14005eefc(uint16_t *param_1, WCHAR *param_2)
+uint16_t *PECMD_ExpandPercentD(uint16_t *param_1, WCHAR *param_2)
 {
   uint16_t w = *param_2;
   for (;;) {

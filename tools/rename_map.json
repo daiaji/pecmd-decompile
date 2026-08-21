@@ -1122,5 +1122,9 @@
   "FUN_1400e8940": "PECMD_DestroyWindowObj",
   "FUN_1400a43c4": "PECMD_CreateNamedWaitObj",
   "FUN_14005c898": "PECMD_LazyLoadProc",
-  "FUN_14001d744": "PECMD_MemMoveSafe"
+  "FUN_14001d744": "PECMD_MemMoveSafe",
+  "FUN_14005eefc": "PECMD_ExpandPercentD",
+  "FUN_14007de70": "PECMD_StrSetOrConcat",
+  "FUN_140061470": "PECMD_WaitTickCount",
+  "FUN_1400705ac": "PECMD_DispatchGlobalMessage"
 }

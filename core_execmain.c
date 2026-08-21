@@ -79,7 +79,7 @@ extern void PECMD_ModalDialogPump(void *win, uint32_t msg);       /* @0x1400e91f
 extern void FUN_1400b1724(void *script, LPCWSTR p);       /* @0x1400b1724 脚本执行循环 */
 extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
                           void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
-extern void FUN_140061470(void);                          /* @0x140061470 */
+extern void PECMD_WaitTickCount(void);                          /* @0x140061470 */
 extern void FUN_14001a640(WCHAR *buf);                    /* @0x14001a640 恢复当前目录 */
 extern void PECMD_SyncWorkingDirectory(void);                          /* @0x14001e2cc */
 extern void FUN_14009BB28(void *script, int flag);        /* @0x14009bb28 脚本清理 */
@@ -412,7 +412,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
     }
     LeaveCriticalSection(&g_csInit);
 ref_done:
-    FUN_140061470();
+    PECMD_WaitTickCount();
 
     /* 还原 CurDir/CurDrv/CurFile 变量；persistMode 时同步持久化对象 */
     if (pCurFile != NULL) {

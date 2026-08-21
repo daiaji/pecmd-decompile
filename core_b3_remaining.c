@@ -305,7 +305,7 @@ extern int64_t  PECMD_ModalMsgPumpEx(int64_t *param_1, uint64_t param_2);   /* @
 extern void     FUN_1400668ec(int64_t *param_1, uint64_t param_2, LPCWSTR param_3, LPCWSTR param_4); /* @0x1400668ec */
 extern uint32_t PECMD_ModalDialogPump(int64_t *param_1, uint64_t param_2);   /* @0x1400e91f0 */
 extern void     PECMD_ClearTaskTable(int64_t script, int mode);             /* @0x14004eaa8 */
-extern void     FUN_140061470(void);                                 /* @0x140061470 */
+extern void     PECMD_WaitTickCount(void);                                 /* @0x140061470 */
 extern uint64_t PECMD_ParseAndSkipSpace_7f90(int64_t *param_1, double *param_2);    /* @0x140077f90 */
 extern int64_t *PECMD_SplitTokenAssignVar(int64_t *param_1, int64_t *param_2, short param_3, uint8_t param_4); /* @0x14007f6e4 */
 extern void     PECMD_ExtractTokenByDelim(int64_t *param_1, int64_t *param_2, short param_3); /* @0x1400676e4 */
@@ -624,7 +624,7 @@ extern void     PECMD_InitTableSlots(uint64_t *param_1, int64_t *param_2, uint64
 extern uint32_t PECMD_LoadIconFrames(int64_t *param_1, uint64_t *param_2, int *param_3); /* @0x14007db70 */
 extern uint64_t PECMD_OneTimeInit(void);                              /* @0x14007053c 工作区句柄 */
 extern uint64_t *PECMD_InitObject(uint64_t *param_1, uint64_t param_2); /* @0x14005b3a0 构造对象 */
-extern int64_t  FUN_1400705ac(int64_t *param_1, LPCWSTR param_2, uint32_t param_3,
+extern int64_t  PECMD_DispatchGlobalMessage(int64_t *param_1, LPCWSTR param_2, uint32_t param_3,
                               uint64_t param_4, uint64_t param_5, uint32_t param_6,
                               uint32_t param_7, uint64_t param_8); /* @0x1400705ac */
 extern uint64_t PECMD_ExpandDrivePathAlloc(LPCWSTR param_1, uint64_t *param_2); /* @0x14001c270 */
@@ -18839,7 +18839,7 @@ uint64_t PECMD_WindowThreadMain(int64_t *param_1)
         FUN_14005B104((WCHAR **)&local_198);
         FUN_14005B104((WCHAR **)&local_190);
         PECMD_RefCountRelease((WCHAR **)&local_res20);
-        FUN_140061470();
+        PECMD_WaitTickCount();
         if (!bVar16) {
             EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
             g_taskCount = g_taskCount + -1;
@@ -19537,7 +19537,7 @@ LAB_140082261:
     PECMD_ClearTaskTable((int64_t)(uintptr_t)&local_138, 0);
     FUN_14005B104((WCHAR **)local_c8);
     (*((void (**)(int64_t *, int))*plVar9 + 0x18))(plVar9, 1);
-    FUN_140061470();
+    PECMD_WaitTickCount();
     if (pHVar11 != (HWND)0) {
         SendMessageW(pHVar11, 0x451, (uint64_t)uVar15 | 1, 0);
     }
@@ -24903,7 +24903,7 @@ LAB_1400b72be:
             }
             *(int64_t **)(param_1 + 0x38) = plVar10;
             *(uint32_t *)(param_1 + 0xa0) = 0x12345004;
-            FUN_1400705ac(plVar10, (LPCWSTR)g_szEmpty, local_244 | 0x40000000,
+            PECMD_DispatchGlobalMessage(plVar10, (LPCWSTR)g_szEmpty, local_244 | 0x40000000,
                           (uint64_t)(uintptr_t)&local_190, *(uint64_t *)(lVar26 + 0x20),
                           uVar4, 0, 0);
             pHVar12 = local_218;

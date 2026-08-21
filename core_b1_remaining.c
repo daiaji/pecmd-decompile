@@ -168,7 +168,7 @@ extern void PECMD_ParseIntegerString(int64_t *ps, uint64_t *out);               
 extern uint64_t PECMD_GetParentProcessId(DWORD pid);                                 /* @0x140006988 */
 extern uint64_t PECMD_RunCommand(void *p1, void *p2);                        /* @0x140031454 */
 extern uint64_t PECMD_ParseDateTimeSpec(void *p1, void *p2, int p3, void *p4);      /* @0x1400408d0 */
-extern void *FUN_14007de70(void *a, void *b, LPCWSTR c);                  /* @0x14007de70 */
+extern void *PECMD_StrSetOrConcat(void *a, void *b, LPCWSTR c);                  /* @0x14007de70 */
 extern void PECMD_ExpandVarDispatch(int64_t *param_1, WCHAR *param_2, void *param_3, int param_4,
                           uint8_t param_5);                                /* @0x14007bf44 命令串解析 */
 /* 全局: 标准句柄 / 文件版本 / 进程创建 / 命令表 */
@@ -4722,35 +4722,35 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
         iLen = (int)((pStr - pTok) >> 1);            /* 基本名长度 */
         iBasename = iLen + 1;
 
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.exe"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.exe"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pDir, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.com"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.com"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.ntr"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.ntr"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.cmd"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.cmd"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.bat"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.bat"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a050, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".pecmdplugin.*.PEI"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".pecmdplugin.*.PEI"));
         PECMD_LoadPluginPecmdTbl((int *)&g_cmdTable1Count, *(LPCWSTR *)puSlot, pTok);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dll"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".$*.dll"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a090, *(LPCWSTR *)puSlot, pTok, iLen + 2, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".$*.dlx"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".$*.dlx"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a090, *(LPCWSTR *)puSlot, pTok, iLen + 2, 4);
         FUN_14005B104((WCHAR **)&lps3);
 
@@ -4817,18 +4817,18 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
             }
         }
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wci"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.wci"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wcs"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.wcs"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         pTok = lps2;
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wce"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.wce"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, pTok, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
-        puSlot = (uint64_t *)FUN_14007de70(&lps, &lps3, WSTR(".*.wcz"));
+        puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.wcz"));
         PECMD_ScanDirectory((uint64_t *)&PTR_PTR_14013a070, *(LPCWSTR *)puSlot, lps2, iBasename, 4);
         FUN_14005B104((WCHAR **)&lps3);
         FUN_14005B104((WCHAR **)&pData);
@@ -5593,7 +5593,7 @@ LAB_140016cfa:
                                   (LPCWSTR)**((uintptr_t **)((uintptr_t)g_cmdTable5 +
                                                         (long long)(int)uVar9 * 0x10)));
                     LeaveCriticalSection(&g_csInit);
-                    pLVar6 = (LARGE_INTEGER *)FUN_14007de70(&local_48, &local_res18, param_4);
+                    pLVar6 = (LARGE_INTEGER *)PECMD_StrSetOrConcat(&local_48, &local_res18, param_4);
                     LVar7 = FUN_14004c0bc((uint64_t)(intptr_t)(void *)param_1, *pLVar6,
                                           (long long *)0, (long long *)0, NULL);
                     memcpy(param_5, &LVar7, 8);

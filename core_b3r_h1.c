@@ -114,7 +114,7 @@ extern int       PECMD_QueryDiskGeometry(HANDLE param_1, uint64_t *param_2, int 
                                int param_4);                /* 磁盘 IO ctl */
 extern uint64_t  PECMD_ReadFileToWideString(HANDLE param_1, int64_t *param_2, uint32_t param_3); /* 读文本 */
 extern uint64_t  PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3);  /* 清洗文本 */
-extern LPWSTR    FUN_14005eefc(LPWSTR param_1, WCHAR *param_2);   /* 串拷贝 */
+extern LPWSTR    PECMD_ExpandPercentD(LPWSTR param_1, WCHAR *param_2);   /* 串拷贝 */
 extern void      PECMD_ExpandDrivePath(LPCWSTR path, DWORD a, LPWSTR buf, LPWSTR *out);
 extern int64_t   PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, uint64_t param_3,
                                uint64_t param_4, LARGE_INTEGER *param_5,
@@ -1149,10 +1149,10 @@ LAB_14008638a:
                     local_190 = pWVar16 + (int)(uintptr_t)pWVar25;
                     memcpy((void *)local_190, (const void *)local_b8, (int)(uintptr_t)pWVar27 * 2);
                     local_e0 = pWVar13;
-                    FUN_14005eefc(pWVar13, (WCHAR *)local_d0);
+                    PECMD_ExpandPercentD(pWVar13, (WCHAR *)local_d0);
                     pWVar3 = local_e8;
                     local_188 = pWVar19;
-                    FUN_14005eefc(pWVar19, local_140);
+                    PECMD_ExpandPercentD(pWVar19, local_140);
                     local_100 = (LPWSTR)((uintptr_t)local_100 + local_110);
                     local_e8 = (LPWSTR)((uintptr_t)pWVar3 + local_110);
                     uVar6 = local_170;
