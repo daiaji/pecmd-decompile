@@ -1302,7 +1302,7 @@ void FUN_14006fd1c(longlong *param_1,longlong *param_2,longlong *param_3,longlon
   *(uint16_t *)*param_6 = 0;
   PECMD_SplitTokenTrimWs(pl,param_6,0x3b);
   if (*(short *)*param_1 == 0x3b) *param_1 = (longlong)((short *)*param_1 + 1);
-  PECMD_SkipLeadingControlChars(param_1);
+  PECMD_SkipLeadingControlChars((long long *)param_1);
   longlong v = *param_6;
   *param_2 = v; *param_3 = v; *param_4 = v;
   short *p = (short *)*param_3;
