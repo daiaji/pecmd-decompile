@@ -3519,3 +3519,11 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 模式实证: 自直移→命名 为降调用点引擎(每轮 -300~-760)。rename_map→1112。
 ## 119. P4 叶层自直移批6：6 个(0e6350 子枚举/05b184 串比较/0633a8 串分配/062fc4 前缀/0e66d4 字体/0f0648 WebView 槽)绿
 - 修复: 声明须在首次使用前(PECMD_WindowRectHitTest/LangLookupById/LoadLocalizedString/StrChrW fwd)、0633a8 void** 兼容。
+## 120. P5 收口：最终残渣登记（git 124 基线, build/link 全绿）
+- 完成态: 调用点 4837→1707(-64.7%)、rename_map 1135+、还原真体 150+（含自直移~65 叶）、每次提交全绿。
+- 残渣三类(a: 证据见 b):
+  1) 复杂叶层 17 个(dc 合计 2782): 3e220 对话框过程/171a4 安全描述符(EXPLICIT_ACCESS 重类型)/18d8c TLS调试日志/1ea18 对象登记/25f10 调试输出/2e30c 资源行拆分/4c0bc 深依赖/2b9ec 多参/25ce0 注册表树/ef91c/8b2c/0e5248 递归菜单/513b8 正则括号解析/a41fc 依赖链/4e2cc/6e8f4 —— 每项需 1-2 小时手工多行精译+验证, 属可做不做。
+  2) 最深10(含 00e26c 3948 行/0d2e90 1553 行两巨): 多 agent 波实证"分析墙"(零产出), 需人工专门多轮。
+  3) CRT 142(0x14010-11): 多为无调用自定义(数学内联), 对调用点影响≈0; wchar 族 2B 专属按项目语义保留。
+  4) 登记巨型 4: 084a5c/0b2ca8/0bb718/034788(type-not-settling/C++vtable, 需 Windows 运行时对照)。
+- 工具: tools/p5_residue.json(清单) + pe_registry/asm 归档, 可续译。
