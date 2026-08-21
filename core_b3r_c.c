@@ -17,7 +17,7 @@ extern void FUN_14005b104(void *ps);                         /* @0x14005b104 fre
 extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
-extern void FUN_140018d8c(uint64_t ctx, const WCHAR *fmt, uint64_t a, uint64_t b); /* @0x140018d8c debug */
+extern void PECMD_TlsLogWrite(uint64_t ctx, const WCHAR *fmt, uint64_t a, uint64_t b); /* @0x140018d8c debug */
 extern void PECMD_AsciiTrimToWide(void **pp, const void *src, uint64_t len); /* @0x14005fe34 append bytes as wide */
 extern uint16_t *PECMD_DataToWideString(int64_t data, int start, int end, uint16_t *out); /* @0x14005fd7c */
 extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);        /* @0x14001f1d4 */
@@ -97,7 +97,7 @@ uint64_t PECMD_QueryDevice(HANDLE param_1, uint64_t param_2, uint16_t *param_3, 
         *(uint32_t *)(buf + 0x410) = 0;
     }
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("DBGG %d %d %d: %d %d %d\r\n"), 0x36a5, (uint64_t)param_4);
     }
 
@@ -140,7 +140,7 @@ L1400779bd:
             uVar8 = DeviceIoControl(param_1, 0x7c088, buf, 0x21, lpOutBuffer, 0x400, &local_54[0], 0);
             uVar13 = uVar8;
             if (g_u8CCB1 != 0) {
-                FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                               WSTR("DBGA %d: %d 0x%X 0x%X\r\n"), 0x36df, (uint64_t)uVar13);
             }
             if ((uVar8 != 0) && (*(uint16_t *)(buf + 0x424) > 0x1fff) &&
@@ -183,7 +183,7 @@ L140077696:
                 }
                 if (g_u8CCB1 != 0) {
                     GetLastError();
-                    FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+                    PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                                   WSTR("DBGN %d: %d %d %d  %d %d %d %d %d err=%d\r\n"),
                                   0x370b, (uint64_t)uVar8);
                 }
@@ -252,7 +252,7 @@ L1400777ea:
                         bVar5 = 0;
                     }
                     if (g_u8CCB1 != 0) {
-                        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+                        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                                       WSTR("DBGS %d: %d %d %d %d %d %d\r\n"),
                                       0x3742, (uint64_t)uVar8);
                     }

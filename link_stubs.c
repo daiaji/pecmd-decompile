@@ -595,13 +595,13 @@ void PECMD_ReleaseCallbackObj(int *param_1)
   }
 }
 uint64_t PECMD_ScriptInit(void) { return 0; }
-/* FUN_140018d8c 前置: TLS 日志全局槽 (定义见后部 0x14013c934/0x14013cb18/0x14013cb41 区) */
+/* PECMD_TlsLogWrite 前置: TLS 日志全局槽 (定义见后部 0x14013c934/0x14013cb18/0x14013cb41 区) */
 extern unsigned long DAT_14013c934;
 extern longlong DAT_14013cb18[8];
 extern uint8_t  DAT_14013cb41;
 void *TlsGetValue(unsigned long idx);
 /* @0x140018d8c size=— TLS 调试日志写者(直移) */
-void FUN_140018d8c(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b)
+void PECMD_TlsLogWrite(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b)
 {
   (void)ctx;
   uint64_t local_res18 = a, local_res20 = b;

@@ -102,7 +102,7 @@ extern void      PECMD_InsertControlObject(WPARAM, int64_t, int64_t *, int, int,
 
 /* ---- 随机/时间 ---- */
 extern int64_t   PECMD_NextRandomSeed(void);                       /* @0x14005e04c 随机数 */
-extern void      FUN_140018d8c(void *ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
+extern void      PECMD_TlsLogWrite(void *ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
 
 /* ---- 文件/流 ---- */
 extern void      PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
@@ -1597,7 +1597,7 @@ LAB_140086cae:
                           (HANDLE)0x0);
             if (g_u8CCB1 != '\0') {
                 pvVar12 = GetStdHandle(0xfffffff6);
-                FUN_140018d8c(&g_Script, WSTR("infile=0x%p 0x%p bstin=%d\r\n"),
+                PECMD_TlsLogWrite(&g_Script, WSTR("infile=0x%p 0x%p bstin=%d\r\n"),
                               (uint64_t)local_d568, (uint64_t)pvVar12);
             }
             iVar22 = 0;

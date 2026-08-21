@@ -89,7 +89,7 @@ extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWO
                              HANDLE tmpl);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos, DWORD method); /* SetFilePointer */
 extern uint32_t PECMD_GetFileSize(HANDLE hFile);                         /* GetFileSize */
-extern void    FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
+extern void    PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
 extern WCHAR  *FUN_1400703e4(int64_t *out, LPCWSTR src);             /* StrCpyW2 */
 extern int64_t PECMD_FindVarValue(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
                              int param_4);                            /* 变量插值 */
@@ -1488,7 +1488,7 @@ LAB_14009ebed:
       local_b0.QuadPart = 0;
       local_88 = _Var27;
       if (g_u8CCB1 != '\0') {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("DBG %d:\r\n"), 0x556a, uVar7);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("DBG %d:\r\n"), 0x556a, uVar7);
       }
       local_c0 = 0;
       hObject.QuadPart = LVar19.QuadPart;

@@ -5028,7 +5028,7 @@ extern WCHAR _UNK_140121ff6;
 extern int64_t PECMD_OpenFileHandle();
 extern int64_t PECMD_CreateMutexSlot();
 extern int64_t PECMD_ReleaseMutex();
-extern int64_t FUN_140018d8c();
+extern int64_t PECMD_TlsLogWrite();
 extern int64_t FUN_1400195F0();
 extern int64_t FUN_14001a640();
 extern int64_t PECMD_RegisterCallbackWnd();
@@ -5652,7 +5652,7 @@ LAB_140039c58:
         local_630 = (uint32_t)local_a10;
         local_63c = (uint32_t)local_a30;
         if (cVar9 == '\0') {
-          FUN_140018d8c(script,WSTR("autodisp: w=%d h=%d r=%d f=%d\r\n"),local_a30 & 0xffffffff,
+          PECMD_TlsLogWrite(script,WSTR("autodisp: w=%d h=%d r=%d f=%d\r\n"),local_a30 & 0xffffffff,
                         local_a20 & 0xffffffff);
           goto LAB_140039e25;
         }

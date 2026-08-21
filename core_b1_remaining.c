@@ -100,7 +100,7 @@ extern uint32_t PECMD_GetFileSize(HANDLE hFile);                    /* @0x1400e6
 extern uint64_t PECMD_EncodeDet(int64_t buf, int len);            /* @0x14005f33c 编码检测 */
 extern uint32_t PECMD_ResDecode(int64_t *ps, uint32_t flag);      /* @0x1400e7d58 卸载/释放缓冲 */
 extern LPWSTR PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode); /* @0x14005fc90 GUID->字符串 */
-extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
+extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
 extern int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD); /* SetupDiGetINFClassW 槽 */
 extern BOOL LookupAccountSidW(LPCWSTR sys, void *sid, LPWSTR name, DWORD *cchName,
                               LPWSTR dom, DWORD *cchDom, int *peUse); /* Win32 API */
@@ -7069,7 +7069,7 @@ bool PECMD_MatchDeviceClass(int64_t param_1, WCHAR *param_2, uint64_t param_3)
     }
     iVar1 = lstrcmpiW(_Str1, param_2);
     if ((*(uint8_t *)(param_1 + 0x157) & 1) != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("\r\nDevClass[%s]:[%s] [%d] "),
                       (uint64_t)(uintptr_t)local_res8, (uint64_t)param_3);
     }

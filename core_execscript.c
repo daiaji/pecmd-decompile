@@ -32,7 +32,7 @@ int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词�
 void FUN_14005e7dc(LPVOID *psd);              /* @0x14005e7dc 安全描述符初始化 */
 void FUN_140026338(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
 void PECMD_DebugScriptString(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
-void FUN_140018d8c(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
+void PECMD_TlsLogWrite(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
 void PECMD_TruncateDebugLog(void);                     /* @0x140023544 */
 void PECMD_InitRamdataRegistry(int n);                    /* @0x14001b888 */
 void PECMD_FixKnownDlls32(void);                     /* @0x14002286c */
@@ -220,15 +220,15 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
             RegCloseKey(hKey);
         }
         if (g_logFlag != 0) {
-            FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1c, r);
+            PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1c, r);
         }
         PECMD_FixKnownDlls32();
         if (g_logFlag != 0) {
-            FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1e, r);
+            PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f1e, r);
         }
         PECMD_SwitchToDefaultDesktop();
         if (g_logFlag != 0) {
-            FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f20, r);
+            PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f20, r);
         }
     }
     if (p[0] != 0) {
@@ -251,7 +251,7 @@ after_init:
     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("MainPECMDPID"), 4,
                   (BYTE *)&pid, 4);
     if (g_logFlag != 0) {
-        FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f2a, r);
+        PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f2a, r);
     }
     FUN_1400e8574(&g_Script, 0);
     /* ---- 参数表初始化 (script+0x78/+0x80) ---- */
@@ -272,7 +272,7 @@ after_init:
         FUN_14005B104(&pTmp);
     }
     if (g_logFlag != 0) {
-        FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f36, r);
+        PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f36, r);
     }
     /* ---- 注册表: bInMain / CallBackhWnd ---- */
     if (!bUser) {
@@ -282,7 +282,7 @@ after_init:
                       &bInMain, 1);
     }
     if (g_logFlag != 0) {
-        FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f3a, r);
+        PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f3a, r);
     }
     if (p[0] != 0) {
         FUN_14001b850();
@@ -297,7 +297,7 @@ after_init:
     FUN_140077358();
     if ((p[0] != 0) || bUser) {
         if (g_logFlag != 0) {
-            FUN_140018d8c(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f45, r);
+            PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f45, r);
         }
         FUN_14005b228(ThreadCb, (LPVOID)0, 0x80000, 0x10000, &g_threadId,
                       (LPSECURITY_ATTRIBUTES)0);

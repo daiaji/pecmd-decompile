@@ -48,7 +48,7 @@ extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);             /* @0x14005c5a0 */
-extern void FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
+extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void PECMD_AllocStrSlot(void *ps);
@@ -900,7 +900,7 @@ uint32_t FUN_1400E3288(uint32_t mode, uint32_t flags)
             WSTR("Policy"), &regType, &policy, &regVal[0]);
     result = policy;
     if (iVar2 == 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("DEVI驱动签名【%s】(%d.%d)\r\n"),
                       (uint64_t)(uintptr_t)&g_b12ae98,
                       (uint64_t)(flags & 0xffffffef));
@@ -1013,7 +1013,7 @@ LAB_365f:
                     goto log_result;
                 }
             } else if (regVal[0] == 0) {
-                FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("DEVI驱动签名【%s】\r\n"),
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("DEVI驱动签名【%s】\r\n"),
                               (uint64_t)(uintptr_t)&g_b12acc0, (uint64_t)uVar1);
             }
         } else {
@@ -1024,7 +1024,7 @@ LAB_365f:
             if (regVal[0] == 0) {
                 msg = WSTR("Err_");
 log_result:
-                FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                               WSTR("DEVI驱动签名【%s%d:0x%lx】\r\n"),
                               (uint64_t)(uintptr_t)msg, (uint64_t)step);
             }
@@ -2203,7 +2203,7 @@ uint64_t FUN_1400EDA04(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
     GetDIBits(hdc, srcBmp, 0, param4, NULL, &bmiSrc, 0);
     GetDIBits(hdc, dstBmp, 0, cLines, NULL, &bmiDst, 0);
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("DBGSCALEb\r\n"), 0, 0);
     }
     bmiSrc.bmiHeader.biCompression = 0;

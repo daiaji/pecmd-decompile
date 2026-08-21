@@ -272,7 +272,7 @@ extern void     PECMD_ForwardCall_6820(int64_t param_1, int param_2);   /* @0x14
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE param_1, LARGE_INTEGER param_2, DWORD param_3); /* @0x14005c674 */
 extern uint64_t PECMD_MergeBytesLE(uint8_t *param_1, uint32_t param_2); /* @0x14005ffe0 */
 extern uint64_t PECMD_PackDecimalDigits(char *param_1, int param_2);    /* @0x140069cdc */
-extern void     FUN_140018d8c(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c */
+extern void     PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c */
 extern int      StrCmpNA(LPCSTR lpString1, LPCSTR lpString2, int n); /* Win32 API */
 
 /* ---- DAT globals / vtable (by reference in these functions) ---- */
@@ -2860,7 +2860,7 @@ LAB_1400488b8:
                 pwVar48 = (WCHAR *)(uint64_t)(uint32_t)(int)(char)p_Var40->SectionName[0x9a];
                 wsprintfW(local_3e8, WSTR("Ver=%lX bNt6=%d bINF=%d bInstall=%d notcheck=%d rescan=%d"),
                           local_15c0 & 0xffffffff);
-                FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, WSTR("调试:[%s]\r\n"), (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)local_3e8, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pwVar48);
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, WSTR("调试:[%s]\r\n"), (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)local_3e8, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pwVar48);
             }
             uVar13 = (uint32_t)uVar41;
             if (cVar56 < 0) {
@@ -3081,7 +3081,7 @@ LAB_14004994f:
                                                 *(uint64_t *)local_1508 = 0;
                                                 PECMD_GuidToString((LPWSTR)local_1508, &local_16d8.ClassGuid.Data1, 1);
                                                 pwVar48 = (WCHAR *)lpStr1;
-                                                FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, local_1560, (uint64_t)(uintptr_t)(uint64_t)local_171c, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)lpStr1);
+                                                PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, local_1560, (uint64_t)(uintptr_t)(uint64_t)local_171c, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)lpStr1);
                                             }
                                             do {
                                                 iVar10 = 0;
@@ -3422,7 +3422,7 @@ LAB_14004b269:
             } else {
 LAB_14004939b:
                 if (local_181f == 1) {
-                    FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, WSTR("\r\n扫描硬件改动..."), (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_szEmpty, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pwVar48);
+                    PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)param_1, WSTR("\r\n扫描硬件改动..."), (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_szEmpty, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pwVar48);
                 }
                 FUN_140025f10((int64_t)param_1, WSTR("rescan--BEGIN"), 0, (pthreadmbcinfo)&DAT_00000011,
                               (pthreadmbcinfo)0, (int64_t *)0);
@@ -3686,7 +3686,7 @@ LAB_14004a9aa:
                     local_1768[iVar12] = 0;
                     PECMD_AppendWideStr((int64_t *)&local_1768, local_ea8.cFileName);
                     pWVar24 = local_1768;
-                    FUN_140018d8c((uint64_t)(uintptr_t)param_1, WSTR("\r\n安装驱动:[%s]\r\n"), (uint64_t)(uintptr_t)local_1768, (uint64_t)(uintptr_t)pwVar48);
+                    PECMD_TlsLogWrite((uint64_t)(uintptr_t)param_1, WSTR("\r\n安装驱动:[%s]\r\n"), (uint64_t)(uintptr_t)local_1768, (uint64_t)(uintptr_t)pwVar48);
                     pwVar48 = (WCHAR *)p_Var40;
                     (*g_pSetupIterateCabinetW)((void *)pWVar24, 0);
                     if (uVar39 != 0) {
@@ -4004,7 +4004,7 @@ LAB_14004b2fa:
     p_Var40->SectionName[0x6d] = 0;
     p_Var40->SectionName[0x6e] = 0;
     p_Var40->SectionName[0x6f] = 0;
-    FUN_140018d8c((uint64_t)(uintptr_t)param_1, WSTR("\r\n"), (uint64_t)(uintptr_t)g_szEmpty, (uint64_t)(uintptr_t)pwVar48);
+    PECMD_TlsLogWrite((uint64_t)(uintptr_t)param_1, WSTR("\r\n"), (uint64_t)(uintptr_t)g_szEmpty, (uint64_t)(uintptr_t)pwVar48);
     FUN_14005b104((int64_t *)&local_1770);
     FUN_14005b104((int64_t *)&local_1768);
     if ((local_1780 != (HANDLE)0) && (local_1780 != (HANDLE)(uintptr_t)-1)) {
@@ -9946,7 +9946,7 @@ uint64_t PECMD_ImageCommitUnmount(uint64_t param_1, int param_2, int param_3)
                 uVar3 = 1;
             }
             if (g_u8CCB1 != '\0') {
-                FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to obtain an image handle.[%s]\n"), (uint64_t)(uintptr_t)0x2a5d, (uint64_t)(uintptr_t)uVar3);
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to obtain an image handle.[%s]\n"), (uint64_t)(uintptr_t)0x2a5d, (uint64_t)(uintptr_t)uVar3);
             }
             goto LAB_14005f5be;
         }
@@ -9967,7 +9967,7 @@ LAB_14005f56a:
                 uVar3 = 1;
             }
             if (g_u8CCB1 != '\0') {
-                FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to commit the image\n"), (uint64_t)(uintptr_t)0x2a6e, (uint64_t)(uintptr_t)uVar3);
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to commit the image\n"), (uint64_t)(uintptr_t)0x2a6e, (uint64_t)(uintptr_t)uVar3);
             }
             iVar1 = 1;
             goto LAB_14005f56a;
@@ -9985,7 +9985,7 @@ LAB_14005f56a:
             uVar3 = 1;
         }
         if (g_u8CCB1 != '\0') {
-            FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to unmount the image\n"), (uint64_t)(uintptr_t)0x2a7f, (uint64_t)(uintptr_t)uVar3);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d: Error 0x%x attempting to unmount the image\n"), (uint64_t)(uintptr_t)0x2a7f, (uint64_t)(uintptr_t)uVar3);
         }
     }
 LAB_14005f5be:
@@ -10056,7 +10056,7 @@ uint8_t PECMD_SetDriveMount(int64_t param_1, uint32_t param_2, uint32_t param_3,
             *(uint16_t *)(uintptr_t)param_8 = *(uint16_t *)(lVar4 + 0x10 + param_1);
             local_40[0] = *(uint16_t *)(uintptr_t)param_8;
             if (((int)param_5 >> 8 != 0) && (g_u8CCB1 != '\0')) {
-                FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("unshow pt: %d:%d %c\r\n"), (uint64_t)(uintptr_t)(uint64_t)param_2, (uint64_t)(uintptr_t)(uint64_t)param_3);
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("unshow pt: %d:%d %c\r\n"), (uint64_t)(uintptr_t)(uint64_t)param_2, (uint64_t)(uintptr_t)(uint64_t)param_3);
             }
             if (param_6 != 0) {
                 BVar2 = DeleteVolumeMountPointW(local_40);
@@ -13520,7 +13520,7 @@ LAB_14006a699:
                                     }
                                 }
                                 if (g_u8CCB1 != '\0') {
-                                    FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d:  nPart=%d\r\n"), (uint64_t)(uintptr_t)(uint64_t)0x39b1, (uint64_t)(uintptr_t)(uint64_t)lVar18);
+                                    PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("%d:  nPart=%d\r\n"), (uint64_t)(uintptr_t)(uint64_t)0x39b1, (uint64_t)(uintptr_t)(uint64_t)lVar18);
                                     return lVar18;
                                 }
                                 return lVar18;
@@ -15546,7 +15546,7 @@ uint64_t PECMD_SetDHCPSettings(uint64_t *param_1, LPCSTR param_2, uint8_t *param
         plVar2 = FUN_1400702f0(&local_res20, param_2, 0xffffffffffffffffULL);
         lVar1 = *plVar2;
         plVar2 = FUN_1400702f0(&local_28, (LPCSTR)param_3, 0xffffffffffffffffULL);
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("\r\nRegSetDHCP(%s,%s)\r\n"),
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("\r\nRegSetDHCP(%s,%s)\r\n"),
                       (uint64_t)lVar1, (uint64_t)*plVar2);
         FUN_14005B104((WCHAR **)&local_res20);
         FUN_14005B104((WCHAR **)&local_28);
@@ -20530,7 +20530,7 @@ LAB_14008c016:
     DVar7 = PECMD_QueryDeviceIoInfo((HANDLE)hObject, 0x200);
     local_508 = DVar7;
     if (g_u8CCB1 != '\0') {
-        FUN_140018d8c((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("DBG %d: disk %s Drv:[0x%X] DT:%d\r\n"), (uint64_t)(uintptr_t)0x3a7b, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pWVar21);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)(uint64_t)(uintptr_t)g_Script, WSTR("DBG %d: disk %s Drv:[0x%X] DT:%d\r\n"), (uint64_t)(uintptr_t)0x3a7b, (uint64_t)(uintptr_t)(uint64_t)(uintptr_t)pWVar21);
     }
     local_544 = 0;
     puVar12 = PECMD_GetDiskLayoutInfo((HANDLE)hObject, (uint64_t *)(uintptr_t)local_510, &local_544);

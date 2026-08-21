@@ -130,7 +130,7 @@ extern void PECMD_AppendDebugLog(LPCSTR msg);
 extern bool PECMD_ParseNumber(int64_t *pp, int *out);
 extern DWORD FUN_1400195F0(uint64_t script, int64_t ms, int mode,
                            uint64_t *arg);
-extern void FUN_140018d8c(uint64_t script, LPCWSTR fmt, uint64_t a,
+extern void PECMD_TlsLogWrite(uint64_t script, LPCWSTR fmt, uint64_t a,
                           uint64_t b);
 extern HWND PECMD_ReadValidWindowHandle(void *p);
 extern void PECMD_TruncateDebugLog(void);
@@ -2528,7 +2528,7 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
     int64_t delay = 500;
 
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ba, a4);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ba, a4);
     }
     if ((g_runFlag & 0x20) != 0) {
         hWnd = PECMD_ReadValidWindowHandle(PTR_u_CallBackhWnd_14011e668_2_14013a288);
@@ -2536,23 +2536,23 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
         SendMessageW(hWnd, 0x44a, 0, 0);
     }
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c0, a4);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c0, a4);
     }
     SendMessageW(g_hwndCF78, 0x44a, 0, 0);
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c2, 0);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c2, 0);
     }
     if ((DAT_140147003 != 0) && (DAT_140147002 == 0)) {
         DAT_140147002 = 1;
         PECMD_InitIfOldSystem();
     }
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c4, 0);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c4, 0);
     }
     while ((g_pwszD250 == NULL) || (*g_pwszD250 == L'\0')) {
         FUN_140022A70(script, 0);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                           WSTR("MAIN_DBG:%d %u MyShell[%s]\r\n"), 0x26c8,
                           (uint64_t)GetCurrentProcessId());
         }
@@ -2564,7 +2564,7 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
         }
     }
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ce, 0);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ce, 0);
     }
     SleepEx(10, 1);
     PECMD_TruncateDebugLog();
@@ -2585,7 +2585,7 @@ void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
     for (;;) {
         while (1) {
             if (g_u8CCB1 != 0) {
-                FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26e9, 0);
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26e9, 0);
             }
             if (PECMD_IsSingleInstance() == 0) {
                 break;
@@ -2596,7 +2596,7 @@ loop_retry:
             FUN_14007034C((int64_t *)&shellCmd, g_pwszD250);
         }
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26eb, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26eb, 0);
         }
         if ((g_topiconFlag != 0) && (g_hwndTray == 0)) {
             SendMessageW(g_hwndCF78, 1099, 0, 0);
@@ -2605,11 +2605,11 @@ loop_retry:
             goto loop_retry;
         }
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ee, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26ee, 0);
         }
         pWVar6 = (LPCWSTR)PECMD_IsExplorerPath((int16_t *)shellName);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f0, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f0, 0);
         }
         if ((g_runFlag & 0x80) != 0) {
             goto loop_retry;
@@ -2622,20 +2622,20 @@ loop_retry:
         }
         PECMD_ApplyDesktopWallpaper();
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f3, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f3, 0);
         }
         SendMessageW(g_hwndCF78, 0x44a, 0, 0);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f5, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26f5, 0);
         }
         LoadEnvi(g_szEmpty, g_szEmpty);
         startTick = GetTickCount();
         FUN_1400702B0(&cmdCopy, shellCmd);
         cmdType = FUN_14001ab84(cmdCopy);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26fc, 0);
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26fc, 0);
             if (g_u8CCB1 != 0) {
-                FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+                PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                               WSTR("MAIN_DBG:%d %u MyShell[%s]\r\n"), 0x26fd,
                               (uint64_t)GetCurrentProcessId());
             }
@@ -2676,7 +2676,7 @@ after_wait:
         }
         FUN_14007034C((int64_t *)&shellCmd, g_pwszD250);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                           WSTR("MAIN_DBG:%d MyShell[%s]\r\n"), 0x270b,
                           (uint64_t)(uintptr_t)shellCmd);
         }
@@ -2684,7 +2684,7 @@ after_wait:
         pWVar4 = PECMD_TruncateAtCommaSkipSpace(pWVar4);
         shellName = PECMD_GetFileName(pWVar4);
         if (g_u8CCB1 != 0) {
-            FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                           WSTR("MAIN_DBG:%d ShellName[%s]\r\n"), 9999,
                           (uint64_t)(uintptr_t)shellName);
         }

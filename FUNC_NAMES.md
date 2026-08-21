@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140018d8c | FUN_140018d8c | PECMD_TlsLogWrite |
 | 0x14001ea18 | FUN_14001ea18 | PECMD_LoadEncodedResource |
 | 0x140025ce0 | FUN_140025ce0 | PECMD_ParseScopeKeywords |
 | 0x1400e57c0 | FUN_1400e57c0 | PECMD_InitWinObjBase |

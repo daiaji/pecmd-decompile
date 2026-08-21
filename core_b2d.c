@@ -66,7 +66,7 @@ extern int64_t *PECMD_SkipWsByte(int64_t *a1);
 extern void *PECMD_CreateMutexToSlot(void *out, LPCWSTR name);
 extern void PECMD_ReleaseMutex(void *out);
 extern void PECMD_AppendDebugLog(LPCSTR msg);
-extern void FUN_140018d8c(uint64_t a1, LPCWSTR a2, uint64_t a3,
+extern void PECMD_TlsLogWrite(uint64_t a1, LPCWSTR a2, uint64_t a3,
                           uint64_t a4);
 extern uint32_t PECMD_GetWinlogonBackground(void);
 extern uint64_t *PECMD_NormalizeNewlines(uint64_t *a1);
@@ -386,7 +386,7 @@ label_shell_name:
     local_res18[0] = 26000;
     PECMD_ReadPelogonReg(pwVar6, pWVar1, 13000);
     if (g_u8CCB1 != 0) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script,
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("MAIN_DBG:%d/0x%X MyShell[%s] [%s] 0x%X\r\n"), 0x242c,
                       (uint64_t)(uint32_t)(int8_t)g_runFlag);
     }
@@ -1195,7 +1195,7 @@ char FUN_14002C048(int64_t *ctx, int mode, void *fileInfo,
         ctx[0x25] = ctx[0x25] + (int64_t)iVar8 * 2;
     }
     if ((ctx[0x1f] == 0) && (g_u8CCB1 != 0)) {
-        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("已解压出:[%s]\r\n"),
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("已解压出:[%s]\r\n"),
                       (uint64_t)(uintptr_t)pWVar12, flags);
     }
 label_02c489:
@@ -1755,7 +1755,7 @@ label_03aee2:
                 if (*pCount == 0) {
                     *(int32_t *)&plVar5[0x34] = -1;
                     if ((*(uint8_t *)&plVar5[0x36] & 0x10) != 0) {
-                        FUN_140018d8c((uint64_t)(uintptr_t)g_Script, WSTR("END 1111\r\n"),
+                        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("END 1111\r\n"),
                                       (uint64_t)(uintptr_t)pWVar14,
                                       (uint64_t)(uintptr_t)pWVar15);
                     }
