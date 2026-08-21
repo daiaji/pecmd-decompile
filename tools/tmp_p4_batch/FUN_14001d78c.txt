@@ -1,0 +1,21 @@
+/* ========== FUN_14001d78c @ 14001d78c  size=36 ========== */
+/* signature: undefined1 * __fastcall FUN_14001d78c(undefined1 * param_1, undefined1 * param_2, int param_3) */
+
+undefined1 * FUN_14001d78c(undefined1 *param_1,undefined1 *param_2,int param_3)
+
+{
+  int iVar1;
+  undefined1 *puVar2;
+  
+  if ((param_1 != param_2) && (iVar1 = param_3 + -1, -1 < iVar1)) {
+    puVar2 = param_1;
+    do {
+      *puVar2 = puVar2[(longlong)param_2 - (longlong)param_1];
+      puVar2 = puVar2 + 1;
+      iVar1 = iVar1 + -1;
+    } while (-1 < iVar1);
+  }
+  return param_1;
+}
+
+

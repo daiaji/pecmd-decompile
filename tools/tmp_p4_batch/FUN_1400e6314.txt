@@ -1,0 +1,18 @@
+/* ========== FUN_1400e6314 @ 1400e6314  size=59 ========== */
+/* signature: undefined __fastcall FUN_1400e6314(HWND param_1, POINT param_2) */
+
+void FUN_1400e6314(HWND param_1,POINT param_2)
+
+{
+  tagRECT local_18;
+  
+  local_18.left = 0;
+  local_18.top = 0;
+  local_18.right = 0;
+  local_18.bottom = 0;
+  GetWindowRect(param_1,&local_18);
+  PtInRect(&local_18,param_2);
+  return;
+}
+
+

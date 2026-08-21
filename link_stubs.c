@@ -765,8 +765,22 @@ void PECMD_ReleaseGdiObjects(undefined8 *param_1, HWND param_2){
 }
 
 void PECMD_DialogBeepNotify(int64_t a, int b) { (void)a;(void)b; }
-void FUN_14005daf8(int64_t a, int *b, int *c, int *d, int *e) { (void)a;(void)b;(void)c;(void)d;(void)e; }
-uint64_t FUN_14005dec4(void) { return 0; }
+/* @0x14005daf8 size=159 — 按工作区缩放四格(直移) */
+void FUN_14005daf8(int64_t a, int *b, int *c, int *d, int *e)
+{
+  int sc = *(int *)(a + 0x17c);
+  if (0 < sc) {
+    *b = (*b * sc) / 0x60; *c = (*c * sc) / 0x60;
+    *d = (*d * sc) / 0x60; *e = (*e * sc) / 0x60;
+  }
+}
+/* @0x14005dec4 size=16 — 取对象偏移实例字段(直移) */
+uint64_t FUN_14005dec4(longlong param_1)
+{
+  if (*(longlong *)(param_1 + 0x40) != 0)
+    return *(uint64_t *)(*(longlong *)(param_1 + 0x40) + 0x20);
+  return 0;
+}
 uint64_t FUN_14005ded4(void) { return 0; }
 uint64_t PECMD_NextRandomSeed(void) { return 0; }
 void FUN_14005e7dc(uint64_t *param_1) { (void)param_1; }
@@ -1285,7 +1299,7 @@ uint64_t SetLocalTime(void) { return 0; }
 int SetMenuItemBitmaps(void *m, unsigned int id, unsigned int f, void *b1, void *b2) { (void)m;(void)id;(void)f;(void)b1;(void)b2; return 0; }
 uint64_t SetParent(void) { return 0; }
 uint64_t SetPixel(void) { return 0; }
-uint64_t SetProcessWorkingSetSize(void) { return 0; }
+uint64_t SetProcessWorkingSetSize(void *h, uint64_t a, uint64_t b) { (void)h;(void)a;(void)b; return 1; }
 uint64_t SetScrollInfo(void) { return 0; }
 uint64_t SetScrollPos(void) { return 0; }
 uint64_t SetScrollRange(void) { return 0; }
@@ -1679,7 +1693,14 @@ undefined8 FUN_140004e34(int param_1, longlong param_2){
     return 0;
 }
 
-uint64_t FUN_140004fd4(void) { return 0; }
+/* @0x140004fd4 size=56 — 压缩工作集后执行命令入口(直移) */
+void FUN_140004fd4(LPCWSTR param_1)
+{
+  extern void *DAT_14013cf70;
+  extern int64_t FUN_14004EB34(void *, uint64_t, const WCHAR *);
+  FUN_14004EB34(DAT_14013cf70,0,param_1);
+  SetProcessWorkingSetSize((void *)(uintptr_t)GetCurrentProcess(),(uint64_t)-1,(uint64_t)-1);
+}
 
 /* 数据 / 虚表 / API 槽符号桩 */
 uint64_t _UNK_1401265b8;
@@ -1810,7 +1831,13 @@ uint64_t *PECMD_GetDiskLayoutInfo(uintptr_t h, uint64_t *buf, uint32_t *out){ (v
 uint32_t PECMD_GetDiskGeometry(const uint16_t *p, uintptr_t h){ (void)p;(void)h; return 0; }
 
 /* --- r37 follow-up stubs (main-agent closure after subagent interrupt) --- */
-uint32_t FUN_140006a4c(const uint16_t *p){ (void)p; return 0; }
+/* @0x140006a4c size=83 — 判断设备路径前缀 (\Device\ / \ArcName\) (直移) */
+uint32_t FUN_140006a4c(LPCWSTR param_1)
+{
+  if (StrCmpNIW((const WCHAR *)L"\\Device\\",param_1,8) != 0 && StrCmpNIW((const WCHAR *)L"\\ArcName\\",param_1,9) != 0)
+    return 0;
+  return 1;
+}
 int64_t PECMD_OpenFileExisting(uint64_t a, uint64_t b, uint64_t c){ (void)a;(void)b;(void)c; return 0; }
 uint64_t DuplicateTokenEx(void){ return 0; }
 uint64_t SetTokenInformation(void){ return 0; }

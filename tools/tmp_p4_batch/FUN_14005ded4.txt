@@ -1,0 +1,23 @@
+/* ========== FUN_14005ded4 @ 14005ded4  size=157 ========== */
+/* signature: undefined __fastcall FUN_14005ded4(HWND param_1) */
+
+void FUN_14005ded4(HWND param_1)
+
+{
+  _STARTUPINFOW local_78;
+  
+  local_78.lpReserved = (LPWSTR)0x0;
+  local_78.cb = 0x68;
+  FUN_140102a90((ulonglong *)&local_78.lpDesktop,0,0x58);
+  GetStartupInfoW(&local_78);
+  if ((((byte)local_78.dwFlags & 1) == 0) || (local_78.wShowWindow != 0)) {
+    ShowWindow(param_1,5);
+    SetWindowPos(param_1,(HWND)0x0,0,0,0,0,3);
+    SetActiveWindow(param_1);
+    SetForegroundWindow(param_1);
+    BringWindowToTop(param_1);
+  }
+  return;
+}
+
+

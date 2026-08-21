@@ -1,0 +1,18 @@
+/* ========== FUN_14006a7f4 @ 14006a7f4  size=38 ========== */
+/* signature: ulonglong __fastcall FUN_14006a7f4(longlong * param_1, ulonglong * param_2) */
+
+ulonglong FUN_14006a7f4(longlong *param_1,ulonglong *param_2)
+
+{
+  ulonglong uVar1;
+  ulonglong uVar2;
+  
+  uVar1 = FUN_14006a740(param_1,param_2);
+  uVar2 = uVar1 & 0xffffffff;
+  if ((int)uVar1 != 0) {
+    FUN_14005b154(param_1);
+  }
+  return uVar2 & 0xffffffff;
+}
+
+

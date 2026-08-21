@@ -1,0 +1,17 @@
+/* ========== FUN_14007bf44 @ 14007bf44  size=52 ========== */
+/* signature: undefined __fastcall FUN_14007bf44(longlong * param_1, WCHAR * param_2, undefined8 * param_3, int param_4, byte param_5) */
+
+void FUN_14007bf44(longlong *param_1,WCHAR *param_2,undefined8 *param_3,int param_4,byte param_5)
+
+{
+  if ((*(char *)((longlong)param_1 + 0xda) == '\0') &&
+     ((*(byte *)((longlong)param_1 + 0xd) & 0xf) == 0)) {
+    FUN_14007bda8(param_1,param_2,param_3,param_4,param_5);
+  }
+  else {
+    FUN_14007a224(param_1,param_2,param_3,param_4,param_5);
+  }
+  return;
+}
+
+

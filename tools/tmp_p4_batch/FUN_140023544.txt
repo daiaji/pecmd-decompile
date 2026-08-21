@@ -1,0 +1,21 @@
+/* ========== FUN_140023544 @ 140023544  size=107 ========== */
+/* signature: undefined __fastcall FUN_140023544(void) */
+
+void FUN_140023544(void)
+
+{
+  HANDLE local_res8 [4];
+  
+  local_res8[0] = (HANDLE)0x0;
+  FUN_140003864(local_res8,L"D:\\DebugPeMainU.LOG",0xc0000000,7,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
+                (HANDLE)0x0);
+  if (local_res8[0] != (HANDLE)0x0) {
+    SetEndOfFile(local_res8[0]);
+    if (local_res8[0] != (HANDLE)0xffffffffffffffff) {
+      CloseHandle(local_res8[0]);
+    }
+  }
+  return;
+}
+
+

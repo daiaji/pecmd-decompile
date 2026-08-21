@@ -1,0 +1,16 @@
+/* ========== FUN_140006a4c @ 140006a4c  size=83 ========== */
+/* signature: undefined4 __fastcall FUN_140006a4c(LPCWSTR param_1) */
+
+undefined4 FUN_140006a4c(LPCWSTR param_1)
+
+{
+  int iVar1;
+  
+  iVar1 = StrCmpNIW(L"\\Device\\",param_1,8);
+  if ((iVar1 != 0) && (iVar1 = StrCmpNIW(L"\\ArcName\\",param_1,9), iVar1 != 0)) {
+    return 0;
+  }
+  return 1;
+}
+
+

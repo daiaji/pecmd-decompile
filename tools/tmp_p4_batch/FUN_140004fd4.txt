@@ -1,0 +1,15 @@
+/* ========== FUN_140004fd4 @ 140004fd4  size=56 ========== */
+/* signature: undefined __fastcall FUN_140004fd4(LPCWSTR param_1) */
+
+void FUN_140004fd4(LPCWSTR param_1)
+
+{
+  HANDLE hProcess;
+  
+  hProcess = GetCurrentProcess();
+  SetProcessWorkingSetSize(hProcess,0xffffffffffffffff,0xffffffffffffffff);
+  FUN_14004eb34(DAT_14013cf70,0,param_1);
+  return;
+}
+
+

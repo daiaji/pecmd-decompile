@@ -1,0 +1,16 @@
+/* ========== FUN_1400e6458 @ 1400e6458  size=49 ========== */
+/* signature: undefined8 __fastcall FUN_1400e6458(longlong param_1) */
+
+undefined8 FUN_1400e6458(longlong param_1)
+
+{
+  DWORD DVar1;
+  
+  *(undefined8 *)(param_1 + 0x18) = 0;
+  DVar1 = GetCurrentProcessId();
+  *(DWORD *)(param_1 + 0x10) = DVar1;
+  EnumWindows(FUN_1400e63c8,param_1);
+  return *(undefined8 *)(param_1 + 0x18);
+}
+
+

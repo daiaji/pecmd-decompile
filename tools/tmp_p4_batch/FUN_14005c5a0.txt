@@ -1,0 +1,21 @@
+/* ========== FUN_14005c5a0 @ 14005c5a0  size=123 ========== */
+/* signature: DWORD __fastcall FUN_14005c5a0(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3, DWORD param_4, BYTE * param_5, DWORD param_6) */
+
+DWORD FUN_14005c5a0(HKEY param_1,LPCWSTR param_2,LPCWSTR param_3,DWORD param_4,BYTE *param_5,
+                   DWORD param_6)
+
+{
+  DWORD DVar1;
+  HKEY local_res8;
+  
+  local_res8 = (HKEY)0x0;
+  if (((param_2 == (LPCWSTR)0x0) ||
+      (DVar1 = FUN_14005c394(param_1,param_2,&local_res8,0x20006,4), param_1 = local_res8,
+      DVar1 == 0)) &&
+     (DVar1 = RegSetValueExW(param_1,param_3,0,param_4,param_5,param_6), local_res8 != (HKEY)0x0)) {
+    RegCloseKey(local_res8);
+  }
+  return DVar1;
+}
+
+

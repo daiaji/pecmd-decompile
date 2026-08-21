@@ -1,0 +1,22 @@
+/* ========== FUN_140061ffc @ 140061ffc  size=117 ========== */
+/* signature: undefined __fastcall FUN_140061ffc(undefined8 param_1, BOOL param_2, LPCWSTR param_3) */
+
+void FUN_140061ffc(undefined8 param_1,BOOL param_2,LPCWSTR param_3)
+
+{
+  _SECURITY_ATTRIBUTES local_48;
+  undefined1 local_30;
+  ulonglong local_2f [4];
+  
+  FUN_14001c2cc(L"SeCreateGlobalPrivilege",2,0x20);
+  local_30 = 0;
+  FUN_140102a90(local_2f,0,0x27);
+  local_48.bInheritHandle = 0;
+  local_48.lpSecurityDescriptor = &local_30;
+  local_48.nLength = 0x18;
+  FUN_14005e7dc(&local_48.lpSecurityDescriptor);
+  CreateMutexW(&local_48,param_2,param_3);
+  return;
+}
+
+

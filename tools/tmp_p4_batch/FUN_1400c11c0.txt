@@ -1,0 +1,20 @@
+/* ========== FUN_1400c11c0 @ 1400c11c0  size=52 ========== */
+/* signature: bool __fastcall FUN_1400c11c0(undefined8 param_1, int * param_2) */
+
+bool FUN_1400c11c0(longlong *param_1,int *param_2)
+
+{
+  bool bVar1;
+  undefined7 extraout_var;
+  ulonglong local_res10 [3];
+  
+  local_res10[0] = (ulonglong)*param_2;
+  bVar1 = FUN_1400c1194(param_1,local_res10);
+  bVar1 = 0 < (int)CONCAT71(extraout_var,bVar1);
+  if (bVar1) {
+    *param_2 = (int)local_res10[0];
+  }
+  return bVar1;
+}
+
+

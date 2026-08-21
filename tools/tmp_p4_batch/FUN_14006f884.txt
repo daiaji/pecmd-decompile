@@ -1,0 +1,19 @@
+/* ========== FUN_14006f884 @ 14006f884  size=131 ========== */
+/* signature: undefined __fastcall FUN_14006f884(LPCWSTR param_1, undefined8 * param_2) */
+
+void FUN_14006f884(LPCWSTR param_1,undefined8 *param_2)
+
+{
+  DWORD DVar1;
+  
+  FUN_140063720(param_2,0x104);
+  *(undefined2 *)*param_2 = 0;
+  DVar1 = GetEnvironmentVariableW(param_1,(LPWSTR)*param_2,0x104);
+  if ((0 < (int)DVar1) && (*(short *)*param_2 == 0)) {
+    FUN_140063720(param_2,(longlong)(int)(DVar1 + 2));
+    GetEnvironmentVariableW(param_1,(LPWSTR)*param_2,DVar1 + 1);
+  }
+  return;
+}
+
+

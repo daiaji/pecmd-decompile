@@ -1,0 +1,19 @@
+/* ========== FUN_14007e34c @ 14007e34c  size=87 ========== */
+/* signature: undefined4 * __fastcall FUN_14007e34c(undefined4 * param_1, undefined1 param_2) */
+
+undefined4 * FUN_14007e34c(undefined4 *param_1,undefined1 param_2)
+
+{
+  *(undefined1 *)((longlong)param_1 + 10) = param_2;
+  *(undefined1 *)(param_1 + 2) = 0;
+  *(undefined1 *)(param_1 + 10) = 0;
+  FUN_140063a6c((undefined8 *)(param_1 + 4),(longlong *)(param_1 + 6),(undefined8 *)(param_1 + 8),2)
+  ;
+  *(undefined1 *)(param_1 + 0x12) = 0;
+  FUN_140063a6c((undefined8 *)(param_1 + 0xc),(longlong *)(param_1 + 0xe),
+                (undefined8 *)(param_1 + 0x10),8);
+  FUN_1400706b4(param_1);
+  return param_1;
+}
+
+

@@ -1,0 +1,16 @@
+/* ========== FUN_140064a88 @ 140064a88  size=47 ========== */
+/* signature: longlong __fastcall FUN_140064a88(ushort * param_1) */
+
+longlong FUN_140064a88(ushort *param_1)
+
+{
+  longlong lVar1;
+  
+  lVar1 = 0;
+  for (; (ushort)(*param_1 - 0x30) < 10; param_1 = param_1 + 1) {
+    lVar1 = (longlong)(int)(*param_1 - 0x30) + lVar1 * 10;
+  }
+  return lVar1;
+}
+
+

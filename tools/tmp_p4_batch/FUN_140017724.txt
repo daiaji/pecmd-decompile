@@ -1,0 +1,21 @@
+/* ========== FUN_140017724 @ 140017724  size=76 ========== */
+/* signature: undefined __fastcall FUN_140017724(void) */
+
+void FUN_140017724(void)
+
+{
+  BOOL BVar1;
+  HDESK hDesktop;
+  
+  hDesktop = OpenDesktopW(L"Default",0,1,0x10000000);
+  if (hDesktop != (HDESK)0x0) {
+    BVar1 = SetThreadDesktop(hDesktop);
+    if (BVar1 != 0) {
+      SwitchDesktop(hDesktop);
+    }
+    CloseDesktop(hDesktop);
+  }
+  return;
+}
+
+
