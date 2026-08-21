@@ -93,6 +93,8 @@ DWORD   GetCurrentThreadId(void);
 DWORD   GetWindowThreadProcessId(HWND w, DWORD *pid);
 void   *LoadLibraryA(const char *m);
 FARPROC GetProcAddress(void *hm, const char *name);
+uint64_t EndDialog(uint64_t a, int b);
+
 void   *GetModuleHandleW(const WCHAR *m);
 int     SetCurrentDirectoryW(const WCHAR *dir);
 void   *HeapAlloc(void *h, unsigned long f, size_t n);
@@ -183,7 +185,21 @@ void FUN_1400706b4(uint32_t *param_1)
 }
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
 long long FUN_14003e220(void *a, unsigned int b, uint64_t c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
-long long FUN_1400e6790(void *a, unsigned int b, uint64_t c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
+void FUN_140062950(void *a) { (void)a; }
+void FUN_1400e66d4(uint64_t *a, uint64_t b, void *c) { (void)a;(void)b;(void)c; }
+int FUN_1400e6350(void *a, uint64_t b) { (void)a;(void)b; return 1; }
+void (*DAT_14013cd90)(...) = 0;
+/* @0x1400e6790 size=— 对话框回调 0x30/0x110(直移) */
+uint64_t FUN_1400e6790(void *param_1, int param_2, void *param_3)
+{
+  if (param_2 == 0x30) {
+    if ((uintptr_t)DAT_14013d868 == 0) FUN_140062950(param_1);
+    if ((uintptr_t)DAT_14013e2a8 == 0) FUN_1400e66d4((uint64_t *)&DAT_14013e2a8,0x3e9,param_3);
+  } else if (param_2 == 0x110) {
+    EndDialog((uint64_t)(uintptr_t)param_1,2);
+  }
+  return 0;
+}
 void FUN_14001b888(uint64_t a) { (void)a; }
 /* ---- 早期放置的 wave-current 还原体所需 Win32 前置声明 (定义见字母桩区) ---- */
 void     GetStartupInfoW(void *d);
@@ -260,6 +276,8 @@ typedef struct _PROCESS_INFORMATION { HANDLE hProcess; HANDLE hThread; DWORD dwP
 typedef struct _STARTUPINFOW { DWORD cb; LPWSTR lpReserved; LPWSTR lpDesktop; LPWSTR lpTitle; DWORD dwX; DWORD dwY; DWORD dwXSize; DWORD dwYSize; DWORD dwXCountChars; DWORD dwYCountChars; DWORD dwFillAttribute; DWORD dwFlags; WORD wShowWindow; WORD cbReserved2; void *lpReserved2; void *hStdInput; void *hStdOutput; void *hStdError; } STARTUPINFOW, *LPSTARTUPINFOW;
 typedef struct _WIN32_FIND_DATAW { DWORD dwFileAttributes; FILETIME ftCreationTime; FILETIME ftLastAccessTime; FILETIME ftLastWriteTime; DWORD nFileSizeHigh; DWORD nFileSizeLow; DWORD dwReserved0; DWORD dwReserved1; WCHAR cFileName[260]; WCHAR cAlternateFileName[14]; } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 typedef struct tagPOINT { LONG x; LONG y; } POINT, tagPOINT, *LPPOINT;
+unsigned int PECMD_WindowRectHitTest(HWND a, POINT b);
+int64_t (*DAT_14013ce30)(void);
 typedef struct tagRECT { LONG left; LONG top; LONG right; LONG bottom; } RECT, tagRECT, *LPRECT;
 typedef struct tagMSG { HWND hwnd; UINT message; ulonglong wParam; longlong lParam; DWORD time; POINT pt; } MSG, tagMSG;
 typedef void *pthreadlocinfo;
@@ -360,7 +378,7 @@ uint64_t CryptReleaseContext(void) { return 0; }
 uint64_t DefWindowProcW(void) { return 0; }
 uint64_t DefWindowProcW_exref(void) { return 0; }
 uint64_t DefineDosDeviceW(void) { return 0; }
-uint64_t DeleteDC(void) { return 0; }
+uint64_t DeleteDC(void *a) { (void)a; return 1; }
 uint64_t DeleteFileW(void) { return 0; }
 int DeleteObject(void *obj) { (void)obj; return 1; }
 uint64_t DeleteService(void) { return 0; }
@@ -383,7 +401,7 @@ uint64_t Ellipse(void) { return 0; }
 uint64_t EmptyClipboard(void) { return 0; }
 uint64_t EnableMenuItem(void) { return 0; }
 int EnableWindow(HWND w, int en) { (void)w;(void)en; return 0; }
-uint64_t EndDialog(void) { return 0; }
+uint64_t EndDialog(uint64_t a, int b) { (void)a;(void)b; return 1; }
 uint64_t EndPaint(void) { return 0; }
 void EnterCriticalSection(void *cs) { (void)cs; }
 int EnumChildWindows(HWND parent, WNDENUMPROC cb, LPARAM lp) { (void)parent;(void)cb;(void)lp; return 0; }
@@ -984,7 +1002,22 @@ longlong FUN_1400639f0(longlong *param_1,longlong *param_2,longlong *param_3,uin
   *param_3 = v + 1;
   return base + v;
 }
-void FUN_140063a6c(uint64_t *param_1, int64_t *param_2, uint64_t *param_3, uint param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; }
+/* @0x140063a6c size=— 定长槽表分配(直移) */
+void FUN_140063a6c(uint64_t *param_1, int64_t *param_2, uint64_t *param_3, uint param_4)
+{
+  *param_3 = 0; *param_2 = 1; *param_1 = 0;
+  uint64_t n = *param_2 * (uint64_t)param_4;
+  int64_t *p;
+  for (;;) {
+    p = (int64_t *)(uintptr_t)HeapAlloc((void *)(uintptr_t)DAT_14013d328,0,n + 8);
+    if ((uintptr_t)p != 0) break;
+    if (PECMD_OomPrompt(2) != 4) break;
+  }
+  *(uint32_t *)((long long)p + 4) = 0xaa55;
+  *p = n;
+  *param_1 = (uint64_t)(uintptr_t)(p + 1);
+  memset(p + 1,0,(uint64_t)param_4);
+}
 /* @0x140063b00 size=98 — 向量槽指针计算(必要时扩容)(直移) */
 int64_t PECMD_VectorSlotPtr(int64_t param_1, int64_t *param_2, int64_t *param_3, unsigned int param_4)
 {
@@ -1471,7 +1504,7 @@ uint64_t GetWindowTextW(void) { return 0; }
 DWORD GetWindowThreadProcessId(HWND w, DWORD *pid) { (void)w;(void)pid; return 0; }
 uint64_t GlobalAlloc(void) { return 0; }
 uint64_t GlobalDeleteAtom(void) { return 0; }
-uint64_t GlobalFree(void) { return 0; }
+uint64_t GlobalFree(uint64_t a) { (void)a; return 1; }
 uint64_t GlobalLock(void) { return 0; }
 uint64_t GlobalMemoryStatus(void) { return 0; }
 uint64_t GlobalUnlock(void) { return 0; }
@@ -1629,8 +1662,40 @@ void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags) { (
 int SetThreadDesktop(void *d) { (void)d; return 1; }
 int SwitchDesktop(void *d) { (void)d; return 1; }
 int CloseDesktop(void *d) { (void)d; return 1; }
-int FUN_1400e63c8(void *h, uint64_t l) { (void)h;(void)l; return 1; }
-void FUN_1400ec084(long long a, uint64_t *b, long long c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; }
+/* @0x1400e63c8 size=— 枚举窗口回调(直移) */
+bool FUN_1400e63c8(POINT param_1, POINT *param_2)
+{
+  int r = PECMD_WindowRectHitTest((void *)(uintptr_t)(uint64_t)param_1.x,*param_2);
+  if (r != 0) {
+    uint32_t pid[2];
+    GetWindowThreadProcessId((void *)(uintptr_t)(uint64_t)param_1.x,(unsigned long *)pid);
+    if (pid[0] == (uint32_t)param_2[2].x) {
+      uint64_t u = SendMessageW((void *)(uintptr_t)(uint64_t)param_1.x,0x45e,(int64_t)param_2[1].x,(uint64_t)(uintptr_t)param_1.x);
+      if ((u >> 0x11 & 1) != 0) param_2[3] = param_1;
+      EnumChildWindows((void *)(uintptr_t)(uint64_t)param_1.x,(WNDENUMPROC)FUN_1400e6350,(uint64_t)(uintptr_t)param_2);
+      return param_2[3].x == 0 && param_2[3].y == 0;
+    }
+  }
+  return 1;
+}
+/* @0x1400ec084 size=— 消息信封结构填充(直移) */
+void FUN_1400ec084(uint64_t param_1, uint64_t *param_2, long long param_3, uint64_t param_4)
+{
+  (void)param_1;
+  memset(param_2,0,0x38);
+  *(uint32_t *)param_2 = 0x38;
+  void *h = *(void **)(param_3 + 0x20);
+  if (param_4 == 0) {
+    void *parent = (void *)(uintptr_t)GetParent(h);
+    *(uint32_t *)((long long)param_2 + 4) = 1;
+    param_2[2] = (uint64_t)(uintptr_t)h;
+    param_2[1] = (uint64_t)(uintptr_t)parent;
+  } else {
+    *(uint32_t *)((long long)param_2 + 4) = 0;
+    param_2[1] = (uint64_t)(uintptr_t)h;
+    param_2[2] = param_4;
+  }
+}
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c) { (void)k;(void)n;(void)r;(void)t;(void)d;(void)c; return 1; }
 uint64_t StrCmpNW(void) { return 0; }
 uint64_t StrCpyNW(void) { return 0; }
@@ -1951,7 +2016,16 @@ bool FUN_1400f072c(longlong *param_1, const WCHAR *param_2, DWORD param_3, int *
 uint64_t FUN_1400f11f8(void) { return 0; }
 uint64_t PECMD_CreateDateTimePickCtl(void) { return 0; }
 uint64_t FUN_1400f28e8(void) { return 0; }
-uint64_t FUN_1400f2934(void) { return 0; }
+/* @0x1400f2934 size=— 创建 SysIPAddress32 控件(直移) */
+bool FUN_1400f2934(longlong *param_1, DWORD param_2, int *param_3, void *param_4, uint param_5)
+{
+  int i1=param_3[3], i2=param_3[2], i3=param_3[1], i4=*param_3;
+  long L = GetWindowLongW(param_4,-6);
+  void *h = (void *)(uintptr_t)CreateWindowExW(0,(const uint16_t *)L"SysIPAddress32",0,param_2,*param_3,(unsigned long)i3,(unsigned long)(i2-i4),(unsigned long)(i1-i3),param_4,(void *)(uintptr_t)param_5,(void *)(intptr_t)L,0);
+  param_1[4] = (longlong)(intptr_t)h;
+  FUN_14006b8fc((void *)param_1);
+  return param_1[4] != 0;
+}
 uint64_t PECMD_InitControlObjC(void) { return 0; }
 bool PECMD_CreateCustomChildControl(longlong *param_1, uint param_2, int *param_3, HWND param_4, uint param_5, LPCWSTR param_6){
     int iVar1,iVar2,iVar3,iVar4; LONG LVar5; HWND pHVar6;
@@ -2100,7 +2174,15 @@ uint16_t PECMD_DispatchMessageMap(int64_t *param_1, int param_2, uint64_t param_
 uint64_t PECMD_MessageHookProc(int param_1, uint64_t param_2, uint64_t param_3)
 { (void)param_1;(void)param_2;(void)param_3; return 0; }
 void PECMD_CloseThreadSlot(int64_t *param_1) { (void)param_1; }
-void FUN_14006ffdc(int64_t *param_1) { (void)param_1; }
+/* @0x14006ffdc size=— 资源释放器(直移) */
+void FUN_14006ffdc(longlong *param_1)
+{
+  if (param_1[7] != 0) { DAT_14013cd90(); param_1[7] = 0; }
+  if ((uintptr_t)param_1[8] != 0) { GlobalFree((uint64_t)(uintptr_t)param_1[8]); param_1[8] = 0; }
+  if (param_1[10] != 0) { (*DAT_14013ce30)(); param_1[10] = 0; }
+  if ((uintptr_t)param_1[9] != 0) { DeleteDC((void *)(uintptr_t)param_1[9]); param_1[9] = 0; }
+  FUN_14005b104((long long *)param_1);
+}
 void PECMD_DestroyStaticControl(uint64_t *param_1) { (void)param_1; }
 void PECMD_ReleaseSlotObject(int64_t *param_1) { (void)param_1; }
 int64_t PECMD_ControlWindowProc(uint64_t param_1, uint64_t param_2, uint64_t param_3, int64_t *param_4)

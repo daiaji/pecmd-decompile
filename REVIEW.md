@@ -3513,3 +3513,5 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 修复: ATL::→AtlThrowImpl、OomPrompt fwd、SetVectorSize/DeviceIoControl/CopyFileW 实参签名、VectorPushBack 真体入桩(原名已改名)。
 ## 116. P4 叶层自直移批4：5 个(01d628 ntdll惰加载/0799f0 多字节转换/063620 串分配/01be14 去引号/AssignAnsiString)绿
 - 修复: 变参函数指针槽赋值((*)(...)转换)、LoadLibraryW fwd、GetProcAddress 实参、fn-ptr 槽调用强转。
+## 117. P4 叶层自直移批5：6 个(0e6790 对话框/0e63c8 窗口枚举/063a6c 表分配/0ec084 信封结构/0f2934 IP控件/06ffdc 资源释放)绿
+- 修复: fwd 位置规则(须在首次使用前)、函数指针槽精确类型、WNDENUMPROC/POINT 类型对齐。
