@@ -3485,3 +3485,7 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - A组在 core_*.c 找到 30+ 真体命名（早前命名代理只看 link_stubs 裸桩漏掉）。累计 P4 命名 159。
 - apply+link_stubs 同步；rename_map 990→1029；build/link 绿。
 - 教训记录：命名代理必须去 core_*.c/decompiled 找真定义，不能只看 link_stubs 裸桩。
+## 105. 可行性评估（git 95 + 完整方案入TASKS§8）
+- 数据: 调用点-33%(4837→3239)、rename_map 1029、300+真体还原、全绿95提交。
+- 结论: 可行且有进度(逐波机制已实证); 收尾=收敛到"只剩登记硬骨项"非字面0。
+- 教训固化: link_stubs并行两次损坏→改单agent独占; 命名代理须deep找真体; apply须同步link_stubs。

@@ -454,3 +454,10 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - 纪律: 单文件无并发/每批build/link(-lm)绿/apply_rename集中/git提交/REVIEW记账；不可核验不臆造。
 - 工具: pe_data_extract.py / pe_registry.json / nameable_60.json / stub_recovery_plan.json / ghidra_out/asm
 - 当前进度(=REVIEW§91-94): 调用点 4837→4424(-8.5%)，剩余~476 被调未命名(290直移+25asm+142CRT+19)+登记项。
+
+## 8. P4收敛→P5收口 完整实施方案（评估后基准, git 95）
+- 现状: 调用点 4837→3239(-33%), rename_map 1029, 还原300+真体, build/link全绿。
+- P4主战(逐波串行; 每波独占link_stubs): ①扫当前层裸桩→decompiled有体? ②直移(波A=10最深含00e26c/0d2e90→~40/波)/asm→C/CRT 2B ③还原后命名(代理须去core/decompiled找真体; apply+link_stubs同步) ④每批build/link绿+git+REVIEW ⑤收敛=无新可还原/命名。
+- P5收口: 混淆巨型3+两巨+真无体+需Windows运行时项 逐一登记; 文档同步+里程碑tag。
+- 纪律: link_stubs单代理独占(防并行损坏); 命名找真体别只看stub; 每批保绿可回滚; 不臆造语义。
+- 工具就位: pe_data_extract/registry(1082真值)/objdump asm/ghidra_out。
