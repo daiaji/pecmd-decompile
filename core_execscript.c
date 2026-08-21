@@ -47,7 +47,7 @@ void PECMD_AllocStrSlot(WCHAR **ps);               /* @0x140063620 分配引用�
 void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
 int FUN_14001ab84(LPCWSTR s);                 /* @0x14001ab84 命令行类型检测 */
 void FUN_14001b850(void);                     /* @0x14001b850 */
-void FUN_14002e30c(void);                     /* @0x14002e30c */
+void PECMD_LoadResourceLines(void);                     /* @0x14002e30c */
 void PECMD_RegisterHotkeyEntry(void);                     /* @0x140022e94 */
 void FUN_140077358(void);                     /* @0x140077358 */
 void FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
@@ -291,7 +291,7 @@ after_init:
     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), pRegName, 0xb,
                   (BYTE *)&g_hCallBackWnd, 8);
     if ((sVar1 != 0) || bUser) {
-        FUN_14002e30c();
+        PECMD_LoadResourceLines();
     }
     PECMD_RegisterHotkeyEntry();
     FUN_140077358();

@@ -1135,5 +1135,6 @@
   "FUN_140018d8c": "PECMD_TlsLogWrite",
   "FUN_1400a41fc": "PECMD_NamedObjLookupOrCreate",
   "FUN_140061ffc": "PECMD_CreateNamedMutex",
-  "FUN_1400513b8": "PECMD_ParseRegexGroup"
+  "FUN_1400513b8": "PECMD_ParseRegexGroup",
+  "FUN_14002e30c": "PECMD_LoadResourceLines"
 }

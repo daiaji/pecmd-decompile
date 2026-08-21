@@ -894,7 +894,7 @@ uint64_t FUN_140026338(void) { return 0; }
 uint64_t FUN_14002ca30(void) { return 0; }
 uint64_t FUN_14002cc30(void) { return 0; }
 /* @0x14002e30c size=— 资源串按行拆分入表(直移) */
-void FUN_14002e30c(void)
+void PECMD_LoadResourceLines(void)
 {
   uint16_t buf[4100]; uint64_t ls;
   buf[0] = 0;

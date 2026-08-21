@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14002e30c | FUN_14002e30c | PECMD_LoadResourceLines |
 | 0x1400513b8 | FUN_1400513b8 | PECMD_ParseRegexGroup |
 | 0x1400a41fc | FUN_1400a41fc | PECMD_NamedObjLookupOrCreate |
 | 0x140061ffc | FUN_140061ffc | PECMD_CreateNamedMutex |
