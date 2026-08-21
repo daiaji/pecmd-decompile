@@ -1893,6 +1893,7 @@ int SwitchDesktop(void *d) { (void)d; return 1; }
 int CloseDesktop(void *d) { (void)d; return 1; }
 unsigned int DragQueryFileW(uint64_t a, uint32_t b, void *c, uint32_t d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 void FUN_140068984(long long *a, long long *b, char c) { (void)a;(void)b;(void)c; }
+int FUN_140050f58(void *a, void *b, uint c) { (void)a;(void)b;(void)c; return -2; }
 /* @0x1400e63c8 size=— 枚举窗口回调(直移) */
 bool PECMD_EnumWindowFindProc(POINT param_1, POINT *param_2)
 {
@@ -3790,7 +3791,27 @@ const uint16_t *FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, ch
    ============================================================ */
 int      FUN_1400510e8(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
 int      FUN_1400512f4(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
-int      FUN_1400513b8(int *a, uint16_t **b, char *c) { (void)a;(void)b;(void)c; return 0; }
+/* @0x1400513b8 size=— 正则式括号组解析(直移) */
+int FUN_1400513b8(int *a, uint16_t **b, char *c)
+{
+  *c = 0;
+  uint16_t *p = *b;
+  if (*p != 0x5d) {
+    int16_t s = *p;
+    if (s == 0x5e) *b = (uint16_t *)(p + 1);
+    p = *b;
+    if (*p != 0x5d) {
+      int r = FUN_140050f58(a,b,(uint)(s == 0x5e));
+      if (r < 0) return r;
+      if (*(uint16_t *)*b != 0x5d) { *a = 4; return -1; }
+      *b = (uint16_t *)((uint16_t *)*b + 1);
+      return r;
+    }
+  }
+  *b = (uint16_t *)(p + 1);
+  *a = 6;
+  return -1;
+}
 undefined8 PECMD_MatchKeywordTable(undefined4 *param_1, longlong *param_2){
     uint64_t *ppuVar2; uint16_t *psVar3; uint16_t *local_res20; uint64_t uVar1;
     ppuVar2=&PTR_u_a__a_zA_Z0_9___14013a2d0[0];
