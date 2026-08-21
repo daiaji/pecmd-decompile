@@ -321,6 +321,7 @@ bool PECMD_EnumChildFindProc(POINT a, POINT *b);
 int64_t (*DAT_14013ce30)(void);
 void *DAT_14013d3b8 = 0;
 int64_t DAT_14013a24f = 0;
+int64_t DAT_14013a24c = 0;
 typedef struct tagRECT { LONG left; LONG top; LONG right; LONG bottom; } RECT, tagRECT, *LPRECT;
 typedef struct tagMSG { HWND hwnd; UINT message; ulonglong wParam; longlong lParam; DWORD time; POINT pt; } MSG, tagMSG;
 typedef void *pthreadlocinfo;
@@ -2769,7 +2770,44 @@ char *PTR_s___disverify_14013a2c8;
 char *PTR_s__AutoDisverify_14013a2c0;
 uint64_t SetupDiGetDeviceInstallParamsW(void){ return 0; }
 uint64_t PECMD_UpdateDriverSigning(int a, int b){ (void)a;(void)b; return 0; }
-void FUN_140025ce0(int64_t *a, char *b, uint8_t *c, char *d, char *e, char *f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
+/* @0x140025ce0 size=— 位置/状态关键字分派(直移) */
+void FUN_140025ce0(int64_t *param_1, uint8_t *param_2, uint8_t *param_3, uint8_t *param_4, char *param_5, uint8_t *param_6)
+{
+  uint8_t local_res8[8]; uint8_t *puVar5 = local_res8;
+  if ((uintptr_t)param_6 != 0) puVar5 = param_6;
+  DAT_14013a24c = -1;
+  if (*(short *)*param_1 == 0x2d) *param_5 = '-';
+  while (((int)*param_5 == (uint)*(ushort *)*param_1 && ((int)*param_5 != (uint)*(ushort *)(*param_1 + 2)))) {
+    *param_1 = *param_1 + 2;
+    if ((int)PECMD_MatchPrefixN((void *)(uintptr_t)&DAT_14011c638,param_1,0) == 0) {
+      if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"top",param_1,3) == 0) {
+        if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"top-",param_1,4) == 0) {
+          if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"bottom",param_1,6) == 0) {
+            if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"pic",param_1,3) == 0) {
+              if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"enable",param_1,6) == 0) {
+                if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"disable",param_1,7) == 0) {
+                  if (PECMD_AdvanceAfterPrefix((const WCHAR *)L"wait",param_1,4) == 0) {
+                    if (StrCmpNIW((const WCHAR *)L"trans:",(const uint16_t *)*param_1,6) == 0) {
+                      *param_1 = *param_1 + 0xc;
+                      *(uint16_t *)param_6 = (uint16_t)DAT_14013a24c;
+                      *(uint16_t *)((char *)param_6 + 2) = (uint16_t)(DAT_14013a24c >> 0xf);
+                      FUN_140074838(param_1,(int *)&param_6);
+                      DAT_14013a24c = (int16_t)(uint64_t)param_6;
+                    } else {
+                      uint16_t *p = (uint16_t *)*param_1;
+                      while (*p != 0 && ((*p < 9 || 0xd < *p) && *p != 0x20)) { p = (uint16_t *)*param_1 + 1; *param_1 = (longlong)p; }
+                      FUN_1400170b0((void **)param_1);
+                    }
+                  } else { *puVar5 = 1; }
+                } else { *param_4 = 2; }
+              } else { *param_4 = 0; }
+            } else { *param_3 = *param_3 | 0x40; }
+          } else { *param_3 = *param_3 & 0xf0; *param_3 = *param_3 | 0x10; }
+        } else { *param_3 = *param_3 & 0xf0; }
+      } else { *param_3 = *param_3 & 0xef; *param_3 = *param_3 | 1; }
+    } else { *param_2 = 1; }
+  }
+}
 uint16_t u__SystemRoot___140123190[64];
 uint64_t SetupDiClassGuidsFromNameW(void){ return 0; }
 uint64_t PTR_FUN_14011cbe8;
