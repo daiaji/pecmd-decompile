@@ -3594,7 +3594,7 @@ void PECMD_DestroyEventSlots(uint64_t *param_1)
   if (DAT_14013e200 != 0) { CloseHandle(DAT_14013e200); DAT_14013e200 = 0; }
 }
 /* @0x1400e5248 size=— 递归弹出菜单构建(直移) */
-void FUN_1400e5248(longlong param_1, uint16_t *param_2, void *param_3, longlong param_4, longlong param_5, longlong *param_6)
+void PECMD_BuildPopMenuRecursive(longlong param_1, uint16_t *param_2, void *param_3, longlong param_4, longlong param_5, longlong *param_6)
 {
   if ((uintptr_t)param_3 == 0) param_3 = (void *)(uintptr_t)CreatePopupMenu();
   int n = *(int *)(param_1 + 4);
@@ -3605,7 +3605,7 @@ void FUN_1400e5248(longlong param_1, uint16_t *param_2, void *param_3, longlong 
       if (*pb == 0x80) {
         longlong sub = *(longlong *)(pb + 0x10);
         void *submenu = (void *)(uintptr_t)CreatePopupMenu();
-        FUN_1400e5248(sub,param_2,(uint64_t)(uintptr_t)submenu,param_4,param_5,param_6);
+        PECMD_BuildPopMenuRecursive(sub,param_2,(uint64_t)(uintptr_t)submenu,param_4,param_5,param_6);
         AppendMenuW((uint64_t)(uintptr_t)param_3,0x10,(uint64_t)(uintptr_t)submenu,*(uint64_t *)(pb + 8));
         *param_2 = *param_2 + 1;
       } else {

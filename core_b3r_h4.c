@@ -139,7 +139,7 @@ extern uint64_t PECMD_ParseAndExecuteLine(int64_t param_1, LPCWSTR param_2, uint
 extern void  PECMD_ClearTaskTable(int64_t script, int mode);
 extern LPCWSTR PECMD_ParseCommandPath(int64_t *script, WCHAR *key, uint32_t *mode, int64_t *out);
 extern void  PECMD_NotifyMainWindowRefresh(int64_t *param_1, int flag);
-extern void  FUN_1400e5248(int64_t a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
+extern void  PECMD_BuildPopMenuRecursive(int64_t a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
 extern void  PECMD_MenuRegisterCommand(void *a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);
 extern void  PECMD_MenuItemWithIcon(HMENU menu, UINT flags, uintptr_t item, void *data);
 extern void *PECMD_CreateNamedLock(LPCWSTR s, char c, uint32_t *mode);
@@ -848,7 +848,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
         if (param_1[3] != 0) goto LAB_1400a65de;
         pHVar8 = CreatePopupMenu();
         lVar9 = param_1[8];
-        FUN_1400e5248((longlong)(intptr_t)puVar6, (ushort *)(lVar9 + 0x218), pHVar8,
+        PECMD_BuildPopMenuRecursive((longlong)(intptr_t)puVar6, (ushort *)(lVar9 + 0x218), pHVar8,
                       *(longlong *)(lVar9 + 0x20), *(longlong *)(lVar9 + 0x200),
                       *(longlong **)(lVar9 + 0x290));
         hMenu = local_60;
