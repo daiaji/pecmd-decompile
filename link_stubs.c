@@ -311,6 +311,13 @@ typedef struct _PROCESS_INFORMATION { HANDLE hProcess; HANDLE hThread; DWORD dwP
 typedef struct _STARTUPINFOW { DWORD cb; LPWSTR lpReserved; LPWSTR lpDesktop; LPWSTR lpTitle; DWORD dwX; DWORD dwY; DWORD dwXSize; DWORD dwYSize; DWORD dwXCountChars; DWORD dwYCountChars; DWORD dwFillAttribute; DWORD dwFlags; WORD wShowWindow; WORD cbReserved2; void *lpReserved2; void *hStdInput; void *hStdOutput; void *hStdError; } STARTUPINFOW, *LPSTARTUPINFOW;
 typedef struct _WIN32_FIND_DATAW { DWORD dwFileAttributes; FILETIME ftCreationTime; FILETIME ftLastAccessTime; FILETIME ftLastWriteTime; DWORD nFileSizeHigh; DWORD nFileSizeLow; DWORD dwReserved0; DWORD dwReserved1; WCHAR cFileName[260]; WCHAR cAlternateFileName[14]; } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 typedef struct tagPOINT { LONG x; LONG y; } POINT, tagPOINT, *LPPOINT;
+typedef void *PACL; typedef void *PSID; typedef void *PSECURITY_DESCRIPTOR;
+#define GRANT_ACCESS 1
+#define TRUSTEE_IS_NAME 1
+#define TRUSTEE_IS_USER 1
+#define SE_KERNEL_OBJECT 6
+typedef struct _TRUSTEE { void *pMultipleTrustee; uint32_t MultipleTrusteeOperation; uint32_t TrusteeForm; uint32_t TrusteeType; void *ptstrName; } TRUSTEE;
+typedef struct _EXPLICIT_ACCESS_W { uint32_t grfAccessPermissions; uint32_t grfAccessMode; uint32_t grfInheritance; TRUSTEE Trustee; } EXPLICIT_ACCESS_W;
 unsigned int PECMD_WindowRectHitTest(HWND a, POINT b);
 /* @0x1400e6350 size=— 子窗口枚举回调(直移) */
 bool PECMD_EnumChildFindProc(POINT param_1, POINT *param_2)
@@ -574,7 +581,24 @@ void FUN_140016ae0(undefined8 param_1, undefined8 *param_2){
     SetServiceStatus(DAT_14013c910,(void*)&DAT_14013c918);
 }
 
-void FUN_1400171a4(int64_t a) { (void)a; }
+/* @0x1400171a4 size=— 授予当前用户内核对象访问(直移) */
+void FUN_1400171a4(int64_t a)
+{
+  void *dacl = 0, *sd = 0, *newdacl = 0;
+  uint64_t r = GetSecurityInfo((void *)(uintptr_t)a,SE_KERNEL_OBJECT,4,0,0,&dacl,0,&sd);
+  if (r != 0) { if ((uintptr_t)sd != 0) LocalFree((uint64_t)(uintptr_t)sd); if ((uintptr_t)dacl != 0) LocalFree((uint64_t)(uintptr_t)dacl); }
+  EXPLICIT_ACCESS_W ea; memset(&ea,0,0x30);
+  ea.grfInheritance = 0;
+  ea.grfAccessPermissions = 2;
+  ea.Trustee.ptstrName = (void *)(uintptr_t)L"CURRENT_USER";
+  ea.grfAccessMode = GRANT_ACCESS;
+  ea.Trustee.TrusteeForm = TRUSTEE_IS_NAME;
+  ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+  r = SetEntriesInAclW(1,&ea,dacl,&newdacl);
+  if (r != 0) { if ((uintptr_t)sd != 0) LocalFree((uint64_t)(uintptr_t)sd); if ((uintptr_t)newdacl != 0) LocalFree((uint64_t)(uintptr_t)newdacl); }
+  r = SetSecurityInfo((void *)(uintptr_t)a,SE_KERNEL_OBJECT,4,0,0,newdacl,0);
+  if (r != 0) { if ((uintptr_t)sd != 0) LocalFree((uint64_t)(uintptr_t)sd); if ((uintptr_t)newdacl != 0) LocalFree((uint64_t)(uintptr_t)newdacl); }
+}
 /* @0x140017724 size=76 — 切换到 Default 桌面(直移) */
 void PECMD_SwitchToDefaultDesktop(void)
 {
@@ -4014,7 +4038,9 @@ uint32_t FUN_1400734e4(int64_t param_1, void *param_2, int64_t *param_3) { (void
 typedef long LSTATUS;
 uint64_t GetNamedSecurityInfoW(void) { return 0; }      /* 0=ERROR_SUCCESS 走主授权分支 */
 uint64_t BuildExplicitAccessWithNameW(void) { return 0; }
-uint64_t SetEntriesInAclW(void) { return 0; }
+uint64_t SetEntriesInAclW(int c, void *ea, void *old, void **newa) { (void)c;(void)ea;(void)old;(void)newa; return 0; }
+uint64_t GetSecurityInfo(void *h, int t, uint32_t i, void **a, void **b, void **c, void **d, void **e) { (void)h;(void)t;(void)i;(void)a;(void)b;(void)c;(void)d;(void)e; return 1; }
+uint64_t SetSecurityInfo(void *h, int t, uint32_t i, void *a, void *b, void *c, void *d) { (void)h;(void)t;(void)i;(void)a;(void)b;(void)c;(void)d; return 1; }
 uint64_t GetUserNameW(void) { return 0; }
 uint64_t LookupAccountNameW(void) { return 0; }
 LSTATUS  FUN_140096f84(void *param_1, void *param_2, void *param_3) { (void)param_1,(void)param_2,(void)param_3; return 0; }
