@@ -207,7 +207,157 @@ void PECMD_InitContainerFields(uint32_t *param_1)
   *(uint8_t *)((long long)param_1 + 9) = 0x20;
 }
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
-long long FUN_14003e220(void *a, unsigned int b, uint64_t c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; return 1; }
+/* ---- FUN_14003e220 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 tools/rename_map.json) ---- */
+extern void *g_hFontE2B0;                          /* DAT_14013e2b0 (core_globals.c: HFONT, 已有定义) */
+extern void FUN_1400E648C(void **pfont, UINT id);  /* @0x1400e648c 按 lang 创建字体 (core_exec.c) */
+extern void PECMD_TrimWorkingSet(char force);      /* @0x14005d4e4 (core_b3e.c) */
+int      GetSystemMetrics(int idx);
+HWND     GetDlgItem(void *hWnd, int nIDDlgItem);
+int      SetWindowTextW(void *hWnd, const void *lpString);
+uint64_t GetWindowTextW(void *hWnd, WCHAR *lpString, int nMaxCount);
+int      LoadStringW(void *h, unsigned int id, WCHAR *buf, int n);
+uint64_t lstrcmpW(const uint16_t *a, const uint16_t *b);
+int      GetWindowRect(void *w, void *r);
+int      SetWindowPos(void *w, void *after, int x, int y, int cx, int cy, unsigned int f);
+int      EnableWindow(HWND w, int en);
+void     FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n);          /* CRT memset 内联 */
+uint64_t FUN_14003db00(uint64_t a);                                     /* 命令入队 (2369 桩) */
+extern uint8_t DAT_14011c638[64];                                       /* 默认命令串缓存 (5600 定义) */
+void     PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src);        /* @0x1400702b0 */
+uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode);  /* @0x14006b1e8 */
+/* ========== FUN_14003e220 @0x14003e220 ==========
+ * “确认/密码”模态对话框过程 (dialog 0x2727, DialogBoxParamW 回调):
+ *   0x110 初始化居中 + 用 PECMD_LangLookupById 填文本; 0x111 按钮分支
+ *   (2=清空命令串, 0xd=置 "-force " 并执行, 1=校验输入命令/密码).
+ * 忠实移植 decompiled.c @36417; 内部调用按 rename_map: FUN_1400169bc→
+ * PECMD_LangLookupById, FUN_140063620→PECMD_AllocStrSlot, FUN_14006b1e8→
+ * PECMD_EncodeStringId, FUN_1400702b0→PECMD_StrDupAssign, FUN_14005d4e4→
+ * PECMD_TrimWorkingSet; FUN_14003db00/FUN_140102a90/FUN_14005b104 保持原名.
+ * 上下文: DAT_14013cfb0 (PECMD_ShowIdDialog 置入的 4 槽数组), 槽[1] 低32位为
+ * 剩余次数, 槽[0] 为原始命令串; g_hFontE2B0 字体缓存; DAT_14011c638 默认命令串.
+ * 返回: 0x110 处理返回 1, 其余 0 (与对话框 proc 约定一致). */
+long long FUN_14003e220(void *a, unsigned int b, uint64_t c, uint64_t d)
+{
+    (void)d;
+    HWND hwnd = (HWND)a;
+    uint64_t *puVar1;
+    int iVar2;
+    int iVar3;
+    HWND pHVar4;
+    LPWSTR pWVar5;
+    LPCWSTR pWVar6;
+    WCHAR *lpString1;
+    union {
+        struct { LONG left; LONG top; LONG right; LONG bottom; } r;   /* tagRECT 布局 (typedef 在文件后部) */
+        uint64_t p;
+    } local_918;
+    WCHAR local_908[104];
+    WCHAR local_838[1024];
+    uint16_t local_38 = 0;
+
+    puVar1 = (uint64_t *)DAT_14013cfb0;
+    if (b == 0x110) {
+        iVar2 = GetSystemMetrics(0x3d);
+        iVar3 = GetSystemMetrics(0x3e);
+        if (g_hFontE2B0 == 0) {
+            FUN_1400E648C((void **)&g_hFontE2B0, 0x3ea);
+        }
+        puVar1[2] = (uint64_t)(uintptr_t)g_hFontE2B0;
+        GetWindowRect(hwnd, &local_918.r);
+        SetWindowPos(hwnd, (HWND)(intptr_t)-2,
+                     ((local_918.r.left - local_918.r.right) + iVar2) / 2,
+                     ((local_918.r.top - local_918.r.bottom) + iVar3) / 2,
+                     0, 0, 0x41);
+        pWVar6 = PECMD_LangLookupById(0x3f4, 0);
+        if (pWVar6 != 0) {
+            pHVar4 = GetDlgItem(hwnd, 1);
+            SetWindowTextW(pHVar4, pWVar6);
+        }
+        pWVar6 = PECMD_LangLookupById(0x3f5, 0);
+        if (pWVar6 != 0) {
+            pHVar4 = GetDlgItem(hwnd, 2);
+            SetWindowTextW(pHVar4, pWVar6);
+        }
+        pWVar6 = PECMD_LangLookupById(0x3fb, 0);
+        if (pWVar6 != 0) {
+            pHVar4 = GetDlgItem(hwnd, 0xb);
+            SetWindowTextW(pHVar4, pWVar6);
+        }
+        pWVar6 = PECMD_LangLookupById(0x2788, 0);
+        if (pWVar6 != 0) {
+            pHVar4 = GetDlgItem(hwnd, 0xc);
+            SetWindowTextW(pHVar4, pWVar6);
+        }
+        pWVar6 = PECMD_LangLookupById(0x3fd, 0);
+        if (pWVar6 != 0) {
+            pHVar4 = GetDlgItem(hwnd, 0xd);
+            SetWindowTextW(pHVar4, pWVar6);
+        }
+        PECMD_TrimWorkingSet('\0');
+        return 1;
+    }
+    if (b == 0x111) {
+        if ((uint16_t)c == 2) {
+            pHVar4 = GetDlgItem(hwnd, 0x757d);
+            SetWindowTextW(pHVar4, (LPCWSTR)(void *)DAT_14011c638);
+        }
+        else {
+            if ((uint16_t)c == 0xd) {
+                PECMD_StrDupAssign((uint16_t **)&local_918.p, (const uint16_t *)L"-force ");
+                FUN_14003db00(local_918.p);
+            }
+            else {
+                if ((uint16_t)c != 1) {
+                    return 0;
+                }
+                local_838[0] = L'\0';
+                PECMD_AllocStrSlot((uint16_t **)&local_918.p);
+                pHVar4 = GetDlgItem(hwnd, 0x757d);
+                GetWindowTextW(pHVar4, local_838, 0x400);
+                local_38 = 0;
+                PECMD_EncodeStringId(local_838, (uint64_t *)&local_918.p, '\0');
+                FUN_140102a90((ulonglong *)local_838, 0, 0x802);
+                pWVar5 = StrChrW(local_838, L',');
+                if (pWVar5 == 0) {
+                    local_908[0] = L'\0';
+                    LoadStringW(DAT_14013ca68, 0x2729, local_908, 100);
+                    for (lpString1 = local_908;
+                         (*lpString1 == L'*' ||
+                          (((8 < (ushort)*lpString1 && ((ushort)*lpString1 < 0xe)) ||
+                            (*lpString1 == L' '))));
+                         lpString1 = lpString1 + 1) {
+                    }
+                    iVar2 = lstrcmpW((LPCWSTR)(uintptr_t)*puVar1,
+                                     (LPCWSTR)((uint8_t *)(uintptr_t)local_918.p + 2));
+                    if ((iVar2 == 0) ||
+                        ((*lpString1 != L'\0' &&
+                          (iVar2 = lstrcmpW(lpString1,
+                                            (LPCWSTR)((uint8_t *)(uintptr_t)local_918.p + 2)),
+                           iVar2 == 0)))) {
+                        EndDialog((uint64_t)(uintptr_t)hwnd, 1);
+                    }
+                    else if (*(int *)(puVar1 + 1) == 1) {
+                        pHVar4 = GetDlgItem(hwnd, 0x757d);
+                        SetWindowTextW(pHVar4, (LPCWSTR)(void *)DAT_14011c638);
+                        pHVar4 = GetDlgItem(hwnd, 1);
+                        EnableWindow(pHVar4, 0);
+                        pHVar4 = GetDlgItem(hwnd, 2);
+                        ShowWindow(pHVar4, 0);
+                        pHVar4 = GetDlgItem(hwnd, 1);
+                        ShowWindow(pHVar4, 0);
+                        pHVar4 = GetDlgItem(hwnd, 0xd);
+                        ShowWindow(pHVar4, 5);
+                    }
+                    else {
+                        *(int *)(puVar1 + 1) = *(int *)(puVar1 + 1) - 1;
+                    }
+                }
+            }
+            FUN_14005b104((long long *)&local_918);
+        }
+    }
+    return 0;
+}
 void FUN_140062950(void *a) { (void)a; }
 /* @0x1400e66d4 size=— 资源字体创建(直移) */
 void PECMD_BuildResourceFont(longlong *param_1, UINT param_2, void *param_3)
@@ -2849,7 +2999,7 @@ uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2)
   if ((int)v != 0) PECMD_SkipLeadingControlChars((long long *)param_1);
   return (uint64_t)v & 0xffffffff;
 }
-uint64_t PECMD_EncodeStringId(void) { return 0; }
+uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode) { (void)name;(void)out;(void)mode; return 0; }   /* @0x14006b1e8 原体见 core_b3g.c FUN_14006B1E8 */
 /* @0x14006f884 size=131 — 读环境变量到动态串(直移) */
 void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2)
 {
@@ -3156,7 +3306,7 @@ uint64_t GetDIBits(void) { return 0; }
 void *GetDesktopWindow(void) { return (void *)0; }
 uint64_t GetDeviceCaps(void) { return 0; }
 uint64_t GetDlgCtrlID(void) { return 0; }
-uint64_t GetDlgItem(void) { return 0; }
+HWND GetDlgItem(void *hWnd, int nIDDlgItem) { (void)hWnd;(void)nIDDlgItem; return 0; }
 uint64_t GetDlgItemTextW(void) { return 0; }
 uint64_t GetDriveTypeW(void) { return 0; }
 uint64_t GetEnvironmentStringsW(void) { return 0; }
@@ -3214,7 +3364,7 @@ uint64_t GetWindowLongPtrW(void) { return 0; }
 LONG GetWindowLongW(HWND hWnd, int nIndex) { (void)hWnd;(void)nIndex; return 0; }
 int GetWindowRect(void *w, void *r) { (void)w;(void)r; return 0; }
 uint64_t GetWindowTextLengthW(void) { return 0; }
-uint64_t GetWindowTextW(void) { return 0; }
+uint64_t GetWindowTextW(void *hWnd, WCHAR *lpString, int nMaxCount) { (void)hWnd;(void)lpString;(void)nMaxCount; return 0; }
 DWORD GetWindowThreadProcessId(HWND w, DWORD *pid) { (void)w;(void)pid; return 0; }
 uint64_t GlobalAlloc(void) { return 0; }
 uint64_t GlobalDeleteAtom(void) { return 0; }
