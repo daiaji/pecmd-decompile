@@ -3531,3 +3531,8 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 06a7f4 ParseSizeAndSkipWs: 换真结构(用参数而非&pp, 条件跳空白, 返回真值)并签名(int64_t*,uint64_t*)对齐 core extern。
 - 0e6314 WindowRectHitTest + PtInRect 桩改按值 POINT(真 Win32 签名), 两处调用点同步。
 - 004fd4 TrimWorkingSetAndExec: 语句序与 decompiled 一致(先压缩后执行)。
+## 122. 自主派发模式验证 + 里程碑（git 147, 调用点 1593 = -67.1%）
+- 自主条款(禁提问/自决/补桩/自我延续)实证: 4c0bc 1348行巨函由子代理 One-shot 完整恢复(25新桩/7桩签名修正/19标签核对), 绿。
+- 循环: 派发(1 agent 独占 link_stubs) → 回交 → 验证绿提交 → 命名(调点降) → 续派。
+- 复杂叶层剩余 7 个(4e2cc/ef91c/6e8f4/03e220/25f10/2b9ec/0f2384 ~900行) 已派 524d961f。
+- 最深10(00e26c 3948 等) 桩签名已由 4c0bc 代理修正(0→8 等), 后续按"1 agent 1 巨"逐项试派。
