@@ -442,7 +442,7 @@ extern uint8_t  GetCommandLineW_exref[]; /* GetCommandLineW 导入引用 */
 extern void     PECMD_InitEnvironmentVars(HINSTANCE hInst, int show);      /* @0x140027690 core_init.c */
 extern void     PECMD_HandleServiceCommandLine(short *param_1);                 /* @0x1400084d0 */
 extern int64_t  FUN_14005c72c(char *a, const WCHAR *w, int n); /* @0x14005c72c 前缀比较 */
-extern int64_t  FUN_140045c90(int64_t *param_1, void *param_2);/* @0x140045c90 */
+extern int64_t  PECMD_ScriptMainEntry(int64_t *param_1, void *param_2);/* @0x140045c90 */
 extern uint64_t FUN_14002ca30(void);                           /* @0x14002ca30 */
 extern uint64_t FUN_14005b7dc(void);                           /* @0x14005b7dc */
 extern void     FUN_14005B21C(UINT code);                      /* @0x14005b21c 退出进程 */
@@ -4240,7 +4240,7 @@ LAB_14000a447:
                  (char)lVar6 != '\0'))
                 goto LAB_14000a382;
             FUN_1400702B0(&local_40, local_58 + 4);
-            FUN_140045c90((int64_t *)(uintptr_t)g_Script, (void *)local_40);
+            PECMD_ScriptMainEntry((int64_t *)(uintptr_t)g_Script, (void *)local_40);
             FUN_14005B104(&local_40);
 LAB_14000a49a:
             if (g_afterMain != '\0') {

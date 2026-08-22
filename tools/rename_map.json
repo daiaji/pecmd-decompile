@@ -1150,5 +1150,6 @@
   "FUN_14003c06c": "PECMD_IndataCopyDirs",
   "FUN_140026338": "PECMD_ScriptInitParse",
   "FUN_1400db648": "PECMD_SetControlGeom",
-  "FUN_14002d708": "PECMD_EnumProcessInfo"
+  "FUN_14002d708": "PECMD_EnumProcessInfo",
+  "FUN_140045c90": "PECMD_ScriptMainEntry"
 }

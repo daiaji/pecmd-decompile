@@ -595,7 +595,7 @@ uint64_t CreateFileW(void) { return 0; }
 uint64_t CreateFileA(void) { return 0; }
 uint64_t CreateFontW(void) { return 0; }
 uint64_t CreateHardLinkW(uint64_t a, uint64_t b, void *c) { (void)a;(void)b;(void)c; return 1; }
-uint64_t CreateMutexA(void *a, int b, const char *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }   /* arity 修正 0->3 (FUN_140045c90 恢复体) */
+uint64_t CreateMutexA(void *a, int b, const char *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }   /* arity 修正 0->3 (PECMD_ScriptMainEntry 恢复体) */
 uint64_t CreateMutexW(void *a, int b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 uint64_t CreatePen(void) { return 0; }
 uint64_t CreatePopupMenu(void) { return 0; }
@@ -1796,7 +1796,7 @@ undefined8 *FUN_14001877C(longlong *ps, int count) { (void)ps;(void)count; retur
 COORD GetLargestConsoleWindowSize(void *h) { (void)h; COORD c = { 0, 0 }; return c; }
 int SetConsoleWindowInfo(void *h, int b, void *r) { (void)h;(void)b;(void)r; return 1; }
 uint64_t FUN_14002ca30(void) { return 0; }
-uint64_t FUN_14002cc30(void *a, const uint16_t *b, longlong c, longlong d, const uint16_t *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }   /* arity 修正 0->5 (FUN_140045c90 恢复体) */
+uint64_t FUN_14002cc30(void *a, const uint16_t *b, longlong c, longlong d, const uint16_t *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }   /* arity 修正 0->5 (PECMD_ScriptMainEntry 恢复体) */
 /* @0x14002e30c size=— 资源串按行拆分入表(直移) */
 void PECMD_LoadResourceLines(void)
 {
@@ -1835,7 +1835,7 @@ long long   PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint
 uint64_t    PECMD_NotifyMainWindowRefresh(uint64_t a, int b);
 uint64_t    FUN_1400b1724(uint64_t a, uint64_t b);
 uint64_t    FUN_1400d2e90(uint64_t a, uint64_t b);
-uint64_t    FUN_140045c90(uint64_t a, uint64_t b);
+uint64_t    PECMD_ScriptMainEntry(uint64_t a, uint64_t b);
 uint64_t    PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d);
 ushort     *FUN_140024c48(longlong *a, longlong *b, uint c);
 uint64_t    FUN_14005b0b8(void *a);
@@ -2785,7 +2785,7 @@ LAB_14004d781:
               }
 LAB_14004d479:
               local_180.QuadPart =
-                   FUN_140045c90((uint64_t)(uintptr_t)&DAT_14013d130,(uint64_t)(uintptr_t)(LVar11.QuadPart + 8));
+                   PECMD_ScriptMainEntry((uint64_t)(uintptr_t)&DAT_14013d130,(uint64_t)(uintptr_t)(LVar11.QuadPart + 8));
               goto LAB_14004c525;
             }
             if (local_158 == 0x4e495053) {
@@ -4103,7 +4103,7 @@ int IsWindowVisible(HWND w) { (void)w; return 0; }
 uint64_t KillTimer(void) { return 0; }
 void LeaveCriticalSection(void *cs) { (void)cs; }
 uint64_t LoadCursorW(void) { return 0; }
-uint64_t LoadEnvi(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (FUN_140045c90 恢复体) */
+uint64_t LoadEnvi(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (PECMD_ScriptMainEntry 恢复体) */
 void *LoadIconW(void *hinst, const unsigned short *name) { (void)hinst;(void)name; return (void*)0; }
 void *LoadLibraryA(const char *m) { (void)m; return (void *)0; }
 uint64_t LoadLibraryExW(void) { return 0; }
@@ -4156,7 +4156,7 @@ uint64_t GetVolumeNameForVolumeMountPointW(void *mount, void *buf, unsigned long
 uint64_t QueryPerformanceCounter(void) { return 0; }
 uint64_t QueryPerformanceFrequency(void) { return 0; }
 uint64_t RaiseException(void) { return 0; }
-uint64_t ReadFile(void *h, void *buf, unsigned long n, unsigned long *read, void *ol) { (void)h;(void)buf;(void)n;(void)read;(void)ol; return 1; }   /* arity 修正 0->5 (FUN_140045c90 恢复体) */
+uint64_t ReadFile(void *h, void *buf, unsigned long n, unsigned long *read, void *ol) { (void)h;(void)buf;(void)n;(void)read;(void)ol; return 1; }   /* arity 修正 0->5 (PECMD_ScriptMainEntry 恢复体) */
 uint64_t ReadProcessMemory(void) { return 0; }
 uint64_t RedrawWindow(void) { return 0; }
 int RegCloseKey(void *k) { (void)k; return 0; }
@@ -4296,7 +4296,7 @@ uint64_t TerminateProcess(void) { return 0; }
 uint64_t TerminateThread(void) { return 0; }
 uint64_t TrackPopupMenu(void) { return 0; }
 int TranslateMessage(const void *m) { (void)m; return 0; }
-uint64_t UnhookWindowsHookEx(void *h) { (void)h; return 0; }   /* arity 修正 0->1 (FUN_140045c90 恢复体) */
+uint64_t UnhookWindowsHookEx(void *h) { (void)h; return 0; }   /* arity 修正 0->1 (PECMD_ScriptMainEntry 恢复体) */
 uint64_t UnmapViewOfFile(void) { return 0; }
 int UnregisterHotKey(void *w, int id) { (void)w;(void)id; return 0; }
 int UpdateWindow(void *w) { (void)w; return 0; }
@@ -6712,7 +6712,7 @@ uint64_t PECMD_ShowIdDialog(LPCWSTR param_1)
   FUN_14005b104((long long *)local_28);
   return u;
 }
-/* ---- FUN_140045c90 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 rename_map) ---- */
+/* ---- PECMD_ScriptMainEntry 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 rename_map) ---- */
 void     PECMD_InitDynamicImports(void);              /* @0x140017908 core_proc.c */
 void     PECMD_DebugScriptString(undefined8 param_1, wchar_t *param_2, undefined8 param_3, undefined8 param_4);  /* def @8966 */
 void     PECMD_InitRamdataRegistry(uint param_1);     /* @0x14001b888 def @9064 */
@@ -6723,7 +6723,7 @@ extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWOR
                                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 extern HHOOK g_hMsgHook;                              /* DAT_14013cf58 core_globals.c */
 extern HWND  DAT_14013cf78;                           /* 主窗 HWND (def @9327) */
-/* ========== FUN_140045c90 @ 140045c90  size=2989 ==========
+/* ========== PECMD_ScriptMainEntry @ 140045c90  size=2989 ==========
  * MAIN 主体 (decompiled.c @40510 忠实移植): 命令行前缀解析 (-user/-u/ **user/**u/**wait) →
  * 互斥体 Global\PECMD:main(_u) 排他 (ERROR_ALREADY_EXISTS 退出) → PELOGON 注册表初始化 →
  * 参数表初始化 (script+0x78/+0x80, atexit 清理注册) → 命令行脚本加载
@@ -6748,7 +6748,7 @@ extern HWND  DAT_14013cf78;                           /* 主窗 HWND (def @9327)
  * (local_78/local_4e 无后续使用) 与 &DAT_0000000d 寄存器残留 (仅形参, 注出). */
 static void CleanupMainArg_045c90(void) { /* 原 LAB_14011ab90 atexit 清理回调; 体未反编译 TODO(verify) */ }
 
-uint64_t FUN_140045c90(uint64_t a, uint64_t b)   /* 签名保持桩 (arity 0->2); 真体直移 @0x140045c90 */
+uint64_t PECMD_ScriptMainEntry(uint64_t a, uint64_t b)   /* 签名保持桩 (arity 0->2); 真体直移 @0x140045c90 */
 {
     WCHAR    *p;            /* local_res10 命令行游标 */
     WCHAR    *pSaved;       /* local_110 / local_118 快照 */
