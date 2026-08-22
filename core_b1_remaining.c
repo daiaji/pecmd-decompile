@@ -211,7 +211,7 @@ extern int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, 
                             DWORD, DWORD *, BOOL);             /* WTSSendMessageW 槽 */
 extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d,
                           DWORD e, DWORD f, DWORD g);          /* @0x1400e3d60 消息框 */
-extern uint64_t FUN_14002d708(WCHAR *s, int a, int64_t *p, int b, DWORD d); /* @0x14002d708 */
+extern uint64_t PECMD_EnumProcessInfo(WCHAR *s, int a, int64_t *p, int b, DWORD d); /* @0x14002d708 */
 extern HANDLE FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack,
                             uint64_t flags, DWORD *tid, LPSECURITY_ATTRIBUTES sa); /* @0x14005b228 线程创建 */
 
@@ -858,7 +858,7 @@ uint64_t PECMD_WaitForCallbackWindow(DWORD param_1, int64_t param_2)
                     break;
                 }
                 PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 10, 0, (uint64_t *)0);
-                if (FUN_14002d708(g_szEmpty, 1, (int64_t *)0, 0, param_1) == 0 ||
+                if (PECMD_EnumProcessInfo(g_szEmpty, 1, (int64_t *)0, 0, param_1) == 0 ||
                     (lVar4 = lVar4 + -1, lVar4 < 0)) {
                     break;
                 }

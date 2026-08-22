@@ -21953,7 +21953,7 @@ LAB_140099508:
                                 *(uint16_t *)(uintptr_t)_Var25 = L'\0';
                                 PECMD_LoadLocalizedString(DAT_14013ca68, 0x2728, (uint16_t *)(uintptr_t)_Var25, 0x1207);
                                 if ((*(uint16_t *)(uintptr_t)_Var25 != L'\0') &&
-                                   ((DVar6 = FUN_14002d708(pWVar14, 0x30, (int64_t *)0x0, 0, 0), DVar6) == 0)) {
+                                   ((DVar6 = PECMD_EnumProcessInfo(pWVar14, 0x30, (int64_t *)0x0, 0, 0), DVar6) == 0)) {
                                     PECMD_AppendWideStr((WCHAR **)&local_f0, WSTR("-dir "));
                                     PECMD_AppendWideStr((WCHAR **)&local_f0, local_b8);
                                     local_res20 = (uint64_t)(uint32_t)local_res20 & 0xffffffffffff0000ULL;

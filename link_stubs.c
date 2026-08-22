@@ -70,7 +70,7 @@ typedef SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;
 typedef struct _OVERLAPPED { ULONG_PTR Internal; ULONG_PTR InternalHigh; union { struct { ULONG Offset; ULONG OffsetHigh; } s; void *Pointer; } u; void *hEvent; } OVERLAPPED;
 typedef OVERLAPPED *LPOVERLAPPED;
 typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } FILETIME, *LPFILETIME;
-/* PROCESSENTRY32W — 进程枚举结构 (core_b1_remaining.c 同款布局; FUN_14002d708 还原用) */
+/* PROCESSENTRY32W — 进程枚举结构 (core_b1_remaining.c 同款布局; PECMD_EnumProcessInfo 还原用) */
 typedef struct tagPROCESSENTRY32W {
     DWORD      dwSize;
     DWORD      cntUsage;
@@ -604,7 +604,7 @@ uint64_t CreateRoundRectRgn(void) { return 0; }
 void *CreateServiceW(void *mgr, const unsigned short *name, const unsigned short *disp, unsigned long acc, unsigned long type, unsigned long start, unsigned long err, const unsigned short *bin, const unsigned short *grp, unsigned long *tag, const unsigned short *deps, const unsigned short *acct, const unsigned short *pwd) { (void)mgr;(void)name;(void)disp;(void)acc;(void)type;(void)start;(void)err;(void)bin;(void)grp;(void)tag;(void)deps;(void)acct;(void)pwd; return (void*)0; }
 HBRUSH CreateSolidBrush(COLORREF color) { (void)color; return (HBRUSH)0; }
 void *CreateThread(void *sa, size_t st, void *rt, void *p, uint32_t f, uint32_t *tid) { (void)sa;(void)st;(void)rt;(void)p;(void)f;(void)tid; return (void*)0; }
-uint64_t CreateToolhelp32Snapshot(DWORD flags, DWORD pid) { (void)flags;(void)pid; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t CreateToolhelp32Snapshot(DWORD flags, DWORD pid) { (void)flags;(void)pid; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 HWND CreateWindowExW(DWORD ex, const WCHAR *cls, const WCHAR *name, DWORD style, int x, int y, int w, int h, HWND parent, HMENU menu, void *inst, void *param) { (void)ex;(void)cls;(void)name;(void)style;(void)x;(void)y;(void)w;(void)h;(void)parent;(void)menu;(void)inst;(void)param; return (HWND)0; }
 uint64_t CryptAcquireContextW(void) { return 0; }
 uint64_t CryptCreateHash(void) { return 0; }
@@ -4058,7 +4058,7 @@ uint64_t GetPixel(void) { return 0; }
 FARPROC GetProcAddress(HMODULE h, const char *name) { (void)h;(void)name; return (FARPROC)0; }
 uint64_t GetProcessAffinityMask(void) { return 0; }
 uint64_t GetProcessHeap(void) { return 0; }
-uint64_t GetProcessTimes(HANDLE h, FILETIME *a, FILETIME *b, FILETIME *c, FILETIME *d) { (void)h;(void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t GetProcessTimes(HANDLE h, FILETIME *a, FILETIME *b, FILETIME *c, FILETIME *d) { (void)h;(void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 uint64_t GetScrollInfo(void) { return 0; }
 int GetScrollPos(void *w, int n) { (void)w;(void)n; return 0; }
 uint64_t GetScrollRange(void) { return 0; }
@@ -4126,7 +4126,7 @@ uint64_t OffsetRect(void) { return 0; }
 uint64_t OpenClipboard(void) { return 0; }
 uint64_t OpenFileMappingA(void) { return 0; }
 uint64_t OpenFileMappingW(void) { return 0; }
-uint64_t OpenProcess(DWORD access, BOOL inherit, DWORD pid) { (void)access;(void)inherit;(void)pid; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t OpenProcess(DWORD access, BOOL inherit, DWORD pid) { (void)access;(void)inherit;(void)pid; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 uint64_t OpenProcessToken(void) { return 0; }
 void *OpenSCManagerW(const void *a, const void *b, unsigned long acc) { (void)a;(void)b;(void)acc; return (void*)0; }
 void *OpenServiceW(void *mgr, const unsigned short *name, unsigned long acc) { (void)mgr;(void)name;(void)acc; return (void*)0; }
@@ -4141,14 +4141,14 @@ uint64_t PECMD_ResPrefD(void) { return 0; }
 uint64_t PECMD_ResReenc(void) { return 0; }
 uint64_t PECMD_SwapBytes(void) { return 0; }
 uint64_t PECMD_XorDecode(void) { return 0; }
-uint64_t PathMatchSpecW(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t PathMatchSpecW(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 uint64_t PathFileExistsW(void) { return 0; }
 int PeekMessageW(void *msg, void *hwnd, UINT a, UINT b, UINT c) { (void)msg;(void)hwnd;(void)a;(void)b;(void)c; return 0; }
 uint64_t Polyline(void) { return 0; }
 int PostMessageW(void *w, unsigned int m, uint64_t a, uint64_t b) { (void)w;(void)m;(void)a;(void)b; return 0; }
 uint64_t PostQuitMessage(void) { return 0; }
-uint64_t Process32FirstW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (FUN_14002d708 体) */
-uint64_t Process32NextW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t Process32FirstW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
+uint64_t Process32NextW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 int PtInRect(const void *r, POINT p) { (void)r;(void)p; return 0; }
 uint64_t QueryDosDeviceW(void) { return 0; }
 uint64_t SetVolumeMountPointW(void) { return 0; }
@@ -4181,7 +4181,7 @@ int ResetEvent(void *h) { (void)h; return 0; }
 uint64_t ResumeThread(void) { return 0; }
 uint64_t SHChangeNotify(void) { return 0; }
 uint64_t SHFileOperationW(uint64_t a) { (void)a; return 0; }
-uint64_t SHGetSpecialFolderPathW(HWND hwnd, WCHAR *path, int csidl, BOOL fCreate) { (void)hwnd;(void)path;(void)csidl;(void)fCreate; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t SHGetSpecialFolderPathW(HWND hwnd, WCHAR *path, int csidl, BOOL fCreate) { (void)hwnd;(void)path;(void)csidl;(void)fCreate; return 0; }   /* arity 修正 (PECMD_EnumProcessInfo 体) */
 uint64_t ScreenToClient(void) { return 0; }
 uint64_t SearchPathW(void) { return 0; }
 uint64_t SelectObject(void) { return 0; }
@@ -6178,7 +6178,7 @@ int64_t PECMD_DispatchGlobalMessage(int64_t *a, const uint16_t *b, uint32_t c, u
   return v;
 }
 char s_0_0_0_0_140126958[16];
-/* ========== FUN_14002d708 @0x14002d708 size=3074 (主体直移) ==========
+/* ========== PECMD_EnumProcessInfo @0x14002d708 size=3074 (主体直移) ==========
  * 枚举进程/输出进程信息表/按名匹配并终止 (与 core_b2f.c FUN_14002D708 同源还原;
  * 此桩按任务恢复真实体, 保持既有 5 参签名).
  * 还原取舍 (歧义自决):
@@ -6217,7 +6217,7 @@ extern uint64_t Process32FirstW(HANDLE h, PROCESSENTRY32W *pe);
 extern uint64_t Process32NextW(HANDLE h, PROCESSENTRY32W *pe);
 extern uint64_t SHGetSpecialFolderPathW(HWND hwnd, WCHAR *path, int csidl, BOOL fCreate);
 
-uint64_t FUN_14002d708(uint16_t *s, int a, int64_t *p, int b, unsigned long d){
+uint64_t PECMD_EnumProcessInfo(uint16_t *s, int a, int64_t *p, int b, unsigned long d){
     LPCWSTR filter = (LPCWSTR)s;      /* param_1 */
     uint32_t mode = (uint32_t)a;      /* param_2 */
     longlong *out = p;                /* param_3 */
