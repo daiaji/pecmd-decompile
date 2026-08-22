@@ -147,6 +147,10 @@ int64_t *FUN_14007034c(int64_t *param_1, const uint16_t *param_2);
 
 /* helper 补前置声明 */
 void FUN_14004e2cc(uint64_t a, void *b);
+/* FUN_14004e2cc 实体内调用 (rename_map 命名; 定义在其它 core_*.c) */
+int64_t  PECMD_ExecuteCommand(int64_t *p1, LPCWSTR p2, int64_t p3, LPCWSTR p4, uint32_t p5, int64_t p6, int p7);
+void     PECMD_FreeTripleString(int64_t *p);
+void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
 uint64_t FUN_14004fb44(longlong *a, ulonglong b);
 void FUN_14005d9a8(int64_t a, int b);
 uint64_t FUN_1400630d0(int a);
@@ -5643,7 +5647,72 @@ long long FUN_140031454(long long *a, pthreadmbcinfo b) { (void)a;(void)b; retur
 int       FUN_140067cf4(long long *a, uint64_t *b) { (void)a;(void)b; return 0; }
 
 /* ---- P4 wave-4 helper 补定义 (声明已存在但缺实体) ---- */
-void FUN_14004e2cc(uint64_t a, void *b) { (void)a;(void)b; }
+/* @0x14004e2cc size=441 串插值分发: 释放三串任务槽, 槽2 带前导 "*" 时按对象/脚本重分发 (decompiled.c 直移) */
+/* 注: 反编译签名 (LARGE_INTEGER param_1, longlong* param_2) 按本文件既有桩签名 (uint64_t a, void* b) 表达,
+   a 即 param_1.QuadPart (上下文地址值), b 即 param_2 (三串槽指针). */
+void FUN_14004e2cc(uint64_t a, void *b)
+{
+  longlong *param_2 = (longlong *)b;
+  LPCWSTR lpString;
+  LPCWSTR lpString_00;
+  LPCWSTR lpString_01;
+  LPWSTR pWVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  longlong lVar5;
+  LPWSTR local_res8;
+  ulonglong *local_res10;
+
+  lpString = (LPCWSTR)param_2[2];
+  lpString_00 = (LPCWSTR)param_2[1];
+  lpString_01 = (LPCWSTR)*param_2;
+  if (lpString != (LPCWSTR)0x0) {
+    iVar2 = lstrlenW(lpString);
+    iVar3 = lstrlenW(lpString_01);
+    iVar4 = lstrlenW(lpString_00);
+    local_res10 = (ulonglong *)param_2[2];
+    param_2[2] = 0;
+    if (*lpString == L'*') {
+      if (((*(longlong *)(lpString + -4) < 5) || (lpString[1] != L'\0')) || (lpString[2] != L'^')) {
+        PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)a },
+                                 (LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)(lpString + 1) },
+                                 (longlong *)0x0,(longlong *)0x0,(pthreadmbcinfo)0x0);
+      }
+      else {
+        ((void (*)(void *, longlong, longlong *))(uintptr_t)(**(code **)(*(longlong *)(lpString + 4) + 8)))
+            (lpString + 4,(long long)a,param_2);
+      }
+    }
+    else {
+      PECMD_AllocWStringBuffer(&local_res8,(long long)(iVar4 + 1 + iVar3 + 1 + iVar2 + 2));
+      pWVar1 = local_res8;
+      lstrcpyW(local_res8,lpString);
+      lVar5 = (long long)(iVar2 + 2);
+      pWVar1[lVar5 + -1] = L'&';
+      pWVar1[lVar5 + -2] = L' ';
+      lstrcpyW(pWVar1 + lVar5,lpString_01);
+      lVar5 = (iVar3 + 1) + lVar5;
+      pWVar1[lVar5 + -1] = L' ';
+      lstrcpyW(pWVar1 + lVar5,lpString_00);
+      PECMD_ExecuteCommand((int64_t *)(uintptr_t)a,local_res8,0,(LPCWSTR)0x0,0,0,0);
+      if ((*(byte *)(a + 0x11) & 1) != 0) {
+        FUN_14005b0b8((ulonglong *)local_res8);
+      }
+      FUN_14005b104((longlong *)&local_res8);
+    }
+    if ((*(byte *)(a + 0x11) & 1) != 0) {
+      FUN_14005b0b8(local_res10);
+    }
+    FUN_14005b104((longlong *)&local_res10);
+  }
+  if ((*(byte *)(a + 0x11) & 1) != 0) {
+    FUN_14005b0b8((ulonglong *)*param_2);
+  }
+  PECMD_FreeTripleString(param_2);
+  free(param_2);
+  return;
+}
 uint64_t FUN_14004fb44(longlong *a, ulonglong b) { (void)a;(void)b; return 1; }
 void FUN_14005d9a8(int64_t a, int b) { (void)a;(void)b; }
 uint64_t FUN_1400630d0(int a) { (void)a; return 0; }
