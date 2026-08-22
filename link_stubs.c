@@ -3219,7 +3219,35 @@ uint8_t *PECMD_MemMoveForward(uint8_t *a, uint8_t *b, int n)
   }
   return a;
 }
-void FUN_140008b2c(uint16_t *s) { (void)s; }                          /* 移除服务(子树) */
+/* @0x140008b2c size=— 按名停止并删除服务(直移) */
+void FUN_140008b2c(uint16_t *param_1)
+{
+  uint16_t w = *param_1;
+  uint16_t *p = param_1;
+  while ((w != 0 && ((w < 9 || 0xd < w) && (w != 0x20)))) { p++; w = *p; }
+  int n = (int)((long long)p - (long long)param_1 >> 1);
+  if (0x400 < n) n = 0x400;
+  uint16_t name[1032];
+  PECMD_MemMoveForward((uint8_t *)name,(uint8_t *)param_1,n * 2);
+  name[n] = 0;
+  for (; ((8 < *p && *p < 0xe) || *p == 0x20); p++) {}
+  void *mgr = (void *)(uintptr_t)OpenSCManagerW(0,0,0xf003f);
+  if ((uintptr_t)mgr != 0) {
+    void *svc = (void *)(uintptr_t)OpenServiceW((uint64_t)(uintptr_t)mgr,name,0x10020);
+    if ((uintptr_t)svc != 0) {
+      uint8_t st[0x38]; memset(st,0,0x38);
+      ControlService((uint64_t)(uintptr_t)svc,1,st);
+      Sleep(200);
+      DeleteService((uint64_t)(uintptr_t)svc);
+      CloseServiceHandle((uint64_t)(uintptr_t)svc);
+      Sleep(200);
+      goto Lc33;
+    }
+  }
+  GetLastError();
+Lc33:
+  CloseServiceHandle((uint64_t)(uintptr_t)mgr);
+}
 void FUN_140017048(const WCHAR *s) { (void)s; }                       /* 服务安装处理 */
 uint32_t DAT_14013c9fc;   /* GetTickCount 结果槽 (PECMD.exe 静态清零区, 初 0) */
 long long DAT_14013d130;   /* 传 PECMD_ExpandCommandLine 的输出槽 */
