@@ -633,7 +633,7 @@ int EnumWindows(WNDENUMPROC cb, LPARAM lp) { (void)cb;(void)lp; return 0; }
 void ExitProcess(uint32_t code) { (void)code; }
 uint64_t ExitWindowsEx(void) { return 0; }
 uint64_t ExitWindowsEx_exref(void) { return 0; }
-uint64_t ExpandEnvironmentStringsW(void) { return 0; }
+uint64_t ExpandEnvironmentStringsW(LPCWSTR src, LPWSTR dst, DWORD n) { (void)src;(void)dst;(void)n; return 0; }   /* arity 修正 0->3 (FUN_14002b9ec 直移) */
 uint64_t ExtTextOutW(void) { return 0; }
 uint64_t PECMD_RunCommandLine(void) { return 0; }
 /* @0x140006554 size=— 拖放文件枚举(直移) */
@@ -3277,8 +3277,8 @@ longlong PECMD_ModalMsgPumpEx(longlong *param_1,ulonglong param_2)
 uint64_t FUN_1400f21a8(void) { return 0; }
 uint64_t FUN_140101e70(void) { return 0; }	/* CRT 标准库内联 */
 uint64_t FillRect(void) { return 0; }
-uint64_t FindClose(void) { return 0; }
-uint64_t FindNextFileW(void) { return 0; }
+uint64_t FindClose(HANDLE h) { (void)h; return 0; }                       /* arity 修正 0->1 (FUN_14002b9ec 直移) */
+uint64_t FindNextFileW(HANDLE h, void *fd) { (void)h;(void)fd; return 0; } /* arity 修正 0->2 (FUN_14002b9ec 直移) */
 uint64_t FindResourceW(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return 1; }
 uint64_t FindWindowA(void) { return 0; }
 uint64_t FindWindowExA(void) { return 0; }
@@ -4476,7 +4476,184 @@ undefined8 PECMD_SetVectorSize(longlong *param_1, ulonglong param_2, int param_3
 void PECMD_AllocExpandPath(void *a, int64_t *b){ (void)a;(void)b; }
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_14002c634(int64_t a, void *b, void *c, int d){ (void)a;(void)b;(void)c;(void)d; return 0; }
-void FUN_14002b9ec(int64_t a, void *b, unsigned c){ (void)a;(void)b;(void)c; }
+/* ========== FUN_14002b9ec @ 14002b9ec size=1625 ==========
+ * ToSys 复制到系统目录 worker (decompiled.c 直移):
+ *   展开源路径 → 构造 INF / DRIVERS / SYSTEM32 三目标目录 (param_1+0x168 自定义基准或 %SystemRoot%),
+ *   CopyFileW 主文件 (param_3&0x30000 时 PECMD_PatchInfDirectives),
+ *   尾部 FindFirstFileW/FindNextFileW 枚举源目录所有文件, 按 .INF/.SYS 扩展名分流复制.
+ * 改名 (tools/rename_map.json): FUN_140063694→PECMD_AllocWStringBuffer,
+ *   FUN_14006459c→PECMD_ExpandDrivePath, FUN_14001d78c→PECMD_MemMoveForward,
+ *   FUN_140021144→PECMD_PatchInfDirectives, FUN_140101db8→PECMD_FindFirstFileW,
+ *   FUN_140103020→PECMD_WideStrLen.
+ * 保持原名: FUN_140025f10 / FUN_14005b104 / FUN_140102a90 (link_stubs 桩).
+ * 取舍: DAT_140120dd8 (源 "*" 通配串, 8 字节) 按 core_b2e.c 既有约定以裸地址引用;
+ *       _wcsicmp 自补 2 参 extern — 真实体 @0x140103244 现为 0 参 no-op 桩, 链接取其符号.
+ */
+extern void    PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);  /* @0x140101db8 (core_b9_remaining.c) */
+extern void    PECMD_PatchInfDirectives(LPCWSTR path);                                /* @0x140021144 (core_b2d.c) */
+extern int     _wcsicmp(const WCHAR *a, const WCHAR *b);                              /* @0x140103244 (core_b9_remaining.c 桩) */
+
+DWORD FUN_14002b9ec(longlong param_1, LPCWSTR param_2, uint param_3)
+{
+  LPCWSTR lpExistingFileName;
+  LPCWSTR lpDst;
+  undefined1 *puVar1;
+  DWORD DVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  BOOL BVar7;
+  LPCWSTR pWVar8;
+  int iVar9;
+  longlong lVar10;
+  WCHAR *local_368;
+  HANDLE local_360;
+  LPWSTR local_358;
+  longlong local_350;
+  WCHAR *local_348;
+  int local_340;
+  WCHAR *local_338;
+  LPWSTR local_330;
+  undefined2 *local_328;
+  WCHAR local_320 [20];
+  WCHAR local_2f8 [24];
+  WCHAR local_2c8 [32];
+  WIN32_FIND_DATAW local_288;
+
+  PECMD_AllocWStringBuffer(&local_330, 0x19c8);
+  local_358 = (LPWSTR)0;
+  PECMD_ExpandDrivePath(param_2, 0x527, local_330, (longlong *)&local_358);
+  if (local_358 == (LPCWSTR)0) {
+    DVar2 = GetLastError();
+    if (DVar2 == 0) {
+      DVar2 = 1;
+    }
+  }
+  else {
+    lpExistingFileName = local_330 + 0x528;
+    lVar10 = (longlong)(int)((longlong)local_358 - (longlong)local_330 >> 1) * 2;
+    PECMD_MemMoveForward((undefined1 *)lpExistingFileName,(undefined1 *)local_330,(int)lVar10);
+    local_328 = (undefined2 *)(lVar10 + (longlong)lpExistingFileName);
+    *local_328 = 0;
+    lpDst = local_330 + 0xa50;
+    if (*(LPCWSTR *)(param_1 + 0x168) == (LPCWSTR)0) {
+      memcpy(local_320,(const WCHAR *)L"%SystemRoot%\\INF\\",0x24);
+      ExpandEnvironmentStringsW(local_320,(LPWSTR)lpDst,0x104);
+      memcpy(local_2c8,(const WCHAR *)L"%SystemRoot%\\SYSTEM32\\DRIVERS\\",0x3e);
+      ExpandEnvironmentStringsW(local_2c8,(LPWSTR)(local_330 + 0xf78),0x104);
+      memcpy(local_2f8,(const WCHAR *)L"%SystemRoot%\\SYSTEM32\\",0x2e);
+      ExpandEnvironmentStringsW(local_2f8,(LPWSTR)(local_330 + 0x14a0),0x104);
+    }
+    else {
+      iVar3 = lstrlenW(*(LPCWSTR *)(param_1 + 0x168));
+      puVar1 = *(undefined1 **)(param_1 + 0x168);
+      if ((*(short *)(puVar1 + (longlong)iVar3 * 2 + -2) == 0x5c) ||
+         (*(short *)(puVar1 + (longlong)iVar3 * 2 + -2) == 0x2f)) {
+        iVar3 = iVar3 + -1;
+      }
+      lVar10 = (longlong)iVar3 * 2;
+      PECMD_MemMoveForward((undefined1 *)lpDst,puVar1,(int)lVar10);
+      PECMD_MemMoveForward((undefined1 *)(lVar10 + (longlong)lpDst),(undefined1 *)L"\\INF\\",0xc);
+      PECMD_MemMoveForward((undefined1 *)(local_330 + 0xf78),puVar1,(int)lVar10);
+      PECMD_MemMoveForward((undefined1 *)(lVar10 + 0xa50 + (longlong)lpDst),
+                           (undefined1 *)L"\\SYSTEM32\\DRIVERS\\",0x26);
+      pWVar8 = local_330 + 0x14a0;
+      PECMD_MemMoveForward((undefined1 *)pWVar8,puVar1,(int)lVar10);
+      PECMD_MemMoveForward((undefined1 *)((longlong)pWVar8 + lVar10),(undefined1 *)L"\\SYSTEM32\\",0x16);
+    }
+    iVar3 = lstrlenW(lpDst);
+    local_340 = lstrlenW(local_330 + 0xf78);
+    iVar4 = lstrlenW(local_330 + 0x14a0);
+    lstrcpyW((WCHAR *)(lpDst + iVar3),local_358);
+    PECMD_AllocWStringBuffer(&local_368,0x2800);
+    _snwprintf(local_368,0x27ff,(const WCHAR *)L"ToSys:Copy <%s>",param_2);
+    lVar10 = param_1 + 8;
+    local_350 = lVar10;
+    FUN_140025f10(lVar10,local_368,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                  (long long *)0x0);
+    FUN_14005b104((longlong *)&local_368);
+    CopyFileW((uint64_t)param_2,(uint64_t)lpDst,0);
+    GetLastError();
+    if ((param_3 & 0x30000) != 0) {
+      PECMD_AllocWStringBuffer(&local_368,0x2800);
+      _snwprintf(local_368,0x27ff,(const WCHAR *)L"ToSys:TreatINF <%s>",lpDst);
+      FUN_140025f10(lVar10,local_368,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                    (long long *)0x0);
+      FUN_14005b104((longlong *)&local_368);
+      PECMD_PatchInfDirectives(lpDst);
+    }
+    PECMD_AllocWStringBuffer(&local_368,0x2800);
+    _snwprintf(local_368,0x27ff,(const WCHAR *)L"ToSys:END <%s>",param_2);
+    FUN_140025f10(lVar10,local_368,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                  (long long *)0x0);
+    FUN_14005b104((longlong *)&local_368);
+    PECMD_MemMoveForward((undefined1 *)local_358,(undefined1 *)(uintptr_t)0x140120dd8,8);
+    local_288.dwFileAttributes = 0;
+    FUN_140102a90((ulonglong *)&local_288.ftCreationTime,0,0x24c);
+    local_360 = (HANDLE)0x0;
+    PECMD_FindFirstFileW(&local_360,local_330,&local_288);
+    if (local_360 != (HANDLE)0x0) {
+      do {
+        if (((local_288.dwFileAttributes & 0x10) == 0) &&
+           ((local_288.cFileName[0] != L'.' ||
+            ((local_288.cFileName[1] != L'\0' &&
+             ((local_288.cFileName[1] != L'.' || (local_288.cFileName[2] != L'\0')))))))) {
+          iVar5 = lstrlenW(local_288.cFileName);
+          PECMD_MemMoveForward((undefined1 *)local_328,(undefined1 *)local_288.cFileName,(iVar5 + 1) * 2);
+          lVar10 = PECMD_WideStrLen(local_288.cFileName);
+          iVar5 = (int)lVar10;
+          if ((int)lVar10 < 4) {
+            iVar5 = 4;
+          }
+          iVar6 = _wcsicmp(local_288.cFileName + (longlong)iVar5 + -4,(const WCHAR *)L".INF");
+          pWVar8 = local_330 + 0x14a0;
+          iVar9 = iVar4;
+          if (iVar6 == 0) {
+            pWVar8 = lpDst;
+            iVar9 = iVar3;
+          }
+          iVar5 = _wcsicmp(local_288.cFileName + (longlong)iVar5 + -4,(const WCHAR *)L".SYS");
+          if (iVar5 == 0) {
+            pWVar8 = local_330 + 0xf78;
+            iVar9 = local_340;
+          }
+          lstrcpyW((WCHAR *)(pWVar8 + iVar9),local_288.cFileName);
+          PECMD_AllocWStringBuffer(&local_368,0x2800);
+          _snwprintf(local_368,0x27ff,(const WCHAR *)L"ToSys:Copy <%s>",lpExistingFileName);
+          FUN_140025f10(local_350,local_368,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                        (long long *)0x0);
+          FUN_14005b104((longlong *)&local_368);
+          CopyFileW((uint64_t)lpExistingFileName,(uint64_t)pWVar8,0);
+          lVar10 = local_350;
+          if ((lpDst == pWVar8) && ((param_3 & 0x30000) != 0)) {
+            PECMD_AllocWStringBuffer(&local_338,0x2800);
+            _snwprintf(local_338,0x27ff,(const WCHAR *)L"ToSys:TreatINF <%s>",lpDst);
+            lVar10 = local_350;
+            FUN_140025f10(local_350,local_338,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                          (long long *)0x0);
+            FUN_14005b104((longlong *)&local_338);
+            PECMD_PatchInfDirectives(lpDst);
+          }
+          PECMD_AllocWStringBuffer(&local_348,0x2800);
+          _snwprintf(local_348,0x27ff,(const WCHAR *)L"ToSys:End <%s>",lpExistingFileName);
+          FUN_140025f10(lVar10,local_348,0,(pthreadmbcinfo)&DAT_00000011,(pthreadmbcinfo)0x0,
+                        (long long *)0x0);
+          FUN_14005b104((longlong *)&local_348);
+          local_288.cFileName[2] = L'\0';
+        }
+        BVar7 = FindNextFileW(local_360,&local_288);
+      } while (BVar7 != 0);
+      if ((local_360 != (HANDLE)0x0) && (local_360 != (HANDLE)(uintptr_t)-1)) {
+        FindClose(local_360);
+      }
+    }
+    local_360 = (HANDLE)0x0;
+    DVar2 = 0;
+  }
+  FUN_14005b104((longlong *)&local_330);
+  return DVar2;
+}
 uint8_t DAT_00000011;
 uint64_t SetupDiSetDeviceInstallParamsW(void){ return 0; }
 uint64_t SetupDiBuildDriverInfoList(void){ return 0; }
