@@ -70,6 +70,19 @@ typedef SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;
 typedef struct _OVERLAPPED { ULONG_PTR Internal; ULONG_PTR InternalHigh; union { struct { ULONG Offset; ULONG OffsetHigh; } s; void *Pointer; } u; void *hEvent; } OVERLAPPED;
 typedef OVERLAPPED *LPOVERLAPPED;
 typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } FILETIME, *LPFILETIME;
+/* PROCESSENTRY32W — 进程枚举结构 (core_b1_remaining.c 同款布局; FUN_14002d708 还原用) */
+typedef struct tagPROCESSENTRY32W {
+    DWORD      dwSize;
+    DWORD      cntUsage;
+    DWORD      th32ProcessID;
+    uintptr_t  th32DefaultHeapID;
+    DWORD      th32ModuleID;
+    DWORD      cntThreads;
+    DWORD      th32ParentProcessID;
+    LONG       pcPriClassBase;
+    DWORD      dwFlags;
+    WCHAR      szExeFile[260];
+} PROCESSENTRY32W;
 /* --- Ghidra 反编译伪类型映射 (P4 wave-4 移植) --- */
 typedef uint64_t undefined8;
 typedef uint32_t undefined4;
@@ -591,7 +604,7 @@ uint64_t CreateRoundRectRgn(void) { return 0; }
 void *CreateServiceW(void *mgr, const unsigned short *name, const unsigned short *disp, unsigned long acc, unsigned long type, unsigned long start, unsigned long err, const unsigned short *bin, const unsigned short *grp, unsigned long *tag, const unsigned short *deps, const unsigned short *acct, const unsigned short *pwd) { (void)mgr;(void)name;(void)disp;(void)acc;(void)type;(void)start;(void)err;(void)bin;(void)grp;(void)tag;(void)deps;(void)acct;(void)pwd; return (void*)0; }
 HBRUSH CreateSolidBrush(COLORREF color) { (void)color; return (HBRUSH)0; }
 void *CreateThread(void *sa, size_t st, void *rt, void *p, uint32_t f, uint32_t *tid) { (void)sa;(void)st;(void)rt;(void)p;(void)f;(void)tid; return (void*)0; }
-uint64_t CreateToolhelp32Snapshot(void) { return 0; }
+uint64_t CreateToolhelp32Snapshot(DWORD flags, DWORD pid) { (void)flags;(void)pid; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 HWND CreateWindowExW(DWORD ex, const WCHAR *cls, const WCHAR *name, DWORD style, int x, int y, int w, int h, HWND parent, HMENU menu, void *inst, void *param) { (void)ex;(void)cls;(void)name;(void)style;(void)x;(void)y;(void)w;(void)h;(void)parent;(void)menu;(void)inst;(void)param; return (HWND)0; }
 uint64_t CryptAcquireContextW(void) { return 0; }
 uint64_t CryptCreateHash(void) { return 0; }
@@ -4045,7 +4058,7 @@ uint64_t GetPixel(void) { return 0; }
 FARPROC GetProcAddress(HMODULE h, const char *name) { (void)h;(void)name; return (FARPROC)0; }
 uint64_t GetProcessAffinityMask(void) { return 0; }
 uint64_t GetProcessHeap(void) { return 0; }
-uint64_t GetProcessTimes(void) { return 0; }
+uint64_t GetProcessTimes(HANDLE h, FILETIME *a, FILETIME *b, FILETIME *c, FILETIME *d) { (void)h;(void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 uint64_t GetScrollInfo(void) { return 0; }
 int GetScrollPos(void *w, int n) { (void)w;(void)n; return 0; }
 uint64_t GetScrollRange(void) { return 0; }
@@ -4113,7 +4126,7 @@ uint64_t OffsetRect(void) { return 0; }
 uint64_t OpenClipboard(void) { return 0; }
 uint64_t OpenFileMappingA(void) { return 0; }
 uint64_t OpenFileMappingW(void) { return 0; }
-uint64_t OpenProcess(void) { return 0; }
+uint64_t OpenProcess(DWORD access, BOOL inherit, DWORD pid) { (void)access;(void)inherit;(void)pid; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 uint64_t OpenProcessToken(void) { return 0; }
 void *OpenSCManagerW(const void *a, const void *b, unsigned long acc) { (void)a;(void)b;(void)acc; return (void*)0; }
 void *OpenServiceW(void *mgr, const unsigned short *name, unsigned long acc) { (void)mgr;(void)name;(void)acc; return (void*)0; }
@@ -4128,14 +4141,14 @@ uint64_t PECMD_ResPrefD(void) { return 0; }
 uint64_t PECMD_ResReenc(void) { return 0; }
 uint64_t PECMD_SwapBytes(void) { return 0; }
 uint64_t PECMD_XorDecode(void) { return 0; }
-uint64_t PathMatchSpecW(void) { return 0; }
+uint64_t PathMatchSpecW(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 uint64_t PathFileExistsW(void) { return 0; }
 int PeekMessageW(void *msg, void *hwnd, UINT a, UINT b, UINT c) { (void)msg;(void)hwnd;(void)a;(void)b;(void)c; return 0; }
 uint64_t Polyline(void) { return 0; }
 int PostMessageW(void *w, unsigned int m, uint64_t a, uint64_t b) { (void)w;(void)m;(void)a;(void)b; return 0; }
 uint64_t PostQuitMessage(void) { return 0; }
-uint64_t Process32FirstW(void) { return 0; }
-uint64_t Process32NextW(void) { return 0; }
+uint64_t Process32FirstW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (FUN_14002d708 体) */
+uint64_t Process32NextW(HANDLE h, PROCESSENTRY32W *pe) { (void)h;(void)pe; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 int PtInRect(const void *r, POINT p) { (void)r;(void)p; return 0; }
 uint64_t QueryDosDeviceW(void) { return 0; }
 uint64_t SetVolumeMountPointW(void) { return 0; }
@@ -4168,7 +4181,7 @@ int ResetEvent(void *h) { (void)h; return 0; }
 uint64_t ResumeThread(void) { return 0; }
 uint64_t SHChangeNotify(void) { return 0; }
 uint64_t SHFileOperationW(uint64_t a) { (void)a; return 0; }
-uint64_t SHGetSpecialFolderPathW(void) { return 0; }
+uint64_t SHGetSpecialFolderPathW(HWND hwnd, WCHAR *path, int csidl, BOOL fCreate) { (void)hwnd;(void)path;(void)csidl;(void)fCreate; return 0; }   /* arity 修正 (FUN_14002d708 体) */
 uint64_t ScreenToClient(void) { return 0; }
 uint64_t SearchPathW(void) { return 0; }
 uint64_t SelectObject(void) { return 0; }
@@ -6165,7 +6178,407 @@ int64_t PECMD_DispatchGlobalMessage(int64_t *a, const uint16_t *b, uint32_t c, u
   return v;
 }
 char s_0_0_0_0_140126958[16];
-uint64_t FUN_14002d708(uint16_t *s, int a, int64_t *p, int b, unsigned long d){ (void)s;(void)a;(void)p;(void)b;(void)d; return 0; }
+/* ========== FUN_14002d708 @0x14002d708 size=3074 (主体直移) ==========
+ * 枚举进程/输出进程信息表/按名匹配并终止 (与 core_b2f.c FUN_14002D708 同源还原;
+ * 此桩按任务恢复真实体, 保持既有 5 参签名).
+ * 还原取舍 (歧义自决):
+ *  - Process32FirstW/NextW 补回被 Ghidra 丢弃的 PROCESSENTRY32W* 第二实参,
+ *    堆栈槽 local_2c8/local_2c0/local_2a8/local_29c 按 PROCESSENTRY32W 字段
+ *    (dwSize/th32ProcessID/th32ParentProcessID/szExeFile) 映射 (同 core_b2f.c).
+ *  - NtQuerySystemInformation(2,...) 第三实参按 0x134 补齐 (同 core_b2f.c).
+ *  - CONCAT71 位提取简化为 (mode & 0x80) != 0.
+ *  - local_440 为 指针槽/长度 复用槽 (同 core_b2f.c int64_t).
+ *  - wsprintfW("%lu...") 原反编译即缺 vararg 实参, 保持原样 (同 core_b2f.c).
+ *  - DAT_14013d040/14013cd78/14013ca49/14013cb80/140121178 → core_globals.c
+ *    既有 g_* 全局; 内部调用按 tools/rename_map.json 用 PECMD_* 名.
+ */
+/* 全局槽 (core_globals.c) */
+extern void *g_pNtQuerySystemInformation;          /* DAT_14013d040 */
+extern void *g_pGetProcessMemoryInfo;              /* DAT_14013cd78 */
+extern uint8_t g_u8CA49;                           /* DAT_14013ca49 */
+extern int64_t g_QPFreq;                           /* DAT_14013cb80 */
+extern double g_dbl1178;                           /* DAT_140121178 */
+/* 内部 helper (core_b1_remaining.c / core_b8d.c / core_b9_remaining.c 定义) */
+extern uint16_t *PECMD_FindLastPathSep(uint16_t *s);         /* @0x140017634 */
+extern int8_t PECMD_GetProcessorCount(void);                 /* @0x1400066e4 */
+extern bool PECMD_CmpStrN(LPCWSTR a, LPCWSTR b, int len, int case_sens);   /* @0x14001a25c */
+extern bool PECMD_IsProcessUser(LPCWSTR user, DWORD pid, int case_sens);   /* @0x14001a488 */
+extern void PECMD_TerminateProcessById(DWORD pid, UINT exitCode, uint64_t *out); /* @0x14001a510 */
+extern uint16_t *PECMD_GetProcessModuleFile(DWORD pid, uint16_t *path);    /* @0x140006770 */
+extern DWORD PECMD_ReadProcessCommandLine(DWORD pid, uint64_t *buf, int size); /* @0x1400098dc */
+extern LPWSTR PECMD_GetProcessUserName(DWORD pid, LPWSTR buf);             /* @0x14001a284 */
+extern void FUN_1400E6CBC(int64_t *ps, double a2, LPCWSTR fmt);            /* @0x1400e6cbc (core_b8d.c) */
+/* Win32 桩 (无参桩配带参调用, 按惯例修 arity; 定义见本文件后部) */
+extern uint64_t GetCurrentProcessId(void);
+extern uint64_t GetProcessTimes(HANDLE h, FILETIME *a, FILETIME *b, FILETIME *c, FILETIME *d);
+extern uint64_t OpenProcess(DWORD access, BOOL inherit, DWORD pid);
+extern uint64_t PathMatchSpecW(const uint16_t *a, const uint16_t *b);
+extern uint64_t Process32FirstW(HANDLE h, PROCESSENTRY32W *pe);
+extern uint64_t Process32NextW(HANDLE h, PROCESSENTRY32W *pe);
+extern uint64_t SHGetSpecialFolderPathW(HWND hwnd, WCHAR *path, int csidl, BOOL fCreate);
+
+uint64_t FUN_14002d708(uint16_t *s, int a, int64_t *p, int b, unsigned long d){
+    LPCWSTR filter = (LPCWSTR)s;      /* param_1 */
+    uint32_t mode = (uint32_t)a;      /* param_2 */
+    longlong *out = p;                /* param_3 */
+    DWORD pid = (DWORD)b;             /* param_4 */
+    DWORD parentPid = (DWORD)d;       /* param_5 */
+    WCHAR *pWVar19 = (WCHAR *)0;
+    LPCWSTR pWVar1;
+    double dVar2;
+    int iVar3;
+    int iVar9;
+    DWORD DVar4 = 0;
+    DWORD DVar5;
+    BOOL BVar10;
+    HMODULE hModule;
+    HANDLE hProcess;
+    HANDLE pvVar6;
+    longlong lVar16;
+    longlong lVar17;
+    LPCWSTR lpString1;
+    WCHAR WVar18;
+    uint64_t uVar11 = 0;
+    uint64_t uVar12;
+    uint64_t uVar20;
+    uint32_t uVar8;
+    uint32_t uVar13;
+    DWORD DVar14;
+    DWORD DVar15 = 0;
+    DWORD *pDVar21;
+    char local_res10;
+    LPCWSTR local_438;
+    int64_t local_440 = 0;
+    WCHAR *local_430;
+    uint64_t local_428 = 0;
+    uint32_t local_420;
+    uint32_t local_41c;
+    DWORD *local_418 = (DWORD *)0;
+    DWORD *local_3d8 = (DWORD *)0;
+    UINT local_410;
+    DWORD local_40c;
+    HANDLE local_408;
+    WCHAR *local_400;
+    WCHAR *local_3f8;
+    longlong local_3f0;
+    longlong local_3e8;
+    WCHAR *local_3e0;
+    longlong local_3d0;
+    uint64_t local_3c8 = 0x400;
+    WCHAR *local_3c0 = (WCHAR *)0;
+    longlong local_3b8;
+    WCHAR *local_3b0;
+    longlong local_3a8;
+    WCHAR *local_3a0;
+    WCHAR *local_398;
+    FILETIME local_390;
+    FILETIME local_388;
+    FILETIME local_380;
+    undefined4 local_378;
+    undefined1 local_374[28];
+    FILETIME local_358[2];
+    undefined4 local_348;
+    undefined4 local_344;
+    ulonglong local_340[15];
+    undefined1 local_2c8[8];
+    ulonglong local_190[42];
+    PROCESSENTRY32W pe32;
+
+    if ((((mode == 0) && (out == (longlong *)0)) && (pid == 0)) && (parentPid == 0)) {
+        filter = (LPCWSTR)PECMD_FindLastPathSep((uint16_t *)filter);
+    }
+    local_438 = filter;
+    thunk_FUN_1400f429c((WCHAR **)&local_438, 0x7c);
+    WVar18 = (WCHAR)(uintptr_t)pWVar19;
+    if (*local_438 != WVar18) {
+        *(WCHAR *)local_438 = WVar18;
+        local_438 = local_438 + 1;
+        if (*local_438 != WVar18) goto LAB_14002d791;
+    }
+    local_438 = (LPCWSTR)pWVar19;
+LAB_14002d791:
+    local_410 = (UINT)(uintptr_t)pWVar19;
+    uVar8 = mode & 0x10000;
+    uVar13 = mode & 0x40;
+    iVar3 = (int)((mode & 0x80) == 0x80);   /* 原 CONCAT71 位提取简化 */
+    local_41c = mode & 0x80000;
+    local_420 = uVar13;
+    local_40c = (DWORD)GetCurrentProcessId();
+    local_3c8 = 0x400;
+    local_428 = 0;
+    local_3d8 = (DWORD *)0;
+    local_418 = (DWORD *)0;
+    if (iVar3 != 0) {
+        local_410 = (UINT)(uintptr_t)out;
+        out = (longlong *)0;
+    }
+    if ((uVar13 != 0) && (iVar3 != 0)) {
+        PECMD_GrowByteBuffer((void **)&local_418, 0x1000);
+        local_3d8 = local_418;
+        out = (longlong *)0;
+    }
+    local_res10 = (char)(uVar13 != 0);
+    if (((uVar13 != 0) && (iVar3 != 0)) && (parentPid != 0)) {
+        *local_3d8 = parentPid;
+        local_428 = 1;
+        local_res10 = '\x02';
+    }
+    local_418 = local_3d8;
+    if (g_pNtQuerySystemInformation == (void *)0) {
+        hModule = (HMODULE)GetModuleHandleA("ntdll");
+        g_pNtQuerySystemInformation = (void *)(uintptr_t)GetProcAddress(hModule, "NtQuerySystemInformation");
+    }
+    PECMD_EnableTokenPrivilege((LPCWSTR)L"SeDebugPrivilege", 2, 4);
+    DVar4 = 0;
+    PECMD_AllocWStringBuffer(&local_3c0, 0x48f3);
+    local_400 = local_3c0;
+    local_3f8 = local_3c0 + 0x50;
+    local_430 = local_3c0 + 0x82;
+    local_3b0 = local_3c0 + 0x7dd;
+    *local_3b0 = L'\t';
+    local_398 = local_3c0 + 0x7de;
+    *local_398 = L'\0';
+    local_3e0 = local_3c0 + 0x8e3;
+    *local_3e0 = L'\0';
+    local_3c0[0x5d3] = L'\0';
+    SHGetSpecialFolderPathW((HWND)0, local_3c0 + 0x5d3, 0x24, 0);
+    iVar9 = lstrlenW(local_430 + 0x551);
+    local_3a0 = local_430 + (longlong)iVar9 + 0x551;
+    if (out != (longlong *)0) {
+        local_378 = 0;
+        FUN_140102a90((ulonglong *)local_374, 0, 0x1c);
+        FUN_140102a90((ulonglong *)(local_2c8 + 4), 0, 0x134);
+        FUN_140102a90(local_190, 0, 0x138);
+        FUN_140102a90((ulonglong *)local_2c8, 0, 8);
+        ((void (*)(int, void *, unsigned long))(uintptr_t)g_pNtQuerySystemInformation)(3, (void *)&local_378, 0x20);
+        ((void (*)(int, void *, unsigned long))(uintptr_t)g_pNtQuerySystemInformation)(2, (void *)local_2c8, 0x134);
+        FUN_1400e6d68(local_400, *(uint64_t *)local_2c8);
+        FUN_1400e6d68(local_3f8, *(uint64_t *)(local_374 + 4));
+    }
+    DVar15 = 0;
+    if (((mode & 1) == 0) && (*filter == L'\0')) {
+        PECMD_AssignString(out, local_400);
+        PECMD_AppendWideStr(out, (LPCWSTR)L"\t");
+        PECMD_AppendWideStr(out, local_3f8);
+        if (g_u8CA49 == '\0') {
+            PECMD_GetProcessorCount();
+        }
+        wsprintfW((LPWSTR)&local_348, (const unsigned short *)L"\t%d\t", (uint64_t)(uint8_t)g_u8CA49);
+        PECMD_AppendWideStr(out, (LPCWSTR)&local_348);
+        FUN_1400e6d68((LPCWSTR)&local_348, (uint64_t)g_QPFreq);
+        PECMD_AppendWideStr(out, (LPCWSTR)&local_348);
+        dVar2 = g_dbl1178 / (double)g_QPFreq;
+        PECMD_AllocStrSlot((void *)&local_440);
+        FUN_1400E6CBC((longlong *)&local_440, dVar2, (LPCWSTR)L"\t%lf");
+        PECMD_AppendWideStr(out, (LPCWSTR)(uintptr_t)local_440);
+        FUN_14005b104((longlong *)&local_440);
+    }
+    local_440 = (int64_t)PECMD_WideStrLen(filter);
+    local_408 = (HANDLE)(uintptr_t)CreateToolhelp32Snapshot(2, parentPid);
+    if (local_408 == (HANDLE)(uintptr_t)0xffffffffffffffffULL) {
+        local_408 = (HANDLE)0;
+    }
+    if (local_408 != (HANDLE)(uintptr_t)0xffffffffffffffffULL) {
+        local_3e8 = (longlong)(int)(mode & 0x20);
+        local_3f0 = (longlong)(int)(mode & 1);
+        local_3a8 = (longlong)(int)(mode & 0x100);
+        local_3b8 = (longlong)(int)(mode & 2);
+        local_3d0 = (longlong)(int)(mode & 0x10);
+        uVar20 = local_428;
+        pDVar21 = local_3d8;
+        do {
+            lVar16 = local_3f0;
+            pe32.dwSize = 0x238;   /* 原 local_2c8._0_4_ */
+            local_428 = uVar20;
+            iVar9 = (int)Process32FirstW(local_408, &pe32);
+            pvVar6 = local_408;
+            uVar11 = uVar20;
+            lVar17 = local_3e8;
+            DVar5 = DVar15;
+            DVar14 = DVar4;
+            while (local_3e8 = lVar17, DVar4 = DVar14, DVar15 = DVar5, iVar9 != 0) {
+                uVar11 = 0;
+                if (local_res10 == '\x02') {
+                    uVar12 = uVar11;
+                    if (uVar20 != 0) {
+                        do {
+                            if (pDVar21[uVar12] == pe32.th32ProcessID) goto LAB_14002e2de;
+                            uVar12 = uVar12 + 1;
+                        } while (uVar12 < uVar20);
+                    }
+                    if (uVar20 != 0) {
+                        do {
+                            if (pDVar21[uVar11] == pe32.th32ParentProcessID) goto LAB_14002dfb4;
+                            uVar11 = uVar11 + 1;
+                        } while (uVar11 < uVar20);
+                    }
+                }
+                else if (((pid == 0) || (pid == pe32.th32ParentProcessID)) &&
+                         ((parentPid == 0) || (parentPid == pe32.th32ProcessID))) {
+                    if (lVar17 == 0) {
+                        if (local_3a8 != 0) {
+                            BVar10 = (BOOL)PathMatchSpecW(pe32.szExeFile, filter);
+                            if (BVar10 != 0) goto LAB_14002dfb4;
+                            goto LAB_14002dcd5;
+                        }
+                        iVar9 = (int)local_440;
+                        if (local_3b8 != 0) {
+                            if (lVar16 == 0) {
+                                if ((int)local_440 == 0) {
+                                    if (pe32.szExeFile[0] == L'\0') goto LAB_14002dcd5;
+                                }
+                                else {
+                                    if (uVar8 == 0) {
+                                        iVar9 = lstrcmpiW(pe32.szExeFile, filter);
+                                    }
+                                    else {
+                                        iVar9 = (int)lstrcmpW(pe32.szExeFile, filter);
+                                    }
+                                    if (iVar9 == 0) goto LAB_14002dfb4;
+                                }
+                            }
+                            else if (((int)local_440 == 0) ||
+                                     (PECMD_CmpStrN(pe32.szExeFile, filter, (int)local_440, (int)uVar8))) {
+                                goto LAB_14002dfb4;
+                            }
+                            goto LAB_14002e2de;
+                        }
+                        if ((lVar16 == 0) ||
+                            (((int)local_440 != 0 &&
+                              !PECMD_CmpStrN(pe32.szExeFile, filter, (int)local_440, (int)uVar8)))) {
+                            if ((iVar9 != 0) &&
+                                PECMD_CmpStrN(pe32.szExeFile, filter, iVar9, (int)uVar8) &&
+                                (local_3f0 == 0)) {
+                                if ((pe32.szExeFile[(int)local_440] == L'\0') ||
+                                    (pe32.szExeFile[(int)local_440] == L'.'))
+                                    goto LAB_14002dfb4;
+                            }
+                            goto LAB_14002e2de;
+                        }
+LAB_14002dfb4:
+                        if ((((out == (longlong *)0) && (local_3d0 != 0)) &&
+                             (local_40c == pe32.th32ProcessID)) ||
+                            ((local_438 != (LPCWSTR)0) &&
+                             (PECMD_IsProcessUser(local_438, pe32.th32ProcessID, (int)uVar8) == 0)))
+                            goto LAB_14002e2de;
+                        if (out == (longlong *)0) {
+                            uVar11 = local_428;
+                            DVar4 = pe32.th32ProcessID;
+                            DVar15 = pe32.th32ProcessID;
+                            if (iVar3 != 0 || local_420 != 0) {
+                                if (pDVar21 != (DWORD *)0) {
+                                    if (local_3c8 <= uVar20) {
+                                        local_3c8 = local_3c8 + 0x400;
+                                        PECMD_GrowByteBuffer((void **)&local_418, local_3c8 * 4);
+                                    }
+                                    local_418[uVar20] = pe32.th32ProcessID;
+                                    uVar20 = uVar20 + 1;
+                                    pDVar21 = local_418;
+                                }
+                                if (iVar3 != 0) {
+                                    PECMD_TerminateProcessById(pe32.th32ProcessID, local_410, (uint64_t *)0);
+                                }
+                                DVar14 = DVar5 + 1;
+                                goto LAB_14002e2de;
+                            }
+                            break;
+                        }
+                        DVar14 = DVar5 + 1;
+                        lVar17 = local_3e8;
+                    }
+                    else {
+LAB_14002dcd5:
+                        if ((local_438 != (LPCWSTR)0) &&
+                            (PECMD_IsProcessUser(local_438, pe32.th32ProcessID, (int)uVar8) == 0))
+                            goto LAB_14002e2de;
+                    }
+                    lVar16 = 0;
+                    if ((out != (longlong *)0) || (lVar17 != 0)) {
+                        if ((out != (longlong *)0) &&
+                            (hProcess = (HANDLE)(uintptr_t)OpenProcess(0x400, 0, pe32.th32ProcessID),
+                             hProcess != (HANDLE)0)) {
+                            FUN_14005c828("GetProcessMemoryInfo", "PSAPI.DLL",
+                                          (longlong *)&g_pGetProcessMemoryInfo, (longlong *)0);
+                            local_348 = 0x48;
+                            local_344 = 0;
+                            FUN_140102a90(local_340, 0, 0x40);
+                            if (g_pGetProcessMemoryInfo != (void *)0) {
+                                ((void (*)(HANDLE, void *, DWORD))(uintptr_t)g_pGetProcessMemoryInfo)(
+                                    hProcess, (void *)&local_348, 0x48);
+                            }
+                            BVar10 = (BOOL)GetProcessTimes(hProcess, local_358, &local_380, &local_390, &local_388);
+                            if (BVar10 != 0) {
+                                lVar16 = (longlong)(((uint64_t)local_390.dwLowDateTime |
+                                                     ((uint64_t)local_390.dwHighDateTime << 32)) +
+                                                    ((uint64_t)local_388.dwLowDateTime |
+                                                     ((uint64_t)local_388.dwHighDateTime << 32)));
+                            }
+                            CloseHandle(hProcess);
+                        }
+                        lpString1 = local_430 + 0x656;
+                        PECMD_GetProcessModuleFile(pe32.th32ProcessID, local_430 + 0x656);
+                        if ((((local_430[0x656] == L'\\') && (local_430[0x657] == L'?')) &&
+                             (local_430[0x658] == L'?')) &&
+                            (((local_430[0x659] == L'\\' && (local_430[0x65a] != L'\0')) &&
+                              (local_430[0x65b] == L':')))) {
+                            lpString1 = local_430 + 0x65a;
+                        }
+                        else {
+                            iVar9 = StrCmpNIW((const unsigned short *)L"\\SystemRoot\\", local_430 + 0x656, 0xc);
+                            if (iVar9 == 0) {
+                                lpString1 = local_430 + 0x551;
+                                lstrcpyW(local_3a0, local_430 + 0x661);
+                            }
+                        }
+                        if (local_3e8 == 0) {
+LAB_14002e1cd:
+                            if (local_41c != 0) {
+                                PECMD_GetProcessUserName(pe32.th32ProcessID, local_398);
+                            }
+                            PECMD_ReadProcessCommandLine(pe32.th32ProcessID, (uint64_t *)local_3e0, 0x8000);
+                            local_3e0[0x4000] = L'\0';
+                            FUN_1400e6d68(local_430, (uint64_t)lVar16);
+                            pWVar1 = local_430 + 0x46;
+                            wsprintfW((LPWSTR)pWVar1, (const unsigned short *)L"%lu\t%lu\t%lu\t%s\t%s%s\t");
+                            if (*(uint16_t *)(uintptr_t)*out != 0) {
+                                PECMD_AppendWideStr(out, (LPCWSTR)L"\r\n");
+                            }
+                            PECMD_AppendWideStr(out, pWVar1);
+                            PECMD_AppendWideStr(out, lpString1);
+                            PECMD_AppendWideStr(out, (LPCWSTR)L"\t");
+                            PECMD_AppendWideStr(out, local_3e0);
+                        }
+                        else if (((uVar8 == 0) &&
+                                  (iVar9 = lstrcmpiW(lpString1, filter), iVar9 == 0)) ||
+                                 (iVar9 = (int)lstrcmpW(lpString1, filter), iVar9 == 0)) {
+                            if (out != (longlong *)0) {
+                                DVar14 = DVar14 + 1;
+                                goto LAB_14002e1cd;
+                            }
+                            uVar11 = local_428;
+                            DVar4 = pe32.th32ProcessID;
+                            DVar15 = pe32.th32ProcessID;
+                            if ((local_3d0 == 0) || (local_40c != pe32.th32ProcessID)) break;
+                        }
+                    }
+                }
+LAB_14002e2de:
+                iVar9 = (int)Process32NextW(pvVar6, &pe32);
+                uVar11 = local_428;
+                lVar16 = local_3f0;
+                lVar17 = local_3e8;
+                DVar5 = DVar14;
+            }
+            local_res10 = '\x02';
+        } while ((local_420 != 0) && (uVar11 < uVar20));
+    }
+    if ((local_408 != (HANDLE)0) && (local_408 != (HANDLE)(uintptr_t)0xffffffffffffffffULL)) {
+        CloseHandle(local_408);
+    }
+    FUN_14005b104((longlong *)&local_3c0);
+    FUN_14005b104((longlong *)&local_418);
+    return DVar15;
+}
 uint64_t GetLastInputInfo(void){ return 0; }
 
 /* --- batch r42: B1/B3/B9 remaining restore link stubs --- */
