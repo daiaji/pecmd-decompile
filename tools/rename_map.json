@@ -1152,5 +1152,6 @@
   "FUN_1400db648": "PECMD_SetControlGeom",
   "FUN_14002d708": "PECMD_EnumProcessInfo",
   "FUN_140045c90": "PECMD_ScriptMainEntry",
-  "FUN_14002cc30": "PECMD_ExpandSpecialDirs"
+  "FUN_14002cc30": "PECMD_ExpandSpecialDirs",
+  "FUN_1400b1724": "PECMD_DispatchExpressionBlock"
 }

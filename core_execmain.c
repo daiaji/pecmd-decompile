@@ -30,7 +30,7 @@
  *      0xf0 副本（执行后 TaskClear+free）
  *   3. &__MAIN__ 初始化：未定义置 "1"，值≠"0" 置 "0"（反编译原样）
  *   4. ENTER:/LEAVE: 调试日志（g_logEnter>0 且 script+0x10 位0/3 允许）
- *   5. 窗口模式：显示窗口后调执行循环 FUN_1400b1724；忙则
+ *   5. 窗口模式：显示窗口后调执行循环 PECMD_DispatchExpressionBlock；忙则
  *      PostMessage(WM_CLOSE)+PECMD_ModalDialogPump
  *   6. 非窗口模式：直接调执行循环；满足条件时对旧窗口
  *      PostMessage(WM_CLOSE) 并清 script+0x40
@@ -76,7 +76,7 @@ extern void *PECMD_InitControlObjField(void *obj, HWND parent, uint32_t msg,
                            void *a4);                     /* @0x1400731d8 窗口对象构造 */
 extern void PECMD_ModalMsgPumpEx(void *win, int a2);             /* @0x1400e95f4 窗口销毁 */
 extern void PECMD_ModalDialogPump(void *win, uint32_t msg);       /* @0x1400e91f0 窗口消息处理 */
-extern void FUN_1400b1724(void *script, LPCWSTR p);       /* @0x1400b1724 脚本执行循环 */
+extern void PECMD_DispatchExpressionBlock(void *script, LPCWSTR p);       /* @0x1400b1724 脚本执行循环 */
 extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
                           void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
 extern void PECMD_WaitTickCount(void);                          /* @0x140061470 */
@@ -328,7 +328,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
             FUN_1400668EC(pExec, *(int64_t *)((char *)pWin + 0x20),
                             WSTR("&&__WinID"), WSTR("0x%I64X"));
             *(int64_t *)((char *)pWin + 0x2a0) = 0;
-            FUN_1400b1724(pExec, pFile);
+            PECMD_DispatchExpressionBlock(pExec, pFile);
             if ((*(int64_t *)((char *)pWin + 0x1c8) > 0 ||
                  **(int32_t **)((char *)pWin + 0x1a8) > 0) ||
                 **(int32_t **)((char *)pWin + 0x1c0) > 0) {
@@ -340,7 +340,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         }
     } else {
         /* 非窗口模式：直接执行 */
-        FUN_1400b1724(pExec, pFile);
+        PECMD_DispatchExpressionBlock(pExec, pFile);
         curWin = *(int64_t *)((char *)pExec + 0x40);
         if (curWin != 0 &&
             noWin == 0 &&

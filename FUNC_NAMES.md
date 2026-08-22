@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400b1724 | FUN_1400b1724 | PECMD_DispatchExpressionBlock |
 | 0x14002cc30 | FUN_14002cc30 | PECMD_ExpandSpecialDirs |
 | 0x140045c90 | FUN_140045c90 | PECMD_ScriptMainEntry |
 | 0x14002d708 | FUN_14002d708 | PECMD_EnumProcessInfo |

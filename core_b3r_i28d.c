@@ -47,7 +47,7 @@ extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);   /* 扫描整数 
 
 /* ---- 脚本/执行 helpers ---- */
 extern void      PECMD_ResetScriptChain(void *script, void *a2);   /* 默认参数/上下文 */
-extern void      FUN_1400b1724(void *script, LPCWSTR p);  /* 脚本执行循环 */
+extern void      PECMD_DispatchExpressionBlock(void *script, LPCWSTR p);  /* 脚本执行循环 */
 extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符串设置 */
 extern uint32_t  PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
@@ -450,7 +450,7 @@ int64_t PECMD_SetControlCommandTrigger(LARGE_INTEGER param_1, short *param_2, LP
         *(uint8_t *)((char *)base + 0xe) = 0;
         *(int *)((char *)base + 0x8c) = iVar4;
         if (lVar5 == 0) {
-            FUN_1400b1724((void *)base, lpString);
+            PECMD_DispatchExpressionBlock((void *)base, lpString);
         } else {
             *(uint32_t *)(lVar5 + 0x148) = 1;
             *(uint32_t *)(lVar5 + 0x144) = 1;
@@ -464,7 +464,7 @@ int64_t PECMD_SetControlCommandTrigger(LARGE_INTEGER param_1, short *param_2, LP
             *(uint8_t *)(lVar5 + 0x120) = 0x30;
             *(uint64_t *)(lVar5 + 0x2a0) = uVar3;
             *(uint8_t *)(lVar5 + 0x121) = 0x81;
-            FUN_1400b1724((void *)base, lpString);
+            PECMD_DispatchExpressionBlock((void *)base, lpString);
             *(uint8_t *)(lVar5 + 0x121) = 0x81;
             *(uint64_t *)(lVar5 + 0x290) = 0;
         }

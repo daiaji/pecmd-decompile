@@ -2161,7 +2161,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, uint64_t cmd, uint32_t flags);  /* 
 uint16_t   *FUN_1400702d4(uint16_t **out, const uint16_t *src, int64_t len);
 long long   PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e);
 uint64_t    PECMD_NotifyMainWindowRefresh(uint64_t a, int b);
-uint64_t    FUN_1400b1724(uint64_t a, uint64_t b);
+uint64_t    PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b);
 uint64_t    FUN_1400d2e90(uint64_t a, uint64_t b);
 uint64_t    PECMD_ScriptMainEntry(uint64_t a, uint64_t b);
 uint64_t    PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d);
@@ -2481,7 +2481,7 @@ LAB_14004e244:
   if ((*(short *)(uintptr_t)local_res10.QuadPart == 0x7b) ||
      ((*(short *)(uintptr_t)local_res10.QuadPart == 0x5b && (*(short *)(local_res10.QuadPart + 2) == 0x5d)))) {
     PECMD_XorEncode((LPCWSTR)(uintptr_t)local_res10.QuadPart,(uint)*(ushort *)(param_1.QuadPart + 0x48),0);
-    LVar15.QuadPart = (long long)FUN_1400b1724((uint64_t)param_1.QuadPart,(uint64_t)(LVar25.QuadPart | 1));
+    LVar15.QuadPart = (long long)PECMD_DispatchExpressionBlock((uint64_t)param_1.QuadPart,(uint64_t)(LVar25.QuadPart | 1));
     goto LAB_14004e244;
   }
   local_140 = local_res10;
@@ -4205,8 +4205,8 @@ uint64_t *PECMD_StrSetOrConcat(uint64_t *param_1,uint64_t *param_2,LPCWSTR param
 uint64_t PECMD_SetCheckVariable(void) { return 0; }
 uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
-/* ========== FUN_1400b1724 @ 1400b1724  size=1733 ==========
- * signature: undefined8 __fastcall FUN_1400b1724(LARGE_INTEGER param_1, ulonglong param_2)
+/* ========== PECMD_DispatchExpressionBlock @ 1400b1724  size=1733 ==========
+ * signature: undefined8 __fastcall PECMD_DispatchExpressionBlock(LARGE_INTEGER param_1, ulonglong param_2)
  * 忠实移植 decompiled.c @110300; 外部签名保持桩 (uint64_t,uint64_t) (arity 修正 0->2),
  * 体内用局部 param_1/param_2 对齐 Ghidra 变量 (x64 寄存器传参等价: param_1.QuadPart≡a,
  * param_2≡b).
@@ -4219,7 +4219,7 @@ int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;
  * 按单寄存器传参); (LPCWSTR)lpStr1 结构体强转指针非法 → (LPCWSTR)(uintptr_t)lpStr1.QuadPart.
  * 注意: 本函数自身不执行, 由 PECMD_ProcessScriptBlock 内部 / core 调用方经
  * uint64_t 签名进入; 返回 0 (decompiled 亦 return 0). */
-/* ---- FUN_1400b1724 恢复体所需前置声明 (定义见 core_*.c / 本文件后部桩) ---- */
+/* ---- PECMD_DispatchExpressionBlock 恢复体所需前置声明 (定义见 core_*.c / 本文件后部桩) ---- */
 extern uint64_t PECMD_MatchPattern(int16_t *pattern, int64_t ctx);            /* @0x14006156c core_b3c.c */
 extern LPCWSTR  PECMD_ExtractTableSegment(int64_t, uint64_t *, uint16_t *, int64_t *, char); /* @0x14001b23c core_b1_remaining.c */
 extern int64_t  PECMD_TokenizeExpression(LARGE_INTEGER, int64_t, int64_t *, uint32_t, WCHAR *); /* @0x1400a53e4 core_b3_remaining.c */
@@ -4228,7 +4228,7 @@ extern uint64_t FUN_140063060(uint64_t value);                                /*
 extern void     FUN_14006159c(longlong param_1, ulonglong param_2);           /* @0x14006159c 新增桩 (本文件) */
 extern void     FUN_1400251ac(undefined8 param_1);                            /* @0x1400251ac 新增桩 (本文件) */
 extern int32_t  g_sysinitState;                                               /* DAT_14013d058 core_scriptdep.c */
-uint64_t FUN_1400b1724(uint64_t a, uint64_t b)
+uint64_t PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b)
 {
   ushort uVar1;
   ushort uVar2;
@@ -5016,7 +5016,7 @@ uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d)
 uint64_t FUN_140061E98(void) { return 0; }
 uint64_t FUN_1400688E0(void) { return 0; }
 uint64_t FUN_14006A81C(void) { return 0; }
-uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (FUN_1400b1724 恢复体 + core_b3_remaining 调用方) */
+uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (PECMD_DispatchExpressionBlock 恢复体 + core_b3_remaining 调用方) */
 uint64_t FUN_1400e6d74(void) { return 0; }
 
 /* ---- 追加桩: batch25 还原(140017b8c/00d2a0/0192d0/004ac4 及 B3 13 函数)引用的未定义符号 ---- */
