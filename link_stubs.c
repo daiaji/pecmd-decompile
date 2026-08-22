@@ -60,6 +60,7 @@ typedef void *HDESK;
 typedef void *HSERVICE;
 typedef uintptr_t UINT_PTR;
 typedef long LONG_PTR;
+typedef intptr_t LRESULT;
 typedef unsigned long ULONG_PTR;
 typedef uint32_t ACCESS_MASK;
 typedef uint16_t WORD;
@@ -3034,7 +3035,7 @@ uint64_t PECMD_ExpandPathAlloc2(LPCWSTR param_1, uint64_t *param_2, int64_t *par
   return *param_2;
 }
 uint64_t FUN_1400e3f80(void) { return 0; }
-uint64_t PECMD_GetWindowTextAlloc(void) { return 0; }
+void PECMD_GetWindowTextAlloc(HWND param_1, uint64_t *param_2) { (void)param_1;(void)param_2; }
 uint64_t PECMD_GetOwnerWindow(uint64_t param_1) { (void)param_1; return 0; }
 /* @0x1400e67e8 size=— 加载对话框资源并显示(直移) */
 void PECMD_ShowAboutDialog(void)
@@ -3138,7 +3139,7 @@ uint64_t FreeLibrary(void) { return 0; }
 uint64_t FreeSid(void) { return 0; }
 uint64_t GetAsyncKeyState(void) { return 0; }
 uint64_t GetBkColor(void) { return 0; }
-uint64_t GetClientRect(void) { return 0; }
+int GetClientRect(void *hWnd, void *lpRect) { (void)hWnd;(void)lpRect; return 0; }
 uint64_t GetClipboardData(void) { return 0; }
 WCHAR *GetCommandLineW(void) { return (WCHAR *)0; }
 uint64_t GetConsoleWindow(void) { return 0; }
@@ -3353,7 +3354,7 @@ uint64_t SetWindowLongPtrW(void *h, int idx, uint64_t v) { (void)h;(void)idx;(vo
 uint64_t SetWindowLongW(void) { return 0; }
 int SetWindowPos(void *w, void *after, int x, int y, int cx, int cy, unsigned int f) { (void)w;(void)after;(void)x;(void)y;(void)cx;(void)cy;(void)f; return 0; }
 int SetWindowRgn(HWND h, void *r, BOOL b) { (void)h;(void)r;(void)b; return 1; }
-uint64_t SetWindowTextW(void) { return 0; }
+int SetWindowTextW(void *hWnd, const void *lpString) { (void)hWnd;(void)lpString; return 0; }
 uint64_t SetWindowsHookExW(void) { return 0; }
 uint64_t SetupDiCreateDeviceInfoList(void) { return 0; }
 uint64_t SetupDiCreateDeviceInfoW(void) { return 0; }
@@ -3685,7 +3686,7 @@ uint64_t *PECMD_InitWinObjBase(uint64_t *param_1)
   param_1[0xe] = 0; param_1[0xd] = 0;
   return param_1;
 }
-uint64_t PECMD_GetControlFont(void) { return 0; }
+LRESULT PECMD_GetControlFont(int64_t param_1) { (void)param_1; return 0; }
 int PECMD_UpdateWindowStyleBits(int64_t a, unsigned int b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }
 /* @0x1400e8644 size=— 临界区保护的窗口对象获取(直移) */
 longlong PECMD_GetWinIdLocked(longlong *param_1)
@@ -4523,7 +4524,83 @@ uint64_t StrCmpIW(void){ return 0; }
 /* PECMD_CreateButtonSubCtl — 创建 BUTTON 控件窗口并按其样式/标志初始化 (func: 按钮/超链接样式).
    依赖: FUN_14006b8fc (控件尺寸计算), FUN_1400ef91c (按钮状态初始化, 内绕坐标/标志). */
 long long FUN_14006b8fc(long long *param_1) { (void)param_1; return 1; } /* 控件尺寸计算 (no-op) */
-void FUN_1400ef91c(long long param_1, uint param_2, uint64_t param_3) { (void)param_1;(void)param_2;(void)param_3; } /* 按钮状态初始化 (no-op) */
+/* --- FUN_1400ef91c 直移还原 (decompiled.c @1400ef91c size=489, 按钮状态初始化/内绕坐标/标志) ---
+ * 依赖: FUN_1400EFEC8 (core_b8d.c) / FUN_1400EFFF8 (core_b8g.c) / PECMD_* 串工具;
+ * CONCAT44 双局部已按 rcPack[4] 数组展开 (同 core_b8k.c FUN_1400EF91C 既定模式). */
+uint64_t *FUN_1400EFEC8(uint64_t *param_1);   /* @0x1400efec8 图标对象初始化 (core_b8d.c) */
+bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
+                   uint32_t id);              /* @0x1400efff8 创建 STATIC 子控件 (core_b8g.c) */
+void FUN_1400ef91c(long long param_1, uint param_2, uint64_t param_3)
+{
+    uint        uVar1;
+    undefined8 *puVar2;
+    longlong   *plVar3;
+    LRESULT     LVar4;
+    LPCWSTR     lpString;
+    uint        uVar5;
+    LPCWSTR     local_res8;
+    tagRECT     local_38;
+    int         rcPack[4];
+
+    if (*(longlong *)(param_1 + 0x110) == 0) {
+        local_38.left = 0;
+        local_38.top = 0;
+        local_38.right = 0;
+        local_38.bottom = 0;
+        GetClientRect(*(HWND *)(param_1 + 0x20), &local_38);
+        if ((param_2 >> 0xb & 1) == 0) {
+            local_38.top = local_38.top + 4;
+            local_38.bottom = local_38.bottom + -4;
+            local_38.left = local_38.left + 4;
+            local_38.right = local_38.right + -4;
+        }
+        puVar2 = operator_new(0xe8);
+        if (puVar2 == (undefined8 *)0x0) {
+            plVar3 = (longlong *)0x0;
+        }
+        else {
+            plVar3 = (longlong *)FUN_1400EFEC8(puVar2);
+        }
+        *(longlong **)(param_1 + 0x110) = plVar3;
+        InvalidateRect(*(HWND *)(param_1 + 0x20), (RECT *)0x0, 1);
+        uVar5 = param_2 | 0x200;
+        uVar1 = (uint)GetWindowLongW(*(HWND *)(param_1 + 0x20), -0x10);
+        if ((uVar1 & 0x300) == 0x300) {
+            uVar5 = param_2 | 0x201;
+            *(undefined1 *)((char *)plVar3 + 0x60) = 0x11;
+        }
+        else if ((uVar1 >> 9 & 1) == 0) {
+            *(undefined1 *)((char *)plVar3 + 0x60) = 0x10;
+        }
+        else {
+            uVar5 = param_2 | 0x202;
+            *(undefined1 *)((char *)plVar3 + 0x60) = 0x12;
+        }
+        PECMD_AllocStrSlot((uint16_t **)&local_res8);
+        lpString = (LPCWSTR)L" ";
+        if ((*(uint8_t *)(param_1 + 0xe8) & 8) != 0) {
+            lpString = (LPCWSTR)(void *)DAT_14011c638;
+        }
+        PECMD_GetWindowTextAlloc(*(HWND *)(param_1 + 0x20), (uint64_t *)&local_res8);
+        if ((param_3 & 1) == 0) {
+            SetWindowTextW(*(HWND *)(param_1 + 0x20), lpString);
+        }
+        rcPack[0] = local_38.left;
+        rcPack[1] = local_38.top;
+        rcPack[2] = local_38.right;
+        rcPack[3] = local_38.bottom;
+        FUN_1400EFFF8((int64_t *)plVar3, local_res8, uVar5 | 0x40000020, rcPack,
+                      *(HWND *)(param_1 + 0x20), 0x7d2);
+        if ((param_3 & 2) != 0) {
+            PECMD_MemMoveForward((uint8_t *)((char *)plVar3 + 0x90), (uint8_t *)(param_1 + 0x90), 0x10);
+        }
+        SetWindowPos((HWND)plVar3[4], (HWND)0x0, 0, 0, 0, 0, 3);
+        LVar4 = PECMD_GetControlFont(param_1);
+        ((void (*)(int64_t *, LRESULT, int))(*(uint64_t *)(*plVar3 + 0x108)))(plVar3, LVar4, 1);
+        InvalidateRect((HWND)plVar3[4], (RECT *)0x0, 1);
+        FUN_14005B104((WCHAR **)&local_res8);
+    }
+}
 bool PECMD_CreateButtonSubCtl(long long *param_1, LPCWSTR param_2, uint64_t param_3, int *param_4,
                   HWND param_5, uint param_6, DWORD param_7)
 {
