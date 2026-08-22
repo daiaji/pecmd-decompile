@@ -582,7 +582,7 @@ void FUN_140016ae0(undefined8 param_1, undefined8 *param_2){
 }
 
 /* @0x1400171a4 size=— 授予当前用户内核对象访问(直移) */
-void FUN_1400171a4(int64_t a)
+void PECMD_GrantCurrentUserAccess(int64_t a)
 {
   void *dacl = 0, *sd = 0, *newdacl = 0;
   uint64_t r = GetSecurityInfo((void *)(uintptr_t)a,SE_KERNEL_OBJECT,4,0,0,&dacl,0,&sd);

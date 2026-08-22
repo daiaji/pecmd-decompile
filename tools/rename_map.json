@@ -1138,5 +1138,6 @@
   "FUN_1400513b8": "PECMD_ParseRegexGroup",
   "FUN_14002e30c": "PECMD_LoadResourceLines",
   "FUN_1400e5248": "PECMD_BuildPopMenuRecursive",
-  "FUN_140008b2c": "PECMD_StopDeleteService"
+  "FUN_140008b2c": "PECMD_StopDeleteService",
+  "FUN_1400171a4": "PECMD_GrantCurrentUserAccess"
 }

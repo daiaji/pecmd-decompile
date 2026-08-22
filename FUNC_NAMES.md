@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400171a4 | FUN_1400171a4 | PECMD_GrantCurrentUserAccess |
 | 0x140008b2c | FUN_140008b2c | PECMD_StopDeleteService |
 | 0x1400e5248 | FUN_1400e5248 | PECMD_BuildPopMenuRecursive |
 | 0x14002e30c | FUN_14002e30c | PECMD_LoadResourceLines |

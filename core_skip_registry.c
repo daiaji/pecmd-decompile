@@ -10,7 +10,7 @@
 /* @0x140004e34 FUN_140004e34 size=136 SKIP */
 /* @0x140006554 PECMD_EnumDropFiles size=268 SKIP */
 /* @0x140009068 PECMD_LoadPluginPecmdTbl size=372 SKIP */
-/* @0x1400171a4 FUN_1400171a4 size=334 SKIP */
+/* @0x1400171a4 PECMD_GrantCurrentUserAccess size=334 SKIP */
 /* @0x140017afc FUN_140017afc size=142 SKIP */
 /* @0x140018220 PECMD_BindDelayImports size=475 SKIP */
 /* @0x14001a56c FUN_14001a56c size=68 SKIP */

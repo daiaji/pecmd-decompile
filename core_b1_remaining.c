@@ -379,7 +379,7 @@ extern BOOL  Process32NextW(HANDLE, PROCESSENTRY32W *);
 /* helper extern */
 extern int  FUN_1400630D0(int mode);                          /* @0x1400630d0 分配失败提示 */
 extern uint64_t *FUN_1400E9048(uint64_t *obj, uint32_t hwnd, uint64_t data); /* @0x1400e9048 窗口对象 G 初始化 */
-extern void FUN_1400171a4(HANDLE param_1);                        /* @0x1400171a4 (SKIP; 需 link_stubs 桩) */
+extern void PECMD_GrantCurrentUserAccess(HANDLE param_1);                        /* @0x1400171a4 (SKIP; 需 link_stubs 桩) */
 extern uint64_t PECMD_GetPackedSystemVersion(void);                              /* @0x14005ea5c 系统版本 */
 
 /* ---- B1 剩余 10 个业务函数还原所需: 额外 helper/全局 extern ---- */
@@ -5716,7 +5716,7 @@ uint64_t PECMD_MapPhysicalMemoryNT5(void)
         if (iVar1 == -0x3fffffde) {
             ((int (*)(uint64_t *, DWORD, uint32_t *))(uintptr_t)g_pZwOpenSection)
                 (&g_u64cd08, 0x60000, local_38);
-            FUN_1400171a4((HANDLE)(uintptr_t)g_u64cd08);
+            PECMD_GrantCurrentUserAccess((HANDLE)(uintptr_t)g_u64cd08);
             CloseHandle((HANDLE)(uintptr_t)g_u64cd08);
             iVar1 = ((int (*)(uint64_t *, DWORD, uint32_t *))(uintptr_t)g_pZwOpenSection)
                         (&g_u64cd08, 6, local_38);
