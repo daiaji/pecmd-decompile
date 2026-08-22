@@ -346,7 +346,7 @@ void        FUN_1400ef91c(long long, uint, uint64_t);
 void        FUN_140005344(void);
 uint16_t   *FUN_14000531c(uint16_t *);
 uint8_t    *PECMD_MemMoveForward(uint8_t *, uint8_t *, int);
-void        FUN_140008b2c(uint16_t *);
+void        PECMD_StopDeleteService(uint16_t *);
 void        FUN_140017048(const WCHAR *);
 void        FUN_140021144(const WCHAR *);
 void        FUN_140019da8(long long, const WCHAR *, int);
@@ -3220,7 +3220,7 @@ uint8_t *PECMD_MemMoveForward(uint8_t *a, uint8_t *b, int n)
   return a;
 }
 /* @0x140008b2c size=— 按名停止并删除服务(直移) */
-void FUN_140008b2c(uint16_t *param_1)
+void PECMD_StopDeleteService(uint16_t *param_1)
 {
   uint16_t w = *param_1;
   uint16_t *p = param_1;
@@ -3293,7 +3293,7 @@ uint64_t PECMD_HandleServiceCommandLine(short *param_1)
         if (cVar3 == '\0') {
             cVar3 = PECMD_MatchTokenAdvance("/RemoveService", (long long *)&local_res8, 0xe);
             if (cVar3 != '\0') {
-                FUN_140008b2c((uint16_t *)local_res8);
+                PECMD_StopDeleteService((uint16_t *)local_res8);
                 ExitProcess(0);
             }
             FUN_14005b104((long long *)&local_res18);
