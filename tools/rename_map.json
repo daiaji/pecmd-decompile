@@ -1142,5 +1142,6 @@
   "FUN_1400171a4": "PECMD_GrantCurrentUserAccess",
   "FUN_14004c0bc": "PECMD_ProcessScriptBlock",
   "FUN_14004e2cc": "PECMD_ExecInterpString",
-  "FUN_1400ef91c": "PECMD_InitButtonState"
+  "FUN_1400ef91c": "PECMD_InitButtonState",
+  "FUN_14006e8f4": "PECMD_CleanupFrameChain"
 }

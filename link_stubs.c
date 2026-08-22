@@ -155,7 +155,7 @@ void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
 uint64_t FUN_14004fb44(longlong *a, ulonglong b);
 void FUN_14005d9a8(int64_t a, int b);
 uint64_t FUN_1400630d0(int a);
-void FUN_14006e8f4(int64_t a);
+void PECMD_CleanupFrameChain(int64_t a);
 void PECMD_ArrayAppend(int64_t script, int64_t obj); /* rename_map: FUN_14006e8a4; 定义在 core_b3e.c */
 DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
@@ -2400,7 +2400,7 @@ void PECMD_ClearTaskTable(undefined8 param_1, int param_2){
             *(undefined8*)(uintptr_t)param_1=0;
         }
     }
-    FUN_14006e8f4((int64_t)param_1);
+    PECMD_CleanupFrameChain((int64_t)param_1);
 }
 
 uint64_t PECMD_ArrayPrepend(void) { return 0; }
@@ -5796,7 +5796,7 @@ uint64_t FUN_14004fb44(longlong *a, ulonglong b) { (void)a;(void)b; return 1; }
 void FUN_14005d9a8(int64_t a, int b) { (void)a;(void)b; }
 uint64_t FUN_1400630d0(int a) { (void)a; return 0; }
 /* @0x14006e8f4 size=439 — 脚本对象释放: COM/临界区清理 + 数组元素回收 (decompiled.c 直移) */
-void FUN_14006e8f4(int64_t a)
+void PECMD_CleanupFrameChain(int64_t a)
 {
   int *piVar1;
   int iVar2;
