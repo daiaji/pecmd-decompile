@@ -564,7 +564,7 @@ extern uint64_t PECMD_ControlEnableCommand(int64_t *param_1, HWND param_2, HWND 
                               LPCWSTR param_4, WPARAM param_5, int64_t param_6); /* @0x1400c47f4 */
 extern uint64_t PECMD_ParseControlMessage(int64_t *param_1, HWND param_2, HWND param_3,
                               LPCWSTR param_4, WPARAM param_5, int64_t param_6); /* @0x140080b0c */
-extern uint64_t FUN_1400db648(HWND param_1, uint16_t *param_2, int64_t param_3,
+extern uint64_t PECMD_SetControlGeom(HWND param_1, uint16_t *param_2, int64_t param_3,
                               int64_t *param_4, HWND param_5, COLORREF param_6,
                               int64_t param_7);                   /* @0x1400db648 */
 extern int      PECMD_ReadRegBinaryGuarded(HKEY param_1, LPCWSTR param_2, LPCWSTR param_3,
@@ -8479,7 +8479,7 @@ LAB_140057d20:
         } else {
             iVar1 = lstrcmpiW(param_2, WSTR("Pos"));
             if (iVar1 != 0) goto LAB_140057d20;
-            FUN_1400db648(param_4, (uint16_t *)param_5, param_6, param_7, param_8,
+            PECMD_SetControlGeom(param_4, (uint16_t *)param_5, param_6, param_7, param_8,
                           *(COLORREF *)(*(int64_t *)(param_6 + 0x40) + 0x2a8),
                           param_9);
         }

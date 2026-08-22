@@ -562,7 +562,7 @@ uint64_t GetSecurityInfo(void *h, int t, uint32_t i, void **a, void **b, void **
 uint64_t SetSecurityInfo(void *h, int t, uint32_t i, void *a, void *b, void *c, void *d);
 uint64_t LocalFree(uint64_t hMem);
 /* --- (原型置于此, 匹配后部定义; 消除与先前隐式 int() 的 conflicting types) --- */
-uint64_t ClientToScreen(void *h, void *pt) { (void)h;(void)pt; return 0; }   /* arity 修正 0->2 (FUN_1400db648 恢复体) */
+uint64_t ClientToScreen(void *h, void *pt) { (void)h;(void)pt; return 0; }   /* arity 修正 0->2 (PECMD_SetControlGeom 恢复体) */
 uint64_t CloseClipboard(void) { return 0; }
 uint64_t CloseHandle(void *h) { (void)h; return 0; }
 int CloseServiceHandle(void *h) { (void)h; return 0; }
@@ -4009,7 +4009,7 @@ uint64_t GetDC(void) { return 0; }
 uint64_t GetDIBits(void) { return 0; }
 void *GetDesktopWindow(void) { return (void *)0; }
 uint64_t GetDeviceCaps(void) { return 0; }
-uint64_t GetDlgCtrlID(void *h) { (void)h; return 0; }   /* arity 修正 0->1 (FUN_1400db648 恢复体) */
+uint64_t GetDlgCtrlID(void *h) { (void)h; return 0; }   /* arity 修正 0->1 (PECMD_SetControlGeom 恢复体) */
 HWND GetDlgItem(void *hWnd, int nIDDlgItem) { (void)hWnd;(void)nIDDlgItem; return 0; }
 uint64_t GetDlgItemTextW(void) { return 0; }
 uint64_t GetDriveTypeW(void) { return 0; }
@@ -4064,7 +4064,7 @@ uint64_t GetTokenInformation(void) { return 0; }
 uint64_t GetVersion(void) { return 0; }
 uint64_t GetVersionExW(void) { return 0; }
 uint64_t GetWindowDC(void) { return 0; }
-uint64_t GetWindowLongPtrW(void *h, int idx) { (void)h;(void)idx; return 0; }   /* arity 修正 0->2 (FUN_1400db648 恢复体) */
+uint64_t GetWindowLongPtrW(void *h, int idx) { (void)h;(void)idx; return 0; }   /* arity 修正 0->2 (PECMD_SetControlGeom 恢复体) */
 LONG GetWindowLongW(HWND hWnd, int nIndex) { (void)hWnd;(void)nIndex; return 0; }
 int GetWindowRect(void *w, void *r) { (void)w;(void)r; return 0; }
 uint64_t GetWindowTextLengthW(void) { return 0; }
@@ -4192,10 +4192,10 @@ uint64_t SetFilePointerEx(void *h, longlong off, longlong *out, unsigned long me
 uint64_t SetFocus(void) { return 0; }
 uint64_t SetForegroundWindow(void *h) { (void)h; return 0; }
 void SetLastError(DWORD e) { (void)e; }
-uint64_t SetLayeredWindowAttributes(void *h, uint32_t cr, uint8_t a, uint32_t f) { (void)h;(void)cr;(void)a;(void)f; return 0; }   /* arity 修正 0->4 (FUN_1400db648 恢复体) */
+uint64_t SetLayeredWindowAttributes(void *h, uint32_t cr, uint8_t a, uint32_t f) { (void)h;(void)cr;(void)a;(void)f; return 0; }   /* arity 修正 0->4 (PECMD_SetControlGeom 恢复体) */
 uint64_t SetLocalTime(void) { return 0; }
 int SetMenuItemBitmaps(void *m, unsigned int id, unsigned int f, void *b1, void *b2) { (void)m;(void)id;(void)f;(void)b1;(void)b2; return 0; }
-uint64_t SetParent(void *h, void *p) { (void)h;(void)p; return 0; }   /* arity 修正 0->2 (FUN_1400db648 恢复体) */
+uint64_t SetParent(void *h, void *p) { (void)h;(void)p; return 0; }   /* arity 修正 0->2 (PECMD_SetControlGeom 恢复体) */
 uint64_t SetPixel(void) { return 0; }
 uint64_t SetProcessWorkingSetSize(void *h, uint64_t a, uint64_t b) { (void)h;(void)a;(void)b; return 1; }
 uint64_t SetScrollInfo(void) { return 0; }
@@ -4977,7 +4977,7 @@ void FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n){ (void)dst;(void)v;(vo
 uint16_t *PECMD_DriveTypeName(int i, uint16_t *out, int max){ (void)i;(void)max; return out; }
 uint64_t PECMD_ParseControlMessage(int64_t *a, uintptr_t b, uintptr_t c, const uint16_t *d, uintptr_t e, int64_t f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
 uint64_t PECMD_ControlEnableCommand(int64_t *a, uintptr_t b, uintptr_t c, const uint16_t *d, uintptr_t e, int64_t f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
-/* ========== FUN_1400db648 @ 0x1400db648 size=3525 ==========
+/* ========== PECMD_SetControlGeom @ 0x1400db648 size=3525 ==========
  * 控件位置/尺寸设置 (decompiled.c 直移; 桩签名保持: (uintptr_t hwnd, uint16_t *s, int64_t p3,
  * int64_t *p4, uintptr_t p5, uint32_t color, int64_t p7); 调用方 core_b3_remaining.c extern 同形)。
  * 移植取舍:
@@ -4994,11 +4994,11 @@ uint64_t PECMD_ControlEnableCommand(int64_t *a, uintptr_t b, uintptr_t c, const 
 typedef struct tagWINDOWINFO { DWORD cbSize; RECT rcWindow; RECT rcClient; DWORD dwStyle;
   DWORD dwExStyle; DWORD dwWindowStatus; UINT cxWindowBorders; UINT cyWindowBorders;
   WORD atomWindowType; WORD wCreatorVersion; } WINDOWINFO, *PWINDOWINFO;
-int GetWindowInfo(void *hWnd, void *pwi) { (void)hWnd;(void)pwi; return 0; }   /* FUN_1400db648 恢复体新增桩 */
+int GetWindowInfo(void *hWnd, void *pwi) { (void)hWnd;(void)pwi; return 0; }   /* PECMD_SetControlGeom 恢复体新增桩 */
 uint64_t FUN_1400c11f4(int64_t *param_1, uint64_t *param_2){ (void)param_1;(void)param_2; return 1; }   /* 数字解析缺桩: 视为已解析 */
 int      FUN_1400cada0(int64_t *param_1, int *param_2){ (void)param_1;(void)param_2; return 1; }       /* 数字解析缺桩: 视为已解析 */
 
-uint64_t FUN_1400db648(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *p4, uintptr_t p5, uint32_t color, int64_t p7)
+uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *p4, uintptr_t p5, uint32_t color, int64_t p7)
 {
   (void)p3;
   HWND hw = (HWND)(uintptr_t)hwnd;              /* param_1 */
