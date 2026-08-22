@@ -156,6 +156,7 @@ uint64_t FUN_14004fb44(longlong *a, ulonglong b);
 void FUN_14005d9a8(int64_t a, int b);
 uint64_t FUN_1400630d0(int a);
 void FUN_14006e8f4(int64_t a);
+void PECMD_ArrayAppend(int64_t script, int64_t obj); /* rename_map: FUN_14006e8a4; 定义在 core_b3e.c */
 DWORD PECMD_RegOpenWithRetryPriv(HKEY param_1, LPCWSTR param_2, PHKEY param_3, REGSAM param_4, uint param_5);
 void *OpenDesktopW(const WCHAR *n, uint64_t f, uint64_t acc, uint64_t flags);
 LONG RegSetValueExW(void *k, const unsigned short *n, unsigned long r, unsigned long t, const unsigned char *d, unsigned long c);
@@ -269,6 +270,7 @@ uint8_t  DAT_14013d300 = 0x10;   /* RichEdit 选择标志 0x14013d300: 10 */
 void    *DAT_14013d328 = 0;      /* g_hHeap */
 int    (*DAT_14013d800)(int) = 0;    /* OleInitialize 槽 */
 void   (*DAT_14013d808)(void) = 0;   /* OleUninitialize 槽 */
+int    (*DAT_14013d820)(int) = 0;    /* CoUninitialize 槽 (FUN_14005c828("CoUninitialize",...) 装载) */
 uint64_t DAT_14013e168[8] = {0}; /* CRITICAL_SECTION COM */
 uint64_t DAT_14013e190[8] = {0}; /* CRITICAL_SECTION (g_csInit) */
 uint32_t DAT_140147000 = 0x100;  /* g_runFlag 0x140147000: 00 01 00 00 */
@@ -5793,7 +5795,94 @@ void PECMD_ExecInterpString(uint64_t a, void *b)
 uint64_t FUN_14004fb44(longlong *a, ulonglong b) { (void)a;(void)b; return 1; }
 void FUN_14005d9a8(int64_t a, int b) { (void)a;(void)b; }
 uint64_t FUN_1400630d0(int a) { (void)a; return 0; }
-void FUN_14006e8f4(int64_t a) { (void)a; }
+/* @0x14006e8f4 size=439 — 脚本对象释放: COM/临界区清理 + 数组元素回收 (decompiled.c 直移) */
+void FUN_14006e8f4(int64_t a)
+{
+  int *piVar1;
+  int iVar2;
+  longlong *plVar3;
+  longlong lVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  longlong *plVar8;
+
+  iVar7 = 0;
+  if (*(byte *)(a + 0x12) != 0) {
+    if (((*(byte *)(a + 0x12) & 4) != 0) && (DAT_14013d820 != (void *)0)) {
+      ((void (*)(void))(uintptr_t)DAT_14013d820)();   /* 实为 CoUninitialize(无参); 槽按既有约定声明 int(*)(int), 调用处强转 */
+    }
+    if ((*(byte *)(a + 0x12) & 2) != 0) {
+      if (DAT_14013d808 != (void *)0) {
+        (*DAT_14013d808)();
+      }
+      LeaveCriticalSection((void *)&DAT_14013e168);
+    }
+    if ((*(byte *)(a + 0x12) & 1) != 0) {
+      LeaveCriticalSection((void *)&DAT_14013e190);
+    }
+    *(undefined1 *)(a + 0x12) = 0;
+  }
+  plVar3 = *(longlong **)(a + 0xe0);
+  if (plVar3 != (longlong *)0) {
+    iVar5 = iVar7;
+    if (0 < *(int *)(a + 0xe8)) {
+      iVar5 = *(int *)(*plVar3 + 0x14);
+    }
+    if ((*(longlong *)(a + 0x38) == 0) || (*(undefined8 **)(a + 0x38) == &DAT_14013d130)) {
+      iVar5 = iVar7;
+    }
+    iVar6 = 1;
+    plVar8 = plVar3;
+    if (1 < *(int *)(a + 0xe8)) {
+      do {
+        lVar4 = plVar8[1];
+        iVar2 = *(int *)(lVar4 + 0x14);
+        if (iVar2 < 0) {
+          *(undefined4 *)(lVar4 + 0x14) = 0;
+        }
+        else if (iVar5 < iVar2) {
+          *(int *)(lVar4 + 0x14) = iVar5;
+        }
+        else if (iVar2 < iVar5) {
+          iVar5 = iVar2;
+        }
+        iVar6 = iVar6 + 1;
+        plVar8 = plVar8 + 1;
+      } while (iVar6 < *(int *)(a + 0xe8));
+    }
+    while (0 < *(int *)(a + 0xe8)) {
+      if ((0 < *(int *)(plVar3[(longlong)*(int *)(a + 0xe8) + -1] + 0x14)) &&
+          (*(longlong *)(a + 0x38) != 0)) goto LAB_14006ea23;
+      iVar5 = *(int *)(a + 0xe8) + -1;
+      *(int *)(a + 0xe8) = iVar5;
+      (**(code **)(*(longlong *)plVar3[iVar5] + 8))();
+      plVar3[*(int *)(a + 0xe8)] = 0;
+    }
+    if (*(longlong *)(a + 0x38) != 0) {
+LAB_14006ea23:
+      plVar8 = plVar3;
+      if (0 < *(int *)(a + 0xe8)) {
+        do {
+          if (0 < *(int *)(*plVar8 + 0x14)) {
+            piVar1 = (int *)(*plVar8 + 0x14);
+            *piVar1 = *piVar1 + -1;
+          }
+          PECMD_ArrayAppend(*(longlong *)(a + 0x38),*plVar8);
+          iVar7 = iVar7 + 1;
+          plVar3[*(int *)(a + 0xe8)] = 0;
+          plVar8 = plVar8 + 1;
+        } while (iVar7 < *(int *)(a + 0xe8));
+      }
+    }
+    if (*(longlong *)(a + 0xe0) != 0) {
+      HeapFree(DAT_14013d328,0,(void *)(uintptr_t)(*(longlong *)(a + 0xe0) + -8));
+    }
+    *(undefined8 *)(a + 0xe0) = 0;
+    *(undefined4 *)(a + 0xe8) = 0;
+  }
+  return;
+}
 
 /* ---- P4 wave-4 helper 补定义 (2) ---- */
 uint64_t FUN_14005c7c4(const char *a, const uint16_t *b) { (void)a;(void)b; return 0; }
