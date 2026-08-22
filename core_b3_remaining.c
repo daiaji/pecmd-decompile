@@ -3717,7 +3717,7 @@ LAB_14004ae28:
                                         if ((char)p_Var40->SectionName[0x9b] == 0) {
                                             if ((char)p_Var40->SectionName[0x9a] == 0x03) {
                                                 pwVar48 = (WCHAR *)(uint64_t)uVar39;
-                                                uVar17 = FUN_14002c634((int64_t)(uintptr_t)p_Var40, pWVar55, pWVar26, uVar39);
+                                                uVar17 = PECMD_DrvLoadInstall((int64_t)(uintptr_t)p_Var40, pWVar55, pWVar26, uVar39);
                                             }
                                         } else {
                                             pwVar48 = (WCHAR *)(uint64_t)uVar39;
@@ -3771,7 +3771,7 @@ LAB_14004b03a:
                             if ((char)p_Var40->SectionName[0x9b] == 0) {
                                 if ((char)p_Var40->SectionName[0x9a] == 0x03) {
                                     pwVar48 = (WCHAR *)(uintptr_t)-1;
-                                    uVar17 = FUN_14002c634((int64_t)(uintptr_t)p_Var40, local_1758, pWVar24, -1);
+                                    uVar17 = PECMD_DrvLoadInstall((int64_t)(uintptr_t)p_Var40, local_1758, pWVar24, -1);
                                 }
                             } else {
                                 pwVar48 = (WCHAR *)(uintptr_t)-1;
@@ -3949,7 +3949,7 @@ LAB_14004ba94:
                         bVar8 = TRUE;
                         if ((char)p_Var40->SectionName[0x9b] == 0) {
                             if ((char)p_Var40->SectionName[0x9a] == 0x03) {
-                                uVar17 = FUN_14002c634((int64_t)(uintptr_t)p_Var40, local_17c0, pWVar26, -1);
+                                uVar17 = PECMD_DrvLoadInstall((int64_t)(uintptr_t)p_Var40, local_17c0, pWVar26, -1);
                                 goto LAB_14004badb;
                             }
                         } else {

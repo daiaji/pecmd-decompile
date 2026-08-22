@@ -6144,9 +6144,9 @@ undefined8 PECMD_SetVectorSize(longlong *param_1, ulonglong param_2, int param_3
 
 void PECMD_AllocExpandPath(void *a, int64_t *b){ (void)a;(void)b; }
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }
-/* ========== FUN_14002c634 @0x14002c634 size=424 ==========
+/* ========== PECMD_DrvLoadInstall @0x14002c634 size=424 ==========
  * "!=drvload ..." 驱动安装 (decompiled.c @26501 直移; 签名按本文件既定桩保持:
- * uint64_t FUN_14002c634(int64_t, void *, void *, int)).
+ * uint64_t PECMD_DrvLoadInstall(int64_t, void *, void *, int)).
  *   构造 "--wd:*\"<inf>\" !=drvload \"<inf>\"" 命令行 → FUN_14000e26c 执行,
  *   成功 (退出码 0) 且已登记安装时 PECMD_AppendKeyIfMissing 记录,
  *   末尾 FUN_140025f10 提示 "DrvLoad安装驱动【(%s)?】[%s]", 返回退出码.
@@ -6162,7 +6162,7 @@ void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(vo
  */
 extern void PECMD_AppendKeyIfMissing(int64_t obj, LPCWSTR key, int len); /* @0x140019da8 (core_b1_remaining.c) */
 
-uint64_t FUN_14002c634(int64_t a, void *b, void *c, int d)
+uint64_t PECMD_DrvLoadInstall(int64_t a, void *b, void *c, int d)
 {
   LPCWSTR param_2;
   LPCWSTR param_3;
