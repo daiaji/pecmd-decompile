@@ -111,4 +111,4 @@
    "dc": 364
   }
  ]
-}
+}{"update":"25f10 追加登记: 调试输出(价值低)+pthreadmbcinfo 内部走查(mbulinfo/refcount 链)+格式串地址(0x1401207c0/790, 需 pe_data_extract) — 2 agent 失败, 登记高难缓译(不虚构)"}
