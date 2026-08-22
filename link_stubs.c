@@ -356,7 +356,7 @@ long long  *PECMD_SkipLeadingControlChars(long long *);
 long long   FUN_140064a34(uint16_t *);
 long long   PECMD_WideStrToInt64(uint16_t *);
 long long   FUN_14006b8fc(long long *);
-void        FUN_1400ef91c(long long, uint, uint64_t);
+void        PECMD_InitButtonState(long long, uint, uint64_t);
 void        FUN_140005344(void);
 uint16_t   *FUN_14000531c(uint16_t *);
 uint8_t    *PECMD_MemMoveForward(uint8_t *, uint8_t *, int);
@@ -4522,15 +4522,15 @@ uint64_t StrCmpIW(void){ return 0; }
 
 /* --- r41 follow-up stubs (main-agent closure) --- */
 /* PECMD_CreateButtonSubCtl — 创建 BUTTON 控件窗口并按其样式/标志初始化 (func: 按钮/超链接样式).
-   依赖: FUN_14006b8fc (控件尺寸计算), FUN_1400ef91c (按钮状态初始化, 内绕坐标/标志). */
+   依赖: FUN_14006b8fc (控件尺寸计算), PECMD_InitButtonState (按钮状态初始化, 内绕坐标/标志). */
 long long FUN_14006b8fc(long long *param_1) { (void)param_1; return 1; } /* 控件尺寸计算 (no-op) */
-/* --- FUN_1400ef91c 直移还原 (decompiled.c @1400ef91c size=489, 按钮状态初始化/内绕坐标/标志) ---
+/* --- PECMD_InitButtonState 直移还原 (decompiled.c @1400ef91c size=489, 按钮状态初始化/内绕坐标/标志) ---
  * 依赖: FUN_1400EFEC8 (core_b8d.c) / FUN_1400EFFF8 (core_b8g.c) / PECMD_* 串工具;
  * CONCAT44 双局部已按 rcPack[4] 数组展开 (同 core_b8k.c FUN_1400EF91C 既定模式). */
 uint64_t *FUN_1400EFEC8(uint64_t *param_1);   /* @0x1400efec8 图标对象初始化 (core_b8d.c) */
 bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
                    uint32_t id);              /* @0x1400efff8 创建 STATIC 子控件 (core_b8g.c) */
-void FUN_1400ef91c(long long param_1, uint param_2, uint64_t param_3)
+void PECMD_InitButtonState(long long param_1, uint param_2, uint64_t param_3)
 {
     uint        uVar1;
     undefined8 *puVar2;
@@ -4653,7 +4653,7 @@ bool PECMD_CreateButtonSubCtl(long long *param_1, LPCWSTR param_2, uint64_t para
     if (bVar5) {
         *(uint8_t *)(param_1 + 0x1d) = *(uint8_t *)(param_1 + 0x1d) & 0xef;
         *(uint8_t *)(param_1 + 0x1d) = *(uint8_t *)(param_1 + 0x1d) | ((uint8_t)(param_3 >> 10) & 1) << 4;
-        FUN_1400ef91c((long long)param_1, (uVar12 & 0x400) * 2, uVar11);
+        PECMD_InitButtonState((long long)param_1, (uVar12 & 0x400) * 2, uVar11);
         if ((bVar7) && (param_1[0x22] != 0)) {
             *(long long **)(param_1[0x22] + 0xe0) = param_1;
         }

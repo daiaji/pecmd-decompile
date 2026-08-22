@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400ef91c | FUN_1400ef91c | PECMD_InitButtonState |
 | 0x14004e2cc | FUN_14004e2cc | PECMD_ExecInterpString |
 | 0x14004c0bc | FUN_14004c0bc | PECMD_ProcessScriptBlock |
 | 0x1400171a4 | FUN_1400171a4 | PECMD_GrantCurrentUserAccess |
