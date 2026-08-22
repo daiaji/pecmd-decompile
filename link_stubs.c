@@ -207,7 +207,7 @@ void PECMD_InitContainerFields(uint32_t *param_1)
   *(uint8_t *)((long long)param_1 + 9) = 0x20;
 }
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
-/* ---- FUN_14003e220 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 tools/rename_map.json) ---- */
+/* ---- PECMD_Dialog2727Proc 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 tools/rename_map.json) ---- */
 extern void *g_hFontE2B0;                          /* DAT_14013e2b0 (core_globals.c: HFONT, 已有定义) */
 extern void FUN_1400E648C(void **pfont, UINT id);  /* @0x1400e648c 按 lang 创建字体 (core_exec.c) */
 extern void PECMD_TrimWorkingSet(char force);      /* @0x14005d4e4 (core_b3e.c) */
@@ -225,7 +225,7 @@ uint64_t FUN_14003db00(uint64_t a);                                     /* 命�
 extern uint8_t DAT_14011c638[64];                                       /* 默认命令串缓存 (5600 定义) */
 void     PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src);        /* @0x1400702b0 */
 uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode);  /* @0x14006b1e8 */
-/* ========== FUN_14003e220 @0x14003e220 ==========
+/* ========== PECMD_Dialog2727Proc @0x14003e220 ==========
  * “确认/密码”模态对话框过程 (dialog 0x2727, DialogBoxParamW 回调):
  *   0x110 初始化居中 + 用 PECMD_LangLookupById 填文本; 0x111 按钮分支
  *   (2=清空命令串, 0xd=置 "-force " 并执行, 1=校验输入命令/密码).
@@ -236,7 +236,7 @@ uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode);  /* @0x14
  * 上下文: DAT_14013cfb0 (PECMD_ShowIdDialog 置入的 4 槽数组), 槽[1] 低32位为
  * 剩余次数, 槽[0] 为原始命令串; g_hFontE2B0 字体缓存; DAT_14011c638 默认命令串.
  * 返回: 0x110 处理返回 1, 其余 0 (与对话框 proc 约定一致). */
-long long FUN_14003e220(void *a, unsigned int b, uint64_t c, uint64_t d)
+long long PECMD_Dialog2727Proc(void *a, unsigned int b, uint64_t c, uint64_t d)
 {
     (void)d;
     HWND hwnd = (HWND)a;
@@ -5020,7 +5020,7 @@ uint64_t PECMD_ShowIdDialog(LPCWSTR param_1)
   if (*local_28[0] != 0) {
     PECMD_ShowAboutDialog();
     DAT_14013cfb0 = (void *)local_28;
-    u = DialogBoxParamW((void *)DAT_14013ca68,(void *)(uintptr_t)0x2727,0,FUN_14003e220,0);
+    u = DialogBoxParamW((void *)DAT_14013ca68,(void *)(uintptr_t)0x2727,0,PECMD_Dialog2727Proc,0);
     DAT_14013cfb0 = 0;
     u = u & 0xffffffff;
   }
