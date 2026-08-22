@@ -6594,7 +6594,7 @@ void *FUN_1400b3d0c(const unsigned short *a, longlong *b, longlong c, longlong d
  *  - 返回类型保持原桩 void (decompiled 返回 iVar18: 0 成功 / 0x80070057 E_INVALIDARG 失败;
  *    本文件唯一调用方行 6694 忽略返回值)。
  */
-void  FUN_1400f2384(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f)
+void  PECMD_DeferDialogAction2(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f)
 {
   WCHAR WVar1;
   bool bVar2;
@@ -6940,7 +6940,7 @@ void PECMD_MenuRegisterCommand(byte *param_1,ushort *param_2,HMENU param_3,longl
   if ((param_4 != 0) && (**(short **)(param_1 + 0x10) != 0)) {
     wsprintfW(local_res8,(const unsigned short *)L"_COMMAND#%d:");
     PECMD_AppendWideStr((uint16_t **)&local_res8,*(LPCWSTR *)(param_1 + 0x10));
-    FUN_1400f2384(param_5,local_res8,param_6,param_4,0,1);
+    PECMD_DeferDialogAction2(param_5,local_res8,param_6,param_4,0,1);
   }
   FUN_14005b104((longlong *)&local_res8);
 }

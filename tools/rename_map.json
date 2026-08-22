@@ -1145,5 +1145,6 @@
   "FUN_1400ef91c": "PECMD_InitButtonState",
   "FUN_14006e8f4": "PECMD_CleanupFrameChain",
   "FUN_14003e220": "PECMD_Dialog2727Proc",
-  "FUN_14002b9ec": "PECMD_ToSysCopyFiles"
+  "FUN_14002b9ec": "PECMD_ToSysCopyFiles",
+  "FUN_1400f2384": "PECMD_DeferDialogAction2"
 }

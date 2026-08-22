@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400f2384 | FUN_1400f2384 | PECMD_DeferDialogAction2 |
 | 0x14002b9ec | FUN_14002b9ec | PECMD_ToSysCopyFiles |
 | 0x14003e220 | FUN_14003e220 | PECMD_Dialog2727Proc |
 | 0x14006e8f4 | FUN_14006e8f4 | PECMD_CleanupFrameChain |
