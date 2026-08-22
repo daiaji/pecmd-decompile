@@ -37,7 +37,7 @@ void PECMD_TruncateDebugLog(void);                     /* @0x140023544 */
 void PECMD_InitRamdataRegistry(int n);                    /* @0x14001b888 */
 void PECMD_FixKnownDlls32(void);                     /* @0x14002286c */
 void PECMD_SwitchToDefaultDesktop(void);                     /* @0x140017724 */
-void FUN_14002cc30(void *script, LPCWSTR s, int64_t a, int64_t b, LPCWSTR c); /* @0x14002cc30 */
+void PECMD_ExpandSpecialDirs(void *script, LPCWSTR s, int64_t a, int64_t b, LPCWSTR c); /* @0x14002cc30 */
 void LoadEnvi(LPCWSTR a, LPCWSTR b);          /* @0x140069f0 环境初始化 */
 void FUN_14005B9A0(void);                     /* @0x14005b9a0 */
 void FUN_14003e1f0(void);                     /* @0x14003e1f0 */
@@ -232,7 +232,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
         }
     }
     if (p[0] != 0) {
-        FUN_14002cc30(script, g_szEmpty, 0, 0x24, (LPCWSTR)0);
+        PECMD_ExpandSpecialDirs(script, g_szEmpty, 0, 0x24, (LPCWSTR)0);
     }
 after_init:
     sVar1 = p[0];

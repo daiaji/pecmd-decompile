@@ -95,7 +95,7 @@ extern LARGE_INTEGER FUN_1400DC9FC(LARGE_INTEGER a, LARGE_INTEGER b,
 extern void PECMD_EnumCDRomDrives(int64_t *ctx);
 extern void FUN_14007A224(void *ctx, WCHAR *text, WCHAR **out, int c,
                           uint8_t d);
-extern uint64_t FUN_14002cc30(int64_t *ctx, LPCWSTR s, int a, int b,
+extern uint64_t PECMD_ExpandSpecialDirs(int64_t *ctx, LPCWSTR s, int a, int b,
                               WCHAR *out);
 extern uint64_t FUN_1400C6324(uint64_t a, void *b, uint64_t c, WCHAR *d,
                               char e);
@@ -1467,7 +1467,7 @@ std_path:
             q = *pp;
         }
         if ((cVar1 != 0) || ((mode == '\0') && (*q != L'&'))) {
-            result.QuadPart = (int64_t)FUN_14002cc30(
+            result.QuadPart = (int64_t)PECMD_ExpandSpecialDirs(
                 (int64_t *)script.QuadPart, q + (cVar1 != 0), (int)cVar1, (int)cVar1,
                 (WCHAR *)arg2);
             goto done;
@@ -1494,7 +1494,7 @@ not_std:
     }
     if ((mode == '\0') && (*p != L'&')) {
 direct:
-        result.QuadPart = (int64_t)FUN_14002cc30(
+        result.QuadPart = (int64_t)PECMD_ExpandSpecialDirs(
             (int64_t *)script.QuadPart, p + (cVar1 != 0), (int)cVar1, (int)cVar1,
             (WCHAR *)arg2);
         return result;

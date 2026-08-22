@@ -116,7 +116,7 @@ extern uint32_t PECMD_DevconUpdate(int64_t a1, LPCWSTR a2, LPCWSTR a3,
                               int a4);
 extern uint32_t FUN_14002C634(int64_t a1, LPCWSTR a2, LPCWSTR a3,
                               int a4);
-extern uint64_t FUN_14002cc30(int64_t *a1, LPCWSTR a2, int a3,
+extern uint64_t PECMD_ExpandSpecialDirs(int64_t *a1, LPCWSTR a2, int a3,
                               int a4, WCHAR *a5);
 extern void FUN_14002E790(HWND a1);
 extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
@@ -1278,7 +1278,7 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
         }
         LoadEnvi(g_szEmpty, g_szEmpty);
     }
-    FUN_14002cc30(ctx, local_178, 0, 0x24, NULL);
+    PECMD_ExpandSpecialDirs(ctx, local_178, 0, 0x24, NULL);
     if (bVar10 == 0) {
         PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $SHELL32.DLL,DllInstall,#1,I"),

@@ -586,7 +586,7 @@ uint64_t CreateBitmap(void) { return 0; }
 uint64_t CreateCompatibleBitmap(void) { return 0; }
 uint64_t CreateCompatibleDC(void) { return 0; }
 uint64_t CreateDialogParamW(void) { return 0; }
-uint64_t CreateDirectoryW(const uint16_t *path, void *sa) { (void)path;(void)sa; return 0; }   /* arity 修正 0->2 (FUN_14002cc30 恢复体: 带参调用, 与 core_*.c 2 参调用一致) */
+uint64_t CreateDirectoryW(const uint16_t *path, void *sa) { (void)path;(void)sa; return 0; }   /* arity 修正 0->2 (PECMD_ExpandSpecialDirs 恢复体: 带参调用, 与 core_*.c 2 参调用一致) */
 HRGN CreateEllipticRgn(int a, int b, int c, int d) { (void)a;(void)b;(void)c;(void)d; return (HRGN)0; }
 void *CreateEventW(void *sa, int manual, int init, const unsigned short *name) { (void)sa;(void)manual;(void)init;(void)name; return (void*)0; }
 uint64_t CreateFileMappingA(void) { return 0; }
@@ -1796,8 +1796,8 @@ undefined8 *FUN_14001877C(longlong *ps, int count) { (void)ps;(void)count; retur
 COORD GetLargestConsoleWindowSize(void *h) { (void)h; COORD c = { 0, 0 }; return c; }
 int SetConsoleWindowInfo(void *h, int b, void *r) { (void)h;(void)b;(void)r; return 1; }
 uint64_t FUN_14002ca30(void) { return 0; }
-uint64_t FUN_14002ca80(void) { return 0; }   /* 新增最小桩 (FUN_14002cc30 恢复体: 作线程入口指针) */
-/* ========== FUN_14002cc30 @ 14002cc30  size=1803 — 环境变量设置命令 (SETENV 语义) ==========
+uint64_t FUN_14002ca80(void) { return 0; }   /* 新增最小桩 (PECMD_ExpandSpecialDirs 恢复体: 作线程入口指针) */
+/* ========== PECMD_ExpandSpecialDirs @ 14002cc30  size=1803 — 环境变量设置命令 (SETENV 语义) ==========
  * decompiled.c @26728 忠实移植: '^' 前缀跳过 → 缓冲分配 (lstrlenW+0x400) → '$'(系统)/'#'(用户)
  * 作用域前缀解析 → 星号/'*' 与 '-' 修饰 (local_78) → 空命令时按 param_4==0/0x23 走重画标志
  * (local_88=0x10), 否则枚举 8 个特殊目录 (PTR_u__Favorites_14011e6f8) 以 "%s="(DAT 真值
@@ -1844,7 +1844,7 @@ extern unsigned long PECMD_RegSetValueWithOpen(void *, const unsigned short *, c
 extern DWORD PECMD_RegDeleteValue(HKEY, LPCWSTR, LPCWSTR);                  /* @0x14005c61c (后部定义) */
 extern long long PECMD_ExpandVarsRecursive(long long *, WCHAR *, void *, int, uint8_t);          /* @0x14007bda8 (后部定义) */
 extern uint64_t SHGetSpecialFolderPathW(HWND, WCHAR *, int, BOOL);          /* @后部定义 */
-uint64_t FUN_14002cc30(void *param_1, const uint16_t *param_2, longlong param_3, longlong param_4,
+uint64_t PECMD_ExpandSpecialDirs(void *param_1, const uint16_t *param_2, longlong param_3, longlong param_4,
                        const uint16_t *param_5)
 {
     WCHAR *pwVar1;          /* 特殊目录路径续写位置 */
@@ -1955,7 +1955,7 @@ LAB_14002ccee:
                                   (uint64_t)'\x01');
                     PECMD_SetVariable((void *)&DAT_14013d130, (const WCHAR *)ppuVar17->name, pwVar1);
                     ptVar18 = (pthreadmbcinfo)0x0;
-                    FUN_14002cc30(param_1, local_40, param_3, 0, (const uint16_t *)0);
+                    PECMD_ExpandSpecialDirs(param_1, local_40, param_3, 0, (const uint16_t *)0);
                 }
                 ppuVar17 = ppuVar17 + 1;
                 lVar13 = lVar13 + -1;
@@ -3703,7 +3703,7 @@ unsigned long PECMD_RegSetValueWithOpen(void *k, const unsigned short *a, const 
   }
   return r;
 }
-DWORD PECMD_RegDeleteValue(HKEY root, LPCWSTR subkey, LPCWSTR name) { (void)root;(void)subkey;(void)name; return 0; }   /* arity 修正 0->3 (FUN_14002cc30 恢复体带参调用; core_b1_remaining.c extern 同签名) */
+DWORD PECMD_RegDeleteValue(HKEY root, LPCWSTR subkey, LPCWSTR name) { (void)root;(void)subkey;(void)name; return 0; }   /* arity 修正 0->3 (PECMD_ExpandSpecialDirs 恢复体带参调用; core_b1_remaining.c extern 同签名) */
 longlong FUN_14005c72c(char *param_1, ushort *param_2, int param_3){
     char cVar1; ushort uVar2; uint uVar3; longlong lVar4;
     lVar4=0;
@@ -7069,7 +7069,7 @@ extern HWND  DAT_14013cf78;                           /* 主窗 HWND (def @9327)
  * PECMD_TokenizeQuotedField, FUN_14005b1a8→PECMD_MatchPrefixN, FUN_14004c0bc→
  * PECMD_ProcessScriptBlock, FUN_1400702b0→PECMD_StrDupAssign, FUN_14005c788→
  * PECMD_AsciiPrefixICmp, FUN_140045868→PECMD_DebugOutput, FUN_14000e26c/LoadEnvi/
- * FUN_14002cc30/FUN_14005b228/FUN_14001708c 保持原名或既定别名.
+ * PECMD_ExpandSpecialDirs/FUN_14005b228/FUN_14001708c 保持原名或既定别名.
  * DAT 真值 (pe_data_extract ../PECMD.exe): 0x140122958 = " --exe:\"%s\"  \"%s\"  ",
  * 0x140122980 = "LOAD *sysinit %s" (均 UTF-16LE, 经 PECMD_CrtShim wsprintf 阴影).
  * 暂略死代码: memcpy(local_78, L"LOGS * D:\\DebugPeMain2.log", 0x36) / local_4e=0x55
@@ -7225,7 +7225,7 @@ uint64_t PECMD_ScriptMainEntry(uint64_t a, uint64_t b)   /* 签名保持桩 (ari
         }
     }
     if (p[0] != 0) {
-        FUN_14002cc30((void *)(uintptr_t)a, (const uint16_t *)DAT_14011c638, 0, 0x24,
+        PECMD_ExpandSpecialDirs((void *)(uintptr_t)a, (const uint16_t *)DAT_14011c638, 0, 0x24,
                       (const uint16_t *)0);
     }
 L_after_init:
