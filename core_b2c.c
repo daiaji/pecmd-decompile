@@ -147,7 +147,7 @@ extern ULARGE_INTEGER FUN_140032DC4(int64_t *ctx, LPCWSTR path, int mode,
                                     LPCWSTR extra);
 extern uintptr_t PECMD_TokenizeExpression(int64_t ctx, uint64_t a3, int64_t *pp,
                                int mode, LPCWSTR empty);
-extern LARGE_INTEGER FUN_14004c0bc(uint64_t script, uint64_t cmd, void *p3,
+extern LARGE_INTEGER PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3,
                                    void *p4, void *p5);
 extern void PECMD_AdvanceTokenPointer(int64_t ctx, int64_t *a4, int mode, int64_t *p);
 extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
@@ -1070,7 +1070,7 @@ int64_t PECMD_ExecPathList(int64_t *script, LPCWSTR paths, uint64_t flags,
                 psVar9 = (SHORT *)(uintptr_t)PECMD_TokenizeExpression(
                     (int64_t)script, local_res18, (int64_t *)&local_48, 0, g_szEmpty);
             } else {
-                LVar10 = FUN_14004c0bc((uint64_t)(uintptr_t)script,
+                LVar10 = PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script,
                                        (uint64_t)LVar10.QuadPart, (void *)0, (void *)0,
                                        ctx);
                 psVar9 = (SHORT *)(uintptr_t)(LVar10.QuadPart & 0xffffffffULL);

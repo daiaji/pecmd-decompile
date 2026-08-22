@@ -57,7 +57,7 @@ extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
 extern void PECMD_FormatSetVar(int64_t *script, uint64_t value, LPCWSTR key,
                           LPCWSTR fmt);                  /* @0x140066930 */
-extern int64_t FUN_14004c0bc(uint64_t script, uint64_t cmd, void *p3, void *p4,
+extern int64_t PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4,
                              void *p5);
 extern int32_t g_msgLockCount;                                /* 消息锁计数 */
 extern void FUN_1400EC428(int64_t obj, int param2);
@@ -480,7 +480,7 @@ default_dispatch:
 /* ========== FUN_1400F172C @0x1400f172c ==========
  * 消息映射表分发：按 hwnd/msg/mode 匹配 0x28 字节表项，执行表项中
  * 的命令串（支持 ":" 变量前缀、"," 附加变量、"-" 抑制错误、"<" 临界区）。
- * TODO(verify): FUN_14004c0bc 返回值（原反编译为 LARGE_INTEGER）。
+ * TODO(verify): PECMD_ProcessScriptBlock 返回值（原反编译为 LARGE_INTEGER）。
  */
 uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out)
@@ -614,7 +614,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
             } else {
                 cVar11 = -1;
             }
-            execResult = FUN_14004c0bc((uint64_t)LVar9, (uint64_t)(uintptr_t)p,
+            execResult = PECMD_ProcessScriptBlock((uint64_t)LVar9, (uint64_t)(uintptr_t)p,
                                        *(void **)(LVar9 + 0x40), NULL, NULL);
             if (cVar11 >= 0) {
                 EnterCriticalSection(&g_csInit);
@@ -2315,7 +2315,7 @@ exec_script:
             PECMD_FormatOutput(*(int64_t *)(b + 0xd8));
             v0 = *(uint64_t *)(*(int64_t *)(b + 0xd8) + 0x50);
             v1 = *(uint64_t *)(*(int64_t *)(b + 0xd8) + 0x28);
-            FUN_14004c0bc(v0, v1, NULL, NULL, NULL);
+            PECMD_ProcessScriptBlock(v0, v1, NULL, NULL, NULL);
         }
         return 1;
     }
@@ -2677,7 +2677,7 @@ after:
     if (*(int64_t *)(b + 0xe0) != 0) {
         GetScrollPos(*(HWND *)(b + OBJ_HWND), 2);
         PECMD_FormatOutput(*(int64_t *)(b + 0xe0));
-        FUN_14004c0bc(*(uint64_t *)(*(int64_t *)(b + 0xe0) + 0x50),
+        PECMD_ProcessScriptBlock(*(uint64_t *)(*(int64_t *)(b + 0xe0) + 0x50),
                       *(uint64_t *)(*(int64_t *)(b + 0xe0) + 0x28), NULL, NULL, NULL);
     }
     result.x = 1;

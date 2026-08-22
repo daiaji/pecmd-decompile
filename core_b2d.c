@@ -124,7 +124,7 @@ extern void PECMD_ScriptWndProc(HWND a1, uint32_t a2, HDC a3,
                           void *a4);
 extern uint64_t FUN_14003DB00(WCHAR *a1);
 extern uint64_t FUN_14003A810(int64_t *a1);
-extern uint64_t FUN_14004c0bc(uint64_t a1, uint64_t a2, void *p3,
+extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2, void *p3,
                               void *p4, void *p5);
 extern void FUN_14005B900(void *a1, uint64_t a2, LPCWSTR a3,
                           HICON a4, uint32_t a5);
@@ -624,7 +624,7 @@ label_0258c3:
             }
             {
                 LARGE_INTEGER LVar6;
-                LVar6.QuadPart = (int64_t)FUN_14004c0bc((uint64_t)script,
+                LVar6.QuadPart = (int64_t)PECMD_ProcessScriptBlock((uint64_t)script,
                                                         (uint64_t)local_res10.QuadPart,
                                                         NULL, NULL, threadInfo);
                 uVar4 = (uint64_t)(int32_t)LVar6.LowPart;
@@ -1364,7 +1364,7 @@ int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
                     FUN_1400679DC((uint64_t *)&local_28, local_34 + 1, 0x2c);
                 }
                 if (*(WCHAR *)(uintptr_t)local_28.QuadPart != L'\0') {
-                    LVar3.QuadPart = (int64_t)FUN_14004c0bc((uint64_t)script.QuadPart,
+                    LVar3.QuadPart = (int64_t)PECMD_ProcessScriptBlock((uint64_t)script.QuadPart,
                                                             (uint64_t)local_28.QuadPart,
                                                             NULL, NULL, NULL);
                     DVar4 = LVar3.LowPart;

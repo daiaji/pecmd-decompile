@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14004c0bc | FUN_14004c0bc | PECMD_ProcessScriptBlock |
 | 0x1400171a4 | FUN_1400171a4 | PECMD_GrantCurrentUserAccess |
 | 0x140008b2c | FUN_140008b2c | PECMD_StopDeleteService |
 | 0x1400e5248 | FUN_1400e5248 | PECMD_BuildPopMenuRecursive |

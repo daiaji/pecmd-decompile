@@ -5051,7 +5051,7 @@ extern int64_t PECMD_StartOnlyApp();
 extern int64_t PECMD_RunCommand();
 extern int64_t FUN_14003AAD0();
 extern int64_t FUN_14003B010();
-extern LARGE_INTEGER FUN_14004c0bc();
+extern LARGE_INTEGER PECMD_ProcessScriptBlock();
 extern int64_t FUN_1400547BC();
 extern int64_t FUN_14005B0B8();
 extern int64_t FUN_14005B1A8();
@@ -7673,7 +7673,7 @@ LAB_14003fd2f:
           FUN_14001a640(local_4250);
         }
         if ((local_41f8.QuadPart != 0) && (*(int16_t *)(uintptr_t)local_41f8.QuadPart != 0)) {
-          LVar22 = FUN_14004c0bc((uint64_t)(uintptr_t)script,local_41f8.QuadPart,(int64_t *)0x0,(int64_t *)0x0,
+          LVar22 = PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script,local_41f8.QuadPart,(int64_t *)0x0,(int64_t *)0x0,
                                  (WCHAR *)0x0);
           DVar10 = LVar22.LowPart;
         }

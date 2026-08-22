@@ -87,7 +87,7 @@ extern int FUN_1400E4480(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4,
 extern HBITMAP PECMD_LoadImageBitmap(LPCWSTR txt, int64_t *outw, int64_t h, int64_t w,
                              uint32_t *param5, uint64_t *param6, int param7);
 extern void FUN_1400E537C(int64_t node, uint64_t id, int64_t *out, int64_t *str);
-extern int64_t FUN_14004c0bc(int64_t p1, int64_t p2, int64_t *p3, int64_t *p4, void *p5);
+extern int64_t PECMD_ProcessScriptBlock(int64_t p1, int64_t p2, int64_t *p3, int64_t *p4, void *p5);
 extern void PECMD_FreeInitObjectList(int64_t p1);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *ps, uint32_t *flags, uint64_t p3, char p4);
 extern void FUN_140025B10(uint64_t p1, uint64_t p2);
@@ -289,7 +289,7 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
         if (FUN_14005C7C4("***", (const WCHAR *)(uintptr_t)q.QuadPart) == 0) {
             FUN_1400669C4(info, (int64_t)(uint64_t)sel, WSTR("&&__MemuId"));
             FUN_1400629B8(info, WSTR("&&__MenuInx"), str);
-            FUN_14004c0bc((int64_t)info, q.QuadPart, NULL, NULL, NULL);
+            PECMD_ProcessScriptBlock((int64_t)info, q.QuadPart, NULL, NULL, NULL);
         }
         else if (info[3] == 0) {
             PECMD_FreeInitObjectList((int64_t)node);

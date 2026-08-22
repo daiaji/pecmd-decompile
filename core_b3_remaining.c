@@ -181,7 +181,7 @@ extern void PECMD_CloseThreadSlot(int64_t *param_1);                  /* @0x1400
 extern void PECMD_FreeResourceSet(int64_t *param_1);                  /* @0x14006ffdc */
 extern void PECMD_DestroyStaticControl(uint64_t *param_1);                 /* @0x1400fd1a8 */
 extern void PECMD_IncTaskCount(void);                              /* @0x140061230 */
-extern void FUN_14004c0bc(uint64_t param_1, uint64_t param_2, void *param_3,
+extern void PECMD_ProcessScriptBlock(uint64_t param_1, uint64_t param_2, void *param_3,
                           void *param_4, void *param_5);     /* @0x14004c0bc 主脚本执行器 */
 extern void PECMD_ReleaseSlotObject(int64_t *param_1);                  /* @0x1400e56e4 */
 /* ---- 本批次(12函数)还原新增 extern 声明 ---- */
@@ -910,7 +910,7 @@ LAB_1400405b5:
     FUN_14006375C(&local_res20, WSTR("\" =PECMD HELP "));
     FUN_14006375C(&local_res20, local_res10);
     LVar2.QuadPart = (int64_t)(intptr_t)local_res20;
-    FUN_14004c0bc((uint64_t)0x14013d130, (uint64_t)LVar2.QuadPart, NULL, NULL, NULL);
+    PECMD_ProcessScriptBlock((uint64_t)0x14013d130, (uint64_t)LVar2.QuadPart, NULL, NULL, NULL);
     FUN_14005B104(&local_res20);
     ppuVar9 = &local_150;
 LAB_140040842:
@@ -4289,7 +4289,7 @@ uint64_t PECMD_ParseAndExecuteLine(int64_t param_1, LPCWSTR param_2, uint64_t pa
                                ((*(WCHAR *)(param_1 + 0x8a) == WVar3 || (*(WCHAR *)(param_1 + 0x90) == WVar3))))
                             ; local_res8 = local_res8 + 1) {
                         }
-                        FUN_14004c0bc((uint64_t)param_1, (uint64_t)(uintptr_t)(LPCWSTR)(uintptr_t)lpStr1.QuadPart, (void *)p3,
+                        PECMD_ProcessScriptBlock((uint64_t)param_1, (uint64_t)(uintptr_t)(LPCWSTR)(uintptr_t)lpStr1.QuadPart, (void *)p3,
                                       (void *)&local_res8, (void *)*ppWVar10);
                     }
                 }
@@ -23359,7 +23359,7 @@ LAB_1400a5424:
                                                                             (int64_t)lpString),
                                        LVar9 = local_80,
                                        *(short *)LVar13.QuadPart != 0 && (cVar14 == '\0')))))) {
-                                    FUN_14004c0bc(local_80.QuadPart, LVar13.QuadPart, (int64_t *)0,
+                                    PECMD_ProcessScriptBlock(local_80.QuadPart, LVar13.QuadPart, (int64_t *)0,
                                                   (int64_t *)&local_88, (WCHAR *)*local_28);
                                 }
                                 if ((*(uint8_t *)(param_1.QuadPart + 0x11) & 1) != 0) {
@@ -23901,7 +23901,7 @@ uint64_t PECMD_ScriptThreadProc(int64_t *param_1)
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         PECMD_IncTaskCount();
-        FUN_14004c0bc(_Memory.QuadPart, local_res18.QuadPart, plVar5, (int64_t *)0x0,
+        PECMD_ProcessScriptBlock(_Memory.QuadPart, local_res18.QuadPart, plVar5, (int64_t *)0x0,
                       local_60);
         if (bVar8) {
             lVar6 = *(int64_t *)(_Memory.QuadPart + 0x40);

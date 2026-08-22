@@ -522,7 +522,7 @@ void FUN_1400083c0(void){
     FUN_1400669c4((int64_t*)&DAT_14013d130,(uint32_t)DAT_14013c9f8,(const uint16_t*)L"&WM_TASKBARBUTTONCREATED");
 }
 
-uint64_t FUN_14000e26c(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f, uint64_t g, uint64_t h) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; return 0; }   /* arity 修正 0->8 (core 调用方 + FUN_14004c0bc 移入) */
+uint64_t FUN_14000e26c(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f, uint64_t g, uint64_t h) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; return 0; }   /* arity 修正 0->8 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 /* PECMD_LangLookupById — 按参数序号在 argv 表中定位 VALUE (形如 "id=value|id=value|...")
    定位到匹配 id 时返回其值指针(跳过 '|' 前缀); 未命中返回 NULL.
    依赖: FUN_1400166b4 初始化 argv 表; FUN_140067d20 数值解析; lstrlenW. */
@@ -921,7 +921,7 @@ void PECMD_AutoMountStartup(long long *param_1, LPCWSTR param_2)
   }
 }
 void FUN_140025f10(long long p1, const WCHAR *p2, uint32_t p3, char *p4, char *p5, long long *p6) { (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; }
-uint64_t FUN_140026338(uint64_t a, uint64_t b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }   /* arity 修正 0->3 (FUN_14004c0bc 移入) */
+uint64_t FUN_140026338(uint64_t a, uint64_t b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }   /* arity 修正 0->3 (PECMD_ProcessScriptBlock 移入) */
 uint64_t FUN_14002ca30(void) { return 0; }
 uint64_t FUN_14002cc30(void) { return 0; }
 /* @0x14002e30c size=— 资源串按行拆分入表(直移) */
@@ -946,7 +946,7 @@ void PECMD_LoadResourceLines(void)
 void PECMD_SendHotkeyKeyMessage(uint32_t a, int b, int c) { (void)a;(void)b;(void)c; }   /* 签名修正: uint32_t,int,int */
 uint64_t FUN_14003e1f0(void) { return 0; }
 /* ============================================================
- * FUN_14004c0bc @0x14004c0bc (size=8717) — 资源/脚本执行主分发 (decompiled.c 直移)
+ * PECMD_ProcessScriptBlock @0x14004c0bc (size=8717) — 资源/脚本执行主分发 (decompiled.c 直移)
  * ============================================================ */
 /* ---- 移植前置: 全局槽 / 跨文件真实体 / 本文件后部定义 / 新增最小桩 ---- */
 extern uint8_t DAT_00000011;                 /* @0x11 地址伪符号 (定义见本文件后部) */
@@ -996,13 +996,13 @@ uint64_t    FUN_1400d0468(uint64_t, uint64_t, uint64_t); uint64_t FUN_1400d0c6c(
 uint64_t    FUN_1400d7038(uint64_t, uint64_t);
 uint64_t    FUN_1400dfb14(uint64_t, uint64_t, uint64_t); uint64_t FUN_1400e1228(uint64_t, uint64_t, uint64_t);
 
-/* ========== FUN_14004c0bc @ 14004c0bc  size=8717 ========== */
-/* signature: LARGE_INTEGER __fastcall FUN_14004c0bc(LARGE_INTEGER param_1, LARGE_INTEGER param_2, longlong * param_3, longlong * param_4, pthreadmbcinfo param_5) */
+/* ========== PECMD_ProcessScriptBlock @ 14004c0bc  size=8717 ========== */
+/* signature: LARGE_INTEGER __fastcall PECMD_ProcessScriptBlock(LARGE_INTEGER param_1, LARGE_INTEGER param_2, longlong * param_3, longlong * param_4, pthreadmbcinfo param_5) */
 
 /* WARNING: Type propagation algorithm not settling */
 
 LARGE_INTEGER
-FUN_14004c0bc(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *param_3,longlong *param_4,
+PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *param_3,longlong *param_4,
              pthreadmbcinfo param_5)
 
 {
@@ -2348,7 +2348,7 @@ LAB_14004c53b:
   FUN_14005b104(&local_160.QuadPart);
   goto LAB_14004e27a;
 }
-/* ---- FUN_14004c0bc 移植新增最小桩 (原未定义符号, 按调用点签名) ---- */
+/* ---- PECMD_ProcessScriptBlock 移植新增最小桩 (原未定义符号, 按调用点签名) ---- */
 uint64_t FUN_140017afc(uint64_t a) { (void)a; return 0; }
 uint64_t FUN_14001af0c(uint64_t a) { (void)a; return 0; }
 uint64_t FUN_140021a4c(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }
@@ -3001,9 +3001,9 @@ uint64_t *PECMD_StrSetOrConcat(uint64_t *param_1,uint64_t *param_2,LPCWSTR param
   return param_2;
 }
 uint64_t PECMD_SetCheckVariable(void) { return 0; }
-uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (core 调用方 + FUN_14004c0bc 移入) */
+uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
-uint64_t FUN_1400b1724(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (FUN_14004c0bc 移入) */
+uint64_t FUN_1400b1724(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (PECMD_ProcessScriptBlock 移入) */
 uint64_t PECMD_CreateFont(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 int PECMD_ParseHexOrDec(long long *a, uint64_t *b) { (void)a; (void)b; return 1; }
 /* @0x1400c11c0 size=52 — 十六进制/十进制解析 bool 封装(直移) */
@@ -3014,7 +3014,7 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
   if ((int)b > 0) { *param_2 = (int)res[0]; return 1; }
   return 0;
 }
-uint64_t FUN_1400d2e90(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (FUN_14004c0bc 移入) */
+uint64_t FUN_1400d2e90(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (PECMD_ProcessScriptBlock 移入) */
 /* @0x1400e3cd4 size=— 宽路径分配并展开(直移) */
 uint64_t PECMD_ExpandPathAlloc2(LPCWSTR param_1, uint64_t *param_2, int64_t *param_3)
 {
@@ -3577,7 +3577,7 @@ uint64_t SetupDiGetDeviceInstanceIdW(void) { return 0; }
 uint64_t SetupDiGetDeviceInterfaceDetailW(void) { return 0; }
 
 uint64_t PECMD_ScriptCopy(void) { return 0; }
-uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (core 调用方 + FUN_14004c0bc 移入) */
+uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 uint64_t FUN_140061E98(void) { return 0; }
 uint64_t FUN_1400688E0(void) { return 0; }
 uint64_t FUN_14006A81C(void) { return 0; }
@@ -4794,7 +4794,7 @@ uint64_t PECMD_ShowIdDialog(LPCWSTR param_1)
   FUN_14005b104((long long *)local_28);
   return u;
 }
-uint64_t FUN_140045c90(uint64_t a, uint64_t b){ (void)a;(void)b; return 0; }   /* arity 修正 0->2 (FUN_14004c0bc 移入) */
+uint64_t FUN_140045c90(uint64_t a, uint64_t b){ (void)a;(void)b; return 0; }   /* arity 修正 0->2 (PECMD_ProcessScriptBlock 移入) */
 void PECMD_RelocatePointerArray(undefined8 param_1, uint *param_2, longlong param_3, longlong param_4)
 {
     uint8_t *base;

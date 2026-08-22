@@ -106,7 +106,7 @@ extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                            uint32_t esize);
 extern void FUN_140063B64(int64_t *arr);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
-extern void FUN_14004c0bc(uint64_t script, uint64_t cmd, void *p3, void *p4,
+extern void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4,
                           void *p5);
 extern void FUN_14007BDA8(void *ctx, LPCWSTR text, WCHAR **out, int c,
                           int d);
@@ -1711,7 +1711,7 @@ void FUN_14002E790(HWND hwnd)
     {
         WCHAR *comma = StrChrW(pCmd, L',');
         if (comma != NULL) {
-            FUN_14004c0bc((uint64_t)(uintptr_t)g_Script,
+            PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)g_Script,
                           (uint64_t)(uintptr_t)(comma + 1), NULL, NULL, NULL);
         }
     }
@@ -2650,7 +2650,7 @@ loop_retry:
             FUN_14000e26c((void *)script.QuadPart, cmdCopy, (void *)script.QuadPart,
                           (void *)(uintptr_t)0x5e, 7, NULL, NULL, NULL);
         } else {
-            FUN_14004c0bc(script.QuadPart, (uint64_t)(uintptr_t)cmdCopy,
+            PECMD_ProcessScriptBlock(script.QuadPart, (uint64_t)(uintptr_t)cmdCopy,
                           NULL, NULL, NULL);
         }
         g_answerFlag = 0;

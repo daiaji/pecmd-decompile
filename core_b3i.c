@@ -52,7 +52,7 @@ extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern void FUN_14001a640(WCHAR *buf);
 extern void PECMD_SyncWorkingDirectory(void);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
-extern uint64_t FUN_14004c0bc(uint64_t a1, uint64_t a2,
+extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2,
                               void *p3, void *p4, void *p5);
 extern int FUN_140050F58(int *a1, int64_t *a2, uint32_t a3);
 extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
@@ -110,7 +110,7 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
         }
         uint8_t local_58[80];
         memcpy(local_58, WSTR("PATH  @%SystemRoot%\\SYSTEM32"), 0x42);
-        uint64_t LVar3 = FUN_14004c0bc((uint64_t)(uintptr_t)g_Script,
+        uint64_t LVar3 = PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)g_Script,
                                          (uint64_t)(uintptr_t)local_58,
                                          (void *)0, (void *)0, (void *)0);
         return (uint32_t)LVar3;

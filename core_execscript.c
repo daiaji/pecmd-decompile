@@ -52,7 +52,7 @@ void PECMD_RegisterHotkeyEntry(void);                     /* @0x140022e94 */
 void FUN_140077358(void);                     /* @0x140077358 */
 void FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
                    DWORD *tid, LPSECURITY_ATTRIBUTES sa);  /* @0x14005b228 线程创建 */
-void FUN_14004c0bc(uint64_t script, uint64_t cmd, void *p3, void *p4, void *p5); /* @0x14004c0bc 主脚本执行器 */
+void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4, void *p5); /* @0x14004c0bc 主脚本执行器 */
 uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3, uint64_t s4,
                        uint32_t flag, void *p6, uint64_t s7, void *p8);  /* @0x14000e26c 脚本执行 */
 
@@ -369,7 +369,7 @@ after_init:
             if (bStar) {
                 wsprintfW(pBuf + 900, WSTR("LOAD *sysinit %s"), p, (void *)&nRead);
                 g_flagD032 = 1;
-                FUN_14004c0bc((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)(pBuf + 900),
+                PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)(pBuf + 900),
                               (void *)0, (void *)0, (void *)0);
             } else {
                 wsprintfW(pBuf + 900, WSTR(" --exe:\"%s\"  \"%s\"  "), pExe, pExeName);
@@ -392,7 +392,7 @@ after_init:
             if (r != 0) {
                 g_flagD032 = 1;
             }
-            FUN_14004c0bc((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)pTmp,
+            PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)pTmp,
                           (void *)0, (void *)0, (void *)0);
             FUN_14005B104(&pTmp);
         }

@@ -46,7 +46,7 @@ extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t 
 extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);     /* @0x14006375c */
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);     /* @0x140018b70 */
 extern void thunk_FUN_1400f429c(WCHAR **pp, WCHAR delim); /* @0x1400f429c 分隔符扫描 thunk */
-extern LARGE_INTEGER FUN_14004c0bc(uint64_t script, LARGE_INTEGER cmd,
+extern LARGE_INTEGER PECMD_ProcessScriptBlock(uint64_t script, LARGE_INTEGER cmd,
                                    void *p3, void *p4, void *p5); /* @0x14004c0bc */
 extern void *g_pQueryServiceStatusEx;                                 /* QueryServiceStatusEx 槽 */
 extern HANDLE RegisterDeviceNotificationW(HANDLE hRecipient, void *notificationFilter,
@@ -1812,7 +1812,7 @@ LARGE_INTEGER PECMD_ExecuteStringCommand(int64_t obj, LPCWSTR s)
 
     cmd.QuadPart = 0;
     FUN_1400702B0((WCHAR **)&cmd, s);
-    result = FUN_14004c0bc(*(uint64_t *)(obj + 8), cmd,
+    result = PECMD_ProcessScriptBlock(*(uint64_t *)(obj + 8), cmd,
                            *(void **)(obj + 0x10), NULL, NULL);
     FUN_14005B104((WCHAR **)&cmd);
     return result;
@@ -1821,7 +1821,7 @@ LARGE_INTEGER PECMD_ExecuteStringCommand(int64_t obj, LPCWSTR s)
 void PECMD_ExecuteCommandNoRet(int64_t obj, LARGE_INTEGER cmd)
 {
     /* @0x1400058f4 size=31 执行命令（不取返回值） */
-    FUN_14004c0bc(*(uint64_t *)(obj + 8), cmd,
+    PECMD_ProcessScriptBlock(*(uint64_t *)(obj + 8), cmd,
                   *(void **)(obj + 0x10), NULL, NULL);
 }
 
@@ -5594,7 +5594,7 @@ LAB_140016cfa:
                                                         (long long)(int)uVar9 * 0x10)));
                     LeaveCriticalSection(&g_csInit);
                     pLVar6 = (LARGE_INTEGER *)PECMD_StrSetOrConcat(&local_48, &local_res18, param_4);
-                    LVar7 = FUN_14004c0bc((uint64_t)(intptr_t)(void *)param_1, *pLVar6,
+                    LVar7 = PECMD_ProcessScriptBlock((uint64_t)(intptr_t)(void *)param_1, *pLVar6,
                                           (long long *)0, (long long *)0, NULL);
                     memcpy(param_5, &LVar7, 8);
                     FUN_14005B104(&local_res18);
@@ -6872,7 +6872,7 @@ void PECMD_RunFbwfHookScript(void)
     if ((DVar1 == 0) && (*(int16_t *)&local_res18 != 0)) {
         PECMD_RegDeleteValue((HKEY)(intptr_t)0xffffffff80000002,
                       WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("fbwf.hook"));
-        FUN_14004c0bc(0x14013d130, local_res18, 0, 0, 0);
+        PECMD_ProcessScriptBlock(0x14013d130, local_res18, 0, 0, 0);
     }
     FUN_14005B104((WCHAR **)&local_res18);
 }
@@ -7376,7 +7376,7 @@ void PECMD_EnumCDRomDrives(LARGE_INTEGER param_1)
     if (cd_count > 0) {
         LARGE_INTEGER cmd;
         cmd.QuadPart = 0x14011edb8;
-        FUN_14004c0bc((uint64_t)param_1.QuadPart, cmd, (void *)0, (void *)0, (void *)0);
+        PECMD_ProcessScriptBlock((uint64_t)param_1.QuadPart, cmd, (void *)0, (void *)0, (void *)0);
     }
 }
 
