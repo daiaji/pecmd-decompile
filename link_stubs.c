@@ -4205,7 +4205,240 @@ uint64_t *PECMD_StrSetOrConcat(uint64_t *param_1,uint64_t *param_2,LPCWSTR param
 uint64_t PECMD_SetCheckVariable(void) { return 0; }
 uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
-uint64_t FUN_1400b1724(uint64_t a, uint64_t b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (PECMD_ProcessScriptBlock 移入) */
+/* ========== FUN_1400b1724 @ 1400b1724  size=1733 ==========
+ * signature: undefined8 __fastcall FUN_1400b1724(LARGE_INTEGER param_1, ulonglong param_2)
+ * 忠实移植 decompiled.c @110300; 外部签名保持桩 (uint64_t,uint64_t) (arity 修正 0->2),
+ * 体内用局部 param_1/param_2 对齐 Ghidra 变量 (x64 寄存器传参等价: param_1.QuadPart≡a,
+ * param_2≡b).
+ * 内部调用按 rename_map: FUN_14006156c→PECMD_MatchPattern, FUN_1400a53e4→
+ * PECMD_TokenizeExpression, FUN_14001b23c→PECMD_ExtractTableSegment, FUN_14006e030→
+ * PECMD_CopyPathToken(桩 arity 0→4 修正), FUN_14004c0bc→PECMD_ProcessScriptBlock;
+ * FUN_14006159c/FUN_1400251ac/FUN_140063060/FUN_1400702d4/FUN_14005b104 保持原名.
+ * DAT_14013d080→g_msgLockCount, DAT_14013d058→g_sysinitState, DAT_14011c638 用符号.
+ * 取舍: FUN_1400251ac(undefined8) 调用传 param_1.QuadPart (Ghidra 将 LARGE_INTEGER
+ * 按单寄存器传参); (LPCWSTR)lpStr1 结构体强转指针非法 → (LPCWSTR)(uintptr_t)lpStr1.QuadPart.
+ * 注意: 本函数自身不执行, 由 PECMD_ProcessScriptBlock 内部 / core 调用方经
+ * uint64_t 签名进入; 返回 0 (decompiled 亦 return 0). */
+/* ---- FUN_1400b1724 恢复体所需前置声明 (定义见 core_*.c / 本文件后部桩) ---- */
+extern uint64_t PECMD_MatchPattern(int16_t *pattern, int64_t ctx);            /* @0x14006156c core_b3c.c */
+extern LPCWSTR  PECMD_ExtractTableSegment(int64_t, uint64_t *, uint16_t *, int64_t *, char); /* @0x14001b23c core_b1_remaining.c */
+extern int64_t  PECMD_TokenizeExpression(LARGE_INTEGER, int64_t, int64_t *, uint32_t, WCHAR *); /* @0x1400a53e4 core_b3_remaining.c */
+extern uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d);   /* @0x14006e030 (定义见后部桩) */
+extern uint64_t FUN_140063060(uint64_t value);                                /* @0x140063060 core_b3_remaining.c */
+extern void     FUN_14006159c(longlong param_1, ulonglong param_2);           /* @0x14006159c 新增桩 (本文件) */
+extern void     FUN_1400251ac(undefined8 param_1);                            /* @0x1400251ac 新增桩 (本文件) */
+extern int32_t  g_sysinitState;                                               /* DAT_14013d058 core_scriptdep.c */
+uint64_t FUN_1400b1724(uint64_t a, uint64_t b)
+{
+  ushort uVar1;
+  ushort uVar2;
+  int iVar3;
+  WCHAR *pWVar4;
+  undefined8 uVar5;
+  LPCWSTR pWVar6;
+  LARGE_INTEGER lpStr1;
+  WCHAR WVar7;
+  WCHAR WVar8;
+  longlong lVar9;
+  int iVar10;
+  WCHAR *pWVar11;
+  WCHAR *pWVar12;
+  LPCWSTR *ppWVar13;
+  WCHAR *local_res10;
+  ulonglong *local_res18;
+  WCHAR *local_res20;
+  LPCWSTR local_58;
+  LPCWSTR local_50 [2];
+  LARGE_INTEGER param_1;
+  ulonglong param_2 = b;
+  param_1.QuadPart = (long long)a;
+  uVar1 = *(ushort *)(param_1.QuadPart + 0x48);
+  iVar10 = 0;
+  pWVar11 = (WCHAR *)(param_2 & 0xfffffffffffffffe);
+  local_res18 = (ulonglong *)0x0;
+  if ((param_2 & 1) == 0) {
+    FUN_14006159c(param_1.QuadPart,(ulonglong)(*(ushort *)(param_1.QuadPart + 0x48) | 0x10000));
+    *(undefined2 *)(param_1.QuadPart + 200) = 0;
+    for (; (((WVar8 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+             (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+            (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8)) ||
+           (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar8)); pWVar11 = pWVar11 + 1) {
+    }
+  }
+  local_58 = (LPCWSTR)0x0;
+  if (((*(byte *)(param_1.QuadPart + 0x10) & 0x80) == 0) ||
+     (ppWVar13 = &local_58, g_msgLockCount == 0)) {
+    ppWVar13 = local_50;
+  }
+  local_res10 = pWVar11;
+  if (*pWVar11 != *(WCHAR *)(param_1.QuadPart + 0x88)) {
+LAB_1400b17e7:
+    do {
+      if ((*(byte *)(param_1.QuadPart + 0x11) & 1) != 0) {
+        FUN_14005b0b8(local_res18);
+      }
+      if ((*(byte *)(param_1.QuadPart + 200) & 0x42) != 0) break;
+      WVar8 = *(WCHAR *)(param_1.QuadPart + 0x88);
+      local_res10 = pWVar11;
+      pWVar4 = (WCHAR *)FUN_140063060((uint64_t)(uintptr_t)pWVar11);
+      if (*pWVar4 == WVar8) break;
+      if (iVar10 < 1) {
+        if (*(WCHAR *)(param_1.QuadPart + 0x96) == *pWVar11) {
+          pWVar4 = pWVar11 + 1;
+          for (pWVar11 = pWVar4;
+              ((WVar7 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar7 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar7)) ||
+              ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar7 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar7)))); pWVar11 = pWVar11 + 1) {
+          }
+          local_res10 = pWVar11;
+          if (((*pWVar11 != WVar8) &&
+              (uVar5 = PECMD_MatchPattern((int16_t *)pWVar11,param_1.QuadPart + 0xaa), (int)uVar5 != 0)) &&
+             (uVar5 = PECMD_MatchPattern((int16_t *)pWVar11,param_1.QuadPart + 0x9a), (int)uVar5 != 0)) {
+            local_res10 = pWVar4;
+            PECMD_TokenizeExpression(param_1,*(undefined8 *)(param_1.QuadPart + 0x40),
+                                     (longlong *)&local_res10,0,(WCHAR *)(uintptr_t)&DAT_14011c638);
+            for (; ((WVar8 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                    (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                   ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8 ||
+                    (pWVar11 = local_res10, *(WCHAR *)(param_1.QuadPart + 0x90) == WVar8))));
+                local_res10 = local_res10 + 1) {
+            }
+          }
+          goto LAB_1400b17e7;
+        }
+        if ((*pWVar11 == *(WCHAR *)(param_1.QuadPart + 0xba)) &&
+           (pWVar11[1] == *(WCHAR *)(param_1.QuadPart + 0xbc))) {
+          for (local_res10 = pWVar11 + 2;
+              (((WVar7 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar7 ||
+                (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar7)) ||
+               (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar7)) ||
+              (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar7)); local_res10 = local_res10 + 1) {
+          }
+          WVar7 = *local_res10;
+          if (WVar7 != WVar8) {
+            do {
+              if (((WVar7 == *(WCHAR *)(param_1.QuadPart + 0x8a)) ||
+                  (WVar7 == *(WCHAR *)(param_1.QuadPart + 0x90))) ||
+                 (*(WCHAR *)(param_1.QuadPart + 0x96) == WVar7)) break;
+              local_res10 = local_res10 + 1;
+              WVar7 = *local_res10;
+            } while (WVar7 != *(WCHAR *)(param_1.QuadPart + 0x88));
+          }
+          for (pWVar4 = local_res10;
+              ((*(WCHAR *)(param_1.QuadPart + 0x92) == *pWVar4 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x94) == *pWVar4)) ||
+              ((*(WCHAR *)(param_1.QuadPart + 0x8a) == *pWVar4 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x90) == *pWVar4)))); pWVar4 = pWVar4 + 1) {
+          }
+          if ((uVar1 ^ 0x7b) == *pWVar4) {
+            FUN_1400702d4((uint16_t **)&local_res20,pWVar11,
+                          (longlong)local_res10 - (longlong)pWVar11 >> 1);
+            for (lVar9 = (longlong)((int)((longlong)local_res10 - (longlong)pWVar11 >> 1) + -1);
+                -1 < lVar9; lVar9 = lVar9 + -1) {
+              local_res20[lVar9] = local_res20[lVar9] ^ *(ushort *)(param_1.QuadPart + 0x48);
+            }
+            for (pWVar11 = pWVar4 + 1;
+                (((WVar8 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                  (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                 (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8)) ||
+                (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar8)); pWVar11 = pWVar11 + 1) {
+            }
+            local_res10 = pWVar11;
+            if (((*pWVar11 != *(WCHAR *)(param_1.QuadPart + 0x88)) &&
+                (pWVar12 = local_res20, uVar5 = PECMD_MatchPattern((int16_t *)pWVar11,param_1.QuadPart + 0xaa),
+                (int)uVar5 != 0)) &&
+               (uVar5 = PECMD_MatchPattern((int16_t *)pWVar11,param_1.QuadPart + 0x9a), (int)uVar5 != 0)) {
+              local_res10 = pWVar4 + 1;
+              PECMD_TokenizeExpression(param_1,*(undefined8 *)(param_1.QuadPart + 0x40),
+                                       (longlong *)&local_res10,0,pWVar12);
+              pWVar11 = local_res10;
+              FUN_14005b104((longlong *)&local_res20);
+              goto LAB_1400b17e7;
+            }
+            FUN_14005b104((longlong *)&local_res20);
+          }
+          WVar8 = *local_res10;
+          if (((WVar8 == *(WCHAR *)(param_1.QuadPart + 0x92)) ||
+              (WVar8 == *(WCHAR *)(param_1.QuadPart + 0x94))) ||
+             ((WVar8 == *(WCHAR *)(param_1.QuadPart + 0x8a) ||
+              (WVar8 == *(WCHAR *)(param_1.QuadPart + 0x90))))) {
+            while (((*(WCHAR *)(param_1.QuadPart + 0x88) != WVar8 &&
+                    (*(WCHAR *)(param_1.QuadPart + 0x8a) != WVar8)) &&
+                   (*(WCHAR *)(param_1.QuadPart + 0x90) != WVar8))) {
+              local_res10 = local_res10 + 1;
+              WVar8 = *local_res10;
+            }
+          }
+          for (; ((WVar8 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                  (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                 ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8 ||
+                  (pWVar11 = local_res10, *(WCHAR *)(param_1.QuadPart + 0x90) == WVar8))));
+              local_res10 = local_res10 + 1) {
+          }
+          goto LAB_1400b17e7;
+        }
+      }
+      local_res10 = (WCHAR *)0x0;
+      local_50[0] = pWVar11;
+      pWVar6 = PECMD_ExtractTableSegment(param_1.QuadPart,(uint64_t *)&local_res18,(ushort *)pWVar11,
+                                         (longlong *)&local_res10,'\0');
+      if (((*pWVar6 != L'\0') && (*pWVar6 != L'/')) && ((*pWVar6 != L';' && (*pWVar6 != L'`')))) {
+        lpStr1.QuadPart =
+             PECMD_CopyPathToken(param_1.QuadPart,(longlong *)&local_res10,(longlong *)&local_res18,
+                           (longlong)pWVar6);
+        iVar3 = StrCmpNIW((LPCWSTR)(uintptr_t)lpStr1.QuadPart,(const uint16_t *)L"_SUB",4);
+        if ((iVar3 == 0) &&
+           ((((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), 8 < uVar2 && (uVar2 < 0xe)) ||
+             (uVar2 == 0x20)) || (uVar2 == 0)))) {
+          iVar10 = iVar10 + 1;
+        }
+        else {
+          iVar3 = StrCmpNIW((LPCWSTR)(uintptr_t)lpStr1.QuadPart,(const uint16_t *)L"_END",4);
+          if ((iVar3 == 0) &&
+             (((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), 8 < uVar2 && (uVar2 < 0xe)) ||
+              ((uVar2 == 0x20 || (uVar2 == 0)))))) {
+            if (0 < iVar10) {
+              iVar10 = iVar10 + -1;
+            }
+          }
+          else if (iVar10 < 1) {
+            if ((((g_sysinitState == '\x03') &&
+                 ((iVar3 = StrCmpNIW((const uint16_t *)L"REGI",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,4), iVar3 != 0 ||
+                  (((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), uVar2 < 9 || (0xd < uVar2)) &&
+                   ((uVar2 != 0x20 && (uVar2 != 0)))))))) &&
+                ((iVar3 = StrCmpNIW((const uint16_t *)L"ENVI",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,4), iVar3 != 0 ||
+                 ((((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), uVar2 < 9 || (0xd < uVar2)) &&
+                   (uVar2 != 0x20)) && (uVar2 != 0)))))) &&
+               ((iVar3 = StrCmpNIW((const uint16_t *)L"SET",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,3), iVar3 != 0 ||
+                (((uVar2 = *(ushort *)(lpStr1.QuadPart + 6), uVar2 < 9 || (0xd < uVar2)) &&
+                 ((uVar2 != 0x20 && (uVar2 != 0)))))))) {
+              FUN_1400251ac(param_1.QuadPart);
+            }
+            PECMD_ProcessScriptBlock(param_1,lpStr1,(longlong *)0x0,(longlong *)&local_res10,
+                                     (pthreadmbcinfo)*ppWVar13);
+          }
+        }
+      }
+      for (; (*local_res10 == *(WCHAR *)(param_1.QuadPart + 0x8a) ||
+             (*local_res10 == *(WCHAR *)(param_1.QuadPart + 0x90))); local_res10 = local_res10 + 1)
+      {
+      }
+      pWVar11 = local_res10;
+    } while (*local_res10 != *(WCHAR *)(param_1.QuadPart + 0x88));
+  }
+  if ((param_2 & 1) == 0) {
+    *(undefined2 *)(param_1.QuadPart + 200) = 0;
+  }
+  FUN_14005b104((longlong *)&local_res18);
+  return 0;
+}
+/* @0x14006159c size=357 — 脚本上下文命令入口标记 (XOR 键/结束标记) 新增桩:
+   原体未移植 (decompiled.c @59192); 签名 void FUN_14006159c(longlong, ulonglong). */
+void FUN_14006159c(longlong param_1, ulonglong param_2) { (void)param_1; (void)param_2; }
+/* @0x1400251ac size=198 — 重置/清理 (decompiled.c @22328) 新增桩:
+   签名 void FUN_1400251ac(undefined8 param_1); 调用约定经 QuadPart 传值. */
+void FUN_1400251ac(undefined8 param_1) { (void)param_1; }
 uint64_t PECMD_CreateFont(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 int PECMD_ParseHexOrDec(long long *a, uint64_t *b) { (void)a; (void)b; return 1; }
 /* @0x1400c11c0 size=52 — 十六进制/十进制解析 bool 封装(直移) */
@@ -4783,7 +5016,7 @@ uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d)
 uint64_t FUN_140061E98(void) { return 0; }
 uint64_t FUN_1400688E0(void) { return 0; }
 uint64_t FUN_14006A81C(void) { return 0; }
-uint64_t PECMD_CopyPathToken(void) { return 0; }
+uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (FUN_1400b1724 恢复体 + core_b3_remaining 调用方) */
 uint64_t FUN_1400e6d74(void) { return 0; }
 
 /* ---- 追加桩: batch25 还原(140017b8c/00d2a0/0192d0/004ac4 及 B3 13 函数)引用的未定义符号 ---- */
