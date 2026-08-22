@@ -5376,12 +5376,12 @@ uint64_t SetMenu(void) { return 0; }
 uint64_t SHAppBarMessage(void) { return 0; }
 uint64_t PTR_FUN_140126540;
 uint64_t PTR_FUN_140126560;
-/* ========== FUN_14003c06c @0x14003c06c size=2427 ==========
+/* ========== PECMD_IndataCopyDirs @0x14003c06c size=2427 ==========
  * 文件操作命令: 解析 -simpleprogress/-progress/-file/-forceq/-force/-su/-q/-delme/-rd/-delay
  * 选项, 拆分 ';' 分组的 "源>目标" 列表, 按 wFunc(2=拷贝/1=移动/3=删除/4=改名)
  * 调用 SHFileOperationW/MoveFile/DeleteFile/PECMD_RunCommand 等执行。
- * 移植自 decompiled.c FUN_14003c06c (仅编辑 link_stubs.c; 内部调用按 rename_map 命名)。
- * signature: LARGE_INTEGER __fastcall FUN_14003c06c(longlong *param_1, LARGE_INTEGER param_2, uint param_3)
+ * 移植自 decompiled.c PECMD_IndataCopyDirs (仅编辑 link_stubs.c; 内部调用按 rename_map 命名)。
+ * signature: LARGE_INTEGER __fastcall PECMD_IndataCopyDirs(longlong *param_1, LARGE_INTEGER param_2, uint param_3)
  */
 typedef struct {
   void *hwnd;
@@ -5403,7 +5403,7 @@ extern int16_t    *PECMD_LastPathSeparator(int16_t *path);
 extern HANDLE      PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                                         LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 
-LARGE_INTEGER FUN_14003c06c(longlong *param_1,LARGE_INTEGER param_2,uint param_3)
+LARGE_INTEGER PECMD_IndataCopyDirs(longlong *param_1,LARGE_INTEGER param_2,uint param_3)
 {
   uint16_t uVar1;
   bool bVar2;

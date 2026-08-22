@@ -105,7 +105,7 @@ extern WCHAR    *PECMD_UnquoteString(WCHAR *s);                           /* @0x
 extern longlong  PECMD_EnumNtSymbolicLink(LPWSTR a, longlong *b, longlong *c, longlong *d); /* @0x14001d8c8 */
 extern WCHAR    *PECMD_NextToken(longlong *a, longlong *b, uint32_t c); /* @0x140024c48           */
 extern longlong  PECMD_RunCommand(longlong *a, pthreadmbcinfo b);      /* @0x140031454 执行命令    */
-extern void      FUN_14003c06c(void *a, void *b, uint c);           /* @0x14003c06c             */
+extern void      PECMD_IndataCopyDirs(void *a, void *b, uint c);           /* @0x14003c06c             */
 extern WCHAR    *PECMD_TokenizeQuotedField(longlong *a, longlong *b, longlong *c,
                                WCHAR d, ushort e);                  /* @0x1400545f8 切分        */
 extern void      PECMD_ParseSkipSeparator(longlong *a, longlong *b, int c, int d); /* @0x140054840       */
@@ -729,7 +729,7 @@ LAB_14009bea3:
             FUN_14005b104((longlong *)ppWVar13);
         }
         PECMD_AppendWideStr((WCHAR **)&local_res10.QuadPart, WSTR("\\*.*"));
-        FUN_14003c06c(param_1, &local_res10, 1);
+        PECMD_IndataCopyDirs(param_1, &local_res10, 1);
     }
     else {
         pWVar10 = PECMD_LoadLocalizedString(g_hInstance, 0x271b, local_668, 0x104);
