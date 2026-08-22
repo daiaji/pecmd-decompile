@@ -146,8 +146,8 @@ void     FUN_1400702b0(uint16_t **ps, const uint16_t *src);
 int64_t *FUN_14007034c(int64_t *param_1, const uint16_t *param_2);
 
 /* helper 补前置声明 */
-void FUN_14004e2cc(uint64_t a, void *b);
-/* FUN_14004e2cc 实体内调用 (rename_map 命名; 定义在其它 core_*.c) */
+void PECMD_ExecInterpString(uint64_t a, void *b);
+/* PECMD_ExecInterpString 实体内调用 (rename_map 命名; 定义在其它 core_*.c) */
 int64_t  PECMD_ExecuteCommand(int64_t *p1, LPCWSTR p2, int64_t p3, LPCWSTR p4, uint32_t p5, int64_t p6, int p7);
 void     PECMD_FreeTripleString(int64_t *p);
 void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
@@ -2387,7 +2387,7 @@ void PECMD_ClearTaskTable(undefined8 param_1, int param_2){
         while (param_2<iVar1) {
             *(int*)(uintptr_t)(param_1+8)=*(int*)(uintptr_t)(param_1+8)-1;
             if (*(longlong*)(uintptr_t)(*(longlong*)(uintptr_t)param_1+(longlong)*(int*)(uintptr_t)(param_1+8)*8)!=0) {
-                FUN_14004e2cc(param_1,*(longlong**)(uintptr_t)(*(longlong*)(uintptr_t)param_1+(longlong)*(int*)(uintptr_t)(param_1+8)*8));
+                PECMD_ExecInterpString(param_1,*(longlong**)(uintptr_t)(*(longlong*)(uintptr_t)param_1+(longlong)*(int*)(uintptr_t)(param_1+8)*8));
                 *(undefined8*)(uintptr_t)(*(longlong*)(uintptr_t)param_1+(longlong)*(int*)(uintptr_t)(param_1+8)*8)=0;
             }
             iVar1=*(int*)(uintptr_t)(param_1+8);
@@ -5650,7 +5650,7 @@ int       FUN_140067cf4(long long *a, uint64_t *b) { (void)a;(void)b; return 0; 
 /* @0x14004e2cc size=441 串插值分发: 释放三串任务槽, 槽2 带前导 "*" 时按对象/脚本重分发 (decompiled.c 直移) */
 /* 注: 反编译签名 (LARGE_INTEGER param_1, longlong* param_2) 按本文件既有桩签名 (uint64_t a, void* b) 表达,
    a 即 param_1.QuadPart (上下文地址值), b 即 param_2 (三串槽指针). */
-void FUN_14004e2cc(uint64_t a, void *b)
+void PECMD_ExecInterpString(uint64_t a, void *b)
 {
   longlong *param_2 = (longlong *)b;
   LPCWSTR lpString;

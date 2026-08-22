@@ -1140,5 +1140,6 @@
   "FUN_1400e5248": "PECMD_BuildPopMenuRecursive",
   "FUN_140008b2c": "PECMD_StopDeleteService",
   "FUN_1400171a4": "PECMD_GrantCurrentUserAccess",
-  "FUN_14004c0bc": "PECMD_ProcessScriptBlock"
+  "FUN_14004c0bc": "PECMD_ProcessScriptBlock",
+  "FUN_14004e2cc": "PECMD_ExecInterpString"
 }
