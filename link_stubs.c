@@ -6144,7 +6144,77 @@ undefined8 PECMD_SetVectorSize(longlong *param_1, ulonglong param_2, int param_3
 
 void PECMD_AllocExpandPath(void *a, int64_t *b){ (void)a;(void)b; }
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }
-uint64_t FUN_14002c634(int64_t a, void *b, void *c, int d){ (void)a;(void)b;(void)c;(void)d; return 0; }
+/* ========== FUN_14002c634 @0x14002c634 size=424 ==========
+ * "!=drvload ..." 驱动安装 (decompiled.c @26501 直移; 签名按本文件既定桩保持:
+ * uint64_t FUN_14002c634(int64_t, void *, void *, int)).
+ *   构造 "--wd:*\"<inf>\" !=drvload \"<inf>\"" 命令行 → FUN_14000e26c 执行,
+ *   成功 (退出码 0) 且已登记安装时 PECMD_AppendKeyIfMissing 记录,
+ *   末尾 FUN_140025f10 提示 "DrvLoad安装驱动【(%s)?】[%s]", 返回退出码.
+ * 改名 (tools/rename_map.json): FUN_140063620→PECMD_AllocStrSlot,
+ *   FUN_1400637dc→PECMD_StrDupA, FUN_14006375c→PECMD_AppendWideStr,
+ *   FUN_140063720→PECMD_AllocString, FUN_140063694→PECMD_AllocWStringBuffer,
+ *   FUN_140019da8→PECMD_AppendKeyIfMissing;
+ * 保持原名: FUN_14000e26c / FUN_140025f10 / FUN_14005b104 (link_stubs 桩).
+ * 取舍: 反编译 "--wd:*\"" 为 ANSI 字面量 (LPCSTR), 而项目 PECMD_StrDupA 声明
+ *   LPCWSTR → (LPCWSTR) 强转保原值 (桩 no-op, 无运行时影响);
+ *   DAT_14013d130 (脚本结构) 按本文件既有符号引用, DAT_14011c638 (默认命令串
+ *   缓存) 同理; _snwprintf 第 3 参按本文件约定 (const WCHAR *) 强转.
+ */
+extern void PECMD_AppendKeyIfMissing(int64_t obj, LPCWSTR key, int len); /* @0x140019da8 (core_b1_remaining.c) */
+
+uint64_t FUN_14002c634(int64_t a, void *b, void *c, int d)
+{
+  LPCWSTR param_2;
+  LPCWSTR param_3;
+  int param_4;
+  int iVar1;
+  DWORD DVar2;
+  LPCWSTR pWVar3;
+  uint16_t local_res8[4];
+  FILETIME local_38;
+  WCHAR *local_30;
+  WCHAR *local_28[2];
+
+  param_2 = (LPCWSTR)b;
+  param_3 = (LPCWSTR)c;
+  param_4 = d;
+  local_30 = (WCHAR *)0;
+  if (*(char *)(a + 0x157) == '\0') {
+    PECMD_AllocStrSlot(&local_30);
+    PECMD_StrDupA(&local_30, (LPCWSTR)"--wd:*\"", (int64_t)-1, (int64_t)-1);
+    PECMD_AppendWideStr(&local_30, param_2);
+    PECMD_AppendWideStr(&local_30, (LPCWSTR)L"\" ");
+    PECMD_AppendWideStr(&local_30, (LPCWSTR)L"!=drvload \"");
+    PECMD_AppendWideStr(&local_30, param_2);
+    PECMD_AppendWideStr(&local_30, (LPCWSTR)L"\"");
+    iVar1 = lstrlenW(local_30);
+    PECMD_AllocString(&local_30, (int64_t)iVar1 + 5);
+    local_38.dwLowDateTime = 0;
+    local_res8[0] = 0;
+    FUN_14000e26c((uint64_t)(uintptr_t)&DAT_14013d130, (uint64_t)(uintptr_t)local_30,
+                  (uint64_t)(uintptr_t)&DAT_14013d130, (uint64_t)(uintptr_t)local_res8, 0,
+                  (uint64_t)(uintptr_t)&local_38, 0, 0);
+    if ((*(long long *)(a + 0x110) != 0) && (local_38.dwLowDateTime == 0)) {
+      PECMD_AppendKeyIfMissing(a, param_3, param_4);
+    }
+    PECMD_AllocWStringBuffer(local_28, 0x2800);
+    pWVar3 = (WCHAR *)DAT_14011c638;
+    if (param_3 != (LPCWSTR)0) {
+      pWVar3 = param_3;
+    }
+    _snwprintf(local_28[0], 0x27ff, (const WCHAR *)L"DrvLoad安装驱动【(%s)?】[%s]", pWVar3,
+               param_2);
+    FUN_140025f10(a + 8, local_28[0], local_38.dwLowDateTime, (pthreadmbcinfo)0x1100,
+                  (pthreadmbcinfo)0, (long long *)0);
+    FUN_14005b104((long long *)local_28);
+    DVar2 = local_38.dwLowDateTime;
+    FUN_14005b104((long long *)&local_30);
+  }
+  else {
+    DVar2 = 0;
+  }
+  return (uint64_t)DVar2;
+}
 /* ========== PECMD_ToSysCopyFiles @ 14002b9ec size=1625 ==========
  * ToSys 复制到系统目录 worker (decompiled.c 直移):
  *   展开源路径 → 构造 INF / DRIVERS / SYSTEM32 三目标目录 (param_1+0x168 自定义基准或 %SystemRoot%),
