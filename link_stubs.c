@@ -526,6 +526,8 @@ uint64_t    FUN_14006042c(void);
 uint64_t    PECMD_LoadNtdllApis(void);
 LPWSTR      StrRChrW(const WCHAR *, const WCHAR *, WCHAR);
 uint64_t    thunk_FUN_1400f429c(void *, short);
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 (真实体 core_thread.c) */
+void        FUN_14005b0d4(long long *param_1);               /* @0x14005b0d4 串槽释放 (桩见文件后部) */
 /* ---- wave-7 (P4 [240:288]) 内部依赖前置声明 (真实体见文件后部 wave-7 节) ---- */
 int         FUN_140067cf4(long long *, uint64_t *);   /* @0x140067cf4 数值解析包装 */
 void        PECMD_InitContainerFields(uint32_t *);                 /* @0x1400706b4 控件表初始化 */
@@ -3054,6 +3056,7 @@ uint16_t *FUN_1400702d4(uint16_t **out, const uint16_t *src, int64_t len) { (voi
 int64_t *FUN_1400702f0(int64_t *a, char *b, uint64_t c) { (void)a;(void)b;(void)c; return a; }
 int64_t *PECMD_AssignString(int64_t *param_1, const uint16_t *param_2) { (void)param_1;(void)param_2; return (int64_t *)0; }
 void FUN_1400703e4(long long *a, const WCHAR *b) { (void)a;(void)b; }
+void FUN_14005b0d4(long long *a) { (void)a; }   /* @0x14005b0d4 串槽释放 (leaf stub), 原体见 decompiled.c:53617 */
 uint64_t PECMD_ParsePrefixColon(void) { return 0; }
 void FUN_140077358(void) { return; }
 /* PECMD_ParseResourceStringRef — 解析 "路径#索引" 形式的资源串引用: 定位 '#' 与数字索引并返回其
@@ -6576,7 +6579,253 @@ void PECMD_LazyLoadProc(const char *name, const char *dll, longlong **slot, long
 }
 
 void *FUN_1400b3d0c(const unsigned short *a, longlong *b, longlong c, longlong d, unsigned int *e, undefined8 *f, int g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; return (void*)0; } /* 位图绘制 (leaf stub) */
-void  FUN_1400f2384(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; } /* 命令注册 (leaf stub) */
+/* @0x1400f2384 size=1378 命令注册/反注册表维护 (decompiled.c 直移)
+ * 签名保持原桩: (longlong a=param_1 对象, const unsigned short *b=param_2 命令串,
+ *   longlong *c=param_3 扩展接收器, longlong d=param_4 命令值, int e=param_5 注册参数,
+ *   int f=param_6 标志(ushort))
+ * 取舍(歧义自决):
+ *  - CONCAT71(extraout_var,bVarX) 为 Ghidra 寄存器拼接残留, 按既定模式(core_b3r_g3.c)归一化为
+ *    底层 bool 判断 (FUN_140067d20 即返回 0/1, 反汇编确认调用后直接 test eax)。
+ *  - iVar5 = FUN_1400701f8(...) : rename_map 目标 PECMD_ParseNumSkipChar_01f8 为 void 桩
+ *    (core_b3b.c), 会丢失该调用点必需的成功标志 — 反汇编证明 FUN_1400701f8 尾部只动 rdx/rbx,
+ *    eax 保留内层 FUN_140067d20 的解析结果被调用方直接 test。故按二进制语义内联复刻
+ *    (FUN_140067d20 + 未到串尾再跳一字), 不复用 void 桩。
+ *  - L'￐'(U+FFD0) 写为 0xffd0 (即 (ushort)(WVar1-0x30) 的环回写法)。
+ *  - 返回类型保持原桩 void (decompiled 返回 iVar18: 0 成功 / 0x80070057 E_INVALIDARG 失败;
+ *    本文件唯一调用方行 6694 忽略返回值)。
+ */
+void  FUN_1400f2384(longlong a, const unsigned short *b, longlong *c, longlong d, int e, int f)
+{
+  WCHAR WVar1;
+  bool bVar2;
+  WCHAR *pWVar3;
+  bool bVar4;
+  int iVar5;
+  undefined8 uVar6;
+  ushort *puVar7;
+  undefined2 *puVar8;
+  ushort uVar9;
+  int iVar10;
+  LPCWSTR pWVar11;
+  longlong lVar12;
+  longlong lVar13;
+  ushort uVar14;
+  longlong lVar15;
+  char cVar16;
+  int iVar17;
+  int iVar18;
+  int local_res8 [2];
+  LPCWSTR local_res10;
+  WCHAR *local_58;
+  WCHAR *local_50;
+  WCHAR *local_48;
+  longlong local_40;
+
+  iVar10 = 0;
+  iVar18 = 0;
+  lVar13 = *(longlong *)(a + 8);
+  iVar5 = 0;
+  local_40 = 0;
+  cVar16 = '\0';
+  bVar2 = false;
+  local_res10 = b;
+  uVar14 = (ushort)f;
+  if (e < 1) {
+    for (; (WVar1 = *local_res10, WVar1 != L'\0' && (WVar1 != L':')); local_res10 = local_res10 + 1)
+    {
+      if (WVar1 == L'%') goto LAB_1400f240b;
+    }
+    if (*local_res10 == L'%') {
+LAB_1400f240b:
+      if (((local_res10[1] == L'&') && (local_res10[2] == L':')) ||
+         ((*(char *)((longlong)c + 0xd) != '\0' && (local_res10[1] == L':')))) {
+        for (pWVar11 = local_res10 + 2; (WVar1 = *pWVar11) != L'\0'; pWVar11 = pWVar11 + 1) {
+          if (WVar1 == L'%') goto LAB_1400f2459;
+          if ((WVar1 == L'=') || (((8 < (ushort)WVar1) && ((ushort)WVar1 < 0xe)) || (WVar1 == L' ')))
+             break;
+        }
+        if (*pWVar11 == L'%') {
+LAB_1400f2459:
+          local_res10 = pWVar11 + 1;
+        }
+      }
+    }
+    thunk_FUN_1400f429c(&local_res10,0x3a);
+    FUN_1400702d4((uint16_t **)&local_48,b,
+                  (longlong)(int)(((longlong)local_res10 - (longlong)b) >> 1));
+    PECMD_AllocStrSlot((uint16_t **)&local_50);
+    local_58 = local_48;
+    PECMD_ExpandVarDispatch(c,local_48,&local_50,0,1);
+    local_58 = local_50;
+    PECMD_SkipLeadingControlChars((long long *)&local_58);
+    if (*local_res10 == L'\0') {
+      if (*local_58 == L'$') goto LAB_1400f2511;
+    }
+    else {
+      local_res10 = local_res10 + 1;
+      PECMD_SkipLeadingControlChars((long long *)&local_res10);
+LAB_1400f2511:
+      WVar1 = *local_58;
+      uVar14 = (ushort)f;
+      while (((WVar1 != L'\0' && (WVar1 != L'#')) && (9 < (ushort)(WVar1 + 0xffd0)))) {
+        if (WVar1 == L'_') {
+          uVar14 = 2;
+        }
+        else if (WVar1 == L'$') {
+          uVar14 = 5;
+        }
+        else if (WVar1 == L'*') {
+          cVar16 = '\x10';
+        }
+        else {
+          if (WVar1 != L'+') break;
+          uVar14 = 0x80;
+        }
+        local_58 = local_58 + 1;
+        WVar1 = *local_58;
+      }
+      local_res8[0] = 0;
+      uVar14 = uVar14 | (short)cVar16;
+      iVar18 = 0;
+      if (*local_58 == L'#') {
+        local_58 = local_58 + 1;
+        iVar18 = 0x5000;
+      }
+      iVar17 = 0x111;
+      uVar6 = FUN_14005c788("COMMAND",(ushort *)local_58,7);
+      if ((char)uVar6 == '\0') {
+        uVar6 = FUN_14005c788("NOTIFY",(ushort *)local_58,6);
+        if ((char)uVar6 != '\0') {
+          uVar9 = 0x200;
+          iVar17 = 0x4e;
+          local_58 = local_58 + 6;
+          goto LAB_1400f260b;
+        }
+        bVar4 = FUN_140067d20((long long *)&local_58,&e);
+        iVar5 = 0;
+        if (!bVar4) goto LAB_1400f271a;
+LAB_1400f270c:
+        e = e + iVar18;
+        if (0 < e) {
+          FUN_14005b104((longlong *)&local_50);
+          FUN_14005b104((longlong *)&local_48);
+          goto LAB_1400f277d;
+        }
+      }
+      else {
+        uVar9 = 0x100;
+        local_58 = local_58 + 7;
+LAB_1400f260b:
+        e = iVar17;
+        bVar4 = bVar2;
+        if (*local_58 == L'=') {
+          uVar14 = uVar14 | uVar9;
+          bVar4 = true;
+          pWVar3 = local_58 + 1;
+          if (local_58[1] == L'#') {
+            iVar18 = 0x5000;
+            pWVar3 = local_58 + 2;
+          }
+          local_58 = pWVar3;
+          FUN_140067d20((long long *)&local_58,&e);
+        }
+        if (*local_58 == L':') {
+          iVar5 = iVar10;
+          if (!bVar4) {
+            e = iVar17;
+            iVar5 = 0;
+          }
+          goto LAB_1400f270c;
+        }
+        if (*local_58 == L'#') {
+          local_58 = local_58 + 1;
+          /* 原 iVar5 = FUN_1400701f8(&local_58,local_res8): 按二进制语义内联
+           * (解析成功标志=eax 传递; 尾部未到串尾再跳一字), 见文件头取舍注释 */
+          iVar5 = FUN_140067d20((long long *)&local_58,local_res8);
+          if (*local_58 != 0) local_58 = local_58 + 1;
+          if (0 < iVar5) {
+            local_40 = (longlong)local_res8[0];
+            uVar14 = uVar14 | 0x20;
+          }
+          bVar4 = FUN_140067d20((long long *)&local_58,local_res8);
+          iVar5 = 0;
+          if (bVar4) {
+            uVar14 = uVar14 | 0x40;
+            iVar5 = local_res8[0];
+          }
+          if ((uVar14 & 0x60) != 0) goto LAB_1400f270c;
+        }
+      }
+LAB_1400f271a:
+      iVar18 = -0x7ff8ffa9;
+    }
+    FUN_14005b104((longlong *)&local_50);
+    FUN_14005b104((longlong *)&local_48);
+  }
+  else {
+LAB_1400f277d:
+    lVar12 = local_40;
+    iVar18 = *(int *)(a + 0x10);
+    if (0 < iVar18) {
+      puVar7 = (ushort *)(lVar13 + 0x18);
+      iVar10 = 0;
+      do {
+        if (((e == *(int *)(puVar7 + -8)) && (d == *(longlong *)(puVar7 + -0xc))) &&
+           ((uVar14 == *puVar7 &&
+            ((local_40 == *(longlong *)(puVar7 + 4) && (iVar5 == *(int *)(puVar7 + 2)))))))
+        goto LAB_1400f27cc;
+        iVar10 = iVar10 + 1;
+        puVar7 = puVar7 + 0x14;
+      } while (iVar10 < iVar18);
+    }
+    if (*local_res10 != L'*') {
+      bVar2 = true;
+LAB_1400f27cc:
+      if (*local_res10 != L'*') {
+        if (bVar2) {
+          PECMD_GrowByteBuffer((void **)(a + 8),(longlong)(iVar18 + 1) * 0x28);
+          iVar10 = *(int *)(a + 0x10);
+          lVar13 = *(longlong *)(a + 8);
+          *(undefined8 *)(lVar13 + (longlong)iVar10 * 0x28) = 0;
+          *(undefined4 *)(lVar13 + 8 + (longlong)*(int *)(a + 0x10) * 0x28) = 0;
+          *(undefined2 *)(lVar13 + 0x18 + (longlong)*(int *)(a + 0x10) * 0x28) = 0;
+          *(undefined8 *)(lVar13 + 0x10 + (longlong)*(int *)(a + 0x10) * 0x28) = 0;
+        }
+        lVar15 = (longlong)iVar10;
+        *(longlong *)(lVar13 + lVar15 * 0x28) = d;
+        *(longlong *)(lVar13 + 0x20 + lVar15 * 0x28) = lVar12;
+        *(int *)(lVar13 + 0x1c + lVar15 * 0x28) = iVar5;
+        *(ushort *)(lVar13 + 0x18 + lVar15 * 0x28) = uVar14;
+        *(int *)(lVar13 + 8 + lVar15 * 0x28) = e;
+        FUN_1400703e4((long long *)(lVar13 + 0x10 + lVar15 * 0x28),local_res10);
+        if (bVar2) {
+          *(int *)(a + 0x10) = *(int *)(a + 0x10) + 1;
+        }
+      }
+      else {
+        lVar15 = (longlong)iVar10;
+        FUN_14005b0d4((long long *)(lVar13 + 0x10 + lVar15 * 0x28));
+        lVar12 = (longlong)(*(int *)(a + 0x10) + -1);
+        if (lVar15 < lVar12) {
+          lVar12 = lVar12 - lVar15;
+          puVar8 = (undefined2 *)(lVar13 + 0x40 + lVar15 * 0x28);
+          do {
+            *(undefined8 *)(puVar8 + -0x20) = *(undefined8 *)(puVar8 + -0xc);
+            *(undefined4 *)(puVar8 + -0x1c) = *(undefined4 *)(puVar8 + -8);
+            lVar12 = lVar12 + -1;
+            puVar8[-0x14] = *puVar8;
+            *(undefined8 *)(puVar8 + -0x18) = *(undefined8 *)(puVar8 + -4);
+            puVar8 = puVar8 + 0x14;
+          } while (lVar12 != 0);
+        }
+        *(undefined8 *)(lVar13 + -0x18 + (longlong)*(int *)(a + 0x10) * 0x28) = 0;
+        *(int *)(a + 0x10) = *(int *)(a + 0x10) + -1;
+      }
+    }
+    iVar18 = 0;
+  }
+  return;   /* decompiled: return iVar18 (0 / 0x80070057); 桩签名 void 保留 */
+}
 
 /* @0x1400e4f14 创建菜单项及可选图标位图 (decompiled.c 直移) */
 void PECMD_MenuItemWithIcon(HMENU param_1,UINT param_2,UINT_PTR param_3,byte *param_4)
