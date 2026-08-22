@@ -633,7 +633,7 @@ int EnumWindows(WNDENUMPROC cb, LPARAM lp) { (void)cb;(void)lp; return 0; }
 void ExitProcess(uint32_t code) { (void)code; }
 uint64_t ExitWindowsEx(void) { return 0; }
 uint64_t ExitWindowsEx_exref(void) { return 0; }
-uint64_t ExpandEnvironmentStringsW(LPCWSTR src, LPWSTR dst, DWORD n) { (void)src;(void)dst;(void)n; return 0; }   /* arity 修正 0->3 (FUN_14002b9ec 直移) */
+uint64_t ExpandEnvironmentStringsW(LPCWSTR src, LPWSTR dst, DWORD n) { (void)src;(void)dst;(void)n; return 0; }   /* arity 修正 0->3 (PECMD_ToSysCopyFiles 直移) */
 uint64_t ExtTextOutW(void) { return 0; }
 uint64_t PECMD_RunCommandLine(void) { return 0; }
 /* @0x140006554 size=— 拖放文件枚举(直移) */
@@ -3277,8 +3277,8 @@ longlong PECMD_ModalMsgPumpEx(longlong *param_1,ulonglong param_2)
 uint64_t FUN_1400f21a8(void) { return 0; }
 uint64_t FUN_140101e70(void) { return 0; }	/* CRT 标准库内联 */
 uint64_t FillRect(void) { return 0; }
-uint64_t FindClose(HANDLE h) { (void)h; return 0; }                       /* arity 修正 0->1 (FUN_14002b9ec 直移) */
-uint64_t FindNextFileW(HANDLE h, void *fd) { (void)h;(void)fd; return 0; } /* arity 修正 0->2 (FUN_14002b9ec 直移) */
+uint64_t FindClose(HANDLE h) { (void)h; return 0; }                       /* arity 修正 0->1 (PECMD_ToSysCopyFiles 直移) */
+uint64_t FindNextFileW(HANDLE h, void *fd) { (void)h;(void)fd; return 0; } /* arity 修正 0->2 (PECMD_ToSysCopyFiles 直移) */
 uint64_t FindResourceW(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return 1; }
 uint64_t FindWindowA(void) { return 0; }
 uint64_t FindWindowExA(void) { return 0; }
@@ -4476,7 +4476,7 @@ undefined8 PECMD_SetVectorSize(longlong *param_1, ulonglong param_2, int param_3
 void PECMD_AllocExpandPath(void *a, int64_t *b){ (void)a;(void)b; }
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_14002c634(int64_t a, void *b, void *c, int d){ (void)a;(void)b;(void)c;(void)d; return 0; }
-/* ========== FUN_14002b9ec @ 14002b9ec size=1625 ==========
+/* ========== PECMD_ToSysCopyFiles @ 14002b9ec size=1625 ==========
  * ToSys 复制到系统目录 worker (decompiled.c 直移):
  *   展开源路径 → 构造 INF / DRIVERS / SYSTEM32 三目标目录 (param_1+0x168 自定义基准或 %SystemRoot%),
  *   CopyFileW 主文件 (param_3&0x30000 时 PECMD_PatchInfDirectives),
@@ -4493,7 +4493,7 @@ extern void    PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *
 extern void    PECMD_PatchInfDirectives(LPCWSTR path);                                /* @0x140021144 (core_b2d.c) */
 extern int     _wcsicmp(const WCHAR *a, const WCHAR *b);                              /* @0x140103244 (core_b9_remaining.c 桩) */
 
-DWORD FUN_14002b9ec(longlong param_1, LPCWSTR param_2, uint param_3)
+DWORD PECMD_ToSysCopyFiles(longlong param_1, LPCWSTR param_2, uint param_3)
 {
   LPCWSTR lpExistingFileName;
   LPCWSTR lpDst;

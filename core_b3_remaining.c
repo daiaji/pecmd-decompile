@@ -3726,7 +3726,7 @@ LAB_14004ae28:
                                         if ((uVar17 == 0) || (bVar3)) break;
                                     }
                                 } else {
-                                    FUN_14002b9ec((int64_t)(uintptr_t)p_Var40, pWVar55, uVar13);
+                                    PECMD_ToSysCopyFiles((int64_t)(uintptr_t)p_Var40, pWVar55, uVar13);
                                 }
                             }
                             goto LAB_14004ad55;
@@ -3961,7 +3961,7 @@ LAB_14004badb:
                     } while (TRUE);
                 }
 LAB_14004bb0a:
-                FUN_14002b9ec((int64_t)(uintptr_t)p_Var40, local_17c0, (uint32_t)(uint16_t)WVar30 << 0x10);
+                PECMD_ToSysCopyFiles((int64_t)(uintptr_t)p_Var40, local_17c0, (uint32_t)(uint16_t)WVar30 << 0x10);
             } else {
                 if ((char)p_Var40->SectionName[0x9c] != 0) goto LAB_14004bb0a;
                 if (*(char *)((char *)p_Var40->SectionName + 0x137) == 0) {
