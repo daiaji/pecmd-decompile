@@ -586,7 +586,7 @@ uint64_t CreateBitmap(void) { return 0; }
 uint64_t CreateCompatibleBitmap(void) { return 0; }
 uint64_t CreateCompatibleDC(void) { return 0; }
 uint64_t CreateDialogParamW(void) { return 0; }
-uint64_t CreateDirectoryW(void) { return 0; }
+uint64_t CreateDirectoryW(const uint16_t *path, void *sa) { (void)path;(void)sa; return 0; }   /* arity 修正 0->2 (FUN_14002cc30 恢复体: 带参调用, 与 core_*.c 2 参调用一致) */
 HRGN CreateEllipticRgn(int a, int b, int c, int d) { (void)a;(void)b;(void)c;(void)d; return (HRGN)0; }
 void *CreateEventW(void *sa, int manual, int init, const unsigned short *name) { (void)sa;(void)manual;(void)init;(void)name; return (void*)0; }
 uint64_t CreateFileMappingA(void) { return 0; }
@@ -1796,7 +1796,335 @@ undefined8 *FUN_14001877C(longlong *ps, int count) { (void)ps;(void)count; retur
 COORD GetLargestConsoleWindowSize(void *h) { (void)h; COORD c = { 0, 0 }; return c; }
 int SetConsoleWindowInfo(void *h, int b, void *r) { (void)h;(void)b;(void)r; return 1; }
 uint64_t FUN_14002ca30(void) { return 0; }
-uint64_t FUN_14002cc30(void *a, const uint16_t *b, longlong c, longlong d, const uint16_t *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }   /* arity 修正 0->5 (PECMD_ScriptMainEntry 恢复体) */
+uint64_t FUN_14002ca80(void) { return 0; }   /* 新增最小桩 (FUN_14002cc30 恢复体: 作线程入口指针) */
+/* ========== FUN_14002cc30 @ 14002cc30  size=1803 — 环境变量设置命令 (SETENV 语义) ==========
+ * decompiled.c @26728 忠实移植: '^' 前缀跳过 → 缓冲分配 (lstrlenW+0x400) → '$'(系统)/'#'(用户)
+ * 作用域前缀解析 → 星号/'*' 与 '-' 修饰 (local_78) → 空命令时按 param_4==0/0x23 走重画标志
+ * (local_88=0x10), 否则枚举 8 个特殊目录 (PTR_u__Favorites_14011e6f8) 以 "%s="(DAT 真值
+ * 0x1401210e8) 构造 "*<名>=<路径>", CSIDL==0x1a (APPDATA) 时补 "\\Microsoft\\Internet
+ * Explorer\\Quick Launch" 并建目录, 写 "HKCU\Environment\" 槽与 &名=路径 变量, 递归本函数 →
+ * param_5 修饰串解析 (~ / ~~ / ~. / ~* 等修饰, * , -env/-raw/-ex) → '=' 拆分 → 变量名展开
+ * (PECMD_ExpandVarsRecursive / PECMD_ExpandCommandLine) → 按 bVar15 模式经 FUN_140084a5c/
+ * FUN_14008569c 重写值 → SYSTEM\...\Environment (local_74=0x24) / HKCU\Environment
+ * (local_70=0x23) 注册表写入 (RegDeleteValue/RegSetValueWithOpen) → SetEnvironmentVariableW →
+ * 收尾: local_78=='-' → 起线程 FUN_14002ca80; 否则非 '*'-前缀且重画标志 → FUN_14002ca30 / g_afterMain.
+ *
+ * 关键取舍:
+ *  - CONCAT22(x._2_2_,v) 等价为 (x&0xffff0000u)|v; Ghidra 栈地址垃圾 (local_74=返回&0xffff0000,
+ *    uVar11=&local_38&0xffffffffffff0000) 按 0 建模 — 高位从未被读, 仅 (short)x 低位参与判定,
+ *    行为逐点等价.
+ *  - PECMD_AllocWStringBuffer 为 void 桩 → 反编译 local_74=返回值 按 0.
+ *  - PECMD_CrtShim 为 void SKIP 桩 → 反编译 iVar5=返回值(写字符数) 按格式 "%s=" 实算
+ *    wcslen(name+2)+1, 使 SHGetSpecialFolderPathW 续写偏移与原等价.
+ *  - 特殊目录表二进制布局每 16B=[LPCWSTR name][int CSIDL][int pad], 代码以 (p-8) 读 CSIDL
+ *    (即上一槽); pe_data_extract 真值配对: &Favorites=0x06 &Desktop=0x10 &StartMenu=0x0b
+ *    &Startup=0x07 &Programs=0x02 &SendTo=0x09 &Personal=0x05 &QuickLaunch=0x1a(APPDATA).
+ *  - 修饰串循环中 Ghidra 冗余的 if(*pWVar8=='~') 重查为恒真, 去冗余保持同为真.
+ *  - FUN_14008569c 无实现 → 新增签名空桩 (@0x14008569c size=326).
+ * 签名保持桩 (arity 修正 0->5); 调用点: PECMD_ScriptMainEntry 恢复体 @6900 (a, DAT_14011c638,
+ * 0, 0x24, 0) / core_b2d.c FUN_14002E3D4 (ctx, local_178, 0, 0x24, 0). */
+typedef struct { const uint16_t *name; int csidl; } EC_FavEntry;
+static const EC_FavEntry EC_favTable[8] = {
+    { (const uint16_t *)L"&Favorites", 0x06 }, { (const uint16_t *)L"&Desktop", 0x10 }, { (const uint16_t *)L"&StartMenu", 0x0b },
+    { (const uint16_t *)L"&Startup", 0x07 },  { (const uint16_t *)L"&Programs", 0x02 }, { (const uint16_t *)L"&SendTo", 0x09 },
+    { (const uint16_t *)L"&Personal", 0x05 }, { (const uint16_t *)L"&QuickLaunch", 0x1a },
+};
+extern uint16_t *wcscat(uint16_t *dest, const uint16_t *src);
+extern uint32_t g_afterMain;                       /* DAT_14013ccc8 (core_globals.c) */
+extern uint8_t  g_flagCCB3;                        /* DAT_14013ccb3 (core_globals.c) */
+extern DWORD    g_dwC96C;                          /* DAT_14013c96c (core_globals.c) */
+extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);      /* @0x14001e19c (core_b1_remaining.c) */
+extern LPCWSTR  FUN_140084a5c(int64_t *, int64_t *, uint16_t *, int64_t *);  /* @0x140084a5c SKIP 桩 (core_b3_remaining.c) */
+extern void    *PECMD_CheckVarMultiLevelRef(int64_t *, LPCWSTR);             /* @0x1400681ec (core_b3_remaining.c) */
+extern uint64_t *FUN_14008569c(uint64_t *, uint64_t *, uint8_t);            /* @0x14008569c SKIP 桩 (本函数后部定义) */
+extern uint64_t  FUN_1400c13f8(uint64_t, uint64_t, uint64_t);               /* @0x1400c13f8 (后部定义) */
+extern HANDLE    FUN_14005b228(LPTHREAD_START_ROUTINE, LPVOID, size_t, DWORD, LPDWORD, LPSECURITY_ATTRIBUTES);  /* @0x14005b228 (后部定义) */
+extern unsigned long PECMD_RegSetValueWithOpen(void *, const unsigned short *, const unsigned short *,
+                                               unsigned long, unsigned char *, unsigned long);   /* @0x14005c5a0 (后部定义) */
+extern DWORD PECMD_RegDeleteValue(HKEY, LPCWSTR, LPCWSTR);                  /* @0x14005c61c (后部定义) */
+extern long long PECMD_ExpandVarsRecursive(long long *, WCHAR *, void *, int, uint8_t);          /* @0x14007bda8 (后部定义) */
+extern uint64_t SHGetSpecialFolderPathW(HWND, WCHAR *, int, BOOL);          /* @后部定义 */
+uint64_t FUN_14002cc30(void *param_1, const uint16_t *param_2, longlong param_3, longlong param_4,
+                       const uint16_t *param_5)
+{
+    WCHAR *pwVar1;          /* 特殊目录路径续写位置 */
+    bool bVar2;             /* -raw */
+    bool bVar3;             /* -ex */
+    LPCWSTR lpName;         /* 展开后变量名 */
+    byte bVar4;             /* 修饰标志携带 */
+    int iVar5;
+    BOOL BVar6;
+    uint uVar7;
+    WCHAR *pWVar8;          /* 修饰串游标 */
+    longlong *plVar9;       /* 串槽 */
+    ulonglong uVar11;       /* 返回值 */
+    WCHAR WVar12;
+    longlong lVar13;        /* 特殊目录循环计数 */
+    byte bVar14;            /* -env 标志 (0x40) */
+    byte bVar15;            /* ~ 与 * 修饰位 (1=~,2=~~,4=*,8=~.,9=~*) */
+    DWORD DVar16;
+    pthreadmbcinfo ptVar18;
+    byte bVar19;
+    LPCWSTR local_res10;    /* 命令串游标 (跳过 $/# 与空白、'*'/'-' 修饰后) */
+    char local_88;          /* param_3!=0 标志 / 0x10 重画 */
+    LPWSTR local_80;        /* '=' 后值串 / 重写结果 */
+    WCHAR local_78;         /* '*' 或 '-' 前缀 */
+    uint local_74;          /* 系统作用域标记 0x24 (低16位参与判定) */
+    undefined4 local_70;    /* 用户作用域标记 0x23 */
+    HKEY local_68;          /* "HKCU\Environment\" 串槽 (以 HKEY 型承载) */
+    LPCWSTR local_60;       /* 变量名展开结果 */
+    ulonglong local_58;
+    WCHAR *local_50;        /* 缓冲索引 1: "*<名>=路径" 起点 */
+    longlong local_48;      /* 重写串槽 */
+    LPWSTR local_40;        /* 缓冲首址 (递归用, 可写: *local_40=L'*') */
+    WCHAR *local_38;        /* 大缓冲 (PECMD_AllocWStringBuffer) */
+    longlong local_30[3];   /* FUN_140084a5c 长度槽 (local_30[0]/[1] 使用, [2] 未用) */
+    const EC_FavEntry *ppuVar17;
+
+    if (*param_2 == L'^') {
+        param_2 = param_2 + 1;
+    }
+    iVar5 = lstrlenW(param_2);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_38, (longlong)iVar5 + 0x400);   /* 反编译 local_74=返回值, 桩 void → 0 */
+    ptVar18 = (pthreadmbcinfo)0x24;
+    local_74 = 0;              /* Ghidra: = 返回 & 0xffff0000 (栈噪声, 等效 0) */
+    local_40 = local_38;
+    local_78 = L'\0';
+    local_70 = 0;              /* Ghidra: = (uint32)(&local_38 & 0xffffffffffff0000), 仅低16位参与判定 */
+    if (param_3 == 0x24) {
+        local_74 = 0x24;
+    }
+    else if (param_3 == 0x23) {
+        local_70 = 0x23;
+    }
+    if ((*param_2 == L'$') && ((uint16_t)local_74 == 0)) {
+        local_74 = (local_74 & 0xffff0000u) | 0x24;
+LAB_14002ccee:
+        local_res10 = param_2 + 1;
+    }
+    else {
+        local_res10 = param_2;
+        if ((*param_2 == L'#') && ((uint16_t)local_70 == 0)) {
+            local_70 = (local_70 & 0xffff0000u) | 0x23;
+            goto LAB_14002ccee;
+        }
+    }
+    if (*local_res10 == L' ') {
+        local_res10 = local_res10 + 1;
+    }
+    if ((*local_res10 == L'*') || (*local_res10 == L'-')) {
+        local_78 = *local_res10;
+        local_res10 = local_res10 + 1;
+    }
+    local_88 = (char)param_3 != '\0';
+    local_58 = 0;
+    PECMD_AllocStrSlot((uint16_t **)&local_68);
+    if (*local_res10 == L'\0') {
+        if ((param_4 == 0) || (param_4 == 0x23)) {
+            local_88 = '\x10';
+        }
+        else {
+            local_50 = local_38 + 1;
+            *local_40 = L'*';
+            lVar13 = 8;
+            ppuVar17 = EC_favTable;
+            do {
+                pwVar1 = local_50;
+                /* 格式 "%s=" @0x1401210e8 (DAT 真值); PECMD_CrtShim 为 void SKIP 桩,
+                   反编译 iVar5=返回值(写字符数) 按格式实算 = wcslen(name+2)+1 */
+                PECMD_CrtShim(local_50, (size_t)0x1401210e8,
+                              (void *)(uintptr_t)((const char *)(ppuVar17->name) + 2),
+                              (void *)ptVar18);
+                iVar5 = 1;
+                {
+                    const uint16_t *q = (const uint16_t *)((uintptr_t)(ppuVar17->name) + 2);
+                    while (*q) { iVar5++; q++; }
+                }
+                ptVar18 = (pthreadmbcinfo)0x1;
+                pwVar1 = pwVar1 + iVar5;
+                BVar6 = SHGetSpecialFolderPathW((HWND)0x0, pwVar1, ppuVar17->csidl, 1);
+                if (BVar6 != 0) {
+                    if (ppuVar17->csidl == 0x1a) {
+                        wcscat(pwVar1, (const uint16_t *)L"\\Microsoft\\Internet Explorer\\Quick Launch");
+                        PECMD_CreateDirectoryTree((LPCWSTR)pwVar1);
+                        CreateDirectoryW(pwVar1, (LPSECURITY_ATTRIBUTES)0x0);
+                    }
+                    PECMD_AssignString((int64_t *)&local_68, (const uint16_t *)L"HKCU\\Environment\\");
+                    PECMD_AppendWideStr(&local_68, local_50);
+                    FUN_1400c13f8((uint64_t)(uintptr_t)&DAT_14013d130, (uint64_t)(uintptr_t)local_68,
+                                  (uint64_t)'\x01');
+                    PECMD_SetVariable((void *)&DAT_14013d130, (const WCHAR *)ppuVar17->name, pwVar1);
+                    ptVar18 = (pthreadmbcinfo)0x0;
+                    FUN_14002cc30(param_1, local_40, param_3, 0, (const uint16_t *)0);
+                }
+                ppuVar17 = ppuVar17 + 1;
+                lVar13 = lVar13 + -1;
+            } while (lVar13 != 0);
+        }
+    }
+    bVar19 = 0;
+    bVar15 = 0;
+    bVar14 = 0;
+    bVar2 = false;
+    bVar3 = false;
+    if ((param_5 != (const uint16_t *)0) && (pWVar8 = (WCHAR *)param_5, bVar4 = 0, *param_5 != L'\0')) {
+        do {
+            bVar15 = bVar4;
+            bVar19 = bVar14;
+            if (((8 < (uint16_t)*pWVar8) && ((uint16_t)*pWVar8 < 0xe)) || (*pWVar8 == L' ')) break;
+            if (((*pWVar8 != L'.') && (*pWVar8 != L'$')) && (*pWVar8 != L'%')) {
+                if (*pWVar8 == L'*') {
+                    bVar15 = bVar15 | 4;
+                }
+                else {
+                    if (*pWVar8 == L'~') {
+                        if (pWVar8[1] == L'~') {
+                            bVar15 = bVar15 | 2;
+LAB_14002cf1e:
+                            pWVar8 = pWVar8 + 1;
+                            goto LAB_14002cfa8;
+                        }
+                        if (pWVar8[1] == L'.') { bVar15 = bVar15 | 8; goto LAB_14002cf1e; }
+                        if (pWVar8[1] == L'*') { bVar15 = bVar15 | 9; goto LAB_14002cf1e; }
+                        bVar15 = bVar15 | 1;
+                        goto LAB_14002cfa8;
+                    }
+                    if (((*pWVar8 == L'-') && (pWVar8[1] == L'e')) &&
+                        ((pWVar8[2] == L'n') && (pWVar8[3] == L'v'))) {
+                        bVar14 = 0x40;
+LAB_14002cf99:
+                        pWVar8 = pWVar8 + 3;
+                    }
+                    else if (*pWVar8 == L'-') {
+                        if (((pWVar8[1] == L'r') && (pWVar8[2] == L'a')) && (pWVar8[3] == L'w')) {
+                            bVar2 = true;
+                            goto LAB_14002cf99;
+                        }
+                        if (((*pWVar8 == L'-') && (pWVar8[1] == L'e')) && (pWVar8[2] == L'x')) {
+                            bVar3 = true;
+                            pWVar8 = pWVar8 + 2;
+                        }
+                    }
+                }
+            }
+LAB_14002cfa8:
+            pWVar8 = pWVar8 + 1;
+            bVar19 = bVar14;
+            bVar4 = bVar15;
+        } while (*pWVar8 != L'\0');
+        WVar12 = *param_5;
+        if (bVar2) {
+            bVar15 = 0;
+            do {
+                if (((8 < (uint16_t)WVar12) && ((uint16_t)WVar12 < 0xe)) || (WVar12 == L' ')) break;
+                param_5 = param_5 + 1;
+                WVar12 = *param_5;
+            } while (WVar12 != L'\0');
+            PECMD_SkipLeadingControls((uint64_t *)&param_5);
+            local_res10 = param_5;
+        }
+    }
+    pWVar8 = (WCHAR *)param_5;
+    local_80 = StrChrW(local_res10, L'=');
+    if (local_80 != (LPWSTR)0x0) {
+        *local_80 = L'\0';
+        local_80 = local_80 + 1;
+    }
+    local_60 = (LPCWSTR)0x0;
+    if ((*(char *)((uintptr_t)param_1 + 0xda) == '\0') &&
+        ((*(byte *)((uintptr_t)param_1 + 0xd) & 0xf) == 0)) {
+        PECMD_ExpandVarsRecursive((long long *)param_1, (WCHAR *)local_res10, (void *)&local_60, 0, 1);
+    }
+    else {
+        PECMD_ExpandCommandLine((long long *)param_1, (WCHAR *)local_res10, (void *)&local_60, 0, 1);
+    }
+    lpName = local_60;
+    local_48 = 0;
+    local_30[0] = 0;
+    local_30[1] = 0;
+    if (bVar15 == 0) {
+LAB_14002d167:
+        if ((local_80 != (LPCWSTR)0x0) &&
+            (FUN_140084a5c((int64_t *)&local_80, local_30, (uint16_t *)pWVar8, local_30 + 1),
+             local_80 != (LPCWSTR)0x0)) {
+            iVar5 = lstrlenW(local_80);
+            DVar16 = iVar5 * 2;
+            goto LAB_14002d1b0;
+        }
+    }
+    else if (local_80 != (LPCWSTR)0x0) {
+        plVar9 = PECMD_AssignString(&local_48, (const uint16_t *)local_80);
+        local_80 = (LPWSTR)FUN_14008569c((uint64_t *)param_1, (uint64_t *)plVar9, (uint8_t)(bVar19 | bVar15));
+        goto LAB_14002d167;
+    }
+    DVar16 = 0;
+LAB_14002d1b0:
+    uVar11 = local_58;
+    if (*lpName != L'\0') {
+        if ((uint16_t)local_74 != 0) {
+            if (local_80 == (LPCWSTR)0x0) {
+                PECMD_RegDeleteValue((HKEY)0xffffffff80000002,
+                                     (LPCWSTR)L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
+                                     lpName);
+            }
+            else {
+                PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
+                                          (LPCWSTR)L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
+                                          lpName, 1, (BYTE *)local_80, DVar16);
+            }
+        }
+        uVar11 = local_58;
+        if (*lpName != L'\0') {
+            if ((uint16_t)local_70 != 0) {
+                if (local_80 == (LPCWSTR)0x0) {
+                    PECMD_RegDeleteValue((HKEY)0xffffffff80000001, (LPCWSTR)L"Environment", lpName);
+                }
+                else {
+                    PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, (LPCWSTR)L"Environment", lpName, 1,
+                                              (BYTE *)local_80, DVar16);
+                }
+            }
+            uVar11 = local_58;
+            if (*lpName != L'\0') {
+                if (bVar3) {
+                    local_80 = (LPWSTR)PECMD_CheckVarMultiLevelRef((int64_t *)param_1, (LPCWSTR)local_80);
+                }
+                BVar6 = SetEnvironmentVariableW(lpName, local_80);
+                uVar7 = 0;
+                if (BVar6 == 0) {
+                    uVar7 = GetLastError();
+                }
+                uVar11 = (ulonglong)uVar7;
+            }
+        }
+    }
+    if ((local_88 != '\0') && (local_78 != L'*')) {
+        if ((local_78 == L'-') || (g_flagCCB3 == (uint8_t)L'-')) {
+            FUN_14005b228((LPTHREAD_START_ROUTINE)FUN_14002ca80, (LPVOID)0x0, (size_t)0x10000,
+                          (DWORD)0x10000, (LPDWORD)&g_dwC96C, (LPSECURITY_ATTRIBUTES)0x0);
+        }
+        else if ((local_88 == '\x10') || (g_flagCCB3 == '\0')) {
+            FUN_14002ca30();
+        }
+        else {
+            g_afterMain = 1;
+        }
+    }
+    FUN_14005b104((void *)local_30);
+    FUN_14005b104((longlong *)&local_48);
+    FUN_14005b104((longlong *)&local_60);
+    FUN_14005b104((longlong *)&local_68);
+    FUN_14005b104((longlong *)&local_38);
+    return uVar11;
+}
+uint64_t *FUN_14008569c(uint64_t *param_1, uint64_t *param_2, uint8_t param_3)
+{
+    /* @0x14008569c size=326 — SKIP: 按修饰标志 byte param_3 (bVar19|bVar15) 对串槽做
+     * ~ 与 * 修饰重写 (PECMD %...% 值改写, 语义族同 FUN_140084a5c SKIP 桩); 无调用验证点,
+     * 保留签名空桩 (新增符号). */
+    (void)param_1; (void)param_2; (void)param_3;
+    return (uint64_t *)0;
+}
 /* @0x14002e30c size=— 资源串按行拆分入表(直移) */
 void PECMD_LoadResourceLines(void)
 {
@@ -3375,7 +3703,7 @@ unsigned long PECMD_RegSetValueWithOpen(void *k, const unsigned short *a, const 
   }
   return r;
 }
-uint64_t PECMD_RegDeleteValue(void) { return 0; }
+DWORD PECMD_RegDeleteValue(HKEY root, LPCWSTR subkey, LPCWSTR name) { (void)root;(void)subkey;(void)name; return 0; }   /* arity 修正 0->3 (FUN_14002cc30 恢复体带参调用; core_b1_remaining.c extern 同签名) */
 longlong FUN_14005c72c(char *param_1, ushort *param_2, int param_3){
     char cVar1; ushort uVar2; uint uVar3; longlong lVar4;
     lVar4=0;
