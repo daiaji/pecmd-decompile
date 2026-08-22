@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140026338 | FUN_140026338 | PECMD_ScriptInitParse |
 | 0x14003c06c | FUN_14003c06c | PECMD_IndataCopyDirs |
 | 0x1400f2384 | FUN_1400f2384 | PECMD_DeferDialogAction2 |
 | 0x14002b9ec | FUN_14002b9ec | PECMD_ToSysCopyFiles |

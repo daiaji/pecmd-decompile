@@ -1081,8 +1081,8 @@ void PECMD_AutoMountStartup(long long *param_1, LPCWSTR param_2)
 }
 void FUN_140025f10(long long p1, const WCHAR *p2, uint32_t p3, char *p4, char *p5, long long *p6) { (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; }
 /* ============================================================
- * FUN_140026338 @0x140026338 (size=4875) — 命令串重定向/日志输出控制 (decompiled.c 直移)
- *   signature: ulonglong __fastcall FUN_140026338(longlong * param_1, LPCWSTR param_2, pthreadmbcinfo param_3)
+ * PECMD_ScriptInitParse @0x140026338 (size=4875) — 命令串重定向/日志输出控制 (decompiled.c 直移)
+ *   signature: ulonglong __fastcall PECMD_ScriptInitParse(longlong * param_1, LPCWSTR param_2, pthreadmbcinfo param_3)
  *   按现桩签名 (uint64_t/uint64_t/uint64_t) 表达, 内部重绑定为类型化别名.
  * ============================================================ */
 /* ---- 移植前置: 类型 / 全局符号 / 前置声明 ---- */
@@ -1117,7 +1117,7 @@ uint64_t *PECMD_InitStringObj(uint64_t *obj);                              /* co
 int32_t   FUN_14005C7C4(const char *a, const uint16_t *b);                 /* 真实体 core_exec5.c */
 undefined8 *FUN_14001877C(longlong *ps, int count);                        /* 新增最小桩 (定义紧随本函数之后) */
 
-uint64_t FUN_140026338(uint64_t a, uint64_t b, uint64_t c)
+uint64_t PECMD_ScriptInitParse(uint64_t a, uint64_t b, uint64_t c)
 {
   longlong *param_1 = (longlong *)a;
   LPCWSTR param_2 = (LPCWSTR)b;
@@ -1778,7 +1778,7 @@ LAB_140026ff5:
   LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
   return uVar25;
 }
-/* ---- 新增最小桩 (FUN_140026338 体新增引用) ---- */
+/* ---- 新增最小桩 (PECMD_ScriptInitParse 体新增引用) ---- */
 undefined8 *FUN_14001877C(longlong *ps, int count) { (void)ps;(void)count; return (undefined8 *)0; }
 COORD GetLargestConsoleWindowSize(void *h) { (void)h; COORD c = { 0, 0 }; return c; }
 int SetConsoleWindowInfo(void *h, int b, void *r) { (void)h;(void)b;(void)r; return 1; }
@@ -1833,7 +1833,7 @@ longlong   *PECMD_AppendWideStr(void *param_1p, LPCWSTR param_2);
 longlong    PECMD_CloseRestartByName(longlong *param_1, LPCWSTR param_2, longlong param_3, ulonglong param_4);
 uint64_t    PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c);
 uint64_t    FUN_14000e26c(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f, uint64_t g, uint64_t h);
-uint64_t    FUN_140026338(uint64_t a, uint64_t b, uint64_t c);
+uint64_t    PECMD_ScriptInitParse(uint64_t a, uint64_t b, uint64_t c);
 uint64_t    PECMD_SetRegistryOwnerRun(int64_t param_1, char param_2);
 uint64_t    PECMD_WideStrLen(const uint16_t *s);
 uint64_t    PECMD_VarLookup(int64_t *a, const uint16_t *b, int64_t *c, int64_t d, void *e);
@@ -2904,7 +2904,7 @@ LAB_14004cb4c:
         }
         else if (local_158 == 0x53474f4c) {
           local_180.QuadPart = (longlong)
-                        FUN_140026338((uintptr_t)param_1.QuadPart,(uint64_t)(uintptr_t)(LVar11.QuadPart + 8),
+                        PECMD_ScriptInitParse((uintptr_t)param_1.QuadPart,(uint64_t)(uintptr_t)(LVar11.QuadPart + 8),
                                       (uint64_t)(uintptr_t)((pthreadmbcinfo)((ulonglong)(local_188.QuadPart == 0) | (ulonglong)param_5)));
           LVar33.QuadPart = LVar15.QuadPart;
         }
@@ -4139,7 +4139,7 @@ uint64_t Process32NextW(void) { return 0; }
 int PtInRect(const void *r, POINT p) { (void)r;(void)p; return 0; }
 uint64_t QueryDosDeviceW(void) { return 0; }
 uint64_t SetVolumeMountPointW(void) { return 0; }
-uint64_t GetVolumeNameForVolumeMountPointW(void *mount, void *buf, unsigned long n) { (void)mount;(void)buf;(void)n; return 0; }   /* arity 修正 (FUN_140026338 体) */
+uint64_t GetVolumeNameForVolumeMountPointW(void *mount, void *buf, unsigned long n) { (void)mount;(void)buf;(void)n; return 0; }   /* arity 修正 (PECMD_ScriptInitParse 体) */
 uint64_t QueryPerformanceCounter(void) { return 0; }
 uint64_t QueryPerformanceFrequency(void) { return 0; }
 uint64_t RaiseException(void) { return 0; }
@@ -4188,7 +4188,7 @@ int SetEndOfFile(void *h) { (void)h; return 1; }
 int SetEnvironmentVariableW(const WCHAR *n, const WCHAR *v) { (void)n;(void)v; return 0; }
 int SetEvent(void *h) { (void)h; return 0; }
 uint64_t SetFilePointer(void) { return 0; }
-uint64_t SetFilePointerEx(void *h, longlong off, longlong *out, unsigned long method) { (void)h;(void)off;(void)out;(void)method; return 0; }   /* arity 修正 (FUN_140026338 体) */
+uint64_t SetFilePointerEx(void *h, longlong off, longlong *out, unsigned long method) { (void)h;(void)off;(void)out;(void)method; return 0; }   /* arity 修正 (PECMD_ScriptInitParse 体) */
 uint64_t SetFocus(void) { return 0; }
 uint64_t SetForegroundWindow(void *h) { (void)h; return 0; }
 void SetLastError(DWORD e) { (void)e; }

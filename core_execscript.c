@@ -30,7 +30,7 @@
 void PECMD_InitDynamicImports(void);                     /* @0x140017908 初始化 */
 int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词比较+推进 (非0=匹配) */
 void FUN_14005e7dc(LPVOID *psd);              /* @0x14005e7dc 安全描述符初始化 */
-void FUN_140026338(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
+void PECMD_ScriptInitParse(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
 void PECMD_DebugScriptString(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
 void PECMD_TlsLogWrite(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
 void PECMD_TruncateDebugLog(void);                     /* @0x140023544 */
@@ -194,7 +194,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
      *   local_4e = 0x55;
      * (local_78/local_4e 无后续使用) */
     if (g_hMainMutex == (HANDLE)0 && FUN_140101E70(path)) {
-        FUN_140026338(&g_Script, pArg, (int64_t)-1);
+        PECMD_ScriptInitParse(&g_Script, pArg, (int64_t)-1);
     }
     /* ---- 调试日志 ---- */
     if (g_logFlag != 0) {
