@@ -2699,7 +2699,7 @@ LAB_1400488b8:
                 PECMD_AppendWideStr(&local_16a8.QuadPart, local_1658);
                 PECMD_AppendWideStr(&local_16a8.QuadPart, WSTR("\",0,"));
                 PECMD_AppendWideStr(&local_16a8.QuadPart, local_1838);
-                FUN_1400d2e90(param_1, local_16a8);
+                PECMD_DdCopyCommand(param_1, local_16a8);
                 local_1838 = (LPWSTR)(intptr_t)PECMD_AssignIfEmpty((int64_t *)(&p_Var40->InfFileName[4]), local_1658);
                 FUN_14005b104(&local_16a8.QuadPart);
                 FUN_14005b104((int64_t *)&local_1658);
@@ -2738,7 +2738,7 @@ LAB_1400488b8:
                     if ((int)(bVar8 != 0) == 0) {
                         PECMD_AllocWStringBuffer((WCHAR **)&local_15f8, 99);
                         wsprintfW((LPWSTR)local_15f8.QuadPart, WSTR(" -dd -bs=1M %s,0,\".\"#33|INDATA"));
-                        FUN_1400d2e90(param_1, local_15f8);
+                        PECMD_DdCopyCommand(param_1, local_15f8);
                         FUN_14005b104(&local_15f8.QuadPart);
                         pWVar23 = (LPWSTR)0;
                     }

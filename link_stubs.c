@@ -2162,7 +2162,7 @@ uint16_t   *FUN_1400702d4(uint16_t **out, const uint16_t *src, int64_t len);
 long long   PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e);
 uint64_t    PECMD_NotifyMainWindowRefresh(uint64_t a, int b);
 uint64_t    PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b);
-uint64_t    FUN_1400d2e90(uint64_t a, uint64_t b);
+uint64_t    PECMD_DdCopyCommand(uint64_t a, uint64_t b);
 uint64_t    PECMD_ScriptMainEntry(uint64_t a, uint64_t b);
 uint64_t    PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d);
 ushort     *FUN_140024c48(longlong *a, longlong *b, uint c);
@@ -2905,7 +2905,7 @@ LAB_14004ce16:
             LVar33 = local_188;
           }
           else if (local_158 == 0x46545550) {
-            local_180.QuadPart = (longlong)FUN_1400d2e90((uintptr_t)param_1.QuadPart,(uint64_t)(LVar25.QuadPart + 8));
+            local_180.QuadPart = (longlong)PECMD_DdCopyCommand((uintptr_t)param_1.QuadPart,(uint64_t)(LVar25.QuadPart + 8));
             LVar33 = local_188;
           }
           else if (local_158 == 0x46574246) {
@@ -4449,10 +4449,10 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
   if ((int)b > 0) { *param_2 = (int)res[0]; return 1; }
   return 0;
 }
-/* ========== FUN_1400d2e90 @ 1400d2e90  size=11447 恢复体 (decompiled.c @129675) ==========
+/* ========== PECMD_DdCopyCommand @ 1400d2e90  size=11447 恢复体 (decompiled.c @129675) ==========
  * 磁盘备份/镜像命令 (dd 式: -bs/-ibs/-obs/-count/-len/-conv/-skip/-skipb/-sparse/-quick/
  *   -qspace/-va/-free/-fd/-file/-dir/-dd/-v, 可选 0x/0x hex 语法与 EXEDATA 编码插件).
- * 签名保持原桩: uint64_t FUN_1400d2e90(uint64_t a, uint64_t b)
+ * 签名保持原桩: uint64_t PECMD_DdCopyCommand(uint64_t a, uint64_t b)
  *   (a=param_1 脚本对象 longlong*, b=param_2 LARGE_INTEGER 命令串指针; 返回按 QuadPart 位值,
  *   调用方行 2908/8271 以 QuadPart 承接).
  * 移植取舍(歧义自决):
@@ -4469,7 +4469,7 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
  *  - FUN_140063344/PECMD_AsciiWideICmp/PECMD_DeviceCheckReady/WriteFile/FlushFileBuffers/
  *    FreeLibrary/LoadLibraryExW 无参桩配带参调用 → 按惯例修 arity (本文件已有先例).
  */
-/* ---------- FUN_1400d2e90 新增桩 (decompiled.c 调用面; rename_map 目标已在 core_* 真实定义,
+/* ---------- PECMD_DdCopyCommand 新增桩 (decompiled.c 调用面; rename_map 目标已在 core_* 真实定义,
  *   仅余 6 个无既有定义者在此补 leaf 桩) ---------- */
 void FUN_14006d788(longlong *param_1, LARGE_INTEGER *param_2) { (void)param_1;(void)param_2; }  /* 参数表初始化 (leaf stub) */
 HANDLE FUN_14005b494(HANDLE h, LARGE_INTEGER *out) { (void)h;(void)out; return (HANDLE)0; }  /* 目标句柄克隆 (leaf stub) */
@@ -4478,7 +4478,7 @@ char FUN_14006ccd4(longlong *p) { (void)p; return '\0'; }  /* 设备/文件类�
 longlong FUN_140079e34(uintptr_t h, int mode, ulonglong *out) { (void)h;(void)mode;(void)out; return 0; }  /* 段/盘容量查询 (leaf stub) */
 char FUN_14006ce38(longlong *p) { (void)p; return '\0'; }  /* 行尾整理 (leaf stub) */
 void (*DAT_14013d380)(void *h, long long len) = 0;  /* SetFileValidData 装载槽 (未装载→跳过) */
-/* ---------- FUN_1400d2e90 调用面前置声明 (定义在本文件后部/core 文件, 避免隐式 int 截断) ---------- */
+/* ---------- PECMD_DdCopyCommand 调用面前置声明 (定义在本文件后部/core 文件, 避免隐式 int 截断) ---------- */
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 int      PECMD_ParseHexOrDec(long long *a, uint64_t *b);
@@ -4510,7 +4510,7 @@ uint64_t SetFilePointerEx(void *h, longlong off, longlong *out, unsigned long me
 int32_t  lstrlenA(const char *s);
 extern void *DAT_14013cf70;                  /* HINSTANCE 槽 (def 行~12531) */
 #define CONCAT44(hi, lo) (((uint64_t)(uint32_t)(hi) << 32) | (uint32_t)(lo))
-uint64_t FUN_1400d2e90(uint64_t a, uint64_t b)
+uint64_t PECMD_DdCopyCommand(uint64_t a, uint64_t b)
 {
   longlong *param_1 = (longlong *)(uintptr_t)a;
   LARGE_INTEGER param_2; param_2.QuadPart = (long long)b;
@@ -9878,7 +9878,7 @@ LAB_14003c8ca:
         PECMD_AppendWideStr(&local_res20.QuadPart,(const uint16_t *)L"\",0,\"");
         PECMD_AppendWideStr(&local_res20.QuadPart,local_b0.pFrom);
         PECMD_AppendWideStr(&local_res20.QuadPart,(const uint16_t *)L"\"");
-        LVar22.QuadPart = (long long)FUN_1400d2e90((uint64_t)(uintptr_t)param_1,(uint64_t)local_res20.QuadPart);
+        LVar22.QuadPart = (long long)PECMD_DdCopyCommand((uint64_t)(uintptr_t)param_1,(uint64_t)local_res20.QuadPart);
         pLVar16 = &local_res20;
         goto LAB_14003c8ca;
       }
