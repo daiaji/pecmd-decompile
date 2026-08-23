@@ -1,0 +1,391 @@
+{
+  "batch": "c8b",
+  "proposals": [
+    {
+      "addr": "1400c3820",
+      "old": "FUN_1400c3820",
+      "spelling_variants": [
+        "FUN_1400C3820",
+        "FUN_1400c3820"
+      ],
+      "name": "PECMD_CreateUpDownCtrl",
+      "confidence": "high",
+      "evidence": "msctls_updown32 控件构造：operator_new(0xe0)+FUN_1400fbe58 建对象，':' 分隔解析初值/上限(FUN_140074838)，按标志组合 WS_*/UDS 样式位，FUN_1400fbf00 建窗(L\"msctls_updown32\")，SendMessageW 0x469 设基数，vtbl+0x130/+0x138 设范围/位置，DragAcceptFiles；由 PECMD_AddUpDownControl(FUN_1400c45a4,L121495) 调用。还原注释『创建 UpDown 控件』。"
+    },
+    {
+      "addr": "1400c3cf8",
+      "old": "FUN_1400c3cf8",
+      "spelling_variants": [
+        "FUN_1400C3CF8",
+        "FUN_1400c3cf8"
+      ],
+      "name": "PECMD_CreateScrollBarObj",
+      "confidence": "medium",
+      "evidence": "滚动条对象构建：operator_new(0xf8)+FUN_1400fc2e0 建对象，解析 min/max/pos/页长(缺省 (max-min)/10 且下限 5)，可选 CreateSolidBrush 背景(+0x34)与 '*' 名字查找 buddy 控件(FUN_1400c36c8+FUN_1400fc458 关联)，调 PECMD_CreateScrollBarCtrl(FUN_1400fc378) 建窗后 SetScrollRange/SetScrollPos/SetScrollInfo、PostMessageW 0x462；由 PECMD_AddScrollBarObject(FUN_1400c46cc,L121529) 调用。还原注释『构建滚动条对象』。"
+    },
+    {
+      "addr": "1400c44f4",
+      "old": "FUN_1400c44f4",
+      "spelling_variants": [
+        "FUN_1400C44F4",
+        "FUN_1400c44f4"
+      ],
+      "name": "PECMD_ParseValStepNext",
+      "confidence": "medium",
+      "evidence": "游标取值辅助：FUN_1400c1194(→FUN_1400c10c0，'(' 前缀子表达式经 CALC 实现 FUN_1400bf358 求值)解析数值并跳空白，随后当前 wchar 非零则游标+1 步过分隔符；被结构字段偏移解析器 FUN_1400c5ba8、FUN_1400d0c6c、FUN_140100ac4 调用。还原注释『解析数值并步过一分隔符』。"
+    },
+    {
+      "addr": "1400c4518",
+      "old": "FUN_1400c4518",
+      "spelling_variants": [
+        "FUN_1400C4518",
+        "FUN_1400c4518"
+      ],
+      "name": "PECMD_ParseCalcStepNext",
+      "confidence": "medium",
+      "evidence": "同族变体：底层用 FUN_1400c11f4（括号 '(…)' 包裹的表达式先经 CALC 求值再回退常规数值解析），解析后同样步过一个 wchar；由 TABL 表格命令实现 FUN_1400cb820(L125933) 调用。还原注释『解析表达式值并步进』。"
+    },
+    {
+      "addr": "1400c4580",
+      "old": "FUN_1400c4580",
+      "spelling_variants": [
+        "FUN_1400C4580",
+        "FUN_1400c4580"
+      ],
+      "name": "PECMD_ParseIntStepNext",
+      "confidence": "medium",
+      "evidence": "同族 int 出参变体：FUN_1400c11c0 解析整数写入 *(int*) 后步过一个 wchar；由列表类控件 SET 处理器 FUN_1400d7ce4 的 '.' 索引子字段解析(L132597)调用。还原注释『解析整数并步进』。"
+    },
+    {
+      "addr": "1400c493c",
+      "old": "FUN_1400c493c",
+      "spelling_variants": [
+        "FUN_1400C493C",
+        "FUN_1400c493c"
+      ],
+      "name": "PECMD_CtlDispatchGenericProp",
+      "confidence": "high",
+      "evidence": "控件通用属性分发器(2499 字节)：依次匹配 \"InvalidateRect\"(支持 @名字/#句柄/l,t,r,b/~dy 与 * 标志)、\"Cursor\"(LoadCursorW+LoadLibraryExW)、\"bkcolor\"、\"trans\"、\"nxp\"、\"font\"、\"scale\"、\"style\"、cmd/cmd?、\"<buddy>\"、frm:/frm</frm>(父窗/布局)，未命中按坐标矩形 InvalidateRect；被 FUN_1400dc410、FUN_1400efd80、PECMD_ParseBuddyPrefix(FUN_1400fce6c)、PECMD_ApplyControlProperty(FUN_1400fe4a4) 调用。还原注释『通用控件属性分发』。"
+    },
+    {
+      "addr": "1400c5300",
+      "old": "FUN_1400c5300",
+      "spelling_variants": [
+        "FUN_1400C5300",
+        "FUN_1400c5300"
+      ],
+      "name": "PECMD_SpinAddControl",
+      "confidence": "high",
+      "evidence": "SPIN 命令实现：分派表锚定 fourcc 0x4E495053(\"SPIN\")→本函数(decompiled.c L44729，位于 FUN_14004c0bc)。跳过 '-' 选项段后按逗号解析 名称,x,y,w,h,扩展(名称 '*' 表全部)，坐标经 FUN_1400744d4 求值，末段数字为样式，最终调 PECMD_AddUpDownControl(FUN_1400c45a4)。还原注释『SPIN 新增 UpDown 控件』。"
+    },
+    {
+      "addr": "1400c56fc",
+      "old": "FUN_1400c56fc",
+      "spelling_variants": [
+        "FUN_1400C56FC",
+        "FUN_1400c56fc"
+      ],
+      "name": "PECMD_SbarAddControl",
+      "confidence": "high",
+      "evidence": "SBAR 命令实现：分派表锚定 fourcc 0x52414253(\"SBAR\")→本函数(L44814)。先循环处理 '-color:' 选项(FUN_14007bf44 解析颜色存 local_98)，再按逗号解析 名称,x,y,w,h,样式('*' 表全部)后调 PECMD_AddScrollBarObject(FUN_1400c46cc)。还原注释『SBAR 新增滚动条控件』。"
+    },
+    {
+      "addr": "1400c5ba8",
+      "old": "FUN_1400c5ba8",
+      "spelling_variants": [
+        "FUN_1400C5BA8",
+        "FUN_1400c5ba8"
+      ],
+      "name": "PECMD_EnviStructFieldOffset",
+      "confidence": "medium",
+      "evidence": "结构成员字节偏移求解：param_3 为结构名(FUN_14001e69c 查表)，param_4=\"Field.Sub\" 路径，按空格/,/:/; 分隔字段序列累加偏移：char=1、wchar|short=2、int|long|float=4、double|int64|ldouble|longlong|ptr=8、intptr|intsys=指针大小，'int'+大写字母 视为嵌套结构以 \"&.\" 前缀递归，'*' 数组成员累计；仅被 ENVI 内存读写引擎 FUN_1400c6324 两处调用。还原注释『求结构字段偏移』。"
+    },
+    {
+      "addr": "1400c6324",
+      "old": "FUN_1400c6324",
+      "spelling_variants": [
+        "FUN_1400C6324",
+        "FUN_1400c6324"
+      ],
+      "name": "PECMD_EnviMemReadWrite",
+      "confidence": "medium",
+      "evidence": "ENVI 扩展内存读写引擎(size=12745)：解析左值变量名('&' 前缀计指针深度、'~name~' 别名)与 '=' 右值，param_4 选项集 -std/-env/-raw/-def/-tom/-tow/-copy/-cmp/-addr/-make/-swap/-zero/-ret/-get/-ex/-x/-[type.field]，类型关键字 char/wchar/short/ptr/intptr/intpe/float…，结合 PECMD_EnviStructFieldOffset(FUN_1400c5ba8) 定位地址读/写内存并按 \"%I64d\" 写回环境变量(local_2a8=L\"%I64d\")；由 LoadEnvi(注册表环境注入,L139030)与 FUN_14002d33c(L27134) 调用。还原注释『ENVI 内存读写』。"
+    },
+    {
+      "addr": "1400c9b9c",
+      "old": "FUN_1400c9b9c",
+      "spelling_variants": [
+        "FUN_1400C9B9C",
+        "FUN_1400c9b9c"
+      ],
+      "name": "PECMD_TablCreateListCtrl",
+      "confidence": "medium",
+      "evidence": "TABL 内嵌列表控件构造：operator_new(0x400)+PECMD_CtorListHostObject(FUN_1400f9134) 建宿主，FUN_1400f345c(=PECMD_CreateListViewCtrl) 建列表窗；'=文本:列头:列宽' 解析，设字体(FUN_1400b1f34/FUN_1400b89dc)、LVM_SETBKCOLOR(0x1001)/SETTEXTCOLOR(0x1026)/SETTEXTBKCOLOR、扩展样式(0x1037)，循环 PECMD_ParseListItemSpec(FUN_1400c99b4)+FUN_1400f8f00 建列，再按 CR/LF 或分隔符逐行切词 FUN_1400f5558 插入行项；由 FUN_1400cadec(L125329)→PECMD_TablCreateControl 链路调用。还原注释『TABL 构建列表控件』。"
+    },
+    {
+      "addr": "1400d5b48",
+      "old": "FUN_1400d5b48",
+      "spelling_variants": [
+        "FUN_1400D5B48",
+        "FUN_1400d5b48"
+      ],
+      "name": "PECMD_CtlLoadPictureRgn",
+      "confidence": "medium",
+      "evidence": "控件图片装载与透明区生成：文件 LoadImageW / 库资源(LoadLibraryExW+LoadBitmapW、FUN_14001ea18 资源枚举)或图标(PECMD_LoadIcon FUN_14001f1d4→GetDIBits)取得 HBITMAP 存对象 +0x12C0，兼容 GDI+/私有 API(DAT_14013ce*)缩放 StretchBlt，非透明色逐像素 CreateRectRgn+CombineRgn 合成区域并 SetWindowRgn(控件 HWND@0x20)，末尾 InvalidateRect 重绘；由 FUN_1400d95f0、FUN_1400d9818、FUN_1400dc410(bkcolor 后重绘) 调用。还原注释『装载控件图片并生成透明区域』。"
+    },
+    {
+      "addr": "1400df464",
+      "old": "FUN_1400df464",
+      "spelling_variants": [
+        "FUN_1400DF464",
+        "FUN_1400df464"
+      ],
+      "name": "PECMD_MounResolveDiskNo",
+      "confidence": "medium",
+      "evidence": "MOUN 磁盘定位辅助：名为空/'*'/'-' 时以 299 次×100ms 循环调 PECMD_FindPhysicalDrive(FUN_140068f3c) 等待新 PhysicalDrive 出现并返回其序号(*param_5)；否则 FUN_140068cf0 打开设备，经函数指针(QueryDosDevice 型 DAT_14013d750)取设备名比对 \"\\\\\\\\.\\\\PHYSICALDRIVE\" 前缀解析序号，或枚举 CDROM 设备(wsprintfW \" * %s,\\\\\\\\.\\\\CDROM%s\")；另有分支自句柄读内容入缓冲(DAT_14013d758)；日志 \" * %d:%d,%s\"；由 PECMD_MounMountWimImage(FUN_1400dfb14,L137168) 调用。还原注释『MOUN 解析目标磁盘序号』。"
+    },
+    {
+      "addr": "1400e3f80",
+      "old": "FUN_1400e3f80",
+      "spelling_variants": [
+        "FUN_1400E3F80",
+        "FUN_1400e3f80"
+      ],
+      "name": "PECMD_MapFileView",
+      "confidence": "medium",
+      "evidence": "文件映射视图封装的无名薄封装：直接转发 FUN_1400e3e38(CreateFileMappingW+MapViewOfFile，含命名映射存在性检测/0xB7 冲突处理)，映射名参数固定传 NULL；被 FUN_14003b540、FUN_14006cf88、FUN_1400c0ad8、FUN_1400d0c6c 调用。还原注释『匿名映射文件视图』。"
+    },
+    {
+      "addr": "1400e4064",
+      "old": "FUN_1400e4064",
+      "spelling_variants": [
+        "FUN_1400E4064",
+        "FUN_1400e4064"
+      ],
+      "name": "PECMD_AlignUpSize",
+      "confidence": "high",
+      "evidence": "纯计算：((n+align-1)/align)*align 向上取整到 align 的倍数(n 为 longlong、align 为 uint)；被 FUN_1400e4078、FUN_1400e7124 调用，core_b8a.c 头注亦作『向上对齐』。还原注释『向上对齐』。"
+    },
+    {
+      "addr": "1400e411c",
+      "old": "FUN_1400e411c",
+      "spelling_variants": [
+        "FUN_1400E411C",
+        "FUN_1400e411c"
+      ],
+      "name": "PECMD_HasVirtualAllocEx",
+      "confidence": "high",
+      "evidence": "返回全局函数指针 DAT_14013e258(VirtualAllocEx，惰性 GetProcAddress 于 L141773-141775)非零与否，供跨进程内存分配(FUN_1400e4480 内 *DAT_14013e258(hProcess,…,MEM_COMMIT,PAGE_EXECUTE_READWRITE))能力判断。还原注释『是否具备 VirtualAllocEx』。"
+    },
+    {
+      "addr": "1400e4c38",
+      "old": "FUN_1400e4c38",
+      "spelling_variants": [
+        "FUN_1400E4C38",
+        "FUN_1400e4c38"
+      ],
+      "name": "PECMD_InitCrc32Table",
+      "confidence": "medium",
+      "evidence": "CRC32 表初始化：HeapAlloc(DAT_14013d328,0,0x408) 头部 {size=0x400,magic=0xAA55}，随后以反射多项式 0xEDB88320 对 0..255 生成 256 项 CRC32 表，表基址存 DAT_14013e260；服务于加密脚本校验链(同族 PECMD_ReadEncByte)；由 FUN_1400e4cc0(L139722) 调用。还原注释『初始化 CRC32 查找表』。"
+    },
+    {
+      "addr": "1400e4d84",
+      "old": "FUN_1400e4d84",
+      "spelling_variants": [
+        "FUN_1400E4D84",
+        "FUN_1400e4d84"
+      ],
+      "name": "PECMD_HasRasDialApi",
+      "confidence": "high",
+      "evidence": "返回全局函数指针 DAT_14013e268 是否已解析——该指针于 L139777 经 PECMD_GetApiProcCached(\"RasDialW\",\"RASAPI32.DLL\") 惰性加载，L144440 作为 RasDialW 调用(回调 FUN_1400e4edc)；由 PECMD_WlanManage(FUN_140099f18,L96871) 调用。还原注释『是否具备 RasDial API』。"
+    },
+    {
+      "addr": "1400e4e6c",
+      "old": "FUN_1400e4e6c",
+      "spelling_variants": [
+        "FUN_1400E4E6C",
+        "FUN_1400e4e6c"
+      ],
+      "name": "PECMD_RasConnResetState",
+      "confidence": "low",
+      "evidence": "连接对象复位：*param_1=vtable(PTR_FUN_14012b1c0)，清两个模块级连接状态全局 DAT_14013e1f8/DAT_14013e200 及对象字段 obj[0x14f]；在 PECMD_WlanManage(FUN_140099f18,L96926) 中于每次发起连接(FUN_1400ebd30)前调用。还原注释『复位连接对象状态』。"
+    },
+    {
+      "addr": "1400e58d8",
+      "old": "FUN_1400e58d8",
+      "spelling_variants": [
+        "FUN_1400E58D8",
+        "FUN_1400e58d8"
+      ],
+      "name": "PECMD_CtlSendEraseBkgnd",
+      "confidence": "medium",
+      "evidence": "若控件标志(byte@+0xf) bit0 未置，经 vtbl+8 向控件 HWND(obj[4]) 投递消息 0x14(WM_ERASEBKGND，wParam=param_2)；层叠窗口绘制收尾(FUN_14006edf8,L69811)调用以补一次背景擦除。还原注释『发送擦除背景通知』。"
+    },
+    {
+      "addr": "1400e5aac",
+      "old": "FUN_1400e5aac",
+      "spelling_variants": [
+        "FUN_1400E5AAC",
+        "FUN_1400e5aac"
+      ],
+      "name": "PECMD_CtlForwardSetBlock",
+      "confidence": "medium",
+      "evidence": "虚方法转发器：把参数块 {a[0],a[1],a[2],a[3],0,a[6]} 经 vtbl+0xf0 调给控件对象；作为自定义消息 0x459 处理器(SET 按名定位控件后 SendMessageW(0x459,&block)，见 FUN_14005eb80/L56844)及通用 SET 回退分支(FUN_1400b0380 非 \"cmd\" 属性时,L109485)。还原注释『转发 SET 参数块至控件虚方法』。"
+    },
+    {
+      "addr": "1400e5ae4",
+      "old": "FUN_1400e5ae4",
+      "spelling_variants": [
+        "FUN_1400E5AE4",
+        "FUN_1400e5ae4"
+      ],
+      "name": "PECMD_ValidateCtlPaint",
+      "confidence": "high",
+      "evidence": "BeginPaint+EndPaint 立即配对＝验证(清空)无效区域；控件基类 WndProc(FUN_1400e5b0c) 在 WM_PAINT(0xf) 且无自绘缓冲标志(+0x1e&2)时调用以吞掉默认擦除(L140701)。还原注释『确认绘制区域』。"
+    },
+    {
+      "addr": "1400e68e0",
+      "old": "FUN_1400e68e0",
+      "spelling_variants": [
+        "FUN_1400E68E0",
+        "FUN_1400e68e0"
+      ],
+      "name": "PECMD_FillRectColor",
+      "confidence": "high",
+      "evidence": "经典纯色填充：SetBkColor(hdc,color)+ExtTextOutW(0,0,ETO_OPAQUE,rect,NULL,0,NULL) 以背景色填满矩形并返回原背景色；全文 22 处引用(文本绘制/层叠窗口 FILL 路径 FUN_14006edf8 等)。还原注释『以纯色填充矩形』。"
+    },
+    {
+      "addr": "1400e6cbc",
+      "old": "FUN_1400e6cbc",
+      "spelling_variants": [
+        "FUN_1400E6CBC",
+        "FUN_1400e6cbc"
+      ],
+      "name": "PECMD_StrAppendFormat",
+      "confidence": "medium",
+      "evidence": "104 wchar 栈缓冲经 PECMD_SafeVFormatW(FUN_1400e6960，StringCchPrintfW 封装)格式化后 FUN_1400703e4 把结果赋/追加进动态字符串对象；由 FUN_14002d708(L27302) 调用。还原注释『格式化并拼接字符串』。"
+    },
+    {
+      "addr": "1400e6d38",
+      "old": "FUN_1400e6d38",
+      "spelling_variants": [
+        "FUN_1400E6D38",
+        "FUN_1400e6d38"
+      ],
+      "name": "PECMD_SprintfRetEnd",
+      "confidence": "high",
+      "evidence": "wsprintfW(dst,fmt,arg) 后返回 dst+lstrlenW 尾指针，便于调用方链式续拼；全文 19 处引用(CALC/FUN_1400668ec 输出等)。还原注释『格式化并返回串尾』。"
+    },
+    {
+      "addr": "1400e6d80",
+      "old": "FUN_1400e6d80",
+      "spelling_variants": [
+        "FUN_1400E6D80",
+        "FUN_1400e6d80"
+      ],
+      "name": "PECMD_FormatDblRetEnd",
+      "confidence": "medium",
+      "evidence": "浮点变体：PECMD_SafeVFormatW(buf,0x3e,fmt,(double)f) 后返回 buf+lstrlen 尾指针(实参以 float 形参提升为 double)；与 FUN_1400e6db4 成对出现(FUN_14006d9d0 等)。还原注释『格式化浮点并返回串尾』。"
+    },
+    {
+      "addr": "1400e6db4",
+      "old": "FUN_1400e6db4",
+      "spelling_variants": [
+        "FUN_1400E6DB4",
+        "FUN_1400e6db4"
+      ],
+      "name": "PECMD_FormatU64RetEnd",
+      "confidence": "medium",
+      "evidence": "64 位整数变体：PECMD_SafeVFormatW(buf,0x3e,fmt,u64) 后返回尾指针；与既有 PECMD_FormatI64Dec/FUN_1400e6d68、PECMD_FormatU64Dec/FUN_1400e6d74 同族；被 FUN_14006d9d0、FUN_1400acd90、FUN_1400c6324 等调用。还原注释『格式化64位数并返回串尾』。"
+    },
+    {
+      "addr": "1400e7098",
+      "old": "FUN_1400e7098",
+      "spelling_variants": [
+        "FUN_1400E7098",
+        "FUN_1400e7098"
+      ],
+      "name": "PECMD_SkipCrLfEncByte",
+      "confidence": "medium",
+      "evidence": "字节流跳行尾：若 *p==key^0x0D 则 p++，接着 *p==key^0x0A 再 p++（异或编码下成对消费 CR/LF）；加密脚本驱动 FUN_1400e7d58(L142346/142354) 调用。还原注释『跳过编码换行(字节)』。"
+    },
+    {
+      "addr": "1400e70f4",
+      "old": "FUN_1400e70f4",
+      "spelling_variants": [
+        "FUN_1400E70F4",
+        "FUN_1400e70f4"
+      ],
+      "name": "PECMD_SkipCrLfEncWchar",
+      "confidence": "medium",
+      "evidence": "同 FUN_1400e7098 的宽字符(ushort)变体，key^0x0D/^0x0A 成对消费；由 FUN_1400e7d58(L142425/142433) 调用。还原注释『跳过编码换行(宽字符)』。"
+    },
+    {
+      "addr": "1400e7994",
+      "old": "FUN_1400e7994",
+      "spelling_variants": [
+        "FUN_1400E7994",
+        "FUN_1400e7994"
+      ],
+      "name": "PECMD_DecodeEncTextToUtf16",
+      "confidence": "medium",
+      "evidence": "编码文本→UTF-16 解码：纯 ASCII(<0x80)快速直拷；否则经代码页指针 DAT_14013c970(MultiByteToWideChar 型，param_1=代码页，0xFDE9=65001/UTF-8)转换；加密模式(key=param_6 低16位)按 XOR '\\n' 切行→逐行异或还原→转码→伪随机槽位重排(FUN_14005dff4()%n，抗静态分析)→输出整体再 XOR param_6 收尾；由加密脚本装载器 FUN_1400e7d58 三处(L142314/142320/142402)调用。还原注释『解码密文文本为宽字符』。"
+    },
+    {
+      "addr": "1400e8574",
+      "old": "FUN_1400e8574",
+      "spelling_variants": [
+        "FUN_1400E8574",
+        "FUN_1400e8574"
+      ],
+      "name": "PECMD_GetOrCreateHiddenWnd",
+      "confidence": "medium",
+      "evidence": "取/建隐藏宿主窗口：已存在(HWND@obj[8])直接返回；否则 operator_new(0xA98)+FUN_1400731d8 以 GetDesktopWindow()(全局对象则为 NULL)为父创建(内部消息 0x271B)，登记属主对象(+0xA4)/lparam(+0xA8) 后发送 0x271D 初始化；MAIN 命令入口 PECMD_ScriptMainEntry(FUN_140045c90,L40686)与 FUN_1400e8644(建后写 \"&&__WinID\" 变量)使用。还原注释『取或建隐藏宿主窗口』。"
+    },
+    {
+      "addr": "1400e9724",
+      "old": "FUN_1400e9724",
+      "spelling_variants": [
+        "FUN_1400E9724",
+        "FUN_1400e9724"
+      ],
+      "name": "PECMD_RamdMountImDisk",
+      "confidence": "medium",
+      "evidence": "RAMD 命令引擎：由分派表目标 PECMD_RunRamdriv(FUN_14002fc48,L28524)调用；解析 --w: 大小、-a、-o ro|par 等选项，组装 imdisk 命令行(\"imdisk -a -t proxy … -o shm -f %s\"、\"imdisk -a … -b %sb -s %sb -f %s\")执行挂载，或直接 CreateFileW(dev,0xC0000000,7,…,0xA0000080) 开设备，失败回退 \" RAMD Imdisk*&V -D -m %s\\\"\" 卸载串。还原注释『RAMD 挂载 ImDisk 内存盘』。"
+    }
+  ],
+  "skips": [
+    {
+      "addr": "1400e3804",
+      "reason": "已有恢复符号名 LoadEnvi：decompiled.c L138910 定义块即为 '/* ========== LoadEnvi @ 1400e3804 */'，且 core_b1_remaining.c/core_b2d.c/core_b2e.c 等已按 LoadEnvi 声明并调用(注册表 HKCU/HKLM 枚举环境变量+SetEnvironmentVariableW+PATH 合并)，无 FUN_ 前缀旧名可替换，不重复提案。"
+    },
+    {
+      "addr": "1400c94f0",
+      "reason": "零引用/疑似死代码：符号名与裸地址在 decompiled.c 全文仅命中定义块自身(共4处)，无任何调用或取址；可能仅经 Ghidra 未渲染的 vtable 间接槽到达。语义推断：单控件 SET 属性应用器(\"Enable\"→FUN_1400c47f4、其余转 PECMD_DispatchControlCommand(FUN_140057b80)、\"update\" 移动重绘、\"stat\" 写状态变量、\"delay\")。core_b7c.c 已有同名简化桩(注释误作『绘制列表项』)。"
+    },
+    {
+      "addr": "1400d7ce4",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)，无调用/取址。语义推断：列表类控件 SET 处理器(\"Sel\"/\"hID\"/\"UPos\" 属性，'*','~','#','@','.' 标志解析，自定义消息 0x462/0x46F/0x470/0x472)，先经 PECMD_DispatchControlCommand。core_b7c.c 已有同名简化桩。"
+    },
+    {
+      "addr": "1400d85d0",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)。语义推断：主窗体显示定型——GWLP_USERDATA 登记、RegisterTouchWindow、WS_ 样式位增删(FUN_1400e5900)、居中/尺寸 SetWindowPos、置顶 z-order(DAT_14013cf60)、写 \"&&__WinID\" 变量；应经窗口创建流程间接引用。core_b7c.c 已有同名简化桩。"
+    },
+    {
+      "addr": "1400d9818",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)。语义推断：主窗体消息过程(约1100行 switch：WM_COMMAND 0x111/WM_NOTIFY 0x4E/WM_TIMER 0x113/滚动 0x114-0x115/鼠标 0x202-0x205/0x43C-0x451 自定义段/Shell_NotifyIconW(NIM_DELETE) 托盘清理/WM_CLOSE 转发)，应经 RegisterClass/RegisterClassEx 注册间接引用。core_b7c.c 已有同名简化桩。"
+    },
+    {
+      "addr": "1400dc410",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)。语义推断：FORM/窗口级属性应用器——空属性名时 SetWindowTextW 设标题、\"Pos\"(写 @0x%p 窗口句柄串)、\"Paint\"/\"InitFocus\"/\"HitTest\"/\"cmd\"/\"child\"、\"<vsb>/<hsb>\"，其余转发通用分发 FUN_1400c493c，\"bkcolor\" 触发 FUN_1400d5b48 重绘。core_b7c.c 已有同名简化桩。"
+    },
+    {
+      "addr": "1400e5708",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)。语义推断：引用计数递减——byte@obj+0x123 大于0时自减并 ShowWindow(hwnd,SW_HIDE)；core_b8a.c 已按此语义还原(头注『隐藏引用窗口』)但仍保留 FUN_ 名，因该文件不在本批可改名范围故列入 skips。"
+    },
+    {
+      "addr": "1400e759c",
+      "reason": "零引用/疑似死代码：decompiled.c 全文仅定义块自身命中(4处)。语义推断：销毁事件/句柄容器对象——调 FUN_1400e4e94 清理，flags&1 时 free(obj)；core_b8a.c 已按此语义还原(头注『销毁事件对象』)但仍保留 FUN_ 名，因该文件不在本批可改名范围故列入 skips。"
+    }
+  ]
+}
