@@ -44,14 +44,14 @@
 
 #include "pecmd_defs.h"
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void FUN_14004F788(int64_t obj);
+extern void PECMD_CleanupTaskEnvObject(int64_t obj);
 extern void FUN_140054B18(void *obj);
 extern void FUN_140054A50(void *obj);
 extern void FUN_140054AB4(void *obj);
 extern void PECMD_DestroyMappedObject(void *obj);
 extern void FUN_1400E8940(void *obj);
 extern void FUN_14006C648(void *obj);
-extern void FUN_14006BF8C(void *obj);
+extern void PECMD_DtorTrackbarControl(void *obj);
 extern void FUN_14006C3CC(void *obj);
 extern void PECMD_ReleaseComObject(void *obj);
 extern void PECMD_ReleaseDeviceObj(void *obj);
@@ -79,7 +79,7 @@ void PECMD_FreeAndFree(uint64_t *slot)
 {
     void *_Memory = (void *)*slot;
     if (_Memory != NULL) {
-        FUN_14004F788((int64_t)_Memory);
+        PECMD_CleanupTaskEnvObject((int64_t)_Memory);
         free(_Memory);
     }
     *slot = 0;
@@ -253,7 +253,7 @@ uint64_t *PECMD_ReleaseWrap_c6c8(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_03f0(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006BF8C(obj);
+    PECMD_DtorTrackbarControl(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

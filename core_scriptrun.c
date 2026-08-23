@@ -7,7 +7,7 @@
  * 本文件实现主展开路径（LAB_140031887 起）：
  *   *map: 前缀 / 引号 / 命令 token → 资源脚本执行 或 变量执行，
  *   最后 sysinit 收尾。深度依赖（脚本执行主入口 FUN_1400B638C、
- *   FUN_140030DCC / FUN_1400E7D58 ResDecode 等）extern 挂起。
+ *   PECMD_InvokeSubRoutine / FUN_1400E7D58 ResDecode 等）extern 挂起。
  * ==================================================================== */
 #include <stdbool.h>
 #include <stdint.h>
@@ -46,7 +46,7 @@ extern int32_t g_sysinitState;                                 /* DAT_14013d058 
 extern WCHAR *g_sysinitName;                                   /* DAT_14013d060 */
 
 /* 未实现（TODO(verify) 挂起） */
-extern uint32_t FUN_140030DCC(void *buf, void *script, uint32_t flags); /* @0x140030dcc */
+extern uint32_t PECMD_InvokeSubRoutine(void *buf, void *script, uint32_t flags); /* @0x140030dcc */
 extern uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags);          /* @0x1400e7d58 */
 extern void *FUN_140024F20(uint32_t key, void **buf, LPCWSTR extra, uint32_t f,
                                      int off);                              /* @0x140024f20 */
@@ -251,7 +251,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_140017CDC(local_138, script);
                     FUN_1400186BC(local_138, script);
                     FUN_14006159C(local_138, (uint64_t)uVar42);
-                    if (FUN_140030DCC(&local_1e8, local_138, kf) == 0) {
+                    if (PECMD_InvokeSubRoutine(&local_1e8, local_138, kf) == 0) {
                         /* TODO(verify): 反编译 707-721 的详细 flags 组合 */
                         DVar13 = FUN_1400B638C(script, local_1e8, local_278, local_1f8,
                                                ((uint64_t)uVar42 << 16) | kf | 0x40,
@@ -292,7 +292,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                 {
                     uint16_t seed = FUN_14001B510();
                     FUN_14001B5AC(local_210, 0, 0);
-                    FUN_140030DCC(&local_210, script, 0);
+                    PECMD_InvokeSubRoutine(&local_210, script, 0);
                     {
                         int64_t pos = FUN_14001B4F8(local_210, 0);
                         FUN_14001B5AC(local_210, (uint32_t)seed, pos + 2);

@@ -2,7 +2,7 @@
  * core_script.c — 脚本执行器（B8b 核心）
  *
  *   PECMD_ParseScriptSegments   @0x140030420   脚本执行器（段切分/import/递归）
- *   FUN_1400307C8   @0x1400307c8   import 文件处理（读文件/编码/合并）
+ *   PECMD_LoadScriptFileSegment   @0x1400307c8   import 文件处理（读文件/编码/合并）
  *
  * 依赖（已实现）：
  *   PECMD_AllocSmallObject/StrAlloc/StrFree/StrCat/StrAssign/XorStr/FindChar/ZeroMem
@@ -39,7 +39,7 @@ extern int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp); /* @0x
 extern uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags); /* @0x1400e7d58 */
 
 /* 前向声明（本文件内相互调用） */
-extern uint32_t FUN_1400307C8(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
+extern uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
                                  void *script2, uint32_t flags); /* @0x1400307c8 */
 
 /* ========== PECMD_ParseScriptSegments @0x140030420 ==========
@@ -123,7 +123,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                     while (*r2 == script[0x45] || *r2 == script[0x48]) r2++;
                                     {
                                         int imp_off = (int)(r2 - base);
-                                        uint32_t u = FUN_1400307C8(ctrl, imp_off, script, out,
+                                        uint32_t u = PECMD_LoadScriptFileSegment(ctrl, imp_off, script, out,
                                                                       (void *)script, flags);
                                         if (u != 0xffffffff) {
                                             ret = f2 | u;
@@ -162,12 +162,12 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
     return ret;
 }
 
-/* ========== FUN_1400307C8 @0x1400307c8 ==========
+/* ========== PECMD_LoadScriptFileSegment @0x1400307c8 ==========
  * import 文件处理：
  *   格式 "file[|offset[|len]]"；打开/读文件，编码识别，
  *   XOR 解码，合并到 ctrl 缓冲，递归 PECMD_ParseScriptSegments。
  */
-uint32_t FUN_1400307C8(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
+uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
                           void *script2, uint32_t flags)
 {
     bool isDev = *(WCHAR *)(*out + 2) != 0;   /* 设备路径标志 TODO(verify) */

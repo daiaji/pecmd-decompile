@@ -1,14 +1,14 @@
 /*
  * core_exec3.c — 命令执行环境（B8a）
  *
- *   FUN_14002452C   @0x14002452c   CurFile/CurDir/CurDrv 变量设置
+ *   PECMD_SetCurFileVariables   @0x14002452c   CurFile/CurDir/CurDrv 变量设置
  *   PECMD_SetEnvIfChanged    @0x140061508   环境变量设置（值不同才写）
  *   PECMD_SetVarEn    @0x1400629b8   (已声明 FUN_1400629B8) 变量写（锁/直写分派）
  *   PECMD_EncodeBuffer   @0x140068984   资源解码加载
  *   FUN_140061C44      @0x140061c44   OLE/COM 初始化
  *   FUN_14005B7E8  @0x14005b7e8   托盘图标清理
  *   FUN_14001BB30  @0x14001bb30   钩子/资源清理
- *   FUN_14001BBDC  @0x14001bbdc   等待条件 + 消息泵
+ *   PECMD_WaitCountPumpMessages  @0x14001bbdc   等待条件 + 消息泵
  *   PECMD_ShutdownCom  @0x140064328   退出清理（COM/回调）
  *   FUN_14006E8F4   @0x14006e8f4   脚本释放（引用计数）
  *   FUN_14004E2CC     @0x14004e2cc   任务释放
@@ -41,11 +41,11 @@ void PECMD_SetEnvIfChanged(LPCWSTR name, LPCWSTR value)
     }
 }
 
-/* ========== FUN_14002452C @0x14002452c ==========
+/* ========== PECMD_SetCurFileVariables @0x14002452c ==========
  * 设置 &&CurFile/&&CurDir/&&CurDrv 等脚本变量（B8a 核心）。
  *   script: 脚本表；curfile: 当前文件路径；flag: 0x40 = 只设变量不改目录。
  */
-int32_t FUN_14002452C(void *script, LPCWSTR curfile, uint32_t flag)
+int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
 {
     bool bSet = false;
     WCHAR *cur = NULL;
@@ -158,10 +158,10 @@ void FUN_14001BB30(void)
     LeaveCriticalSection(&g_csInit);
 }
 
-/* ========== FUN_14001BBDC @0x14001bbdc ==========
+/* ========== PECMD_WaitCountPumpMessages @0x14001bbdc ==========
  * 等待 *count <= limit，期间泵消息。
  */
-void FUN_14001BBDC(int *count, int limit)
+void PECMD_WaitCountPumpMessages(int *count, int limit)
 {
     HANDLE ev = g_hWaitEvent;
     MSG msg;
@@ -246,7 +246,7 @@ void PECMD_ShutdownCom(void)
         g_pComState = NULL;
         FUN_140017F54((int *)g_pComState);
         free(g_pComState);
-        FUN_14001BBDC(&g_taskCount, 2);
+        PECMD_WaitCountPumpMessages(&g_taskCount, 2);
         if (g_pOleUninit != NULL && r == 0) {
             ((void (*)(void))g_pOleUninit)();
         }

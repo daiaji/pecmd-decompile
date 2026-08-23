@@ -1,0 +1,501 @@
+{
+ "batch": "b3",
+ "proposals": [
+  {
+   "addr": "1400050c8",
+   "old": "FUN_1400050C8",
+   "spelling_variants": [
+    "FUN_1400050C8"
+   ],
+   "name": "PECMD_RunBootScriptInFiber",
+   "confidence": "high",
+   "evidence": "ConvertThreadToFiber 后创建 32MB 栈 fiber 执行 FUN_140004fd4（整理工作集并调 PECMD_RunStartupScript），切回后 DeleteFiber 返回脚本结果。"
+  },
+  {
+   "addr": "14001bbdc",
+   "old": "FUN_14001BBDC",
+   "spelling_variants": [
+    "FUN_14001BBDC"
+   ],
+   "name": "PECMD_WaitCountPumpMessages",
+   "confidence": "high",
+   "evidence": "创建通知事件后循环 MsgWaitForMultipleObjects(1s)+Peek/Translate/Dispatch 泵消息，直到 *param_1 计数降到目标值；被启动脚本用于等待任务线程收尾。"
+  },
+  {
+   "addr": "14002452c",
+   "old": "FUN_14002452C",
+   "spelling_variants": [
+    "FUN_14002452C"
+   ],
+   "name": "PECMD_SetCurFileVariables",
+   "confidence": "high",
+   "evidence": "设置 &&__OldDir/&&CurFile.real/&&CurFile.Raw/&&CurFile.File/&&CurFile/&&CurDir/&&CurDrv 等菜单执行环境变量，处理 **#101 与 *map: 前缀及引号参数。"
+  },
+  {
+   "addr": "140025b10",
+   "old": "FUN_140025B10",
+   "spelling_variants": [
+    "FUN_140025B10"
+   ],
+   "name": "PECMD_WaitKeyPressHooked",
+   "confidence": "high",
+   "evidence": "安装 WH_KEYBOARD_LL(13) 低级键盘钩子（钩子过程即已命名的 PECMD_KeyboardHookProc），循环泵消息等待 DAT_14013d070 记录按键或超时。"
+  },
+  {
+   "addr": "1400279d8",
+   "old": "FUN_1400279D8",
+   "spelling_variants": [
+    "FUN_1400279D8"
+   ],
+   "name": "PECMD_FormatImDiskDrive",
+   "confidence": "high",
+   "evidence": "创建 ImDiskFormat 互斥量，构造 \\\\Device\\ImDisk%u 并挂载盘符后拼出 format.com X: /Y /X 命令行，CreateProcessW 重试等待完成，属 ImDisk 虚拟盘格式化流程。"
+  },
+  {
+   "addr": "140028a00",
+   "old": "FUN_140028A00",
+   "spelling_variants": [
+    "FUN_140028A00"
+   ],
+   "name": "PECMD_HelpDlgProc",
+   "confidence": "high",
+   "evidence": "对话框过程：WM_INITDIALOG 加载 HELP/LANG 资源、解析帮助主题行填 ListBox、支持搜索定位(自定义 0x452)与 EM_SETSEL 高亮，并显示版本日期信息。"
+  },
+  {
+   "addr": "14002a508",
+   "old": "FUN_14002A508",
+   "spelling_variants": [
+    "FUN_14002A508"
+   ],
+   "name": "PECMD_ApplyTextWindowLayout",
+   "confidence": "medium",
+   "evidence": "解析 X,Y,W,H、透明度与字体参数（默认宋体），PECMD_CreateFont 建字体、SetWindowPos 调整文本窗口并 InvalidateRect 刷新，为 TEXT 命令的布局应用逻辑。"
+  },
+  {
+   "addr": "14002e3d4",
+   "old": "FUN_14002e3d4",
+   "spelling_variants": [
+    "FUN_14002E3D4",
+    "FUN_14002e3d4"
+   ],
+   "name": "PECMD_ProcessInitCommand",
+   "confidence": "high",
+   "evidence": "处理 INIT 类初始化命令：解析 -dummy/-dummyx 与 c/i/k/u 选项，写 HKLM\\SOFTWARE\\PELOGON\\FirstUsb，CALL Shell32/Browseui/Shdocvw DllInstall 注册组件并设 HOOKKBD/TOPICON/AUTOUSB 开关。"
+  },
+  {
+   "addr": "14002ee44",
+   "old": "FUN_14002EE44",
+   "spelling_variants": [
+    "FUN_14002EE44"
+   ],
+   "name": "PECMD_MainMsgWndProc",
+   "confidence": "high",
+   "evidence": "主隐藏消息窗口过程：处理 WM_CREATE/WM_TIMER(USB轮询)、DBT_DEVNODES_CHANGED 刷新、托盘回调 0x456 弹菜单、WM_HOTKEY(0x312) 从 PELOGON\\RAMDATA\\HOTKEY 读脚本执行及热键注册消息。"
+  },
+  {
+   "addr": "1400307c8",
+   "old": "FUN_1400307C8",
+   "spelling_variants": [
+    "FUN_1400307C8"
+   ],
+   "name": "PECMD_LoadScriptFileSegment",
+   "confidence": "medium",
+   "evidence": "解析 \"file|偏移|长度\" 片段说明，打开文件或经 PECMD_NormalizeVolumeDevPath 打开卷设备读取数据，校验 BOM 后 XOR 解码并转宽字符，替换脚本占位后调用 PECMD_ParseScriptSegments 继续解析。"
+  },
+  {
+   "addr": "140030dcc",
+   "old": "FUN_140030DCC",
+   "spelling_variants": [
+    "FUN_140030DCC"
+   ],
+   "name": "PECMD_InvokeSubRoutine",
+   "confidence": "medium",
+   "evidence": "按编码短值定位 SUB 段起点，复制并初始化脚本上下文、设置 &&CurDir 变量与 XOR 分隔符表后交 PECMD_ParseScriptSegments 执行子例程。"
+  },
+  {
+   "addr": "140037ba8",
+   "old": "FUN_140037BA8",
+   "spelling_variants": [
+    "FUN_140037BA8"
+   ],
+   "name": "PECMD_LogoDlgProc",
+   "confidence": "high",
+   "evidence": "LOGO 启动画面对话框过程：WM_INITDIALOG 全屏置顶/分层透明并写 PELOGON\\LogohWnd 注册表，0x450 读 LogoFile 显示，0x453 读 Text.Paramd 调 PECMD_ApplyTextWindowLayout，0x111 特定 wParam 触发淡出动画后 EndDialog。"
+  },
+  {
+   "addr": "14003d608",
+   "old": "FUN_14003D608",
+   "spelling_variants": [
+    "FUN_14003D608"
+   ],
+   "name": "PECMD_PerformSystemShutdown",
+   "confidence": "high",
+   "evidence": "启用 SeShutdown/SeRemoteShutdown 特权，记录 Boot(...) 日志并调用 PECMD_RunShutdownScript，InitiateSystemShutdownW 关机/重启并等待任务线程结束。"
+  },
+  {
+   "addr": "14004eb34",
+   "old": "FUN_14004EB34",
+   "spelling_variants": [
+    "FUN_14004EB34"
+   ],
+   "name": "PECMD_RunStartupScript",
+   "confidence": "high",
+   "evidence": "启动引导入口：读取 SCRIPTINIT/SCRIPT 资源与命令行（LOAD 前缀、**cmdline*/**#101 标记），选择脚本来源执行，随后泵消息等待任务线程清零再退出消息循环。"
+  },
+  {
+   "addr": "14004f788",
+   "old": "FUN_14004F788",
+   "spelling_variants": [
+    "FUN_14004F788"
+   ],
+   "name": "PECMD_CleanupTaskEnvObject",
+   "confidence": "medium",
+   "evidence": "清理任务线程环境对象：回滚驱动签名(PECMD_UpdateDriverSigning)、释放去尾斜杠路径串、PECMD_ReleaseModuleAndVars、清任务表并关闭句柄；由 PECMD_CleanupTaskThread 在 free 前调用。"
+  },
+  {
+   "addr": "140050f58",
+   "old": "FUN_140050f58",
+   "spelling_variants": [
+    "FUN_140050F58",
+    "FUN_140050f58"
+   ],
+   "name": "PECMD_ParseCharClassRanges",
+   "confidence": "medium",
+   "evidence": "递归下降正则解析器的一环：解析 [..] 字符类（^ 取反、] 结束），用 PECMD_ArrayPrepend 分配节点并把范围上下界写入节点+8 处。"
+  },
+  {
+   "addr": "14006bf8c",
+   "old": "FUN_14006BF8C",
+   "spelling_variants": [
+    "FUN_14006BF8C"
+   ],
+   "name": "PECMD_DtorTrackbarControl",
+   "confidence": "medium",
+   "evidence": "两段式虚表(PTR_FUN_1401266c0)析构：Release 槽7引用计数子对象、释放槽2-5字符串并清空槽0xb记录数组；对应构造函数 FUN_14009c720 包装 msctls_trackbar32 控件。"
+  },
+  {
+   "addr": "14006ccd4",
+   "old": "FUN_14006ccd4",
+   "spelling_variants": [
+    "FUN_14006CCD4",
+    "FUN_14006ccd4"
+   ],
+   "name": "PECMD_NormalizeVolumeDevPath",
+   "confidence": "medium",
+   "evidence": "识别 \\\\.\\PhysicalDrive 与设备路径前缀(PECMD_IsDevicePathPrefix)，把 \\\\?\\X: 归一化为 \\\\.\\ 形式、把裸 \"X:\" 展开成 \\\\.\\X: 设备路径，供 CreateFileW 打开卷。"
+  },
+  {
+   "addr": "14006d7e8",
+   "old": "FUN_14006D7E8",
+   "spelling_variants": [
+    "FUN_14006D7E8"
+   ],
+   "name": "PECMD_StrBldInitWide",
+   "confidence": "high",
+   "evidence": "初始化宽字符串构建器：容量不足 0x400 时经 PECMD_AllocString 分配并布置写指针/界限指针，属 strbld 区域的起始函数。"
+  },
+  {
+   "addr": "14006d92c",
+   "old": "FUN_14006D92C",
+   "spelling_variants": [
+    "FUN_14006D92C"
+   ],
+   "name": "PECMD_StrBldGrowWide",
+   "confidence": "high",
+   "evidence": "字符串构建器剩余空间不足时扩容 +0x400（PECMD_AllocString 重新分配）并同步更新写指针、结尾与限界指针。"
+  },
+  {
+   "addr": "14006d9d0",
+   "old": "FUN_14006D9D0",
+   "spelling_variants": [
+    "FUN_14006D9D0"
+   ],
+   "name": "PECMD_FormatTypedMemValue",
+   "confidence": "medium",
+   "evidence": "按类型名(char/wchar/short/int64/ptr/float/double/ldouble/int)从内存缓冲读取值（支持 ~倍数与 @ 指针形式），用 %d/%f/%I64X 等格式化为字符串。"
+  },
+  {
+   "addr": "14006fd1c",
+   "old": "FUN_14006fd1c",
+   "spelling_variants": [
+    "FUN_14006FD1C",
+    "FUN_14006fd1c"
+   ],
+   "name": "PECMD_SplitItemSpecFields",
+   "confidence": "medium",
+   "evidence": "先把输入跳过控制字符后按 \";\" 截取一条目，再把余下按 \":\" 拆成最多三个字段（原地置 NUL 分隔），供 TAB/ITEM 条目规格解析复用。"
+  },
+  {
+   "addr": "140078e90",
+   "old": "FUN_140078E90",
+   "spelling_variants": [
+    "FUN_140078E90"
+   ],
+   "name": "PECMD_AssignClipboardText",
+   "confidence": "high",
+   "evidence": "OpenClipboard 后取 CF_UNICODETEXT(0xd)，GlobalLock 读入并经 PECMD_AssignString 写入字符串对象，最后 CloseClipboard。"
+  },
+  {
+   "addr": "1400c10c0",
+   "old": "FUN_1400c10c0",
+   "spelling_variants": [
+    "FUN_1400C10C0",
+    "FUN_1400c10c0"
+   ],
+   "name": "PECMD_EvalParenthesizedExpr",
+   "confidence": "high",
+   "evidence": "遇 \"(\" 时深度计数找到配对 \")\"，临时截断后调 PECMD_CalcExpression 求值再恢复括号；否则走 PECMD_ParseIntegerString，是表达式取操作数环节。"
+  },
+  {
+   "addr": "1400d0b2c",
+   "old": "FUN_1400d0b2c",
+   "spelling_variants": [
+    "FUN_1400D0B2C",
+    "FUN_1400d0b2c"
+   ],
+   "name": "PECMD_ParseItemImageSpec",
+   "confidence": "medium",
+   "evidence": "解析条目图像规格：\"名称|\" 后接 ICON/位图/图标组分类（PECMD_IsIconResource 等），\"#n\" 经 PECMD_ParseHexOrDec 解析资源号，返回类型码。"
+  },
+  {
+   "addr": "1400e537c",
+   "old": "FUN_1400E537C",
+   "spelling_variants": [
+    "FUN_1400E537C"
+   ],
+   "name": "PECMD_SearchMenuTreeById",
+   "confidence": "medium",
+   "evidence": "在弹出菜单树中递归查找命令 id 匹配的节点（0x80 标记子树），命中时输出节点文本并把 \" <id>\" 追加到串，供托盘菜单选中后写 &&__MemuId/&&__MenuInx。"
+  },
+  {
+   "addr": "1400e6960",
+   "old": "FUN_1400E6960",
+   "spelling_variants": [
+    "FUN_1400E6960"
+   ],
+   "name": "PECMD_SafeVFormatW",
+   "confidence": "high",
+   "evidence": "StringValidateDestW 校验目标缓冲后调用 StringVPrintfWorkerW(va_list) 安全格式化，是 wnsprintf 风格的封装。"
+  },
+  {
+   "addr": "1400e706c",
+   "old": "FUN_1400E706C",
+   "spelling_variants": [
+    "FUN_1400E706C"
+   ],
+   "name": "PECMD_SkipEncByteToEol",
+   "confidence": "medium",
+   "evidence": "在 XOR 混淆文本上推进字节指针直到解码结果为 NUL、CR 或 LF（*p==key / key^13 / key^10 三种终止），用于加密脚本行扫描行尾。"
+  },
+  {
+   "addr": "1400e70c0",
+   "old": "FUN_1400E70C0",
+   "spelling_variants": [
+    "FUN_1400E70C0"
+   ],
+   "name": "PECMD_SkipEncWCharToEol",
+   "confidence": "medium",
+   "evidence": "上一函数的宽字符版本：推进 wchar 指针直到解码为 NUL/CR/LF，用于 #code 等混淆脚本的行扫描。"
+  },
+  {
+   "addr": "1400e75cc",
+   "old": "FUN_1400E75CC",
+   "spelling_variants": [
+    "FUN_1400E75CC"
+   ],
+   "name": "PECMD_HangUpRasConnection",
+   "confidence": "high",
+   "evidence": "动态解析的 RasHangUpW/RasHangUp 流程：挂断后以 50ms 间隔轮询 RasGetConnectStatusW 直到返回 6（句柄失效）或 3 秒超时。"
+  },
+  {
+   "addr": "1400e96ec",
+   "old": "FUN_1400E96EC",
+   "spelling_variants": [
+    "FUN_1400E96EC"
+   ],
+   "name": "PECMD_NewFormattedI64Str",
+   "confidence": "medium",
+   "evidence": "用 %I64d 把 param_3 格式化进栈缓冲，再经 PECMD_AllocMagicString 包装为新字符串对象存入 *param_1 并返回之。"
+  },
+  {
+   "addr": "1400ec0f0",
+   "old": "FUN_1400EC0F0",
+   "spelling_variants": [
+    "FUN_1400EC0F0"
+   ],
+   "name": "PECMD_LayoutTabPageArea",
+   "confidence": "medium",
+   "evidence": "计算 tab 显示区（依上下/下侧标志与滚动条系统度量修正），对 +0x108 页列表逐页 SetWindowPos 定位并使父窗口重绘。"
+  },
+  {
+   "addr": "1400ec310",
+   "old": "FUN_1400EC310",
+   "spelling_variants": [
+    "FUN_1400EC310"
+   ],
+   "name": "PECMD_OnTabSelChange",
+   "confidence": "medium",
+   "evidence": "TCM 取当前选择并与 +0x120 缓存比较，隐藏旧页 HWND、显示新页、SetFocus，并写 &&控件名.Select 变量为新索引+1。"
+  },
+  {
+   "addr": "1400ef08c",
+   "old": "FUN_1400EF08C",
+   "spelling_variants": [
+    "FUN_1400EF08C"
+   ],
+   "name": "PECMD_DrawVertCenteredText",
+   "confidence": "medium",
+   "evidence": "先 DT_CALCRECT 测量文本高度，按差值一半 OffsetRect 垂直居中并左移 2px 后正式 DrawTextW，绘制垂直居中文本。"
+  },
+  {
+   "addr": "1400ef654",
+   "old": "FUN_1400EF654",
+   "spelling_variants": [
+    "FUN_1400EF654"
+   ],
+   "name": "PECMD_RefreshControlVisibility",
+   "confidence": "high",
+   "evidence": "读 GWL_STYLE 的 WS_VISIBLE 位，可见时 ShowWindow(SW_HIDE) 再 SW_SHOW 强制刷新该控件窗口显示状态。"
+  },
+  {
+   "addr": "1400f0df4",
+   "old": "FUN_1400F0DF4",
+   "spelling_variants": [
+    "FUN_1400F0DF4"
+   ],
+   "name": "PECMD_DrawScaledBarFill",
+   "confidence": "medium",
+   "evidence": "按对象+0x50浮点比例先用参数色填充矩形、再按比例填充左侧条带，最后可选 DrawEdge(9,0x200f) 描边，是自绘比例条/进度面的绘制例程。"
+  },
+  {
+   "addr": "1400f1448",
+   "old": "FUN_1400F1448",
+   "spelling_variants": [
+    "FUN_1400F1448"
+   ],
+   "name": "PECMD_SetHotTrackWindow",
+   "confidence": "medium",
+   "evidence": "向全局 DAT_14013e400（当前热跟踪窗口）发 0x44C 通知旧窗口退出，记录新 HWND 并 PostMessage WM_USER；调用处均为鼠标悬停热跟踪切换。"
+  },
+  {
+   "addr": "1400f31cc",
+   "old": "FUN_1400F31CC",
+   "spelling_variants": [
+    "FUN_1400F31CC"
+   ],
+   "name": "PECMD_InvalidateGroupItems",
+   "confidence": "low",
+   "evidence": "从 +0x398 组表取组内成员偏移，逐项向子窗口发送自定义消息 0x102a 使各成员项失效重绘；具体业务含义未能完全确认。"
+  },
+  {
+   "addr": "1400f3308",
+   "old": "FUN_1400F3308",
+   "spelling_variants": [
+    "FUN_1400F3308"
+   ],
+   "name": "PECMD_ListSubItemHitTest",
+   "confidence": "high",
+   "evidence": "向 ListView 发 LVM_SUBITEMHITTEST(0x1039) 得到命中项/子项，命中第 0 项且带状态图标标志时再用 LVM_GETITEMRECT+PtInRect 细化判定。"
+  },
+  {
+   "addr": "1400f5584",
+   "old": "FUN_1400F5584",
+   "spelling_variants": [
+    "FUN_1400F5584"
+   ],
+   "name": "PECMD_ItemPropFindIdxList1",
+   "confidence": "medium",
+   "evidence": "在对象+0x260 的记录数组（首整型为 id）中线性查找匹配 id 的表项，输出 rec[2] 并返回下标，找不到返回 -1。"
+  },
+  {
+   "addr": "1400f5608",
+   "old": "FUN_1400F5608",
+   "spelling_variants": [
+    "FUN_1400F5608"
+   ],
+   "name": "PECMD_ItemPropFindIdxList2",
+   "confidence": "medium",
+   "evidence": "在对象+0x278 的记录数组中按 id 线性查找，输出 rec[2] 并返回下标，找不到返回 -1。"
+  },
+  {
+   "addr": "1400f568c",
+   "old": "FUN_1400F568C",
+   "spelling_variants": [
+    "FUN_1400F568C"
+   ],
+   "name": "PECMD_ItemPropFindIdxSub1",
+   "confidence": "medium",
+   "evidence": "在对象+0x290 的记录数组中按 rec[0]==id 且 rec[4]==副键 双条件查找，输出 rec[2] 并返回下标。"
+  },
+  {
+   "addr": "1400f593c",
+   "old": "FUN_1400F593C",
+   "spelling_variants": [
+    "FUN_1400F593C"
+   ],
+   "name": "PECMD_ItemPropFindIdxList3",
+   "confidence": "medium",
+   "evidence": "在对象+0x2a8 的记录数组中按 id 线性查找，输出 rec[2] 并返回下标，找不到返回 -1。"
+  },
+  {
+   "addr": "1400f59c0",
+   "old": "FUN_1400F59C0",
+   "spelling_variants": [
+    "FUN_1400F59C0"
+   ],
+   "name": "PECMD_ItemPropFindIdxList4",
+   "confidence": "medium",
+   "evidence": "在对象+0x2c0 的记录数组中按 id 线性查找，输出 rec[2] 并返回下标，找不到返回 -1。"
+  },
+  {
+   "addr": "1400f5a44",
+   "old": "FUN_1400F5A44",
+   "spelling_variants": [
+    "FUN_1400F5A44"
+   ],
+   "name": "PECMD_ItemPropFindIdxSub2",
+   "confidence": "medium",
+   "evidence": "在对象+0x2d8 的记录数组中按 rec[0]==id 且 rec[4]==副键 双条件查找，输出 rec[2] 并返回下标。"
+  },
+  {
+   "addr": "1400f5d50",
+   "old": "FUN_1400F5D50",
+   "spelling_variants": [
+    "FUN_1400F5D50"
+   ],
+   "name": "PECMD_DtorControlStyleObj",
+   "confidence": "low",
+   "evidence": "置虚表 PTR_FUN_14012c550 后 DeleteObject 槽0x22 GDI 对象并释放 0x1a/0x1d/0x20 字符串槽，最终经 FUN_1400e8940 还原子窗口过程；对应构造 FUN_1400f5c74。确切类名未定故低置信。"
+  },
+  {
+   "addr": "1400ff2bc",
+   "old": "FUN_1400FF2BC",
+   "spelling_variants": [
+    "FUN_1400FF2BC"
+   ],
+   "name": "PECMD_BuildTreeIndexPathStr",
+   "confidence": "high",
+   "evidence": "沿 TVM_GETNEXTITEM/TVGN_PARENT 逐级上行收集节点序号，按 \"%d.\" 反序拼接成树视图选中项的点分索引路径字符串。"
+  },
+  {
+   "addr": "1400ff414",
+   "old": "FUN_1400FF414",
+   "spelling_variants": [
+    "FUN_1400FF414"
+   ],
+   "name": "PECMD_FindTreeItemByPath",
+   "confidence": "high",
+   "evidence": "解析点分数字路径（前缀 @ 时直接当作句柄返回），从根起按 TVGN_ROOT/NEXT/CHILD 逐层下行定位树视图项并返回句柄。"
+  }
+ ],
+ "skips": [
+  {
+   "addr": "1400dfb14",
+   "reason": "进入批次时已被并发更新的 rename_map.json 提案覆盖（tools/name_proposals.json 已含该地址），按规则跳过"
+  },
+  {
+   "addr": "1400b2ca8",
+   "reason": "已被并发更新后的 tools/rename_map.json 收录为 PECMD_RenderTextBitmapIcon，跳过"
+  }
+ ]
+}

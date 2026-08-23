@@ -38,9 +38,9 @@ extern int32_t FUN_14005B184(const char *a, const char *b, int n);
 extern void FUN_140060A74(uint8_t *buf, int len);
 extern int32_t FUN_1400E7994(uint32_t spec, const uint8_t *src, int srclen,
                                uint16_t *dst, int dstcap, uint32_t key);
-extern void FUN_1400E706C(uint8_t **pp, uint8_t key);
+extern void PECMD_SkipEncByteToEol(uint8_t **pp, uint8_t key);
 extern void FUN_1400E7098(uint8_t **pp, uint8_t key);
-extern void FUN_1400E70C0(WCHAR **pp, uint16_t key);
+extern void PECMD_SkipEncWCharToEol(WCHAR **pp, uint16_t key);
 extern void FUN_1400E70F4(WCHAR **pp, uint16_t key);
 extern void PECMD_ResReenc(WCHAR *src, int64_t *ps, uint32_t flag,
                            uint16_t key); /* @0x140075c7c TODO(verify): 按代码页二次转换 */
@@ -114,14 +114,14 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
         uint8_t *pb = (uint8_t *)pHead;
         if (pb[0] == 0x40) pb++;
         if (pb[0] == 0x3a && pb[1] == 0x3a) {
-            FUN_1400E706C(&pCur, keyLo);
+            PECMD_SkipEncByteToEol(&pCur, keyLo);
             FUN_1400E7098(&pCur, keyLo);
         }
     }
     if (((uint8_t)*pCur ^ keyLo) == 0x40) pCur++;
     if (((int8_t)*pCur ^ (int32_t)(key & 0xffff)) == 0x23 &&
         ((int8_t)pCur[1] ^ (int32_t)(key & 0xffff)) == 0x21) {
-        FUN_1400E706C(&pCur, keyLo);
+        PECMD_SkipEncByteToEol(&pCur, keyLo);
         FUN_1400E7098(&pCur, keyLo);
     }
     {
@@ -232,13 +232,13 @@ postproc:
             WCHAR *w = (WCHAR *)(intptr_t)ps[0];
             if ((w[0] ^ key16) == 0x40) w++;
             if (((w[0] ^ key16) == 0x3a) && ((w[1] ^ key16) == 0x3a)) {
-                FUN_1400E70C0(&w, key16);
+                PECMD_SkipEncWCharToEol(&w, key16);
                 FUN_1400E70F4(&w, key16);
             }
             w = (WCHAR *)(intptr_t)ps[0];
             if ((w[0] ^ key16) == 0x40) w++;
             if (((w[0] ^ key16) == 0x23) && ((w[1] ^ key16) == 0x21)) {
-                FUN_1400E70C0(&w, key16);
+                PECMD_SkipEncWCharToEol(&w, key16);
                 FUN_1400E70F4(&w, key16);
             }
             /* 拷贝 '#' 处起的 <=0x20 个 WCHAR 到 pHead（WCHAR 级 XOR），比较 "#code=" */

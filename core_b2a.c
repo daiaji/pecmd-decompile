@@ -31,9 +31,9 @@ extern void PECMD_SetObjectVtable(void *obj);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
 extern HMENU PECMD_BuildImDiskMenu(int64_t *obj, ULARGE_INTEGER pos, int mode,
                            int64_t *out, uint64_t flags);
-extern uint64_t FUN_140028A00(void *app, HWND hwnd, uint32_t msg, HDC hdc, HWND wnd);
-extern HGDIOBJ FUN_140037BA8(void *script, HWND hwnd, uint32_t msg, HDC hdc, void *p4);
-extern int64_t FUN_14002EE44(uintptr_t script, HWND hwnd, uint32_t msg, void *wParam,
+extern uint64_t PECMD_HelpDlgProc(void *app, HWND hwnd, uint32_t msg, HDC hdc, HWND wnd);
+extern HGDIOBJ PECMD_LogoDlgProc(void *script, HWND hwnd, uint32_t msg, HDC hdc, void *p4);
+extern int64_t PECMD_MainMsgWndProc(uintptr_t script, HWND hwnd, uint32_t msg, void *wParam,
                              int64_t lParam);
 extern uint32_t PECMD_ParseSize(LPWSTR s, int a, int b, int c);
 extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
@@ -43,7 +43,7 @@ extern void PECMD_RunFbwfHookScript(void);
 extern void PECMD_TerminateJobObject(int64_t obj);
 extern uint32_t FUN_1400E3288(uint32_t mode, uint32_t flags); /* @0x1400e3288 */
 extern void PECMD_BuildExecCommand(int64_t obj);
-extern void FUN_14004F788(int64_t obj);
+extern void PECMD_CleanupTaskEnvObject(int64_t obj);
 extern void *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
 extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
 extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
@@ -64,7 +64,7 @@ extern uint64_t *PECMD_SkipLeadingControls(WCHAR **pp);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern WCHAR **FUN_14007034C(void *ps, LPCWSTR src);
 extern bool FUN_1400C11C0(WCHAR **pp, int *out);
-extern uint64_t FUN_14002A508(uint64_t value, LPCWSTR text);
+extern uint64_t PECMD_ApplyTextWindowLayout(uint64_t value, LPCWSTR text);
 extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -154,28 +154,28 @@ void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
 /* ========== FUN_140037b84 @0x140037b84 ==========
  * @0x140037b84 size=35 — 窗口过程转发(asm→C): rcx=DAT_14013cfb0(g_pAppData),
  *   rdx=hwnd, r8d=msg, r9=hdc, [rsp+0x20]=wnd,
- *   call FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd)。
+ *   call PECMD_HelpDlgProc(g_pAppData, hwnd, msg, hdc, wnd)。
  */
 void FUN_140037b84(HWND hwnd, uint32_t msg, HDC hdc, HWND wnd)
 {
-    FUN_140028A00(g_pAppData, hwnd, msg, hdc, wnd);
+    PECMD_HelpDlgProc(g_pAppData, hwnd, msg, hdc, wnd);
 }
 
 /* ========== PECMD_ScriptWndProc @0x14003892c ==========
- * 窗口过程转发到 FUN_140037BA8(g_Script, ...)。
+ * 窗口过程转发到 PECMD_LogoDlgProc(g_Script, ...)。
  */
 void PECMD_ScriptWndProc(HWND hwnd, uint32_t msg, HDC hdc, void *p4)
 {
-    FUN_140037BA8(g_Script, hwnd, msg, hdc, p4);
+    PECMD_LogoDlgProc(g_Script, hwnd, msg, hdc, p4);
 }
 
 /* ========== PECMD_WndProcForward @0x14003e16c ==========
- * 窗口过程转发到 FUN_14002EE44((uintptr_t)g_Script, ...)。
+ * 窗口过程转发到 PECMD_MainMsgWndProc((uintptr_t)g_Script, ...)。
  */
 LRESULT PECMD_WndProcForward(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     /* UNIMPLEMENTED @0xFUN_14003e16c — decompile-failed, body 未还原 */
-FUN_14002EE44((uintptr_t)g_Script, hwnd, msg,
+PECMD_MainMsgWndProc((uintptr_t)g_Script, hwnd, msg,
                   (void *)(uintptr_t)wParam, (int64_t)lParam);
     return 0;
 }
@@ -214,7 +214,7 @@ int64_t PECMD_CleanupTaskThread(void *task)
         LeaveCriticalSection(&g_csThreadTbl);
     }
     PECMD_BuildExecCommand((int64_t)task);
-    FUN_14004F788((int64_t)task);
+    PECMD_CleanupTaskEnvObject((int64_t)task);
     free(task);
     EnterCriticalSection(&g_csInit);
     g_taskCount--;
@@ -505,7 +505,7 @@ void PECMD_SetPELogonParamText(uint64_t value, LPCWSTR text, HWND hwnd)
 {
     int len;
     if (hwnd == (HWND)0) {
-        FUN_14002A508(value, text);
+        PECMD_ApplyTextWindowLayout(value, text);
     } else {
         len = lstrlenW(text);
         PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),

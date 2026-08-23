@@ -15,7 +15,7 @@
  *   捕获父窗口背景         FUN_1400FD5E8    @0x1400fd5e8
  *   控件悬停定时器         FUN_1400FD86C   @0x1400fd86c
  *   控件鼠标消息           FUN_1400FDEDC     @0x1400fdedc
- *   树项路径查找           FUN_1400FF414          @0x1400ff414
+ *   树项路径查找           PECMD_FindTreeItemByPath          @0x1400ff414
  *   树路径串构建           FUN_1400FF5D0        @0x1400ff5d0
  *   树路径串构建(扩展)     FUN_1400FF730      @0x1400ff730
  *   树路径串构建(扩展2)    FUN_1400FF8A8     @0x1400ff8a8
@@ -52,12 +52,12 @@ extern void FUN_1400F5C10(int64_t *array);         /* @0x1400f5c10 */
 extern void FUN_1400F5D50(uint64_t *obj);   /* @0x1400f5d50 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 extern void FUN_1400FD538(HWND hwnd, int mode); /* @0x1400fd538 */
-extern void FUN_1400F1448(HWND hwnd);           /* @0x1400f1448 */
+extern void PECMD_SetHotTrackWindow(HWND hwnd);           /* @0x1400f1448 */
 extern int FUN_1400FEDA4(int64_t obj, uint64_t param2,
                                            uint64_t *out, uint32_t param4); /* @0x1400feda4 */
 extern int FUN_1400FEE24(int64_t obj, uint64_t param2,
                                      uint64_t *out);         /* @0x1400fee24 */
-extern int64_t FUN_1400FF2BC(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
+extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_AllocStrSlot(void *ps);
@@ -636,7 +636,7 @@ void FUN_1400FD86C(int64_t *obj, uint32_t timerId)
                 FUN_1400FD538(hwnd, 1);
         } else {
             if (g_tooltipThreshold == (int8_t)obj[0x14])
-                FUN_1400F1448(hwnd);
+                PECMD_SetHotTrackWindow(hwnd);
             if ((int8_t)obj[0x14] <= g_tooltipCount0)
                 *(int8_t *)((uint8_t *)obj + 0xa0) = (int8_t)obj[0x14] + 1;
             if (g_tooltipCount0 == (int8_t)obj[0x14])
@@ -733,10 +733,10 @@ dispatch:
     return 0;
 }
 
-/* ========== FUN_1400FF414 @0x1400ff414 ==========
+/* ========== PECMD_FindTreeItemByPath @0x1400ff414 ==========
  * 按路径数字串（"1.2.3" 或 "@n"）在树控件中查找 HTREEITEM。
  */
-uint64_t FUN_1400FF414(int64_t obj, WCHAR *path, uint64_t *out)
+uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out)
 {
     WCHAR *p = path;
     uint64_t hItem = 0;
@@ -811,7 +811,7 @@ int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem,
         value = (uint64_t)-(int64_t)(ok != 0) & value;
         if ((value & 2) != 0) {
             if (mode == 0) {
-                FUN_1400FF2BC(obj, hItem, out);
+                PECMD_BuildTreeIndexPathStr(obj, hItem, out);
             } else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];
@@ -850,7 +850,7 @@ int64_t FUN_1400FF730(int64_t obj, int64_t *out, WPARAM hItem,
         lr = SendMessageW(hwnd, 0x1127, hItem, 0xf000);
         if ((uint32_t)lr >> 0xc != 1) {
             if ((flags & 0x10) == 0) {
-                FUN_1400FF2BC(obj, hItem, out);
+                PECMD_BuildTreeIndexPathStr(obj, hItem, out);
             } else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];
@@ -896,7 +896,7 @@ int64_t FUN_1400FF8A8(int64_t obj, int64_t *out, uint64_t hItem,
         ok = FUN_1400FEE24(obj, hItem, &value);
         if (ok != 0 && (value & 2) != 0) {
             if ((flags & 0x10) == 0) {
-                FUN_1400FF2BC(obj, hItem, out);
+                PECMD_BuildTreeIndexPathStr(obj, hItem, out);
             } else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];

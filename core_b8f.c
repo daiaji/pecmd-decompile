@@ -15,7 +15,7 @@
  *   添加字符串列表项       FUN_1400EC71C @0x1400ec71c
  *   初始化字符串对象       FUN_1400ECE2C @0x1400ece2c
  *   销毁 DC 对象           FUN_1400EEEA0 @0x1400eeea0
- *   居中绘制文本           FUN_1400EF08C @0x1400ef08c
+ *   居中绘制文本           PECMD_DrawVertCenteredText @0x1400ef08c
  *   矩形内绘制图标         FUN_1400EFF58 @0x1400eff58
  *   取/建对象画刷          FUN_1400F0A3C @0x1400f0a3c
  *   刷新滚动条可见性       FUN_1400F2C44 @0x1400f2c44
@@ -28,13 +28,13 @@
  *   设置列表选择           FUN_1400F5104 @0x1400f5104
  *   设置列表选择(单值)    FUN_1400F51D8 @0x1400f51d8
  *   发送控件 0x83 消息     FUN_1400F5338 @0x1400f5338
- *   查找映射值 A           FUN_1400F5584 @0x1400f5584
- *   查找映射值 B           FUN_1400F5608 @0x1400f5608
- *   查找映射双值 A         FUN_1400F568C @0x1400f568c
+ *   查找映射值 A           PECMD_ItemPropFindIdxList1 @0x1400f5584
+ *   查找映射值 B           PECMD_ItemPropFindIdxList2 @0x1400f5608
+ *   查找映射双值 A         PECMD_ItemPropFindIdxSub1 @0x1400f568c
  *   添加映射双值 A         FUN_1400F57F4 @0x1400f57f4
- *   查找映射值 C           FUN_1400F593C @0x1400f593c
- *   查找映射值 D           FUN_1400F59C0 @0x1400f59c0
- *   查找映射双值 B         FUN_1400F5A44 @0x1400f5a44
+ *   查找映射值 C           PECMD_ItemPropFindIdxList3 @0x1400f593c
+ *   查找映射值 D           PECMD_ItemPropFindIdxList4 @0x1400f59c0
+ *   查找映射双值 B         PECMD_ItemPropFindIdxSub2 @0x1400f5a44
  *   添加映射双值 B         FUN_1400F5ADC @0x1400f5adc
  *   销毁静态控件对象       FUN_1400FD1A8 @0x1400fd1a8
  *   查询控件值(带类型)    FUN_1400FEDA4 @0x1400feda4
@@ -371,10 +371,10 @@ void FUN_1400EEEA0(uint64_t *obj)
     FUN_1400F06FC(obj);
 }
 
-/* ========== FUN_1400EF08C @0x1400ef08c ==========
+/* ========== PECMD_DrawVertCenteredText @0x1400ef08c ==========
  * 先用 DT_CALCRECT 测量，再纵向居中并右移 2 像素后实际绘制。
  */
-void FUN_1400EF08C(HDC hdc, LPCWSTR text, int length,
+void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length,
                             RECT *rect, uint32_t flags)
 {
     RECT measure = *rect;
@@ -739,20 +739,20 @@ static void PECMD_AddDoubleMapEntry(int64_t obj, int dataOff, int capOff,
     FUN_1400639F0(arr, cap, cnt, &node, 8, 1);
 }
 
-/* ========== FUN_1400F5584 @0x1400f5584 ========== */
-int64_t FUN_1400F5584(int64_t obj, int key, int *outValue)
+/* ========== PECMD_ItemPropFindIdxList1 @0x1400f5584 ========== */
+int64_t PECMD_ItemPropFindIdxList1(int64_t obj, int key, int *outValue)
 {
     return PECMD_FindSingleMapValue(obj, 0x260, 0x268, 0x270, key, outValue);
 }
 
-/* ========== FUN_1400F5608 @0x1400f5608 ========== */
-int64_t FUN_1400F5608(int64_t obj, int key, int *outValue)
+/* ========== PECMD_ItemPropFindIdxList2 @0x1400f5608 ========== */
+int64_t PECMD_ItemPropFindIdxList2(int64_t obj, int key, int *outValue)
 {
     return PECMD_FindSingleMapValue(obj, 0x278, 0x280, 0x288, key, outValue);
 }
 
-/* ========== FUN_1400F568C @0x1400f568c ========== */
-int64_t FUN_1400F568C(int64_t obj, int key1, int key2, int *outValue)
+/* ========== PECMD_ItemPropFindIdxSub1 @0x1400f568c ========== */
+int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int key1, int key2, int *outValue)
 {
     return PECMD_FindDoubleMapValue(obj, 0x290, 0x298, 0x2a0,
                                     key1, key2, outValue);
@@ -765,20 +765,20 @@ void FUN_1400F57F4(int64_t obj, int key1, int key2, uint64_t value)
                             key1, key2, value);
 }
 
-/* ========== FUN_1400F593C @0x1400f593c ========== */
-int64_t FUN_1400F593C(int64_t obj, int key, int *outValue)
+/* ========== PECMD_ItemPropFindIdxList3 @0x1400f593c ========== */
+int64_t PECMD_ItemPropFindIdxList3(int64_t obj, int key, int *outValue)
 {
     return PECMD_FindSingleMapValue(obj, 0x2a8, 0x2b0, 0x2b8, key, outValue);
 }
 
-/* ========== FUN_1400F59C0 @0x1400f59c0 ========== */
-int64_t FUN_1400F59C0(int64_t obj, int key, int *outValue)
+/* ========== PECMD_ItemPropFindIdxList4 @0x1400f59c0 ========== */
+int64_t PECMD_ItemPropFindIdxList4(int64_t obj, int key, int *outValue)
 {
     return PECMD_FindSingleMapValue(obj, 0x2c0, 0x2c8, 0x2d0, key, outValue);
 }
 
-/* ========== FUN_1400F5A44 @0x1400f5a44 ========== */
-int64_t FUN_1400F5A44(int64_t obj, int key1, int key2, int *outValue)
+/* ========== PECMD_ItemPropFindIdxSub2 @0x1400f5a44 ========== */
+int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int key1, int key2, int *outValue)
 {
     return PECMD_FindDoubleMapValue(obj, 0x2d8, 0x2e0, 0x2e8,
                                     key1, key2, outValue);

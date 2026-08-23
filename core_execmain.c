@@ -56,7 +56,7 @@ extern int64_t FUN_14001B4F8(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
                                int64_t len);                   /* @0x14001e69c core_var3.c */
 extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0x140073ccc core_exec5.c */
-extern void FUN_14002452C(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c core_exec3.c */
+extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c core_exec3.c */
 extern void PECMD_SetEnvIfChanged(LPCWSTR name, LPCWSTR value);      /* @0x140061508 core_exec3.c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 core_exec5.c */
 extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key,
@@ -254,7 +254,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         *(uint8_t *)((char *)pExec + 0xda) |= 1;
     }
     if (pCurFile != NULL) {
-        FUN_14002452C(pExec, curFileTmp, (uint16_t)flags & 0x40);
+        PECMD_SetCurFileVariables(pExec, curFileTmp, (uint16_t)flags & 0x40);
     }
     pWinName = g_szEmpty;
     if (curFileTmp != NULL) {

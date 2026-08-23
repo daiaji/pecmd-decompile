@@ -8,7 +8,7 @@
  *   脚本编码行插入   FUN_140024F20 @0x140024f20
  *   sysinit 执行     PECMD_RunSysInit   @0x140025180
  *   sysinit 检查     FUN_1400251AC  @0x1400251ac
- *   脚本子执行       FUN_140030DCC @0x140030dcc
+ *   脚本子执行       PECMD_InvokeSubRoutine @0x140030dcc
  *   脚本 @CALL 插入  FUN_140030F1C @0x140030f1c
  *   脚本编码块执行   PECMD_ExecuteScriptBlock     @0x140031068
  *   token 推进       FUN_1400679DC      @0x1400679dc
@@ -57,7 +57,7 @@ extern void PECMD_CloseRestartByName(void *script, LPCWSTR path, void *win, int 
 extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 */
 extern void FUN_14004EAA8(void *script, int mode);   /* @0x14004eaa8 脚本结构清理 */
 extern uint32_t PECMD_ParseScriptSegments(void *script, int a, int b, WCHAR **pc, void *sub, uint32_t flags); /* @0x140030420 */
-extern uint32_t FUN_1400307C8(WCHAR **buf, int a, LPCWSTR b, WCHAR **c, void *sub, uint32_t flags); /* @0x1400307c8 */
+extern uint32_t PECMD_LoadScriptFileSegment(WCHAR **buf, int a, LPCWSTR b, WCHAR **c, void *sub, uint32_t flags); /* @0x1400307c8 */
 extern int64_t FUN_1400B638C(void *script, void *buf, void *a3, void *a4, uint64_t flags,
                              void *a6, void *a7);   /* @0x1400b638c 脚本执行主入口 */
 
@@ -196,7 +196,7 @@ void FUN_1400251AC(void *script)
     }
 }
 
-/* ========== FUN_140030DCC @0x140030dcc ==========
+/* ========== PECMD_InvokeSubRoutine @0x140030dcc ==========
  * 按模板执行子脚本: 复制模板结构, 注入 &&CurDir + XOR 分隔符表,
  * 交给 PECMD_ParseScriptSegments 执行。
  *   script : 宿主脚本表
@@ -204,7 +204,7 @@ void FUN_1400251AC(void *script)
  *   flags  : 高 16 位 = XOR 密钥, 低 16 位执行标志
  * 返回 (执行结果 & 0xffff) | flags。
  */
-uint32_t FUN_140030DCC(void *script, void *tmpl, uint32_t flags)
+uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
 {
     WCHAR *nls = NULL;                  /* local_res10 "\n" */
     WCHAR *cwd = NULL;                  /* local_res8 当前目录 */
@@ -331,7 +331,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     FUN_1400629B8(sub, WSTR("&&CurDir"), l1a8);
     FUN_14006159C(sub, (uint64_t)key);
     *l198 ^= key;                       /* 编码流首字符 = key */
-    r = FUN_1400307C8(&l198, 0, l178, &l1a0, sub, (uint32_t)key << 16); /* TODO(verify) */
+    r = PECMD_LoadScriptFileSegment(&l198, 0, l178, &l1a0, sub, (uint32_t)key << 16); /* TODO(verify) */
     if (r == 0xffffffffu) {
         ret = GetLastError();
     } else {

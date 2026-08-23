@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   写远程进程 WinExec 补丁  FUN_1400229F8   @0x1400229f8
  *   枚举显示模式数组        PECMD_EnumDisplayModes      @0x140023338
- *   超时消息泵/钩子等待     FUN_140025B10 @0x140025b10
+ *   超时消息泵/钩子等待     PECMD_WaitKeyPressHooked @0x140025b10
  *   解析窗口样式关键字       FUN_140025CE0 @0x140025ce0
  *   手工映射加载 DLL        FUN_1400282D4         @0x1400282d4
  *   图形窗口子类过程         PECMD_GraphSubclassWndProc       @0x140028560
@@ -162,7 +162,7 @@ extern uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR path, LPCWSTR name, int 
 extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR name);
 extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
 extern void PECMD_InitRamdataRegistry(uint32_t mode);
-extern int64_t FUN_14003D608(uint32_t a, uint32_t b, LPCWSTR menu);
+extern int64_t PECMD_PerformSystemShutdown(uint32_t a, uint32_t b, LPCWSTR menu);
 extern void PECMD_RunShutdownScript(LPCWSTR menu, uint32_t mode);
 extern LRESULT CallWindowProcW(void *prev, HWND hWnd, UINT msg, WPARAM wParam,
                                LPARAM lParam);
@@ -279,11 +279,11 @@ skip_duplicate:
     return uVar5;
 }
 
-/* ========== FUN_140025B10 @0x140025b10 ==========
+/* ========== PECMD_WaitKeyPressHooked @0x140025b10 ==========
  * 安装/复用 GETMESSAGE 钩子，在指定超时内派发消息。
  * TODO(verify): g_hookBusyFlag/074 与钩子过程 PECMD_KeyboardHookProc 的交互语义。
  */
-int FUN_140025B10(uint32_t timeout, uint32_t flags)
+int PECMD_WaitKeyPressHooked(uint32_t timeout, uint32_t flags)
 {
     DWORD DVar1;
     DWORD DVar2;
@@ -1315,7 +1315,7 @@ int64_t FUN_14003D92C(void)
             ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD))g_pSHSetValueW)
                 (HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("LOCKDOWN"), 4);
         }
-        lVar4 = FUN_14003D608(uVar7, uVar6 | uVar8 | 1, local_a8);
+        lVar4 = PECMD_PerformSystemShutdown(uVar7, uVar6 | uVar8 | 1, local_a8);
     } else {
 skip_menu:
         wsprintfW(local_a8, WSTR("MENU-SKIP:0x%X:0x%X/%u"), g_ShowWindow,

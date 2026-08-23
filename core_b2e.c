@@ -117,14 +117,14 @@ extern void FUN_14001c82c(void);
 extern void FUN_140103a20(void);
 extern BOOL PECMD_DosDeviceMount(LPCWSTR a, LPCWSTR b, WCHAR *c, uint32_t d,
                           char e);
-extern void FUN_1400279D8(uint32_t dev, LPCWSTR a, LPCWSTR b);
+extern void PECMD_FormatImDiskDrive(uint32_t dev, LPCWSTR a, LPCWSTR b);
 extern void FUN_140035B40(uint32_t a, int b, int c);
 extern void PECMD_DeleteDriveMountPoint(uint16_t ch);
 extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
                               uint64_t e, uint32_t f, uint64_t g, int64_t h,
                               int i);
 extern void PECMD_EnsureMciLoaded(void);
-extern int64_t FUN_14003D608(int mode, uint32_t flags, LPCWSTR name);
+extern int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR name);
 extern void PECMD_RunShutdownScript(LPCWSTR name, uint32_t mode);
 extern void PECMD_AppendDebugLog(LPCSTR msg);
 extern bool PECMD_ParseNumber(int64_t *pp, int *out);
@@ -2093,7 +2093,7 @@ io_ready:
         }
     }
     if (mountPoint != NULL) {
-        FUN_1400279D8((uint32_t)*unit, drive, mountPoint);
+        PECMD_FormatImDiskDrive((uint32_t)*unit, drive, mountPoint);
     }
     FUN_14005B104((WCHAR **)&ioBuf);
     return 0;
@@ -2336,7 +2336,7 @@ uint64_t FUN_14003DB00(WCHAR *cmdline)
         if (ch == 0) {
 skip_to_exec:
             PECMD_SkipLeadingControls(&rest);
-            return (uint64_t)FUN_14003D608(mode, actionFlags | flags, WSTR("CMD"));
+            return (uint64_t)PECMD_PerformSystemShutdown(mode, actionFlags | flags, WSTR("CMD"));
         }
         isForce = FUN_1400660AC("--", (int64_t *)&cmd, 2);
         if (isForce != '\0') {

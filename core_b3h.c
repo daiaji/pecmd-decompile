@@ -27,7 +27,7 @@
  *   读取加密字节     FUN_14006857C @0x14006857c
  *   解析 token       FUN_140069B68 @0x140069b68
  *   清理解析器       FUN_140073C58 @0x140073c58
- *   读取剪贴板文本   FUN_140078E90 @0x140078e90
+ *   读取剪贴板文本   PECMD_AssignClipboardText @0x140078e90
  *   解析数字字段     PECMD_ParseNumericField @0x140079980
  *   连接 tokens      FUN_140079C80 @0x140079c80
  *   解析路径记录2    FUN_14007EFA4 @0x14007efa4
@@ -529,10 +529,10 @@ void FUN_140073C58(int64_t parser)
     LeaveCriticalSection(&g_csInit);
 }
 
-/* ========== FUN_140078E90 @0x140078e90 ==========
+/* ========== PECMD_AssignClipboardText @0x140078e90 ==========
  * 读取剪贴板文本。
  */
-int64_t *FUN_140078E90(int64_t *out)
+int64_t *PECMD_AssignClipboardText(int64_t *out)
 {
     *(uint16_t *)*out = 0;
     if (OpenClipboard((HWND)0)) {

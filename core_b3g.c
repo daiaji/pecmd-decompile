@@ -23,7 +23,7 @@
  *   十六进制转字节   PECMD_HexStringToBytes @0x14006ad9c
  *   字符串转 ID      FUN_14006B1E8 @0x14006b1e8
  *   追加引号串       FUN_14006B684 @0x14006b684
- *   释放对象 C       FUN_14006BF8C @0x14006bf8c
+ *   释放对象 C       PECMD_DtorTrackbarControl @0x14006bf8c
  *   释放对象 D       FUN_14006C3CC @0x14006c3cc
  *   释放对象 E       FUN_14006C430 @0x14006c430
  *   追加 I64         FUN_14006CC70 @0x14006cc70
@@ -466,10 +466,10 @@ void FUN_14006B684(int64_t *pp, uint8_t *text, int len)
     *(uint16_t *)*pp = 0;
 }
 
-/* ========== FUN_14006BF8C @0x14006bf8c ==========
+/* ========== PECMD_DtorTrackbarControl @0x14006bf8c ==========
  * 释放对象（vtable 1401266c0）。
  */
-void FUN_14006BF8C(uint64_t *obj)
+void PECMD_DtorTrackbarControl(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401266c0;
     int64_t *plVar1 = (int64_t *)obj[7];

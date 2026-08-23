@@ -65,7 +65,7 @@ extern uint32_t PECMD_IsIconResource(uint16_t *obj);
 extern uint32_t PECMD_IsBitmapResource(uint16_t *obj);
 
 /* ---- 已实现依赖 ---- */
-extern void FUN_14006BF8C(uint64_t *obj);   /* @0x14006bf8c core_b3g.c */
+extern void PECMD_DtorTrackbarControl(uint64_t *obj);   /* @0x14006bf8c core_b3g.c */
 extern uint32_t FUN_14005D7E8(uint16_t *obj); /* @0x14005d7e8 core_b3f.c */
 
 /* ---- 本批引用的全局数据 ---- */
@@ -250,7 +250,7 @@ uint64_t *FUN_1400C3CA4(uint64_t *s, uint32_t out)
     FUN_14005B104((WCHAR **)(s + 0x11));
     FUN_14005B104((WCHAR **)(s + 0x10));
     FUN_14005B104((WCHAR **)(s + 0xf));
-    FUN_14006BF8C(s);
+    PECMD_DtorTrackbarControl(s);
     if ((out & 1) != 0) {
         free(s);
     }

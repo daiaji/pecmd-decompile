@@ -67,15 +67,15 @@ extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
                           int64_t esize, int32_t mode);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
 extern void FUN_1400F3674(HWND hwnd);
-extern int64_t FUN_1400F5608(int64_t obj, int idx, int *out);
-extern int64_t FUN_1400F59C0(int64_t obj, int idx, int *out);
-extern int64_t FUN_1400F5584(int64_t obj, int idx, int *out);
-extern int64_t FUN_1400F593C(int64_t obj, int idx, int *out);
-extern int64_t FUN_1400F568C(int64_t obj, int idx, int mode,
+extern int64_t PECMD_ItemPropFindIdxList2(int64_t obj, int idx, int *out);
+extern int64_t PECMD_ItemPropFindIdxList4(int64_t obj, int idx, int *out);
+extern int64_t PECMD_ItemPropFindIdxList1(int64_t obj, int idx, int *out);
+extern int64_t PECMD_ItemPropFindIdxList3(int64_t obj, int idx, int *out);
+extern int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int idx, int mode,
                              int *out);
-extern int64_t FUN_1400F5A44(int64_t obj, int idx, int mode,
+extern int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int idx, int mode,
                              int *out);
-extern void FUN_1400F3308(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
+extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
 extern void FUN_1400F5104(int64_t obj, int idx, int mode);
 extern void *FUN_1400E57C0(void *obj);
 
@@ -458,11 +458,11 @@ int FUN_1400F5DC4(int64_t obj, int key, int fallback, int *out)
     int value;
     int64_t idx;
 
-    idx = FUN_1400F5608(obj, key, &value);
+    idx = PECMD_ItemPropFindIdxList2(obj, key, &value);
     if (idx >= 0) {
         *out = value;
     }
-    idx = FUN_1400F59C0(obj, key, &value);
+    idx = PECMD_ItemPropFindIdxList4(obj, key, &value);
     if (idx >= 0) {
         fallback = value;
     }
@@ -477,11 +477,11 @@ int FUN_1400F5EF8(int64_t obj, int key, int fallback, int *out)
     int value;
     int64_t idx;
 
-    idx = FUN_1400F5584(obj, key, &value);
+    idx = PECMD_ItemPropFindIdxList1(obj, key, &value);
     if (idx >= 0) {
         *out = value;
     }
-    idx = FUN_1400F593C(obj, key, &value);
+    idx = PECMD_ItemPropFindIdxList3(obj, key, &value);
     if (idx >= 0) {
         fallback = value;
     }
@@ -496,11 +496,11 @@ int FUN_1400F6034(int64_t obj, int key1, int key2, int fallback, int *out)
     int value;
     int64_t idx;
 
-    idx = FUN_1400F568C(obj, key1, key2, &value);
+    idx = PECMD_ItemPropFindIdxSub1(obj, key1, key2, &value);
     if (idx >= 0) {
         *out = value;
     }
-    idx = FUN_1400F5A44(obj, key1, key2, &value);
+    idx = PECMD_ItemPropFindIdxSub2(obj, key1, key2, &value);
     if (idx >= 0) {
         fallback = value;
     }
@@ -517,7 +517,7 @@ void FUN_1400F6944(int64_t obj)
 
     local_res8[0] = -2;
     local_res20[0] = -2;
-    FUN_1400F3308(obj, local_res8, local_res20);
+    PECMD_ListSubItemHitTest(obj, local_res8, local_res20);
     if ((*(int *)(obj + 0x3c8) >= 0) && ((*(uint8_t *)(obj + 0x3f8) & 2) != 0)) {
         int64_t data;
         int value;

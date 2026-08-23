@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   清理任务对象     FUN_14004F788 @0x14004f788
+ *   清理任务对象     PECMD_CleanupTaskEnvObject @0x14004f788
  *   按参数设置变量   FUN_1400544BC @0x1400544bc
  *   移除索引项       FUN_14005BE68 @0x14005be68
  *   LZ 解压          FUN_14005C260 @0x14005c260
@@ -152,10 +152,10 @@ extern int64_t g_i64E120;
 extern uint8_t g_u8D5D0;
 extern WCHAR g_szEmpty[];             /* g_szEmpty 空串 */
 
-/* ========== FUN_14004F788 @0x14004f788 ==========
+/* ========== PECMD_CleanupTaskEnvObject @0x14004f788 ==========
  * 清理任务/线程上下文对象：关闭句柄并释放各槽位。
  */
-void FUN_14004F788(int64_t task)
+void PECMD_CleanupTaskEnvObject(int64_t task)
 {
     HANDLE hObject;
 

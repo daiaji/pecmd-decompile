@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   查找顶层父窗口    FUN_1400E5788 @0x1400e5788
  *   按进程 ID 找窗口  FUN_1400E6458 @0x1400e6458
- *   存储格式化 I64    FUN_1400E96EC @0x1400e96ec
+ *   存储格式化 I64    PECMD_NewFormattedI64Str @0x1400e96ec
  *   分发窗口消息 F    FUN_1400EF620 @0x1400ef620
  *   取组合框选择      FUN_1400F3640 @0x1400f3640
  *   设置控件布局      FUN_1400F400C @0x1400f400c
@@ -63,10 +63,10 @@ uint64_t FUN_1400E6458(int64_t ctx)
     return *(uint64_t *)(ctx + 0x18);
 }
 
-/* ========== FUN_1400E96EC @0x1400e96ec ==========
+/* ========== PECMD_NewFormattedI64Str @0x1400e96ec ==========
  * 把整数格式化为宽字符串，再保存字符串指针到 out。
  */
-uint64_t *FUN_1400E96EC(uint64_t *out, uint64_t unused, uint64_t value)
+uint64_t *PECMD_NewFormattedI64Str(uint64_t *out, uint64_t unused, uint64_t value)
 {
     WCHAR buf[104];
 

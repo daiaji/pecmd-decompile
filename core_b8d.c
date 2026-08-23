@@ -8,13 +8,13 @@
  *   设置颜色画刷        FUN_1400E5A58 @0x1400e5a58
  *   虚表 +0xf0 分发     FUN_1400E5AAC @0x1400e5aac
  *   点是否在窗口内      FUN_1400E6314 @0x1400e6314
- *   安全格式化串        FUN_1400E6960 @0x1400e6960
+ *   安全格式化串        PECMD_SafeVFormatW @0x1400e6960
  *   格式化并赋值串      FUN_1400E6CBC @0x1400e6cbc
  *   对齐扩容            FUN_1400E6CF8 @0x1400e6cf8
  *   鼠标按下分发        FUN_1400EC9C0 @0x1400ec9c0
  *   释放串指针数组      FUN_1400ECDD8 @0x1400ecdd8
  *   初始化 DC 对象      FUN_1400EEE30 @0x1400eee30
- *   刷新可见窗口        FUN_1400EF654 @0x1400ef654
+ *   刷新可见窗口        PECMD_RefreshControlVisibility @0x1400ef654
  *   初始化图标对象      FUN_1400EFEC8 @0x1400efec8
  *   销毁图标对象主体    FUN_1400EFF10 @0x1400eff10
  *   绘制对象            FUN_1400F05F8 @0x1400f05f8
@@ -54,7 +54,7 @@ extern void FUN_1400F2B6C(int64_t obj); /* @0x1400f2b6c */
 extern void PECMD_AllocStrSlot(void *ps);
 extern void *FUN_1400E57C0(uint64_t *obj);
 extern void FUN_1400E8940(uint64_t *obj);
-extern void FUN_1400EC310(int64_t obj);
+extern void PECMD_OnTabSelChange(int64_t obj);
 extern void *FUN_1400F0648(uint64_t *obj, uint64_t value);
 extern void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target,
                           int64_t overrideObj);
@@ -130,11 +130,11 @@ BOOL FUN_1400E6314(HWND hwnd, POINT pt)
     return PtInRect(&rc, pt);
 }
 
-/* ========== FUN_1400E6960 @0x1400e6960 ==========
+/* ========== PECMD_SafeVFormatW @0x1400e6960 ==========
  * 原函数内部为 StringValidateDestW + StringVPrintfWorkerW，这里按项目
  * core_strbld.c 的同一简化方式使用 _snwprintf。TODO(verify): 仅 1 个可变参数。
  */
-void FUN_1400E6960(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg)
+void PECMD_SafeVFormatW(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg)
 {
     (void)_snwprintf(dest, cchDest, fmt, arg);
 }
@@ -145,7 +145,7 @@ void FUN_1400E6960(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg)
 void FUN_1400E6CBC(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
 {
     WCHAR buf[104];
-    FUN_1400E6960(buf, 99, fmt, arg);
+    PECMD_SafeVFormatW(buf, 99, fmt, arg);
     FUN_1400703E4(ps, buf);
 }
 
@@ -174,7 +174,7 @@ void FUN_1400EC9C0(int64_t *obj, uint32_t param2, uint64_t param3)
         *(void (**)(int64_t, uint32_t, WPARAM, LPARAM))(*obj + 8);
     fn((int64_t)obj[4], 0x201, (WPARAM)param2,
        (LPARAM)(int64_t)(int32_t)packed);
-    FUN_1400EC310((int64_t)obj);
+    PECMD_OnTabSelChange((int64_t)obj);
 }
 
 /* ========== FUN_1400ECDD8 @0x1400ecdd8 ==========
@@ -213,10 +213,10 @@ uint64_t *FUN_1400EEE30(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400EF654 @0x1400ef654 ==========
+/* ========== PECMD_RefreshControlVisibility @0x1400ef654 ==========
  * 窗口带 WS_VISIBLE 时执行一次隐藏再显示，用于刷新外观。
  */
-void FUN_1400EF654(int64_t obj)
+void PECMD_RefreshControlVisibility(int64_t obj)
 {
     uint32_t style = (uint32_t)GetWindowLongW(*(HWND *)(obj + OBJ_HWND), GWL_STYLE);
     if ((style >> 0x1c & 1) != 0) {

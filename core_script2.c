@@ -27,7 +27,7 @@ extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x140024
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
 extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern uint16_t FUN_14001B510(void);                     /* @0x14001b510 */
-extern void FUN_14002452C(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
+extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32_t *flags); /* @0x14001ea18 */
 
@@ -147,7 +147,7 @@ run_script:
             WCHAR *p2 = NULL;
             PECMD_AllocStrSlot(&p2);
             /* TODO(verify): 完整参数解析后执行 */
-            FUN_14002452C(&g_Script, cmdline, 0);
+            PECMD_SetCurFileVariables(&g_Script, cmdline, 0);
             /* 执行主脚本 */
             r = PECMD_RunCommand(&g_Script, cmdline, NULL, NULL, NULL, NULL);
             FUN_14005B104(&p2);

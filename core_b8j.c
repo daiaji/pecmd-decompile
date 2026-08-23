@@ -13,12 +13,12 @@
  *   查询控件值分发         FUN_1400F1234   @0x1400f1234
  *   控件按键消息处理       FUN_1400F1F78  @0x1400f1f78
  *   控件消息处理 A         FUN_1400F2DD4    @0x1400f2dd4
- *   命中测试控件           FUN_1400F3308       @0x1400f3308
+ *   命中测试控件           PECMD_ListSubItemHitTest       @0x1400f3308
  *   设置映射对条目         FUN_1400F4D1C      @0x1400f4d1c
  *   设置数组项条目         FUN_1400F60A4    @0x1400f60a4
  *   按值设置项             FUN_1400F8FCC     @0x1400f8fcc
  *   控件消息处理 B         FUN_1400FEF3C    @0x1400fef3c
- *   格式化控件范围串       FUN_1400FF2BC  @0x1400ff2bc
+ *   格式化控件范围串       PECMD_BuildTreeIndexPathStr  @0x1400ff2bc
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -515,12 +515,12 @@ uint64_t FUN_1400FEF3C(int64_t obj, int64_t pmsg)
     return PECMD_HandleControlMsgImpl(obj, pmsg, 0x108);
 }
 
-/* ========== FUN_1400F3308 @0x1400f3308 ==========
+/* ========== PECMD_ListSubItemHitTest @0x1400f3308 ==========
  * 命中测试: 以光标位置发 WM_0x1039 (结构中 8 字节起始含坐标 + 4 长度),
  * 结果写索引/标志; 命中首行时再用 WM_0x100E 矩形复核。
  * TODO(verify): 结构字段与 0x1038 的用途。
  */
-void FUN_1400F3308(int64_t obj, int *out_index, int *out_flag)
+void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag)
 {
     typedef struct {
         int32_t x, y;
@@ -746,12 +746,12 @@ void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
     }
 }
 
-/* ========== FUN_1400FF2BC @0x1400ff2bc ==========
+/* ========== PECMD_BuildTreeIndexPathStr @0x1400ff2bc ==========
  * 遍历上行/下行范围 (WM_0x110A), 生成 "起始号." 序列串拼接进 *out。
  * 首项前补空格; 返回最终串长度。
  * TODO(verify): wsprintfW 缺实参 (原始反编译) — 补 0 占位。
  */
-int64_t FUN_1400FF2BC(int64_t obj, LRESULT first, int64_t *out)
+int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first, int64_t *out)
 {
     uint8_t *dst;
     uint64_t local_res10;

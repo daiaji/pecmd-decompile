@@ -6,13 +6,13 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   服务命令          PECMD_ServiceControl @0x140020018
  *   创建快捷方式      FUN_140021A4C @0x140021a4c
- *   帮助对话框过程    FUN_140028A00 @0x140028a00
+ *   帮助对话框过程    PECMD_HelpDlgProc @0x140028a00
  *   枚举进程          FUN_14002D708 @0x14002d708
  *   安装字体          FUN_14002F454 @0x14002f454
  *   IF 条件求值       FUN_140032DC4 @0x140032dc4
  *   虚拟盘菜单构建    PECMD_BuildImDiskMenu @0x140034788
  *   虚拟盘命令        FUN_1400369D0 @0x1400369d0
- *   LOGO 窗口过程     FUN_140037BA8 @0x140037ba8
+ *   LOGO 窗口过程     PECMD_LogoDlgProc @0x140037ba8
  *   显示模式命令      FUN_140038D30 @0x140038d30
  *   设备目录扫描      FUN_14003B540 @0x14003b540
  *   文件操作命令      FUN_14003C06C @0x14003c06c
@@ -32,7 +32,7 @@
  * 本文件包含:
  *   PECMD_ServiceControl   @0x140020018   (PECMD_ServiceControl)
  *   FUN_140021A4C   @0x140021a4c   (FUN_140021A4C)
- *   FUN_140028A00   @0x140028a00   (FUN_140028A00)
+ *   PECMD_HelpDlgProc   @0x140028a00   (PECMD_HelpDlgProc)
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；原始地址保留在 @0x 注释。
@@ -104,7 +104,7 @@ extern short PECMD_NextNonDelimChar(WCHAR **pp);
 extern void PECMD_GrowByteBuffer(void *pp, int64_t size);
 extern void PECMD_AllocStrSlot(void *ps);
 extern uint64_t PECMD_ComparePrefixNoCaseLen(LPCWSTR a, LPCWSTR b);
-extern uint64_t *FUN_1400E96EC(uint64_t *a1, int a2, int64_t a3);
+extern uint64_t *PECMD_NewFormattedI64Str(uint64_t *a1, int a2, int64_t a3);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern LPCWSTR FUN_14005B6AC(HINSTANCE, UINT, LPWSTR, int);
 extern int64_t *FUN_1400702F0(int64_t *out, LPCSTR src, uint64_t len);
@@ -982,12 +982,12 @@ label_02261f:
     return lVar18;
 }
 
-/* ========== FUN_140028A00 @0x140028a00 ==========
+/* ========== PECMD_HelpDlgProc @0x140028a00 ==========
  * 帮助对话框窗口过程。
  * TODO(verify): HWND 类型被 Ghidra 复用作 WCHAR* 缓冲/整型，偏移按原反编译保留；
  *               StrStrW 在 stub 中返回 BOOL，实际为 LPWSTR。
  */
-uint64_t FUN_140028A00(int *app, HWND hwnd, uint32_t msg,
+uint64_t PECMD_HelpDlgProc(int *app, HWND hwnd, uint32_t msg,
                               HDC hdc, HWND wnd)
 {
     LPWSTR pWVar1;
@@ -1464,7 +1464,7 @@ label_0298c9:
             if ((int32_t)app[0x12] == (int32_t)0x80000000) {
                 app[0x12] = app[0xc];
             }
-            puVar21 = FUN_1400E96EC((uint64_t *)&local_178, 1, (int64_t)app[0x12]);
+            puVar21 = PECMD_NewFormattedI64Str((uint64_t *)&local_178, 1, (int64_t)app[0x12]);
             SetWindowTextW(local_1b8, (LPCWSTR)(uintptr_t)*puVar21);
             FUN_14005B104((WCHAR **)&local_178);
             PostMessageW(hwnd, 0x44e, 0, 0);
@@ -1665,7 +1665,7 @@ label_02a480:
                 }
             }
             pHVar18 = GetDlgItem(hwnd, 0x757a);
-            puVar21 = FUN_1400E96EC((uint64_t *)&local_168, 1, (int64_t)app[0x12]);
+            puVar21 = PECMD_NewFormattedI64Str((uint64_t *)&local_168, 1, (int64_t)app[0x12]);
             SetWindowTextW(pHVar18, (LPCWSTR)(uintptr_t)*puVar21);
             FUN_14005B104((WCHAR **)&local_168);
             UVar32 = 0x44e;
@@ -3673,7 +3673,7 @@ code_r0x00014003460d:
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   菜单构建            PECMD_BuildImDiskMenu @0x140034788 (stub)
  *   RAM 盘命令行        FUN_1400369D0      @0x1400369d0
- *   LOGO 窗口过程       FUN_140037BA8         @0x140037ba8
+ *   LOGO 窗口过程       PECMD_LogoDlgProc         @0x140037ba8
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -3725,8 +3725,8 @@ extern uint32_t PECMD_QueryImDiskVolumeInfo(uint32_t a1, LPCWSTR a2, int64_t *a3
 extern char PECMD_DevLockUnlock(uint64_t a1, LPCWSTR a2, uint32_t a3,
                           uint32_t text);
 extern char PECMD_DevAlignCheck(uint64_t a1, LPCWSTR a2, uint64_t a3);
-extern DWORD FUN_1400279D8(uint32_t a1, WCHAR *a2, LPCWSTR a3); /* @0x1400279d8 */
-extern uint64_t FUN_14002A508(uint64_t a1, LPCWSTR a2); /* @0x14002a508 */
+extern DWORD PECMD_FormatImDiskDrive(uint32_t a1, WCHAR *a2, LPCWSTR a3); /* @0x1400279d8 */
+extern uint64_t PECMD_ApplyTextWindowLayout(uint64_t a1, LPCWSTR a2); /* @0x14002a508 */
 extern void FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR a2);
 extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR a2, DWORD type,
                            BYTE *data, DWORD size);
@@ -4443,7 +4443,7 @@ after_parse:
             if (local_198 == NULL) {
                 return uVar19;
             }
-            FUN_1400279D8(uVar10, (WCHAR *)_Str1, local_198);
+            PECMD_FormatImDiskDrive(uVar10, (WCHAR *)_Str1, local_198);
             goto LAB_140037a4d;
         }
     }
@@ -4485,11 +4485,11 @@ LAB_140037a4d:
     return uVar19;
 }
 
-/* ========== FUN_140037BA8 @0x140037ba8 ==========
+/* ========== PECMD_LogoDlgProc @0x140037ba8 ==========
  * PELOGON LOGO 窗口过程：处理初始化、绘制、淡入淡出、Logo 文件装载和销毁。
  * TODO(verify): 反编译 in_stack 高 32 位按 0 处理；RECT _8_8_ 保存/恢复无外部效应，已简化。
  */
-HGDIOBJ FUN_140037BA8(uint64_t script, HWND hwnd, uint32_t msg,
+HGDIOBJ PECMD_LogoDlgProc(uint64_t script, HWND hwnd, uint32_t msg,
                           HDC hdcIn, uint8_t *p5)
 {
     uint32_t uVar1;
@@ -4547,7 +4547,7 @@ HGDIOBJ FUN_140037BA8(uint64_t script, HWND hwnd, uint32_t msg,
         if (DVar10 != 0) {
             *local_100 = L'\0';
         }
-        uVar14 = FUN_14002A508(script, local_100);
+        uVar14 = PECMD_ApplyTextWindowLayout(script, local_100);
         SetWindowLongPtrW(local_res10, 0, (LONG_PTR)(uVar14 | 0x1010));
         FUN_14005B104(&local_100);
         return (HGDIOBJ)(uVar14 | 0x1000);
@@ -5036,7 +5036,7 @@ extern int64_t FUN_14001B510();
 extern int64_t FUN_14001B5AC();
 extern int64_t PECMD_GetParentProcessIdLevel();
 extern int64_t FUN_14001bbac();
-extern int64_t FUN_14001BBDC();
+extern int64_t PECMD_WaitCountPumpMessages();
 extern void *PECMD_MatchKeywordToken();
 extern int64_t PECMD_AppendParamToken();
 extern int64_t PECMD_DeleteDirectoryTree();
@@ -5044,7 +5044,7 @@ extern int64_t PECMD_EnumDisplayModes();
 extern int64_t PECMD_RunPecmdMain();
 extern int64_t PECMD_IsSysStartuped();
 extern int64_t PECMD_RunSysInit();
-extern int64_t FUN_140025B10();
+extern int64_t PECMD_WaitKeyPressHooked();
 extern int64_t FUN_140025f10();
 extern int64_t FUN_140027EAC();
 extern int64_t PECMD_StartOnlyApp();
@@ -7257,7 +7257,7 @@ LAB_14003efd6:
     } while (bVar36 == bVar28);
     if (bVar4) {
       DVar10 = GetCurrentThreadId();
-      uVar16 = FUN_14001BBDC(&g_taskCount,(uint32_t)(DVar10 != g_Tid));
+      uVar16 = PECMD_WaitCountPumpMessages(&g_taskCount,(uint32_t)(DVar10 != g_Tid));
       return (int64_t)(int)uVar16;
     }
   }
@@ -7422,7 +7422,7 @@ LAB_14003f729:
         if ((uVar13 != 0) || (uVar23 = 2, local_res18 != '\0')) {
           uVar23 = 1;
         }
-        uVar13 = FUN_140025B10(uVar13,uVar23 | DVar14);
+        uVar13 = PECMD_WaitKeyPressHooked(uVar13,uVar23 | DVar14);
         local_4290 = (uint64_t)uVar13;
         if ((bVar41 == 0) && (uVar13 - 0x60 < 10)) {
           local_4290 = (uint64_t)(uVar13 - 0x30);

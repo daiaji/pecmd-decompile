@@ -36,8 +36,8 @@ extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /
 extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400633A8(void **ps, int64_t len);               /* @0x1400633a8 */
 extern int64_t FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
-extern uint64_t FUN_1400E75CC(uint64_t *state);       /* @0x1400e75cc */
-extern void FUN_1400F1448(HWND hwnd);              /* @0x1400f1448 */
+extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);       /* @0x1400e75cc */
+extern void PECMD_SetHotTrackWindow(HWND hwnd);              /* @0x1400f1448 */
 extern void *FUN_1400E57C0(void *obj);                   /* @0x1400e57c0 */
 extern int64_t *FUN_140063B64(int64_t *arr);                  /* @0x140063b64 */
 extern void FUN_1400FD538(HWND hwnd, int mode); /* @0x1400fd538 */
@@ -54,7 +54,7 @@ extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *
 extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);
 extern int64_t PECMD_ContainerAppend(int64_t *container);
-extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
+extern uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
@@ -280,7 +280,7 @@ uint64_t FUN_1400E7664(LPCWSTR name)
         }
         else {
             PECMD_AllocString(&g_pRasEntryBuf, 100);
-            result = FUN_1400E75CC(&g_rasState);
+            result = PECMD_HangUpRasConnection(&g_rasState);
         }
     }
     else {
@@ -294,13 +294,13 @@ uint64_t FUN_1400E7664(LPCWSTR name)
         if (0 < (int)count) {
             do {
                 if (*name == L'*') {
-                    result = FUN_1400E75CC((uint64_t *)((uint8_t *)blk +
+                    result = PECMD_HangUpRasConnection((uint64_t *)((uint8_t *)blk +
                                                                   (int64_t)i * 0x15b + 1));
                     result &= 0xffffffffU;
                 }
                 else {
                     if (lstrcmpiW(name, (LPCWSTR)(blk + i * 0x15b + 3)) == 0) {
-                        result = FUN_1400E75CC((uint64_t *)((uint8_t *)blk +
+                        result = PECMD_HangUpRasConnection((uint64_t *)((uint8_t *)blk +
                                                                       (int64_t)i * 0x15b + 1));
                         result &= 0xffffffffU;
                     }
@@ -447,7 +447,7 @@ void FUN_1400F2CF0(int64_t obj, int64_t msg)
         }
         else {
             if (g_tooltipThreshold == *(int8_t *)((uint8_t *)obj + 0xa0))
-                FUN_1400F1448(*(HWND *)((uint8_t *)obj + OBJ_HWND));
+                PECMD_SetHotTrackWindow(*(HWND *)((uint8_t *)obj + OBJ_HWND));
             if (*(int8_t *)((uint8_t *)obj + 0xa0) <= g_tooltipCount0)
                 *(int8_t *)((uint8_t *)obj + 0xa0) =
                     *(int8_t *)((uint8_t *)obj + 0xa0) + 1;
@@ -617,7 +617,7 @@ void FUN_1400FD764(int64_t *obj, uint32_t wParam, uint64_t lParam)
                 InvalidateRect((HWND)obj[4], NULL, 1);
         }
         if ((int8_t)g_tooltipThreshold < 1)
-            FUN_1400F1448((HWND)obj[4]);
+            PECMD_SetHotTrackWindow((HWND)obj[4]);
         if ((uint64_t)obj[0x11] == (uint64_t)g_hStockWhiteBrush)
             FUN_1400FD538((HWND)obj[4], 1);
     }
@@ -690,5 +690,5 @@ void FUN_1400FFA38(int64_t obj, int64_t *cursor, uint8_t *flags,
     }
     if (orig != 0)
         *cursor = *tailPtr;
-    FUN_1400FF414(obj, tail, NULL);
+    PECMD_FindTreeItemByPath(obj, tail, NULL);
 }

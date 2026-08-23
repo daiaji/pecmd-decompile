@@ -7,17 +7,17 @@
  *   补丁 INF 复制/删除指令 PECMD_PatchInfDirectives @0x140021144
  *   设置 PELOGON Shell    FUN_140022A70 @0x140022a70
  *   解析命令块/变量段    PECMD_ParseCommandBlock @0x140025474
- *   格式化 ImDisk 虚拟盘 FUN_1400279D8 @0x1400279d8
+ *   格式化 ImDisk 虚拟盘 PECMD_FormatImDiskDrive @0x1400279d8
  *   编辑框子类窗口过程   PECMD_EditSubclassWndProc @0x140028708
- *   应用 PELOGON 布局字体 FUN_14002A508 @0x14002a508
+ *   应用 PELOGON 布局字体 PECMD_ApplyTextWindowLayout @0x14002a508
  *   安装/解压 INF/SYS 文件 FUN_14002C048 @0x14002c048
  *   PELOGON 初始化扩展    FUN_14002E3D4 @0x14002e3d4
- *   PELOGON 主窗口过程    FUN_14002EE44 @0x14002ee44
+ *   PELOGON 主窗口过程    PECMD_MainMsgWndProc @0x14002ee44
  *   应用 LOGO 配置        FUN_1400389C4 @0x1400389c4
  *   处理单个安装项        FUN_14003AAD0 @0x14003aad0
  *   处理安装脚本队列      FUN_14003B010 @0x14003b010
  *   发送按键/鼠标命令     FUN_14003C9E8 @0x14003c9e8
- *   系统关机/重启处理     FUN_14003D608 @0x14003d608
+ *   系统关机/重启处理     PECMD_PerformSystemShutdown @0x14003d608
  *   确认对话框过程        FUN_14003E220 @0x14003e220
  *
  * 约定:
@@ -142,7 +142,7 @@ extern BOOL PECMD_DosDeviceMount(LPCWSTR a1, LPCWSTR a2, WCHAR *a3,
                           uint32_t a4, char a5);
 extern void FUN_140077358(void);
 extern bool PECMD_ParseNumber(int64_t *a1, int *a2);
-extern int64_t *FUN_140078E90(int64_t *a1);
+extern int64_t *PECMD_AssignClipboardText(int64_t *a1);
 extern int64_t FUN_14007A224(void *script, WCHAR *text, WCHAR **out, int c,
                              uint8_t d);
 extern uint64_t PECMD_TokenizeExpression(int64_t a1, int64_t a2, WCHAR **a3,
@@ -642,11 +642,11 @@ label_0258c3:
     } while (true);
 }
 
-/* ========== FUN_1400279D8 @0x1400279d8 ==========
+/* ========== PECMD_FormatImDiskDrive @0x1400279d8 ==========
  * 调用 format.com 格式化 ImDisk 虚拟盘，并在需要时建立/删除 DOS 设备名。
  * TODO(verify): _snwprintf 的 %u 实参按语义补 script。
  */
-DWORD FUN_1400279D8(uint32_t unit, WCHAR *drive, LPCWSTR label)
+DWORD PECMD_FormatImDiskDrive(uint32_t unit, WCHAR *drive, LPCWSTR label)
 {
     WCHAR WVar1;
     WCHAR WVar7;
@@ -823,7 +823,7 @@ label_0287f3:
         if (msg == 0x302) {
             wParam = (void *)1;
             PECMD_AllocString(&local_30, 1);
-            FUN_140078E90(&local_30);
+            PECMD_AssignClipboardText(&local_30);
             msg = 0xc2;
             pLVar7 = PECMD_NormalizeNewlines((uint64_t *)&local_30);
             lParam = *pLVar7;
@@ -875,10 +875,10 @@ label_0288a6:
     return LVar8;
 }
 
-/* ========== FUN_14002A508 @0x14002a508 ==========
+/* ========== PECMD_ApplyTextWindowLayout @0x14002a508 ==========
  * 解析 PELOGON 配置串（位置/字体/延迟），更新窗口、字体与重绘区域。
  */
-uint64_t FUN_14002A508(uint64_t value, LPCWSTR text)
+uint64_t PECMD_ApplyTextWindowLayout(uint64_t value, LPCWSTR text)
 {
     WCHAR WVar1;
     int iVar2;
@@ -1314,10 +1314,10 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
     return 0;
 }
 
-/* ========== FUN_14002EE44 @0x14002ee44 ==========
+/* ========== PECMD_MainMsgWndProc @0x14002ee44 ==========
  * PELOGON 主窗口过程：处理任务栏重启、热键注册、定时器与托盘消息。
  */
-int64_t FUN_14002EE44(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
+int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
                                  void *wParam, int64_t lParam)
 {
     int iVar1;
@@ -2099,11 +2099,11 @@ uint64_t FUN_14003C9E8(LPCWSTR cmd)
     return uVar6;
 }
 
-/* ========== FUN_14003D608 @0x14003d608 ==========
+/* ========== PECMD_PerformSystemShutdown @0x14003d608 ==========
  * 执行系统关机/重启流程，支持立即/延时/远程关机选项。
  * TODO(verify): wsprintfA/wsprintfW 反编译缺参，按可见格式串保留。
  */
-int64_t FUN_14003D608(int mode, uint32_t flags, LPCWSTR remote)
+int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR remote)
 {
     bool bVar1 = true;
     bool bVar2;

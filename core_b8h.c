@@ -17,17 +17,17 @@
  *   取控件字体             FUN_1400E5890    @0x1400e5890
  *   加载控件字体           FUN_1400E66D4   @0x1400e66d4
  *   配置对话框过程         FUN_1400E6790  @0x1400e6790
- *   跳到指定分隔符 A       FUN_1400E706C   @0x1400e706c
+ *   跳到指定分隔符 A       PECMD_SkipEncByteToEol   @0x1400e706c
  *   跳过前导 CR/LF A       FUN_1400E7098     @0x1400e7098
- *   跳到指定分隔符 W       FUN_1400E70C0   @0x1400e70c0
+ *   跳到指定分隔符 W       PECMD_SkipEncWCharToEol   @0x1400e70c0
  *   跳过前导 CR/LF W       FUN_1400E70F4     @0x1400e70f4
- *   等待 RAS 拨号连接      FUN_1400E75CC @0x1400e75cc
+ *   等待 RAS 拨号连接      PECMD_HangUpRasConnection @0x1400e75cc
  *   缓存窗口 ID            FUN_1400E8644    @0x1400e8644
  *   下发控件命令           FUN_1400E86B4  @0x1400e86b4
  *   销毁窗口对象(带GDI)    FUN_1400E9138 @0x1400e9138
- *   绘制百分比条           FUN_1400F0DF4    @0x1400f0df4
+ *   绘制百分比条           PECMD_DrawScaledBarFill    @0x1400f0df4
  *   设置对象画刷           FUN_1400F0EB0   @0x1400f0eb0
- *   激活设备窗口           FUN_1400F1448 @0x1400f1448
+ *   激活设备窗口           PECMD_SetHotTrackWindow @0x1400f1448
  *   初始化简单窗口对象     FUN_1400F1BE4 @0x1400f1be4
  *   计算滚动偏移           FUN_1400F2A7C  @0x1400f2a7c
  *   宽字符游标扫描         FUN_1400F429C @0x1400f429c
@@ -402,10 +402,10 @@ uint64_t FUN_1400E6790(HWND hwnd, int msg, HANDLE base)
     return 0;
 }
 
-/* ========== FUN_1400E706C @0x1400e706c ==========
+/* ========== PECMD_SkipEncByteToEol @0x1400e706c ==========
  * ANSI 指针前进至命中 param/d 或 CR(0x0d^d)/LF(0x0a^d) 处。
  */
-void FUN_1400E706C(uint8_t **pp, uint8_t d)
+void PECMD_SkipEncByteToEol(uint8_t **pp, uint8_t d)
 {
     uint8_t *p = *pp;
 
@@ -426,10 +426,10 @@ void FUN_1400E7098(uint8_t **pp, uint8_t d)
         (*pp)++;
 }
 
-/* ========== FUN_1400E70C0 @0x1400e70c0 ==========
+/* ========== PECMD_SkipEncWCharToEol @0x1400e70c0 ==========
  * 宽字符指针前进至命中 param/d 或 CR(0x0d^d)/LF(0x0a^d) 处。
  */
-void FUN_1400E70C0(uint16_t **pp, uint16_t d)
+void PECMD_SkipEncWCharToEol(uint16_t **pp, uint16_t d)
 {
     uint16_t *p = *pp;
 
@@ -450,13 +450,13 @@ void FUN_1400E70F4(uint16_t **pp, uint16_t d)
         (*pp)++;
 }
 
-/* ========== FUN_1400E75CC @0x1400e75cc ==========
+/* ========== PECMD_HangUpRasConnection @0x1400e75cc ==========
  * 等待 RAS 拨号连接: 先调用 RasHangUpW 快速试探, 失败则调用
  * RasGetConnectStatusW 在 3 秒内轮询 (每 50ms), 返回 6 视为完成。
  * 返回 1 表示成功, 0 表示超时/中断。
  * TODO(verify): RAS 返回码与 0x234 状态块的具体语义。
  */
-uint64_t FUN_1400E75CC(uint64_t *state)
+uint64_t PECMD_HangUpRasConnection(uint64_t *state)
 {
     uint32_t pollBlk[144];
     uint32_t t0, t1;
@@ -565,13 +565,13 @@ void FUN_1400E9138(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400F0DF4 @0x1400f0df4 ==========
+/* ========== PECMD_DrawScaledBarFill @0x1400f0df4 ==========
  * 绘制两段式百分比条:
  *   - 底色取对象 0x54 (负值则用 GetBkColor/前景 0x58)
  *   - 按 obj+0x50 比例在左边叠画一段前景色
  *   - edge 非 0 时加 DrawEdge 边框
  */
-void FUN_1400F0DF4(int64_t obj, HDC hdc, RECT *rc, COLORREF color, int edge)
+void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color, int edge)
 {
     COLORREF c;
     int w;
@@ -632,10 +632,10 @@ void FUN_1400F0EB0(int64_t obj, COLORREF color, uint64_t flags)
     InvalidateRect(*(HWND *)((uint8_t *)obj + OBJ_HWND), NULL, 1);
 }
 
-/* ========== FUN_1400F1448 @0x1400f1448 ==========
+/* ========== PECMD_SetHotTrackWindow @0x1400f1448 ==========
  * 切换到新设备窗口: 旧窗口收 WM_0x44C, 新窗口挂 WM_0x1000 刷新消息。
  */
-void FUN_1400F1448(HWND hwnd)
+void PECMD_SetHotTrackWindow(HWND hwnd)
 {
     if (g_hActiveDevWnd != 0)
         SendMessageW(g_hActiveDevWnd, 0x44c, 0, 0);

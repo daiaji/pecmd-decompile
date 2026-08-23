@@ -137,7 +137,7 @@ extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out,
 extern short PECMD_ParseHashNumbers(WCHAR **pp, int64_t val);           /* @0x1400677b0 */
 extern uint32_t PECMD_TokenizeList(int64_t *ctx, short *src, int mode); /* @0x14007403c */
 extern void PECMD_SetClipboardUnicode(LPCWSTR s);                          /* @0x140060718 */
-extern WCHAR *FUN_140078E90(WCHAR **ps);                       /* @0x140078e90 */
+extern WCHAR *PECMD_AssignClipboardText(WCHAR **ps);                       /* @0x140078e90 */
 extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n); /* @0x1400660ac */
 extern void FUN_1400668ec(int64_t *ctx, uint64_t fn, LPCWSTR a,
                           LPCWSTR fmt);                        /* @0x1400668ec */
@@ -5134,7 +5134,7 @@ uint8_t PECMD_ParseEnvSwitches(const WCHAR *s, int64_t *param_2, short param_3)
                 p += 11;
                 FUN_14005B154(&p);
                 PECMD_AllocStrSlot(&pbuf);
-                FUN_140078E90(&pbuf);
+                PECMD_AssignClipboardText(&pbuf);
                 FUN_1400629B8(param_2, (LPCWSTR)p, (LPCWSTR)pbuf);
                 FUN_14005B104(&pbuf);
                 return 1;

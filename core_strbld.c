@@ -1,14 +1,14 @@
 /*
  * core_strbld.c — 字符串构建器 / 数字格式化 / 变量格式化（B8b）
  *
- *   FUN_14006D7E8    @0x14006d7e8  6 槽字符串构建器初始化
+ *   PECMD_StrBldInitWide    @0x14006d7e8  6 槽字符串构建器初始化
  *   FUN_14006D880    @0x14006d880  按需扩展（need + 0xe）
- *   FUN_14006D92C @0x14006d92c 批量扩展（+0x400）
+ *   PECMD_StrBldGrowWide @0x14006d92c 批量扩展（+0x400）
  *   FUN_1400E6D38      @0x1400e6d38  %I64X 格式化
  *   FUN_1400E6D74       @0x1400e6d74  %I64u 格式化
  *   FUN_1400E6D80     @0x1400e6d80  浮点格式化
  *   FUN_1400E6DB4        @0x1400e6db4  长浮点格式化
- *   FUN_14006D9D0       @0x14006d9d0  变量格式化
+ *   PECMD_FormatTypedMemValue       @0x14006d9d0  变量格式化
  *
  * 6 槽字符串构建器布局（调用方 FUN_14007AF60 传递变量地址）:
  *   s[0]=out 变量地址(WCHAR**), s[1]=count 变量地址(int*),
@@ -17,7 +17,7 @@
  * 槽内读取 = *(WCHAR**)s[i]（指向的变量当前值）.
  *
  * 说明:
- *   FUN_1400E6960 (StringValidateDestW + StringVPrintfWorkerW) 简化为
+ *   PECMD_SafeVFormatW (StringValidateDestW + StringVPrintfWorkerW) 简化为
  *   swprintf(dst, 0x3e, ...) (0x3e=62 字符上限).
  *   PECMD_MemMoveForward/14001d744 = MSVC 内联 memcpy/memmove, 库替换.
  */
@@ -30,11 +30,11 @@
 
 extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out); /* @0x1400c1194 */
 
-/* ========== FUN_14006D7E8 @0x14006d7e8 ==========
+/* ========== PECMD_StrBldInitWide @0x14006d7e8 ==========
  * 初始化 6 槽字符串构建器. count < 0x400 时提升到 0x400 并分配缓冲.
  * end = out 字节地址 - 2 + count*2; limit = end - 0x7e4; cur 初始 = base.
  */
-void FUN_14006D7E8(void *s[6], WCHAR **out, int *count, WCHAR **cur,
+void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur,
                      WCHAR **end, WCHAR **base, WCHAR **limit)
 {
     s[0] = (void *)out;
@@ -81,10 +81,10 @@ void FUN_14006D880(void *s[6], int need)
     }
 }
 
-/* ========== FUN_14006D92C @0x14006d92c ==========
+/* ========== PECMD_StrBldGrowWide @0x14006d92c ==========
  * 批量扩展: (cur - limit) >> 1 >= 0 时 count += 0x400, 其余同 FUN_14006D880.
  */
-void FUN_14006D92C(void *s[6])
+void PECMD_StrBldGrowWide(void *s[6])
 {
     WCHAR **pOut = (WCHAR **)s[0];
     int *count = (int *)s[1];
@@ -126,7 +126,7 @@ void FUN_1400E6D74(WCHAR *dst, uint64_t v)
 }
 
 /* ========== FUN_1400E6D80 @0x1400e6d80 ==========
- * 浮点输出. 原 FUN_1400E6960 内部为 StringValidateDestW +
+ * 浮点输出. 原 PECMD_SafeVFormatW 内部为 StringValidateDestW +
  * StringVPrintfWorkerW(dst, 0x3e, NULL, fmt, (double)v), 简化用
  * swprintf(dst, 0x3e, fmt, (double)v).
  * TODO(verify): WCHAR 转 wchar_t 强转 (Linux wchar_t=4B), 由移植层承担.
@@ -139,7 +139,7 @@ WCHAR *FUN_1400E6D80(WCHAR *dst, float v, LPCWSTR fmt)
 }
 
 /* ========== FUN_1400E6DB4 @0x1400e6db4 ==========
- * 长浮点/64 位值输出 (%Lf/%lf 等), 同 FUN_1400E6960 简化.
+ * 长浮点/64 位值输出 (%Lf/%lf 等), 同 PECMD_SafeVFormatW 简化.
  * TODO(verify): %Lf 在 Linux 下期望 16B long double, 与 Windows
  * (long double=double=8B) 不同, 运行时由移植层处理.
  */
@@ -150,7 +150,7 @@ WCHAR *FUN_1400E6DB4(WCHAR *dst, uint64_t v, LPCWSTR fmt)
     return dst + lstrlenW(dst);
 }
 
-/* ========== FUN_14006D9D0 @0x14006d9d0 ==========
+/* ========== PECMD_FormatTypedMemValue @0x14006d9d0 ==========
  * 变量格式化: node=VarNode(值@+8, 长度掩码@+0x18 & 0x3fffffffffffffff 为字节长).
  * spec 前缀类型: char→1 / wchar|short→2 / long|int64|ptr→8 / float→4(浮点) /
  * double|ldouble→8(双浮点) / int→4(第4字符为大写字母且非 'S' 时回退默认 1).
@@ -158,7 +158,7 @@ WCHAR *FUN_1400E6DB4(WCHAR *dst, uint64_t v, LPCWSTR fmt)
  * 数字偏移; 截断: 数据不足时偏移 = max(0, 元素宽-数据长).
  * 复制到 8 字节局部后按格式输出并回填 *lenOut = lstrlenW(dst).
  */
-WCHAR *FUN_14006D9D0(int64_t node, uint64_t *lenOut, WCHAR *spec, WCHAR *dst,
+WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WCHAR *dst,
                     WCHAR *width)
 {
     WCHAR *value = *(WCHAR **)(node + 8);

@@ -10,7 +10,7 @@
  *   创建对话框窗口          FUN_1400E6574        @0x1400e6574
  *   注入式建进程            FUN_1400E7414   @0x1400e7414
  *   构建钩子键列表          FUN_1400E8748       @0x1400e8748
- *   布局子窗口              FUN_1400EC0F0     @0x1400ec0f0
+ *   布局子窗口              PECMD_LayoutTabPageArea     @0x1400ec0f0
  *   像素缩放                FUN_1400ED7A0       @0x1400ed7a0
  *   GDI 消息分发            FUN_1400EEC28         @0x1400eec28
  *   控件消息分发(扩展)      FUN_1400EF694   @0x1400ef694
@@ -69,7 +69,7 @@ extern bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style,
 extern LRESULT FUN_1400E5890(int64_t obj);             /* @0x1400e5890 */
 extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
                                 int64_t script, int64_t cmdCtx, int64_t *varTable); /* @0x1400e5248 */
-extern void FUN_1400F0DF4(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
+extern void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
                                  int edge);                   /* @0x1400f0df4 */
 extern void FUN_1400F0CA0(HWND hwnd, COLORREF color); /* @0x1400f0ca0 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
@@ -86,16 +86,16 @@ extern int FUN_1400E4480(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4,
                                           PROCESS_INFORMATION *p11, LPCWSTR p12); /* @0x1400e4480 */
 extern HBITMAP PECMD_LoadImageBitmap(LPCWSTR txt, int64_t *outw, int64_t h, int64_t w,
                              uint32_t *param5, uint64_t *param6, int param7);
-extern void FUN_1400E537C(int64_t node, uint64_t id, int64_t *out, int64_t *str);
+extern void PECMD_SearchMenuTreeById(int64_t node, uint64_t id, int64_t *out, int64_t *str);
 extern int64_t PECMD_ProcessScriptBlock(int64_t p1, int64_t p2, int64_t *p3, int64_t *p4, void *p5);
 extern void PECMD_FreeInitObjectList(int64_t p1);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *ps, uint32_t *flags, uint64_t p3, char p4);
-extern void FUN_140025B10(uint64_t p1, uint64_t p2);
+extern void PECMD_WaitKeyPressHooked(uint64_t p1, uint64_t p2);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out);
 extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
 extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4);
-extern void FUN_1400EF654(int64_t p1);
+extern void PECMD_RefreshControlVisibility(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
 extern uint64_t *FUN_1400EFEC8(uint64_t *mem);
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
@@ -282,7 +282,7 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
     PECMD_AllocStrSlot((uint64_t *)&str);
     if (sel > 0xff) {
         EnterCriticalSection(&g_csInit);
-        FUN_1400E537C((int64_t)node, sel & 0xffff, &q.QuadPart, (int64_t *)&str);
+        PECMD_SearchMenuTreeById((int64_t)node, sel & 0xffff, &q.QuadPart, (int64_t *)&str);
         LeaveCriticalSection(&g_csInit);
     }
     if (q.QuadPart != 0) {
@@ -451,7 +451,7 @@ uint64_t FUN_1400E8748(uint16_t *text, uint64_t p2)
     void *old = g_pHookData;
     g_pHookData = mem;
     if (g_hHook == 0)
-        FUN_140025B10(0, 0);
+        PECMD_WaitKeyPressHooked(0, 0);
     LeaveCriticalSection(&g_csHook);
     LeaveCriticalSection(&g_csInit);
     if (old != 0)
@@ -459,11 +459,11 @@ uint64_t FUN_1400E8748(uint16_t *text, uint64_t p2)
     return cnt;
 }
 
-/* ========== FUN_1400EC0F0 @0x1400ec0f0 ==========
+/* ========== PECMD_LayoutTabPageArea @0x1400ec0f0 ==========
  * 计算并应用子窗口布局: 由系统度量与父窗口位置得出目标矩形,
  * 变化时 SetWindowPos 全部子窗口并失效父窗口对应区域。
  */
-void FUN_1400EC0F0(int64_t obj, char track)
+void PECMD_LayoutTabPageArea(int64_t obj, char track)
 {
     RECT wndRc, cli;
     POINT ofs;
@@ -663,7 +663,7 @@ uint64_t FUN_1400EF694(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
         if (*(int64_t *)((uint8_t *)obj + 0x44) != 0) {
             SendMessageW(*(HWND *)(*(int64_t *)((uint8_t *)obj + 0x44) + OBJ_HWND), 0x30,
                          (WPARAM)wParam, (LPARAM)lParam);
-            FUN_1400EF654((int64_t)obj);
+            PECMD_RefreshControlVisibility((int64_t)obj);
         }
     }
     if (msg == 0x45a) {
@@ -674,7 +674,7 @@ uint64_t FUN_1400EF694(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
         uint32_t style = GetWindowLongW(*(HWND *)((uint8_t *)obj + 8), -0x10);
         if ((style >> 0x1c & 1) != 0) {
             LRESULT lr = SendMessageW(*(HWND *)((uint8_t *)obj + 8), 0x449, 0, 0);
-            FUN_1400EF654((int64_t)obj);
+            PECMD_RefreshControlVisibility((int64_t)obj);
             if ((int)lr < 0)
                 goto dispatch;
         }
@@ -690,7 +690,7 @@ dispatch:
         if (top != 0)
             SendMessageW(top, 0x450, 4, 0x5aa555aa);
         if (msg == 10 && *(int64_t *)((uint8_t *)obj + 0x44) != 0)
-            FUN_1400EF654((int64_t)obj);
+            PECMD_RefreshControlVisibility((int64_t)obj);
         if (0 < count) {
             out = 0;
             r = FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
@@ -959,7 +959,7 @@ void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
         GetClientRect((HWND)obj[4], &rc);
         b = *(uint8_t *)((uint8_t *)obj + 0x60);
         if (*(float *)((uint8_t *)obj + 0x50) <= g_paintScale2) {
-            FUN_1400F0DF4((int64_t)obj, hdc, &rc, 0x80000000,
+            PECMD_DrawScaledBarFill((int64_t)obj, hdc, &rc, 0x80000000,
                                  (int)(int8_t)*(uint8_t *)((uint8_t *)obj + 0x60) & 8);
         }
         h = (HGDIOBJ)obj[0xe];

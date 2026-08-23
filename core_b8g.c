@@ -6,11 +6,11 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   枚举窗口查找            FUN_1400E3D60 @0x1400e3d60
  *   刷新桌面                FUN_1400E3F94 @0x1400e3f94
- *   树查找并格式化路径      FUN_1400E537C @0x1400e537c
+ *   树查找并格式化路径      PECMD_SearchMenuTreeById @0x1400e537c
  *   初始化基类对象          FUN_1400E57C0 @0x1400e57c0
  *   是否进程提升权限        FUN_1400E6FB8 @0x1400e6fb8
  *   初始化窗口对象 G        FUN_1400E9048 @0x1400e9048
- *   标签选择变更处理        FUN_1400EC310 @0x1400ec310
+ *   标签选择变更处理        PECMD_OnTabSelChange @0x1400ec310
  *   设置标签选择            FUN_1400EC428 @0x1400ec428
  *   创建标签控件            FUN_1400EC5E4 @0x1400ec5e4
  *   更新控件显示顺序        FUN_1400EC7C0 @0x1400ec7c0
@@ -74,19 +74,19 @@ extern DWORD GetVersion(void);
 extern BOOL PECMD_EnumWindowCallback(HWND hwnd, LPARAM lParam);
 extern uint32_t FUN_1400E6F18(void);
 extern void PECMD_AllocStrSlot(void *ps);
-extern void FUN_1400EC0F0(int64_t a1, char a2);
+extern void PECMD_LayoutTabPageArea(int64_t a1, char a2);
 extern int64_t PECMD_ContainerAppend(uint64_t *a1);
 extern LRESULT FUN_1400E5890(int64_t a1);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
                           int64_t esize, int32_t mode);
-extern int64_t FUN_1400F5584(int64_t a1, int a2, int *a3);
-extern int64_t FUN_1400F593C(int64_t a1, int a2, int *a3);
-extern int64_t FUN_1400F568C(int64_t a1, int a2, int a3,
+extern int64_t PECMD_ItemPropFindIdxList1(int64_t a1, int a2, int *a3);
+extern int64_t PECMD_ItemPropFindIdxList3(int64_t a1, int a2, int *a3);
+extern int64_t PECMD_ItemPropFindIdxSub1(int64_t a1, int a2, int a3,
                              int *a4);
-extern int64_t FUN_1400F5A44(int64_t a1, int a2, int a3,
+extern int64_t PECMD_ItemPropFindIdxSub2(int64_t a1, int a2, int a3,
                              int *a4);
-extern int64_t FUN_1400F5608(int64_t a1, int a2, int *a3);
-extern int64_t FUN_1400F59C0(int64_t a1, int a2, int *a3);
+extern int64_t PECMD_ItemPropFindIdxList2(int64_t a1, int a2, int *a3);
+extern int64_t PECMD_ItemPropFindIdxList4(int64_t a1, int a2, int *a3);
 extern void FUN_1400F57F4(int64_t a1, int a2, int a3,
                           uint64_t a4);
 extern void FUN_1400F5ADC(int64_t a1, int a2, int a3,
@@ -178,12 +178,12 @@ void FUN_1400E3F94(void)
     PostMessageW(listView, 0x101, 0x74, 0);
 }
 
-/* ========== FUN_1400E537C @0x1400e537c ==========
+/* ========== PECMD_SearchMenuTreeById @0x1400e537c ==========
  * 在树形结构中递归查找 key；命中时把 key 追加到 outFmt 的格式化串，
  * 并把节点文本写入 matchWord。
  * TODO(verify): wsprintfW 缺少的 %d 参数按匹配 key 还原。
  */
-uint64_t FUN_1400E537C(int64_t root, uint64_t searchKey,
+uint64_t PECMD_SearchMenuTreeById(int64_t root, uint64_t searchKey,
                                      int64_t *outText, int64_t *outFmt)
 {
     uint8_t *node;
@@ -197,7 +197,7 @@ uint64_t FUN_1400E537C(int64_t root, uint64_t searchKey,
     for (i = 0; i < count; i++) {
         node = *(uint8_t **)(base + i * 8);
         if (*node == (uint8_t)0x80) {
-            uint64_t r = FUN_1400E537C(
+            uint64_t r = PECMD_SearchMenuTreeById(
                 *(int64_t *)(node + 0x10), key, outText, outFmt);
             if ((int)r != 0) {
                 return r;
@@ -339,10 +339,10 @@ uint64_t *FUN_1400E9048(uint64_t *obj, uint32_t hwnd, uint64_t data)
     return obj;
 }
 
-/* ========== FUN_1400EC310 @0x1400ec310 ==========
+/* ========== PECMD_OnTabSelChange @0x1400ec310 ==========
  * 标签控件当前项变化时隐藏旧项、显示新项，并设置 &&<name>.Select 变量。
  */
-void FUN_1400EC310(int64_t obj)
+void PECMD_OnTabSelChange(int64_t obj)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int old_sel;
@@ -443,7 +443,7 @@ void FUN_1400EC7C0(int64_t obj, char mode)
         return;
     }
 
-    FUN_1400EC0F0(obj, mode);
+    PECMD_LayoutTabPageArea(obj, mode);
     items = *(int64_t ***)(self + 0x108);
     count = (int)*(int64_t *)(self + 0x118);
     i = 1;
@@ -751,7 +751,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
     int changed;
 
     if (-2 < (int)val2) {
-        int64_t idx = FUN_1400F5584(obj, key, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxList1(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
@@ -766,7 +766,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
     }
 
     if (-2 < (int)val1) {
-        int64_t idx = FUN_1400F593C(obj, key, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxList3(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {
@@ -792,7 +792,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
     int changed;
 
     if (-2 < (int)val2) {
-        int64_t idx = FUN_1400F568C(obj, key1, key2, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxSub1(obj, key1, key2, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
@@ -807,7 +807,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
     }
 
     if (-2 < (int)val1) {
-        int64_t idx = FUN_1400F5A44(obj, key1, key2, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxSub2(obj, key1, key2, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {
@@ -833,7 +833,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
     int changed;
 
     if (-2 < (int)val2) {
-        int64_t idx = FUN_1400F5608(obj, key, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxList2(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
@@ -848,7 +848,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
     }
 
     if (-2 < (int)val1) {
-        int64_t idx = FUN_1400F59C0(obj, key, &dummy);
+        int64_t idx = PECMD_ItemPropFindIdxList4(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {

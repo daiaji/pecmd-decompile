@@ -19,11 +19,11 @@
 #include "win32_stub.h"
 
 /* core_strbld.c 构建器/格式化 */
-extern void FUN_14006D7E8(void *s[6], WCHAR **out, int *count, WCHAR **cur,
+extern void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur,
                             WCHAR **end, WCHAR **base, WCHAR **limit);   /* @0x14006d7e8 */
 extern void FUN_14006D880(void *s[6], int need);                       /* @0x14006d880 */
-extern void FUN_14006D92C(void *s[6]);                             /* @0x14006d92c */
-extern WCHAR *FUN_14006D9D0(int64_t node, uint64_t *lenOut, WCHAR *spec,
+extern void PECMD_StrBldGrowWide(void *s[6]);                             /* @0x14006d92c */
+extern WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec,
                            WCHAR *dst, WCHAR *width);                    /* @0x14006d9d0 */
 extern void FUN_1400E6D74(WCHAR *dst, uint64_t v);                        /* @0x1400e6d74 */
 
@@ -148,7 +148,7 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
     EnterCriticalSection(&g_csInit);
     PECMD_AllocWStringBuffer(&envBuf, 0x50);
     lpBuffer = envBuf;
-    FUN_14006D7E8(xb, out, &count, &cur, &end, &base, &limit);
+    PECMD_StrBldInitWide(xb, out, &count, &cur, &end, &base, &limit);
     inP = line;
 
     for (;;) {
@@ -161,7 +161,7 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             LeaveCriticalSection(&g_csInit);
             return lVar11 >> 1;
         }
-        FUN_14006D92C(xb);
+        PECMD_StrBldGrowWide(xb);
         uVar5 = 0;
         iVar3 = iVar10;
         if (*inP != L'%') {
@@ -404,7 +404,7 @@ var_lookup:  /* %name% 变量查找（:~ 截取 / ?spec 格式化） */
             if (node == 0) goto not_found;
             {
                 WCHAR f8[96];
-                p6 = FUN_14006D9D0((int64_t)node, (uint64_t *)&uVar5, p13, f8, q);
+                p6 = PECMD_FormatTypedMemValue((int64_t)node, (uint64_t *)&uVar5, p13, f8, q);
                 goto fmt_copy;
             }
         }
@@ -617,7 +617,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
 
     PECMD_AllocWStringBuffer(&envBuf, 0x50);
     lpBuffer = envBuf;
-    FUN_14006D7E8(xb, out, &count, &cur, &end, &base, &limit);
+    PECMD_StrBldInitWide(xb, out, &count, &cur, &end, &base, &limit);
     inP = line;
 
     for (;;) {
@@ -634,7 +634,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             FUN_14005B104(&envBuf);
             return lVar7 >> 1;
         }
-        FUN_14006D92C(xb);
+        PECMD_StrBldGrowWide(xb);
         uVar14 = 0;
         if (*p != L'%') {
             /* 普通字符复制段 */
@@ -863,7 +863,7 @@ var_b6ee:  /* %name% 变量查找 */
             if (node == 0) goto b961;
             {
                 WCHAR f8[96];
-                p6 = FUN_14006D9D0((int64_t)node, (uint64_t *)&uVar14, p15, f8, q);
+                p6 = PECMD_FormatTypedMemValue((int64_t)node, (uint64_t *)&uVar14, p15, f8, q);
                 goto ba34;
             }
         }

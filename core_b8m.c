@@ -62,16 +62,16 @@ extern int64_t PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3,
 extern int32_t g_msgLockCount;                                /* 消息锁计数 */
 extern void FUN_1400EC428(int64_t obj, int param2);
 extern void FUN_1400FD764(int64_t *obj, int param2, uint64_t param3);
-extern void FUN_1400EC310(int64_t obj);
+extern void PECMD_OnTabSelChange(int64_t obj);
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
-extern void FUN_1400EC0F0(int64_t obj, char track); /* @0x1400ec0f0 */
+extern void PECMD_LayoutTabPageArea(int64_t obj, char track); /* @0x1400ec0f0 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                                uint32_t esize);               /* @0x140063b00 */
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
 extern LRESULT FUN_1400E5890(int64_t obj);             /* @0x1400e5890 */
-extern void FUN_1400F0DF4(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
+extern void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
                                  int edge);                   /* @0x1400f0df4 */
-extern void FUN_1400EF08C(HDC hdc, LPCWSTR text, int length, RECT *rect,
+extern void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length, RECT *rect,
                                    uint32_t flags);           /* @0x1400ef08c */
 extern void FUN_1400EFF58(int64_t obj, HDC hdc, RECT *rect, int centerX); /* @0x1400eff58 */
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
@@ -93,7 +93,7 @@ extern void FUN_1400F4064(int64_t obj, int height, int mode); /* @0x1400f4064 */
 extern int PECMD_DpiConvert(double value);                     /* @0x1400628b4 */
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name); /* @0x1400b1f34 */
 extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
-extern uint64_t FUN_1400FF414(int64_t obj, WCHAR *path, uint64_t *out); /* @0x1400ff414 */
+extern uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out); /* @0x1400ff414 */
 extern void FUN_1400FD5E8(int64_t obj);        /* @0x1400fd5e8 */
 extern void PECMD_SelectObjectSlot_b054(int64_t ctx, HDC hdc, HGDIOBJ obj); /* @0x14005b054 */
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);      /* @0x1400f429c */
@@ -101,7 +101,7 @@ extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len); /* @0x140070
 extern void PECMD_ParseNumSkipChar_01f8(int64_t *pp, int *out);      /* @0x1400701f8 */
 extern void FUN_14005B0D4(void *ps);
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
-extern void FUN_1400F3308(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
+extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
 extern void FUN_1400F51D8(int64_t obj, int current); /* @0x1400f51d8 */
 extern uint64_t FUN_1400F2F58(int64_t obj, int *rect, int msgParam); /* @0x1400f2f58 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
@@ -111,7 +111,7 @@ extern BOOL GetScrollRange(HWND hWnd, int nBar, int *lpMinPos, int *lpMaxPos);
 extern BOOL SetScrollRange(HWND hWnd, int nBar, int nMinPos, int nMaxPos, BOOL bRedraw);
 extern uint8_t g_u8CCB1;                                  /* MAIN_DBG 日志标志 */
 extern void FUN_1400633A8(void **ps, int64_t len);             /* @0x1400633a8 */
-extern void FUN_1400E6960(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg); /* @0x1400e6960 */
+extern void PECMD_SafeVFormatW(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg); /* @0x1400e6960 */
 extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);     /* @0x14007034c */
 extern void *FUN_14007DE70(LPCWSTR *a, LPCWSTR *out, LPCWSTR src); /* @0x14007de70 */
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *ps, uint64_t *src); /* @0x140070398 */
@@ -728,9 +728,9 @@ uint64_t FUN_1400ECA00(int64_t obj, uint32_t msg, int64_t wParam,
                                     (uint32_t)(uint64_t)lParam) & 0xffff0000ffffULL;
                 FUN_1400FD764((int64_t *)(uintptr_t)obj, (int)wParam, packed);
             } else if (msg == 0x100) {
-                FUN_1400EC310(obj);
+                PECMD_OnTabSelChange(obj);
             } else if (msg == 0x47) {
-                FUN_1400EC0F0(obj, (char)((*(uint32_t *)(b + OBJ_LINK) >> 7) & 1));
+                PECMD_LayoutTabPageArea(obj, (char)((*(uint32_t *)(b + OBJ_LINK) >> 7) & 1));
             }
         }
         if (0 < count)
@@ -1099,7 +1099,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
             HWND parent = GetParent(*(HWND *)(obj + OBJ_HWND));
             bgColor = (COLORREF)SendMessageW(parent, 0x449, 0, 0);
         }
-        FUN_1400F0DF4(target, hdc, &rc, bgColor, 0);
+        PECMD_DrawScaledBarFill(target, hdc, &rc, bgColor, 0);
         if ((*(uint8_t *)(obj + 0x60) & 0x10) != 0)
             align = (uint32_t)(int8_t)*(uint8_t *)(obj + 0x60) & 3;
     }
@@ -1166,7 +1166,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
             if (-1 < *(int *)(src + 0x90 + (int64_t)idx * 8))
                 SetTextColor(hdc, color);
         }
-        FUN_1400EF08C(hdc, text, -1, &rc, align);
+        PECMD_DrawVertCenteredText(hdc, text, -1, &rc, align);
     }
     SelectObject(hdc, oldFont);
     FUN_14005B104((WCHAR **)&text);
@@ -2090,7 +2090,7 @@ WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
     } else {
         format = WSTR("%.*lE");
     }
-    FUN_1400E6960(*out, 99, format, p);
+    PECMD_SafeVFormatW(*out, 99, format, p);
 
     expPart = StrChrW(*out, L'E');
     if (expPart != NULL) {
@@ -2825,7 +2825,7 @@ void FUN_1400EF14C(int64_t obj, int64_t paintInfo)
             if (font != 0)
                 oldObj = SelectObject(memDC, font);
         }
-        FUN_1400EF08C(memDC, text, -1, &rc, 1);
+        PECMD_DrawVertCenteredText(memDC, text, -1, &rc, 1);
         if (oldObj != 0)
             SelectObject(memDC, oldObj);
         if (*(int64_t *)(b + 0x110) == 0)
@@ -2871,7 +2871,7 @@ void FUN_1400F69B8(int64_t *obj, uint32_t msg, uint64_t lParam)
     bVar4 = ((uVar2 >> 0x19) & 1) != 0 && lVar14 != 0;
     bVar5 = ((uVar2 >> 0x19) & 1) != 0 && ((uVar2 >> 0x10) & 1) != 0;
 
-    FUN_1400F3308((int64_t)obj, &pt.x, local_c8);
+    PECMD_ListSubItemHitTest((int64_t)obj, &pt.x, local_c8);
     LVar6 = pt.x;
     if (obj[0x71] > 0)
         lVar9 = obj[0x70];
@@ -3297,7 +3297,7 @@ void FUN_1400FE610(int64_t obj, HDC hdcIn)
     }
 
     if (g_alphaThreshold <= *(float *)(b + 0x50)) {
-        FUN_1400F0DF4(obj, hdc, &rc, *(COLORREF *)(b + 0x54),
+        PECMD_DrawScaledBarFill(obj, hdc, &rc, *(COLORREF *)(b + 0x54),
                              (int)(int8_t)*(uint8_t *)(b + 0x60) & 8);
         shadow = false;
         drawFlags = 0;
@@ -3398,7 +3398,7 @@ uint64_t FUN_1400FFB64(int64_t obj, uint16_t *path, int64_t *out,
     bool first = true;
 
     if (((uintptr_t)path & 1) == 0)
-        hItem = FUN_1400FF414(obj, path, NULL);
+        hItem = PECMD_FindTreeItemByPath(obj, path, NULL);
     else
         hItem = (uint64_t)(uintptr_t)path & 0xfffffffffffffffeULL;
     if (hItem == 0)
