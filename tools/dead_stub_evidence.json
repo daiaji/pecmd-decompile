@@ -1,0 +1,101 @@
+{
+  "_meta": {
+    "generated": "2025-08-23 死代码取证 (read-only forensic pass)",
+    "scope": "引用核查范围 = refactored/core_*.c + link_stubs.c + include/*.h (大小写不敏感, 含裸地址/DAT_/PTR_ 形式); 佐证语料 = ../decompiled.c (Ghidra 全量反编译) 与 ../PECMD原始.EXE 原始二进制 (.rdata QWORD 函数指针扫描)",
+    "verdict_rule": "DEAD=全语料零外部引用(允许仅自递归)/LIVE=存在真实调用或取址证据/INDIR=仅函数指针表(.rdata 指针槽)间接引用"
+  },
+  "candidates": [
+    {
+      "addr": "1400f6db0",
+      "dc_body_lines": 1103,
+      "refs": { "total": 3, "defs": 1, "protos": 0, "calls": 0, "comments": 2, "addrs_taken": 0 },
+      "call_sites": [],
+      "identity": "控件自绘重绘例程(WM_PAINT类): CreatePen/MoveToEx/LineTo/DrawFrameControl/DrawTextW/SetTextColor 等大量 GDI 绘制, size=8526B",
+      "verdict": "INDIR",
+      "note": "编译源零调用零取址(仅 core_b8_remaining.c 定义+注释)。但原始 EXE .rdata 含其 QWORD 函数指针槽: file_off 0x12b940 / RVA 0x12c740, 位于控制对象虚表区(PTR_FUN_14012c670 家族, 该虚表由 FUN_1400f9324 安装); ../decompiled.c 中亦无任何直接调用者 → 纯虚表间接引用。不可登记 SKIP; 编译源桩可保留现状待还原图谱定位。"
+    },
+    {
+      "addr": "1400d9818",
+      "dc_body_lines": 1088,
+      "refs": { "total": 2, "defs": 1, "protos": 0, "calls": 0, "comments": 1, "addrs_taken": 0 },
+      "call_sites": [],
+      "identity": "窗口滚动条/定时器/托盘(Shell_NotifyIconW, 字符串\"PECMD2012\")相关消息处理大函数, 返回 HWND, size=7726B (Ghidra: Type propagation not settling)",
+      "verdict": "INDIR",
+      "note": "编译源零引用(core_b7c.c 仅定义+横幅注释)。原始 EXE .rdata 指针槽: file_off 0x125d20 / RVA 0x126b20, 与 1400d85d0 同处一张密集代码指针分派表(相邻槽 0x1400e6574/0x1400aab68/0x1400d85d0 及小thunk 0x140001188); 无任何直接调用者。保留, 不入 SKIP。"
+    },
+    {
+      "addr": "140100ac4",
+      "dc_body_lines": 715,
+      "refs": { "total": 5, "defs": 1, "protos": 0, "calls": 0, "comments": 4, "addrs_taken": 0 },
+      "call_sites": [],
+      "identity": "控件 CHECK/ENABLE/Expand 属性应用与鼠标定位(ScreenToClient/SetFocus)处理, 内部两处调用 FUN_1401001c0 刷新项文本, size=4631B",
+      "verdict": "INDIR",
+      "note": "编译源零调用(b9_remaining.c 定义+TODO 注释, 注释称'按真实签名调用'但尚无调用点); 裸地址命中均为注释(@size 标注)。但原始 EXE .rdata 指针槽: file_off 0x12c100 / RVA 0x12cf00, 密集函数指针表中(相邻 0x1400ff5a0/0x140063c58); 与既有 tools/unref_classification.json 的 BUSINESS_INDIRECT 判定互证。它在原二进制体内调用 FUN_1401001c0×2(decompiled.c:157965,158011)。保留待还原图谱。"
+    },
+    {
+      "addr": "1400d85d0",
+      "dc_body_lines": 440,
+      "refs": { "total": 2, "defs": 1, "protos": 0, "calls": 0, "comments": 1, "addrs_taken": 0 },
+      "call_sites": [],
+      "identity": "窗口/控件属性批量应用: SetWindowPos/SetWindowLongPtr、DragAcceptFiles、RegisterTouchWindow(GetProcAddress user32.dll)、GetSystemMenu/EnableMenuItem、属性名 .Enable/.Visible/.Visable/.Paint、&&__WinID、Control_RunDLLW/SHELL32.DLL, size=4125B",
+      "verdict": "INDIR",
+      "note": "编译源零引用(core_b7c.c 仅定义+注释)。原始 EXE .rdata 指针槽: file_off 0x125d40 / RVA 0x126b40, 与 1400d9818 同一张分派表(相距 0x20 即 4 槽); 零直接调用者。保留。"
+    },
+    {
+      "addr": "1400d7ce4",
+      "dc_body_lines": 321,
+      "refs": { "total": 2, "defs": 1, "protos": 0, "calls": 0, "comments": 1, "addrs_taken": 0 },
+      "call_sites": [],
+      "identity": "控件属性设置辅助(ENABLE/UPos 属性名, SendMessageW 密集调用, 格式串 0x%I64X), size=2281B",
+      "verdict": "INDIR",
+      "note": "编译源零引用(core_b7c.c 仅定义+注释)。原始 EXE .rdata 指针槽: file_off 0x125ab0 / RVA 0x1268b0, 另一张密集代码指针表(相邻槽多为默认处理 0x140053e78 与 0x14007cf54/0x14007cf84); 零直接调用者。保留。"
+    },
+    {
+      "addr": "1400f36ec",
+      "dc_body_lines": 310,
+      "refs": { "total": 3, "defs": 1, "protos": 0, "calls": 0, "comments": 2, "addrs_taken": 0 },
+      "call_sites": [
+        "../decompiled.c:153669 FUN_1400f9324(obj,index,x) 直接调用 — FUN_1400f9324 为经 PTR_FUN_14012c670 虚表安装的控件对象方法(*param_1=&PTR_FUN_14012c670), 尚未还原进编译源"
+      ],
+      "identity": "按索引调整控件子项高度并失效重绘: (obj,index,height), GetWindowRect+InvalidateRect+SendMessageW, size=2308B",
+      "verdict": "LIVE",
+      "note": "编译源零引用(core_b8_remaining.c 简化桩定义+注释), 但原二进制有真实直接调用者 FUN_1400f9324(decompiled.c:153669), 该调用者本身靠虚表指针进入 → 二进制中可达, 删桩会丢失还原图谱节点。EXE .rdata 无其独立指针槽(QWORD 扫描 0 命中)。保守判定 LIVE(证据在 ../decompiled.c, 不在编译源); 不入 SKIP, 待还原 FUN_1400f9324 时一并恢复。"
+    },
+    {
+      "addr": "1400c5ba8",
+      "dc_body_lines": 271,
+      "refs": { "total": 2, "defs": 1, "protos": 0, "calls": 0, "comments": 1, "addrs_taken": 0 },
+      "call_sites": [
+        "../decompiled.c:122410/122471/122839/122999 共4处全部为 FUN_1400c5ba8 自身体内自递归(定义@122257)"
+      ],
+      "identity": "类型名 token 递归下降匹配(char/wchar/short/float/double/ldouble/int64/longlong/intptr… StrChrW/StrCmpNIW), size=1915B",
+      "verdict": "DEAD",
+      "note": "编译源零引用; 原二进制中唯一调用形式是自身递归(无任何外部入口, 无 .rdata 指针槽, QWORD 扫描 0 命中)→ 从二进制入口不可达, 属真死代码。可登记 SKIP/删桩; decompiled.c 保留原文可随时回捞。注意: 若未来发现其所在解析器上游被激活需复核。"
+    },
+    {
+      "addr": "1400df464",
+      "dc_body_lines": 261,
+      "refs": { "total": 2, "defs": 1, "protos": 0, "calls": 0, "comments": 1, "addrs_taken": 0 },
+      "call_sites": [
+        "../decompiled.c:137168 唯一调用点为 FUN_1400df464 体内自递归(定义@136424)"
+      ],
+      "identity": "脚本行解析辅助(\" *- %d:%d\" / \" * %d:%d,%s\" 节偏移格式, StrStrW/StrCmpNIW/EnterCriticalSection/CloseHandle), size=1709B",
+      "verdict": "DEAD",
+      "note": "编译源零引用; 原二进制仅剩自递归一条边, 无外部调用者、无 .rdata 指针槽(QWORD 扫描 0 命中)→ 入口不可达, 真死代码。可登记 SKIP/删桩。"
+    },
+    {
+      "addr": "1401001c0",
+      "dc_body_lines": 272,
+      "refs": { "total": 4, "defs": 1, "protos": 0, "calls": 1, "comments": 2, "addrs_taken": 0 },
+      "call_sites": [
+        "refactored/core_b3_remaining.c:26529 在 FUN_1400bb718(融合体, 含原 FUN_1400bcc5c 控件构建逻辑)内真实调用: FUN_1401001c0((int64_t)plVar6,(int64_t*)&param_5,0,0)",
+        "../decompiled.c:117247 原 FUN_1400bcc5c 内调用(对应上条)",
+        "../decompiled.c:157495/157523 自递归×2",
+        "../decompiled.c:157965/158011 FUN_140100ac4 内调用×2"
+      ],
+      "identity": "控件文本设置/替换封装((obj,&text,flags,flags), SendMessageW), 被控件构建路径与 140100ac4 依赖, size=2306B",
+      "verdict": "LIVE",
+      "note": "编译源恰有 1 处真实调用(core_b3_remaining.c:26529)。但其编译源定义体本身是 UNIMPLEMENTED 占位(core_b9_remaining.c:112 'decompile-failed, body 未还原')→ 还原关键路径上的活函数, 绝不可 SKIP; 应优先补全其函数体。EXE .rdata 无独立指针槽(QWORD 0 命中), 引用全部为直接调用。"
+    }
+  ]
+}
