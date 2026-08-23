@@ -97,16 +97,261 @@ extern int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out); /* @0x140
 static longlong b7c_003a20(longlong *script, WCHAR **slot, uint8_t flag);
 
 
+/* ---- HASH 命令 (PECMD_HashCmdCompute @0x1400c0ad8) 新增依赖 ---- */
+extern uint64_t FUN_14005c7c4(const char *a, const uint16_t *b);   /* @0x14005c7c4 ANSI 词前缀匹配 */
+extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 定位取长 */
+extern void *PECMD_MapFileView(HANDLE h, int64_t size, uint32_t prot, int64_t offset); /* @0x1400e3f80 文件映射视图 */
+extern uint32_t PECMD_CryptoHashCompute(BYTE *data, DWORD len, uint32_t alg, uint64_t extra); /* @0x1400e4864 CryptAPI 哈希 */
+extern uint32_t PECMD_Crc32HexOfBytes(const uint8_t *data, int64_t len, char *out); /* @0x1400e4cc0 CRC32 */
+extern short  *PECMD_UnquoteString(short *s);                      /* @0x14001be14 剥成对引号 */
+extern void    FUN_14006355c(void *out, const WCHAR *src, int c, uint64_t d); /* @0x14006355c wide→ANSI 槽 */
+extern void    FUN_1400BEF64(LPCWSTR cmd);                         /* @0x1400bef64 蜂鸣并执行文本 */
+extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                    HANDLE tmpl);                  /* @0x140003864 CreateFileW 包装 */
+
 /* ========== PECMD_HashCmdCompute @0x1400c0ad8 ==========
- * [简化桩] 读取文件并计算哈希。返回 NULL。
- * TODO(verify): 需完整还原文件映射/哈希算法。
+ * 'HASH' 命令引擎 (decompiled.c @119159 size=1318 忠实直移,
+ * 分块/收尾路径经 objdump -d 于原始 EXE 核对寄存器流向)。
+ *
+ * 行格式: [$|*|&]路径,%输出变量%[,算法]   算法缺省 MD5(CALG 0x8003)。
+ *   '$' 数据源为串本体(转 ANSI); '*'/'&' 为具名内存块
+ *   (FUN_140018978, 持全局锁 DAT_14013e190 直至收尾);
+ *   其余按文件处理: 剥引号 → GENERIC_READ 打开 → SetFilePointer(FILE_END)
+ *   取长度 → PECMD_MapFileView 映射。
+ * 输出: " <摘要大写十六进制>" 写入宽串槽; 有变量名则 SetVariable/
+ *   param_3 直写(跳过首空格), 否则 FUN_1400bef64 执行原文。
+ * 返回: [rsp+0x40] 槽 — 仅 >4GB 分块哈希时为末次调用返回值, 其余为 0。
+ * TODO(verify): list/CRC32 大文件分支不进入分块循环 (与原体一致)。
  */
 void *PECMD_HashCmdCompute(int64_t *a1, LPCWSTR a2, int64_t *a3)
 {
-    (void)a1;
-    (void)a2;
-    (void)a3;
-    return NULL;
+    WCHAR *cur = (WCHAR *)(uintptr_t)a2;
+    char   cVar12;                        /* 输出格式旗标: 0 hex /1 CRC32 /-1 list */
+    char   cVar14;                        /* '*'/'&' 内存块模式 */
+    char   flag_dollar;                   /* '$' 串模式 ([rsp+0x198]) */
+    WCHAR *pWVar5;
+    WCHAR *tail_alg;                      /* 首个 StrRChrW 尾字段 = 算法名 */
+    WCHAR *varname;                       /* 第二个尾字段 = 输出变量名 */
+    uint32_t AVar17;                      /* ALG_ID */
+    char  *hash_out;                      /* [rsp+0x58]: 摘要输出指针 (list 时=&list_alloc) */
+    char  *res_src;                       /* [rsp+0x48]: 送 StrBldCopyAnsi 的 ANSI 串 */
+    char  *list_alloc;                    /* local_128: list 模式分配的行缓冲槽 */
+    uint64_t ansi_slot;                   /* local_118 ($ 模式 ANSI 转换槽) */
+    BYTE  *data;                          /* r12: 数据基址 */
+    longlong size;                        /* rbp: 数据长度 */
+    void  *mapbase;                       /* r14: 待 Unmap 的映射基址 (0=无) */
+    CRITICAL_SECTION *kept_cs;            /* rdi: 跨收尾持有的锁 */
+    uint32_t retval;                      /* [rsp+0x40] 返回槽 */
+    /* hexbuf 区: 前 0x18 字节供分块流式句柄槽 (out-0x18/out-0x10),
+     * hexbuf 自 hb+0x17 起, hexbuf+1 恰 8 字节对齐。 */
+    static uint64_t hb_align[(0x18 + 176) / 8];
+    char *hexbuf = (char *)hb_align + 0x17;
+
+    cur = (WCHAR *)a2;
+    retval = 0;
+    data = NULL;
+    mapbase = NULL;
+    kept_cs = NULL;
+    list_alloc = NULL;
+    ansi_slot = 0;
+    size = 0;
+
+    FUN_14005B154(&cur);
+    flag_dollar = (char)(*cur == L'$');
+    if ((*cur == L'*') || (*cur == L'&')) {
+        cVar14 = '\x01';
+    }
+    else {
+        cVar14 = '\0';
+    }
+    pWVar5 = cur;
+    if ((*cur == L'$') || (*cur == L'*')) {
+        pWVar5 = cur + 1;
+    }
+    tail_alg = (WCHAR *)StrRChrW(pWVar5, NULL, L',');
+    if (tail_alg != NULL) {
+        *(WCHAR *)tail_alg = L'\0';
+        tail_alg = tail_alg + 1;
+    }
+    varname = (WCHAR *)StrRChrW(pWVar5, NULL, L',');
+    if (varname != NULL) {
+        *(WCHAR *)varname = L'\0';
+        varname = varname + 1;
+    }
+    if (varname == NULL) {
+        varname = tail_alg;               /* 仅一个尾字段: 视作变量名 */
+        tail_alg = NULL;
+    }
+
+    hash_out = hexbuf + 1;
+    res_src = hexbuf;
+    hexbuf[0] = ' ';
+    hexbuf[1] = '\0';
+    cVar12 = '\0';
+    AVar17 = 0x8003u;                     /* CALG_MD5 缺省 */
+    if (tail_alg != NULL) {
+        if (FUN_14005c7c4("SHA1", (const ushort *)tail_alg)) {
+            AVar17 = 0x8004u;
+        }
+        else if (FUN_14005c7c4("SHA256", (const ushort *)tail_alg)) {
+            AVar17 = 0x800cu;
+        }
+        else if (FUN_14005c7c4("SHA384", (const ushort *)tail_alg)) {
+            AVar17 = 0x800du;
+        }
+        else if (FUN_14005c7c4("SHA512", (const ushort *)tail_alg)) {
+            AVar17 = 0x800eu;
+        }
+        else if (FUN_14005c7c4("CRC32", (const ushort *)tail_alg)) {
+            cVar12 = '\x01';
+        }
+        else if (FUN_14005c7c4("list", (const ushort *)tail_alg)) {
+            hash_out = (char *)&list_alloc;
+            AVar17 = 0xffffcfc7u;
+            cVar12 = '\xff';
+        }
+        /* CRC32/list 命中才回写旗标字节 (local_res10 低字节, 此处以独立变量承接) */
+    }
+
+    EnterCriticalSection((CRITICAL_SECTION *)g_csInit);       /* DAT_14013e190 */
+    kept_cs = (CRITICAL_SECTION *)g_csInit;
+    if (cVar14 == '\0') {
+        LeaveCriticalSection((CRITICAL_SECTION *)g_csInit);
+        kept_cs = NULL;
+    }
+
+    if (flag_dollar == '\0') {
+        if (cVar14 == '\0') {
+            /* ---------- 文件模式 ---------- */
+            HANDLE hFile = (HANDLE)0;
+            WCHAR *path = (WCHAR *)PECMD_UnquoteString((short *)pWVar5);
+            PECMD_OpenFileHandle(&hFile, path, 0x80000000u /*GENERIC_READ*/,
+                                 3 /*FILE_SHARE_READ|WRITE*/, (LPSECURITY_ATTRIBUTES)0,
+                                 3 /*OPEN_EXISTING*/, 0, (HANDLE)0);
+            if (hFile == (HANDLE)0) {
+                res_src = hexbuf;         /* 失败: 结果 = " " */
+                goto LAB_1400c0f05_out;
+            }
+            {
+                LARGE_INTEGER zero;
+                LARGE_INTEGER szv;
+                zero.QuadPart = 0;
+                szv = PECMD_SetFilePointer(hFile, zero, 2 /*FILE_END*/);
+                size = szv.QuadPart;
+            }
+            data = (BYTE *)PECMD_MapFileView(hFile, size, 2, 0);
+            mapbase = data;
+            if (data == NULL) {
+                if (hFile != INVALID_HANDLE_VALUE) {
+                    CloseHandle(hFile);
+                }
+                mapbase = NULL;           /* r14 = rax = 0 */
+                res_src = hexbuf;
+                goto LAB_1400c0f05_out;
+            }
+            if ((cVar12 > '\0') || ((ulonglong)size <= 0xffffffffULL)) {
+                /* 单次哈希路径 (≤4GB 或 CRC32): 句柄即关, 收尾统一算 */
+                if (hFile != INVALID_HANDLE_VALUE) {
+                    CloseHandle(hFile);
+                }
+                mapbase = data;
+                goto LAB_1400c0eb3_tail;
+            }
+            /* ---------- >4GB SHA 分块流式循环 ---------- */
+            {
+                uint64_t remaining = (ulonglong)size;
+                BYTE *cursor = data;
+                ((void **)hb_align)[0] = 0;          /* out-0x18 prov 槽清零 */
+                ((void **)hb_align)[1] = 0;          /* out-0x10 hash 槽清零 */
+                do {
+                    longlong chunk = 0xffffffffLL;
+                    char cf = '\x03';
+                    uint32_t rv;
+                    if (remaining <= (ulonglong)0xffffffffULL) {
+                        chunk = (longlong)remaining;
+                        cf = '\x01';      /* 末块: extra 低位 1 → 终结 */
+                    }
+                    rv = PECMD_CryptoHashCompute(cursor, (DWORD)chunk, AVar17,
+                            (uint64_t)(intptr_t)hash_out + (uint64_t)(byte)cf);
+                    if ((byte)cVar12 >= 0x80) {      /* cmovl: list 模式切换结果串 */
+                        res_src = list_alloc;
+                    }
+                    retval = rv;          /* [rsp+0x40] */
+                    cursor = cursor + chunk;
+                    remaining -= (ulonglong)chunk;
+                } while (remaining != 0);
+            }
+            if (hFile != INVALID_HANDLE_VALUE) {
+                CloseHandle(hFile);
+            }
+            mapbase = data;               /* r14 ← [rsp+0x198] */
+            data = NULL;                  /* r12 清零: 跳过单次哈希 */
+            goto LAB_1400c0eb3_tail;
+        }
+        else {
+            /* ---------- 具名内存块模式 (* / &) ---------- */
+            int64_t blk = FUN_140018978(a1, (const uint16_t *)pWVar5,
+                                        (int64_t *)0, ~(longlong)0, (void *)0);
+            if (blk == 0) {
+                res_src = hexbuf;
+                goto LAB_1400c0f05_out;
+            }
+            size = *(int64_t *)(intptr_t)(blk + 0x18) & 0x3fffffffffffffffLL;
+            data = *(BYTE **)(intptr_t)(blk + 8);
+            goto LAB_1400c0eb3_tail;
+        }
+    }
+    else {
+        /* ---------- '$' 串模式: wide→ANSI ---------- */
+        FUN_14006355c(&ansi_slot, pWVar5, ~0, ~(uint64_t)0);
+        data = (BYTE *)(uintptr_t)ansi_slot;
+        size = (longlong)lstrlenA((LPCSTR)(uintptr_t)ansi_slot);
+        goto LAB_1400c0eb3_tail;
+    }
+
+LAB_1400c0eb3_tail:
+    /* ---------- 单次摘要计算公共尾 ---------- */
+    if (data != NULL) {
+        if ((signed char)cVar12 > 0) {
+            /* CRC32: 全长 64 位直送 */
+            PECMD_Crc32HexOfBytes((const uint8_t *)data, size, hash_out);
+        }
+        else {
+            PECMD_CryptoHashCompute(data, (DWORD)size, AVar17,
+                                    (uint64_t)(intptr_t)hash_out);
+            if ((byte)cVar12 >= 0x80) {
+                res_src = list_alloc;     /* list 模式切换结果串 */
+            }
+        }
+    }
+
+LAB_1400c0f05_out:
+    /* ---------- 结果落槽 / 变量 / 执行 ---------- */
+    {
+        int64_t wslot = 0;                /* local_res10 复用的宽串槽 */
+        PECMD_StrBldCopyAnsi(&wslot, res_src, ~(uint64_t)0);
+        if (a3 != (int64_t *)0) {
+            PECMD_AssignString(a3, (LPCWSTR)(uintptr_t)(wslot + 2));  /* 跳过首空格 */
+        }
+        else if ((varname != NULL) && (*varname != L'\0')) {
+            FUN_1400629B8((void *)a1, (LPCWSTR)varname,
+                          (LPCWSTR)(uintptr_t)(wslot + 2));
+        }
+        else {
+            FUN_1400BEF64((LPCWSTR)(uintptr_t)wslot);
+        }
+        PECMD_FreeStrBuf((WCHAR **)&wslot);
+    }
+    if (kept_cs != NULL) {
+        LeaveCriticalSection(kept_cs);
+    }
+    if (mapbase != NULL) {
+        UnmapViewOfFile(mapbase);
+    }
+    PECMD_FreeStrBuf((WCHAR **)&ansi_slot);
+    PECMD_FreeStrBuf((WCHAR **)&list_alloc);
+    return (void *)(uintptr_t)retval;
 }
 
 /* ========== PECMD_CreateUpDownCtrl @0x1400c3820 ==========
