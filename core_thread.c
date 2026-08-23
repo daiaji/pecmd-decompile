@@ -379,7 +379,7 @@ uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_
         LeaveCriticalSection(&g_csInit);
         ResumeThread(hThread);
     }
-    if ((int64_t)a7 != -1) {
+    if ((int)a7 != -1) {
         a7 = a7 + 5 + a7 / 10;
     }
     if (hThread) {

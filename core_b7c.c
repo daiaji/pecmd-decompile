@@ -5469,7 +5469,7 @@ LAB_1400ceb57:;
                                     do {
                                         if ((local_904 == *(short *)((byte *)puVar20 - 2)) &&
                                             (local_8f8 ==
-                                             (int)(short)*(ushort *)puVar20)) break;
+                                             (int)(short)*(int16_t *)puVar20)) break;
                                         iVar7 = iVar7 + 1;
                                         puVar20 = (ulonglong *)((byte *)puVar20 + 4);
                                     } while (iVar7 < iVar9);

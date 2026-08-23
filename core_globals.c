@@ -28,7 +28,7 @@ uint32_t g_runFlag;         /* DAT_140147000 运行状态 */
 uint8_t g_flag169;          /* DAT_14013c969 (低字节) */
 uint8_t g_state138;         /* DAT_14013d138 全局状态 */
 uint32_t g_afterMain;       /* DAT_14013ccc8 收尾钩子标志 */
-uint8_t g_flagA24F;         /* DAT_14013a24f 运行标志 */
+int8_t g_flagA24F;          /* DAT_14013a24f 运行标志(dc 写入-1/0xff/0xfe 哨兵, 读侧有符号序比较; 审计#1根因) */
 uint32_t g_state190;        /* DAT_14013d190 */
 uint32_t g_state198;        /* DAT_14013d198 */
 

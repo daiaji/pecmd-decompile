@@ -109,7 +109,7 @@ extern void *g_pVtblB;            /* DAT_14013d5e0 */
 extern int32_t g_val668;          /* DAT_14013d668 */
 extern int32_t g_val5d8;          /* DAT_14013d5d8 */
 extern uint16_t g_privFlags;      /* DAT_14013e20c */
-extern uint8_t g_flagA24F;        /* DAT_14013a24f 运行标志 */
+extern int8_t g_flagA24F;        /* DAT_14013a24f 运行标志 */
 extern uint8_t g_Script[0x200];   /* DAT_14013d130 脚本结构 */
 extern const uint8_t g_DefEnv[0x100]; /* DAT_14011d308 默认环境表 */
 extern uint8_t g_richEditMode;    /* DAT_14013d300 富文本类选择 */
