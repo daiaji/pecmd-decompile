@@ -7,6 +7,9 @@ CFLAGS="-std=c99 -Wall -Wextra -Wno-unused-parameter -Wno-implicit-function-decl
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 FAIL=0
 # third_party/giflib 需要 gnu99 (fdopen 等 POSIX 声明); 其余用 c99
+if [ $# -eq 0 ]; then
+  set -- core_*.c
+fi
 for f in "$@"; do
   if [ -f "$f" ]; then
     case "$f" in
