@@ -11,9 +11,9 @@
  *   是否进程提升权限        FUN_1400E6FB8 @0x1400e6fb8
  *   初始化窗口对象 G        FUN_1400E9048 @0x1400e9048
  *   标签选择变更处理        PECMD_OnTabSelChange @0x1400ec310
- *   设置标签选择            FUN_1400EC428 @0x1400ec428
+ *   设置标签选择            PECMD_SelectTabPageIndex @0x1400ec428
  *   创建标签控件            FUN_1400EC5E4 @0x1400ec5e4
- *   更新控件显示顺序        FUN_1400EC7C0 @0x1400ec7c0
+ *   更新控件显示顺序        PECMD_ShowFirstTabPage @0x1400ec7c0
  *   创建静态控件 B          PECMD_CreateStaticWindow @0x1400efff8
  *   初始化窗口基类对象      FUN_1400F0648 @0x1400f0648
  *   创建按钮控件            PECMD_CreateButtonWindow @0x1400f072c
@@ -52,7 +52,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern int64_t FUN_1400F40C8(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
+extern int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
 extern void FUN_1400F2B6C(int64_t obj);                            /* @0x1400f2b6c */
 extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1, int32_t field2);                     /* @0x1400f2b84 */
 extern void FUN_1400F5724(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
@@ -70,7 +70,7 @@ extern DWORD GetVersion(void);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL PECMD_EnumWindowCallback(HWND hwnd, LPARAM lParam);
-extern uint32_t FUN_1400E6F18(void);
+extern BOOL PECMD_IsAdminGroupMember(void);
 extern void PECMD_AllocStrSlot(void *ps);
 extern void PECMD_LayoutTabPageArea(int64_t a1, char a2);
 extern int64_t PECMD_ContainerAppend(uint64_t *a1);
@@ -272,7 +272,7 @@ uint32_t FUN_1400E6FB8(void)
     DWORD ver;
     HANDLE token;
 
-    u = FUN_1400E6F18();
+    u = PECMD_IsAdminGroupMember();
     if (u == 0) {
         return 0;
     }
@@ -379,10 +379,10 @@ void PECMD_OnTabSelChange(int64_t obj)
     PECMD_FreeStrBuf(&var);
 }
 
-/* ========== FUN_1400EC428 @0x1400ec428 ==========
+/* ========== PECMD_SelectTabPageIndex @0x1400ec428 ==========
  * 设置标签控件当前页：隐藏旧页、显示新页，返回旧选择；越界返回 -1。
  */
-int FUN_1400EC428(int64_t obj, int index)
+int PECMD_SelectTabPageIndex(int64_t obj, int index)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int old_sel;
@@ -426,10 +426,10 @@ bool FUN_1400EC5E4(int64_t *obj, DWORD style, int *rect,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400EC7C0 @0x1400ec7c0 ==========
+/* ========== PECMD_ShowFirstTabPage @0x1400ec7c0 ==========
  * 按当前选中项隐藏其余子窗口并显示第一项。
  */
-void FUN_1400EC7C0(int64_t obj, char mode)
+void PECMD_ShowFirstTabPage(int64_t obj, char mode)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int64_t **items;
@@ -708,7 +708,7 @@ void FUN_1400F5B54(int64_t obj, int id, int64_t value)
     int64_t *base;
     void *item;
 
-    idx = FUN_1400F40C8(obj, id, &ignored);
+    idx = PECMD_ItemPropFindIdxList5(obj, id, &ignored);
     (void)ignored;
     if (idx < 0) {
         if (value != 0) {

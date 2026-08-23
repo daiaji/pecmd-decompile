@@ -95,8 +95,7 @@ extern void      PECMD_ReadFileToWide(WCHAR *, int64_t *);                   /* 
 /* ---- 写控件分发 (对话框) ---- */
 extern void      PECMD_DispatchCreateControl(uint64_t, int64_t, WCHAR **, int, int, int, int,
                                WCHAR **, WCHAR **, uint32_t, int *, LPCWSTR, uint64_t);
-extern void      FUN_140063ed4(WPARAM, int64_t, int64_t *, int, int, int, int,
-                               int64_t *, int64_t *, uint32_t);
+extern void PECMD_CreateDtimItem(WPARAM mgr, int64_t v2, uint64_t *p3, int x, int y, int w, int h, uint64_t *p8, uint64_t *p9, uint32_t flags);
 extern void      PECMD_InsertControlObject(WPARAM, int64_t, int64_t *, int, int, int, int,
                                int64_t *, int64_t *, uint32_t);
 
@@ -403,7 +402,7 @@ LAB_140083a22:
 
 /* ==================================================================
  * @0x140083f74  (uint64_t PECMD_ParseMsgDispatch(longlong*, ushort*, WPARAM, uint64_t))
- * MSG 参数解析: 同族写控件分发, 通过 FUN_140063ed4。
+ * MSG 参数解析: 同族写控件分发, 通过 PECMD_CreateDtimItem。
  * ================================================================== */
 uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, uint64_t param_4)
 {
@@ -502,7 +501,7 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
         if (uVar1 != 0x2a) {
             param_1 = *(int64_t **)((uintptr_t)param_3 + 0x290);
         }
-        FUN_140063ed4(param_3, (int64_t)param_1, &local_80, local_88, local_84, local_res18[0],
+        PECMD_CreateDtimItem(param_3, (int64_t)param_1, &local_80, local_88, local_84, local_res18[0],
                       local_res8[0], &local_78, &local_68, uVar9);
         PECMD_FreeStrBuf((void *)&local_68);
         PECMD_FreeStrBuf((void *)&local_70);

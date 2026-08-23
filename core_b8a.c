@@ -52,8 +52,8 @@ extern DWORD GetFileSize(HANDLE, DWORD *);
 extern void *PECMD_MapSharedSection(HANDLE, int64_t, uint32_t, int64_t, LPCWSTR); /* @0x1400e3e38 */
 extern void FUN_1400E4E94(uint64_t *obj);
 extern void FUN_1400E9138(uint64_t *obj);
-extern void FUN_1400EEEA0(uint64_t *obj);
-extern void FUN_1400EFF10(uint64_t *obj);
+extern void PECMD_DtorMemDcCanvas(uint64_t *obj);
+extern void PECMD_DtorImageHolder(uint64_t *obj);
 extern void FUN_1400E8940(void *obj);
 extern int64_t PECMD_ContainerAppend(uint64_t *obj);
 extern uint64_t FUN_1400F0814(HDC, uint32_t, HDC, LPCWSTR, int32_t);
@@ -232,7 +232,7 @@ int64_t FUN_1400EF8C8(uint64_t a, uint64_t b)
  */
 uint64_t *FUN_1400EF8EC(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400EEEA0(obj);
+    PECMD_DtorMemDcCanvas(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -244,7 +244,7 @@ uint64_t *FUN_1400EF8EC(uint64_t *obj, uint32_t flags)
  */
 uint64_t *FUN_1400F00C4(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400EFF10(obj);
+    PECMD_DtorImageHolder(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

@@ -60,7 +60,7 @@ extern void PECMD_FormatSetVar(int64_t *script, uint64_t value, LPCWSTR key,
 extern int64_t PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4,
                              void *p5);
 extern int32_t g_msgLockCount;                                /* 消息锁计数 */
-extern void FUN_1400EC428(int64_t obj, int param2);
+extern int PECMD_SelectTabPageIndex(int64_t obj, int index);
 extern void PECMD_ControlOnMouseMove(int64_t *obj, int param2, uint64_t param3);
 extern void PECMD_OnTabSelChange(int64_t obj);
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
@@ -102,7 +102,7 @@ extern void PECMD_ParseNumSkipChar_01f8(int64_t *pp, int *out);      /* @0x14007
 extern void FUN_14005B0D4(void *ps);
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
 extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
-extern void FUN_1400F51D8(int64_t obj, int current); /* @0x1400f51d8 */
+extern void PECMD_TableSetHoverIdx(int64_t obj, int current); /* @0x1400f51d8 */
 extern uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam); /* @0x1400f2f58 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern void PECMD_FormatOutput(int64_t obj);                     /* @0x14009c6dc */
@@ -138,7 +138,7 @@ extern uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_
                                               LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
                                               PROCESS_INFORMATION *pi, LPCWSTR param11); /* @0x1400e4324 */
 extern BOOL FUN_1400E411C(void);     /* @0x1400e411c */
-extern BOOL FUN_1400E4228(HANDLE hProcess, LPCVOID base); /* @0x1400e4228 */
+extern bool PECMD_ZwUnmapViewOfSection(HANDLE process, void *baseAddress); /* @0x1400e4228 */
 extern BOOL FUN_1400E412C(int64_t obj);   /* @0x1400e412c */
 extern void PECMD_PeApplyRelocations(int64_t obj, void *src, void *dst); /* @0x1400e4160 */
 extern uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e248 */
@@ -657,7 +657,7 @@ uint64_t FUN_1400ECA00(int64_t obj, uint32_t msg, int64_t wParam,
 
     if (msg == 0x462) {
         EnterCriticalSection(&g_csInit);
-        FUN_1400EC428(obj, (int)wParam);
+        PECMD_SelectTabPageIndex(obj, (int)wParam);
         LeaveCriticalSection(&g_csInit);
         return 1;
     }
@@ -1380,7 +1380,7 @@ int PECMD_RunPeInjectStart(LPWSTR cmd, int64_t ctxBase, int64_t param3,
     if (pWVar6 == local_res8 && dataSize <= (uint32_t)local_res10[0]) {
         remoteBuf = (LPVOID)(uintptr_t)local_res8;
         VirtualProtectEx(pi->hProcess, remoteBuf, (size_t)local_res10[0], 0x40, oldProt);
-    } else if (FUN_1400E411C() && FUN_1400E4228(pi->hProcess, pWVar6)) {
+    } else if (FUN_1400E411C() && PECMD_ZwUnmapViewOfSection(pi->hProcess, pWVar6)) {
         remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
             (void *)g_pfnVirtualAllocEx)(pi->hProcess, pWVar6, dataSize, 0x3000, 0x40);
         if (remoteBuf == NULL && FUN_1400E412C(ctxBase)) {
@@ -2976,7 +2976,7 @@ after_hit2:
                 lVar9 = obj[0x70];
             if (lVar9 != 0)
                 WVar12 = *(WPARAM *)(lVar9 + WVar12 * 8);
-            FUN_1400F51D8((int64_t)obj, (int)WVar12);
+            PECMD_TableSetHoverIdx((int64_t)obj, (int)WVar12);
         }
     }
 }

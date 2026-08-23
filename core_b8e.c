@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   调用 ZwUnmapViewOfSection  FUN_1400E4228 @0x1400e4228
+ *   调用 ZwUnmapViewOfSection  PECMD_ZwUnmapViewOfSection @0x1400e4228
  *   更新窗口扩展样式位      FUN_1400E5960 @0x1400e5960
  *   子窗口命中测试回调      FUN_1400E6350 @0x1400e6350
  *   填充矩形背景色          FUN_1400E68E0 @0x1400e68e0
@@ -23,7 +23,7 @@
  *   添加映射项 B            FUN_1400F578C @0x1400f578c
  *   添加映射项 C            FUN_1400F586C @0x1400f586c
  *   添加映射项 D            FUN_1400F58D4 @0x1400f58d4
- *   释放 GDI 对象数组       FUN_1400F5C10 @0x1400f5c10
+ *   释放 GDI 对象数组       PECMD_ClearNamedPropArray @0x1400f5c10
  *   销毁 GDI 复合对象       FUN_1400F5D50 @0x1400f5d50
  *   取映射双值 A            FUN_1400F5DC4 @0x1400f5dc4
  *   取映射双值 B            FUN_1400F5EF8 @0x1400f5ef8
@@ -32,7 +32,7 @@
  *   发送控件按下通知 B      FUN_1400FBDE0 @0x1400fbde0
  *   初始化 GDI 对象 C       FUN_1400FC2E0 @0x1400fc2e0
  *   初始化 GDI 对象 D       FUN_1400FEC9C @0x1400fec9c
- *   查询控件值              FUN_1400FED38 @0x1400fed38
+ *   查询控件值              PECMD_TreeGetItemParam @0x1400fed38
  *   查询控件值(扩展)       FUN_1400FEE24 @0x1400fee24
  *
  * 约定:
@@ -57,7 +57,7 @@ extern uint8_t PTR_FUN_14012cf00[];
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int FUN_1400E6314(HWND hwnd, POINT pt);
-extern void FUN_1400ECDD8(uint64_t *arr);
+extern void PECMD_FreeNamedEntryArray(uint64_t *arr);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400F0648(uint64_t *obj, uint64_t value);
 extern void FUN_14005B0D4(void *ps);
@@ -66,7 +66,7 @@ extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
                           int64_t esize, int32_t mode);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
-extern void FUN_1400F3674(HWND hwnd);
+extern void PECMD_ForcePosChanged(HWND hwnd);
 extern int64_t PECMD_ItemPropFindIdxList2(int64_t obj, int idx, int *out);
 extern int64_t PECMD_ItemPropFindIdxList4(int64_t obj, int idx, int *out);
 extern int64_t PECMD_ItemPropFindIdxList1(int64_t obj, int idx, int *out);
@@ -76,13 +76,13 @@ extern int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int idx, int mode,
 extern int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int idx, int mode,
                              int *out);
 extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
-extern void FUN_1400F5104(int64_t obj, int idx, int mode);
+extern void PECMD_TableSetCurSel(int64_t obj, int current, int scroll);
 extern void *FUN_1400E57C0(void *obj);
 
-/* ========== FUN_1400E4228 @0x1400e4228 ==========
+/* ========== PECMD_ZwUnmapViewOfSection @0x1400e4228 ==========
  * 动态加载 ntdll!ZwUnmapViewOfSection 并调用；返回 NTSTATUS==0。
  */
-bool FUN_1400E4228(HANDLE process, void *baseAddress)
+bool PECMD_ZwUnmapViewOfSection(HANDLE process, void *baseAddress)
 {
     typedef int32_t (*ZwUnmapViewOfSectionFn)(HANDLE, void *);
     bool ok = false;
@@ -191,7 +191,7 @@ void FUN_1400EC6A8(int64_t obj, int64_t target, uint64_t param3,
  */
 uint64_t *FUN_1400ECEB4(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400ECDD8(obj + 0x21);
+    PECMD_FreeNamedEntryArray(obj + 0x21);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x21));
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x1b));
     FUN_1400E8940(obj);
@@ -317,7 +317,7 @@ void FUN_1400F4064(int64_t obj, int height, int mode)
         if (mode == 2) {
             erase = FALSE;
         } else {
-            FUN_1400F3674(hwnd);
+            PECMD_ForcePosChanged(hwnd);
             if (height > -2) {
                 return;
             }
@@ -411,10 +411,10 @@ void FUN_1400F58D4(int64_t obj, uint32_t key, uint64_t value)
                              (int64_t *)(obj + 0x2d0), key, value);
 }
 
-/* ========== FUN_1400F5C10 @0x1400f5c10 ==========
+/* ========== PECMD_ClearNamedPropArray @0x1400f5c10 ==========
  * 释放数组中的 GDI 对象：释放内部字符串、删除 GDI 对象并 free 节点。
  */
-void FUN_1400F5C10(int64_t *array)
+void PECMD_ClearNamedPropArray(int64_t *array)
 {
     uint8_t *base = (uint8_t *)array[0];
     int64_t count = array[2];
@@ -531,7 +531,7 @@ void FUN_1400F6944(int64_t obj)
         if (data != 0) {
             value = *(int *)(data + (int64_t)local_res8[0] * 8);
         }
-        FUN_1400F5104(obj, value, local_res20[0]);
+        PECMD_TableSetCurSel(obj, value, local_res20[0]);
     }
 }
 
@@ -585,10 +585,10 @@ uint64_t *FUN_1400FEC9C(uint64_t *obj, uint64_t param2, uint64_t param3)
     return obj;
 }
 
-/* ========== FUN_1400FED38 @0x1400fed38 ==========
+/* ========== PECMD_TreeGetItemParam @0x1400fed38 ==========
  * 发送 0x113e 查询结构；成功时把 +0x30 处的 64 位结果写入 *out。
  */
-void FUN_1400FED38(int64_t obj, uint64_t param2, uint64_t *out)
+void PECMD_TreeGetItemParam(int64_t obj, uint64_t param2, uint64_t *out)
 {
     uint8_t buf[0x38];
     LRESULT result;

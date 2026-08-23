@@ -49,7 +49,7 @@ extern HWND CreateDialogParamW(HINSTANCE, LPCWSTR, HWND, void *dproc, intptr_t);
 extern HRGN CreateEllipticRgn(int, int, int, int);
 extern void *operator_new(size_t size);
 extern int64_t PECMD_ContainerAppend(int64_t *container);
-extern LPCWSTR FUN_1400E429C(uint64_t *obj); /* @0x1400e429c */
+extern LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj); /* @0x1400e429c */
 extern void *GetThreadContext_exref;
 extern void *SetThreadContext_exref;
 extern uint64_t FUN_1400F0814(int64_t obj, uint32_t msg, int64_t wParam,
@@ -377,7 +377,7 @@ int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
     if ((int)r != 0) {
         local_28 = 0;
         if (p10 == NULL)
-            p10 = FUN_1400E429C((uint64_t *)&local_28);
+            p10 = PECMD_GetModulePathAlt((uint64_t *)&local_28);
         dwSize = local_18;
         rc = PECMD_RunPeInjectStart(p3, saved, local_10, local_20, (uint32_t)local_18, p4,
                            p5, p6, p7, p8, p9, p10);

@@ -8,7 +8,7 @@
  *   数组前插         FUN_14004FE34 @0x14004fe34
  *   递归解析         PECMD_ParseRegexRecursive @0x140051070
  *   匹配关键字       FUN_140053BE8 @0x140053be8
- *   释放对象 K       FUN_140054B18 @0x140054b18
+ *   释放对象 K       PECMD_DtorEditItem @0x140054b18
  *   释放资源对象     FUN_14005B888 @0x14005b888
  *   解析大小后缀     PECMD_ParseSizeSuffix @0x14005bbb4
  *   匹配单词         PECMD_MatchWordAndPad @0x14005c6b8
@@ -23,7 +23,7 @@
  *   堆分配块         PECMD_AllocMagicBlock @0x1400632d8
  *   ANSI 串追加      FUN_14006345C @0x14006345c
  *   数组增长原始     PECMD_ArrayGrowRaw @0x140063978
- *   初始化指针数组   FUN_140063BE8 @0x140063be8
+ *   初始化指针数组   PECMD_ResizePtrTable @0x140063be8
  *   读取加密字节     FUN_14006857C @0x14006857c
  *   解析 token       FUN_140069B68 @0x140069b68
  *   清理解析器       FUN_140073C58 @0x140073c58
@@ -32,7 +32,7 @@
  *   连接 tokens      FUN_140079C80 @0x140079c80
  *   解析路径记录2    FUN_14007EFA4 @0x14007efa4
  *   释放互斥体对象   FUN_1400A4350 @0x1400a4350
- *   释放对象 L       FUN_1400A9C40 @0x1400a9c40
+ *   释放对象 L       PECMD_DtorTimerItem @0x1400a9c40
  *   运行命令或函数   FUN_1400B0380 @0x1400b0380
  *
  * 约定:
@@ -165,10 +165,10 @@ uint64_t FUN_140053BE8(uint32_t *a, int64_t *b)
     return 0xffffffff;
 }
 
-/* ========== FUN_140054B18 @0x140054b18 ==========
+/* ========== PECMD_DtorEditItem @0x140054b18 ==========
  * 释放对象（vtable 140123580）。
  */
-void FUN_140054B18(uint64_t *obj)
+void PECMD_DtorEditItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140123580;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -454,10 +454,10 @@ void PECMD_ArrayGrowRaw(uint64_t *arr, int64_t *cap, uint32_t esize,
     *cap = iVar2;
 }
 
-/* ========== FUN_140063BE8 @0x140063be8 ==========
+/* ========== PECMD_ResizePtrTable @0x140063be8 ==========
  * 初始化指针数组。
  */
-void FUN_140063BE8(int64_t *arr, int64_t count)
+void PECMD_ResizePtrTable(int64_t *arr, int64_t count)
 {
     int64_t lVar3 = 0;
     if (count < 0) {
@@ -628,10 +628,10 @@ uint64_t *FUN_1400A4350(uint64_t *obj, uint64_t flags)
     return obj;
 }
 
-/* ========== FUN_1400A9C40 @0x1400a9c40 ==========
+/* ========== PECMD_DtorTimerItem @0x1400a9c40 ==========
  * 释放对象（vtable 140129040）。
  */
-void FUN_1400A9C40(uint64_t *obj)
+void PECMD_DtorTimerItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140129040;
     if (*(int *)((uint8_t *)obj + 0x10 * 8) != 0) {

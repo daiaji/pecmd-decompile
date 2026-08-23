@@ -77,9 +77,7 @@ extern uint64_t  PECMD_DispatchCommandObject(WPARAM param_1, int64_t *param_2, i
                                WCHAR *param_4, int param_5, int param_6, int param_7,
                                int param_8, int param_9, int param_10, uint32_t param_11,
                                LPCRITICAL_SECTION *param_12);
-extern void      FUN_1400aaa4c(WPARAM param_1, longlong param_2, undefined8 *param_3,
-                               int param_4, int param_5, int param_6, int param_7,
-                               ushort *param_8, undefined8 *param_9, uint param_10);
+extern void PECMD_CreateSliderItem(WPARAM mgr, int64_t v2, uint64_t *p3, int x, int y, int w, int h, uint16_t *p8, uint64_t *p9, uint32_t flags);
 extern uint64_t  PECMD_ProcessControlCommand(int64_t *param_1, int64_t *param_2, LPCWSTR param_3,
                                uint64_t param_4, int64_t param_5, uint32_t param_6,
                                int16_t *param_7, int64_t *param_8, int param_9,
@@ -391,7 +389,7 @@ undefined8 PECMD_ParseControlCenterArgs(longlong *param_1, ushort *param_2, WPAR
         if (uVar1 != 0x2a) {
             param_1 = *(longlong **)(param_3 + 0x290);
         }
-        FUN_1400aaa4c(param_3, (longlong)param_1, (undefined8 *)&local_80, local_88, local_84,
+        PECMD_CreateSliderItem(param_3, (longlong)param_1, (undefined8 *)&local_80, local_88, local_84,
                       local_res18[0], (int)(intptr_t)local_res8, local_78, (undefined8 *)&local_68, uVar11);
         PECMD_FreeStrBuf(&local_68);
         PECMD_FreeStrBuf(&local_70);

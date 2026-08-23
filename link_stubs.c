@@ -14306,7 +14306,7 @@ uint64_t PECMD_BufferedWriteByte(void) { return 0; }
 uint64_t PECMD_StreamReadByte(void) { return 0; }
 uint64_t PECMD_AllocConsoleBuffers(void) { return 0; }
 uint64_t PECMD_CalcCalendarMonthRows(void) { return 0; }
-void FUN_140063ed4(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, undefined8 *param_9, uint param_10){
+static void PECMD_CreateDtimItem(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, undefined8 *param_9, uint param_10){
     longlong lVar1; undefined8 *puVar2,*puVar3,*puVar4; int local_res20[2];
     local_res20[0]=param_4;
     puVar2=(undefined8*)FUN_140060834(param_1,*param_3);
@@ -14539,7 +14539,7 @@ void PECMD_AddControlA(WPARAM param_1, longlong param_2, undefined8 *param_3, in
         FUN_14005d9a8(param_1,0);
     }
 }
-void FUN_1400aa7e4(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined4 param_8, LPWSTR param_9, undefined4 param_10){
+static void PECMD_CreateProgressItem(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined4 param_8, LPWSTR param_9, undefined4 param_10){
     longlong lVar1; undefined8 *puVar2,*puVar3,*puVar4; int local_res20[2];
     local_res20[0]=param_4;
     puVar2=(undefined8*)FUN_140060834(param_1,*param_3);
@@ -14555,7 +14555,7 @@ void FUN_1400aa7e4(WPARAM param_1, longlong param_2, undefined8 *param_3, int pa
     }
 }
 
-void FUN_1400aaa4c(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, ushort *param_8, undefined8 *param_9, uint param_10){
+static void PECMD_CreateSliderItem(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, ushort *param_8, undefined8 *param_9, uint param_10){
     longlong lVar1; undefined8 *puVar2,*puVar3,*puVar4; int local_res20[2];
     local_res20[0]=param_4;
     puVar2=(undefined8*)FUN_140060834(param_1,*param_3);
@@ -14572,7 +14572,7 @@ void FUN_1400aaa4c(WPARAM param_1, longlong param_2, undefined8 *param_3, int pa
     }
 }
 
-void FUN_1400b9340(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, uint param_9, int *param_10, LPCWSTR param_11){
+static void PECMD_CreateGroupItem(WPARAM param_1, longlong param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, uint param_9, int *param_10, LPCWSTR param_11){
     longlong lVar1; undefined8 *puVar2,*puVar3,*puVar4; int local_res20[2];
     local_res20[0]=param_4;
     puVar2=(undefined8*)FUN_140060834(param_1,*param_3);
@@ -14588,7 +14588,7 @@ void FUN_1400b9340(WPARAM param_1, longlong param_2, undefined8 *param_3, int pa
     }
 }
 
-void FUN_1400bd620(WPARAM param_1, undefined8 param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, undefined8 *param_9, undefined4 *param_10, undefined4 param_11, uint param_12){
+static void PECMD_CreateImageItem(WPARAM param_1, undefined8 param_2, undefined8 *param_3, int param_4, int param_5, int param_6, int param_7, undefined8 *param_8, undefined8 *param_9, undefined4 *param_10, undefined4 param_11, uint param_12){
     longlong lVar1; undefined8 *puVar2,*puVar3,*puVar4; int local_res20[2];
     local_res20[0]=param_4;
     puVar2=(undefined8*)FUN_140060834(param_1,*param_3);

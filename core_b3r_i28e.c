@@ -33,9 +33,7 @@ extern void     PECMD_ScaleQuadByFactor(int64_t param_1, int *param_2, int *para
                               int *param_4, int *param_5); /* @0x14005daf8 */
 extern void     PECMD_DialogBeepNotify(int64_t param_1, int param_2); /* @0x14005d9a8 */
 extern void     PECMD_ResetScriptChain(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
-extern void     FUN_1400b9340(int64_t script, int64_t ctx, void *str, int a,
-                              int b, int c, int d, void *e, uint32_t f,
-                              int *g, LPCWSTR h);          /* 窗口构造/执行 */
+extern void PECMD_CreateGroupItem(WPARAM mgr, int64_t v2, int64_t *p3, int x, int y, int w, int h, int64_t *p8, uint32_t flags, int *p10, LPCWSTR text);          /* 窗口构造/执行 */
 extern uint64_t *PECMD_ConstructControl(uint64_t *param_1, int64_t param_2, uint32_t param_3,
                                uint64_t *param_4, uint32_t param_5, uint32_t param_6,
                                uint32_t param_7, uint32_t param_8, LPCWSTR param_9,
@@ -96,7 +94,7 @@ extern uint8_t  PECMD_DhcpWriteAndWait(LPCWSTR, LPCWSTR, uint64_t, int, LPCWSTR,
  *   ushort * param_2, WPARAM param_3)
  *
  * 解析 "<...>,x,y,w,h,dx,dy,.." 形式的窗口/提示参数串, 拆分后调用
- * FUN_1400b9340 完成窗口构造。寄存器拼接 (CONCAT*) 已归一化。
+ * PECMD_CreateGroupItem 完成窗口构造。寄存器拼接 (CONCAT*) 已归一化。
  */
 uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM param_3)
 {
@@ -226,7 +224,7 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
             if (uVar1 != 0x2a) {
                 param_1 = *(int64_t **)((char *)(uintptr_t)param_3 + 0x290);
             }
-            FUN_1400b9340(param_3, (int64_t)param_1, &local_78, local_84, local_88,
+            PECMD_CreateGroupItem(param_3, (int64_t)param_1, &local_78, local_84, local_88,
                           local_80[0], local_res18[0], &local_68,
                           (uVar8 & 0xffff) | uVar10, local_60,
                           (LPCWSTR)((*local_50 != 0) ? local_50 : 0));

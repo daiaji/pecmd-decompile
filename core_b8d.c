@@ -12,19 +12,19 @@
  *   格式化并赋值串      FUN_1400E6CBC @0x1400e6cbc
  *   对齐扩容            FUN_1400E6CF8 @0x1400e6cf8
  *   鼠标按下分发        FUN_1400EC9C0 @0x1400ec9c0
- *   释放串指针数组      FUN_1400ECDD8 @0x1400ecdd8
+ *   释放串指针数组      PECMD_FreeNamedEntryArray @0x1400ecdd8
  *   初始化 DC 对象      FUN_1400EEE30 @0x1400eee30
  *   刷新可见窗口        PECMD_RefreshControlVisibility @0x1400ef654
  *   初始化图标对象      PECMD_InitImageHolder @0x1400efec8
- *   销毁图标对象主体    FUN_1400EFF10 @0x1400eff10
+ *   销毁图标对象主体    PECMD_DtorImageHolder @0x1400eff10
  *   绘制对象            FUN_1400F05F8 @0x1400f05f8
  *   初始化控件对象 A    FUN_1400F11F8 @0x1400f11f8
  *   父窗口命令通知(位)  FUN_1400F1F28 @0x1400f1f28
  *   初始化窗口对象 B    FUN_1400F28E8 @0x1400f28e8
  *   消息预翻译          FUN_1400F2A00 @0x1400f2a00
  *   矩形折线绘制        FUN_1400F2BF0 @0x1400f2bf0
- *   按 ID 查找表项      FUN_1400F40C8 @0x1400f40c8
- *   释放 GDI 表项数组   FUN_1400F4208 @0x1400f4208
+ *   按 ID 查找表项      PECMD_ItemPropFindIdxList5 @0x1400f40c8
+ *   释放 GDI 表项数组   PECMD_ClearPropArrayItems @0x1400f4208
  *   释放普通表项数组    PECMD_ClearPtrArrayItems @0x1400f425c
  *   跳到目标字符之后    FUN_1400F42C4 @0x1400f42c4
  *   父窗口命令通知(值)  FUN_1400FBA68 @0x1400fba68
@@ -176,10 +176,10 @@ void FUN_1400EC9C0(int64_t *obj, uint32_t param2, uint64_t param3)
     PECMD_OnTabSelChange((int64_t)obj);
 }
 
-/* ========== FUN_1400ECDD8 @0x1400ecdd8 ==========
+/* ========== PECMD_FreeNamedEntryArray @0x1400ecdd8 ==========
  * 释放数组中的每个“串对象”：先释放对象内 +8 的宽字符串，再 free 对象本身。
  */
-void FUN_1400ECDD8(uint64_t *arr)
+void PECMD_FreeNamedEntryArray(uint64_t *arr)
 {
     int64_t count = (int64_t)arr[2];
     uint64_t *base = (uint64_t *)arr[0];
@@ -239,10 +239,10 @@ uint64_t *PECMD_InitImageHolder(uint64_t *obj)
     return obj;
 }
 
-/* ========== FUN_1400EFF10 @0x1400eff10 ==========
+/* ========== PECMD_DtorImageHolder @0x1400eff10 ==========
  * 图标对象析构主体：按 +0xdc 标志选择 DestroyIcon 或 DeleteObject。
  */
-void FUN_1400EFF10(uint64_t *obj)
+void PECMD_DtorImageHolder(uint64_t *obj)
 {
     HICON icon;
 
@@ -338,10 +338,10 @@ void FUN_1400F2BF0(HDC hdc, LONG *rect)
     Polyline(hdc, pts, 5);
 }
 
-/* ========== FUN_1400F40C8 @0x1400f40c8 ==========
+/* ========== PECMD_ItemPropFindIdxList5 @0x1400f40c8 ==========
  * 在数组 +0x308/count +0x318 中按项首 id 查找，返回下标并写出项数据。
  */
-int64_t FUN_1400F40C8(int64_t obj, int id, uint64_t *outValue)
+int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue)
 {
     int count = *(int *)(obj + 0x318);
     int64_t i;
@@ -356,10 +356,10 @@ int64_t FUN_1400F40C8(int64_t obj, int id, uint64_t *outValue)
     return -1;
 }
 
-/* ========== FUN_1400F4208 @0x1400f4208 ==========
+/* ========== PECMD_ClearPropArrayItems @0x1400f4208 ==========
  * 释放数组中的每个 GDI 表项：先 FUN_1400F2B6C 再 free。
  */
-void FUN_1400F4208(uint64_t *arr)
+void PECMD_ClearPropArrayItems(uint64_t *arr)
 {
     int64_t count = (int64_t)arr[2];
     uint64_t *base = (uint64_t *)arr[0];

@@ -26,12 +26,12 @@
  *   初始化数组         PECMD_InitPtrTable @0x140063b64
  *   转发自定义消息     PECMD_ForwardCustomMessage @0x140066e20
  *   分离虚拟磁盘       PECMD_DetachVirtualDisk @0x140069044
- *   释放控件对象       FUN_14006C648 @0x14006c648
+ *   释放控件对象       PECMD_DtorListItem @0x14006c648
  *   释放句柄串对象     PECMD_ReleaseKernelObject @0x14006e6c8
  *   获取完整路径       FUN_140078BE8 @0x140078be8
  *   设置 Check 状态    FUN_14007DF90 @0x14007df90
  *   解析单词 token     PECMD_ParseFirstWordToken @0x140085844
- *   释放热键对象       FUN_1400AA484 @0x1400aa484
+ *   释放热键对象       PECMD_DtorHotkeyItem @0x1400aa484
  *   从对象创建字体     FUN_1400B8960 @0x1400b8960
  *   释放位图控件对象   FUN_1400BCBE0 @0x1400bcbe0
  *
@@ -70,7 +70,7 @@ extern void PECMD_ClearStringItemList(int64_t arr);
 extern DWORD PECMD_CreateDirectory(uint64_t a1, WCHAR *a2);
 extern void *PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
 extern int64_t *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
-extern HFONT FUN_1400B2218(int *a1, int *a2, LPCWSTR a3);
+extern HFONT PECMD_CreateFontAdjusted(int *lf, int *size, LPCWSTR name);
 
 /* ---- Win32 桩未覆盖的原生 API 声明 (语法编译用) ---- */
 extern BOOL EmptyClipboard(void);
@@ -599,10 +599,10 @@ uint64_t PECMD_DetachVirtualDisk(LPCWSTR name, uint32_t flags)
     }
 }
 
-/* ========== FUN_14006C648 @0x14006c648 ==========
+/* ========== PECMD_DtorListItem @0x14006c648 ==========
  * 释放控件对象（vtable 140126740）。
  */
-void FUN_14006C648(uint64_t *obj)
+void PECMD_DtorListItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140126740;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -713,10 +713,10 @@ uint64_t PECMD_ParseFirstWordToken(int64_t *a, int64_t *b, uint64_t *c)
     return *c;
 }
 
-/* ========== FUN_1400AA484 @0x1400aa484 ==========
+/* ========== PECMD_DtorHotkeyItem @0x1400aa484 ==========
  * 释放注册了热键的对象。
  */
-void FUN_1400AA484(uint64_t *obj)
+void PECMD_DtorHotkeyItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401290a8;
     if (*(int16_t *)((uint8_t *)obj + 0x7e) != 0) {
@@ -741,7 +741,7 @@ void FUN_1400B8960(HANDLE hFont, int *size, LPCWSTR name)
 {
     int local_68 = 0;
     GetObjectW((HGDIOBJ)hFont, 0x5c, &local_68);
-    FUN_1400B2218(&local_68, size, name);
+    PECMD_CreateFontAdjusted(&local_68, size, name);
 }
 
 /* ========== FUN_1400BCBE0 @0x1400bcbe0 ==========

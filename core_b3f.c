@@ -33,7 +33,7 @@
  *   重置解析上下文   FUN_14007E34C @0x14007e34c
  *   解析路径记录     FUN_14007F018 @0x14007f018
  *   解析 $ 移位      FUN_1400857E4 @0x1400857e4
- *   创建字体 DPI     FUN_1400B2218 @0x1400b2218
+ *   创建字体 DPI     PECMD_CreateFontAdjusted @0x1400b2218
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -564,10 +564,10 @@ void FUN_1400857E4(int64_t *pp, uint64_t *out, uint8_t *shift)
     }
 }
 
-/* ========== FUN_1400B2218 @0x1400b2218 ==========
+/* ========== PECMD_CreateFontAdjusted @0x1400b2218 ==========
  * 按 DPI 创建字体。
  */
-HFONT FUN_1400B2218(int *lf, int *size, LPCWSTR name)
+HFONT PECMD_CreateFontAdjusted(int *lf, int *size, LPCWSTR name)
 {
     double local_res10[3];
     local_res10[0] = (double)*size;

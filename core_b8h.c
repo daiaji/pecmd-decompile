@@ -7,7 +7,7 @@
  *   进程注入 API 就绪    FUN_1400E411C @0x1400e411c
  *   对象双标志查询         FUN_1400E412C      @0x1400e412c
  *   指针表偏移搬运         PECMD_PeApplyRelocations  @0x1400e4160
- *   构建程序 exe 路径      FUN_1400E429C      @0x1400e429c
+ *   构建程序 exe 路径      PECMD_GetModulePathAlt      @0x1400e429c
  *   初始化 CRC32 表        FUN_1400E4C38      @0x1400e4c38
  *   计算 CRC32             FUN_1400E4CC0         @0x1400e4cc0
  *   RAS API 就绪查询      FUN_1400E4D84     @0x1400e4d84
@@ -179,13 +179,13 @@ uint64_t PECMD_PeApplyRelocations(int64_t obj, int64_t base, int64_t delta)
     return 1;
 }
 
-/* ========== FUN_1400E429C @0x1400e429c ==========
+/* ========== PECMD_GetModulePathAlt @0x1400e429c ==========
  * 构造当前可执行文件的完整路径 (含扩展名探测):
  *   - 先 GetModuleFileNameW 取 exe 路径
  *   - 64 位系统中若同名 "xxx2.exe" 存在则改用它
  * TODO(verify): 缓冲区头部 16 字节用途。
  */
-LPCWSTR FUN_1400E429C(uint64_t *obj)
+LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj)
 {
     LPWSTR lpFilename;
     int i;

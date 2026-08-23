@@ -45,27 +45,27 @@
 #include "pecmd_defs.h"
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_CleanupTaskEnvObject(int64_t obj);
-extern void FUN_140054B18(void *obj);
-extern void FUN_140054A50(void *obj);
-extern void FUN_140054AB4(void *obj);
+extern void PECMD_DtorEditItem(uint64_t *obj);
+extern void PECMD_DtorDtimItem(uint64_t *obj);
+extern void PECMD_DtorIpadItem(uint64_t *obj);
 extern void PECMD_DestroyMappedObject(void *obj);
 extern void FUN_1400E8940(void *obj);
-extern void FUN_14006C648(void *obj);
+extern void PECMD_DtorListItem(uint64_t *obj);
 extern void PECMD_DtorTrackbarControl(void *obj);
-extern void FUN_14006C3CC(void *obj);
+extern void PECMD_DtorSbarItem(uint64_t *obj);
 extern void PECMD_ReleaseComObject(void *obj);
 extern void PECMD_ReleaseDeviceObj(void *obj);
-extern void FUN_14006C430(void *obj);
-extern void FUN_14006FC4C(void *obj);
-extern void FUN_14006FCB4(void *obj);
+extern void PECMD_DtorCheckboxItem(uint64_t *obj);
+extern void PECMD_DtorTableItem(uint64_t *obj);
+extern void PECMD_DtorTreeItem(uint64_t *obj);
 extern void PECMD_ReleaseCtrlObject(void *obj);
 extern void PECMD_DestroyWindowObject(void *obj);
-extern void FUN_1400A9C40(void *obj);
-extern void FUN_1400AA094(void *obj);
-extern void FUN_1400AA2FC(void *obj);
-extern void FUN_1400AA484(void *obj);
+extern void PECMD_DtorTimerItem(uint64_t *obj);
+extern void PECMD_DtorRadioItem(uint64_t *obj);
+extern void PECMD_DtorProgressItem(uint64_t *obj);
+extern void PECMD_DtorHotkeyItem(uint64_t *obj);
 extern void PECMD_ReleaseControlObject(void *obj);
-extern void FUN_1400B916C(void *obj);
+extern void PECMD_DtorLabelControlItem(uint64_t *obj);
 
 /* ---- 本批引用的全局数据 ---- */
 extern uint32_t g_sysColor8;
@@ -90,7 +90,7 @@ void PECMD_FreeAndFree(uint64_t *slot)
  */
 uint64_t *PECMD_ReleaseWrap_4b88(uint64_t *obj, uint32_t flags)
 {
-    FUN_140054B18(obj);
+    PECMD_DtorEditItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -102,7 +102,7 @@ uint64_t *PECMD_ReleaseWrap_4b88(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_75fc(uint64_t *obj, uint32_t flags)
 {
-    FUN_140054A50(obj);
+    PECMD_DtorDtimItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -114,7 +114,7 @@ uint64_t *PECMD_ReleaseWrap_75fc(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_7910(uint64_t *obj, uint32_t flags)
 {
-    FUN_140054AB4(obj);
+    PECMD_DtorIpadItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -241,7 +241,7 @@ uint64_t *PECMD_ReleaseWrap_c498(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_c6c8(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006C648(obj);
+    PECMD_DtorListItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -265,7 +265,7 @@ uint64_t *PECMD_ReleaseWrap_03f0(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_0420(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006C3CC(obj);
+    PECMD_DtorSbarItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -301,7 +301,7 @@ uint64_t *PECMD_ReleaseWrap_94f4(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_96b4(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006C430(obj);
+    PECMD_DtorCheckboxItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -313,7 +313,7 @@ uint64_t *PECMD_ReleaseWrap_96b4(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_cf24(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006FC4C(obj);
+    PECMD_DtorTableItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -325,7 +325,7 @@ uint64_t *PECMD_ReleaseWrap_cf24(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_cf54(uint64_t *obj, uint32_t flags)
 {
-    FUN_14006FCB4(obj);
+    PECMD_DtorTreeItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -373,7 +373,7 @@ uint64_t *PECMD_ReleaseWrap_9620(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_9cb4(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400A9C40(obj);
+    PECMD_DtorTimerItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -385,7 +385,7 @@ uint64_t *PECMD_ReleaseWrap_9cb4(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_a0fc(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400AA094(obj);
+    PECMD_DtorRadioItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -397,7 +397,7 @@ uint64_t *PECMD_ReleaseWrap_a0fc(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_a364(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400AA2FC(obj);
+    PECMD_DtorProgressItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -409,7 +409,7 @@ uint64_t *PECMD_ReleaseWrap_a364(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_a50c(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400AA484(obj);
+    PECMD_DtorHotkeyItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -433,7 +433,7 @@ uint64_t *PECMD_ReleaseWrap_ab68(uint64_t *obj, uint32_t flags)
  */
 uint64_t *PECMD_ReleaseWrap_91d4(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400B916C(obj);
+    PECMD_DtorLabelControlItem(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

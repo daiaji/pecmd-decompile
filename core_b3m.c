@@ -30,10 +30,10 @@
  *   查找/创建命名锁  FUN_1400A41FC @0x1400a41fc
  *   添加控件 A       FUN_1400AA53C @0x1400aa53c
  *   添加控件 B       PECMD_AppendCheckboxChild @0x1400b1dec
- *   添加控件 C       FUN_1400B2B64 @0x1400b2b64
- *   添加控件 D       FUN_1400B9204 @0x1400b9204
- *   添加控件 E       FUN_1400B9340 @0x1400b9340
- *   添加控件 F       FUN_1400BD620 @0x1400bd620
+ *   添加控件 C       PECMD_CreateListItem @0x1400b2b64
+ *   添加控件 D       PECMD_CreateLabelItem @0x1400b9204
+ *   添加控件 E       PECMD_CreateGroupItem @0x1400b9340
+ *   添加控件 F       PECMD_CreateImageItem @0x1400bd620
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -1522,10 +1522,10 @@ void PECMD_AppendCheckboxChild(int64_t mgr, int64_t v2, int64_t *p3,
     }
 }
 
-/* ========== FUN_1400B2B64 @0x1400b2b64 ==========
+/* ========== PECMD_CreateListItem @0x1400b2b64 ==========
  * 添加控件 C（0x98 构造体，带双文本参数）。
  */
-void FUN_1400B2B64(WPARAM mgr, int64_t v2, int64_t *p3, int x,
+void PECMD_CreateListItem(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                        int y, int w, int h, int64_t *p8,
                        LPCWSTR text1, LPCWSTR text2, uint32_t flags,
                        char mode, int extra)
@@ -1555,10 +1555,10 @@ void FUN_1400B2B64(WPARAM mgr, int64_t v2, int64_t *p3, int x,
     }
 }
 
-/* ========== FUN_1400B9204 @0x1400b9204 ==========
+/* ========== PECMD_CreateLabelItem @0x1400b9204 ==========
  * 添加控件 D（0x98 构造体，三指针文本参数）。
  */
-void FUN_1400B9204(WPARAM mgr, int64_t v2, int64_t *p3, int x,
+void PECMD_CreateLabelItem(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                        int y, int w, int h, int64_t *p8,
                        int64_t *p9, int64_t *p10, LPCWSTR text,
                        uint32_t flags)
@@ -1587,10 +1587,10 @@ void FUN_1400B9204(WPARAM mgr, int64_t v2, int64_t *p3, int x,
     }
 }
 
-/* ========== FUN_1400B9340 @0x1400b9340 ==========
+/* ========== PECMD_CreateGroupItem @0x1400b9340 ==========
  * 添加控件 E（0x78 构造体，带整数指针参数）。
  */
-void FUN_1400B9340(WPARAM mgr, int64_t v2, int64_t *p3, int x,
+void PECMD_CreateGroupItem(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                        int y, int w, int h, int64_t *p8,
                        uint32_t flags, int *p10, LPCWSTR text)
 {
@@ -1617,10 +1617,10 @@ void FUN_1400B9340(WPARAM mgr, int64_t v2, int64_t *p3, int x,
     }
 }
 
-/* ========== FUN_1400BD620 @0x1400bd620 ==========
+/* ========== PECMD_CreateImageItem @0x1400bd620 ==========
  * 添加控件 F（0xb0 构造体，带额外 DPI 参数）。
  */
-void FUN_1400BD620(WPARAM mgr, uint64_t v2, int64_t *p3, int x,
+void PECMD_CreateImageItem(WPARAM mgr, uint64_t v2, int64_t *p3, int x,
                        int y, int w, int h, int64_t *p8,
                        int64_t *p9, uint32_t *p10, uint32_t flags1,
                        uint32_t flags2)

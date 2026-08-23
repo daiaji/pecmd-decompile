@@ -57,19 +57,11 @@ extern void      PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *
                                int a4, int a5);
 
 /* ---- 控件对象分派 helpers（已还原，见 core_b3l.c / core_b3m.c） ---- */
-extern void FUN_1400B2A4C(WPARAM mgr, LPCWSTR text, uint64_t *p3,
-                          int x, int y, int w, int h,
-                          int16_t *p8, uint32_t flags);
-extern void FUN_1400B2B64(WPARAM mgr, int64_t v2, int64_t *p3, int x,
-                          int y, int w, int h, int64_t *p8,
-                          LPCWSTR text1, LPCWSTR text2, uint32_t flags,
-                          char mode, int extra);
+extern void PECMD_CreateTabsItem(WPARAM mgr, LPCWSTR text, uint64_t *p3, int x, int y, int w, int h, int16_t *p8, uint32_t flags);
+extern void PECMD_CreateListItem(WPARAM mgr, int64_t v2, int64_t *p3, int x, int y, int w, int h, int64_t *p8, LPCWSTR text1, LPCWSTR text2, uint32_t flags, char mode, int extra);
 extern void PECMD_AppendCheckboxChild(int64_t mgr, int64_t v2, int64_t *p3,
                           uint32_t flags1, uint32_t flags2, int mode);
-extern void FUN_1400B9204(WPARAM mgr, int64_t v2, int64_t *p3, int x,
-                          int y, int w, int h, int64_t *p8,
-                          int64_t *p9, int64_t *p10, LPCWSTR text,
-                          uint32_t flags);
+extern void PECMD_CreateLabelItem(WPARAM mgr, int64_t v2, int64_t *p3, int x, int y, int w, int h, int64_t *p8, int64_t *p9, int64_t *p10, LPCWSTR text, uint32_t flags);
 extern void PECMD_RemoveObjectByType(int64_t mgr, int p2, int p3, int p4); /* 删除动作 */
 
 /* ========== PECMD_AddControlStar @ 1400b48e0 ==========
@@ -145,7 +137,7 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
         if (uVar1 != 0x2a) {
             param_1 = *(LPCWSTR *)(param_3 + 0x290);
         }
-        FUN_1400B2A4C(param_3, param_1, (uint64_t *)&local_70, local_74, local_78,
+        PECMD_CreateTabsItem(param_3, param_1, (uint64_t *)&local_70, local_74, local_78,
                       local_res20, local_res8, (int16_t *)&local_68, (uint32_t)uVar4);
         uVar4 = (int)uVar5;
     }
@@ -315,7 +307,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
         if ((char)uVar7 == '\0') {
             param_1 = *(longlong **)(param_3 + 0x290);
         }
-        FUN_1400B2B64(param_3, (int64_t)param_1, (int64_t *)&local_90, local_80,
+        PECMD_CreateListItem(param_3, (int64_t)param_1, (int64_t *)&local_90, local_80,
                       local_88, local_a8, local_res8, (int64_t *)&local_78,
                       local_a0, local_98, uVar16 | (uint32_t)local_res18,
                       '\0', (int)uVar15);
@@ -753,7 +745,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     if ((char)uVar26 == '\0') {
         param_1 = *(longlong **)(local_res18 + 0x290);
     }
-    FUN_1400B9204(local_res18, (int64_t)param_1, (int64_t *)&local_78, local_98,
+    PECMD_CreateLabelItem(local_res18, (int64_t)param_1, (int64_t *)&local_78, local_98,
                   local_84, local_88, local_80, (int64_t *)&local_90,
                   (int64_t *)&local_68, (int64_t *)&local_a8, local_70, uVar16);
     PECMD_FreeStrBuf((void *)&local_68);

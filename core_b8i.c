@@ -13,7 +13,7 @@
  *   分发控件消息            FUN_1400EC500 @0x1400ec500
  *   设置文本/画刷           FUN_1400F20C0     @0x1400f20c0
  *   跟踪 Tooltip 定时器     FUN_1400F2CF0  @0x1400f2cf0
- *   初始化对象(虚表 C550)   FUN_1400F5C74    @0x1400f5c74
+ *   初始化对象(虚表 C550)   PECMD_InitTableCellModel    @0x1400f5c74
  *   应用字体到控件          FUN_1400FB934 @0x1400fb934
  *   设置绘制画刷            FUN_1400FBBB0     @0x1400fbbb0
  *   创建富文本控件          PECMD_CreateRichEditCtrl @0x1400fbcb0
@@ -459,12 +459,12 @@ void FUN_1400F2CF0(int64_t obj, int64_t msg)
     }
 }
 
-/* ========== FUN_1400F5C74 @0x1400f5c74 ==========
+/* ========== PECMD_InitTableCellModel @0x1400f5c74 ==========
  * 初始化"对象" (虚表 PTR_FUN_14012c550): 两个数组 + 引用串容器 +
  * 若干默认字段 (0xab/0xeb/199/1.0)。
  * TODO(verify): 各字段含义。
  */
-uint64_t *FUN_1400F5C74(uint64_t *obj)
+uint64_t *PECMD_InitTableCellModel(uint64_t *obj)
 {
     uint64_t local_res8;
 

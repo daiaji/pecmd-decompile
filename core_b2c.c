@@ -126,7 +126,7 @@ extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
                           int64_t esize, int32_t mode);
-extern void FUN_140063BE8(int64_t *arr, int32_t mode);
+extern void PECMD_ResizePtrTable(int64_t *arr, int64_t count);
 extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void FUN_1400195F0(void *script, int a, int b, void *c);
 extern void FUN_14002CA30(void);
@@ -807,7 +807,7 @@ registered:
                 }
             }
             if ((iVar4 == lVar1) || (iVar6 = iVar6 - 1, iVar6 < 0)) {
-                FUN_140063BE8((int64_t *)g_d278, 0);
+                PECMD_ResizePtrTable((int64_t *)g_d278, 0);
                 LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
                 FUN_14002CA30();
                 goto done_wait;

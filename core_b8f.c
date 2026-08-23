@@ -9,12 +9,12 @@
  *   控件通知消息分发       FUN_1400E59C0 @0x1400e59c0
  *   窗口枚举命中测试       FUN_1400E63C8 @0x1400e63c8
  *   关闭对话框/销毁窗口   FUN_1400E6860 @0x1400e6860
- *   是否管理员             FUN_1400E6F18 @0x1400e6f18
+ *   是否管理员             PECMD_IsAdminGroupMember @0x1400e6f18
  *   销毁基类窗口对象       FUN_1400E8940 @0x1400e8940
  *   创建 tooltips 窗口     FUN_1400EBFE4 @0x1400ebfe4
  *   添加字符串列表项       FUN_1400EC71C @0x1400ec71c
  *   初始化字符串对象       FUN_1400ECE2C @0x1400ece2c
- *   销毁 DC 对象           FUN_1400EEEA0 @0x1400eeea0
+ *   销毁 DC 对象           PECMD_DtorMemDcCanvas @0x1400eeea0
  *   居中绘制文本           PECMD_DrawVertCenteredText @0x1400ef08c
  *   矩形内绘制图标         PECMD_DrawIconInRect @0x1400eff58
  *   取/建对象画刷          FUN_1400F0A3C @0x1400f0a3c
@@ -22,11 +22,11 @@
  *   滚动列表到指定项       FUN_1400F31CC @0x1400f31cc
  *   滚动列表项到可见区     FUN_1400F3264 @0x1400f3264
  *   取图标尺寸             FUN_1400F35B8 @0x1400f35b8
- *   发送窗口几何通知       FUN_1400F3674 @0x1400f3674
+ *   发送窗口几何通知       PECMD_ForcePosChanged @0x1400f3674
  *   按 ID 查找项(带串)    PECMD_ItemPropFindIdxNamed @0x1400f4114
  *   查找映射对槽           FUN_1400F4CA0 @0x1400f4ca0
- *   设置列表选择           FUN_1400F5104 @0x1400f5104
- *   设置列表选择(单值)    FUN_1400F51D8 @0x1400f51d8
+ *   设置列表选择           PECMD_TableSetCurSel @0x1400f5104
+ *   设置列表选择(单值)    PECMD_TableSetHoverIdx @0x1400f51d8
  *   发送控件 0x83 消息     FUN_1400F5338 @0x1400f5338
  *   查找映射值 A           PECMD_ItemPropFindIdxList1 @0x1400f5584
  *   查找映射值 B           PECMD_ItemPropFindIdxList2 @0x1400f5608
@@ -37,7 +37,7 @@
  *   查找映射双值 B         PECMD_ItemPropFindIdxSub2 @0x1400f5a44
  *   添加映射双值 B         FUN_1400F5ADC @0x1400f5adc
  *   销毁静态控件对象       FUN_1400FD1A8 @0x1400fd1a8
- *   查询控件值(带类型)    FUN_1400FEDA4 @0x1400feda4
+ *   查询控件值(带类型)    PECMD_TreeGetItemState @0x1400feda4
  *   统计树节点数           FUN_1400FEE94 @0x1400fee94
  *
  * 约定:
@@ -239,10 +239,10 @@ void FUN_1400E6860(uint64_t *obj, int result)
     }
 }
 
-/* ========== FUN_1400E6F18 @0x1400e6f18 ==========
+/* ========== PECMD_IsAdminGroupMember @0x1400e6f18 ==========
  * 检查当前令牌是否属于 BUILTIN\Administrators (S-1-5-32-544)。
  */
-BOOL FUN_1400E6F18(void)
+BOOL PECMD_IsAdminGroupMember(void)
 {
     PECMD_SID_AUTHORITY authority = { { 0, 0, 0, 0, 0, 5 } };
     void *sid = NULL;
@@ -346,10 +346,10 @@ uint64_t *FUN_1400ECE2C(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400EEEA0 @0x1400eeea0 ==========
+/* ========== PECMD_DtorMemDcCanvas @0x1400eeea0 ==========
  * DC 对象析构：还原画刷、释放容器回调、释放 DC 后调用基类析构尾段。
  */
-void FUN_1400EEEA0(uint64_t *obj)
+void PECMD_DtorMemDcCanvas(uint64_t *obj)
 {
     void *releaseObj;
 
@@ -536,10 +536,10 @@ BOOL FUN_1400F35B8(HICON icon, int *width, int *height)
     return TRUE;
 }
 
-/* ========== FUN_1400F3674 @0x1400f3674 ==========
+/* ========== PECMD_ForcePosChanged @0x1400f3674 ==========
  * 发送 0x47 窗口几何/位置通知结构（含 HWND、宽高和标志 0x216）。
  */
-void FUN_1400F3674(HWND hwnd)
+void PECMD_ForcePosChanged(HWND hwnd)
 {
     uint8_t buf[0x30];
     RECT rc;
@@ -607,10 +607,10 @@ int64_t *FUN_1400F4CA0(int64_t obj, int64_t key1, int64_t key2)
     return NULL;
 }
 
-/* ========== FUN_1400F5104 @0x1400f5104 ==========
+/* ========== PECMD_TableSetCurSel @0x1400f5104 ==========
  * 更新列表当前项/滚动项，并刷新旧选择区域。
  */
-void FUN_1400F5104(int64_t obj, int current, int scroll)
+void PECMD_TableSetCurSel(int64_t obj, int current, int scroll)
 {
     int oldCurrent = *(int *)(obj + 0x3d4);
     int oldSel = *(int *)(obj + 0x3d0);
@@ -632,10 +632,10 @@ void FUN_1400F5104(int64_t obj, int current, int scroll)
     }
 }
 
-/* ========== FUN_1400F51D8 @0x1400f51d8 ==========
+/* ========== PECMD_TableSetHoverIdx @0x1400f51d8 ==========
  * 只设置当前项，旧选择/滚动清为 -2。
  */
-void FUN_1400F51D8(int64_t obj, int current)
+void PECMD_TableSetHoverIdx(int64_t obj, int current)
 {
     int oldCurrent = *(int *)(obj + 0x3d4);
     int oldSel = *(int *)(obj + 0x3d0);
@@ -814,10 +814,10 @@ void FUN_1400FD1A8(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400FEDA4 @0x1400feda4 ==========
+/* ========== PECMD_TreeGetItemState @0x1400feda4 ==========
  * 发送 0x113e 查询结构；成功时把 +0x10 处的 32 位结果写入 *out。
  */
-int FUN_1400FEDA4(int64_t obj, uint64_t param2,
+int PECMD_TreeGetItemState(int64_t obj, uint64_t param2,
                                  uint64_t *out, uint32_t param4)
 {
     uint8_t buf[0x38];

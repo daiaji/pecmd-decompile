@@ -44,17 +44,16 @@ extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
 extern int64_t * PECMD_InitPtrTable(int64_t *arr);                /* @0x140063b64 */
 extern void FUN_1400633A8(void **ps, int64_t len);             /* @0x1400633a8 */
 extern void *FUN_1400E57C0(void *obj);                 /* @0x1400e57c0 */
-extern uint64_t *FUN_1400F5C74(uint64_t *obj);        /* @0x1400f5c74 */
+extern uint64_t * PECMD_InitTableCellModel(uint64_t *obj);        /* @0x1400f5c74 */
 extern void FUN_1400E8940(void *obj);               /* @0x1400e8940 */
 extern void PECMD_ClearPtrArrayItems(uint64_t *arr);               /* @0x1400f425c */
-extern void FUN_1400F4208(uint64_t *arr);            /* @0x1400f4208 */
-extern void FUN_1400F5C10(int64_t *array);         /* @0x1400f5c10 */
+extern void PECMD_ClearPropArrayItems(uint64_t *arr);            /* @0x1400f4208 */
+extern void PECMD_ClearNamedPropArray(int64_t *array);         /* @0x1400f5c10 */
 extern void FUN_1400F5D50(uint64_t *obj);   /* @0x1400f5d50 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
 extern void PECMD_SetHotTrackWindow(HWND hwnd);           /* @0x1400f1448 */
-extern int FUN_1400FEDA4(int64_t obj, uint64_t param2,
-                                           uint64_t *out, uint32_t param4); /* @0x1400feda4 */
+extern int PECMD_TreeGetItemState(int64_t obj, uint64_t param2, uint64_t *out, uint32_t param4); /* @0x1400feda4 */
 extern int FUN_1400FEE24(int64_t obj, uint64_t param2,
                                      uint64_t *out);         /* @0x1400fee24 */
 extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
@@ -282,7 +281,7 @@ uint64_t *FUN_1400F9134(uint64_t *obj, uint64_t param2, uint64_t param3)
     FUN_1400E57C0(obj);
     obj[0] = (uint64_t)(uintptr_t)&PTR_FUN_14012c670;
     obj[0x1a] = param3;
-    FUN_1400F5C74(obj + 0x1b);
+    PECMD_InitTableCellModel(obj + 0x1b);
     *(uint32_t *)(b + 0x218) = 0;
     PECMD_InitPtrTable((int64_t *)(obj + 0x4c));
     PECMD_InitPtrTable((int64_t *)(obj + 0x4f));
@@ -356,9 +355,9 @@ void PECMD_DestroyCtlResources(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x67));
     PECMD_ClearPtrArrayItems(obj + 0x64);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x64));
-    FUN_1400F4208(obj + 0x61);
+    PECMD_ClearPropArrayItems(obj + 0x61);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x61));
-    FUN_1400F5C10((int64_t *)(obj + 0x5e));
+    PECMD_ClearNamedPropArray((int64_t *)(obj + 0x5e));
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x5e));
     PECMD_ClearPtrArrayItems(obj + 0x5b);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x5b));
@@ -807,7 +806,7 @@ int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem,
     HWND hwnd = *(HWND *)(obj + OBJ_HWND);
 
     for (; hItem != 0; hItem = SendMessageW(hwnd, 0x110a, 1, hItem)) {
-        ok = FUN_1400FEDA4(obj, hItem, &value, 2);
+        ok = PECMD_TreeGetItemState(obj, hItem, &value, 2);
         value = (uint64_t)-(int64_t)(ok != 0) & value;
         if ((value & 2) != 0) {
             if (mode == 0) {

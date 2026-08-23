@@ -8,8 +8,8 @@
  *   调整缓冲2        FUN_14004FDD0 @0x14004fdd0
  *   数组压入         FUN_14004FEA4 @0x14004fea4
  *   发送 RGB 消息    FUN_1400540A8 @0x1400540a8
- *   释放对象 A       FUN_140054A50 @0x140054a50
- *   释放对象 B       FUN_140054AB4 @0x140054ab4
+ *   释放对象 A       PECMD_DtorDtimItem @0x140054a50
+ *   释放对象 B       PECMD_DtorIpadItem @0x140054ab4
  *   获取过程地址     FUN_14005C898 @0x14005c898
  *   执行特殊命令     FUN_14005CC4C @0x14005cc4c
  *   初始化标记       FUN_14005D2A4 @0x14005d2a4
@@ -24,16 +24,16 @@
  *   字符串转 ID      FUN_14006B1E8 @0x14006b1e8
  *   追加引号串       FUN_14006B684 @0x14006b684
  *   释放对象 C       PECMD_DtorTrackbarControl @0x14006bf8c
- *   释放对象 D       FUN_14006C3CC @0x14006c3cc
- *   释放对象 E       FUN_14006C430 @0x14006c430
+ *   释放对象 D       PECMD_DtorSbarItem @0x14006c3cc
+ *   释放对象 E       PECMD_DtorCheckboxItem @0x14006c430
  *   追加 I64         FUN_14006CC70 @0x14006cc70
- *   释放对象 F       FUN_14006FC4C @0x14006fc4c
- *   释放对象 G       FUN_14006FCB4 @0x14006fcb4
+ *   释放对象 F       PECMD_DtorTableItem @0x14006fc4c
+ *   释放对象 G       PECMD_DtorTreeItem @0x14006fcb4
  *   释放 GDI 对象    FUN_14006FFDC @0x14006ffdc
  *   压入字符串 token FUN_1400738D0 @0x1400738d0
- *   释放对象 H       FUN_1400AA094 @0x1400aa094
- *   释放对象 I       FUN_1400AA2FC @0x1400aa2fc
- *   释放对象 J       FUN_1400B916C @0x1400b916c
+ *   释放对象 H       PECMD_DtorRadioItem @0x1400aa094
+ *   释放对象 I       PECMD_DtorProgressItem @0x1400aa2fc
+ *   释放对象 J       PECMD_DtorLabelControlItem @0x1400b916c
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -181,10 +181,10 @@ uint64_t FUN_1400540A8(int64_t obj, uint32_t c1, uint32_t c2,
     return 0;
 }
 
-/* ========== FUN_140054A50 @0x140054a50 ==========
+/* ========== PECMD_DtorDtimItem @0x140054a50 ==========
  * 释放对象（vtable 140123540）。
  */
-void FUN_140054A50(uint64_t *obj)
+void PECMD_DtorDtimItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140123540;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -200,10 +200,10 @@ void FUN_140054A50(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_140054AB4 @0x140054ab4 ==========
+/* ========== PECMD_DtorIpadItem @0x140054ab4 ==========
  * 释放对象（vtable 140123560）。
  */
-void FUN_140054AB4(uint64_t *obj)
+void PECMD_DtorIpadItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140123560;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -485,10 +485,10 @@ void PECMD_DtorTrackbarControl(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_14006C3CC @0x14006c3cc ==========
+/* ========== PECMD_DtorSbarItem @0x14006c3cc ==========
  * 释放对象（vtable 1401266e8）。
  */
-void FUN_14006C3CC(uint64_t *obj)
+void PECMD_DtorSbarItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401266e8;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -504,10 +504,10 @@ void FUN_14006C3CC(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_14006C430 @0x14006c430 ==========
+/* ========== PECMD_DtorCheckboxItem @0x14006c430 ==========
  * 释放对象（vtable 140126708）。
  */
-void FUN_14006C430(uint64_t *obj)
+void PECMD_DtorCheckboxItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140126708;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -538,10 +538,10 @@ void FUN_14006CC70(int64_t *pp, uint64_t value)
     FUN_14006375C((WCHAR **)pp, local_88 + (sVar1 == 0));
 }
 
-/* ========== FUN_14006FC4C @0x14006fc4c ==========
+/* ========== PECMD_DtorTableItem @0x14006fc4c ==========
  * 释放对象（vtable 140126888）。
  */
-void FUN_14006FC4C(uint64_t *obj)
+void PECMD_DtorTableItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140126888;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -558,10 +558,10 @@ void FUN_14006FC4C(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_14006FCB4 @0x14006fcb4 ==========
+/* ========== PECMD_DtorTreeItem @0x14006fcb4 ==========
  * 释放对象（vtable 1401268a8）。
  */
-void FUN_14006FCB4(uint64_t *obj)
+void PECMD_DtorTreeItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401268a8;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -629,10 +629,10 @@ uint64_t FUN_1400738D0(uint64_t a, uint64_t b, LPCWSTR text,
     return 1;
 }
 
-/* ========== FUN_1400AA094 @0x1400aa094 ==========
+/* ========== PECMD_DtorRadioItem @0x1400aa094 ==========
  * 释放对象（vtable 140129060）。
  */
-void FUN_1400AA094(uint64_t *obj)
+void PECMD_DtorRadioItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140129060;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -649,10 +649,10 @@ void FUN_1400AA094(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_1400AA2FC @0x1400aa2fc ==========
+/* ========== PECMD_DtorProgressItem @0x1400aa2fc ==========
  * 释放对象（vtable 140129080）。
  */
-void FUN_1400AA2FC(uint64_t *obj)
+void PECMD_DtorProgressItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140129080;
     int64_t *plVar1 = (int64_t *)obj[7];
@@ -669,10 +669,10 @@ void FUN_1400AA2FC(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_1400B916C @0x1400b916c ==========
+/* ========== PECMD_DtorLabelControlItem @0x1400b916c ==========
  * 释放对象（vtable 1401294f0）。
  */
-void FUN_1400B916C(uint64_t *obj)
+void PECMD_DtorLabelControlItem(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401294f0;
     int64_t *plVar1 = (int64_t *)obj[7];

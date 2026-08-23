@@ -7,7 +7,7 @@
  *   解析字符类主体    PECMD_ParseCharClassRanges @0x140050f58
  *   初始化控件标志    PECMD_InitControlFlags @0x140054380
  *   绘制控件重绘      PECMD_DispatchControlMessage @0x140061914
- *   插入控件对象 A    FUN_140063ED4 @0x140063ed4
+ *   插入控件对象 A    PECMD_CreateDtimItem @0x140063ed4
  *   插入控件对象 B    FUN_140063FF0 @0x140063ff0
  *   更新滑块变量      FUN_140066D18 @0x140066d18
  *   读文本文件为宽串  PECMD_ReadFileToWide @0x140068034
@@ -30,9 +30,9 @@
  *   保存选择状态      FUN_14009CFBC @0x14009cfbc
  *   设置随机变量      PECMD_EvalRandFunction @0x1400a3f08
  *   解析 <...> 参数   FUN_1400A40E8 @0x1400a40e8
- *   插入控件对象 C    FUN_1400AA7E4 @0x1400aa7e4
- *   插入控件对象 D    FUN_1400AAA4C @0x1400aaa4c
- *   插入控件对象 E    FUN_1400B2A4C @0x1400b2a4c
+ *   插入控件对象 C    PECMD_CreateProgressItem @0x1400aa7e4
+ *   插入控件对象 D    PECMD_CreateSliderItem @0x1400aaa4c
+ *   插入控件对象 E    PECMD_CreateTabsItem @0x1400b2a4c
  *   蜂鸣并执行        FUN_1400BEF64 @0x1400bef64
  *
  * 约定:
@@ -302,10 +302,10 @@ int64_t PECMD_DispatchControlMessage(HDC obj, uint32_t msg, HDC hdc, uint64_t *l
     return lVar3;
 }
 
-/* ========== FUN_140063ED4 @0x140063ed4 ==========
+/* ========== PECMD_CreateDtimItem @0x140063ed4 ==========
  * 创建 0x78 控件对象并插入到指定槽。
  */
-void FUN_140063ED4(WPARAM mgr, int64_t v2, uint64_t *p3,
+void PECMD_CreateDtimItem(WPARAM mgr, int64_t v2, uint64_t *p3,
                                 int x, int y, int w, int h,
                                 uint64_t *p8, uint64_t *p9, uint32_t flags)
 {
@@ -1305,10 +1305,10 @@ uint64_t FUN_1400A40E8(uint64_t *pp, int64_t *out1, int64_t *out2,
     return 0;
 }
 
-/* ========== FUN_1400AA7E4 @0x1400aa7e4 ==========
+/* ========== PECMD_CreateProgressItem @0x1400aa7e4 ==========
  * 创建 0x78 控件对象（变体 C）。
  */
-void FUN_1400AA7E4(WPARAM mgr, int64_t v2, uint64_t *p3,
+void PECMD_CreateProgressItem(WPARAM mgr, int64_t v2, uint64_t *p3,
                                 int x, int y, int w, int h,
                                 uint32_t flags, LPWSTR text, uint32_t extra)
 {
@@ -1331,10 +1331,10 @@ void FUN_1400AA7E4(WPARAM mgr, int64_t v2, uint64_t *p3,
     }
 }
 
-/* ========== FUN_1400AAA4C @0x1400aaa4c ==========
+/* ========== PECMD_CreateSliderItem @0x1400aaa4c ==========
  * 创建 0x70 控件对象（变体 D）。
  */
-void FUN_1400AAA4C(WPARAM mgr, int64_t v2, uint64_t *p3,
+void PECMD_CreateSliderItem(WPARAM mgr, int64_t v2, uint64_t *p3,
                                 int x, int y, int w, int h,
                                 uint16_t *p8, uint64_t *p9, uint32_t flags)
 {
@@ -1358,10 +1358,10 @@ void FUN_1400AAA4C(WPARAM mgr, int64_t v2, uint64_t *p3,
     }
 }
 
-/* ========== FUN_1400B2A4C @0x1400b2a4c ==========
+/* ========== PECMD_CreateTabsItem @0x1400b2a4c ==========
  * 创建 0x90 控件对象（变体 E）。
  */
-void FUN_1400B2A4C(WPARAM mgr, LPCWSTR text, uint64_t *p3,
+void PECMD_CreateTabsItem(WPARAM mgr, LPCWSTR text, uint64_t *p3,
                                 int x, int y, int w, int h,
                                 int16_t *p8, uint32_t flags)
 {

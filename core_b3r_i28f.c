@@ -49,8 +49,7 @@ extern uint64_t  PECMD_DispatchControlConstruct(WPARAM, uint64_t, int64_t, LPCWS
 
 /* ---- object / window helpers ---- */
 extern void      PECMD_ResetScriptChain(int64_t *script, int64_t *a2); /* 默认参数/上下文 */
-extern void      FUN_1400bd620(WPARAM, LPCWSTR, void *, int, int, int, int, void *,
-                               void *, int *, uint32_t, uint32_t); /* 构造派发(size 版) */
+extern void PECMD_CreateImageItem(WPARAM mgr, uint64_t v2, int64_t *p3, int x, int y, int w, int h, int64_t *p8, int64_t *p9, uint32_t *p10, uint32_t flags1, uint32_t flags2); /* 构造派发(size 版) */ /* 构造派发(size 版) */
 extern void      PECMD_ClipboardCommand(WCHAR *);                       /* 直接挂图像 */
 extern void     *PECMD_EncodeStringId(LPCWSTR, void *, char);         /* 装载图像 */
 extern void     *PECMD_DecodeBase64ToWideStr(byte *, ulonglong *);           /* 装载图像(串) */
@@ -305,7 +304,7 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
  *   LPCWSTR param_2, WPARAM param_3)
  *
  * 解析 "-gui"/-size/-center/-right/-left/-bupdate/.../-num: 选项及
- * 逗号分隔字段; "-size" 分支获取图标尺寸, 否则通过 FUN_1400bd620
+ * 逗号分隔字段; "-size" 分支获取图标尺寸, 否则通过 PECMD_CreateImageItem
  * 构造控件或枚举资源。寄存器拼接 (CONCAT/低32位清零) 已归一化。
  */
 int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
@@ -558,9 +557,9 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 if (WVar1 != L'*') {
                     param_1 = *(LPCWSTR *)((char *)(uintptr_t)param_3 + 0x290);
                 }
-                FUN_1400bd620(param_3, param_1, &local_168, local_148, local_144[0],
+                PECMD_CreateImageItem(param_3, (uint64_t)(uintptr_t)param_1, (int64_t *)&local_168, local_148, local_144[0],
                               (int)(uint32_t)local_res20, local_res18[0], &local_138,
-                              &local_160, local_144 + 1, (uint32_t)local_res8, local_130);
+                              (int64_t *)&local_160, local_144 + 1, (uint32_t)local_res8, local_130);
                 PECMD_FreeStrBuf(&local_138);
             } else {
                 uVar6 = uVar6 & 0xff;

@@ -77,9 +77,7 @@ extern void      PECMD_AddControlA(WPARAM param_1, int64_t param_2, WCHAR **para
                                int param_4, int param_5, int param_6, int param_7,
                                WCHAR **param_8, WCHAR **param_9, uint32_t param_10,
                                LPCWSTR param_11);
-extern void      FUN_1400aa7e4(WPARAM param_1, int64_t param_2, WCHAR **param_3,
-                               int param_4, int param_5, int param_6, int param_7,
-                               int param_8, LPCWSTR param_9, uint32_t param_10);
+extern void PECMD_CreateProgressItem(WPARAM mgr, int64_t v2, uint64_t *p3, int x, int y, int w, int h, uint32_t flags, LPWSTR text, uint32_t extra); /* 构造派发 */
 
 /* ================================================================
  * @0x1400a97cc  GUI "Title/Tip/Select" 命令处理
@@ -614,7 +612,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
         if (WVar1 != L'*') {
             param_1 = *(longlong **)(param_3 + 0x290);
         }
-        FUN_1400aa7e4(param_3, (int64_t)param_1, &local_48, local_50[0], local_54,
+        PECMD_CreateProgressItem(param_3, (int64_t)param_1, (uint64_t *)&local_48, local_50[0], local_54,
                       local_58, local_res20[0], iVar5, (LPCWSTR)pWVar3,
                       (uint32_t)(cVar2 != '\0'));
         uVar4 = 0;
