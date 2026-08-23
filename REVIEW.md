@@ -3591,3 +3591,13 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 累计 rename_map 1157→**1478**; 未命名唯一FUN_ 630→~310(biz ~165)。
 - 教训: 声明重写式归一只适用于「调用风格统一」的函数族; 高频异构函数(GetApiProcCached等)
   必须走最小管线靠原生extern兼容。
+
+## 128. S4 落账：biz 残余未命名处置终表（46→0 待决）
+依据 c8a/b/c skips + lowconf_review + 死桩取证 + 符号审计，46 个 biz 未命名全部定性：
+- **纯桩/无体（5）**: 140001188(常0)/14001c82c(常1)/140053e78(空void)/140063060(恒等)/14007033c(dc无块) → SKIP
+- **INDIR 大桩（3）**: f6db0(1103·列表宿主自绘)/d9818(1088·主窗体过程)/100ac4(715) → 已由 b7f8dbc1 波次移植(95-97%), 余小桩登记
+- **KEEP_LOW（3）**: 6f73c CtlHitTestSubArea / d95f0 FloatTextWindowPaint / 5b3e4 ThemeDrawDispatch → 登记待运行时钉死
+- **零引用 vtable 候选（~22）**: c94f0/d85d0/dc410/e5708/e759c/f4040/f40bc/fc034/fc33c/ec698/f1f18 等 → SKIP 登记(c8b/c8c 附语义推断备查); 其中 e5708/e759c 注明 core_b8a.c 已按正确语义还原未改名
+- **已还原未改名（2）**: e3804=LoadEnvi(既有名)/25f10(R1已还原,AppendLogMessage 名被占待别名) → 后续小批处理
+- **其它零散（~8）**: ec9c0/ef620/ef8ec/f00c4/f0f78/f22ac/f22dc/f2a4c/f2b1c/f51a8/fb558/fbdb0/fc770/fc8bc/fdedc/fe5bc/fe5e0/fec58/ff5a0/e4e6c 中零引用者 SKIP、有引用者回 G 批
+结论: **命名战线收敛达成**——无无主项。

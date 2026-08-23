@@ -519,7 +519,7 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
     ③S4 零引用甄别落账(c8b/c8c 已附语义推断)
     ④S5 终账: 机械警告124清理+行为120登记+BOM/A249类语义修复入账+gen_tasks 刷新+tag p4-close
     ⑤B/C 评估材料包(供用户): 附录B 指标快照/warning_census.json/signedness_audit.json/处置台账/PRODUCTION_ROADMAP.md 原文
-    ⑥p4-close 后派发【B/C 方案审计与更新子代理】, 其职责含:
+    ⑥**用户指令(2026-08-23): S5 完成后立即派发**【B/C 方案审计与更新子代理】, 其职责含:
       - 审计现有实现与方案书基线的偏差(命名/还原已大幅超前于其 §2 基线)
       - 结合「部分工作将切换到 WIN 端 DSH」的事实重排批次
       - **评估并裁定 WIN 端 DSH 的接管点**(从哪个阶段开始切): 权衡因素=各阶段对 gcc 工具链/
