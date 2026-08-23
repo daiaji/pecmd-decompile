@@ -86,7 +86,7 @@ extern WCHAR    *PECMD_UnquoteString(WCHAR *s);
 extern void      PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
 extern void      PECMD_ParseSignedNumberStr(void **in, void *out, short delim);
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src);
 extern uint8_t  *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
@@ -102,7 +102,7 @@ extern int64_t  *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
 extern short    *PECMD_LastPathSeparator(short *s);
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
-extern void      FUN_14005c828(const char *func, const char *dll,
+extern void      PECMD_GetApiProcCached(const char *func, const char *dll,
                                void **out, uintptr_t *hmod);
 extern intptr_t  PECMD_ControlMessage(HWND, UINT, LPARAM, LPARAM);
 /* PECMD_EnumeratePhysicalDrives helpers */
@@ -500,7 +500,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     cVar23 = '\0';
     bVar3 = false;
     puVar19 = local_res10;
-    lVar8 = FUN_14005c72c("*raw", (const WCHAR *)local_res10, 4);
+    lVar8 = PECMD_TokPrefixICmp("*raw", (const WCHAR *)local_res10, 4);
     bVar26 = ((char)lVar8 != '\0');
     if (bVar26) {
         local_res10 = puVar19 + 4;
@@ -637,7 +637,7 @@ LAB_140087be8:
             if (BVar7 != 0) {
                 PECMD_AssignString(&local_5b0, (const WCHAR *)local_458);
             }
-            FUN_14005c828("CoTaskMemFree", "OLE32", (void **)&g_pCoTaskMemFree,
+            PECMD_GetApiProcCached("CoTaskMemFree", "OLE32", (void **)&g_pCoTaskMemFree,
                           (uintptr_t *)&g_hOle32);
             if (g_pCoTaskMemFree != (void (*)(LPVOID))0x0) {
                 g_pCoTaskMemFree(pidl);

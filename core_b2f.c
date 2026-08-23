@@ -77,7 +77,7 @@ uint64_t PECMD_ServiceControl(int64_t *script, LPCWSTR name);
 void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 /* ---- 未实现依赖 (extern) ---- */
-extern void FUN_14005C828(LPCSTR a2, LPCSTR dll, void *slot, void *err);
+extern void PECMD_GetApiProcCached(LPCSTR a2, LPCSTR dll, void *slot, void *err);
 extern void PECMD_SkipLeadingControls(void *pp);
 extern WCHAR *FUN_14001BE14(const WCHAR *s);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
@@ -190,17 +190,17 @@ uint64_t PECMD_ServiceControl(int64_t *script, LPCWSTR name)
     (void)uVar3;
     (void)local_220;
     if (g_pOpenSCManagerW == NULL) {
-        FUN_14005C828("OpenSCManagerW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenSCManagerW,
+        PECMD_GetApiProcCached("OpenSCManagerW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenSCManagerW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("OpenServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenServiceW,
+        PECMD_GetApiProcCached("OpenServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pOpenServiceW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("QueryServiceStatusEx", "Advapi32.DLL", (int64_t *)(void **)&g_pQueryServiceStatusEx,
+        PECMD_GetApiProcCached("QueryServiceStatusEx", "Advapi32.DLL", (int64_t *)(void **)&g_pQueryServiceStatusEx,
                       (int64_t *)&local_res18);
-        FUN_14005C828("ControlService", "Advapi32.DLL", (int64_t *)(void **)&g_pControlService,
+        PECMD_GetApiProcCached("ControlService", "Advapi32.DLL", (int64_t *)(void **)&g_pControlService,
                       (int64_t *)&local_res18);
-        FUN_14005C828("StartServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pStartServiceW,
+        PECMD_GetApiProcCached("StartServiceW", "Advapi32.DLL", (int64_t *)(void **)&g_pStartServiceW,
                       (int64_t *)&local_res18);
-        FUN_14005C828("CloseServiceHandle", "Advapi32.DLL", (int64_t *)(void **)&g_pCloseServiceHandle,
+        PECMD_GetApiProcCached("CloseServiceHandle", "Advapi32.DLL", (int64_t *)(void **)&g_pCloseServiceHandle,
                       (int64_t *)&local_res18);
         if (g_pOpenSCManagerW == NULL) {
             return 0;
@@ -2230,7 +2230,7 @@ LAB_14002dcd5:
                             lVar16 = 0;
                             if ((out != NULL) || (lVar17 != 0)) {
                                 if ((out != NULL) && (hProcess = OpenProcess(0x400, 0, pe32.th32ProcessID)) != (HANDLE)0) {
-                                    FUN_14005C828("GetProcessMemoryInfo", "PSAPI.DLL",
+                                    PECMD_GetApiProcCached("GetProcessMemoryInfo", "PSAPI.DLL",
                                                   (int64_t *)(void **)&g_pGetProcessMemoryInfo, (int64_t *)0);
                                     pmc.cb = 0x48;
                                     pmc.PageFaultCount = 0;
@@ -5052,7 +5052,7 @@ extern int64_t PECMD_RunCommand();
 extern uint64_t PECMD_DeviSubPackageWorkerProc(uint64_t *task);
 extern uint64_t PECMD_DeviExtractSchedulerProc(uint64_t *tasks);
 extern LARGE_INTEGER PECMD_ProcessScriptBlock();
-extern int64_t FUN_1400547BC();
+extern int64_t PECMD_SplitNextToken();
 extern void PECMD_ZeroLenBuf(void *p);
 extern int64_t FUN_14005B1A8();
 extern void *PECMD_LastPathSeparator();
@@ -5266,7 +5266,7 @@ LAB_140038e01:
       }
     }
   }
-  FUN_14005C828("SetDisplayConfig","User32.DLWSTR(",(int64_t *)(void **)&g_pSetDisplayConfig,&g_hUser32);
+  PECMD_GetApiProcCached("SetDisplayConfig","User32.DLWSTR(",(int64_t *)(void **)&g_pSetDisplayConfig,&g_hUser32);
   local_8a8.dmDeviceName[0] = L'\0';
   memset((uint64_t *)(local_8a8.dmDeviceName + 1),0,0x3e);
   memset((uint64_t *)&local_8a8.dmSpecVersion,0,0x9c);
@@ -5364,8 +5364,8 @@ LAB_1400395a9:
           }
         }
         uVar19 = 0x80004001;
-        FUN_14005C828("SetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pSetDeviceGammaRamp,&g_hGdi32);
-        FUN_14005C828("GetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pGetDeviceGammaRamp,&g_hGdi32);
+        PECMD_GetApiProcCached("SetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pSetDeviceGammaRamp,&g_hGdi32);
+        PECMD_GetApiProcCached("GetDeviceGammaRamp","GDI32",(int64_t *)(void **)&g_pGetDeviceGammaRamp,&g_hGdi32);
         hDC = GetDC((HWND)0x0);
         FUN_1400633A8(&local_9c0,0x600);
         puVar33 = local_9c0 + 0x100;
@@ -5520,7 +5520,7 @@ LAB_140039657:
 LAB_14003989b:
     pWVar29 = local_9e8;
     if (cVar9 != '\0') {
-      FUN_1400547BC(script,(int64_t *)&local_res10,(int64_t *)&local_9c8,0x2c,0);
+      PECMD_SplitNextToken(script,(int64_t *)&local_res10,(int64_t *)&local_9c8,0x2c,0);
     }
     CharUpperW(local_res10);
     local_a48[0] = -1;

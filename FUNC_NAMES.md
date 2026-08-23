@@ -4,6 +4,19 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400c13f8 | FUN_1400c13f8 | PECMD_RegiEditRegistry |
+| 0x1400cd3a8 | FUN_1400cd3a8 | PECMD_PartShowHideDrive |
+| 0x1400dfb14 | FUN_1400dfb14 | PECMD_MounMountWimImage |
+| 0x1400bb718 | FUN_1400bb718 | PECMD_MessShowMsgBox |
+| 0x1400a2390 | FUN_1400a2390 | PECMD_MstrStringOps |
+| 0x140084a5c | FUN_140084a5c | PECMD_ApplyVarWriteModifiers |
+| 0x1400d7038 | FUN_1400d7038 | PECMD_DiskFindLoadHives |
+| 0x14003db00 | FUN_14003db00 | PECMD_ShutPowerAction |
+| 0x1400caf78 | FUN_1400caf78 | PECMD_TablCreateControl |
+| 0x1400547bc | FUN_1400547bc | PECMD_SplitNextToken |
+| 0x14005c828 | FUN_14005c828 | PECMD_GetApiProcCached |
+| 0x14005c72c | FUN_14005c72c | PECMD_TokPrefixICmp |
+| 0x1400050c8 | FUN_1400050c8 | PECMD_RunBootScriptInFiber |
 | 0x1400fe4a4 | FUN_1400fe4a4 | PECMD_ApplyControlProperty |
 | 0x1400f20c0 | FUN_1400f20c0 | PECMD_SetCtlStateBrush |
 | 0x1400f5e2c | FUN_1400f5e2c | PECMD_ItemPropSetPair13 |

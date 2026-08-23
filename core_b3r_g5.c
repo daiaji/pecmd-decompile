@@ -29,7 +29,7 @@ extern void    PECMD_AllocStrSlot(WCHAR **out);                              /* 
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);                /* @0x140063720 分配串 */
 extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);                   /* @0x1400633a8 分配 */
 extern void PECMD_ZeroLenBuf(void *p);                                  /* @0x14005b0b8 缓冲区构造 */
-extern void    FUN_14005c828(const char *func, const char *dll,
+extern void    PECMD_GetApiProcCached(const char *func, const char *dll,
                              void **out, uintptr_t *hmod);              /* @0x14005c828 GetProcAddress 包装 */
 extern uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2);     /* @0x14006a7f4 尺寸换算 */
 extern void    PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
@@ -410,7 +410,7 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
     WCHAR   local_e8[104];
 
     EnterCriticalSection((void *)&g_csInit);
-    FUN_14005c828("GetStorageDependencyInformation", "VirtDisk.DLL",
+    PECMD_GetApiProcCached("GetStorageDependencyInformation", "VirtDisk.DLL",
                   (void **)&g_pGetStorageDependencyInformation, (uintptr_t *)0x0);
     iVar1 = 0;
     if (g_pGetStorageDependencyInformation == (FN_14013d3b0)0x0) {

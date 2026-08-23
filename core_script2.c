@@ -42,7 +42,7 @@ static int32_t g_autoAppFlag;      /* g_charTableF */
 static int32_t g_bInitWin;         /* DAT_14013d059 */
 static int32_t g_cmdlineMode;      /* DAT_14013ccb0 */
 
-/* ========== FUN_1400050C8 @0x14004eb34 ==========
+/* ========== PECMD_RunBootScriptInFiber @0x14004eb34 ==========
  * ExecCmd 主流程（mainW → fiber → ExecLine → ExecCmd）。
  * 注：窗口/线程深层交互以 TODO(verify) 简化，核心命令行解析/脚本
  * 执行链已还原。

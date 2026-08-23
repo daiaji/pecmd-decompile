@@ -129,7 +129,7 @@ WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags)
 
 /* ========== EXEC 消息处理 @0x1400084d0 ========== */
 /* mainW EXEC 分支调用: 解析消息文本, 处理 /InstallService /Service /RemoveService,
- * 构造 "~S/服务 参数" 或 "~I/Service ..." 命令文本交给 FUN_1400050C8 (PECMD_ServiceEntry) */
+ * 构造 "~S/服务 参数" 或 "~I/Service ..." 命令文本交给 PECMD_RunBootScriptInFiber (PECMD_ServiceEntry) */
 int FUN_1400084D0(WCHAR *msg)
 {
     WCHAR first;        /* 首字符 (引号检测) */

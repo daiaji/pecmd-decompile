@@ -44,7 +44,7 @@ extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char      PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
@@ -318,11 +318,11 @@ undefined8 PECMD_ParseControlCenterArgs(longlong *param_1, ushort *param_2, WPAR
         uVar9 = 0;
         while ((ushort)(sVar7 + 1U) == uVar10) {
             uVar6 = (ulonglong)uVar10;
-            lVar3 = FUN_14005c72c("-center", (const WCHAR *)puVar8, 7);
+            lVar3 = PECMD_TokPrefixICmp("-center", (const WCHAR *)puVar8, 7);
             if ((char)lVar3 == '\0') {
-                lVar3 = FUN_14005c72c("-right", (const WCHAR *)puVar8, 6);
+                lVar3 = PECMD_TokPrefixICmp("-right", (const WCHAR *)puVar8, 6);
                 if ((char)lVar3 == '\0') {
-                    lVar3 = FUN_14005c72c("-left", (const WCHAR *)puVar8, 5);
+                    lVar3 = PECMD_TokPrefixICmp("-left", (const WCHAR *)puVar8, 5);
                     if ((char)lVar3 != '\0') {
                         uVar9 = 0x80000000;
                     }

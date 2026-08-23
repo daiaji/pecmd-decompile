@@ -90,7 +90,7 @@ extern undefined8 PECMD_OnDeleteCommand(void *a, LPCWSTR b, HWND c);        /* @
 extern LPCWSTR   PECMD_LoadLocalizedString(HINSTANCE, UINT, LPWSTR, int);       /* @0x14005b6ac 资源字符串   */
 extern int       PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c788 前缀比较   */
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);      /* @0x14005c7c4 后缀比较     */
-extern void      FUN_14005c828(const char *func, const char *dll, void **out,
+extern void      PECMD_GetApiProcCached(const char *func, const char *dll, void **out,
                                uintptr_t *hmod);                    /* @0x14005c828 延迟加载     */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
 extern DWORD     PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
@@ -413,7 +413,7 @@ LAB_140096b4b:
                               (LPSECURITY_ATTRIBUTES)0x0, 3, 0x80, (HANDLE)0x0);
                 pWVar10 = (WCHAR *)local_res10;
                 if (local_res10 != (WCHAR *)0x0) {
-                    FUN_14005c828("GetFinalPathNameByHandleW", (LPCSTR)0x0,
+                    PECMD_GetApiProcCached("GetFinalPathNameByHandleW", (LPCSTR)0x0,
                                   (void **)&g_pGetFinalPathNameByHandleW, &g_hKernel32);
                     if (g_pGetFinalPathNameByHandleW != (DWORD (*)(HANDLE, LPWSTR, DWORD, DWORD))0) {
                         PECMD_AllocString(&local_88, 0xa000);
@@ -1582,7 +1582,7 @@ LAB_1400966dc:
                     local_1118[0] = 0;
                     local_1124 = 0;
                     local_10d0 = 0;
-                    FUN_14005c828("GetVolumeInformationByHandleW", "Kernel32.DLL",
+                    PECMD_GetApiProcCached("GetVolumeInformationByHandleW", "Kernel32.DLL",
                                   (void **)&g_pGetVolumeInformationByHandleW, &g_hKernel32);
                     if (g_pGetVolumeInformationByHandleW != (DWORD (*)(HANDLE, LPWSTR, DWORD, LPDWORD))0) {
                         local_res20 = 0;

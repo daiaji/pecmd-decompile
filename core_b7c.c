@@ -184,11 +184,11 @@ DWORD FUN_1400DF464(LPCWSTR a1, uint32_t a2, LPCWSTR a3,
     return 0;
 }
 
-/* ========== FUN_1400C13F8 @0x1400c13f8 ==========
+/* ========== PECMD_RegiEditRegistry @0x1400c13f8 ==========
  * [简化桩] 注册表复制。返回 a1。
  * TODO(verify): 需完整还原递归复制。
  */
-HKEY FUN_1400C13F8(HKEY a1, HKEY a2, char a3)
+HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
 {
     (void)a2;
     (void)a3;
@@ -259,11 +259,11 @@ uint64_t *FUN_1400C9B9C(uint64_t *a1, uint64_t a2, uint64_t a3,
     return a1;
 }
 
-/* ========== FUN_1400CAF78 @0x1400caf78 ==========
+/* ========== PECMD_TablCreateControl @0x1400caf78 ==========
  * [简化桩] 列表控件命令。返回 NULL。
  * TODO(verify): 需完整还原命令处理。
  */
-uint16_t *FUN_1400CAF78(int64_t *a1, LPCWSTR a2, WPARAM a3)
+uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
 {
     (void)a1;
     (void)a2;
@@ -287,11 +287,11 @@ POINT PECMD_EvalQueryValue(int64_t *a1, POINT a2, uint64_t a3, char a4)
     return r;
 }
 
-/* ========== FUN_1400CD3A8 @0x1400cd3a8 ==========
+/* ========== PECMD_PartShowHideDrive @0x1400cd3a8 ==========
  * [简化桩] 解析变量命令。返回 0。
  * TODO(verify): 需完整还原变量命令解析。
  */
-int64_t FUN_1400CD3A8(uint64_t a1, WCHAR *a2)
+int64_t PECMD_PartShowHideDrive(uint64_t a1, WCHAR *a2)
 {
     (void)a1;
     (void)a2;
@@ -335,11 +335,11 @@ char FUN_1400D5B48(int64_t a1, HDC a2)
     return 0;
 }
 
-/* ========== FUN_1400D7038 @0x1400d7038 ==========
+/* ========== PECMD_DiskFindLoadHives @0x1400d7038 ==========
  * [简化桩] 解析控件规格。返回 0。
  * TODO(verify): 需完整还原规格解析。
  */
-uint64_t FUN_1400D7038(int64_t *a1, WCHAR *a2)
+uint64_t PECMD_DiskFindLoadHives(int64_t *a1, WCHAR *a2)
 {
     (void)a1;
     (void)a2;
@@ -419,11 +419,11 @@ LARGE_INTEGER PECMD_EvalAtCommand(LARGE_INTEGER a1, LARGE_INTEGER a2,
     return r;
 }
 
-/* ========== FUN_1400DFB14 @0x1400dfb14 ==========
+/* ========== PECMD_MounMountWimImage @0x1400dfb14 ==========
  * [简化桩] 文件时间命令。返回 {0}。
  * TODO(verify): 需完整还原时间命令。
  */
-FILETIME FUN_1400DFB14(int64_t *a1, FILETIME a2, WPARAM a3)
+FILETIME PECMD_MounMountWimImage(int64_t *a1, FILETIME a2, WPARAM a3)
 {
     FILETIME r;
     (void)a1;

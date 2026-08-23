@@ -32,7 +32,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
+extern void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400633A8(void **ps, int64_t len);               /* @0x1400633a8 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
@@ -87,15 +87,15 @@ uint64_t FUN_1400E4D94(uint64_t this_)
     int64_t hmod = 0;
 
     if (g_pfnRasDial == NULL) {
-        FUN_14005C828("RasDialW", "RASAPI32.DLL", (void **)&g_pfnRasDial, (HMODULE *)&hmod);
-        FUN_14005C828("RasEnumEntriesW", "RASAPI32.DLL", (void **)&g_pfnRasEnumEntries,
+        PECMD_GetApiProcCached("RasDialW", "RASAPI32.DLL", (void **)&g_pfnRasDial, (HMODULE *)&hmod);
+        PECMD_GetApiProcCached("RasEnumEntriesW", "RASAPI32.DLL", (void **)&g_pfnRasEnumEntries,
                           (HMODULE *)&hmod);
-        FUN_14005C828("RasGetConnectStatusW", "RASAPI32.DLL",
+        PECMD_GetApiProcCached("RasGetConnectStatusW", "RASAPI32.DLL",
                           (void **)&g_pfnRasGetConnectStatus, (HMODULE *)&hmod);
-        FUN_14005C828("RasGetErrorStringW", "RASAPI32.DLL", (void **)&g_pfnRasGetErrorString,
+        PECMD_GetApiProcCached("RasGetErrorStringW", "RASAPI32.DLL", (void **)&g_pfnRasGetErrorString,
                           (HMODULE *)&hmod);
-        FUN_14005C828("RasHangUpW", "RASAPI32.DLL", (void **)&g_pfnRasHangUp, (HMODULE *)&hmod);
-        FUN_14005C828("RasEnumConnectionsW", "RASAPI32.DLL",
+        PECMD_GetApiProcCached("RasHangUpW", "RASAPI32.DLL", (void **)&g_pfnRasHangUp, (HMODULE *)&hmod);
+        PECMD_GetApiProcCached("RasEnumConnectionsW", "RASAPI32.DLL",
                           (void **)&g_pfnRasEnumConnections, (HMODULE *)&hmod);
     }
     return this_;

@@ -34,7 +34,7 @@ extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_
 extern bool FUN_1400C11C0(int64_t *pp, int *out);
 extern int64_t FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
 extern WCHAR *FUN_14001BE14(WCHAR *s);
-extern HKEY FUN_1400C13F8(HKEY script, HKEY args, char mode);
+extern HKEY PECMD_RegiEditRegistry(HKEY script, HKEY args, char mode);
 extern uint64_t PECMD_EvalParenExprRounded(int64_t *pp, uint64_t *out);
 extern bool PECMD_ParseUIntValue(int64_t *pp, int *out);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
@@ -156,7 +156,7 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
     FUN_14007A224((void *)(uintptr_t)script, s, &expanded, 0, 0);
     WCHAR *value = FUN_14001BE14(expanded);
     FUN_14006375C(&res, value);
-    FUN_1400C13F8(script, (HKEY)(uintptr_t)res, '\x01');
+    PECMD_RegiEditRegistry(script, (HKEY)(uintptr_t)res, '\x01');
 
     FUN_1400702B0(&res,
         WSTR("#HKCU\\Software\\Policies\\Microsoft\\Internet Explorer\\Control Panel\\HomePage="));
@@ -165,7 +165,7 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
         homeValue = WSTR("1");
     }
     FUN_14006375C(&res, homeValue);
-    FUN_1400C13F8(script, (HKEY)((uintptr_t)res + (disableHomePage == 0) * 2), '\0');
+    PECMD_RegiEditRegistry(script, (HKEY)((uintptr_t)res + (disableHomePage == 0) * 2), '\0');
 
     FUN_1400702B0(&res,
         WSTR("#HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\DisableRegistryTools="));
@@ -174,7 +174,7 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
         regValue = WSTR("1");
     }
     FUN_14006375C(&res, regValue);
-    FUN_1400C13F8(script, (HKEY)((uintptr_t)res + (disableRegTools == 0) * 2), '\0');
+    PECMD_RegiEditRegistry(script, (HKEY)((uintptr_t)res + (disableRegTools == 0) * 2), '\0');
 
     PECMD_FreeStrBuf(&res);
     PECMD_FreeStrBuf(&expanded);

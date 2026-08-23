@@ -212,7 +212,7 @@ extern void PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3,
                           LPCWSTR param_4, char param_5);    /* @0x1400a96e4 (定义于 core_b3r_e.c) */
 extern uint64_t PECMD_EvalParenStripped(int64_t *a, uint64_t *b);       /* @0x1400745c8 */
 extern void PECMD_ParseIntThenSkip(int64_t *a, int *b);                /* @0x140007bcc */
-extern void FUN_1400547bc(int64_t *a, int64_t *b, int64_t *c, int d, int e);
+extern void PECMD_SplitNextToken(int64_t *a, int64_t *b, int64_t *c, int d, int e);
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);
 extern uint8_t g_b120950[];                               /* 常量串(存在) */
 extern uint8_t g_b1215e8[];                               /* 常量串(不存在) */
@@ -346,7 +346,7 @@ extern void   PECMD_InitRamdataRegistry(int a);                       /* @0x1400
 extern HWND   g_hwndC9C8;                             /* @0x14013c9c8 */
 extern WCHAR  PTR_u_Shell_14011ddb8_2_14013a290[];       /* @0x14013a290 */
 extern uint64_t PECMD_GetPackedSystemVersion(void);                     /* @0x14005ea5c */
-extern int64_t FUN_14005c72c(LPCWSTR a, const uint16_t *b, int n); /* @0x14005c72c */
+extern int64_t PECMD_TokPrefixICmp(LPCWSTR a, const uint16_t *b, int n); /* @0x14005c72c */
 extern DWORD  PECMD_QueryRegValueWithRetry(HKEY, LPCWSTR, LPCWSTR, DWORD *, uint8_t *, DWORD *); /* @0x14005c4e0 */
 extern void   PECMD_SetPELogonParamText(int64_t *, LPCWSTR, void *); /* @0x140038950 */
 extern void   PECMD_ParseHexOrDecBool(LPWSTR *pp, int *out);       /* @0x1400c11c0 */
@@ -527,7 +527,7 @@ extern int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);
 extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t); /* @0x14013d408 */
 /* 本批(B3)新增 helper/WS2 槽 extern */
 extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr, uint32_t flag);   /* @0x14001c2cc EnablePrivilege */
-extern void FUN_14005c828(const char *func, const char *dll, void **out, uintptr_t *hmod); /* @0x14005c828 */
+extern void PECMD_GetApiProcCached(const char *func, const char *dll, void **out, uintptr_t *hmod); /* @0x14005c828 */
 extern uint64_t g_u6459e4;
 extern uint64_t g_u6459e8;
 extern void PECMD_DeleteDriveMountPoint(uint16_t ch);                     /* @0x14005f7ec 卷更新 */
@@ -1311,7 +1311,7 @@ uint64_t PECMD_ShowScreenText(int64_t *param_1, WCHAR *param_2)
     (void)local_196;
     uVar6 = PECMD_GetPackedSystemVersion();
     cVar14 = 0x60000 < (uint)(uVar6 >> 0x10);
-    lVar7 = FUN_14005c72c(WSTR("-8"), (const uint16_t *)param_2, 2);
+    lVar7 = PECMD_TokPrefixICmp(WSTR("-8"), (const uint16_t *)param_2, 2);
     uVar11 = 0;
     if ((char)lVar7 != '\0') {
         cVar14 = '\x03';
@@ -8523,7 +8523,7 @@ uint64_t PECMD_ReleaseSyncObject(int64_t *param_1, int param_2, HANDLE param_3, 
             }
             PECMD_AllocStrSlot((void *)local_28);
             PECMD_AllocStrSlot((void *)&local_30);
-            FUN_1400547bc(param_1, &local_res20, (int64_t *)&local_30, 0x2c, 0);
+            PECMD_SplitNextToken(param_1, &local_res20, (int64_t *)&local_30, 0x2c, 0);
             BVar2 = ReleaseSemaphore(param_3, local_res10[0], (int32_t *)local_38);
             PECMD_AppendLongDecimal(param_1, (uint64_t)local_38[0], local_30);
             if (BVar2 != 1) {
@@ -9197,41 +9197,41 @@ uint64_t PECMD_LoadWimApi(uint64_t param_1, LPCWSTR param_2)
             return param_1;
         }
     }
-    FUN_14005c828("WIMMountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage,
+    PECMD_GetApiProcCached("WIMMountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImage,
+    PECMD_GetApiProcCached("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImage,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImages,
+    PECMD_GetApiProcCached("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImages,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCreateFile", "WIMGAPI.DLL", (void **)&g_pWIMCreateFile,
+    PECMD_GetApiProcCached("WIMCreateFile", "WIMGAPI.DLL", (void **)&g_pWIMCreateFile,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMSetTemporaryPath", "WIMGAPI.DLL", (void **)&g_pWIMSetTemporaryPath,
+    PECMD_GetApiProcCached("WIMSetTemporaryPath", "WIMGAPI.DLL", (void **)&g_pWIMSetTemporaryPath,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMLoadImage", "WIMGAPI.DLL", (void **)&g_pWimLoadImage,
+    PECMD_GetApiProcCached("WIMLoadImage", "WIMGAPI.DLL", (void **)&g_pWimLoadImage,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMMountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMHandleOp480,
+    PECMD_GetApiProcCached("WIMMountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMHandleOp480,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandleSlot,
+    PECMD_GetApiProcCached("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandleSlot,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageHandle,
+    PECMD_GetApiProcCached("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageHandle,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageHandle,
+    PECMD_GetApiProcCached("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageHandle,
                   (uintptr_t *)&local_res8);
-    FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageHandle,
+    PECMD_GetApiProcCached("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageHandle,
                   (uintptr_t *)&local_res8);
     if (bVar1) {
         local_res8 = (HMODULE)0;
-        FUN_14005c828("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageCount,
+        PECMD_GetApiProcCached("WIMGetMountedImages", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageCount,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage2,
+        PECMD_GetApiProcCached("WIMUnmountImage", "WIMGAPI.DLL", (void **)&g_pWIMMountImage2,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageNum,
+        PECMD_GetApiProcCached("WIMGetMountedImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMGetMountedImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageNum,
+        PECMD_GetApiProcCached("WIMCommitImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMCommitImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageNum,
+        PECMD_GetApiProcCached("WIMUnmountImageHandle", "WIMGAPI.DLL", (void **)&g_pWIMUnmountImageNum,
                       (uintptr_t *)&local_res8);
-        FUN_14005c828("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandle,
+        PECMD_GetApiProcCached("WIMCloseHandle", "WIMGAPI.DLL", (void **)&g_pWIMCloseHandle,
                       (uintptr_t *)&local_res8);
     }
     return param_1;
@@ -9350,30 +9350,30 @@ uint64_t PECMD_InitWinsock(uint64_t param_1)
     if (g_psock == 0) {
         local_res8 = 0;
         PECMD_EnableTokenPrivilege(WSTR("SeDebugPrivilege"), 2, 4);
-        FUN_14005c828("WSAStartup", "WS2_32.DLL", (void **)&g_pWSAStartup, (uintptr_t *)&local_res8);
-        FUN_14005c828("shutdown", "WS2_32.DLL", (void **)&g_pshutdown, (uintptr_t *)&local_res8);
-        FUN_14005c828("closesocket", "WS2_32.DLL", (void **)&g_pclosesocket, (uintptr_t *)&local_res8);
-        FUN_14005c828("connect", "WS2_32.DLL", (void **)&g_pconnect, (uintptr_t *)&local_res8);
-        FUN_14005c828("send", "WS2_32.DLL", (void **)&g_psend, (uintptr_t *)&local_res8);
-        FUN_14005c828("select", "WS2_32.DLL", (void **)&g_pselect, (uintptr_t *)&local_res8);
-        FUN_14005c828("recvfrom", "WS2_32.DLL", (void **)&g_precvfrom, (uintptr_t *)&local_res8);
-        FUN_14005c828("sendto", "WS2_32.DLL", (void **)&g_psendto, (uintptr_t *)&local_res8);
-        FUN_14005c828("bind", "WS2_32.DLL", (void **)&g_pbind, (uintptr_t *)&local_res8);
-        FUN_14005c828("listen", "WS2_32.DLL", (void **)&g_plisten, (uintptr_t *)&local_res8);
-        FUN_14005c828("accept", "WS2_32.DLL", (void **)&g_paccept, (uintptr_t *)&local_res8);
-        FUN_14005c828("getsockname", "WS2_32.DLL", (void **)&g_pgetsockname, (uintptr_t *)&local_res8);
-        FUN_14005c828("getpeername", "WS2_32.DLL", (void **)&g_pgetpeername, (uintptr_t *)&local_res8);
-        FUN_14005c828("ioctlsocket", "WS2_32.DLL", (void **)&g_pioctlsocket, (uintptr_t *)&local_res8);
-        FUN_14005c828("setsockopt", "WS2_32.DLL", (void **)&g_psetsockopt, (uintptr_t *)&local_res8);
-        FUN_14005c828("ntohl", "WS2_32.DLL", (void **)&g_pntohl, (uintptr_t *)&local_res8);
-        FUN_14005c828("htonl", "WS2_32.DLL", (void **)&g_phtonl, (uintptr_t *)&local_res8);
-        FUN_14005c828("htons", "WS2_32.DLL", (void **)&g_phtons, (uintptr_t *)&local_res8);
-        FUN_14005c828("inet_addr", "WS2_32.DLL", (void **)&g_pinet_addr, (uintptr_t *)&local_res8);
-        FUN_14005c828("gethostbyname", "WS2_32.DLL", (void **)&g_pgethostbyname, (uintptr_t *)&local_res8);
-        FUN_14005c828("inet_ntoa", "WS2_32.DLL", (void **)&g_pinet_ntoa, (uintptr_t *)&local_res8);
-        FUN_14005c828("WSAGetLastError", "WS2_32.DLL", (void **)&g_pWSAGetLastError, (uintptr_t *)&local_res8);
-        FUN_14005c828("__WSAFDIsSet", "WS2_32.DLL", (void **)&g_pWSAFDIsSet, (uintptr_t *)&local_res8);
-        FUN_14005c828("socket", "WS2_32.DLL", (void **)&g_psock, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("WSAStartup", "WS2_32.DLL", (void **)&g_pWSAStartup, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("shutdown", "WS2_32.DLL", (void **)&g_pshutdown, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("closesocket", "WS2_32.DLL", (void **)&g_pclosesocket, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("connect", "WS2_32.DLL", (void **)&g_pconnect, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("send", "WS2_32.DLL", (void **)&g_psend, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("select", "WS2_32.DLL", (void **)&g_pselect, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("recvfrom", "WS2_32.DLL", (void **)&g_precvfrom, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("sendto", "WS2_32.DLL", (void **)&g_psendto, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("bind", "WS2_32.DLL", (void **)&g_pbind, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("listen", "WS2_32.DLL", (void **)&g_plisten, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("accept", "WS2_32.DLL", (void **)&g_paccept, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("getsockname", "WS2_32.DLL", (void **)&g_pgetsockname, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("getpeername", "WS2_32.DLL", (void **)&g_pgetpeername, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("ioctlsocket", "WS2_32.DLL", (void **)&g_pioctlsocket, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("setsockopt", "WS2_32.DLL", (void **)&g_psetsockopt, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("ntohl", "WS2_32.DLL", (void **)&g_pntohl, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("htonl", "WS2_32.DLL", (void **)&g_phtonl, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("htons", "WS2_32.DLL", (void **)&g_phtons, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("inet_addr", "WS2_32.DLL", (void **)&g_pinet_addr, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("gethostbyname", "WS2_32.DLL", (void **)&g_pgethostbyname, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("inet_ntoa", "WS2_32.DLL", (void **)&g_pinet_ntoa, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("WSAGetLastError", "WS2_32.DLL", (void **)&g_pWSAGetLastError, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("__WSAFDIsSet", "WS2_32.DLL", (void **)&g_pWSAFDIsSet, (uintptr_t *)&local_res8);
+        PECMD_GetApiProcCached("socket", "WS2_32.DLL", (void **)&g_psock, (uintptr_t *)&local_res8);
     }
     return param_1;
 }
@@ -15499,7 +15499,7 @@ DWORD PECMD_DeleteRegistryKeyRecursive(HKEY param_1,LPCWSTR param_2)
       }
       RegCloseKey(local_38);
       if ((g_pRegDeleteKeyExW != (void *)0x0) ||
-         (FUN_14005c828("RegDeleteKeyExW","Advapi32.dll",(void **)&g_pRegDeleteKeyExW,
+         (PECMD_GetApiProcCached("RegDeleteKeyExW","Advapi32.dll",(void **)&g_pRegDeleteKeyExW,
                         (uintptr_t *)0) , g_pRegDeleteKeyExW != (void *)0x0)) {
         DVar2 = (*g_pRegDeleteKeyExW)(param_1,param_2,0,0);
       }
@@ -19894,7 +19894,7 @@ LAB_140084877:
     return uVar3;
 }
 
-LPCWSTR FUN_140084a5c(int64_t *param_1, int64_t *param_2, uint16_t *param_3, int64_t *param_4)
+LPCWSTR PECMD_ApplyVarWriteModifiers(int64_t *param_1, int64_t *param_2, uint16_t *param_3, int64_t *param_4)
 {
     /* @0x140084a5c size=3133 — 格式/字节图案展开器(按 param_3 的 '$'/'%'/'='/'.'/'#'/'*' 修饰符把
      *   输入串扩展为字节/字序列写入 *param_2, 返回结果串指针并写 *param_4=长度)。
@@ -21417,7 +21417,7 @@ int64_t PECMD_LoadUnloadRegistryHive(int64_t *param_1, uint16_t *param_2)
                                  DVar4 != 0))
                 goto done;
             DeleteFileW(lpFile);
-            FUN_14005c828("RegSaveKeyExW", "Advapi32.DLL", (void **)&DAT_14013d388,
+            PECMD_GetApiProcCached("RegSaveKeyExW", "Advapi32.DLL", (void **)&DAT_14013d388,
                           (uintptr_t *)0x0);
             if (DAT_14013d388 != (void *)0x0) {
                 DVar4 = ((int64_t (*)(HKEY, LPCWSTR, DWORD))DAT_14013d388)(local_40, lpFile, 0);
@@ -26268,7 +26268,7 @@ LAB_1400bb1d8:
     return param_1;
 }
 
-uint64_t FUN_1400bb718(int64_t *param_1, WCHAR *param_2, int64_t *param_3)
+uint64_t PECMD_MessShowMsgBox(int64_t *param_1, WCHAR *param_2, int64_t *param_3)
 {
     /* @0x1400bb718 size=4933 — GUI 控件/编辑框体文本编辑器: 依据控件类型把 param_2 文本解析为
      *   按钮/输入框等控件主体(创建窗口->取 DC->设字体/边距->按回车/换行切分文本并逐行排布), 返回

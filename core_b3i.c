@@ -8,7 +8,7 @@
  *   解析范围说明       PECMD_RegexParseCharItem @0x14004faa8
  *   解析字符类         FUN_1400513B8 @0x1400513b8
  *   设置 Enable 状态   FUN_140053C5C @0x140053c5c
- *   追加分隔 token     FUN_1400547BC @0x1400547bc
+ *   追加分隔 token     PECMD_SplitNextToken @0x1400547bc
  *   释放全局缓存       FUN_14005CF3C @0x14005cf3c
  *   发送 UDP 包        FUN_14005D30C @0x14005d30c
  *   释放 GDI 资源      FUN_14005D558 @0x14005d558
@@ -211,10 +211,10 @@ void FUN_140053C5C(int64_t obj, int mode)
     }
 }
 
-/* ========== FUN_1400547BC @0x1400547bc ==========
+/* ========== PECMD_SplitNextToken @0x1400547bc ==========
  * 追加一个 token；若当前字符为分隔符则跳过。
  */
-int16_t *FUN_1400547BC(int64_t *script, int64_t *pp, int64_t *out,
+int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out,
                                     int16_t sep1, int16_t sep2)
 {
     FUN_14006764C(pp, out, sep1, sep2);

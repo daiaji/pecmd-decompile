@@ -3,7 +3,7 @@
  *
  *   FUN_14005B154      @0x14005b154   跳过空白
  *   FUN_14005B1A8  @0x14005b1a8   前缀比较（后随空白/结束）
- *   FUN_14005C72C @0x14005c72c   前缀比较（字母忽略大小写）(已声明 StrICmpN)
+ *   PECMD_TokPrefixICmp @0x14005c72c   前缀比较（字母忽略大小写）(已声明 StrICmpN)
  *   FUN_14001EA18     @0x14001ea18   加载资源（FindResource/LoadResource + 解码）
  *   FUN_14005F33C   @0x14005f33c   编码检测（UTF8/UTF16/UNICODE 魔数）
  *   FUN_14005E51C   @0x14005e51c   空白/注释处理（";;" → 换行）

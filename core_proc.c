@@ -2,7 +2,7 @@
  * core_proc.c — PECMD 进程/服务/动态导入/系统初始化工具
  *
  * 来源: PECMD原始.EXE (x64)
- *   FUN_14005C828     @0x14005c828   (动态导入缓存)
+ *   PECMD_GetApiProcCached     @0x14005c828   (动态导入缓存)
  *   FUN_14000531C    @0x14000531c   (返回指针版跳空白)
  *   FUN_14000546C @0x14000546c   (跳过引号/普通 token)
  *   PECMD_CheckDebugMsg      @0x140005344   (DEBUGMDG 环境变量)
@@ -47,7 +47,7 @@ extern void (*g_pNtCreateSymbolicLinkObject)(void); /* DAT_14013cd38 */
 
 /* ========== 动态导入 @0x14005c828 ========== */
 /* *out = GetProcAddress(模块, name); 模块句柄缓存于 *hmod */
-void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod)
+void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod)
 {
     HMODULE h;
     HMODULE local;
@@ -176,7 +176,7 @@ uint64_t PECMD_GetParentProcessId(DWORD pid)
     uint64_t info[5];
     HANDLE h;
 
-    FUN_14005C828("NtQueryInformationProcess", "NTDLL.DLL",
+    PECMD_GetApiProcCached("NtQueryInformationProcess", "NTDLL.DLL",
                       (void **)&g_pNtQueryInfo, NULL);
     if (g_pNtQueryInfo != NULL) {
         memset(info, 0, 0x30);
@@ -196,15 +196,15 @@ uint64_t PECMD_GetParentProcessId(DWORD pid)
 /* ========== 动态导入初始化 @0x140017908 ========== */
 void PECMD_InitDynamicImports(void)
 {
-    FUN_14005C828("RegDeleteKeyExW", "Advapi32.DLL",
+    PECMD_GetApiProcCached("RegDeleteKeyExW", "Advapi32.DLL",
                       (void **)&g_pRegDeleteKeyExW, NULL);
     if (!g_pSHDeleteKeyW) {
-        FUN_14005C828("SHGetValueW", "ShLwAPI.DLL", (void **)&g_pSHGetValueW, NULL);
-        FUN_14005C828("SHGetValueA", "ShLwAPI.DLL", (void **)&g_pSHGetValueA, NULL);
-        FUN_14005C828("StrToIntExW", "ShLwAPI.DLL", (void **)&g_pStrToIntExW, NULL);
-        FUN_14005C828("SHSetValueW", "ShLwAPI.DLL", (void **)&g_pSHSetValueW, NULL);
-        FUN_14005C828("SHDeleteValueW", "ShLwAPI.DLL", (void **)&g_pSHDeleteValueW, NULL);
-        FUN_14005C828("SHDeleteKeyW", "ShLwAPI.DLL", (void **)&g_pSHDeleteKeyW, NULL);
+        PECMD_GetApiProcCached("SHGetValueW", "ShLwAPI.DLL", (void **)&g_pSHGetValueW, NULL);
+        PECMD_GetApiProcCached("SHGetValueA", "ShLwAPI.DLL", (void **)&g_pSHGetValueA, NULL);
+        PECMD_GetApiProcCached("StrToIntExW", "ShLwAPI.DLL", (void **)&g_pStrToIntExW, NULL);
+        PECMD_GetApiProcCached("SHSetValueW", "ShLwAPI.DLL", (void **)&g_pSHSetValueW, NULL);
+        PECMD_GetApiProcCached("SHDeleteValueW", "ShLwAPI.DLL", (void **)&g_pSHDeleteValueW, NULL);
+        PECMD_GetApiProcCached("SHDeleteKeyW", "ShLwAPI.DLL", (void **)&g_pSHDeleteKeyW, NULL);
     }
 }
 

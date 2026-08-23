@@ -10,7 +10,7 @@
  *   PECMD_FreeStrBuf      @0x14005b104
  *   FUN_14005B154    @0x14005b154
  *   FUN_14005C788     @0x14005c788  (ASCII 前缀词比较, 忽略大小写)
- *   FUN_14005C72C    @0x14005c72c  (同语义变体)
+ *   PECMD_TokPrefixICmp    @0x14005c72c  (同语义变体)
  *   FUN_1400630D0    @0x1400630d0
  *
  * 内存块布局 (HeapAlloc, 全局堆 g_hHeap = g_hHeap):

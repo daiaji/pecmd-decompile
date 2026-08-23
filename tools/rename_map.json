@@ -1463,5 +1463,18 @@
   "FUN_1400fba68": "PECMD_PostNotif203Byte",
   "FUN_1400c3ca4": "PECMD_DtorUpDownControl",
   "FUN_1400e6cf8": "PECMD_GrowCapacityAligned",
-  "FUN_1400eceb4": "PECMD_DtorWinObjWithStrings"
+  "FUN_1400eceb4": "PECMD_DtorWinObjWithStrings",
+  "FUN_1400c13f8": "PECMD_RegiEditRegistry",
+  "FUN_1400cd3a8": "PECMD_PartShowHideDrive",
+  "FUN_1400dfb14": "PECMD_MounMountWimImage",
+  "FUN_1400bb718": "PECMD_MessShowMsgBox",
+  "FUN_1400a2390": "PECMD_MstrStringOps",
+  "FUN_140084a5c": "PECMD_ApplyVarWriteModifiers",
+  "FUN_1400d7038": "PECMD_DiskFindLoadHives",
+  "FUN_14003db00": "PECMD_ShutPowerAction",
+  "FUN_1400caf78": "PECMD_TablCreateControl",
+  "FUN_1400547bc": "PECMD_SplitNextToken",
+  "FUN_14005c828": "PECMD_GetApiProcCached",
+  "FUN_14005c72c": "PECMD_TokPrefixICmp",
+  "FUN_1400050c8": "PECMD_RunBootScriptInFiber"
 }

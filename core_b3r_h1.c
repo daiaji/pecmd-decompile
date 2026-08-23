@@ -56,7 +56,7 @@ extern void      PECMD_ResetScriptChain(int64_t *, int64_t *);             /* �
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);            /* 数字写串 */
 
 /* ---- 字符串比较/解析 ---- */
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n); /* icmp 前缀 */
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* icmp 前缀 */
 extern int64_t   PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n); /* 前缀比较 */
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);        /* 后缀比较 */
 extern char      PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);   /* token 消费 */
@@ -75,7 +75,7 @@ extern int64_t   PECMD_ExpandCommandLine(void *ctx, WCHAR *src, WCHAR **out,
                                int mode, uint8_t flag);               /* 变量写入 */
 
 /* ---- 参数拆分/数值 ---- */
-extern WCHAR    *FUN_1400547bc(void *ctx, int64_t *pp, int64_t *out,
+extern WCHAR    *PECMD_SplitNextToken(void *ctx, int64_t *pp, int64_t *out,
                                int c1, int c2);                       /* 拆分到串 */
 extern void      PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2,
                                uint64_t c, int64_t d);                /* 路由解析 */
@@ -239,22 +239,22 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     if (WVar13 == *local_res10) {
         do {
             pWVar14 = local_res10;
-            lVar3 = FUN_14005c72c("-center", (const WCHAR *)local_res10, 7);
+            lVar3 = PECMD_TokPrefixICmp("-center", (const WCHAR *)local_res10, 7);
             if ((char)lVar3 == '\0') {
-                lVar3 = FUN_14005c72c("-right", (const WCHAR *)pWVar14, 6);
+                lVar3 = PECMD_TokPrefixICmp("-right", (const WCHAR *)pWVar14, 6);
                 if ((char)lVar3 == '\0') {
-                    lVar3 = FUN_14005c72c("-vcenter:", (const WCHAR *)pWVar14, 8);
+                    lVar3 = PECMD_TokPrefixICmp("-vcenter:", (const WCHAR *)pWVar14, 8);
                     if ((char)lVar3 == '\0') {
                         uVar4 = (uint64_t)PECMD_AsciiPrefixICmp("-vcenter:", (const WCHAR *)pWVar14,
                                                         iVar7 + -0x23);
                         if ((char)uVar4 == '\0') {
-                            lVar3 = FUN_14005c72c("-rich", (const WCHAR *)pWVar14, 5);
+                            lVar3 = PECMD_TokPrefixICmp("-rich", (const WCHAR *)pWVar14, 5);
                             if (((char)lVar3 == '\0') &&
-                                (lVar3 = FUN_14005c72c("-rich", (const WCHAR *)pWVar14, 5),
+                                (lVar3 = PECMD_TokPrefixICmp("-rich", (const WCHAR *)pWVar14, 5),
                                  (char)lVar3 == '\0')) {
-                                lVar3 = FUN_14005c72c("-3D", (const WCHAR *)pWVar14, 3);
+                                lVar3 = PECMD_TokPrefixICmp("-3D", (const WCHAR *)pWVar14, 3);
                                 if ((char)lVar3 == '\0') {
-                                    lVar3 = FUN_14005c72c("-u2d", (const WCHAR *)pWVar14, 4);
+                                    lVar3 = PECMD_TokPrefixICmp("-u2d", (const WCHAR *)pWVar14, 4);
                                     if ((char)lVar3 != '\0') {
                                         uVar8 = uVar8 | 0x1000000;
                                     }
@@ -328,7 +328,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
         local_res10 = local_res10 + 1;
         PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     }
-    FUN_1400547bc(param_1, (int64_t *)&local_res10, (int64_t *)&local_a0, 0x2c, 0);
+    PECMD_SplitNextToken(param_1, (int64_t *)&local_res10, (int64_t *)&local_a0, 0x2c, 0);
     if (*local_res10 == L'\0') {
         PECMD_FreeStrBuf((void *)&local_80);
         PECMD_FreeStrBuf((void *)&local_c8);
@@ -1369,7 +1369,7 @@ uint64_t PECMD_ProcessEncodedFile(int64_t *param_1, WCHAR *param_2)
                                             cVar2 = PECMD_MatchTokenAdvance("--", (WCHAR **)&local_res10, 2);
                                             local_d4c8 = local_res10;
                                             if (((cVar2 == '\0') &&
-                                                (lVar11 = FUN_14005c72c("-", (const WCHAR *)local_res10, 1),
+                                                (lVar11 = PECMD_TokPrefixICmp("-", (const WCHAR *)local_res10, 1),
                                                  (char)lVar11 == '\0')) &&
                                                 (WVar4 = *local_d4c8, WVar4 == L'-')) {
                                                 do {
@@ -2124,7 +2124,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
             cVar14 = '\x02';
         }
     }
-    local_res10[0] = FUN_1400547bc(param_1, (int64_t *)local_res10, (int64_t *)&local_50, 0x3d, 0);
+    local_res10[0] = PECMD_SplitNextToken(param_1, (int64_t *)local_res10, (int64_t *)&local_50, 0x3d, 0);
     if (*local_res10[0] == L'=') {
         local_res10[0] = local_res10[0] + 1;
         PECMD_TokenizeQuotedField(param_1, (WCHAR **)local_res10, (WCHAR **)local_48, L'\0', 0);

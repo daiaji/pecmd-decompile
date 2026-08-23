@@ -37,7 +37,7 @@ extern void      PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);    /* delimiter scan */
 extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* string append */
 extern int64_t  *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern char      PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern bool      PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size); /* parse numeric/expr */
@@ -395,27 +395,27 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
         {
             WCHAR *pWVar20 = local_res10;
             while ((local_res10 = pWVar20, WVar1 == L'-')) {
-                lVar18 = FUN_14005c72c("-center", (const WCHAR *)pWVar20, 7);
+                lVar18 = PECMD_TokPrefixICmp("-center", (const WCHAR *)pWVar20, 7);
                 if ((char)lVar18 == '\0') {          /* -center 未命中 */
-                    lVar18 = FUN_14005c72c("-right", (const WCHAR *)pWVar20, 6);
+                    lVar18 = PECMD_TokPrefixICmp("-right", (const WCHAR *)pWVar20, 6);
                     if ((char)lVar18 == '\0') {      /* -right 未命中 */
-                        lVar18 = FUN_14005c72c("-left", (const WCHAR *)pWVar20, 5);
+                        lVar18 = PECMD_TokPrefixICmp("-left", (const WCHAR *)pWVar20, 5);
                         if ((char)lVar18 == '\0') {  /* -left 未命中 */
-                            lVar18 = FUN_14005c72c("-bupdate", (const WCHAR *)pWVar20, 8);
+                            lVar18 = PECMD_TokPrefixICmp("-bupdate", (const WCHAR *)pWVar20, 8);
                             uVar16 = (uint)(uintptr_t)pWVar19;
                             if ((char)lVar18 == '\0') { /* -bupdate 未命中 */
-                                lVar18 = FUN_14005c72c("-real", (const WCHAR *)pWVar20, 5);
+                                lVar18 = PECMD_TokPrefixICmp("-real", (const WCHAR *)pWVar20, 5);
                                 if ((char)lVar18 == '\0') { /* -real 未命中 */
-                                    lVar18 = FUN_14005c72c("-smooth", (const WCHAR *)pWVar20, 7);
+                                    lVar18 = PECMD_TokPrefixICmp("-smooth", (const WCHAR *)pWVar20, 7);
                                     if ((char)lVar18 == '\0') { /* -smooth 未命中 */
-                                        lVar18 = FUN_14005c72c("-tab", (const WCHAR *)pWVar20, 4);
+                                        lVar18 = PECMD_TokPrefixICmp("-tab", (const WCHAR *)pWVar20, 4);
                                         if ((char)lVar18 == '\0') { /* -tab 未命中 */
-                                            lVar18 = FUN_14005c72c("-numicong", (const WCHAR *)pWVar20, 9);
+                                            lVar18 = PECMD_TokPrefixICmp("-numicong", (const WCHAR *)pWVar20, 9);
                                             uVar16 = (uint)(uintptr_t)pWVar14;
                                             if ((char)lVar18 == '\0') { /* -numicong 未命中 */
-                                                lVar18 = FUN_14005c72c("-numicon", (const WCHAR *)pWVar20, 8);
+                                                lVar18 = PECMD_TokPrefixICmp("-numicon", (const WCHAR *)pWVar20, 8);
                                                 if ((char)lVar18 == '\0') { /* -numicon 未命中 */
-                                                    lVar18 = FUN_14005c72c("-numbmp", (const WCHAR *)pWVar20, 7);
+                                                    lVar18 = PECMD_TokPrefixICmp("-numbmp", (const WCHAR *)pWVar20, 7);
                                                     if ((char)lVar18 == '\0') { /* -numbmp 未命中 */
                                                         if ((char)PECMD_AsciiPrefixICmp("-num:", (const WCHAR *)pWVar20, 5) != '\0') {
                                                             local_res10 = pWVar20 + 5;

@@ -67,7 +67,7 @@ extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD 
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void AtlThrowImpl(long a1);
-extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
+extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern int FUN_14004FE34(int *a1, int a2);
 extern uint64_t PECMD_RegexParseCharItem(uint32_t *a1, int64_t *a2,
@@ -134,7 +134,7 @@ extern void *PECMD_CreateDialogControl(void *a1, LPCWSTR a2, int a3,
                            uint64_t *a4, int a5, int a6, int a7,
                            int a8, int16_t *a9, uint32_t a10,
                            int64_t a11);
-extern void FUN_1400bb718(void *script, LPCWSTR text, int64_t *a3);
+extern void PECMD_MessShowMsgBox(void *script, LPCWSTR text, int64_t *a3);
 extern void Beep(uint32_t, uint32_t);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -781,7 +781,7 @@ void PECMD_ReadConnectionRegistryValue(LPCSTR name, int64_t *out, LPCSTR value)
  */
 uint32_t FUN_140072D8C(uint8_t *mac, int64_t *out, int mode)
 {
-    FUN_14005C828("GetAdaptersInfo", "Iphlpapi.DLL", (int64_t *)(void **)&g_pGetAdaptersInfo, NULL);
+    PECMD_GetApiProcCached("GetAdaptersInfo", "Iphlpapi.DLL", (int64_t *)(void **)&g_pGetAdaptersInfo, NULL);
     if (g_pGetAdaptersInfo == NULL) {
         return 0;
     }
@@ -1418,6 +1418,6 @@ void FUN_1400BEF64(LPCWSTR cmd)
     PECMD_FreeStrBuf((WCHAR **)local_res10);
 
     Beep(1000, 0x1e);
-    FUN_1400bb718((void *)g_Script, local_res8, NULL);
+    PECMD_MessShowMsgBox((void *)g_Script, local_res8, NULL);
     PECMD_FreeStrBuf((WCHAR **)&local_res8);
 }

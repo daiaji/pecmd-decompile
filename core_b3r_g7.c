@@ -70,7 +70,7 @@ extern bool     PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);    /* @0x1400c1
 extern uint32_t PECMD_GetDiskGeometry(LPCWSTR p, HANDLE h);           /* @0x140065efc 取文件系统类型 */
 extern BOOL     PECMD_OpenCloseDrive(char param_1, int param_2);     /* @0x14006f908 */
 extern void     PECMD_CheckDriveType(WCHAR param_1, int param_2);    /* @0x14007c7ec */
-extern short   *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
+extern short   *PECMD_SplitNextToken(int64_t *ctx, WCHAR **pp, WCHAR **out,
                               short c, short f);              /* @0x1400547bc 拆串 */
 extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);        /* @0x14005c5a0 注册表查询 */
@@ -309,7 +309,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     PECMD_AllocStrSlot((WCHAR **)&local_58);
     local_48 = 0x8000000000000000ULL;
-    FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
+    PECMD_SplitNextToken(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
     if ((*local_res10 == 0) ||
         (bVar3 = PECMD_ParseHexOrDec((WCHAR **)&local_res10, &local_48), !bVar3)) {
         PECMD_FreeStrBuf((void *)&local_58);

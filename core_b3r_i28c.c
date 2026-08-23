@@ -93,7 +93,7 @@ extern void             PECMD_LoadSetupApiFunctions(void);               /* 初�
 extern void             PECMD_InitWinsock(void *p);            /* 懒加载 WS2_32 */
 extern int32_t          PECMD_QueryState_cfc0(void);
 extern void             PECMD_FreeCacheBlock(void);               /* 网络初始化失败 */
-extern void             FUN_14005c828(const char *func, const char *dll,
+extern void             PECMD_GetApiProcCached(const char *func, const char *dll,
                                       void **out, uintptr_t *hmod);
 extern DWORD            PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2,
                                       int param_3, undefined8 *param_4);
@@ -116,7 +116,7 @@ extern uint8_t         *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
 extern void             PECMD_VarWriteLine(int64_t *script, LPCWSTR name, LPCWSTR v,
                                       int64_t len, int64_t *out, char flag);
 extern void             PECMD_AllocSmallObject(void *arr);          /* 小对象分配 */
-extern void            *FUN_1400547bc(void *ctx, int64_t *pp, int64_t *out,
+extern void            *PECMD_SplitNextToken(void *ctx, int64_t *pp, int64_t *out,
                                       int sep, int flag);
 extern int64_t          PECMD_ExpandCommandLine(void *ctx, WCHAR *src, WCHAR **out,
                                       int mode, uint8_t flag);
@@ -551,7 +551,7 @@ LAB_1400af515:
         PECMD_WideToAnsiStr((int64_t *)&local_b8, local_170, -1, 0xffffffffffffffffULL);
         lstrlenA(local_b8);
         if ((int)(uint32_t)local_148 == 0) {
-            FUN_14005c828("DhcpNotifyConfigChange", "dhcpcsvc.DLL", (void **)&g_pDhcpNotifyConfigChange, (uintptr_t *)0);
+            PECMD_GetApiProcCached("DhcpNotifyConfigChange", "dhcpcsvc.DLL", (void **)&g_pDhcpNotifyConfigChange, (uintptr_t *)0);
             if (g_pDhcpNotifyConfigChange == 0) {
                 DVar26 = 1;
             } else {
@@ -1350,7 +1350,7 @@ LAB_1400b47a6:
             local_res10 = puVar10 + 1;
             PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
         }
-        FUN_1400547bc(param_1, (int64_t *)&local_res10, &local_78, 0x2c, 0);
+        PECMD_SplitNextToken(param_1, (int64_t *)&local_res10, &local_78, 0x2c, 0);
         uVar5 = 1;
         if (*local_res10 == 0) goto LAB_1400b48af;
         puVar7 = (uint64_t *)PECMD_SplitTokenAssignVar(&local_58, (WCHAR **)&local_res10, 0x2c, 1);

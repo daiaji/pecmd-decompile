@@ -11,11 +11,11 @@
  *
  * 流程: 命令行获取 -> PECMD**pecmd-cmd* 前缀检测 (cmd 兼容模式) ->
  *       主循环逐行取 token: EXEC (资源消息执行) / MAIN (脚本执行) /
- *       普通行 (命令处理器 FUN_1400050C8) -> 收尾
+ *       普通行 (命令处理器 PECMD_RunBootScriptInFiber) -> 收尾
  *
  * 依赖 (后续批次实现):
  *   FUN_140024C48   @0x140024c48  token 分割
- *   FUN_1400050C8     @0x1400050c8  命令处理器 (核心)
+ *   PECMD_RunBootScriptInFiber     @0x1400050c8  命令处理器 (核心)
  *   FUN_140045C90  @0x140045c90  脚本执行 (MAIN)
  *   PECMD_InitEnvironmentVars     @0x140027690  实例/ShowWindow 初始化
  *   FUN_14002CA30   @0x14002ca30  收尾钩子
@@ -35,7 +35,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 已实现 (core_string/core_init/core_token) 与待重构原型 ---- */
 WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 core_token.c */
-int FUN_1400050C8(WCHAR *cmdline);                              /* @0x1400050c8 TODO 后续批次 */
+int PECMD_RunBootScriptInFiber(WCHAR *cmdline);                              /* @0x1400050c8 TODO 后续批次 */
 int FUN_140045C90(void *script, LPCWSTR text);               /* @0x140045c90 TODO 后续批次 */
 void PECMD_InitEnvironmentVars(HINSTANCE hInst, int show);                  /* @0x140027690 core_init.c */
 void FUN_14002CA30(void);                                     /* @0x14002ca30 core_init.c */
@@ -152,7 +152,7 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         }
         /* 普通命令行 */
         g_flag169 = g_state138;             /* DAT_14013c969 = DAT_14013d138 */
-        FUN_1400050C8(pStart);
+        PECMD_RunBootScriptInFiber(pStart);
         FUN_14004EAA8(&g_Script, 0);
         FUN_1400637DC((WCHAR **)(void *)&g_Env, (LPCSTR)(const void *)g_DefEnv, -1, -1);
         g_state190 = 0;

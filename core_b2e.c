@@ -16,7 +16,7 @@
  *   解析命令路径          FUN_14002FD88     @0x14002fd88
  *   ImDisk 控制请求       PECMD_MountImDiskRamDisk        @0x140035cec
  *   ImDisk 移除/卸载      PECMD_DismountRamDiskDrive         @0x14003634c
- *   处理电源命令          FUN_14003DB00  @0x14003db00
+ *   处理电源命令          PECMD_ShutPowerAction  @0x14003db00
  *   主 Shell 循环         PECMD_ShellLaunchThread        @0x14003e768
  *
  * 约定:
@@ -54,7 +54,7 @@ extern void PECMD_InitRamdataRegistry(uint32_t mode);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *a, int64_t *b, char c);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
                           uint8_t flag);
-extern int64_t FUN_14005C72C(char *s, uint16_t *w, int len);
+extern int64_t PECMD_TokPrefixICmp(char *s, uint16_t *w, int len);
 extern uint64_t FUN_14005C7C4(char *s, uint16_t *w);
 extern HWND PECMD_RegisterCallbackWnd(int mode);
 extern WCHAR *FUN_1400679DC(uint64_t *out, int *src, int16_t mode);
@@ -111,7 +111,7 @@ extern void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, vo
 extern void FUN_14007BDA8(void *ctx, LPCWSTR text, WCHAR **out, int c,
                           int d);
 extern uint16_t *FUN_14007443C(LPCWSTR s, int64_t *out);
-extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *slot, int64_t *a);
+extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *slot, int64_t *a);
 extern bool PECMD_QueryDeviceControlState(HANDLE h);
 extern void FUN_14001c82c(void);
 extern void FUN_140103a20(void);
@@ -235,7 +235,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
     }
     if (((WCHAR)(uint16_t)c == *local_res10) && (local_res10[1] != L'\0')) {
         i = lstrlenA("delall");
-        if ((char)FUN_14005C72C("delall", (uint16_t *)(p + 2), i) != 0) {
+        if ((char)PECMD_TokPrefixICmp("delall", (uint16_t *)(p + 2), i) != 0) {
             ((void (*)(HKEY, LPCWSTR))(uintptr_t)g_pSHDeleteKeyW)(
                 (HKEY)(intptr_t)0xffffffff80000002,
                 WSTR("SOFTWARE\\PELOGON\\RAMDATA\\HOTKEY"));
@@ -1922,9 +1922,9 @@ uint32_t PECMD_MountImDiskRamDisk(uint32_t *unit, uint64_t *data1, uint64_t *dat
 
     memset(&uni, 0, sizeof(uni));
     memset(&uni2, 0, sizeof(uni2));
-    FUN_14005C828("RtlCreateUnicodeString", "NTDLL.DLL",
+    PECMD_GetApiProcCached("RtlCreateUnicodeString", "NTDLL.DLL",
                   (int64_t *)(void **)&g_pRtlCreateUnicodeString, NULL);
-    FUN_14005C828("RtlFreeUnicodeString", "NTDLL.DLL",
+    PECMD_GetApiProcCached("RtlFreeUnicodeString", "NTDLL.DLL",
                   (int64_t *)(void **)&g_pRtlFreeUnicodeString, NULL);
     if (g_pRtlInitUnicodeString == NULL) {
         return 3;
@@ -2027,7 +2027,7 @@ after_awe:
                 PECMD_FreeStrBuf(&tmpStr);
                 return 0xffffffff;
             }
-            FUN_14005C828("RtlDosPathNameToNtPathName_U", "NTDLL.DLL",
+            PECMD_GetApiProcCached("RtlDosPathNameToNtPathName_U", "NTDLL.DLL",
                           (int64_t *)(void **)&g_pRtlDosPathNameToNtPathName_U, NULL);
             *(void **)&pRtlDos = g_pRtlDosPathNameToNtPathName_U;
             status = pRtlDos(path, &uni, NULL, NULL);
@@ -2295,10 +2295,10 @@ cleanup_out:
     return ret;
 }
 
-/* ========== FUN_14003DB00 @0x14003db00 ==========
+/* ========== PECMD_ShutPowerAction @0x14003db00 ==========
  * 解析并执行电源命令: SHUTDOWN/LOGOUT/HIBERNATE/SLEEP/LOCK/EJECT/CLOSE。
  */
-uint64_t FUN_14003DB00(WCHAR *cmdline)
+uint64_t PECMD_ShutPowerAction(WCHAR *cmdline)
 {
     WCHAR *cmd = cmdline;
     WCHAR *rest = cmdline;
@@ -2317,7 +2317,7 @@ uint64_t FUN_14003DB00(WCHAR *cmdline)
     void (*pCdDoor)();
 
     PECMD_EnsureMciLoaded();
-    FUN_14005C828("SetSuspendState", "powrprof.DLL",
+    PECMD_GetApiProcCached("SetSuspendState", "powrprof.DLL",
                   (int64_t *)(void **)&g_pSetSuspendState, NULL);
     isForce = FUN_1400660AC("-force", (int64_t *)&cmd, 6);
     timeout[0] = 0;

@@ -39,7 +39,7 @@ extern int16_t   FUN_1400677B0(int64_t *pp, int64_t out);  /* 解析最多4个 #
 extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan (thunk) */
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 extern uint64_t  PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *flags, uint64_t p3, char p4);
@@ -216,11 +216,11 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
         if (WVar8 == *pWVar10) {
             do {
                 longlong lVar3;
-                lVar3 = FUN_14005c72c("-center", pWVar10, 7);
+                lVar3 = PECMD_TokPrefixICmp("-center", pWVar10, 7);
                 if ((char)lVar3 == '\0') {
-                    lVar3 = FUN_14005c72c("-right", pWVar10, 6);
+                    lVar3 = PECMD_TokPrefixICmp("-right", pWVar10, 6);
                     if ((char)lVar3 == '\0') {
-                        lVar3 = FUN_14005c72c("-h", pWVar10, 2);
+                        lVar3 = PECMD_TokPrefixICmp("-h", pWVar10, 2);
                         if ((char)lVar3 == '\0') {
                             uVar4 = PECMD_AsciiPrefixICmp("-vcenter:", pWVar10, iVar9 + -0x23);
                             if ((char)uVar4 != '\0') {
@@ -575,28 +575,28 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
         if ((WCHAR)0x2d == uVar1) {
             do {
                 int64_t lVar7;
-                lVar7 = FUN_14005c72c("-center", puVar20, 7);
+                lVar7 = PECMD_TokPrefixICmp("-center", puVar20, 7);
                 if ((char)lVar7 == '\0') {
-                    lVar7 = FUN_14005c72c("-right", puVar20, 6);
+                    lVar7 = PECMD_TokPrefixICmp("-right", puVar20, 6);
                     if ((char)lVar7 == '\0') {
-                        lVar7 = FUN_14005c72c("-left", puVar20, 5);
+                        lVar7 = PECMD_TokPrefixICmp("-left", puVar20, 5);
                         if ((char)lVar7 == '\0') {
-                            lVar7 = FUN_14005c72c("-trans", puVar20, 6);
+                            lVar7 = PECMD_TokPrefixICmp("-trans", puVar20, 6);
                             uVar23 = uVar17;
                             if ((char)lVar7 == '\0') {
-                                lVar7 = FUN_14005c72c("-w", puVar20, 2);
+                                lVar7 = PECMD_TokPrefixICmp("-w", puVar20, 2);
                                 if ((char)lVar7 == '\0') {
-                                    lVar7 = FUN_14005c72c("-wx", puVar20, 3);
+                                    lVar7 = PECMD_TokPrefixICmp("-wx", puVar20, 3);
                                     if ((char)lVar7 == '\0') {
-                                        lVar7 = FUN_14005c72c("-nf", puVar20, 3);
+                                        lVar7 = PECMD_TokPrefixICmp("-nf", puVar20, 3);
                                         if ((char)lVar7 == '\0') {
-                                            lVar7 = FUN_14005c72c("-vcenter", puVar20, 8);
+                                            lVar7 = PECMD_TokPrefixICmp("-vcenter", puVar20, 8);
                                             if ((char)lVar7 == '\0') {
-                                                lVar7 = FUN_14005c72c("-ncmd", puVar20, 5);
+                                                lVar7 = PECMD_TokPrefixICmp("-ncmd", puVar20, 5);
                                                 if ((char)lVar7 == '\0') {
-                                                    lVar7 = FUN_14005c72c("-3D", puVar20, 3);
+                                                    lVar7 = PECMD_TokPrefixICmp("-3D", puVar20, 3);
                                                     if ((char)lVar7 == '\0') {
-                                                        lVar7 = FUN_14005c72c("-mod", puVar20, 4);
+                                                        lVar7 = PECMD_TokPrefixICmp("-mod", puVar20, 4);
                                                         if ((char)lVar7 != '\0') {
                                                             uVar17 = uVar23 | 0x400000;
                                                         }

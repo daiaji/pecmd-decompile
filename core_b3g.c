@@ -51,7 +51,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 extern uint64_t PECMD_ReserveVec8(int64_t *a1, uint64_t a2);
 extern uint64_t PECMD_ReserveObjectArray(int64_t *a1, uint64_t a2);
 extern void PECMD_ClearStringItemList(int64_t arr);
-extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
+extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern uint64_t PECMD_ServiceControl(int64_t *a1, LPCWSTR a2);
 extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
@@ -311,7 +311,7 @@ uint64_t PECMD_FindFirstFreeDrive(LPCWSTR buf)
  */
 uint64_t PECMD_CreateSymbolicLink(uint64_t src, uint64_t dst, uint32_t flags)
 {
-    FUN_14005C828("CreateSymbolicLinkW", "KERNEL32.DLL", (int64_t *)(void **)&g_pCreateSymbolicLinkW, NULL);
+    PECMD_GetApiProcCached("CreateSymbolicLinkW", "KERNEL32.DLL", (int64_t *)(void **)&g_pCreateSymbolicLinkW, NULL);
     if (g_pCreateSymbolicLinkW == NULL) {
         return 0;
     }

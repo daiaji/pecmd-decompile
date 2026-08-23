@@ -32,7 +32,7 @@ extern void FUN_1400E9138(uint64_t *obj);                  /* @0x1400e9138 */
 extern uint64_t PTR_FUN_14011eb88;                         /* 对象虚表 */
 extern uint64_t PTR_FUN_14011c410;                         /* 对象虚表 */
 extern UINT WinExec(LPCSTR lpCmdLine, UINT uCmdShow);      /* Win32 API */
-extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
+extern void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
 extern int FUN_14005C788(const char *a, const WCHAR *w, int n); /* @0x14005c788 */
 extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                            BYTE *data, DWORD size);       /* @0x14005c5a0 */
@@ -110,7 +110,7 @@ extern HICON PECMD_LoadIconFromResource(HMODULE h, LPCWSTR name, int a, int b,
                            int c, uint32_t *flags);            /* @0x140073934 待还原(见core_b3_remaining.c) */
 
 /* ---- 本批(B1 剩余 8 个)还原所需: 额外 helper extern ---- */
-extern HKEY FUN_1400C13F8(HKEY a1, HKEY a2, char a3);                 /* @0x1400c13f8 脚本注册表写 */
+extern HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3);                 /* @0x1400c13f8 脚本注册表写 */
 extern bool FUN_140101E70(LPCWSTR path);                              /* @0x140101e70 路径存在判断 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 串复制(core_exec5.c) */
 extern uint64_t PECMD_ExecCmdDispatch(uint64_t script, uint64_t cmd, uint64_t s3,
@@ -141,7 +141,7 @@ extern WCHAR *PECMD_AssignClipboardText(WCHAR **ps);                       /* @0
 extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n); /* @0x1400660ac */
 extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);                        /* @0x1400668ec */
 extern void FUN_1400a9a84(WCHAR **pp, uint64_t *out);          /* @0x1400a9a84 */
-extern short *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
+extern short *PECMD_SplitNextToken(int64_t *ctx, WCHAR **pp, WCHAR **out,
                             short c, short f);                 /* @0x1400547bc */
 extern uint64_t FUN_140001188(void);                           /* @0x140001188 */
 extern bool PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);         /* @0x1400c1194 */
@@ -439,7 +439,7 @@ extern uint8_t  GetCommandLineW_exref[]; /* GetCommandLineW 导入引用 */
 /* ---- 本批(B1 剩余 10 个)还原所需: 额外 helper / 全局 extern ---- */
 extern void     PECMD_InitEnvironmentVars(HINSTANCE hInst, int show);      /* @0x140027690 core_init.c */
 extern void     PECMD_HandleServiceCommandLine(short *param_1);                 /* @0x1400084d0 */
-extern int64_t  FUN_14005c72c(char *a, const WCHAR *w, int n); /* @0x14005c72c 前缀比较 */
+extern int64_t  PECMD_TokPrefixICmp(char *a, const WCHAR *w, int n); /* @0x14005c72c 前缀比较 */
 extern int64_t  PECMD_ScriptMainEntry(int64_t *param_1, void *param_2);/* @0x140045c90 */
 extern uint64_t FUN_14002ca30(void);                           /* @0x14002ca30 */
 extern uint64_t FUN_14005b7dc(void);                           /* @0x14005b7dc */
@@ -783,10 +783,10 @@ int64_t PECMD_DelayLoadOleaut32(void)
 {
     /* @0x1400038fc size=127 延迟加载 Oleaut32 位图/图片函数 */
     if (g_pSysFreeString == 0) {
-        FUN_14005C828("SysAllocString", "Oleaut32", (void **)&g_pSysAllocString, &g_hOleaut32);
-        FUN_14005C828("OleLoadPicture", "Oleaut32", (void **)&Ordinal_418_exref,
+        PECMD_GetApiProcCached("SysAllocString", "Oleaut32", (void **)&g_pSysAllocString, &g_hOleaut32);
+        PECMD_GetApiProcCached("OleLoadPicture", "Oleaut32", (void **)&Ordinal_418_exref,
                       &g_hOleaut32);
-        FUN_14005C828("SysFreeString", "Oleaut32", (void **)&g_pSysFreeString, &g_hOleaut32);
+        PECMD_GetApiProcCached("SysFreeString", "Oleaut32", (void **)&g_pSysFreeString, &g_hOleaut32);
     }
     return (int64_t)(uintptr_t)g_pSysFreeString;
 }
@@ -797,15 +797,15 @@ void PECMD_LoadWtsUserEnvApis(void)
      * 首次调用时装载 WTSSendMessageW/WTSQueryUserToken (Wtsapi32)
      * 与 CreateEnvironmentBlock/DestroyEnvironmentBlock (Userenv) 到函数指针槽。 */
     if (g_pWTSQueryUserToken == 0) {
-        FUN_14005C828("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
+        PECMD_GetApiProcCached("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
                       (HMODULE *)0);
-        FUN_14005C828("WTSQueryUserToken", "Wtsapi32.DLL", (void **)&g_pWTSQueryUserToken,
+        PECMD_GetApiProcCached("WTSQueryUserToken", "Wtsapi32.DLL", (void **)&g_pWTSQueryUserToken,
                       (HMODULE *)0);
     }
     if ((uintptr_t)g_pDestroyEnvironmentBlock == 0) {
-        FUN_14005C828("CreateEnvironmentBlock", "Userenv.DLL",
+        PECMD_GetApiProcCached("CreateEnvironmentBlock", "Userenv.DLL",
                       (void **)&g_pCreateEnvironmentBlock, (HMODULE *)0);
-        FUN_14005C828("DestroyEnvironmentBlock", "Userenv.DLL",
+        PECMD_GetApiProcCached("DestroyEnvironmentBlock", "Userenv.DLL",
                       (void **)&g_pDestroyEnvironmentBlock, (HMODULE *)0);
     }
 }
@@ -821,10 +821,10 @@ uint32_t PECMD_WtsShowMessage(LPCWSTR param_1, LPCWSTR param_2, uint32_t param_3
 
     local_28[0] = 0;
     if (g_pWTSSendMessageW == 0) {
-        FUN_14005C828("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
+        PECMD_GetApiProcCached("WTSSendMessageW", "Wtsapi32.DLL", (void **)&g_pWTSSendMessageW,
                       (HMODULE *)0);
     }
-    FUN_14005C828("WTSGetActiveConsoleSessionId", "Kernel32", (void **)&g_pWTSGetActiveConsoleSessionId,
+    PECMD_GetApiProcCached("WTSGetActiveConsoleSessionId", "Kernel32", (void **)&g_pWTSGetActiveConsoleSessionId,
                   &g_hKernel32);
     if ((g_pWTSSendMessageW != 0) && (g_pWTSGetActiveConsoleSessionId != 0)) {
         iVar1 = lstrlenW(param_1);
@@ -1504,9 +1504,9 @@ void PECMD_LoadPsapiFunctions(void)
     uint64_t err[4] = {0};
 
     if (g_u64C9F0 == 0) {
-        FUN_14005C828("GetModuleFileNameExW", "PSAPI.DLL",
+        PECMD_GetApiProcCached("GetModuleFileNameExW", "PSAPI.DLL",
                       (void **)&g_u64C9E8, (HMODULE *)err);
-        FUN_14005C828("EnumProcessModules", "PSAPI.DLL",
+        PECMD_GetApiProcCached("EnumProcessModules", "PSAPI.DLL",
                       (void **)&g_u64C9F0, (HMODULE *)err);
     }
 }
@@ -1906,9 +1906,9 @@ uint64_t PECMD_GetFileVersionInfo(LPCWSTR param_1, void *param_2, void *param_3,
     }
     if (g_pGetFileVersionInfoExW == (void *)0x0) {
         local_res18[0] = 0;
-        FUN_14005C828("GetFileVersionInfoSizeExW", "Version", (void **)&g_pGetFileVersionInfoSizeExW,
+        PECMD_GetApiProcCached("GetFileVersionInfoSizeExW", "Version", (void **)&g_pGetFileVersionInfoSizeExW,
                       (HMODULE *)local_res18);
-        FUN_14005C828("GetFileVersionInfoExW", "Version", (void **)&g_pGetFileVersionInfoExW,
+        PECMD_GetApiProcCached("GetFileVersionInfoExW", "Version", (void **)&g_pGetFileVersionInfoExW,
                       (HMODULE *)local_res18);
         if ((g_pGetFileVersionInfoSizeExW == (void *)0x0) || (g_pGetFileVersionInfoExW == (void *)0x0)) {
             g_pGetFileVersionInfoSizeExW = (void *)(uintptr_t)-1;
@@ -2412,11 +2412,11 @@ bool PECMD_EnsureMemoryQueryInit(void)
         bVar1 = false;
     } else if ((uintptr_t)g_pMemQuery == 1) {
         local_res8[0] = 0;
-        FUN_14005C828("DeleteProcThreadAttributeList", "Kernel32.DLL",
+        PECMD_GetApiProcCached("DeleteProcThreadAttributeList", "Kernel32.DLL",
                       (void **)&g_u64CA50, (HMODULE *)local_res8);
-        FUN_14005C828("UpdateProcThreadAttribute", "Kernel32.DLL",
+        PECMD_GetApiProcCached("UpdateProcThreadAttribute", "Kernel32.DLL",
                       (void **)&g_pProcMemRead, (HMODULE *)local_res8);
-        FUN_14005C828("InitializeProcThreadAttributeList", "Kernel32.DLL",
+        PECMD_GetApiProcCached("InitializeProcThreadAttributeList", "Kernel32.DLL",
                       (void **)&g_pMemQuery, (HMODULE *)local_res8);
         bVar1 = (uintptr_t)g_pMemQuery != 0;
     } else {
@@ -3335,7 +3335,7 @@ BOOL PECMD_CreateProcessAsUser(LPCWSTR param_1, LPWSTR param_2, LPSECURITY_ATTRI
     PECMD_InitNullDaclSD((uint64_t *)&local_90.lpSecurityDescriptor);
     local_b8 = (HANDLE)0;
     PECMD_LoadWtsUserEnvApis();
-    FUN_14005C828("WTSGetActiveConsoleSessionId", "Kernel32",
+    PECMD_GetApiProcCached("WTSGetActiveConsoleSessionId", "Kernel32",
                   (void **)&g_pWTSGetActiveConsoleSessionId, &g_hKernel32);
     /* param_10 实为调用方传入的 PROCESS_INFORMATION 地址(Ghidra 以 _LUID 承载) */
     lpProcessInformation = (LPPROCESS_INFORMATION)(uintptr_t)
@@ -4116,7 +4116,7 @@ DWORD PECMD_ReadProcessCommandLine(DWORD param_1, uint64_t *param_2, int param_3
         memset(local_e8, 0, 0x30);
         local_b8 = 0;
         memset(local_b4, 0, 0x7c);
-        FUN_14005C828("NtQueryInformationProcess", "NTDLL.DLL",
+        PECMD_GetApiProcCached("NtQueryInformationProcess", "NTDLL.DLL",
                       (void **)&g_pNtQueryInfo, (HMODULE *)0);
         DVar1 = 0xffffffff;
         /* TODO(verify): PBI/PEB 栈重叠语义(local_120/local_118 共享区) */
@@ -4234,7 +4234,7 @@ LAB_14000a447:
             local_48 = pWVar8;
             FUN_14005B154((WCHAR **)&local_48);
             if ((bVar1) &&
-                (lVar6 = FUN_14005c72c("**u", (const WCHAR *)local_48, 3),
+                (lVar6 = PECMD_TokPrefixICmp("**u", (const WCHAR *)local_48, 3),
                  (char)lVar6 != '\0'))
                 goto LAB_14000a382;
             FUN_1400702B0(&local_40, local_58 + 4);
@@ -5239,7 +5239,7 @@ uint8_t PECMD_ParseEnvSwitches(const WCHAR *s, int64_t *param_2, short param_3)
                                 PECMD_ParseIntThenSkip(&p, (int *)&num);
                                 FUN_1400a9a84(&p, &local_138);
                             } else {
-                                FUN_1400547bc(param_2, &p, &local_128, 0x2c, 0);
+                                PECMD_SplitNextToken(param_2, &p, &local_128, 0x2c, 0);
                                 if (*local_128 == L'\0') goto DCA1;
                                 FUN_14005B154(&p);
                             }
@@ -5272,7 +5272,7 @@ DCA1:
                         p += 7;
                         if (!bVar15) {
                             p++;
-                            FUN_1400547bc(param_2, &p, &w120, 0x2c, 0);
+                            PECMD_SplitNextToken(param_2, &p, &w120, 0x2c, 0);
                         }
                         if (*p == L':') {
                             p++;
@@ -5967,17 +5967,17 @@ void PECMD_LoadSetupApiFunctions(void)
 
     if (g_pSetupDiGetINFClassW == 0) {
         hmod = (HMODULE)0;
-        FUN_14005C828("SetupDiGetClassDevsW", "SetupApi.DLL", (void **)&g_pSetupDiGetClassDevsW, &hmod);
-        FUN_14005C828("SetupDiGetDeviceRegistryPropertyW", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoList, &hmod);
-        FUN_14005C828("SetupDiDestroyDeviceInfoList", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoListRev, &hmod);
-        FUN_14005C828("SetupDiSetClassInstallParamsW", "SetupApi.DLL", (void **)&g_pSetupDiSetClassInstallParamsW, &hmod);
-        FUN_14005C828("SetupDiCallClassInstaller", "SetupApi.DLL", (void **)&g_pSetupDiCallClassInstaller, &hmod);
-        FUN_14005C828("SetupDiEnumDeviceInfo", "SetupApi.DLL", (void **)&g_pSetupDiEnumDeviceInfo, &hmod);
-        FUN_14005C828("SetupIterateCabinetW", "SetupApi.DLL", (void **)&g_pSetupIterateCabinetW, &hmod);
-        FUN_14005C828("InstallHinfSectionW", "SetupApi.DLL", (void **)&g_pInstallHinfSectionW, &hmod);
-        FUN_14005C828("InstallHinfSection", "SetupApi.DLL", (void **)&g_pInstallHinfSection, &hmod);
-        FUN_14005C828("CM_Get_DevNode_Status", "SetupApi.DLL", (void **)&g_pCmGetDevNodeStatus, &hmod);
-        FUN_14005C828("SetupDiGetINFClassW", "SetupApi.DLL", (void **)&g_pSetupDiGetINFClassW, &hmod);
+        PECMD_GetApiProcCached("SetupDiGetClassDevsW", "SetupApi.DLL", (void **)&g_pSetupDiGetClassDevsW, &hmod);
+        PECMD_GetApiProcCached("SetupDiGetDeviceRegistryPropertyW", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoList, &hmod);
+        PECMD_GetApiProcCached("SetupDiDestroyDeviceInfoList", "SetupApi.DLL", (void **)&g_pSetupDiDestroyDeviceInfoListRev, &hmod);
+        PECMD_GetApiProcCached("SetupDiSetClassInstallParamsW", "SetupApi.DLL", (void **)&g_pSetupDiSetClassInstallParamsW, &hmod);
+        PECMD_GetApiProcCached("SetupDiCallClassInstaller", "SetupApi.DLL", (void **)&g_pSetupDiCallClassInstaller, &hmod);
+        PECMD_GetApiProcCached("SetupDiEnumDeviceInfo", "SetupApi.DLL", (void **)&g_pSetupDiEnumDeviceInfo, &hmod);
+        PECMD_GetApiProcCached("SetupIterateCabinetW", "SetupApi.DLL", (void **)&g_pSetupIterateCabinetW, &hmod);
+        PECMD_GetApiProcCached("InstallHinfSectionW", "SetupApi.DLL", (void **)&g_pInstallHinfSectionW, &hmod);
+        PECMD_GetApiProcCached("InstallHinfSection", "SetupApi.DLL", (void **)&g_pInstallHinfSection, &hmod);
+        PECMD_GetApiProcCached("CM_Get_DevNode_Status", "SetupApi.DLL", (void **)&g_pCmGetDevNodeStatus, &hmod);
+        PECMD_GetApiProcCached("SetupDiGetINFClassW", "SetupApi.DLL", (void **)&g_pSetupDiGetINFClassW, &hmod);
     }
 }
 
@@ -7326,7 +7326,7 @@ void PECMD_EnsureMciLoaded(void)
 {
     /* @0x14001a610 size=48 延迟加载 mciSendStringW */
     if (g_pMciSendStringW == 0) {
-        FUN_14005C828("mciSendStringW", "winmm.DLL",
+        PECMD_GetApiProcCached("mciSendStringW", "winmm.DLL",
                       (void **)&g_pMciSendStringW, NULL);
     }
 }
@@ -7365,7 +7365,7 @@ void PECMD_EnumCDRomDrives(LARGE_INTEGER param_1)
             wsprintfW(buf,
                       WSTR("HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\CDROM%u=%s"),
                       (unsigned)cd_count, Drv);
-            FUN_1400C13F8((HKEY)(uintptr_t)g_Script, (HKEY)(uintptr_t)buf, '\0');
+            PECMD_RegiEditRegistry((HKEY)(uintptr_t)g_Script, (HKEY)(uintptr_t)buf, '\0');
             wsprintfW(buf, WSTR("CDROM%u"), (unsigned)cd_count);
             cd_count = cd_count + 1;   /* 计数器在两次 wsprintfW 之后自增 */
             FUN_1400629B8((void *)g_Script, buf, Drv);
@@ -8091,44 +8091,44 @@ void PECMD_LoadUnloadImdisk(uint64_t param_1, int param_2)
             g_hImdiskCpl = LoadLibraryA("Imdisk.cpl");
             EnterCriticalSection(&g_csInit);
             g_pImDiskGetVersion = 0;
-            FUN_14005C828("ImDiskGetVersion", "Imdisk.cpl", (void **)&g_pImDiskGetVersion, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskGetVersion", "Imdisk.cpl", (void **)&g_pImDiskGetVersion, &g_hImdiskCpl);
             g_pImDiskFindFreeLetter = 0;
-            FUN_14005C828("ImDiskFindFreeDriveLetter", "Imdisk.cpl", (void **)&g_pImDiskFindFreeLetter, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskFindFreeDriveLetter", "Imdisk.cpl", (void **)&g_pImDiskFindFreeLetter, &g_hImdiskCpl);
             g_pImDiskForceRemove = 0;
-            FUN_14005C828("ImDiskForceRemoveDevice", "Imdisk.cpl", (void **)&g_pImDiskForceRemove, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskForceRemoveDevice", "Imdisk.cpl", (void **)&g_pImDiskForceRemove, &g_hImdiskCpl);
             g_pImDiskMask = 0;
-            FUN_14005C828("ImDiskGetDeviceList", "Imdisk.cpl", (void **)&g_pImDiskMask, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskGetDeviceList", "Imdisk.cpl", (void **)&g_pImDiskMask, &g_hImdiskCpl);
             g_pImDiskCtrl = 0;
-            FUN_14005C828("ImDiskGetDeviceListEx", "Imdisk.cpl", (void **)&g_pImDiskCtrl, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskGetDeviceListEx", "Imdisk.cpl", (void **)&g_pImDiskCtrl, &g_hImdiskCpl);
             g_pImDiskGetOffsetByExt = 0;
-            FUN_14005C828("ImDiskGetOffsetByFileExt", "Imdisk.cpl", (void **)&g_pImDiskGetOffsetByExt, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskGetOffsetByFileExt", "Imdisk.cpl", (void **)&g_pImDiskGetOffsetByExt, &g_hImdiskCpl);
             g_pImDiskGetPartInfo = 0;
-            FUN_14005C828("ImDiskGetPartitionInformation", "Imdisk.cpl", (void **)&g_pImDiskGetPartInfo, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskGetPartitionInformation", "Imdisk.cpl", (void **)&g_pImDiskGetPartInfo, &g_hImdiskCpl);
             g_pImDiskOpenDevice = 0;
-            FUN_14005C828("ImDiskOpenDeviceByName", "Imdisk.cpl", (void **)&g_pImDiskOpenDevice, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskOpenDeviceByName", "Imdisk.cpl", (void **)&g_pImDiskOpenDevice, &g_hImdiskCpl);
             g_pDevOpen = 0;
-            FUN_14005C828("ImDiskOpenDeviceByNumber", "Imdisk.cpl", (void **)&g_pDevOpen, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskOpenDeviceByNumber", "Imdisk.cpl", (void **)&g_pDevOpen, &g_hImdiskCpl);
             g_pDevOpen2 = 0;
-            FUN_14005C828("ImDiskOpenDeviceByMountPoint", "Imdisk.cpl", (void **)&g_pDevOpen2, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskOpenDeviceByMountPoint", "Imdisk.cpl", (void **)&g_pDevOpen2, &g_hImdiskCpl);
             g_pImDiskRemoveMountPoint = 0;
-            FUN_14005C828("ImDiskRemoveMountPoint", "Imdisk.cpl", (void **)&g_pImDiskRemoveMountPoint, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskRemoveMountPoint", "Imdisk.cpl", (void **)&g_pImDiskRemoveMountPoint, &g_hImdiskCpl);
             g_pImDiskStartService = 0;
-            FUN_14005C828("ImDiskStartService", "Imdisk.cpl", (void **)&g_pImDiskStartService, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskStartService", "Imdisk.cpl", (void **)&g_pImDiskStartService, &g_hImdiskCpl);
             g_pImDiskCreateMountPoint = 0;
-            FUN_14005C828("ImDiskCreateMountPoint", "Imdisk.cpl", (void **)&g_pImDiskCreateMountPoint, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskGetVersion@8", "Imdisk.cpl", (void **)&g_pImDiskGetVersion, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskFindFreeDriveLetter@0", "Imdisk.cpl", (void **)&g_pImDiskFindFreeLetter, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskForceRemoveDevice@8", "Imdisk.cpl", (void **)&g_pImDiskForceRemove, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskGetDeviceList@0", "Imdisk.cpl", (void **)&g_pImDiskMask, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskGetDeviceListEx@8", "Imdisk.cpl", (void **)&g_pImDiskCtrl, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskGetOffsetByFileExt@8", "Imdisk.cpl", (void **)&g_pImDiskGetOffsetByExt, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskGetPartitionInformation@16", "Imdisk.cpl", (void **)&g_pImDiskGetPartInfo, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskOpenDeviceByName@8", "Imdisk.cpl", (void **)&g_pImDiskOpenDevice, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskOpenDeviceByNumber@8", "Imdisk.cpl", (void **)&g_pDevOpen, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskOpenDeviceByMountPoint@8", "Imdisk.cpl", (void **)&g_pDevOpen2, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskRemoveMountPoint@4", "Imdisk.cpl", (void **)&g_pImDiskRemoveMountPoint, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskStartService@4", "Imdisk.cpl", (void **)&g_pImDiskStartService, &g_hImdiskCpl);
-            FUN_14005C828("_ImDiskCreateMountPoint@8", "Imdisk.cpl", (void **)&g_pImDiskCreateMountPoint, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("ImDiskCreateMountPoint", "Imdisk.cpl", (void **)&g_pImDiskCreateMountPoint, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskGetVersion@8", "Imdisk.cpl", (void **)&g_pImDiskGetVersion, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskFindFreeDriveLetter@0", "Imdisk.cpl", (void **)&g_pImDiskFindFreeLetter, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskForceRemoveDevice@8", "Imdisk.cpl", (void **)&g_pImDiskForceRemove, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskGetDeviceList@0", "Imdisk.cpl", (void **)&g_pImDiskMask, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskGetDeviceListEx@8", "Imdisk.cpl", (void **)&g_pImDiskCtrl, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskGetOffsetByFileExt@8", "Imdisk.cpl", (void **)&g_pImDiskGetOffsetByExt, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskGetPartitionInformation@16", "Imdisk.cpl", (void **)&g_pImDiskGetPartInfo, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskOpenDeviceByName@8", "Imdisk.cpl", (void **)&g_pImDiskOpenDevice, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskOpenDeviceByNumber@8", "Imdisk.cpl", (void **)&g_pDevOpen, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskOpenDeviceByMountPoint@8", "Imdisk.cpl", (void **)&g_pDevOpen2, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskRemoveMountPoint@4", "Imdisk.cpl", (void **)&g_pImDiskRemoveMountPoint, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskStartService@4", "Imdisk.cpl", (void **)&g_pImDiskStartService, &g_hImdiskCpl);
+            PECMD_GetApiProcCached("_ImDiskCreateMountPoint@8", "Imdisk.cpl", (void **)&g_pImDiskCreateMountPoint, &g_hImdiskCpl);
             LeaveCriticalSection(&g_csInit);
         }
     }
@@ -8640,9 +8640,9 @@ int64_t PECMD_EnumNtSymbolicLink(LPWSTR param_1, int64_t *param_2, int64_t *para
         (param_4 == (int64_t *)0)) {
         lVar3 = 0;
     } else {
-        FUN_14005C828("NtOpenSymbolicLinkObject", "NTDLL.DLL",
+        PECMD_GetApiProcCached("NtOpenSymbolicLinkObject", "NTDLL.DLL",
                       (void **)&g_pNtOpenSymLink, (HMODULE *)&local_90);
-        FUN_14005C828("NtQuerySymbolicLinkObject", "NTDLL.DLL",
+        PECMD_GetApiProcCached("NtQuerySymbolicLinkObject", "NTDLL.DLL",
                       (void **)&g_pNtQuerySymLink, (HMODULE *)&local_90);
         PECMD_AllocWStringBuffer((WCHAR **)&buf, 0x2002);
         local_78 = (uint16_t *)(uintptr_t)buf;
@@ -8743,9 +8743,9 @@ uint8_t *PECMD_ReadPhysicalMemory(uint8_t *param_1, uint64_t param_2, uint64_t *
     puVar5 = (uint8_t *)0x0;
     *param_3 = 0;
     uVar6 = (uint32_t)((iVar2 + 0xfff + (int)param_2) & (-iVar3 - 0x1000U));
-    FUN_14005C828("ZwOpenSection", "NTDLL.DLL", (void **)&g_pZwOpenSection, (HMODULE *)0x0);
-    FUN_14005C828("ZwMapViewOfSection", "NTDLL.DLL", (void **)&g_pZwMapViewOfSection, (HMODULE *)0x0);
-    FUN_14005C828("ZwUnmapViewOfSection", "NTDLL.DLL", (void **)&g_pZwUnmapViewOfSection, (HMODULE *)0x0);
+    PECMD_GetApiProcCached("ZwOpenSection", "NTDLL.DLL", (void **)&g_pZwOpenSection, (HMODULE *)0x0);
+    PECMD_GetApiProcCached("ZwMapViewOfSection", "NTDLL.DLL", (void **)&g_pZwMapViewOfSection, (HMODULE *)0x0);
+    PECMD_GetApiProcCached("ZwUnmapViewOfSection", "NTDLL.DLL", (void **)&g_pZwUnmapViewOfSection, (HMODULE *)0x0);
     memcpy(local_68, WSTR("\\Device\\PhysicalMemory"), 0x2e);
     hObject = (HANDLE)PECMD_OpenNtSection((uint64_t)(uintptr_t)local_68);
     if (hObject != (HANDLE)0x0) {

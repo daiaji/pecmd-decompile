@@ -61,7 +61,7 @@ extern void PECMD_ReleaseObjectListTail(int64_t a1, int a2);
 extern int64_t *FUN_14007034C(int64_t *a1, LPCWSTR a2);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern int16_t *FUN_1400547BC(int64_t *a1, int64_t *a2, int64_t *a3,
+extern int16_t *PECMD_SplitNextToken(int64_t *a1, int64_t *a2, int64_t *a3,
                               int16_t a4, int16_t a5);
 extern WCHAR *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3,
                             uint32_t a4);
@@ -578,7 +578,7 @@ int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out)
 {
     LPCWSTR local_res10 = NULL;
     PECMD_AllocStrSlot((WCHAR **)&local_res10);
-    FUN_1400547BC(ctx, pp, (int64_t *)&local_res10, 0x2c, 0);
+    PECMD_SplitNextToken(ctx, pp, (int64_t *)&local_res10, 0x2c, 0);
     PECMD_ResolveVariable(ctx, local_res10, (uint64_t *)out, 0);
     int64_t lVar1 = *out;
     *pp = lVar1;

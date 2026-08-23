@@ -61,7 +61,7 @@ extern LPCWSTR PECMD_ExtractTableSegment(int64_t a1, int64_t *a2, uint16_t *a3,
                              int64_t *a4, char a5);
 extern int32_t PECMD_LoadOle32Apis(void);
 extern int64_t *PECMD_LoadImageFromFile(LPCWSTR a1);
-extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
+extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern void PECMD_AllocStrSlot(void *ps);
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
@@ -422,7 +422,7 @@ uint64_t PECMD_GetPackedSystemVersion(void)
             local_res10[0] = 0;
             local_res18[0] = 0;
             local_res20 = 0;
-            FUN_14005C828("RtlGetNtVersionNumbers", "NTDLL.DLL",
+            PECMD_GetApiProcCached("RtlGetNtVersionNumbers", "NTDLL.DLL",
                           (int64_t *)(void **)&g_pRtlGetNtVersionNumbers, &local_res20);
             if (g_pRtlGetNtVersionNumbers != NULL) {
                 ((void (*)(uint32_t *, uint32_t *, uint32_t *))g_pRtlGetNtVersionNumbers)
@@ -449,18 +449,18 @@ uint64_t PECMD_LoadVhdApi(void)
     uVar2 = 0;
     if (DAT_14013d738 == 0) {
         local_res8 = 0;
-        FUN_14005C828("CreateVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pCreateVirtualDisk, &local_res8);
-        FUN_14005C828("AttachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pAttachVirtualDisk, &local_res8);
-        FUN_14005C828("DetachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pDetachVirtualDisk, &local_res8);
-        FUN_14005C828("GetVirtualDiskPhysicalPath", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskPhysPath, &local_res8);
-        FUN_14005C828("GetVirtualDiskInformation", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskInfo, &local_res8);
+        PECMD_GetApiProcCached("CreateVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pCreateVirtualDisk, &local_res8);
+        PECMD_GetApiProcCached("AttachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pAttachVirtualDisk, &local_res8);
+        PECMD_GetApiProcCached("DetachVirtualDisk", "VirtDisk.DLL", (int64_t *)(void **)&g_pDetachVirtualDisk, &local_res8);
+        PECMD_GetApiProcCached("GetVirtualDiskPhysicalPath", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskPhysPath, &local_res8);
+        PECMD_GetApiProcCached("GetVirtualDiskInformation", "VirtDisk.DLL", (int64_t *)(void **)&g_pGetVirtDiskInfo, &local_res8);
         local_res10 = 0;
-        FUN_14005C828("OpenVirtualDisk", "VirtDisk.DLL", &local_res10, &local_res8);
+        PECMD_GetApiProcCached("OpenVirtualDisk", "VirtDisk.DLL", &local_res10, &local_res8);
         local_res8 = 0;
-        FUN_14005C828("UnmountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pUnmountVHD, &local_res8);
+        PECMD_GetApiProcCached("UnmountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pUnmountVHD, &local_res8);
         lVar1 = local_res10;
         if (local_res10 == 0) {
-            FUN_14005C828("MountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pMountVHD, &local_res8);
+            PECMD_GetApiProcCached("MountVHD", "vhdmount.dll", (int64_t *)(void **)&g_pMountVHD, &local_res8);
         }
         DAT_14013d738 = lVar1;
         if ((lVar1 != 0) || (g_pMountVHD != 0)) {

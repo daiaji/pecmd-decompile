@@ -51,7 +51,7 @@ extern int64_t *PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
                               int64_t *extra);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t mode);
 extern void PECMD_ClearStringItemList(int64_t arr);
-extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
+extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *s, char *key);
 extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);
 extern uint64_t PECMD_EvalExpressionTree(int64_t *pp, double *out);
@@ -190,9 +190,9 @@ DWORD FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR name)
 void FUN_14005C904(void)
 {
     if (g_pGetSaveFileNameW == 0) {
-        FUN_14005C828("GetOpenFileNameW", "COMDLG32.DLL", (int64_t *)&g_i64D428,
+        PECMD_GetApiProcCached("GetOpenFileNameW", "COMDLG32.DLL", (int64_t *)&g_i64D428,
                       (int64_t *)&g_i64D438);
-        FUN_14005C828("GetSaveFileNameW", "COMDLG32.DLL", (int64_t *)(void **)&g_pGetSaveFileNameW,
+        PECMD_GetApiProcCached("GetSaveFileNameW", "COMDLG32.DLL", (int64_t *)(void **)&g_pGetSaveFileNameW,
                       (int64_t *)&g_i64D438);
     }
 }

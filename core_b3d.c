@@ -57,7 +57,7 @@ extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
 extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
                             uint32_t c, WCHAR *d);
 extern char FUN_1400660AC(char *key, int64_t *pp, int len);
-extern int64_t FUN_14005C72C(char *a, uint16_t *w, int n);
+extern int64_t PECMD_TokPrefixICmp(char *a, uint16_t *w, int n);
 extern int64_t PECMD_InitComState(void);
 extern uint64_t PECMD_EvalParenExpression(int64_t *pp, uint64_t *out);
 extern void FUN_14007D0AC(int64_t *ctx, LPCWSTR key, LPCWSTR value);
@@ -397,7 +397,7 @@ bool PECMD_MatchPrefixAdvance(char *key, int64_t *pp, int len)
  */
 char PECMD_MatchAndPad(int64_t key, int64_t *pp, int len)
 {
-    int64_t lVar2 = FUN_14005C72C((char *)(key + 1),
+    int64_t lVar2 = PECMD_TokPrefixICmp((char *)(key + 1),
                                   (uint16_t *)(*pp + 2), len - 1);
     char cVar1 = (char)lVar2;
     if (cVar1 != '\0') {

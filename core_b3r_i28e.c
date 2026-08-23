@@ -59,7 +59,7 @@ extern void     PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern uint64_t PECMD_ParseSignedNumber(short *);
 extern void     PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR   *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);    /* delimiter scan */
-extern int64_t  FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t  PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int64_t  PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int       PECMD_ParseHashNumbers(int64_t *, int64_t);         /* 数值写, 返回写入个数 */
 extern WCHAR   *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
@@ -144,9 +144,9 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
         do {
             puVar5 = local_res10;
             uVar4 = (uint64_t)uVar7;
-            lVar3 = FUN_14005c72c("-center", local_res10, 7);
+            lVar3 = PECMD_TokPrefixICmp("-center", local_res10, 7);
             if ((char)lVar3 == '\0') {
-                lVar3 = FUN_14005c72c("-right", puVar5, 6);
+                lVar3 = PECMD_TokPrefixICmp("-right", puVar5, 6);
                 if ((char)lVar3 != '\0') {
                     uVar6 = 0x20000000;
                 }
@@ -844,46 +844,46 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
         if ((ushort)(sVar1 + 1U) == uVar13) {
             do {
                 WCHAR *puVar15 = local_res10;
-                lVar4 = FUN_14005c72c("-center", local_res10, 7);
+                lVar4 = PECMD_TokPrefixICmp("-center", local_res10, 7);
                 if ((char)lVar4 == '\0') {
-                    lVar4 = FUN_14005c72c("-right", puVar15, 6);
+                    lVar4 = PECMD_TokPrefixICmp("-right", puVar15, 6);
                     if ((char)lVar4 != '\0') {
                         pHVar17 = (HWND)0x20000000;
                     } else {
-                        lVar4 = FUN_14005c72c("-left", puVar15, 5);
+                        lVar4 = PECMD_TokPrefixICmp("-left", puVar15, 5);
                         if ((char)lVar4 != '\0') {
                             pHVar17 = (HWND)0x80000000;
                         } else {
-                            lVar4 = FUN_14005c72c("-pcenter", puVar15, 8);
+                            lVar4 = PECMD_TokPrefixICmp("-pcenter", puVar15, 8);
                             uVar11 = (uint32_t)pHVar12;
                             if ((char)lVar4 != '\0') {
                                 pHVar12 = (HWND)(uint64_t)(uVar11 | 0x800000);
                             } else {
-                                lVar4 = FUN_14005c72c("-round", puVar15, 6);
+                                lVar4 = PECMD_TokPrefixICmp("-round", puVar15, 6);
                                 if ((char)lVar4 != '\0') {
                                     pHVar12 = (HWND)(uint64_t)(uVar11 | 0x200000);
                                 } else {
-                                    lVar4 = FUN_14005c72c("-nscope", puVar15, 7);
+                                    lVar4 = PECMD_TokPrefixICmp("-nscope", puVar15, 7);
                                     if ((char)lVar4 != '\0') {
                                         pHVar12 = (HWND)(uint64_t)(uVar11 | 0x400000);
                                     } else {
-                                        lVar4 = FUN_14005c72c("-nscopef", puVar15, 8);
+                                        lVar4 = PECMD_TokPrefixICmp("-nscopef", puVar15, 8);
                                         if ((char)lVar4 != '\0') {
                                             pHVar12 = (HWND)(uint64_t)(uVar11 | 0x500000);
                                         } else {
-                                            lVar4 = FUN_14005c72c("-nfocus", puVar15, 7);
+                                            lVar4 = PECMD_TokPrefixICmp("-nfocus", puVar15, 7);
                                             if ((char)lVar4 != '\0') {
                                                 pHVar12 = (HWND)(uint64_t)(uVar11 | 0x100000);
                                             } else {
-                                                lVar4 = FUN_14005c72c("-def", puVar15, 4);
+                                                lVar4 = PECMD_TokPrefixICmp("-def", puVar15, 4);
                                                 if ((char)lVar4 != '\0') {
                                                     pHVar12 = (HWND)(uint64_t)(uVar11 | 0x80000);
                                                 } else {
-                                                    lVar4 = FUN_14005c72c("-na", puVar15, 3);
+                                                    lVar4 = PECMD_TokPrefixICmp("-na", puVar15, 3);
                                                     if ((char)lVar4 != '\0') {
                                                         pHVar12 = (HWND)(uint64_t)(uVar11 | 0x2000000);
                                                     } else {
-                                                        lVar4 = FUN_14005c72c("-b", puVar15, 2);
+                                                        lVar4 = PECMD_TokPrefixICmp("-b", puVar15, 2);
                                                         if ((char)lVar4 != '\0') {
                                                             pHVar18 = *(HWND *)((char *)(uintptr_t)param_3 + 0x20);
                                                         } else {

@@ -29,7 +29,7 @@
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
                               uint64_t cap);
-extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *out,
+extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *out,
                           int64_t *err);
 extern HWND PECMD_FindTrayWindow(void);
 extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
@@ -313,10 +313,10 @@ void PECMD_LoadImageListApi(void)
 {
     int64_t local_res8[4] = {0, 0, 0, 0};
     if (g_flagD321 == 0) {
-        FUN_14005C828("ImageList_Create", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListCreate, local_res8);
-        FUN_14005C828("ImageList_Destroy", "Comctl32.DLL", (int64_t *)(void **)&g_pFnCleanup, local_res8);
-        FUN_14005C828("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
-        FUN_14005C828("ImageList_Add", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListAdd, local_res8);
+        PECMD_GetApiProcCached("ImageList_Create", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListCreate, local_res8);
+        PECMD_GetApiProcCached("ImageList_Destroy", "Comctl32.DLL", (int64_t *)(void **)&g_pFnCleanup, local_res8);
+        PECMD_GetApiProcCached("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
+        PECMD_GetApiProcCached("ImageList_Add", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListAdd, local_res8);
         g_flagD321 = (g_pImageListAdd != 0) ? 1 : 0xff;
     }
 }

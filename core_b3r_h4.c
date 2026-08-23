@@ -2,7 +2,7 @@
  * core_b3r_h4.c — Restored batch28/gh4 business functions (group h4)
  *
  *   PECMD_VarSearchReplace @0x1400a1938  通用变量搜索/替换 (通配/列表复制)
- *   FUN_1400a2390 @0x1400a2390  增强变量解析 (前缀/-delims/-trim 等)
+ *   PECMD_MstrStringOps @0x1400a2390  增强变量解析 (前缀/-delims/-trim 等)
  *   PECMD_FormatTimeString @0x1400a3310  日期/时间变量格式化成串
  *   PECMD_LoadTasksWait @0x1400a4504  并发任务装载与等待 (--try/--try+星/--exist)
  *   PECMD_ParseCommaParams @0x1400a5e6c  解析 ",,,,," 分隔的参数
@@ -74,7 +74,7 @@ extern void PECMD_FreeStrBuf(void *ps);
 extern WCHAR *PECMD_SkipLeadingControlChars(void *pp);
 extern char  PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern int64_t PECMD_AsciiPrefixICmp(const char *a, const void *w, int n);
-extern int64_t FUN_14005c72c(const char *a, const void *w, int n);
+extern int64_t PECMD_TokPrefixICmp(const char *a, const void *w, int n);
 extern int32_t PECMD_AsciiWideICmp(const char *a, const void *w);
 extern void  PECMD_StrDupAssign(void *ps, const WCHAR *src);
 extern void  PECMD_RunCommandLine(void *script, void *str, int mode);
@@ -222,7 +222,7 @@ LPCWSTR *PECMD_VarSearchReplace(longlong *param_1, LPCWSTR param_2)
   local_a0 = g_szEmpty;
   PECMD_StrDupAssign(&local_a8, g_szEmpty);
   pWVar13 = local_res10;
-  lVar12 = FUN_14005c72c("-case", (ushort *)local_res10, 5);
+  lVar12 = PECMD_TokPrefixICmp("-case", (ushort *)local_res10, 5);
   bVar22 = (char)lVar12 != '\0';
   if (bVar22) {
     local_res10 = pWVar13 + 5;
@@ -1010,13 +1010,13 @@ LAB_1400a344b:
             cVar17 = '\0';
             goto LAB_1400a35e0;
           }
-          lVar12 = FUN_14005c72c("bsys", (ushort *)(pWVar13 + 1), 4);
+          lVar12 = PECMD_TokPrefixICmp("bsys", (ushort *)(pWVar13 + 1), 4);
           if ((char)lVar12 == '\0') {
-            lVar12 = FUN_14005c72c("space0", (ushort *)(pWVar13 + 1), 6);
+            lVar12 = PECMD_TokPrefixICmp("space0", (ushort *)(pWVar13 + 1), 6);
             if ((char)lVar12 == '\0') {
-              lVar12 = FUN_14005c72c("space", (ushort *)(pWVar13 + 1), 5);
+              lVar12 = PECMD_TokPrefixICmp("space", (ushort *)(pWVar13 + 1), 5);
               if ((char)lVar12 == '\0') {
-                lVar12 = FUN_14005c72c("us", (ushort *)(pWVar13 + 1), 2);
+                lVar12 = PECMD_TokPrefixICmp("us", (ushort *)(pWVar13 + 1), 2);
                 bVar2 = bVar3;
                 if ((char)lVar12 != '\0') {
                   bVar3 = true;

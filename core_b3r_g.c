@@ -80,7 +80,7 @@ extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern LPWSTR    PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
@@ -96,7 +96,7 @@ extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);
 extern void      PECMD_ResetScriptChain(int64_t *, int64_t *);
 extern void      PECMD_ExpandVarDispatch(int64_t *, WCHAR *, WCHAR **, int, int);
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);
-extern void      FUN_1400547bc(int64_t *, WCHAR **, WCHAR **, uint32_t, int);
+extern void      PECMD_SplitNextToken(int64_t *, WCHAR **, WCHAR **, uint32_t, int);
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void      PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);
 extern void      PECMD_ExtractTokenByDelim(int64_t *, int64_t *, int);
@@ -692,23 +692,23 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     if (WVar15 == *local_res10) {
         do {
             pWVar16 = local_res10;
-            lVar4 = FUN_14005c72c("-center", (const WCHAR *)local_res10, 7);
+            lVar4 = PECMD_TokPrefixICmp("-center", (const WCHAR *)local_res10, 7);
             if ((char)lVar4 == '\0') {
-                lVar4 = FUN_14005c72c("-right", (const WCHAR *)pWVar16, 6);
+                lVar4 = PECMD_TokPrefixICmp("-right", (const WCHAR *)pWVar16, 6);
                 if ((char)lVar4 == '\0') {
-                    lVar4 = FUN_14005c72c("-vcenter:", (const WCHAR *)pWVar16, 8);
+                    lVar4 = PECMD_TokPrefixICmp("-vcenter:", (const WCHAR *)pWVar16, 8);
                     uVar10 = (uint32_t)uVar8;
                     if ((char)lVar4 == '\0') {
                         uVar5 = (uint64_t)PECMD_AsciiPrefixICmp("-vcenter:", (const WCHAR *)pWVar16,
                                                         iVar9 + -0x23);
                         if ((char)uVar5 == '\0') {
-                            lVar4 = FUN_14005c72c("-rich", (const WCHAR *)pWVar16, 5);
+                            lVar4 = PECMD_TokPrefixICmp("-rich", (const WCHAR *)pWVar16, 5);
                             if ((char)lVar4 == '\0') {
-                                lVar4 = FUN_14005c72c("-nroc", (const WCHAR *)pWVar16, 5);
+                                lVar4 = PECMD_TokPrefixICmp("-nroc", (const WCHAR *)pWVar16, 5);
                                 if ((char)lVar4 == '\0') {
-                                    lVar4 = FUN_14005c72c("-3D", (const WCHAR *)pWVar16, 3);
+                                    lVar4 = PECMD_TokPrefixICmp("-3D", (const WCHAR *)pWVar16, 3);
                                     if ((char)lVar4 == '\0') {
-                                        lVar4 = FUN_14005c72c("-u2d", (const WCHAR *)pWVar16, 4);
+                                        lVar4 = PECMD_TokPrefixICmp("-u2d", (const WCHAR *)pWVar16, 4);
                                         if ((char)lVar4 != '\0') {
                                             uVar8 = (uint64_t)(uVar10 | 0x1000000);
                                         }
@@ -789,7 +789,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
         local_res10 = local_res10 + 1;
         PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
     }
-    FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_a8, 0x2c, 0);
+    PECMD_SplitNextToken(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_a8, 0x2c, 0);
     if (*local_res10 == L'\0') {
         PECMD_FreeStrBuf((WCHAR **)&local_88);
         PECMD_FreeStrBuf((WCHAR **)&local_c0);

@@ -102,7 +102,7 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
         n = (int)lstrlenA(word);
     }
     p = *pp;
-    r = FUN_14005C788(word, p, n);   /* FUN_14005C72C 等价实现 */
+    r = FUN_14005C788(word, p, n);   /* PECMD_TokPrefixICmp 等价实现 */
     if (r != 0) {
         *pp = p + n;
         FUN_14005B154(pp);

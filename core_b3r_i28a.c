@@ -41,7 +41,7 @@ extern uint64_t  PECMD_ParseSignedNumber(short *);
 extern void      PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char      PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter scan */
-extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
+extern int64_t   PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 
@@ -288,15 +288,15 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
     uVar2 = *puVar11;
     uVar15 = (uint32_t)uVar12;
     while ((uint16_t)(sVar10 + 1U) == uVar2) {
-        lVar5 = FUN_14005c72c("-center", (const WCHAR *)puVar11, 7);
+        lVar5 = PECMD_TokPrefixICmp("-center", (const WCHAR *)puVar11, 7);
         if ((char)lVar5 == 0) {
-            lVar5 = FUN_14005c72c("-right", (const WCHAR *)puVar11, 6);
+            lVar5 = PECMD_TokPrefixICmp("-right", (const WCHAR *)puVar11, 6);
             if ((char)lVar5 != 0) {
                 uVar15 = 0x20000000;
                 pWVar4 = local_90;
                 goto LAB_1400aac88;
             }
-            lVar5 = FUN_14005c72c("-scale", (const WCHAR *)puVar11, 6);
+            lVar5 = PECMD_TokPrefixICmp("-scale", (const WCHAR *)puVar11, 6);
             pWVar4 = pWVar13;
             if (((char)lVar5 != 0) ||
                 (uVar6 = PECMD_AsciiPrefixICmp("-scale:", (const WCHAR *)puVar11, 7),
@@ -511,15 +511,15 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
             PECMD_FreeStrBuf(&local_60);
             return (uint64_t)uVar9;
         }
-        lVar5 = FUN_14005c72c("-center", (const WCHAR *)puVar11, 7);
+        lVar5 = PECMD_TokPrefixICmp("-center", (const WCHAR *)puVar11, 7);
         if ((char)lVar5 == 0) {
-            lVar5 = FUN_14005c72c("-right", (const WCHAR *)puVar11, 6);
+            lVar5 = PECMD_TokPrefixICmp("-right", (const WCHAR *)puVar11, 6);
             if ((char)lVar5 != 0) {
                 uVar16 = 0x20000000;
                 pWVar4 = local_80;
                 goto LAB_1400ab134;
             }
-            lVar5 = FUN_14005c72c("-scale", (const WCHAR *)puVar11, 6);
+            lVar5 = PECMD_TokPrefixICmp("-scale", (const WCHAR *)puVar11, 6);
             pWVar4 = pWVar12;
             if (((char)lVar5 != 0) ||
                 (uVar9 = PECMD_AsciiPrefixICmp("-scale:", (const WCHAR *)puVar11, 7),

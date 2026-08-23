@@ -120,7 +120,7 @@ extern void PECMD_DispConfirmPopupMenu(HWND a1);
 extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
 extern void PECMD_ScriptWndProc(HWND a1, uint32_t a2, HDC a3,
                           void *a4);
-extern uint64_t FUN_14003DB00(WCHAR *a1);
+extern uint64_t PECMD_ShutPowerAction(WCHAR *a1);
 extern uint64_t PECMD_DeviFileExtractThreadProc(int64_t *task);
 extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2, void *p3,
                               void *p4, void *p5);
@@ -2251,7 +2251,7 @@ uint64_t FUN_14003E220(HWND hwnd, int msg, int16_t wParam)
         } else {
             if (wParam == 0xd) {
                 FUN_1400702B0((WCHAR **)&local_918.p, WSTR("-force "));
-                FUN_14003DB00((WCHAR *)(uintptr_t)local_918.p);
+                PECMD_ShutPowerAction((WCHAR *)(uintptr_t)local_918.p);
             } else {
                 if (wParam != 1) {
                     return 0;

@@ -59,7 +59,7 @@ extern BOOL PECMD_WritePhysicalMem(uint64_t a, uint32_t b);
 extern void PECMD_FreeNtdll(void);
 extern LPCWSTR FUN_140062EC8(LPCWSTR s, LPCWSTR sep, int mode, uint32_t flags);
 extern void PECMD_FixKnownDlls32(void);
-extern void FUN_1400DFB14(void *script, WCHAR *cmd, uintptr_t flag);
+extern void PECMD_MounMountWimImage(void *script, WCHAR *cmd, uintptr_t flag);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
@@ -868,7 +868,7 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
             if (cmdline != NULL) {
                 FUN_14006375C(&local_res20, cmdline);
             }
-            FUN_1400DFB14(g_Script, local_res20, 0);
+            PECMD_MounMountWimImage(g_Script, local_res20, 0);
             PECMD_FreeStrBuf(&local_res20);
         }
     }

@@ -42,7 +42,7 @@ extern int     PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d
                              uint64_t f, int64_t *g, HWND h, int64_t i);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
 extern void    PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value);
-extern int64_t FUN_14005c72c(const char *a, const WCHAR *w, int n);   /* 前缀比较 */
+extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);   /* 前缀比较 */
 extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);          /* 后缀/封装比较 */
 extern uint64_t PECMD_AsciiPrefixICmp(const char *a, const uint16_t *w, int n); /* 固定长度比较 */
 extern uint32_t PECMD_ParseStringToken(int64_t *a, int64_t *b, int64_t *c);    /* 分隔符选项解析 */
@@ -107,7 +107,7 @@ extern int64_t PECMD_AllocConsoleBuffers(int64_t a);                            
 extern WCHAR  *PECMD_UnquoteString(WCHAR *s);                              /* 串标签查找 */
 extern void    PECMD_DeviceCheckReady(LPCWSTR s);
 extern uint32_t FUN_140063060(uint32_t *buf);                         /* 取 BUFFER 大小 */
-extern WCHAR  *FUN_1400547bc(int64_t *ctx, int64_t *pp, int64_t *out,
+extern WCHAR  *PECMD_SplitNextToken(int64_t *ctx, int64_t *pp, int64_t *out,
                              int16_t c1, int16_t c2);
 extern void    PECMD_RunCommandLine(int64_t *ctx, void *key, int mode);      /* 变量取值 */
 extern bool    PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);
@@ -207,7 +207,7 @@ uint64_t PECMD_WriteVarEncoded(int64_t *param_1, LPCWSTR param_2)
     if (*local_res10 == L'\0') {
         goto LAB_0a0617;
     }
-    psVar5 = FUN_1400547bc(param_1, (int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d, 0);
+    psVar5 = PECMD_SplitNextToken(param_1, (int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d, 0);
     if ((*local_res20 == L'\0') || (*psVar5 != 0x3d)) {
         uVar7 = 0xffffffff80070057ULL;
         goto LAB_0a0617;
@@ -991,23 +991,23 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
 
   if (((*(uint16_t *)(uintptr_t)pp < 9) || (0xd < *(uint16_t *)(uintptr_t)pp)) &&
       (*(int16_t *)(uintptr_t)pp != 0x20)) {
-    lVar9 = FUN_14005c72c("-UNI", (const WCHAR *)(uintptr_t)pp, 4);
+    lVar9 = PECMD_TokPrefixICmp("-UNI", (const WCHAR *)(uintptr_t)pp, 4);
     if (((char)lVar9 == '\0') &&
-        (lVar9 = FUN_14005c72c("-UNICODE", (const WCHAR *)(uintptr_t)pp, 8),
+        (lVar9 = PECMD_TokPrefixICmp("-UNICODE", (const WCHAR *)(uintptr_t)pp, 8),
          (char)lVar9 == '\0')) {
-      lVar9 = FUN_14005c72c("-UNIB", (const WCHAR *)(uintptr_t)pp, 5);
+      lVar9 = PECMD_TokPrefixICmp("-UNIB", (const WCHAR *)(uintptr_t)pp, 5);
       if (((char)lVar9 == '\0') &&
-          (lVar9 = FUN_14005c72c("-UNICODEB", (const WCHAR *)(uintptr_t)pp, 9),
+          (lVar9 = PECMD_TokPrefixICmp("-UNICODEB", (const WCHAR *)(uintptr_t)pp, 9),
            (char)lVar9 == '\0')) {
-        lVar9 = FUN_14005c72c("-ANSI", (const WCHAR *)(uintptr_t)pp, 5);
+        lVar9 = PECMD_TokPrefixICmp("-ANSI", (const WCHAR *)(uintptr_t)pp, 5);
         if ((char)lVar9 == '\0') {
-          lVar9 = FUN_14005c72c("-GBK", (const WCHAR *)(uintptr_t)pp, 4);
+          lVar9 = PECMD_TokPrefixICmp("-GBK", (const WCHAR *)(uintptr_t)pp, 4);
           if ((char)lVar9 == '\0') {
-            lVar9 = FUN_14005c72c("-BIG5", (const WCHAR *)(uintptr_t)pp, 5);
+            lVar9 = PECMD_TokPrefixICmp("-BIG5", (const WCHAR *)(uintptr_t)pp, 5);
             if ((char)lVar9 == '\0') {
-              lVar9 = FUN_14005c72c("-UTF8", (const WCHAR *)(uintptr_t)pp, 5);
+              lVar9 = PECMD_TokPrefixICmp("-UTF8", (const WCHAR *)(uintptr_t)pp, 5);
               if ((char)lVar9 == '\0') {
-                lVar9 = FUN_14005c72c("-UTF7", (const WCHAR *)(uintptr_t)pp, 5);
+                lVar9 = PECMD_TokPrefixICmp("-UTF7", (const WCHAR *)(uintptr_t)pp, 5);
                 if ((char)lVar9 == '\0') {
                   LVar10.QuadPart = 0xffff0000;
                   if ((*(uint16_t *)(uintptr_t)pp == 0x2d) &&
@@ -1857,24 +1857,24 @@ LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
     if (((((uint16_t)*(const uint16_t *)(uintptr_t)param_2.QuadPart < 9) ||
           (0xd < (uint16_t)*(const uint16_t *)(uintptr_t)param_2.QuadPart)) &&
          ((int16_t)*(const int16_t *)(uintptr_t)param_2.QuadPart != 0x20)) &&
-        (lVar17 = FUN_14005c72c("-UNI", (const WCHAR *)(uintptr_t)param_2.QuadPart, 4),
+        (lVar17 = PECMD_TokPrefixICmp("-UNI", (const WCHAR *)(uintptr_t)param_2.QuadPart, 4),
          uVar11 = 0x4b0, (char)lVar17 == '\0')) {
         iVar32 = 5;
-        lVar17 = FUN_14005c72c("-UNIB", (const WCHAR *)(uintptr_t)param_2.QuadPart, 5);
+        lVar17 = PECMD_TokPrefixICmp("-UNIB", (const WCHAR *)(uintptr_t)param_2.QuadPart, 5);
         if ((char)lVar17 == '\0') {
-            lVar17 = FUN_14005c72c("-UNICODE", (const WCHAR *)(uintptr_t)param_2.QuadPart, 8);
+            lVar17 = PECMD_TokPrefixICmp("-UNICODE", (const WCHAR *)(uintptr_t)param_2.QuadPart, 8);
             if ((char)lVar17 == '\0') {
-                lVar17 = FUN_14005c72c("-UNICODEB", (const WCHAR *)(uintptr_t)param_2.QuadPart, 9);
+                lVar17 = PECMD_TokPrefixICmp("-UNICODEB", (const WCHAR *)(uintptr_t)param_2.QuadPart, 9);
                 if ((char)lVar17 != '\0') goto LAB_14009f125;
-                lVar17 = FUN_14005c72c("-UTF8", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
+                lVar17 = PECMD_TokPrefixICmp("-UTF8", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
                 if ((char)lVar17 == '\0') {
-                    lVar17 = FUN_14005c72c("-UTF7", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
+                    lVar17 = PECMD_TokPrefixICmp("-UTF7", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
                     if ((char)lVar17 == '\0') {
-                        lVar17 = FUN_14005c72c("-GBK", (const WCHAR *)(uintptr_t)param_2.QuadPart, 4);
+                        lVar17 = PECMD_TokPrefixICmp("-GBK", (const WCHAR *)(uintptr_t)param_2.QuadPart, 4);
                         if ((char)lVar17 == '\0') {
-                            lVar17 = FUN_14005c72c("-BIG5", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
+                            lVar17 = PECMD_TokPrefixICmp("-BIG5", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
                             if ((char)lVar17 == '\0') {
-                                lVar17 = FUN_14005c72c("-ANSI", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
+                                lVar17 = PECMD_TokPrefixICmp("-ANSI", (const WCHAR *)(uintptr_t)param_2.QuadPart, iVar32);
                                 uVar11 = 0;
                                 if ((char)lVar17 == '\0') {
                                     if (((int16_t)*(const int16_t *)(uintptr_t)param_2.QuadPart == 0x2d) &&
