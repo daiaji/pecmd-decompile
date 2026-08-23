@@ -801,27 +801,27 @@
   "checked": [
    {
     "site": "core_b1_remaining.c:9523",
-    "dc": "FUN_14001f1d4 body42 (HICON)0xffffffffffffffff 等值",
+    "dc": "decompiled.c@18744",
     "verdict": "FAITHFUL"
    },
    {
     "site": "core_b1_remaining.c:9624",
-    "dc": "body139 (longlong)param_1 - 1U == 0xfffffffffffffffd 同宽包裹等值",
+    "dc": "decompiled.c@18841",
     "verdict": "FAITHFUL"
    },
    {
     "site": "core_b2f.c:4415",
-    "dc": "FUN_1400369d0 local_1d8[0]=0xffffffff 哨兵,布尔化等值",
+    "dc": "decompiled.c@32060(哨兵写入), 比较点同函数内",
     "verdict": "FAITHFUL"
    },
    {
     "site": "core_b3_remaining.c:16660",
-    "dc": "body52 (longlong)param_1 - 0x10001U < 0xfffffffffffaffff 同式范围检查",
+    "dc": "decompiled.c@75164",
     "verdict": "FAITHFUL"
    },
    {
     "site": "core_b8m.c:3265",
-    "dc": "body88 if ((int)CVar5 < -1) 逐字同形",
+    "dc": "decompiled.c@156277",
     "verdict": "FAITHFUL"
    },
    {
@@ -830,7 +830,18 @@
     "verdict": "FAITHFUL"
    }
   ],
-  "note": "原派发代理 953875ce/843f14f1 均无输出中止; 任务由主审计自行吸收完成"
+  "note": "原派发代理 953875ce/843f14f1 均无输出中止; 任务由主审计自行吸收完成; 行号引用已按绝对行号校正",
+  "exhaustive_retry": {
+   "agent": "843f14f1(收窄版重扫)",
+   "scope": "显式整数转换+与 -1/0xffffffff/0x80000000 比较, 全库 102 行正则命中→剔除在案 4 → 98 候选逐点对照 dc 转换宽度",
+   "result": "checked=98 mismatch=0 equiv=98 —— 类别干净",
+   "method_notes": [
+    "Ghidra 类型名按宽度+符号映射(int64_t≡longlong 等)",
+    "core_b3_remaining.c 的 PECMD_DriverInstall 缺 @0x 注释致脚本错锚 FUN_1400472a4, 人工重锚 FUN_1400474a8(dc:41271) 后核对",
+    "全表明细 /tmp/final_table.txt"
+   ],
+   "style_note": "b3_remaining.c:20895 冗余恒等转换链 (int)(int64_t)(uintptr_t) 可顺手清理(非问题)"
+  }
  },
  "regression_review": {
   "scope": "a189151 实际落地的 4 处(globals:31/pecmd_defs.h:112/b7c:5472/thread:382)",
