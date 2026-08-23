@@ -487,5 +487,10 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
   - tools/stub_wave_triage.json + tools/r1_wave_brief.md — R1 还原批(13 小函数, 头名5b104 870调用点)
     简报含 140101e70 签名修正特例(uint64_t(void)→bool(LPCWSTR))。
 - **已落地**: 0b2ca8→PECMD_RenderTextBitmapIcon(4处) 首切片绿+提交 907d634(选择性提交, 避开A的ls中间态)。
+- **任务A 完成（git 59c1736）**: SEG6-10 全量落地, 00e26c EXEC 巨命令(3948行)真体完整还原,
+  build/link 绿+nm 唯一强符号; 详见 REVIEW §123。
+- **命名批 b3/b4-clean 已应用（git 7c12233/790970e）**: 77名/456处, rename_map=1235;
+  ls-dirty 24个待 --sync-ls 批; B2 余量按 REVIEW §123 归并规则处理。
+- **R1 还原批进行中**: 子代理 b3c05d9f 独占 link_stubs.c 还原 13 小函数(r1_wave_brief.md)。
 - **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
   (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
