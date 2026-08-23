@@ -1213,21 +1213,22 @@ LAB_14009dd92:
       if (0 < (int)local_78) {
         local_res10 = (uint64_t)((int64_t)local_80 + local_70);
       }
-      iVar13 = (int)*(char *)(uintptr_t)local_res10;
-      if ((iVar13 == 0xff) && (*(char *)(uintptr_t)((int64_t)local_res10 + 1) == 0xfe)) {
+      /* BOM 探测: 原体为有符号 -1/-2/-17/-85/-65 比较(dc@18645), 此处按无符号等价改写恢复可达性 */
+      iVar13 = (int)*(uint8_t *)(uintptr_t)local_res10;
+      if ((iVar13 == 0xff) && (*(uint8_t *)(uintptr_t)((int64_t)local_res10 + 1) == 0xfe)) {
         DVar31 = 0x4b0;
         LVar10.QuadPart = 2;
       }
-      else if ((iVar13 == 0xfe) && (*(char *)(uintptr_t)((int64_t)local_res10 + 1) == 0xff)) {
+      else if ((iVar13 == 0xfe) && (*(uint8_t *)(uintptr_t)((int64_t)local_res10 + 1) == 0xff)) {
         DVar31 = 0x4b1;
         LVar10.QuadPart = 2;
       }
       else {
         LVar10.QuadPart = LVar19.QuadPart;
         if (((iVar13 == 0xef) &&
-             (*(char *)(uintptr_t)((int64_t)local_res10 + 1) == 0xbb)) &&
+             (*(uint8_t *)(uintptr_t)((int64_t)local_res10 + 1) == 0xbb)) &&
             (LVar10.QuadPart = 0,
-             *(char *)(uintptr_t)((int64_t)local_res10 + 2) == 0xbf)) {
+             *(uint8_t *)(uintptr_t)((int64_t)local_res10 + 2) == 0xbf)) {
           LVar10.QuadPart = 3;
           DVar31 = 0xfde9;
         }
