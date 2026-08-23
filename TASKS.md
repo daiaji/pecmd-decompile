@@ -551,3 +551,8 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 ### S5 P5 收口（1 轮）
 - 编译警告全量分类复核(行为相关者终账登记); TASKS/REVIEW 数据汇总终账;
   gen_tasks 刷新; git 里程碑 tag(p4-close); 完成判定=build/link 绿+未命名仅剩登记项+无未处理 TODO。
+
+## 13. ✅ S6 完成（git e9821ef）——DSH 侧任务全部结束
+- ROADMAP v3 落地(§2基线实测刷新/批1重心转local·param·DAT语义化/§8 WIN接管点=R-C0真机金标准录制起)
+- B/C 评估输入就绪: docs/bc_evaluation_inputs.md(材料索引+L1-L10遗留清单)
+- **下一步=用户本人**: 评估 B/C 场景选择与 WIN 接管点建议; DSH 不再自动推进任何批次。
