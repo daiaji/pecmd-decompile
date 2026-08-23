@@ -57,13 +57,13 @@ extern BOOL      SHGetPathFromIDListW(LPCITEMIDLIST, LPWSTR);
 /* ---- Helper function externs (bodies are NOT defined here) ---- */
 /* PECMD_SetupRoundedRegion helpers */
 extern void      PECMD_ReleaseGdiObjects(void *param_1, HWND param_2);
-extern void      FUN_140067d20(void **pp, int *out);
+extern void      PECMD_ParseNumTryWriteback(void **pp, int *out);
 extern void      PECMD_ParseNumSkipChar_01f8(void **pp, int *out);
 extern void     *PECMD_GrowByteBuffer(void **ps, int64_t len);
 /* PECMD_ParseLtwhFlags helper */
 extern uint64_t  PECMD_EvalParenExpression(int64_t *pp, uint64_t *out);
 /* PECMD_ApplyWindowFlags helpers */
-extern void      FUN_1400a9a84(WCHAR **pp, uint64_t *out);
+extern void      PECMD_EvalExprSkipOneChar(WCHAR **pp, uint64_t *out);
 extern int       PECMD_UpdateWindowStyleBits(int64_t a, uint32_t b, uint64_t c);
 extern int       PECMD_UpdateWindowExStyle(HWND a, uint32_t b, uint64_t c);
 /* PECMD_ParseQuotedArg helpers */
@@ -97,7 +97,7 @@ extern HWND      PECMD_QueryState_f414(int64_t a);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
 extern void      PECMD_SyncWorkingDirectory(void);
-extern void      FUN_14005C904(void);                    /* @0x14005c904 (core_b3f.c) */
+extern void      PECMD_LoadComDlgApis(void);                    /* @0x14005c904 (core_b3f.c) */
 extern int64_t  *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
 extern short    *PECMD_LastPathSeparator(short *s);
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
@@ -190,11 +190,11 @@ int64_t *PECMD_SetupRoundedRegion(int64_t *param_1, short *param_2, HWND param_3
         *(undefined4 *)(puVar1 + 5) = 8;
         *(undefined4 *)((longlong)puVar1 + 0x34) = 1;
         *(undefined4 *)(puVar1 + 6) = 1;
-        FUN_140067d20((void **)&local_res10, (int *)local_58);
+        PECMD_ParseNumTryWriteback((void **)&local_res10, (int *)local_58);
         color = 0xffffffff;
         if (*local_res10 == 0x2f) {
             local_res10 = local_res10 + 1;
-            FUN_140067d20((void **)&local_res10, (int *)local_res18);
+            PECMD_ParseNumTryWriteback((void **)&local_res10, (int *)local_res18);
             color = local_res18[0];
         }
         local_res10 = local_res10 + 1;
@@ -314,8 +314,8 @@ uint64_t PECMD_ApplyWindowFlags(HWND param_1, short *param_2)
     }
     local_res18 = 0;
     local_res20 = 0;
-    FUN_1400a9a84((WCHAR **)&local_res10, &local_res18);
-    FUN_1400a9a84((WCHAR **)&local_res10, &local_res20);
+    PECMD_EvalExprSkipOneChar((WCHAR **)&local_res10, &local_res18);
+    PECMD_EvalExprSkipOneChar((WCHAR **)&local_res10, &local_res20);
     if (sVar1 == 0x40) {
         nIndex = -0x14;
         if (sVar2 == 0) {
@@ -709,7 +709,7 @@ LAB_14008822a:
         (void)local_530;
         local_520 = pWVar11;
         (void)local_520;
-        FUN_14005C904();
+        PECMD_LoadComDlgApis();
         if (bVar3) {
             local_598[0] = (uint)((int (*)(void))g_pGetSaveFileNameW)();
         } else {

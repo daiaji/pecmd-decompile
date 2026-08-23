@@ -6,7 +6,7 @@
  *   PECMD_OpenSharedMapping      @0x140005738  (命名共享内存映射)
  *   PECMD_InitShellFolderEnvVars   @0x14001c01c  (&PE_IDBASE/&MyName/&Desktop 等)
  *   FUN_140053E78          @0x140053e78  (空函数)
- *   FUN_14005B9A0 @0x14005b9a0 (RegisterWindowMessageW TaskbarCreated)
+ *   PECMD_GetTaskbarCreatedMsg @0x14005b9a0 (RegisterWindowMessageW TaskbarCreated)
  *   PECMD_SetRdataTablePtr     @0x14005d694  (设置 .rdata 表指针)
  *   FUN_140064A88           @0x140064a88  (宽字符十进制解析)
  *   PECMD_LookupShellFolderVar  @0x14001bf20  (特殊目录 -> &变量)
@@ -143,7 +143,7 @@ void FUN_140053E78(void)
 }
 
 /* ========== TaskbarCreated 注册 @0x14005b9a0 ========== */
-void FUN_14005B9A0(void)
+void PECMD_GetTaskbarCreatedMsg(void)
 {
     if (g_WM_TaskbarRestart == 0) {
         g_WM_TaskbarRestart = (uint32_t)RegisterWindowMessageW(WSTR("TaskbarCreated"));

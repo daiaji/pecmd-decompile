@@ -76,7 +76,7 @@ extern void     PECMD_ReleaseResources(int64_t param_1);
 extern void     PECMD_SetConfigString(LPCWSTR, int);
 extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);     /* RegSetValue */
-extern int64_t  FUN_1400a9a84(int64_t *a, uint64_t *b);    /* 解析长度/句柄 */
+extern int64_t  PECMD_EvalExprSkipOneChar(int64_t *a, uint64_t *b);    /* 解析长度/句柄 */
 extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out); /* 解析整数 */
 extern int64_t  PECMD_ParseNumber(int64_t *pp, int *out);
 extern void    *PECMD_ReadTipDummyConfig(void);
@@ -929,7 +929,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                 PECMD_TokenWithRef(param_1, (int64_t *)&local_res10,
                                                                               &local_c8, (int64_t *)&local_80);
                                                                 local_c0_hwnd = 0;
-                                                                iVar3 = (int)FUN_1400a9a84(&local_c8,
+                                                                iVar3 = (int)PECMD_EvalExprSkipOneChar(&local_c8,
                                                                                            (uint64_t *)&local_c0_hwnd);
                                                                 ppHVar10 = &local_80;
                                                                 if (0 < iVar3) {

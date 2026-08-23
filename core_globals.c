@@ -87,7 +87,7 @@ const WCHAR *PTR_u_2024_05_12_14013a000 = WSTR("2024.05.12"); /* PTR_u_2024_05_1
 
 /* 随机数状态 (B8a) */
 int64_t g_randState;    /* DAT_14013a358 随机状态 */
-int64_t g_lcgState;     /* DAT_14013a360 LCG 状态 (FUN_14005DFF4) */
+int64_t g_lcgState;     /* DAT_14013a360 LCG 状态 (PECMD_RandSeedAdvance) */
 int64_t g_randPrev;     /* DAT_14013e1c0 上次随机值 */
 
 /* 执行环境 (B8a) */

@@ -7,14 +7,14 @@
 #include <stdint.h>
 
 /* @0x140001188 FUN_140001188 size=3 SKIP */
-/* @0x140004e34 FUN_140004e34 size=136 SKIP */
+/* @0x140004e34 PECMD_PumpMessagesTimeout size=136 SKIP */
 /* @0x140006554 PECMD_EnumDropFiles size=268 SKIP */
 /* @0x140009068 PECMD_LoadPluginPecmdTbl size=372 SKIP */
 /* @0x1400171a4 PECMD_GrantCurrentUserAccess size=334 SKIP */
-/* @0x140017afc FUN_140017afc size=142 SKIP */
+/* @0x140017afc PECMD_IsPecmdScriptFile size=142 SKIP */
 /* @0x140018220 PECMD_BindDelayImports size=475 SKIP */
-/* @0x14001a56c FUN_14001a56c size=68 SKIP */
-/* @0x14001af0c FUN_14001af0c size=7 SKIP */
+/* @0x14001a56c PECMD_NtShutdownSystemCall size=68 SKIP */
+/* @0x14001af0c PECMD_UserCmdHandler size=7 SKIP */
 /* @0x140102d68 operator_new size=152 SKIP */
 /* @0x140102f50 atexit size=23 SKIP */
 /* @0x14010303c wcscat size=44 SKIP */

@@ -40,14 +40,14 @@ extern bool PECMD_ParseUIntValue(int64_t *pp, int *out);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
 extern void FUN_14005DAF8(int64_t ctx, int *a, int *b, int *c, int *d);
-extern uint64_t *FUN_1400C9B9C(uint64_t *obj, uint64_t a2, uint64_t a3, uint32_t a4,
+extern uint64_t *PECMD_TablCreateListCtrl(uint64_t *obj, uint64_t a2, uint64_t a3, uint32_t a4,
                                uint64_t *a5, int32_t a6, int32_t a7, int32_t a8,
                                int32_t a9, uint64_t *a10, uint16_t *a11, LPCWSTR a12,
                                int64_t a13, int16_t *a14, LPCWSTR a15, uint64_t *a16,
                                uint64_t a17, uint64_t a18);
 extern void FUN_14005D9A8(int64_t ctx, int mode);
-extern char FUN_1400D5B48(int64_t obj, HDC hdc);
-extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);
+extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC hdc);
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color);
 extern int64_t PECMD_ExecuteCommand(int64_t *ctx, LPCWSTR text, uint64_t a3,
                              LPCWSTR a4, uint32_t a5, int64_t a6, int a7);
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
@@ -285,7 +285,7 @@ uint64_t FUN_1400CADEC(WPARAM mgr, uint64_t a2, uint64_t a3,
     FUN_14005DAF8((int64_t)mgr, &a5, &a6, &a7, &a8);
     uint64_t *mem = (uint64_t *)malloc(0x78);
     if (mem != NULL) {
-        obj = FUN_1400C9B9C(mem, a2, a3,
+        obj = PECMD_TablCreateListCtrl(mem, a2, a3,
                             (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
                             a4, (int32_t)a5, (int32_t)a6,
                             (int32_t)a7, (int32_t)a8, a9, a10,
@@ -305,7 +305,7 @@ void FUN_1400D95F0(int64_t *self, uint64_t wParam, uint64_t lParam)
     if (IsIconic((HWND)self[4]) == 0) {
         if ((*(uint8_t *)(self + 0x4a) & 1) != 0) {
             HDC hdc = GetWindowDC((HWND)self[4]);
-            FUN_1400D5B48((int64_t)self, hdc);
+            PECMD_CtlLoadPictureRgn((int64_t)self, hdc);
             *(uint8_t *)(self + 0x4a) = *(uint8_t *)(self + 0x4a) & 0xfe;
         }
 
@@ -320,7 +320,7 @@ void FUN_1400D95F0(int64_t *self, uint64_t wParam, uint64_t lParam)
             rc.bottom = 0;
             GetClientRect((HWND)self[4], &rc);
             if (-1 < (int)*(COLORREF *)(self + 0x55)) {
-                FUN_1400E68E0(hdc, &rc, *(COLORREF *)(self + 0x55));
+                PECMD_FillRectColor(hdc, &rc, *(COLORREF *)(self + 0x55));
             }
             if (title != 0) {
                 WCHAR buf[304];

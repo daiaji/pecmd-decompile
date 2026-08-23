@@ -11,7 +11,7 @@
  *   脚本子执行       PECMD_InvokeSubRoutine @0x140030dcc
  *   脚本 @CALL 插入  PECMD_PrependCallSubLine @0x140030f1c
  *   脚本编码块执行   PECMD_ExecuteScriptBlock     @0x140031068
- *   token 推进       FUN_1400679DC      @0x1400679dc
+ *   token 推进       PECMD_ParseIntSkipSepChar      @0x1400679dc
  *   环境变量查询     FUN_14006F884        @0x14006f884
  *   带头串赋值       FUN_14007034C    @0x14007034c
  *   数字解析         PECMD_ParseUIntValue      @0x140074838
@@ -39,7 +39,7 @@ int8_t g_flagA248 = 0;           /* g_charTableF 运行标志 TODO(verify) */
 /* ---- 已有实现引用 ---- */
 extern uint16_t FUN_14001B510(void);        /* @0x14001b510 core_var3.c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac core_var3.c */
-extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch);         /* @0x14001b4f8 core_var3.c */
+extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch);         /* @0x14001b4f8 core_var3.c */
 extern void *FUN_140017CDC(void *dst, void *src);                /* @0x140017cdc core_exec5.c */
 extern void FUN_1400186BC(void *s, int64_t parent);              /* @0x1400186bc core_exec5.c */
 extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed);           /* @0x14006159c core_exec2.c */
@@ -49,7 +49,7 @@ extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140
 extern void PECMD_AllocStrSlot(void *ps);              /* @0x140063620 分配引用串容器 */
 extern void *PECMD_ReallocBuffer(void *ptr, int64_t len); /* @0x140063224 重分配(带 OOM 处理) */
 extern void *PECMD_AllocMagicString(LPCWSTR src);            /* @0x140070154 带 -8 头的串复制 */
-extern void FUN_14001b660(void *script);            /* @0x14001b660 sysinit 前置 */
+extern void PECMD_RunClearTmpMbrosOnce(void *script);            /* @0x14001b660 sysinit 前置 */
 extern void PECMD_AutoMountStartup(void *script, LPCWSTR name);   /* @0x1400250f0 sysinit 执行 */
 extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析到分隔符 */
 extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *val);    /* @0x1400745c8 数字解析 */
@@ -144,7 +144,7 @@ WCHAR *PECMD_PrependEnviHeader(uint32_t key, WCHAR **pbuf, LPCWSTR line,
     }
     linelen = (size_t)lstrlenW(tmp);
     /* 从 off 起找下一个 key 分隔字符, +1 含其自身 */
-    seglen = (size_t)FUN_14001B4F8(*(const WCHAR **)pbuf + off, (WCHAR)key) + 1;
+    seglen = (size_t)PECMD_StrChrOffset(*(const WCHAR **)pbuf + off, (WCHAR)key) + 1;
     FUN_14001B5AC(tmp, key, 0);
     nb = PECMD_ReallocBuffer(*(void **)pbuf, (int64_t)(seglen + linelen + (size_t)off) * 2 + 0x12);
     ins = (WCHAR *)((uint8_t *)nb + (size_t)off * 2);
@@ -164,7 +164,7 @@ WCHAR *PECMD_PrependEnviHeader(uint32_t key, WCHAR **pbuf, LPCWSTR line,
  */
 void PECMD_RunSysInit(void *script, LPCWSTR name)
 {
-    FUN_14001b660(script);        /* TODO(verify) @0x14001b660 */
+    PECMD_RunClearTmpMbrosOnce(script);        /* TODO(verify) @0x14001b660 */
     PECMD_AutoMountStartup(script, name);  /* TODO(verify) @0x1400250f0 */
 }
 
@@ -214,7 +214,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
     uint32_t r;
 
     FUN_1400702B0(&nls, WSTR("\n"));
-    pos = FUN_14001B4F8(*(const WCHAR **)script, (WCHAR)key);
+    pos = PECMD_StrChrOffset(*(const WCHAR **)script, (WCHAR)key);
     PECMD_AllocWStringBuffer((WCHAR **)&cwd, 0x20a);
     GetCurrentDirectoryW(0x208, cwd);
     FUN_140017CDC(sub, tmpl);
@@ -255,7 +255,7 @@ WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name, int64_t 
     if (name == NULL || *name == 0) {
         return *(WCHAR **)buf;
     }
-    pos = FUN_14001B4F8(*(const WCHAR **)buf, (WCHAR)key);
+    pos = PECMD_StrChrOffset(*(const WCHAR **)buf, (WCHAR)key);
     tok = FUN_140024C48(&cur, NULL, 1);
     FUN_1400702B0(&line, WSTR("@CALL ** "));
     FUN_14006375C(&line, name);
@@ -336,7 +336,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     } else {
         FUN_14007034C(&l1a0, NULL);
         p = l198;                       /* pWVar11 初值 */
-        pos = (int64_t)FUN_14001B4F8(l198, (WCHAR)key);
+        pos = (int64_t)PECMD_StrChrOffset(l198, (WCHAR)key);
         ret = 0;
         if (pos > 0) {
             /* key=0 无变换, 忠实还原反编译调用 */
@@ -394,12 +394,12 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     return ret;
 }
 
-/* ========== FUN_1400679DC @0x1400679dc ==========
+/* ========== PECMD_ParseIntSkipSepChar @0x1400679dc ==========
  * 解析 token (分隔符 sep) 后推进游标一位。
  *   pp  : 解析游标 (推进)
  *   out : 解析结果输出
  */
-void FUN_1400679DC(WCHAR **pp, int *out, WCHAR sep)
+void PECMD_ParseIntSkipSepChar(WCHAR **pp, int *out, WCHAR sep)
 {
     PECMD_ParseShortStore(pp, out, sep);    /* TODO(verify) @0x1400679b0 解析到分隔符 */
     if (**pp != 0) {

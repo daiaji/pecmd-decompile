@@ -36,8 +36,8 @@ extern BOOL CryptGetHashParam(HCRYPTHASH hHash, DWORD dwParam, BYTE *pbData,
 extern BOOL CryptDestroyHash(HCRYPTHASH hHash);
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern void FUN_1400E5AE4(HWND hwnd);               /* @0x1400e5ae4 */
-extern int64_t FUN_1400E5AAC(int64_t *obj, uint64_t *args); /* @0x1400e5aac */
+extern void PECMD_ValidateCtlPaint(HWND hwnd);               /* @0x1400e5ae4 */
+extern int64_t PECMD_CtlForwardSetBlock(int64_t *obj, uint64_t *args); /* @0x1400e5aac */
 extern void FUN_1400EF91C(int64_t obj, uint32_t param2, uint64_t param3); /* @0x1400ef91c */
 extern void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn,
                           uint32_t flags, int thickness); /* @0x14005d600 */
@@ -82,7 +82,7 @@ extern int (*g_pGdipGetImageHeight)();
 extern int (*g_pGdipCreateFromHDC)();
 extern int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);
 extern int (*g_pGdipDeleteGraphics)();
-extern int64_t FUN_1400E4064(int64_t value, uint32_t align); /* @0x1400e4064 */
+extern int64_t PECMD_AlignUpSize(int64_t value, uint32_t align); /* @0x1400e4064 */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern int64_t FUN_14007A224(void *script, WCHAR *text, WCHAR **out, int c, int d);
 extern void PECMD_ParseNumSkipChar_de4c(int64_t *pp, double *out);  /* @0x14007de4c */
@@ -99,12 +99,12 @@ extern void PECMD_SelectObjectSlot_b054(int64_t ctx, HDC hdc, HGDIOBJ obj); /* @
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);      /* @0x1400f429c */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len); /* @0x1400702d4 */
 extern void PECMD_ParseNumSkipChar_01f8(int64_t *pp, int *out);      /* @0x1400701f8 */
-extern void FUN_14005B0D4(void *ps);
+extern void PECMD_HeapFreeWithHeader(void *ps);
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
 extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
 extern void PECMD_TableSetHoverIdx(int64_t obj, int current); /* @0x1400f51d8 */
 extern uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam); /* @0x1400f2f58 */
-extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern void PECMD_FormatOutput(int64_t obj);                     /* @0x14009c6dc */
 extern void PECMD_SetWindowTheme(uint64_t hwnd);           /* @0x140066054 */
 extern BOOL GetScrollRange(HWND hWnd, int nBar, int *lpMinPos, int *lpMaxPos);
@@ -137,7 +137,7 @@ extern uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_
                                               int64_t *outSize, BOOL inherit, uint32_t flags,
                                               LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
                                               PROCESS_INFORMATION *pi, LPCWSTR param11); /* @0x1400e4324 */
-extern BOOL FUN_1400E411C(void);     /* @0x1400e411c */
+extern BOOL PECMD_HasVirtualAllocEx(void);     /* @0x1400e411c */
 extern bool PECMD_ZwUnmapViewOfSection(HANDLE process, void *baseAddress); /* @0x1400e4228 */
 extern BOOL FUN_1400E412C(int64_t obj);   /* @0x1400e412c */
 extern void PECMD_PeApplyRelocations(int64_t obj, void *src, void *dst); /* @0x1400e4160 */
@@ -216,7 +216,7 @@ int64_t FUN_1400E5B0C(int64_t obj, uint64_t msg, int64_t wParam, int64_t *lParam
             }
             if (msg == 0xf) {
                 if ((*(uint8_t *)(b + 0x78) & 2) != 0) {
-                    FUN_1400E5AE4(*(HWND *)(b + OBJ_HWND));
+                    PECMD_ValidateCtlPaint(*(HWND *)(b + OBJ_HWND));
                     return 0;
                 }
                 ((int64_t (*)(int64_t, int64_t, int64_t *))vt[0x28 / 8])(
@@ -419,7 +419,7 @@ int64_t FUN_1400E5B0C(int64_t obj, uint64_t msg, int64_t wParam, int64_t *lParam
         if (msg == 0x459) {
             if (wParam != obj)
                 return 1;
-            return FUN_1400E5AAC((int64_t *)(uintptr_t)obj,
+            return PECMD_CtlForwardSetBlock((int64_t *)(uintptr_t)obj,
                                         (uint64_t *)(uintptr_t)lParam);
         }
         if (msg == 0x45b) {
@@ -1273,7 +1273,7 @@ int PECMD_Wow64MapPeImage(void *filePtr, uint32_t fileSize, int64_t *outPeHeader
         sizeOfImage = *(uint32_t *)(peMapped + 0x54);
     else
         sizeOfImage = *(uint32_t *)(peMapped + 0x54);
-    cursor = FUN_1400E4064((int64_t)sizeOfImage, sizeOfHeaders);
+    cursor = PECMD_AlignUpSize((int64_t)sizeOfImage, sizeOfHeaders);
     dst = (uint8_t *)(cursor + *outBase);
 
     numSections = *(uint16_t *)(peMapped + 6);
@@ -1295,7 +1295,7 @@ int PECMD_Wow64MapPeImage(void *filePtr, uint32_t fileSize, int64_t *outPeHeader
                 if (secSize <= *(uint32_t *)(off + 8 + *outSectionTable))
                     secSize = *(uint32_t *)(off + 8 + *outSectionTable);
             }
-            cursor = FUN_1400E4064((int64_t)secSize, sizeOfHeaders);
+            cursor = PECMD_AlignUpSize((int64_t)secSize, sizeOfHeaders);
             off += 0x28;
             dst += cursor;
             n--;
@@ -1380,7 +1380,7 @@ int PECMD_RunPeInjectStart(LPWSTR cmd, int64_t ctxBase, int64_t param3,
     if (pWVar6 == local_res8 && dataSize <= (uint32_t)local_res10[0]) {
         remoteBuf = (LPVOID)(uintptr_t)local_res8;
         VirtualProtectEx(pi->hProcess, remoteBuf, (size_t)local_res10[0], 0x40, oldProt);
-    } else if (FUN_1400E411C() && PECMD_ZwUnmapViewOfSection(pi->hProcess, pWVar6)) {
+    } else if (PECMD_HasVirtualAllocEx() && PECMD_ZwUnmapViewOfSection(pi->hProcess, pWVar6)) {
         remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
             (void *)g_pfnVirtualAllocEx)(pi->hProcess, pWVar6, dataSize, 0x3000, 0x40);
         if (remoteBuf == NULL && FUN_1400E412C(ctxBase)) {
@@ -2801,7 +2801,7 @@ void PECMD_DrawRadioButtonFace(int64_t obj, int64_t paintInfo)
             Ellipse(memDC, draw.left, draw.top, draw.right, draw.bottom);
             PECMD_RestoreAndDeleteObject(slot);
         } else if (color != 0xffffffff) {
-            FUN_1400E68E0(memDC, &draw, color);
+            PECMD_FillRectColor(memDC, &draw, color);
         }
     }
     PECMD_RestoreAndDeleteObject(slot);
@@ -3164,7 +3164,7 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
         if (found >= 0) {
             int64_t base = *(int64_t *)(b + 8);
             uint8_t *e = (uint8_t *)(base + (int64_t)found * 0x28);
-            FUN_14005B0D4((void *)(e + 0x10));
+            PECMD_HeapFreeWithHeader((void *)(e + 0x10));
             if (found < count - 1) {
                 memmove(e, e + 0x28, (size_t)(count - found - 1) * 0x28);
             }
@@ -3265,7 +3265,7 @@ void PECMD_ControlPaint(int64_t obj, HDC hdcIn)
         if ((int)color < -1)
             color = GetSysColor(0xf);
         if (-1 < (int)color)
-            FUN_1400E68E0(hdc, &rc, color);
+            PECMD_FillRectColor(hdc, &rc, color);
     }
 
     if (useMem) {
@@ -3309,7 +3309,7 @@ void PECMD_ControlPaint(int64_t obj, HDC hdcIn)
         mode &= 0x20;
     } else {
         if (*(int32_t *)(b + OBJ_COLOR) >= 0)
-            FUN_1400E68E0(hdc, &rc, *(COLORREF *)(b + OBJ_COLOR));
+            PECMD_FillRectColor(hdc, &rc, *(COLORREF *)(b + OBJ_COLOR));
     }
 
     PECMD_AllocStrSlot(&text);

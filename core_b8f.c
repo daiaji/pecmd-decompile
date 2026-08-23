@@ -82,7 +82,7 @@ extern void FreeSid(void *sid);
 extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int64_t FUN_1400E4064(int64_t value, uint32_t align);
+extern int64_t PECMD_AlignUpSize(int64_t value, uint32_t align);
 extern void *FUN_1400E57C0(void *obj);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern int64_t * PECMD_InitPtrTable(int64_t *arr);
@@ -93,7 +93,7 @@ extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
 extern void FUN_14005D558(void *obj, HWND hwnd);
 extern void PECMD_FreeContainer(int64_t *container);
 extern int64_t PECMD_ContainerAppend(uint64_t *container);
-extern void FUN_1400F06FC(uint64_t *obj);
+extern void PECMD_DtorCtlCoreObj(uint64_t *obj);
 extern HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc);   /* @0x1400fd35c */
 extern void FUN_1400F30C0(int64_t obj, int mode, int value);
 
@@ -111,7 +111,7 @@ int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
                               int64_t peHeader, int64_t sectionTable)
 {
     uint32_t align = *(uint32_t *)(peHeader + 0x38);
-    int64_t total = FUN_1400E4064(*(uint32_t *)(peHeader + 0x54), align);
+    int64_t total = PECMD_AlignUpSize(*(uint32_t *)(peHeader + 0x54), align);
     int count = *(uint16_t *)(peHeader + 6);
     int i;
 
@@ -128,12 +128,12 @@ int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
             if (uVar1 <= entry[-2]) {
                 uVar1 = entry[-2];
             }
-            total += FUN_1400E4064((int64_t)uVar1, align);
+            total += PECMD_AlignUpSize((int64_t)uVar1, align);
         } else {
             if (entry[-2] != 0) {
                 uVar1 = entry[-2];
             }
-            total = FUN_1400E4064((int64_t)(entry[-1] + uVar1), align);
+            total = PECMD_AlignUpSize((int64_t)(entry[-1] + uVar1), align);
         }
     }
     return total;
@@ -368,7 +368,7 @@ void PECMD_DtorMemDcCanvas(uint64_t *obj)
         ReleaseDC((HWND)obj[0x1f], (HDC)obj[0x1e]);
         obj[0x1e] = 0;
     }
-    FUN_1400F06FC(obj);
+    PECMD_DtorCtlCoreObj(obj);
 }
 
 /* ========== PECMD_DrawVertCenteredText @0x1400ef08c ==========

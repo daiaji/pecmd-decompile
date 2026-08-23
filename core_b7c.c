@@ -5,21 +5,21 @@
  * 本轮先补可编译、可链接的简化实现，保留原始 @0x 地址和 TODO(verify)。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   FUN_1400C0AD8       @0x1400c0ad8  (简化桩)
- *   FUN_1400C3820   @0x1400c3820  (简化桩)
- *   FUN_1400C3CF8   @0x1400c3cf8  (简化桩)
- *   FUN_1400C5300    @0x1400c5300  (简化桩)
- *   FUN_1400C56FC  @0x1400c56fc  (简化桩)
+ *   PECMD_HashCmdCompute       @0x1400c0ad8  (简化桩)
+ *   PECMD_CreateUpDownCtrl   @0x1400c3820  (简化桩)
+ *   PECMD_CreateScrollBarObj   @0x1400c3cf8  (简化桩)
+ *   PECMD_SpinAddControl    @0x1400c5300  (简化桩)
+ *   PECMD_SbarAddControl  @0x1400c56fc  (简化桩)
  * ==================================================================== */
 #include <stdint.h>
 
 #include "pecmd_defs.h"
 
-/* ========== FUN_1400C0AD8 @0x1400c0ad8 ==========
+/* ========== PECMD_HashCmdCompute @0x1400c0ad8 ==========
  * [简化桩] 读取文件并计算哈希。返回 NULL。
  * TODO(verify): 需完整还原文件映射/哈希算法。
  */
-void *FUN_1400C0AD8(int64_t *a1, LPCWSTR a2, int64_t *a3)
+void *PECMD_HashCmdCompute(int64_t *a1, LPCWSTR a2, int64_t *a3)
 {
     (void)a1;
     (void)a2;
@@ -27,11 +27,11 @@ void *FUN_1400C0AD8(int64_t *a1, LPCWSTR a2, int64_t *a3)
     return NULL;
 }
 
-/* ========== FUN_1400C3820 @0x1400c3820 ==========
+/* ========== PECMD_CreateUpDownCtrl @0x1400c3820 ==========
  * [简化桩] 创建 updown 控件对象。直接返回 a1。
  * TODO(verify): 需完整还原控件创建/样式计算。
  */
-uint64_t *FUN_1400C3820(uint64_t *a1, int64_t a2, uint32_t a3,
+uint64_t *PECMD_CreateUpDownCtrl(uint64_t *a1, int64_t a2, uint32_t a3,
                                  uint64_t *a4, uint32_t a5, uint32_t a6,
                                  uint32_t a7, uint32_t a8, uint64_t *a9,
                                  uint64_t *a10, uint64_t *a11, uint32_t a12)
@@ -50,11 +50,11 @@ uint64_t *FUN_1400C3820(uint64_t *a1, int64_t a2, uint32_t a3,
     return a1;
 }
 
-/* ========== FUN_1400C3CF8 @0x1400c3cf8 ==========
+/* ========== PECMD_CreateScrollBarObj @0x1400c3cf8 ==========
  * [简化桩] 创建滚动条控件对象。直接返回 a1。
  * TODO(verify): 需完整还原滚动条创建/范围设置。
  */
-uint64_t *FUN_1400C3CF8(uint64_t *a1, int64_t a2, uint32_t a3,
+uint64_t *PECMD_CreateScrollBarObj(uint64_t *a1, int64_t a2, uint32_t a3,
                                  uint64_t *a4, uint32_t a5, uint32_t a6,
                                  uint32_t a7, uint32_t a8, uint16_t *a9,
                                  uint64_t *a10, uint32_t a11, LPCWSTR a12)
@@ -73,11 +73,11 @@ uint64_t *FUN_1400C3CF8(uint64_t *a1, int64_t a2, uint32_t a3,
     return a1;
 }
 
-/* ========== FUN_1400C5300 @0x1400c5300 ==========
+/* ========== PECMD_SpinAddControl @0x1400c5300 ==========
  * [简化桩] 向列表控件添加项。返回 0。
  * TODO(verify): 需完整还原参数解析/控件消息。
  */
-uint64_t FUN_1400C5300(int64_t *a1, uint16_t *a2, WPARAM a3,
+uint64_t PECMD_SpinAddControl(int64_t *a1, uint16_t *a2, WPARAM a3,
                                uint64_t a4)
 {
     (void)a1;
@@ -87,11 +87,11 @@ uint64_t FUN_1400C5300(int64_t *a1, uint16_t *a2, WPARAM a3,
     return 0;
 }
 
-/* ========== FUN_1400C56FC @0x1400c56fc ==========
+/* ========== PECMD_SbarAddControl @0x1400c56fc ==========
  * [简化桩] 向列表控件添加项（带 -color 前缀解析）。返回 0。
  * TODO(verify): 需完整还原参数解析/颜色处理。
  */
-uint64_t FUN_1400C56FC(int64_t *a1, uint16_t *a2, WPARAM a3,
+uint64_t PECMD_SbarAddControl(int64_t *a1, uint16_t *a2, WPARAM a3,
                                  uint64_t a4)
 {
     (void)a1;
@@ -101,11 +101,11 @@ uint64_t FUN_1400C56FC(int64_t *a1, uint16_t *a2, WPARAM a3,
     return 0;
 }
 
-/* ========== FUN_1400C5BA8 @0x1400c5ba8 ==========
+/* ========== PECMD_EnviStructFieldOffset @0x1400c5ba8 ==========
  * [简化桩] 解析文件属性命令。返回 0。
  * TODO(verify): 需完整还原属性/时间解析。
  */
-int64_t FUN_1400C5BA8(int64_t *a1, int64_t *a2, LPCWSTR a3,
+int64_t PECMD_EnviStructFieldOffset(int64_t *a1, int64_t *a2, LPCWSTR a3,
                                  LPCWSTR a4, uint64_t *a5, int64_t *a6)
 {
     (void)a1;
@@ -166,11 +166,11 @@ uint64_t FUN_1400DC410(int64_t *a1, int64_t *a2, LPCWSTR a3,
     return 0;
 }
 
-/* ========== FUN_1400DF464 @0x1400df464 ==========
+/* ========== PECMD_MounResolveDiskNo @0x1400df464 ==========
  * [简化桩] 下载 URL 到文件。返回 0。
  * TODO(verify): 需完整还原下载/缓存逻辑。
  */
-DWORD FUN_1400DF464(LPCWSTR a1, uint32_t a2, LPCWSTR a3,
+DWORD PECMD_MounResolveDiskNo(LPCWSTR a1, uint32_t a2, LPCWSTR a3,
                               uint64_t a4, uint64_t *a5, uint32_t *a6,
                               uint64_t *a7)
 {
@@ -195,11 +195,11 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
     return a1;
 }
 
-/* ========== FUN_1400C493C @0x1400c493c ==========
+/* ========== PECMD_CtlDispatchGenericProp @0x1400c493c ==========
  * [简化桩] 添加树控件项。返回 0。
  * TODO(verify): 需完整还原树节点添加。
  */
-uint64_t FUN_1400C493C(int64_t *a1, int64_t *a2, LPCWSTR a3,
+uint64_t PECMD_CtlDispatchGenericProp(int64_t *a1, int64_t *a2, LPCWSTR a3,
                                uint16_t *a4, uint64_t a5, uint64_t a6,
                                int64_t a7)
 {
@@ -213,11 +213,11 @@ uint64_t FUN_1400C493C(int64_t *a1, int64_t *a2, LPCWSTR a3,
     return 0;
 }
 
-/* ========== FUN_1400C6324 @0x1400c6324 ==========
+/* ========== PECMD_EnviMemReadWrite @0x1400c6324 ==========
  * [简化桩] 执行脚本行。返回 NULL。
  * TODO(verify): 需完整还原脚本执行。
  */
-void *FUN_1400C6324(WCHAR *a1, void *a2, uint64_t a3,
+void *PECMD_EnviMemReadWrite(WCHAR *a1, void *a2, uint64_t a3,
                              WCHAR *a4, char a5)
 {
     (void)a1;
@@ -228,11 +228,11 @@ void *FUN_1400C6324(WCHAR *a1, void *a2, uint64_t a3,
     return NULL;
 }
 
-/* ========== FUN_1400C9B9C @0x1400c9b9c ==========
+/* ========== PECMD_TablCreateListCtrl @0x1400c9b9c ==========
  * [简化桩] 创建列表控件。返回 a1。
  * TODO(verify): 需完整还原列表创建。
  */
-uint64_t *FUN_1400C9B9C(uint64_t *a1, uint64_t a2, uint64_t a3,
+uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3,
                                  uint32_t a4, uint64_t *a5, uint32_t a6,
                                  uint32_t a7, uint32_t a8, uint32_t a9,
                                  uint64_t *a10, uint16_t *a11, LPCWSTR a12,
@@ -324,11 +324,11 @@ LARGE_INTEGER FUN_1400D2E90(int64_t *a1, LARGE_INTEGER a2)
     return r;
 }
 
-/* ========== FUN_1400D5B48 @0x1400d5b48 ==========
+/* ========== PECMD_CtlLoadPictureRgn @0x1400d5b48 ==========
  * [简化桩] 判断点是否在控件内。返回 0。
  * TODO(verify): 需完整还原命中判断。
  */
-char FUN_1400D5B48(int64_t a1, HDC a2)
+char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
 {
     (void)a1;
     (void)a2;

@@ -6,10 +6,10 @@
  *   变量写入         FUN_14001E6BC     @0x14001e6bc
  *   环境变量写入     FUN_14005D534       @0x14005d534
  *   随机种子         FUN_14001B510     @0x14001b510
- *   随机数发生器     FUN_14005DFF4      @0x14005dff4
+ *   随机数发生器     PECMD_RandSeedAdvance      @0x14005dff4
  *   随机数种子源     FUN_14005E04C   @0x14005e04c
  *   XOR 编码         FUN_14001B5AC       @0x14001b5ac
- *   查找字符偏移     FUN_14001B4F8     @0x14001b4f8
+ *   查找字符偏移     PECMD_StrChrOffset     @0x14001b4f8
  *   变量写(锁/直写)  FUN_1400629B8      @0x1400629b8 (已声明)
  */
 #include <stdlib.h>
@@ -45,10 +45,10 @@ static int32_t FUN_14005D534(const char *name, LPCWSTR value)
     return SetEnvironmentVariableW((LPCWSTR)name, value);
 }
 
-/* ========== FUN_14005DFF4 @0x14005dff4 ==========
+/* ========== PECMD_RandSeedAdvance @0x14005dff4 ==========
  * 48 位 LCG 单步。
  */
-void FUN_14005DFF4(void)
+void PECMD_RandSeedAdvance(void)
 {
     g_lcgState = (g_lcgState * 0x5deece66d + 0xb) & 0xffffffffffff;
 }
@@ -63,7 +63,7 @@ int64_t FUN_14005E04C(void)
     QueryPerformanceCounter(&qpc);
     l2 = g_randState * 0x83 + qpc;
     do {
-        FUN_14005DFF4();
+        PECMD_RandSeedAdvance();
         l2 = g_lcgState + l2 * 3;
     } while (l2 == g_randPrev);
     g_randPrev = l2;
@@ -113,10 +113,10 @@ int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n)
     return (int32_t)(key << 16);
 }
 
-/* ========== FUN_14001B4F8 @0x14001b4f8 ==========
+/* ========== PECMD_StrChrOffset @0x14001b4f8 ==========
  * 返回从 buf 到 ch 的字符偏移（不含 ch）。
  */
-uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch)
+uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch)
 {
     const WCHAR *p;
     for (p = buf; *p != ch; p++) {

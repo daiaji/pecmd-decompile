@@ -7,7 +7,7 @@
  *   调用 ZwUnmapViewOfSection  PECMD_ZwUnmapViewOfSection @0x1400e4228
  *   更新窗口扩展样式位      FUN_1400E5960 @0x1400e5960
  *   子窗口命中测试回调      FUN_1400E6350 @0x1400e6350
- *   填充矩形背景色          FUN_1400E68E0 @0x1400e68e0
+ *   填充矩形背景色          PECMD_FillRectColor @0x1400e68e0
  *   初始化窗口查找结构      FUN_1400EC084 @0x1400ec084
  *   发送对象查找消息 0x432   FUN_1400EC6A8 @0x1400ec6a8
  *   销毁对象(带释放) F      PECMD_DtorWinObjWithStrings @0x1400eceb4
@@ -47,7 +47,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void FUN_1400F2B6C(int64_t obj);            /* @0x1400f2b6c */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj);            /* @0x1400f2b6c */
 
 /* ---- 全局数据符号 ---- */
 extern uint8_t PTR_FUN_14012bbf0[];
@@ -60,7 +60,7 @@ extern int FUN_1400E6314(HWND hwnd, POINT pt);
 extern void PECMD_FreeNamedEntryArray(uint64_t *arr);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400F0648(uint64_t *obj, uint64_t value);
-extern void FUN_14005B0D4(void *ps);
+extern void PECMD_HeapFreeWithHeader(void *ps);
 extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                            uint32_t esize);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
@@ -134,10 +134,10 @@ bool FUN_1400E6350(HWND hwnd, POINT *ctx)
     return keepGoing;
 }
 
-/* ========== FUN_1400E68E0 @0x1400e68e0 ==========
+/* ========== PECMD_FillRectColor @0x1400e68e0 ==========
  * 设置背景色并用 ExtTextOutW(ETO_OPAQUE, NULL) 填充矩形，返回旧背景色。
  */
-COLORREF FUN_1400E68E0(HDC hdc, RECT *rect, COLORREF color)
+COLORREF PECMD_FillRectColor(HDC hdc, RECT *rect, COLORREF color)
 {
     COLORREF oldColor = SetBkColor(hdc, color);
 
@@ -230,7 +230,7 @@ void PECMD_ClearStringItemList(int64_t arr)
 
     for (i = 0; i < count; i++) {
         if (*(int64_t *)(data + 0x10 + (int64_t)i * 0x28) != 0) {
-            FUN_14005B0D4((void *)(data + 0x10 + (int64_t)i * 0x28));
+            PECMD_HeapFreeWithHeader((void *)(data + 0x10 + (int64_t)i * 0x28));
         }
     }
     PECMD_FreeStrBuf((WCHAR **)(base + 8));
@@ -426,7 +426,7 @@ void PECMD_ClearNamedPropArray(int64_t *array)
         item = *(void **)(base + count * 8);
         if (item != NULL) {
             PECMD_FreeStrBuf((WCHAR **)((char *)item + 0x10));
-            FUN_1400F2B6C((int64_t)item);
+            PECMD_DeleteEntryGdiHandle((int64_t)item);
             free(item);
             *(uint64_t *)(base + count * 8) = 0;
         }

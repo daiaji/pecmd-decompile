@@ -140,8 +140,8 @@ extern void      PECMD_SetVariableWithPrefix(longlong *a, LPCWSTR b, LPCWSTR c);
 extern undefined8 PECMD_ListDrives(undefined8 *a, WCHAR b, int c, int d,
                                 uint e, LPCWSTR f);                 /* @0x1400787b4             */
 extern undefined8 *PECMD_SplitTokenAssignVar(undefined8 *a, longlong *b, short c, byte d); /* @0x14007f6e4 */
-extern undefined8 FUN_1400a9a84(longlong *a, ulonglong *b);         /* @0x1400a9a84             */
-extern undefined8 FUN_1400e4d84(void);                              /* @0x1400e4d84             */
+extern undefined8 PECMD_EvalExprSkipOneChar(longlong *a, ulonglong *b);         /* @0x1400a9a84             */
+extern undefined8 PECMD_HasRasDialApi(void);                              /* @0x1400e4d84             */
 extern undefined8 PECMD_LoadRasApi(undefined8 a);                      /* @0x1400e4d94             */
 extern void      PECMD_DestroyEventSlots(undefined8 *a);                      /* @0x1400e4e94             */
 extern ulonglong PECMD_FindRasConnection(LPCWSTR a);                          /* @0x1400e7664             */
@@ -990,24 +990,24 @@ LAB_140097f33:
                 local_res10[0] = (WCHAR *)(pWVar23 + 1);
             }
             local_b0.bottom = uVar10;
-            iVar7 = (int)FUN_1400a9a84((longlong *)local_res10, (ulonglong *)&local_98);
+            iVar7 = (int)PECMD_EvalExprSkipOneChar((longlong *)local_res10, (ulonglong *)&local_98);
             bVar27 = (byte)(iVar7 != 0);
             hWnd = ptVar20;
             if (bVar27) {
                 local_b0.left = (int)(uint32_t)local_98;
                 hWnd = (RECT *)(uintptr_t)local_98;
             }
-            iVar7 = (int)FUN_1400a9a84((longlong *)local_res10, (ulonglong *)&local_res20);
+            iVar7 = (int)PECMD_EvalExprSkipOneChar((longlong *)local_res10, (ulonglong *)&local_res20);
             if (iVar7 != 0) {
                 bVar27 = (byte)(bVar27 | 2);
                 local_b0.top = (uint)(uint32_t)local_res20;
             }
-            iVar7 = (int)FUN_1400a9a84((longlong *)local_res10, (ulonglong *)&local_res20);
+            iVar7 = (int)PECMD_EvalExprSkipOneChar((longlong *)local_res10, (ulonglong *)&local_res20);
             if (iVar7 != 0) {
                 bVar27 = (byte)(bVar27 | 4);
                 local_b0.right = (uint)(uint32_t)local_res20;
             }
-            iVar7 = (int)FUN_1400a9a84((longlong *)local_res10, (ulonglong *)&local_res20);
+            iVar7 = (int)PECMD_EvalExprSkipOneChar((longlong *)local_res10, (ulonglong *)&local_res20);
             if (iVar7 != 0) {
                 bVar27 = (byte)(bVar27 | 8);
                 local_b0.bottom = (uint)(uint32_t)local_res20;
@@ -2155,7 +2155,7 @@ LAB_14009a3f5:
     pwVar31 = local_bf8;
     if (local_c27 == '\0') {
         PECMD_LoadRasApi((uint64_t)(uintptr_t)&local_c28);
-        bVar8 = FUN_1400e4d84() != 0;
+        bVar8 = PECMD_HasRasDialApi() != 0;
         uVar32 = 1;
         if (bVar8) {
             if (bVar5) {

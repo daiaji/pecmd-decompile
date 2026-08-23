@@ -7,9 +7,9 @@
  *   一次性初始化     PECMD_EnsureOneTimeInit @0x140027e88
  *   引用计数释放     PECMD_ReleaseRef @0x1400281a4
  *   版本检查         PECMD_InitIfOldSystem @0x14002f1cc
- *   文件大小包装     FUN_140035b08 @0x140035b08
- *   文件大小包装     FUN_140035b24 @0x140035b24
- *   窗口过程转发     FUN_140037b84 @0x140037b84
+ *   文件大小包装     PECMD_IfexCmdHandler @0x140035b08
+ *   文件大小包装     PECMD_FindCmdHandler @0x140035b24
+ *   窗口过程转发     PECMD_HelpDialogProc @0x140037b84
  *   窗口过程转发     PECMD_ScriptWndProc @0x14003892c
  *   窗口过程转发     PECMD_WndProcForward @0x14003e16c
  *
@@ -131,32 +131,32 @@ void PECMD_InitIfOldSystem(void)
     }
 }
 
-/* ========== FUN_140035b08 @0x140035b08 ==========
+/* ========== PECMD_IfexCmdHandler @0x140035b08 ==========
  * @0x140035b08 size=25 — 文件大小/位置包装(asm→C): 纯尾调用包装,
  *   将第4参(r8)移入第4槽(r9)、置第3参 r8b=1, call PECMD_BuildImDiskMenu。
  */
-void FUN_140035b08(int64_t *obj, ULARGE_INTEGER pos,
+void PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
 {
     PECMD_BuildImDiskMenu(obj, pos, 1, out, flags);
 }
 
-/* ========== FUN_140035b24 @0x140035b24 ==========
+/* ========== PECMD_FindCmdHandler @0x140035b24 ==========
  * @0x140035b24 size=25 — 文件大小/位置包装(asm→C): 同 b08, 第3参 xor r8d=0,
  *   call PECMD_BuildImDiskMenu。
  */
-void FUN_140035b24(int64_t *obj, ULARGE_INTEGER pos,
+void PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos,
                    int64_t *out, uint64_t flags)
 {
     PECMD_BuildImDiskMenu(obj, pos, 0, out, flags);
 }
 
-/* ========== FUN_140037b84 @0x140037b84 ==========
+/* ========== PECMD_HelpDialogProc @0x140037b84 ==========
  * @0x140037b84 size=35 — 窗口过程转发(asm→C): rcx=DAT_14013cfb0(g_pAppData),
  *   rdx=hwnd, r8d=msg, r9=hdc, [rsp+0x20]=wnd,
  *   call PECMD_HelpDlgProc(g_pAppData, hwnd, msg, hdc, wnd)。
  */
-void FUN_140037b84(HWND hwnd, uint32_t msg, HDC hdc, HWND wnd)
+void PECMD_HelpDialogProc(HWND hwnd, uint32_t msg, HDC hdc, HWND wnd)
 {
     PECMD_HelpDlgProc(g_pAppData, hwnd, msg, hdc, wnd);
 }

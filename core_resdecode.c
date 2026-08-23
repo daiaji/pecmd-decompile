@@ -12,7 +12,7 @@
  *     >>16   : XOR 密钥 key16（低字节 keyLo 用于字节级操作）
  *   流程：前 6 字节按密钥试探解码 → 检测 UTF-16BE/LE 与脚本前缀
  *   （常量 @0x14012412c/@0x140124128/@0x140124130 内容 TODO(verify)）→
- *   剥离前缀/字节序转换 → 整块解码（FUN_1400E7994 @0x1400e7994）→
+ *   剥离前缀/字节序转换 → 整块解码（PECMD_DecodeEncTextToUtf16 @0x1400e7994）→
  *   尾部补 8 个密钥填充 + 终止符 → 扫描 "#code=N"(N=代码页)/"#!tN" →
  *   需要时按代码页二次转换 → 返回 spec。
  *   返回值：spec（0、0xfde9 或 "#code=" 后的数字；未解析保持原值）。
@@ -30,18 +30,18 @@ extern void *PECMD_ReallocBuffer(void *old, int64_t size);                    /*
 extern void PECMD_ZeroLenBuf(void *p);                                     /* @0x14005b0b8 */
 extern bool FUN_1400C11C0(LPCWSTR *ps, int *out);                      /* @0x1400c11c0 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
-extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch);             /* @0x14001b4f8 */
+extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch);             /* @0x14001b4f8 */
 
 /* 同批（core_scriptdep.c）：core_var3.c 已实现，此处仅声明供衔接核对 */
 /* 未实现辅助（TODO(verify) 挂起，语义待核对） */
 extern int32_t FUN_14005B184(const char *a, const char *b, int n);
 extern void FUN_140060A74(uint8_t *buf, int len);
-extern int32_t FUN_1400E7994(uint32_t spec, const uint8_t *src, int srclen,
+extern int32_t PECMD_DecodeEncTextToUtf16(uint32_t spec, const uint8_t *src, int srclen,
                                uint16_t *dst, int dstcap, uint32_t key);
 extern void PECMD_SkipEncByteToEol(uint8_t **pp, uint8_t key);
-extern void FUN_1400E7098(uint8_t **pp, uint8_t key);
+extern void PECMD_SkipCrLfEncByte(uint8_t **pp, uint8_t key);
 extern void PECMD_SkipEncWCharToEol(WCHAR **pp, uint16_t key);
-extern void FUN_1400E70F4(WCHAR **pp, uint16_t key);
+extern void PECMD_SkipCrLfEncWchar(WCHAR **pp, uint16_t key);
 extern void PECMD_ResReenc(WCHAR *src, int64_t *ps, uint32_t flag,
                            uint16_t key); /* @0x140075c7c TODO(verify): 按代码页二次转换 */
 
@@ -115,14 +115,14 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
         if (pb[0] == 0x40) pb++;
         if (pb[0] == 0x3a && pb[1] == 0x3a) {
             PECMD_SkipEncByteToEol(&pCur, keyLo);
-            FUN_1400E7098(&pCur, keyLo);
+            PECMD_SkipCrLfEncByte(&pCur, keyLo);
         }
     }
     if (((uint8_t)*pCur ^ keyLo) == 0x40) pCur++;
     if (((int8_t)*pCur ^ (int32_t)(key & 0xffff)) == 0x23 &&
         ((int8_t)pCur[1] ^ (int32_t)(key & 0xffff)) == 0x21) {
         PECMD_SkipEncByteToEol(&pCur, keyLo);
-        FUN_1400E7098(&pCur, keyLo);
+        PECMD_SkipCrLfEncByte(&pCur, keyLo);
     }
     {
         uint8_t *pb = pCur;
@@ -189,11 +189,11 @@ raw_decode:
     /* 两次解码尝试：先自动模式，失败再 0xfde9 强制模式 */
     skipN = len * 3;
     pNew = (uint8_t *)PECMD_ReallocBuffer(pNew, (int64_t)(skipN + 3) * 2 + 2);
-    iVar3 = FUN_1400E7994(0, (const uint8_t *)(intptr_t)ps[0], len, (uint16_t *)pNew, skipN,
+    iVar3 = PECMD_DecodeEncTextToUtf16(0, (const uint8_t *)(intptr_t)ps[0], len, (uint16_t *)pNew, skipN,
                             (key & 0xffff) | 0x1000000);
     if (iVar3 < 1) {
         bool b = (f4 != 0);
-        iVar3 = FUN_1400E7994(0xfde9, (const uint8_t *)(intptr_t)ps[0], len,
+        iVar3 = PECMD_DecodeEncTextToUtf16(0xfde9, (const uint8_t *)(intptr_t)ps[0], len,
                                 (uint16_t *)pNew, skipN,
                                 ((uint32_t)(-(int32_t)b) & 0x40000) | (key & 0xffff));
         if (iVar3 < 1) {
@@ -218,7 +218,7 @@ main_decode:
     }
     ps[0] = (int64_t)(intptr_t)PECMD_ReallocBuffer((void *)(intptr_t)ps[0],
                                              (int64_t)(len * 3 + 3) * 2 + 2);
-    iVar3 = FUN_1400E7994(spec, data, len, (uint16_t *)(intptr_t)ps[0], len * 2,
+    iVar3 = PECMD_DecodeEncTextToUtf16(spec, data, len, (uint16_t *)(intptr_t)ps[0], len * 2,
                             key & 0xffff);
 
 postproc:
@@ -233,13 +233,13 @@ postproc:
             if ((w[0] ^ key16) == 0x40) w++;
             if (((w[0] ^ key16) == 0x3a) && ((w[1] ^ key16) == 0x3a)) {
                 PECMD_SkipEncWCharToEol(&w, key16);
-                FUN_1400E70F4(&w, key16);
+                PECMD_SkipCrLfEncWchar(&w, key16);
             }
             w = (WCHAR *)(intptr_t)ps[0];
             if ((w[0] ^ key16) == 0x40) w++;
             if (((w[0] ^ key16) == 0x23) && ((w[1] ^ key16) == 0x21)) {
                 PECMD_SkipEncWCharToEol(&w, key16);
-                FUN_1400E70F4(&w, key16);
+                PECMD_SkipCrLfEncWchar(&w, key16);
             }
             /* 拷贝 '#' 处起的 <=0x20 个 WCHAR 到 pHead（WCHAR 级 XOR），比较 "#code=" */
             {
@@ -270,12 +270,12 @@ postproc:
             (specOut == g_SysCodePage)) {
             break;
         }
-        /* 按代码页二次转换后重算长度（填充的密钥供 FUN_14001B4F8 定位终止） */
+        /* 按代码页二次转换后重算长度（填充的密钥供 PECMD_StrChrOffset 定位终止） */
         {
             WCHAR *w = (WCHAR *)(intptr_t)ps[0];
             ps[0] = 0;
             PECMD_ResReenc(w, ps, (uint32_t)(cpArg == 0x3b6), key16 & 0xffff);
-            iVar3 = (int)FUN_14001B4F8((WCHAR *)(intptr_t)ps[0], key16);
+            iVar3 = (int)PECMD_StrChrOffset((WCHAR *)(intptr_t)ps[0], key16);
             mode |= 0x1000;
             PECMD_FreeStrBuf((WCHAR **)&w);
         }

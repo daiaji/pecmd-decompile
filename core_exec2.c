@@ -6,7 +6,7 @@
  *   PECMD_TokPrefixICmp @0x14005c72c   前缀比较（字母忽略大小写）(已声明 StrICmpN)
  *   FUN_14001EA18     @0x14001ea18   加载资源（FindResource/LoadResource + 解码）
  *   FUN_14005F33C   @0x14005f33c   编码检测（UTF8/UTF16/UNICODE 魔数）
- *   FUN_14005E51C   @0x14005e51c   空白/注释处理（";;" → 换行）
+ *   PECMD_SemicolonRunToNewline   @0x14005e51c   空白/注释处理（";;" → 换行）
  *   FUN_140024C48  @0x140024c48   Token 解析（引号/空白）
  *   FUN_140073CCC    @0x140073ccc   参数表构建
  *   FUN_14001BE14  @0x14001be14   去首尾引号
@@ -19,7 +19,7 @@
  *   PECMD_AllocAnsiString     @0x140070044   ANSI 字符串复制
  *   PECMD_InitObfuscatedKeywords   @0x14006159c   脚本分隔符初始化（XOR 编码表）
  *   FUN_14002487C     @0x14002487c   行分割（_ENDFILE 处理）
- *   FUN_14005B21C    @0x14005b21c   退出进程
+ *   PECMD_ExitProcessCall    @0x14005b21c   退出进程
  *   PECMD_ReallocBuffer     @0x140063224   带 0xaa55 头分配
  */
 #include <stdlib.h>
@@ -32,7 +32,7 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp);                 /* @0x14005b154 见 core_string.c */
 extern char *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
 extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
-extern void FUN_14005B21C(UINT code);                  /* @0x14005b21c */
+extern void PECMD_ExitProcessCall(UINT code);                  /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
 
 /* FUN_14005B154 实现见 core_string.c (@0x14005b154)。 */
@@ -107,8 +107,8 @@ char *PECMD_AllocAnsiString(const char *src)
 
 /* FUN_1400630D0 实现见 core_string.c (@0x1400630d0)。 */
 
-/* ========== FUN_14005B21C @0x14005b21c ========== */
-void FUN_14005B21C(UINT code)
+/* ========== PECMD_ExitProcessCall @0x14005b21c ========== */
+void PECMD_ExitProcessCall(UINT code)
 {
     ExitProcess(code);
 }

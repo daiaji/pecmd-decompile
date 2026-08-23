@@ -34,7 +34,7 @@ extern uint16_t FUN_14001B510(void);                          /* @0x14001b510 */
 extern int64_t FUN_14001B5AC(void *buf, uint32_t key, int64_t len); /* @0x14001b5ac */
 extern uint8_t *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                               int64_t len, void **out);        /* @0x140018978 */
-extern int64_t FUN_14001B4F8(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
+extern int64_t PECMD_StrChrOffset(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
 extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 */
 extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type,
                               void **out, uint32_t *flags_out); /* @0x14001ea18 */
@@ -53,7 +53,7 @@ extern void *PECMD_PrependEnviHeader(uint32_t key, void **buf, LPCWSTR extra, ui
 extern WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name,
                                       int64_t a4);                        /* @0x140030f1c */
 extern WCHAR * PECMD_UnquoteTokenInPlace(WCHAR *p);                                 /* @0x14001d5f4 */
-extern void FUN_1400679DC(WCHAR **pp, int64_t *out, WCHAR sep);       /* @0x1400679dc */
+extern void PECMD_ParseIntSkipSepChar(WCHAR **pp, int64_t *out, WCHAR sep);       /* @0x1400679dc */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int64_t *out);               /* @0x140074838 */
 extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);     /* @0x1400b638c core_execmain.c */
 extern DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR a2, LPCWSTR a3, uint32_t flags,
@@ -293,7 +293,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_14001B5AC(local_210, 0, 0);
                     PECMD_InvokeSubRoutine(&local_210, script, 0);
                     {
-                        int64_t pos = FUN_14001B4F8(local_210, 0);
+                        int64_t pos = PECMD_StrChrOffset(local_210, 0);
                         FUN_14001B5AC(local_210, (uint32_t)seed, pos + 2);
                     }
                     FUN_1400702B0(&local_150, WSTR("**mem"));

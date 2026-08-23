@@ -47,7 +47,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_14005D558(void *obj, HWND hwnd);
-extern void FUN_14005DFF4(void);
+extern void PECMD_RandSeedAdvance(void);
 extern uint64_t FUN_14005F158(uint64_t *obj, uint8_t *data);
 extern uint64_t PECMD_ParseNumberToDouble(int64_t *pp, double *out);
 extern uint32_t PECMD_EnumDeviceInterfaces(int dev, uint32_t flags, void *ctx);
@@ -197,7 +197,7 @@ void PECMD_FreeContainer(int64_t *container)
 void PECMD_UpdateLcg(int64_t seed)
 {
     g_lcgState = (g_lcgState + seed) & 0xffffffffffffLL;
-    FUN_14005DFF4();
+    PECMD_RandSeedAdvance();
 }
 
 /* ========== PECMD_IncAndForward_f2b0 @0x14005f2b0 ==========

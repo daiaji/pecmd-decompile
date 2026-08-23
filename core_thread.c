@@ -67,7 +67,7 @@ void PECMD_ZeroLenBuf(void *p)
 }
 
 /* ========== 引用计数减 @0x140017110 ========== */
-/* 计数到 0 释放 (FUN_14005B0D4 = PECMD_FreeStrBuf), 返回 NULL */
+/* 计数到 0 释放 (PECMD_HeapFreeWithHeader = PECMD_FreeStrBuf), 返回 NULL */
 void *PECMD_ReleaseRefCount(void **pp)
 {
     void *p;

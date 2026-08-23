@@ -65,7 +65,7 @@ extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
 extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
 extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_CrtShim(WCHAR *out, size_t size, void *ctx, void *name);
-extern uint64_t FUN_1400E9724(LPCWSTR cmd, int64_t *ctx);
+extern uint64_t PECMD_RamdMountImDisk(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern uint64_t PECMD_SetRamdrivDiskSize(int size, LPCWSTR name);
 extern void PECMD_QueryDiskSpace(LPCWSTR name);
@@ -1154,7 +1154,7 @@ uint64_t PECMD_RunRamdriv(int64_t *ctx, LPCWSTR cmd)
         local_res10 = cmd;
         iVar1 = StrCmpNIW(cmd, WSTR("ImDisk"), 6);
         if (iVar1 == 0) {
-            uVar3 = FUN_1400E9724(cmd, ctx);
+            uVar3 = PECMD_RamdMountImDisk(cmd, ctx);
             uVar3 = (uint64_t)(int)uVar3;
         } else {
             PECMD_AllocWStringBuffer((WCHAR **)&local_res18, 0x50);

@@ -53,7 +53,7 @@
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
 extern int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
-extern void FUN_1400F2B6C(int64_t obj);                            /* @0x1400f2b6c */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj);                            /* @0x1400f2b6c */
 extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1, int32_t field2);                     /* @0x1400f2b84 */
 extern void PECMD_TrackItemChangeList1(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
 extern void PECMD_TrackItemChangeList2(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f578c */
@@ -93,11 +93,11 @@ extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2,
                               int64_t *a7);
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 extern bool PECMD_ParseNumSkipWs(WCHAR **pp, int64_t *out);
-extern uint64_t FUN_1400C493C(int64_t *a1, int64_t *a2,
+extern uint64_t PECMD_CtlDispatchGenericProp(int64_t *a1, int64_t *a2,
                               LPCWSTR a3, uint16_t *a4,
                               uint64_t a5, uint64_t a6,
                               int64_t a7);
-extern void FUN_1400f21a8(void);
+extern void PECMD_RichEditWordBreakProc(void);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
 extern uint8_t PTR_FUN_14012b240[];
@@ -564,7 +564,7 @@ bool PECMD_CreateEditCtrl(int64_t *obj, uint32_t flags, DWORD style,
     PECMD_ContainerAppend((uint64_t *)obj);
     if ((flags >> 0xc & 1U) != 0U) {
         SendMessageW((HWND)obj[4], 0xd0, 0,
-                     (LPARAM)(uintptr_t)&FUN_1400f21a8);
+                     (LPARAM)(uintptr_t)&PECMD_RichEditWordBreakProc);
     }
     return obj[4] != 0;
 }
@@ -726,7 +726,7 @@ void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
     if (item != (void *)0) {
         if (value == 0) {
             *(int64_t *)(base + idx * 8) = 0;
-            FUN_1400F2B6C((int64_t)item);
+            PECMD_DeleteEntryGdiHandle((int64_t)item);
             free(item);
         } else {
             *(int64_t *)((uint8_t *)item + 8) = value;
@@ -1021,7 +1021,7 @@ uint64_t PECMD_ParseBuddyPrefix(int64_t *obj, int64_t *ctx,
         *name = 0;
         return 0;
     }
-    return FUN_1400C493C(obj, ctx, p, name, a5, a6, a7);
+    return PECMD_CtlDispatchGenericProp(obj, ctx, p, name, a5, a6, a7);
 }
 
 /* ========== FUN_1400FD220 @0x1400fd220 ==========
@@ -1102,7 +1102,7 @@ uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx,
             PECMD_ParseUIntValue(&s, value);
             *(int *)((uint8_t *)obj + 0xa8) = value[0];
         } else if (lstrcmpW(WSTR("enable"), param) != 0) {
-            return FUN_1400C493C(obj, ctx, s, (uint16_t *)param,
+            return PECMD_CtlDispatchGenericProp(obj, ctx, s, (uint16_t *)param,
                                  a5, a6, a7);
         } else {
             int value[2] = { (int)0x80000000, 0 };

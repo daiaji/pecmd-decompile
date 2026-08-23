@@ -6,10 +6,10 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   取窗口文本到串      FUN_1400E5730 @0x1400e5730
  *   设置颜色画刷        PECMD_SetCtlBackBrush @0x1400e5a58
- *   虚表 +0xf0 分发     FUN_1400E5AAC @0x1400e5aac
+ *   虚表 +0xf0 分发     PECMD_CtlForwardSetBlock @0x1400e5aac
  *   点是否在窗口内      FUN_1400E6314 @0x1400e6314
  *   安全格式化串        PECMD_SafeVFormatW @0x1400e6960
- *   格式化并赋值串      FUN_1400E6CBC @0x1400e6cbc
+ *   格式化并赋值串      PECMD_StrAppendFormat @0x1400e6cbc
  *   对齐扩容            PECMD_GrowCapacityAligned @0x1400e6cf8
  *   鼠标按下分发        FUN_1400EC9C0 @0x1400ec9c0
  *   释放串指针数组      PECMD_FreeNamedEntryArray @0x1400ecdd8
@@ -18,9 +18,9 @@
  *   初始化图标对象      PECMD_InitImageHolder @0x1400efec8
  *   销毁图标对象主体    PECMD_DtorImageHolder @0x1400eff10
  *   绘制对象            PECMD_CtlOnPaint @0x1400f05f8
- *   初始化控件对象 A    FUN_1400F11F8 @0x1400f11f8
+ *   初始化控件对象 A    PECMD_CtorSbarSubObj @0x1400f11f8
  *   父窗口命令通知(位)  PECMD_PostNotif203Bit @0x1400f1f28
- *   初始化窗口对象 B    FUN_1400F28E8 @0x1400f28e8
+ *   初始化窗口对象 B    PECMD_CtorIpadSubObj @0x1400f28e8
  *   消息预翻译          PECMD_CtlPreTranslateMsg @0x1400f2a00
  *   矩形折线绘制        PECMD_PolylineRectOutline @0x1400f2bf0
  *   按 ID 查找表项      PECMD_ItemPropFindIdxList5 @0x1400f40c8
@@ -48,7 +48,7 @@
 extern BOOL Polyline(HDC, const POINT *, int);
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void FUN_1400F2B6C(int64_t obj); /* @0x1400f2b6c */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj); /* @0x1400f2b6c */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_AllocStrSlot(void *ps);
@@ -108,10 +108,10 @@ void PECMD_SetCtlBackBrush(int64_t obj, COLORREF color, int64_t mode)
     InvalidateRect(*(HWND *)(obj + OBJ_HWND), (RECT *)0, 1);
 }
 
-/* ========== FUN_1400E5AAC @0x1400e5aac ==========
+/* ========== PECMD_CtlForwardSetBlock @0x1400e5aac ==========
  * 调用对象虚表 +0xf0 处的 7 参回调。TODO(verify): 参数数组槽位语义未确认。
  */
-int64_t FUN_1400E5AAC(int64_t *obj, uint64_t *args)
+int64_t PECMD_CtlForwardSetBlock(int64_t *obj, uint64_t *args)
 {
     int (*fn)(int64_t *, uint64_t, uint64_t, uint64_t, uint64_t, int, uint64_t) =
         *(int (**)(int64_t *, uint64_t, uint64_t, uint64_t, uint64_t, int, uint64_t))
@@ -138,10 +138,10 @@ void PECMD_SafeVFormatW(WCHAR *dest, size_t cchDest, LPCWSTR fmt, uint64_t arg)
     (void)_snwprintf(dest, cchDest, fmt, arg);
 }
 
-/* ========== FUN_1400E6CBC @0x1400e6cbc ==========
+/* ========== PECMD_StrAppendFormat @0x1400e6cbc ==========
  * 将单个参数按格式串格式化到临时缓冲，再赋值给字符串容器。
  */
-void FUN_1400E6CBC(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
+void PECMD_StrAppendFormat(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
 {
     WCHAR buf[104];
     PECMD_SafeVFormatW(buf, 99, fmt, arg);
@@ -270,10 +270,10 @@ void PECMD_CtlOnPaint(int64_t obj)
     EndPaint(hwnd, &ps);
 }
 
-/* ========== FUN_1400F11F8 @0x1400f11f8 ==========
+/* ========== PECMD_CtorSbarSubObj @0x1400f11f8 ==========
  * 初始化控件对象 A 并设置虚表 PTR_FUN_14012c0e0。
  */
-uint64_t *FUN_1400F11F8(uint64_t *obj, uint64_t param2)
+uint64_t *PECMD_CtorSbarSubObj(uint64_t *obj, uint64_t param2)
 {
     FUN_1400E57C0(obj);
     obj[0x1a] = param2;
@@ -295,10 +295,10 @@ void PECMD_PostNotif203Bit(int64_t obj)
     }
 }
 
-/* ========== FUN_1400F28E8 @0x1400f28e8 ==========
+/* ========== PECMD_CtorIpadSubObj @0x1400f28e8 ==========
  * 初始化窗口对象 B 并设置虚表 PTR_FUN_14012c410。
  */
-uint64_t *FUN_1400F28E8(uint64_t *obj, uint64_t param2)
+uint64_t *PECMD_CtorIpadSubObj(uint64_t *obj, uint64_t param2)
 {
     FUN_1400E57C0(obj);
     obj[0x1a] = param2;
@@ -357,7 +357,7 @@ int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue)
 }
 
 /* ========== PECMD_ClearPropArrayItems @0x1400f4208 ==========
- * 释放数组中的每个 GDI 表项：先 FUN_1400F2B6C 再 free。
+ * 释放数组中的每个 GDI 表项：先 PECMD_DeleteEntryGdiHandle 再 free。
  */
 void PECMD_ClearPropArrayItems(uint64_t *arr)
 {
@@ -368,7 +368,7 @@ void PECMD_ClearPropArrayItems(uint64_t *arr)
         count--;
         void *item = (void *)base[count];
         if (item != (void *)0) {
-            FUN_1400F2B6C((int64_t)item);
+            PECMD_DeleteEntryGdiHandle((int64_t)item);
             free(item);
             base[count] = 0;
         }

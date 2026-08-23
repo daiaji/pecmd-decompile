@@ -6,8 +6,8 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   PECMD_SockCreateIpcObj      @0x1400e1228  (简化桩)
- *   FUN_1400E9724       @0x1400e9724  (简化桩)
- *   FUN_1400F36EC  @0x1400f36ec  (简化桩)
+ *   PECMD_RamdMountImDisk       @0x1400e9724  (简化桩)
+ *   PECMD_ListMoveItemBlock  @0x1400f36ec  (简化桩)
  *   FUN_1400F6DB0     @0x1400f6db0  (简化桩)
  *   PECMD_ListHostMsgDispatch    @0x1400f94a0  (简化桩)
  * ==================================================================== */
@@ -29,22 +29,22 @@ LARGE_INTEGER PECMD_SockCreateIpcObj(LARGE_INTEGER script, WCHAR *cmd, WPARAM wP
     return r;
 }
 
-/* ========== FUN_1400E9724 @0x1400e9724 ==========
+/* ========== PECMD_RamdMountImDisk @0x1400e9724 ==========
  * [简化桩] 原函数为 9K 大函数，按签名返回 0。
  * TODO(verify): 需完整还原 Ramdriv 解析逻辑。
  */
-uint64_t FUN_1400E9724(LPCWSTR cmd, int64_t *out)
+uint64_t PECMD_RamdMountImDisk(LPCWSTR cmd, int64_t *out)
 {
     (void)cmd;
     (void)out;
     return 0;
 }
 
-/* ========== FUN_1400F36EC @0x1400f36ec ==========
+/* ========== PECMD_ListMoveItemBlock @0x1400f36ec ==========
  * [简化桩] 原函数为列表列布局，先返回。
  * TODO(verify): 需完整还原列宽/滚动映射。
  */
-void FUN_1400F36EC(int64_t obj, int index, int height)
+void PECMD_ListMoveItemBlock(int64_t obj, int index, int height)
 {
     (void)obj;
     (void)index;

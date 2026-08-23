@@ -57,7 +57,7 @@ extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
 extern int64_t PECMD_TokPrefixICmp(char *s, uint16_t *w, int len);
 extern uint64_t FUN_14005C7C4(char *s, uint16_t *w);
 extern HWND PECMD_RegisterCallbackWnd(int mode);
-extern WCHAR *FUN_1400679DC(uint64_t *out, int *src, int16_t mode);
+extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *out, int *src, int16_t mode);
 extern int64_t PECMD_RunPecmdMain(void *script, uint32_t mode);
 extern void FUN_1400629B8(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t len,
@@ -78,7 +78,7 @@ extern int64_t PECMD_GetAvailPhysMemoryMB(void);
 extern int64_t PECMD_GetDiskFreeMB(LPCWSTR s);
 extern int PECMD_FindSuitableDrive(LPWSTR s, int max, WCHAR *out);
 extern int16_t *FUN_140103068(int16_t *dst, int16_t *src);
-extern WCHAR *FUN_1400E6D38(WCHAR *dst, uint64_t v, LPCWSTR fmt);
+extern WCHAR *PECMD_SprintfRetEnd(WCHAR *dst, uint64_t v, LPCWSTR fmt);
 extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
 extern DWORD FUN_14005C4E0(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD *type,
                            BYTE *data, DWORD *size);
@@ -97,7 +97,7 @@ extern void FUN_14007A224(void *ctx, WCHAR *text, WCHAR **out, int c,
                           uint8_t d);
 extern uint64_t PECMD_ExpandSpecialDirs(int64_t *ctx, LPCWSTR s, int a, int b,
                               WCHAR *out);
-extern uint64_t FUN_1400C6324(uint64_t a, void *b, uint64_t c, WCHAR *d,
+extern uint64_t PECMD_EnviMemReadWrite(uint64_t a, void *b, uint64_t c, WCHAR *d,
                               char e);
 extern UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *sel, LPCWSTR buf,
                           int mode);
@@ -143,7 +143,7 @@ extern uint16_t *PECMD_IsExplorerPath(int16_t *s);
 extern DWORD FUN_14002D708(LPCWSTR s, uint32_t a, int64_t *b, DWORD c,
                            DWORD d);
 extern void PECMD_ApplyDesktopWallpaper(void);
-extern uint32_t FUN_14001ab84(LPCWSTR s);
+extern uint32_t PECMD_LineIsTeamExecLoad(LPCWSTR s);
 extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);
@@ -189,7 +189,7 @@ extern void *g_pDevOpen2;                  /* 设备打开2 */
 
 /* ========== PECMD_HotkeyControl @0x140023640 ==========
  * 处理热键命令行: 查询/设置/删除注册表 HOTKEY 配置并通知主窗口。
- * TODO(verify): PECMD_RegisterCallbackWnd 的 Ghidra 返回类型与 FUN_1400679DC 交互。
+ * TODO(verify): PECMD_RegisterCallbackWnd 的 Ghidra 返回类型与 PECMD_ParseIntSkipSepChar 交互。
  */
 uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
 {
@@ -301,8 +301,8 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
                 local_res10 = (WCHAR *)(((uintptr_t)local_res10 & 0xffffffff00000000ULL) |
                                         0xffffffffULL);
                 valueId = 0xffffffff;
-                FUN_1400679DC((uint64_t *)&valueEnd, (int *)&local_res10, 0x2c);
-                FUN_1400679DC((uint64_t *)&valueEnd, (int *)&valueId, 0x2c);
+                PECMD_ParseIntSkipSepChar((uint64_t *)&valueEnd, (int *)&local_res10, 0x2c);
+                PECMD_ParseIntSkipSepChar((uint64_t *)&valueEnd, (int *)&valueId, 0x2c);
                 result = 0;
                 if ((PECMD_LO32(local_res10) == idLow[0]) && (valueId == idHigh)) {
                     bestValue = valueEnd - (intptr_t)dotMode;
@@ -925,7 +925,7 @@ after_reg:
                         {
                             WCHAR *pw = newEntry;
                             int k = PECMD_CrtShim(newEntry, 0x140120b48, cmd, NULL);
-                            WCHAR *pW = FUN_1400E6D38(pw + k, minSize, WSTR("%I64d "));
+                            WCHAR *pW = PECMD_SprintfRetEnd(pw + k, minSize, WSTR("%I64d "));
                             PECMD_FormatI64Dec(pW, maxSize);
                             i = lstrlenW(newEntry);
                             i = i + 1;
@@ -1499,7 +1499,7 @@ direct:
     }
 
 call_c6324:
-    result.QuadPart = (int64_t)FUN_1400C6324(script.QuadPart, (void *)p, 0,
+    result.QuadPart = (int64_t)PECMD_EnviMemReadWrite(script.QuadPart, (void *)p, 0,
                                              (WCHAR *)arg2, mode);
 done:
     PECMD_FreeStrBuf(&outStr);
@@ -2629,7 +2629,7 @@ loop_retry:
         LoadEnvi(g_szEmpty, g_szEmpty);
         startTick = GetTickCount();
         FUN_1400702B0(&cmdCopy, shellCmd);
-        cmdType = FUN_14001ab84(cmdCopy);
+        cmdType = PECMD_LineIsTeamExecLoad(cmdCopy);
         if (g_u8CCB1 != 0) {
             PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26fc, 0);
             if (g_u8CCB1 != 0) {

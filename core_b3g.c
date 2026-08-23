@@ -58,7 +58,7 @@ extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
                            uint64_t *a4);
 extern bool FUN_140101E70(LPCWSTR a1);
 extern uint16_t *PECMD_Base64Encode(uint64_t *a1, uint64_t *a2, char a3);
-extern LPCWSTR FUN_1400E6D38(LPCWSTR a1, uint64_t a2, LPCWSTR a3);
+extern LPCWSTR PECMD_SprintfRetEnd(LPCWSTR a1, uint64_t a2, LPCWSTR a3);
 extern void PECMD_ArrayGrowRaw(uint64_t *a1, int64_t *a2, uint32_t a3,
                           int64_t a4);
 extern void *PECMD_AllocSmallObject(void *a1);
@@ -531,7 +531,7 @@ void FUN_14006CC70(int64_t *pp, uint64_t value)
 {
     WCHAR local_88[64];
     int16_t sVar1 = *(int16_t *)*pp;
-    FUN_1400E6D38(local_88, value, WSTR(" %I64d"));
+    PECMD_SprintfRetEnd(local_88, value, WSTR(" %I64d"));
     int iVar2 = lstrlenW(local_88 + (sVar1 == 0));
     pp[2] += iVar2;
     pp[1] += iVar2;

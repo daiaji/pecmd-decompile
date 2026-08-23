@@ -39,7 +39,7 @@ extern char *lstrcpynA(char *, const char *, int);
 
 /* ---- FUN_ helper 声明 ---- */
 extern void  PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
-extern LPCVOID FUN_1400e3f80(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
+extern LPCVOID PECMD_MapFileView(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* @0x140063424 分配槽数组 */
 extern int  PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);        /* @0x14005b184 检索匹配 */
@@ -248,7 +248,7 @@ LAB_14006d_common:
     lpBaseAddress = param_11;
     lpBaseAddress_00 = (LPCVOID)0;
     if (param_11 == (LPCVOID)0) {
-        lpBaseAddress = (LPCVOID)FUN_1400e3f80(param_2, uVar11 - uVar27, 2, uVar27);
+        lpBaseAddress = (LPCVOID)PECMD_MapFileView(param_2, uVar11 - uVar27, 2, uVar27);
         lpBaseAddress_00 = lpBaseAddress;
         if (lpBaseAddress == (LPCVOID)0) {
             lVar25 = (int64_t)(param_5 + (int)local_d8);

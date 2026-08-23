@@ -29,7 +29,7 @@ extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0
 extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
-extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3); /* @0x1400f0fa8 */
 extern bool PECMD_DrawImageFileToDC(int64_t ctx, LPCWSTR name, int width, int height,
                           uint32_t flags1, uint32_t flags2);       /* @0x14006e588 */
@@ -354,7 +354,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
         GetClientRect((HWND)param_1[4], &local_a0);
         if ((HBRUSH)param_1[7] == (HBRUSH)0) {
             if (*((int *)&param_1[8]) >= 0) {
-                FUN_1400E68E0(hDC, &local_a0, *(COLORREF *)&param_1[8]);
+                PECMD_FillRectColor(hDC, &local_a0, *(COLORREF *)&param_1[8]);
             }
         }
         else {

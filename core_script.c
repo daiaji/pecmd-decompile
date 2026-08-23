@@ -22,7 +22,7 @@
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac */
-extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
+extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
 extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
 extern void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
@@ -130,7 +130,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                         }
                                         /* 更新游标：定位到新合并文本的主分隔符 */
                                         {
-                                            uint64_t nl = FUN_14001B4F8((WCHAR *)(base + imp_off), (WCHAR)code);
+                                            uint64_t nl = PECMD_StrChrOffset((WCHAR *)(base + imp_off), (WCHAR)code);
                                             end = (WCHAR *)(base + ((int)nl + imp_off) * 2);
                                             p = end;
                                         }
@@ -152,7 +152,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
     }
     {
         /* 尾部：定位主分隔符 */
-        uint64_t u8 = FUN_14001B4F8(end, script[0x44]);
+        uint64_t u8 = PECMD_StrChrOffset(end, script[0x44]);
         int64_t l17 = (int64_t)(((int64_t)(int)((u8 * 2 - ctrl[0]) + (int64_t)end) >> 1) * 2);
         ctrl[1] = l17;
         ctrl[2] = l17;

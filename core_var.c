@@ -3,9 +3,9 @@
  *
  * 来源: PECMD原始.EXE (x64)
  *   FUN_1400629B8     @0x1400629b8   (变量设置核心: & 前缀/脚本标志分支)
- *   FUN_140062A2C  @0x140062a2c   (SetVar + SetEnvironmentVariableW(key+2))
+ *   PECMD_SetVarAndEnvSync  @0x140062a2c   (SetVar + SetEnvironmentVariableW(key+2))
  *   PECMD_AllocWStringBuffer  @0x140063694   (缓冲分配变体, size=count*2+2, 分配+10)
- *   PECMD_AppendFmtValue  @0x1400668ec   (格式化设置: FUN_1400E6D38 + SetVar)
+ *   PECMD_AppendFmtValue  @0x1400668ec   (格式化设置: PECMD_SprintfRetEnd + SetVar)
  *   PECMD_VarSetUInt    @0x140066978   (wsprintfW "%lu" + SetVar)
  *   PECMD_AppendLongDecimal    @0x1400669c4   (wsprintfW "%ld" + SetVar)
  *
@@ -19,7 +19,7 @@
 /* ---- 待重构函数原型 (后续批次) ---- */
 void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int a);  /* @0x14001e6bc 变量写入 */
 void FUN_14005D534(void *s, LPCWSTR k, LPCWSTR v);         /* @0x14005d534 无锁写入 */
-WCHAR *FUN_1400E6D38(WCHAR *buf, uint64_t value, LPCWSTR fmt); /* @0x1400e6d38 格式化 */
+WCHAR *PECMD_SprintfRetEnd(WCHAR *buf, uint64_t value, LPCWSTR fmt); /* @0x1400e6d38 格式化 */
 
 /* 全局 */
 
@@ -39,7 +39,7 @@ void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value)
 }
 
 /* ========== 变量设置 + 环境变量 @0x140062a2c ========== */
-void FUN_140062A2C(void *script, LPCWSTR key, LPCWSTR value)
+void PECMD_SetVarAndEnvSync(void *script, LPCWSTR key, LPCWSTR value)
 {
     FUN_1400629B8(script, key, value);
     /* 反编译 jumptable 警告: 实际为 SetEnvironmentVariableW(key+2, value) */
@@ -73,7 +73,7 @@ void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt
 {
     WCHAR buf[64];
 
-    FUN_1400E6D38(buf, value, fmt);
+    PECMD_SprintfRetEnd(buf, value, fmt);
     FUN_1400629B8(script, key, buf);
 }
 

@@ -39,18 +39,18 @@ void PECMD_FixKnownDlls32(void);                     /* @0x14002286c */
 void PECMD_SwitchToDefaultDesktop(void);                     /* @0x140017724 */
 void PECMD_ExpandSpecialDirs(void *script, LPCWSTR s, int64_t a, int64_t b, LPCWSTR c); /* @0x14002cc30 */
 void LoadEnvi(LPCWSTR a, LPCWSTR b);          /* @0x140069f0 环境初始化 */
-void FUN_14005B9A0(void);                     /* @0x14005b9a0 */
-void FUN_14003e1f0(void);                     /* @0x14003e1f0 */
+void PECMD_GetTaskbarCreatedMsg(void);                     /* @0x14005b9a0 */
+void PECMD_EnsureCallbackWindow(void);                     /* @0x14003e1f0 */
 DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data, DWORD size); /* @0x14005c5a0 注册表值写入 */
-void FUN_1400e8574(void *script, int flag);   /* @0x1400e8574 */
+void PECMD_GetOrCreateHiddenWnd(void *script, int flag);   /* @0x1400e8574 */
 void PECMD_AllocStrSlot(WCHAR **ps);               /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
 void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路径解析 */
-int FUN_14001ab84(LPCWSTR s);                 /* @0x14001ab84 命令行类型检测 */
-void FUN_14001b850(void);                     /* @0x14001b850 */
+int PECMD_LineIsTeamExecLoad(LPCWSTR s);                 /* @0x14001ab84 命令行类型检测 */
+void PECMD_InstallKeyboardHook(void);                     /* @0x14001b850 */
 void PECMD_LoadResourceLines(void);                     /* @0x14002e30c */
 void PECMD_RegisterHotkeyEntry(void);                     /* @0x140022e94 */
-void FUN_140077358(void);                     /* @0x140077358 */
-void FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
+void PECMD_RelaunchLoadFirstUsb(void);                     /* @0x140077358 */
+void PECMD_CreateDetachedThread(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
                    DWORD *tid, LPSECURITY_ATTRIBUTES sa);  /* @0x14005b228 线程创建 */
 void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4, void *p5); /* @0x14004c0bc 主脚本执行器 */
 uint64_t PECMD_ExecCmdDispatch(uint64_t script, uint64_t cmd, uint64_t s3, uint64_t s4,
@@ -244,8 +244,8 @@ after_init:
     if (p[0] == 0) {
         g_flagD6f7 = 1;
     }
-    FUN_14005B9A0();
-    FUN_14003e1f0();
+    PECMD_GetTaskbarCreatedMsg();
+    PECMD_EnsureCallbackWindow();
     pid = GetCurrentProcessId();
     r = 4;
     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("MainPECMDPID"), 4,
@@ -253,7 +253,7 @@ after_init:
     if (g_logFlag != 0) {
         PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f2a, r);
     }
-    FUN_1400e8574(&g_Script, 0);
+    PECMD_GetOrCreateHiddenWnd(&g_Script, 0);
     /* ---- 参数表初始化 (script+0x78/+0x80) ---- */
     if (pS[0xf] == 0) {
         if ((g_initFlags & 1) == 0) {
@@ -285,7 +285,7 @@ after_init:
         PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f3a, r);
     }
     if (p[0] != 0) {
-        FUN_14001b850();
+        PECMD_InstallKeyboardHook();
     }
     r = 0xb;
     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), pRegName, 0xb,
@@ -294,12 +294,12 @@ after_init:
         PECMD_LoadResourceLines();
     }
     PECMD_RegisterHotkeyEntry();
-    FUN_140077358();
+    PECMD_RelaunchLoadFirstUsb();
     if ((p[0] != 0) || bUser) {
         if (g_logFlag != 0) {
             PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f45, r);
         }
-        FUN_14005b228(ThreadCb, (LPVOID)0, 0x80000, 0x10000, &g_threadId,
+        PECMD_CreateDetachedThread(ThreadCb, (LPVOID)0, 0x80000, 0x10000, &g_threadId,
                       (LPSECURITY_ATTRIBUTES)0);
     }
     r = 0x2a;
@@ -322,7 +322,7 @@ after_init:
         if (pSaved != (LPWSTR)0) {
             pExeName = pSaved + 1;
         }
-        i = FUN_14001ab84(p);
+        i = PECMD_LineIsTeamExecLoad(p);
         if (i == 0) {
             /* ---- 文件模式: 读取内容, 检测 #!pecmd / --inline-main ---- */
             bStar = false;

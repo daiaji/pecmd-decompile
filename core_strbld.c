@@ -4,10 +4,10 @@
  *   PECMD_StrBldInitWide    @0x14006d7e8  6 槽字符串构建器初始化
  *   PECMD_TextBufReserve    @0x14006d880  按需扩展（need + 0xe）
  *   PECMD_StrBldGrowWide @0x14006d92c 批量扩展（+0x400）
- *   FUN_1400E6D38      @0x1400e6d38  %I64X 格式化
+ *   PECMD_SprintfRetEnd      @0x1400e6d38  %I64X 格式化
  *   PECMD_FormatU64Dec       @0x1400e6d74  %I64u 格式化
- *   FUN_1400E6D80     @0x1400e6d80  浮点格式化
- *   FUN_1400E6DB4        @0x1400e6db4  长浮点格式化
+ *   PECMD_FormatDblRetEnd     @0x1400e6d80  浮点格式化
+ *   PECMD_FormatU64RetEnd        @0x1400e6db4  长浮点格式化
  *   PECMD_FormatTypedMemValue       @0x14006d9d0  变量格式化
  *
  * 6 槽字符串构建器布局（调用方 PECMD_ExpandEnvVars 传递变量地址）:
@@ -107,43 +107,43 @@ void PECMD_StrBldGrowWide(void *s[6])
     }
 }
 
-/* ========== FUN_1400E6D38 @0x1400e6d38 ==========
+/* ========== PECMD_SprintfRetEnd @0x1400e6d38 ==========
  * wsprintfW(dst, fmt, v) (Ghidra 丢第 3 参, 已补).
  * 返回写结束指针 dst + lstrlenW(dst).
  */
-WCHAR *FUN_1400E6D38(WCHAR *dst, uint64_t v, LPCWSTR fmt)
+WCHAR *PECMD_SprintfRetEnd(WCHAR *dst, uint64_t v, LPCWSTR fmt)
 {
     wsprintfW(dst, fmt, v);
     return dst + lstrlenW(dst);
 }
 
 /* ========== PECMD_FormatU64Dec @0x1400e6d74 ==========
- * 无符号 64 位十进制输出, 即 FUN_1400E6D38(dst, v, "%I64u").
+ * 无符号 64 位十进制输出, 即 PECMD_SprintfRetEnd(dst, v, "%I64u").
  */
 void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v)
 {
-    FUN_1400E6D38(dst, v, WSTR("%I64u"));
+    PECMD_SprintfRetEnd(dst, v, WSTR("%I64u"));
 }
 
-/* ========== FUN_1400E6D80 @0x1400e6d80 ==========
+/* ========== PECMD_FormatDblRetEnd @0x1400e6d80 ==========
  * 浮点输出. 原 PECMD_SafeVFormatW 内部为 StringValidateDestW +
  * StringVPrintfWorkerW(dst, 0x3e, NULL, fmt, (double)v), 简化用
  * swprintf(dst, 0x3e, fmt, (double)v).
  * TODO(verify): WCHAR 转 wchar_t 强转 (Linux wchar_t=4B), 由移植层承担.
  */
-WCHAR *FUN_1400E6D80(WCHAR *dst, float v, LPCWSTR fmt)
+WCHAR *PECMD_FormatDblRetEnd(WCHAR *dst, float v, LPCWSTR fmt)
 {
     (void)swprintf((wchar_t *)(void *)dst, 0x3e,
                    (const wchar_t *)(const void *)fmt, (double)v);
     return dst + lstrlenW(dst);
 }
 
-/* ========== FUN_1400E6DB4 @0x1400e6db4 ==========
+/* ========== PECMD_FormatU64RetEnd @0x1400e6db4 ==========
  * 长浮点/64 位值输出 (%Lf/%lf 等), 同 PECMD_SafeVFormatW 简化.
  * TODO(verify): %Lf 在 Linux 下期望 16B long double, 与 Windows
  * (long double=double=8B) 不同, 运行时由移植层处理.
  */
-WCHAR *FUN_1400E6DB4(WCHAR *dst, uint64_t v, LPCWSTR fmt)
+WCHAR *PECMD_FormatU64RetEnd(WCHAR *dst, uint64_t v, LPCWSTR fmt)
 {
     (void)swprintf((wchar_t *)(void *)dst, 0x3e,
                    (const wchar_t *)(const void *)fmt, v);
@@ -244,20 +244,20 @@ WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WC
     memcpy(&val, value + off, elmW);
     dst[0] = L'\0';
     if (isLDouble) {
-        FUN_1400E6DB4(dst, val, WSTR("%Lf"));
+        PECMD_FormatU64RetEnd(dst, val, WSTR("%Lf"));
     } else if (dblFlag == 0) {
         if (isFloat) {
             /* TODO(verify): (float)val 为整数→浮点转换, 与位模式重解释
              * (*(float *)&val) 语义不同, 原反编译显示 (float) 转换 */
-            FUN_1400E6D80(dst, (float)val, WSTR("%f"));
+            PECMD_FormatDblRetEnd(dst, (float)val, WSTR("%f"));
         } else if (sflag == 1 || sflag == 2 || sflag == 4) {
             /* Ghidra 丢参, 已补第 3 参 */
             wsprintfW(dst, WSTR("%d"), (int)val);
         } else {
-            FUN_1400E6D38(dst, val, fmt);
+            PECMD_SprintfRetEnd(dst, val, fmt);
         }
     } else {
-        FUN_1400E6DB4(dst, val, WSTR("%lf"));
+        PECMD_FormatU64RetEnd(dst, val, WSTR("%lf"));
     }
     *lenOut = (uint64_t)lstrlenW(dst);
     return dst;

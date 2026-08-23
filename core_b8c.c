@@ -35,7 +35,7 @@ extern int64_t *PECMD_AllocMagicString(WCHAR *s);
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400FD1A8(uint64_t *obj);
-extern void FUN_1400FECFC(uint64_t *obj);
+extern void PECMD_DtorTreeSubObj(uint64_t *obj);
 
 /* ========== FUN_1400E5788 @0x1400e5788 ==========
  * 逐级向上找父窗口，直到遇到非 WS_CHILD 的顶层父窗口。
@@ -170,7 +170,7 @@ uint64_t *FUN_1400FE5E0(uint64_t *obj, uint32_t flags)
  */
 uint64_t *FUN_1400FF5A0(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400FECFC(obj);
+    PECMD_DtorTreeSubObj(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

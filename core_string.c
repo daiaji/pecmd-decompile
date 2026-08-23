@@ -29,7 +29,7 @@
 extern HANDLE g_hHeap;
 
 void FUN_1400630D0(int mode);      /* @0x1400630d0 */
-void FUN_14005B21C(int code);    /* @0x14005b21c (TODO: 待重构确认) */
+void PECMD_ExitProcessCall(int code);    /* @0x14005b21c (TODO: 待重构确认) */
 
 /* ========== 内存分配器 @0x140063118 ========== */
 /* 分配/重分配带 8 字节头 (size+magic) 的内存块, 返回数据指针
@@ -180,7 +180,7 @@ void FUN_1400630D0(int mode)
     LPCWSTR msg = (mode == 0) ? WSTR("内存错误") : WSTR("内存不足!");
     int r = MessageBoxW((HWND)0, msg, WSTR("异常退出"), 5);
     if (r != 4 && r != 5) {
-        FUN_14005B21C(8);
+        PECMD_ExitProcessCall(8);
         /* int3 (swi(3)) */
         __debugbreak();
     }

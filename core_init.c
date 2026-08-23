@@ -2,14 +2,14 @@
  * core_init.c — PECMD 初始化/收尾/脚本结构管理
  *
  * 来源: PECMD原始.EXE (x64)
- *   FUN_14005B21C @0x14005b21c   (ExitProcess 封装)
- *   FUN_14005B7DC @0x14005b7dc   (返回 *g_pExitCode)
+ *   PECMD_ExitProcessCall @0x14005b21c   (ExitProcess 封装)
+ *   PECMD_GetExitCodeGlobal @0x14005b7dc   (返回 *g_pExitCode)
  *   PECMD_InitEnvironmentVars     @0x140027690   (环境变量/内置变量初始化)
- *   FUN_14002CA30   @0x14002ca30   (收尾钩子)
+ *   PECMD_BroadcastEnvChange   @0x14002ca30   (收尾钩子)
  *   FUN_14004EAA8 @0x14004eaa8   (脚本项数组清理)
  *   FUN_1400637DC @0x1400637dc   (ANSI->Unicode 表复制)
  *
- * 注意: PECMD_SkipLeadingControls / FUN_14005B0D4 与 FUN_14005B154 /
+ * 注意: PECMD_SkipLeadingControls / PECMD_HeapFreeWithHeader 与 FUN_14005B154 /
  *       PECMD_FreeStrBuf 字节级相同 (core_string.c), 不重复实现.
  * ==================================================================== */
 #include <stdint.h>
@@ -22,17 +22,17 @@ void PECMD_InitDynamicImports(void);            /* @0x140017908 初始化 */
 void FUN_140053E78(void);            /* @0x140053e78 */
 void FUN_14001D628(void);            /* @0x14001d628 */
 void FUN_1400186BC(void *s, int a);  /* @0x1400186bc */
-void FUN_1400083c0(void);            /* @0x1400083c0 */
+void PECMD_InitSystemApiGlobals(void);            /* @0x1400083c0 */
 extern void PECMD_InitPerfCounterFreq(void);            /* @0x14001a220 */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 设置内置变量 */
-void FUN_140062A2C(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变量 */
+void PECMD_SetVarAndEnvSync(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变量 */
 void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置数值变量 */
 extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 uint64_t PECMD_GetParentProcessId(DWORD pid);   /* @0x140006988 父进程 PID */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 分配 */
 void PECMD_ImportSystemEnvVars(void);            /* @0x14001c1d4 */
 void PECMD_InitShellFolderEnvVars(void);            /* @0x14001c01c */
-void FUN_14005B9A0(void);            /* @0x14005b9a0 */
+void PECMD_GetTaskbarCreatedMsg(void);            /* @0x14005b9a0 */
 extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9); /* @0x140027eac */
 void FUN_14004E2CC(void *s, void *item);  /* @0x14004e2cc 释放单项 */
 void FUN_14006E8F4(void *s);         /* @0x14006e8f4 清理结构 */
@@ -52,13 +52,13 @@ extern uint32_t g_SysCodePage;       /* DAT_140147004 */
 extern uint32_t g_ShowWindow;        /* DAT_14013a234 */
 
 /* ========== ExitProcess 封装 @0x14005b21c ========== */
-static void FUN_14005B21C(int code)
+static void PECMD_ExitProcessCall(int code)
 {
     ExitProcess((UINT)code);
 }
 
 /* ========== 退出码 @0x14005b7dc ========== */
-int FUN_14005B7DC(void)
+int PECMD_GetExitCodeGlobal(void)
 {
     return (int)*g_pExitCode;
 }
@@ -80,7 +80,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     FUN_140053E78();
     FUN_14001D628();
     FUN_1400186BC(&g_Script, 0);
-    FUN_1400083c0();
+    PECMD_InitSystemApiGlobals();
     PECMD_InitPerfCounterFreq();
     QueryPerformanceCounter(&g_QPC);
     GetSystemTimeAsFileTime((FILETIME *)&g_StartTime);
@@ -93,7 +93,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     FUN_1400702B0(&pVer, WSTR("AMD64 U "));
     FUN_14006375C(&pVer, PTR_u_2024_05_12_14013a000);  /* .rdata 版本日期串 */
     FUN_1400629B8(&g_Script, WSTR("&PECMDBUILD"), pVer);
-    FUN_140062A2C(&g_Script, WSTR("&&ERROR"), WSTR("0"));
+    PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&ERROR"), WSTR("0"));
     /* thunk_PECMD_UpdateLcg(0x3a0c) 计时忽略 */
     PECMD_InitShellFolderEnvVars();
     /* thunk_PECMD_UpdateLcg(0x3a0e) 计时忽略 */
@@ -102,7 +102,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     }
     g_ShowWindow = (uint32_t)show;
     g_hInst = hInstance;
-    FUN_14005B9A0();
+    PECMD_GetTaskbarCreatedMsg();
     PECMD_VarSetUInt(&g_Script, g_WM_TaskbarRestart, WSTR("&WM_TaskbarRestart"));
     pid = GetCurrentProcessId();
     PECMD_VarSetUInt(&g_Script, pid, WSTR("&__PID"));
@@ -116,20 +116,20 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     PECMD_VarSetUInt(&g_Script, g_SysCodePage, WSTR("&SYSCODEPAGE"));
     PECMD_AllocWStringBuffer((WCHAR **)&pBuf, 0x20a);
     GetCurrentDirectoryW(0x208, pBuf);
-    FUN_140062A2C(&g_Script, WSTR("&&CurDir"), pBuf);
-    FUN_140062A2C(&g_Script, WSTR("&&_CD"), pBuf);
+    PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&CurDir"), pBuf);
+    PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&_CD"), pBuf);
     pBuf[2] = L'\0';                    /* 截断为盘符 */
-    FUN_140062A2C(&g_Script, WSTR("&&CurDrv"), pBuf);
+    PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&CurDrv"), pBuf);
     pBuf[0] = L'\0';
     GetModuleFileNameW((HMODULE)0, pBuf, 0x208);
-    FUN_140062A2C(&g_Script, WSTR("&&CurFile"), pBuf);
+    PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&CurFile"), pBuf);
     PECMD_ImportSystemEnvVars();
     PECMD_FreeStrBuf(&pBuf);
     PECMD_FreeStrBuf(&pVer);
 }
 
 /* ========== 收尾钩子 @0x14002ca30 ========== */
-void FUN_14002CA30(void)
+void PECMD_BroadcastEnvChange(void)
 {
     extern uint32_t g_afterMain;   /* DAT_14013ccc8 */
     g_afterMain = 0;

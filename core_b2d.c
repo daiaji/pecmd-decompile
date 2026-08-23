@@ -52,7 +52,7 @@ extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD 
 extern void FUN_1400633A8(void **ps, int64_t len);            /* @0x1400633a8 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
-extern WCHAR *FUN_1400679DC(uint64_t *a1, int *a2, int16_t a3);
+extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, int16_t a3);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_ParseIntThenSkip(int64_t *a1, int *a2);
@@ -77,13 +77,13 @@ extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
 extern void PECMD_RunFbwfHookScript(void);
 extern void PECMD_TerminateJobObject(int64_t a1);
 extern bool PECMD_MatchDeviceClass(int64_t a1, WCHAR *a2, uint64_t a3);
-extern void FUN_14001a56c(int a1);
+extern void PECMD_NtShutdownSystemCall(int a1);
 extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR a1);
 extern void PECMD_EnumCDRomDrives(int64_t *a1);
 extern void PECMD_ReadPelogonReg(LPCWSTR a1, WCHAR *a2, int a3);
 extern void PECMD_ApplyDesktopWallpaper(void);
 extern uint64_t PECMD_WritePELogonDword(uint64_t a1, LPCWSTR a2, uint32_t a3);
-extern void FUN_14001b850(void);
+extern void PECMD_InstallKeyboardHook(void);
 extern uint32_t PECMD_DeviceIoControlQuery(WCHAR *a1);
 extern char PECMD_DevLockUnlock(uint64_t a1, LPCWSTR a2, uint32_t a3,
                           uint32_t a4);
@@ -138,7 +138,7 @@ extern uint16_t *FUN_14006B1E8(LPCWSTR a1, uint64_t *a2, char a3);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
 extern BOOL PECMD_DosDeviceMount(LPCWSTR a1, LPCWSTR a2, WCHAR *a3,
                           uint32_t a4, char a5);
-extern void FUN_140077358(void);
+extern void PECMD_RelaunchLoadFirstUsb(void);
 extern bool PECMD_ParseNumber(int64_t *a1, int *a2);
 extern int64_t *PECMD_AssignClipboardText(int64_t *a1);
 extern int64_t FUN_14007A224(void *script, WCHAR *text, WCHAR **out, int c,
@@ -410,7 +410,7 @@ label_shell_name:
         HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("HOOKKBD"), local_res20,
         local_res10, local_res18);
     if ((iVar4 == 0) && (local_res10[0] == 1)) {
-        FUN_14001b850();
+        PECMD_InstallKeyboardHook();
     }
     local_res10[0] = 0;
     local_res18[0] = 4;
@@ -1306,7 +1306,7 @@ uint64_t PECMD_ProcessInitCommand(int64_t *ctx, WCHAR *cmd)
     if ((uint32_t)(uVar9 >> 0x10) < 0x60000) {
         PECMD_StartOnlyApp(WSTR("-init"));
     }
-    FUN_140077358();
+    PECMD_RelaunchLoadFirstUsb();
     PECMD_FreeStrBuf(&local_188);
     return 0;
 }
@@ -1357,8 +1357,8 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
                 &local_38, (void *)(uintptr_t)LVar3.QuadPart, local_res18);
             if ((iVar1 == 0) && (*(WCHAR *)(uintptr_t)local_28.QuadPart != L'\0')) {
                 if ((uint16_t)(*(WCHAR *)(uintptr_t)local_28.QuadPart - 0x30U) < 10) {
-                    FUN_1400679DC((uint64_t *)&local_28, local_34, 0x2c);
-                    FUN_1400679DC((uint64_t *)&local_28, local_34 + 1, 0x2c);
+                    PECMD_ParseIntSkipSepChar((uint64_t *)&local_28, local_34, 0x2c);
+                    PECMD_ParseIntSkipSepChar((uint64_t *)&local_28, local_34 + 1, 0x2c);
                 }
                 if (*(WCHAR *)(uintptr_t)local_28.QuadPart != L'\0') {
                     LVar3.QuadPart = (int64_t)PECMD_ProcessScriptBlock((uint64_t)script.QuadPart,
@@ -1400,7 +1400,7 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
     }
     if (msg == 0x219) {
         if (iVar1 == 0x8000) {
-            FUN_140077358();
+            PECMD_RelaunchLoadFirstUsb();
             return 0;
         }
         if (g_flagA24B < 1) {
@@ -1433,7 +1433,7 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
                     if (g_flagA24B < 1) {
                         return 0;
                     }
-                    FUN_140077358();
+                    PECMD_RelaunchLoadFirstUsb();
                 }
                 if (iVar1 != 0x1e) {
                     return 0;
@@ -2176,7 +2176,7 @@ int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR remote)
         PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 2, 0, 0, 2, 10, 1, 0);
     }
     if (!bVar9) {
-        FUN_14001a56c((int)bVar3);
+        PECMD_NtShutdownSystemCall((int)bVar3);
         lVar8 = 0;
     }
     PECMD_FreeStrBuf(&local_c8[0]);

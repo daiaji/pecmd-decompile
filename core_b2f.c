@@ -83,7 +83,7 @@ extern WCHAR *FUN_14001BE14(const WCHAR *s);
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
 extern void PECMD_ParseSkipSeparator(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
-extern WCHAR *FUN_1400679DC(uint64_t *a1, int *a2, int16_t a3);
+extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, int16_t a3);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void PECMD_ExtractTokenByDelim(int64_t *src, WCHAR **dst, int mode);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *a2, void *out, int mode,
@@ -117,7 +117,7 @@ extern uint64_t PECMD_CreateAuxWindow(HWND);
 extern void PECMD_ReleaseGdiObject(int64_t *, uint64_t, HGDIOBJ);
 extern void PECMD_RestoreWindowProc(int64_t);
 extern HWND PECMD_ReplaceWithEditBox(HWND, DWORD, uint64_t);
-extern void FUN_14005B0D4(void *ps);
+extern void PECMD_HeapFreeWithHeader(void *ps);
 extern void PECMD_TrimWorkingSet(char);
 
 /* ---- 本批引用的全局数据 (完整链接时在 core_globals.c 统一定义) ---- */
@@ -464,15 +464,15 @@ label_020ae4:
             local_res20[0] = 1;
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_238, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_218, 0x2c, 0);
-            FUN_1400679DC((uint64_t *)&local_res10, (int *)&local_268, 0x2c);
-            FUN_1400679DC((uint64_t *)&local_res10, (int *)&local_264, 0x2c);
-            FUN_1400679DC((uint64_t *)&local_res10, (int *)local_res20, 0x2c);
+            PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10, (int *)&local_268, 0x2c);
+            PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10, (int *)&local_264, 0x2c);
+            PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10, (int *)local_res20, 0x2c);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_258, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_260, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_240, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_248, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_210, 0x2c, 0);
-            iVar6 = (int)(intptr_t)FUN_1400679DC((uint64_t *)&local_res10, (int *)&local_res18, 0x2c);
+            iVar6 = (int)(intptr_t)PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10, (int *)&local_res18, 0x2c);
             lpdwTagId = (DWORD *)&local_res18;
             if (iVar6 == 0) {
                 lpdwTagId = NULL;
@@ -1597,7 +1597,7 @@ label_028a83:
                     return 0;
                 }
                 if (uVar5 == 2) {
-                    FUN_14005B0D4((WCHAR **)(app + 0x1a));
+                    PECMD_HeapFreeWithHeader((WCHAR **)(app + 0x1a));
                     if (*(HGDIOBJ *)(app + 0x36) != (HGDIOBJ)0) {
                         DeleteObject(*(HGDIOBJ *)(app + 0x36));
                     }
@@ -1910,7 +1910,7 @@ extern void *FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag);
 extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
 extern void PECMD_GetProcessorCount(void);
-extern void FUN_1400E6CBC(int64_t *ps, double a2, LPCWSTR fmt);
+extern void PECMD_StrAppendFormat(int64_t *ps, double a2, LPCWSTR fmt);
 extern int64_t PECMD_WideStrLen(const void *p);
 extern int PECMD_CmpStrN(LPCWSTR s1, LPCWSTR s2, int n, uint32_t case_sens);
 extern int PECMD_IsProcessUser(LPCWSTR s, DWORD pid, uint32_t case_sens);
@@ -2099,7 +2099,7 @@ LAB_14002d791:
                 {
                     double dVar2 = g_dbl1178 / (double)g_QPFreq;
                     PECMD_AllocStrSlot(&local_440);
-                    FUN_1400E6CBC((int64_t *)&local_440, dVar2, WSTR("\t%lf"));
+                    PECMD_StrAppendFormat((int64_t *)&local_440, dVar2, WSTR("\t%lf"));
                     FUN_14006375C((WCHAR **)out, (LPCWSTR)(uintptr_t)local_440);
                     PECMD_FreeStrBuf((WCHAR **)&local_440);
                 }
@@ -4620,7 +4620,7 @@ HGDIOBJ PECMD_LogoDlgProc(uint64_t script, HWND hwnd, uint32_t msg,
             FUN_14005C61C((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"), WSTR("LogohWnd"));
             g_hTooltipParent = (HWND)0;
             g_flagA249 = (int8_t)0xff;
-            FUN_14005B0D4((int64_t *)&g_pwszD220);
+            PECMD_HeapFreeWithHeader((int64_t *)&g_pwszD220);
             if (g_hIconCF88 != 0) {
                 ((void (*)(void))g_pGdipDisposeImage)();
             }
@@ -5030,12 +5030,12 @@ extern int64_t PECMD_CreateMutexSlot();
 extern int64_t PECMD_ReleaseMutex();
 extern int64_t PECMD_TlsLogWrite();
 extern int64_t FUN_1400195F0();
-extern int64_t FUN_14001a640();
+extern int64_t PECMD_SetCurrentDirIfChanged();
 extern int64_t PECMD_RegisterCallbackWnd();
 extern int64_t FUN_14001B510();
 extern int64_t FUN_14001B5AC();
 extern int64_t PECMD_GetParentProcessIdLevel();
-extern int64_t FUN_14001bbac();
+extern int64_t PECMD_MsgWaitForObjects();
 extern int64_t PECMD_WaitCountPumpMessages();
 extern void *PECMD_MatchKeywordToken();
 extern int64_t PECMD_AppendParamToken();
@@ -5069,7 +5069,7 @@ extern int64_t PECMD_FreeArray_ddf8();
 extern int64_t FUN_14009BB28();
 extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);
 extern LARGE_INTEGER FUN_1400D2E90();
-extern void *FUN_1400E3F80();
+extern void *PECMD_MapFileView();
 extern int64_t FUN_1400E693C();
 extern int64_t PECMD_FindFirstFileW();
 
@@ -6071,7 +6071,7 @@ LAB_14003b5c1:
           DVar6 = FUN_1400E693C(pvVar12);
           uVar9 = (uint64_t)(uint32_t)DVar6;
           local_2b8 = uVar9;
-          local_2a8 = (WCHAR *)FUN_1400E3F80(pvVar12,uVar9,8,0);
+          local_2a8 = (WCHAR *)PECMD_MapFileView(pvVar12,uVar9,8,0);
           if (local_2a8 != (WCHAR *)0x0) {
             pwVar16 = (WCHAR *)(uVar9 + (int64_t)local_2a8);
             local_288 = (((int64_t)
@@ -6151,7 +6151,7 @@ LAB_14003b9c8:
                   }
                   pvVar12 = local_2c8;
                   for (lVar8 = (int64_t)(local_res20 + -1); -1 < lVar8; lVar8 = lVar8 + -1) {
-                    FUN_14005B0D4((int64_t *)(*(int64_t *)(pWVar3 + lVar8 * 4) + 0x28));
+                    PECMD_HeapFreeWithHeader((int64_t *)(*(int64_t *)(pWVar3 + lVar8 * 4) + 0x28));
                     local_2a0 = *(uint64_t *)(pWVar3 + lVar8 * 4);
                     pWVar11 = pWVar3 + lVar8 * 4;
                     pWVar11[0] = L'\0';
@@ -6189,7 +6189,7 @@ LAB_14003b9c8:
                                      0x10004,(DWORD *)&g_dwC96C);
               lpParameter[2] = (uint64_t)pvVar12;
               if (pvVar12 == (HANDLE)0x0) {
-                FUN_14005B0D4((int64_t *)(lpParameter + 5));
+                PECMD_HeapFreeWithHeader((int64_t *)(lpParameter + 5));
               }
               else {
                 local_res20 = local_res20 + 1;
@@ -7586,7 +7586,7 @@ LAB_14003fd2f:
           uVar13 = -uVar13;
         }
         if ((local_427c == 0) && (*ppvVar40 != (HANDLE)0x0)) {
-          FUN_14001a640(local_4278);
+          PECMD_SetCurrentDirIfChanged(local_4278);
         }
         DVar14 = GetTickCount();
         iVar12 = uVar13 + DVar14;
@@ -7603,7 +7603,7 @@ LAB_14003fd2f:
                 DVar10 = uVar13;
               }
             }
-            iVar11 = FUN_14001bbac(script,1,ppvVar40,0,DVar10,0x4ff);
+            iVar11 = PECMD_MsgWaitForObjects(script,1,ppvVar40,0,DVar10,0x4ff);
             if (iVar11 == 0) break;
             iVar11 = 100;
             while (((('\0' < g_flagA24F &&
@@ -7626,7 +7626,7 @@ LAB_14003fd2f:
         }
         if ((0 < local_4230) && ('\0' < g_flagA24F)) {
           if (iVar11 == 0) {
-            FUN_14001a640(local_4278);
+            PECMD_SetCurrentDirIfChanged(local_4278);
           }
           if (0 < local_4230) {
             do {
@@ -7670,7 +7670,7 @@ LAB_14003fd2f:
           }
         }
         if ((iVar11 == 0) && (*ppvVar40 != (HANDLE)0x0)) {
-          FUN_14001a640(local_4250);
+          PECMD_SetCurrentDirIfChanged(local_4250);
         }
         if ((local_41f8.QuadPart != 0) && (*(int16_t *)(uintptr_t)local_41f8.QuadPart != 0)) {
           LVar22 = PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script,local_41f8.QuadPart,(int64_t *)0x0,(int64_t *)0x0,

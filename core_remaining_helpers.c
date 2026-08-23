@@ -29,12 +29,12 @@ extern void  PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
 
 /* ---- PECMD_DecodeBig5NameTable (BIG5 字符名表解码/重排) 依赖 ---- */
-extern uint32_t FUN_14001b4f8(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
+extern uint32_t PECMD_StrChrOffset(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
 extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
 extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount,
                           void *tmp, int size, int grow);           /* @0x1400639f0 表追加行 */
 extern WCHAR *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
-extern uint64_t FUN_14005dff4(void);                                /* @0x14005dff4 PRNG */
+extern uint64_t PECMD_RandSeedAdvance(void);                                /* @0x14005dff4 PRNG */
 extern void *FUN_140063224(void *ps, int64_t len);                  /* @0x140063224 输出串扩容 */
 extern void PECMD_ZeroLenBuf(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
 
@@ -149,7 +149,7 @@ int PECMD_BytesToHexStr(WCHAR **out, LPCSTR src, int len)
 
 /* @0x1400692d8 size=58 — WCHAR 串 → 十六进制串包装: len<1 先取串长,
  * 再以 len*2 字节长度调 PECMD_BytesToHexStr(@0x14006923c) 转 "0x%02X " 宽串 */
-void FUN_1400692d8(WCHAR **ps, LPCWSTR src, int len)
+void PECMD_AppendHexDumpWide(WCHAR **ps, LPCWSTR src, int len)
 {
     if (len < 1) {
         len = lstrlenW(src);
@@ -271,7 +271,7 @@ LAB_done:
 
 /* @0x140075c7c size=797 — BIG5 字符名表解码/重排: 以 uVar19(参4) 定位节首(puVar10),
  * 节内行以 (uVar19^10) 为分隔符经 PECMD_VectorAppendGen 收集入 0x28 字节行表(行串指针+行长),
- * PRNG(FUN_14005dff4) 随机抽未处理行, 行串 XOR uVar19 解密, ASCII 前缀直拷 + 余段
+ * PRNG(PECMD_RandSeedAdvance) 随机抽未处理行, 行串 XOR uVar19 解密, ASCII 前缀直拷 + 余段
  * LCMapStringW(zh-CN) 映射, 再 XOR 回密存入行表输出槽; 循环至全表处理完, 按表序级联
  * 写入 *param_2 并在尾部附 uVar19 封口返回。SUB168/SUB164 为 64 位取模伪影, 已按
  * uint64 取模书写。 */
@@ -308,7 +308,7 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
     int64_t local_68;
 
     uVar19 = (uint16_t)param_4;
-    uVar7 = FUN_14001b4f8((int16_t *)param_1, (int16_t)uVar19);
+    uVar7 = PECMD_StrChrOffset((int16_t *)param_1, (int16_t)uVar19);
     local_78 = 0;
     puVar10 = (uint8_t *)&param_1[(size_t)uVar7];
     uVar17 = uVar7 & 0xffffffff;
@@ -344,7 +344,7 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
     local_res18 = 0;
     if (local_80[0] < 1) goto LAB_140075f08;
 LAB_140075dbb:
-    uVar8 = FUN_14005dff4();                 /* PRNG 选行起点 (SUB168/SUB164=64位取模伪影) */
+    uVar8 = PECMD_RandSeedAdvance();                 /* PRNG 选行起点 (SUB168/SUB164=64位取模伪影) */
     uVar8 = uVar8 % uVar7;
     lVar11 = (int64_t)uVar8;
     if (lVar11 < (int64_t)uVar7) {
@@ -446,7 +446,7 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
 
 /* @0x1400a9a84 size=36 — 解析一个值(成功时推进 *pp)再越过 1 个字符;
  * 返回值沿用 PECMD_EvalParenStripped 的解析结果(ABI: ret 时 RAX 未改) */
-uint64_t FUN_1400a9a84(int64_t *pp, uint64_t *out)
+uint64_t PECMD_EvalExprSkipOneChar(int64_t *pp, uint64_t *out)
 {
     uint64_t v;
 

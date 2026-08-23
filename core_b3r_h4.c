@@ -102,7 +102,7 @@ extern void  PECMD_ScaleWindowPos(int64_t param_1, uint32_t param_2, int *param_
 extern void  PECMD_ResetScriptChain(void *script, void *a2);
 extern WCHAR *PECMD_NextToken(void *param_1, void *param_2, uint32_t param_3);
 extern void  PECMD_ParseNumSkipChar_01f8(void *pp, int *out);
-extern void  FUN_140067d20(void *pp, int *out);
+extern void  PECMD_ParseNumTryWriteback(void *pp, int *out);
 extern int64_t *PECMD_CopyStrToSlot(void *a1, void *a2);
 extern int64_t *PECMD_ReplaceStringSlot(void *ps, void *src);
 extern WCHAR *PECMD_AssignString(void *ps, const WCHAR *src);
@@ -146,7 +146,7 @@ extern void *PECMD_CreateNamedLock(LPCWSTR s, char c, uint32_t *mode);
 extern void  PECMD_ArrayAppend(int64_t script, int64_t obj);
 extern bool  PECMD_ParseHexOrDecBool(void *pp, int *out);
 extern void  PECMD_ParseStringToken(WCHAR **pp, int64_t *param_1, void **out);
-extern void  FUN_14001bbac(void *script, int a, HANDLE *b, DWORD c, DWORD ms, DWORD d);
+extern void  PECMD_MsgWaitForObjects(void *script, int a, HANDLE *b, DWORD c, DWORD ms, DWORD d);
 extern undefined8 PECMD_MatchPrefixN(ushort *a, undefined8 *b, int c);
 extern void  PECMD_FreeInitObjectList(int64_t p1);
 
@@ -1482,7 +1482,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                   iVar14 = 3;
                   if (*local_108 != L'\0') {
                     local_108 = (WCHAR *)(pWVar18 + 5);
-                    FUN_140067d20(&local_108, &local_e8);
+                    PECMD_ParseNumTryWriteback(&local_108, &local_e8);
                     if (*local_108 != L'\0') {
                       local_108 = local_108 + 1;
                       local_d8[0] = 0;
@@ -1556,7 +1556,7 @@ LAB_1400a4cee:
                                               (uint)(uVar13 != 1), 100);
             }
             else {
-              FUN_14001bbac(param_1, (int)uVar13,
+              PECMD_MsgWaitForObjects(param_1, (int)uVar13,
                             (HANDLE *)(uintptr_t)local_100,
                             (uint)(uVar13 != 1), 1000, 0x4ff);
               uVar19 = 0;

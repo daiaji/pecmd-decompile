@@ -87,7 +87,7 @@ extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep
 extern void      PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);
 extern uint64_t  PECMD_ParseSignedNumber(short *);                              /* 解析数字 */
 extern int64_t   PECMD_EvalParenStripped(WCHAR **pp, int64_t *out);            /* 解析整数 */
-extern uint64_t  FUN_1400a9a84(WCHAR **pp, uint64_t *out);            /* 解析长度 */
+extern uint64_t  PECMD_EvalExprSkipOneChar(WCHAR **pp, uint64_t *out);            /* 解析长度 */
 extern uint16_t *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);   /* 路径扩展 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *, char);                  /* 清空串 */
 extern void      PECMD_ReadFileToWide(WCHAR *, int64_t *);                   /* 变量到串 */
@@ -885,9 +885,9 @@ LAB_140085e5d:
                                                 PECMD_ExpandCommandLine(param_1, pWVar22, (WCHAR **)&local_178,
                                                               0, 1);
                                                 local_1a0 = local_178;
-                                                FUN_1400a9a84((WCHAR **)&local_1a0,
+                                                PECMD_EvalExprSkipOneChar((WCHAR **)&local_1a0,
                                                               (uint64_t *)&local_128);
-                                                FUN_1400a9a84((WCHAR **)&local_1a0,
+                                                PECMD_EvalExprSkipOneChar((WCHAR **)&local_1a0,
                                                               (uint64_t *)&local_120);
                                                 pWVar19 = local_128;
                                                 local_100 = local_128;

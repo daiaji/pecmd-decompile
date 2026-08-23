@@ -60,7 +60,7 @@ extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
     /* @0x1400f429c thunk: 查找字符, *pp 停在字符或串尾 */
 extern bool PECMD_ParseNumSkipWs(WCHAR **pp, int64_t *out);
     /* @0x140067cf4 数字解析, 非0=成功 */
-extern int64_t FUN_1400a9a84(WCHAR **pp, int64_t *out);
+extern int64_t PECMD_EvalExprSkipOneChar(WCHAR **pp, int64_t *out);
     /* @0x1400a9a84 数字解析, >0=成功 */
 extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *out);
     /* @0x1400745c8 数字解析 (core_scriptdep.c 同签名) */
@@ -68,7 +68,7 @@ extern int64_t PECMD_SetFilePointer(HANDLE h, int64_t offset, DWORD method);
     /* @0x14005c674 SetFilePointer 包装, 返回新位置 */
 extern int PECMD_WcharToByteDigits(void *out, LPCWSTR src);
     /* @0x140069314 WCHAR 串→字节缓冲, 返回字节数 */
-extern void FUN_1400692d8(WCHAR **ps, LPCWSTR src, int len);
+extern void PECMD_AppendHexDumpWide(WCHAR **ps, LPCWSTR src, int len);
     /* @0x1400692d8 追加 len 字节到串 */
 extern void PECMD_BytesToHexStr(WCHAR **ps, LPCSTR src, int len);
     /* @0x14006923c 追加 len 字节 (字节→WCHAR) 到串 */
@@ -519,7 +519,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     } else {
                         LPCWSTR v;
                         if (dstFlag2 == 0) {
-                            FUN_1400692d8(&sStr, (LPCWSTR)data, (int)datalen);
+                            PECMD_AppendHexDumpWide(&sStr, (LPCWSTR)data, (int)datalen);
                             v = sStr;
                         } else {
                             v = sArg2;
@@ -645,7 +645,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     if (dstFlag2 == 0) {
                         WCHAR *sv = NULL;
                         PECMD_AllocWStringBuffer((WCHAR **)&sv, 0);
-                        FUN_1400692d8(&sv, (LPCWSTR)data, nSmall);
+                        PECMD_AppendHexDumpWide(&sv, (LPCWSTR)data, nSmall);
                         FUN_1400629B8(script, sArg4, sv);
                         PECMD_FreeStrBuf(&sv);
                         goto L_ab5e;
@@ -709,7 +709,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             pAfter = pSep + 1;
         }
         if ((uint16_t)(*pAfter - 0x30) < 10) {
-            FUN_1400a9a84(&pAfter, &n1);        /* 数字前缀 = 源偏移 */
+            PECMD_EvalExprSkipOneChar(&pAfter, &n1);        /* 数字前缀 = 源偏移 */
             pAfter = NULL;
         } else {
             pAfter = (*pAfter != 0) ? pAfter : NULL;
@@ -772,7 +772,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     keyLen = (*(int64_t *)((uint8_t *)vNode2 + 0x18)) & 0x3fffffffffffffff;
                 }
             } else {
-                if (FUN_1400a9a84(&pCur, &srcOff) > 0) {
+                if (PECMD_EvalExprSkipOneChar(&pCur, &srcOff) > 0) {
                     /* 数字源偏移已解析 */
                 }
             }
@@ -792,8 +792,8 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     PECMD_EvalParenStripped(&pCur, &nChunk);
                 }
                 if (*pCur != 0) pCur++;
-                FUN_1400a9a84(&pCur, &srcOff);
-                FUN_1400a9a84(&pCur, &nCount2);
+                PECMD_EvalExprSkipOneChar(&pCur, &srcOff);
+                PECMD_EvalExprSkipOneChar(&pCur, &nCount2);
             }
 
             /* ---- 取源变量数据 ---- */

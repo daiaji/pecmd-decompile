@@ -25,10 +25,10 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void FUN_1400F06FC(int64_t obj);            /* @0x1400f06fc */
+extern void PECMD_DtorCtlCoreObj(int64_t obj);            /* @0x1400f06fc */
 extern void FUN_1400F1F18(uint64_t *obj);      /* @0x1400f1f18 */
-extern void FUN_1400F2924(uint64_t *obj);      /* @0x1400f2924 */
-extern void FUN_1400FBA3C(uint64_t *obj);      /* @0x1400fba3c */
+extern void PECMD_DtorIpadSubObj(uint64_t *obj);      /* @0x1400f2924 */
+extern void PECMD_DtorListViewObj(uint64_t *obj);      /* @0x1400fba3c */
 extern void FUN_1400FC034(uint64_t *obj); /* @0x1400fc034 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
@@ -41,7 +41,7 @@ extern void FUN_1400FC33C(uint64_t *obj); /* @0x1400fc33c core_b8c.c */
  */
 uint64_t *FUN_1400F0F78(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400F06FC((int64_t)obj);
+    PECMD_DtorCtlCoreObj((int64_t)obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -75,7 +75,7 @@ void FUN_1400F22DC(uint64_t *obj, uint32_t flags, uint64_t lParam)
  */
 uint64_t *FUN_1400F2A4C(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400F2924(obj);
+    PECMD_DtorIpadSubObj(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -121,7 +121,7 @@ uint64_t *FUN_1400FB558(uint64_t *obj, uint32_t flags)
  */
 uint64_t *FUN_1400FBDB0(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400FBA3C(obj);
+    PECMD_DtorListViewObj(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

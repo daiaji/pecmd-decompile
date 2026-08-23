@@ -35,14 +35,14 @@
 extern void FUN_1400633A8(void **ps, int64_t len);          /* @0x1400633a8 */
 extern void FUN_14007D0AC(int64_t **ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);          /* @0x140067d20 */
-extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize); /* @0x140063b00 */
 extern int64_t *FUN_1400F4CA0(int64_t obj, int64_t key1, int64_t key2);  /* @0x1400f4ca0 */
 extern int64_t *FUN_1400F4C28(int64_t obj, int64_t value);             /* @0x1400f4c28 */
 extern int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue, WCHAR **outString);                  /* @0x1400f4114 */
 extern void PECMD_TreeGetItemParam(int64_t obj, uint64_t param2, uint64_t *out); /* @0x1400fed38 */
 extern void PECMD_ShowFirstTabPage(int64_t obj, char mode);        /* @0x1400ec7c0 */
-extern void FUN_1400F2B6C(int64_t obj);                                   /* @0x1400f2b6c */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj);                                   /* @0x1400f2b6c */
 extern int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
                                         uint8_t *item, uint32_t esize, int64_t mode); /* @0x1400639f0 */
 extern HWND FUN_1400E5788(HWND hwnd);                                  /* @0x1400e5788 */
@@ -52,7 +52,7 @@ extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *
                               int64_t hwnd, uint8_t mode, uint64_t *out);
 extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t wParam, int64_t lParam,
                              int64_t *out);
-extern uint64_t FUN_1400C493C(int64_t *obj, int64_t *ctx, LPCWSTR value,
+extern uint64_t PECMD_CtlDispatchGenericProp(int64_t *obj, int64_t *ctx, LPCWSTR value,
                               uint16_t *name, uint64_t a5, uint64_t a6,
                               int64_t a7);
 extern void FUN_1400EF91C(int64_t obj, uint32_t flags, uint64_t value);
@@ -60,7 +60,7 @@ extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern void PECMD_BltTransparentBits(HDC hdcDst, int x0, int y0, int w, int h, HDC hdcSrc,
                           int sx, int sy, uint64_t p9, uint64_t p10, COLORREF color);
-extern void FUN_14005B0D4(int64_t *ps);
+extern void PECMD_HeapFreeWithHeader(int64_t *ps);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 extern void *operator_new(size_t size);   /* 全局 new 包装 */
 
@@ -73,7 +73,7 @@ extern uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *, uint3
 /* 未来链接用占位 (避免 extern 悬空): 由本文件内 static 提供 */
 static const uint8_t *g_dummy = NULL;
 
-/* ========== FUN_1400E3F80 @0x1400e3e38 ==========
+/* ========== PECMD_MapFileView @0x1400e3e38 ==========
  * 创建/打开文件映射并映射视图:
  *   - bit29: name 视为"句柄输出"而非映射名
  *   - bit30/31 控制打开已存在映射时的策略 (0xb7 已存在错误码)
@@ -312,7 +312,7 @@ uint64_t PECMD_ApplyTextPropToCtl(int64_t *obj, int64_t *ctx, LPCWSTR name,
     }
     else {
         if (lstrcmpW(WSTR("color"), param) != 0)
-            return FUN_1400C493C(obj, ctx, value, (uint16_t *)param,
+            return PECMD_CtlDispatchGenericProp(obj, ctx, value, (uint16_t *)param,
                                  a5, a6, a7);
 
         parsed = -0x80000000;
@@ -367,7 +367,7 @@ void PECMD_FillCtlBackground(HWND hwnd, COLORREF color)
     hdcSrc = CreateCompatibleDC(hdc);
     bmp = CreateCompatibleBitmap(hdc, cx, cy);
     PECMD_SelectObjectSlot_b028(sel, hdcSrc, bmp);
-    FUN_1400E68E0(hdcSrc, &rc, color);
+    PECMD_FillRectColor(hdcSrc, &rc, color);
     PECMD_BltTransparentBits(hdcSrc, 0, 0, cx, cy, hdc, 0, 0,
                   (uint64_t)(uint32_t)cx, (uint64_t)(uint32_t)cy, sysColor);
     BitBlt(hdc, 0, 0, cx, cy, hdcSrc, 0, 0, 0xcc0020);
@@ -614,7 +614,7 @@ void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
         slot = (int64_t *)*slot;
         if (text == NULL) {
             if (*slot != 0) {
-                FUN_14005B0D4(slot);
+                PECMD_HeapFreeWithHeader(slot);
                 *slot = 0;
             }
         }
@@ -677,7 +677,7 @@ void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
         slot = (int64_t *)*slot;
         if (text == NULL) {
             if (*slot != 0) {
-                FUN_14005B0D4(slot);
+                PECMD_HeapFreeWithHeader(slot);
                 *slot = 0;
             }
         }
@@ -730,14 +730,14 @@ void PECMD_SetListItemCellData(int64_t obj, int id, int64_t value, LPCWSTR text)
             if (value == 0) {
                 *slot = 0;
                 PECMD_FreeStrBuf((WCHAR **)((uint8_t *)m + 0x10));
-                FUN_1400F2B6C((int64_t)(intptr_t)m);
+                PECMD_DeleteEntryGdiHandle((int64_t)(intptr_t)m);
                 free(m);
             }
             else {
                 *(int64_t *)((uint8_t *)m + 8) = value;
                 *(int *)*slot = id;
                 if (text == NULL)
-                    FUN_14005B0D4((int64_t *)(*slot + 0x10));
+                    PECMD_HeapFreeWithHeader((int64_t *)(*slot + 0x10));
                 else
                     PECMD_StrBldCopyWide((WCHAR **)(*slot + 0x10), text);
             }

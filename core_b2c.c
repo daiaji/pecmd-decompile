@@ -102,7 +102,7 @@ extern void PECMD_BubbleSort(uint8_t *arr, int64_t count, int64_t elem_size,
                           void *cmp);                   /* @0x140023268 排序 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void FUN_14001bbac(void *script, int a, HANDLE *b, DWORD c, DWORD ms,
+extern void PECMD_MsgWaitForObjects(void *script, int a, HANDLE *b, DWORD c, DWORD ms,
                           DWORD d);
 extern LRESULT PECMD_KeyboardHookProc(int a1, WPARAM a2, char *a3);
 extern char PECMD_AdvanceAfterPrefix(LPCWSTR s, int64_t *pp, int len);
@@ -129,7 +129,7 @@ extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
 extern void PECMD_ResizePtrTable(int64_t *arr, int64_t count);
 extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void FUN_1400195F0(void *script, int a, int b, void *c);
-extern void FUN_14002CA30(void);
+extern void PECMD_BroadcastEnvChange(void);
 extern void PECMD_ResetScriptChain(void *script, void *a2);
 extern void PECMD_FreeRecordChain(int64_t ctx);
 extern LPCWSTR FUN_14002FD88(int64_t *script, WCHAR *s, uint32_t *flags,
@@ -325,7 +325,7 @@ loop:
         if (10 < uVar7) {
             uVar3 = 10;
         }
-        FUN_14001bbac(&g_Script, 0, (HANDLE *)0, 0, uVar3, 0x4ff);
+        PECMD_MsgWaitForObjects(&g_Script, 0, (HANDLE *)0, 0, uVar3, 0x4ff);
         while ((g_flagA24F > 0) && (g_hookBusyFlag == 0)) {
             if (uVar6 != 2) {
                 DVar2 = GetTickCount();
@@ -809,7 +809,7 @@ registered:
             if ((iVar4 == lVar1) || (iVar6 = iVar6 - 1, iVar6 < 0)) {
                 PECMD_ResizePtrTable((int64_t *)g_d278, 0);
                 LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-                FUN_14002CA30();
+                PECMD_BroadcastEnvChange();
                 goto done_wait;
             }
             LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);

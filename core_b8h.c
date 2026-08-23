@@ -4,13 +4,13 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   进程注入 API 就绪    FUN_1400E411C @0x1400e411c
+ *   进程注入 API 就绪    PECMD_HasVirtualAllocEx @0x1400e411c
  *   对象双标志查询         FUN_1400E412C      @0x1400e412c
  *   指针表偏移搬运         PECMD_PeApplyRelocations  @0x1400e4160
  *   构建程序 exe 路径      PECMD_GetModulePathAlt      @0x1400e429c
- *   初始化 CRC32 表        FUN_1400E4C38      @0x1400e4c38
+ *   初始化 CRC32 表        PECMD_InitCrc32Table      @0x1400e4c38
  *   计算 CRC32             PECMD_Crc32HexOfBytes         @0x1400e4cc0
- *   RAS API 就绪查询      FUN_1400E4D84     @0x1400e4d84
+ *   RAS API 就绪查询      PECMD_HasRasDialApi     @0x1400e4d84
  *   初始化事件对           FUN_1400E4E6C     @0x1400e4e6c
  *   销毁事件对             FUN_1400E4E94  @0x1400e4e94
  *   触发同步事件           PECMD_RasDialStatusCallback   @0x1400e4edc
@@ -18,9 +18,9 @@
  *   加载控件字体           FUN_1400E66D4   @0x1400e66d4
  *   配置对话框过程         FUN_1400E6790  @0x1400e6790
  *   跳到指定分隔符 A       PECMD_SkipEncByteToEol   @0x1400e706c
- *   跳过前导 CR/LF A       FUN_1400E7098     @0x1400e7098
+ *   跳过前导 CR/LF A       PECMD_SkipCrLfEncByte     @0x1400e7098
  *   跳到指定分隔符 W       PECMD_SkipEncWCharToEol   @0x1400e70c0
- *   跳过前导 CR/LF W       FUN_1400E70F4     @0x1400e70f4
+ *   跳过前导 CR/LF W       PECMD_SkipCrLfEncWchar     @0x1400e70f4
  *   等待 RAS 拨号连接      PECMD_HangUpRasConnection @0x1400e75cc
  *   缓存窗口 ID            FUN_1400E8644    @0x1400e8644
  *   下发控件命令           FUN_1400E86B4  @0x1400e86b4
@@ -33,7 +33,7 @@
  *   宽字符游标扫描         FUN_1400F429C @0x1400f429c
  *   初始化列表视窗对象     FUN_1400FB588 @0x1400fb588
  *   初始化编辑对象核心     FUN_1400FCF44   @0x1400fcf44
- *   销毁组合对象           FUN_1400FECFC @0x1400fecfc
+ *   销毁组合对象           PECMD_DtorTreeSubObj @0x1400fecfc
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -51,7 +51,7 @@ extern LPCWSTR FUN_14005B6AC(HINSTANCE inst, UINT id, LPWSTR buf,
                              int buflen);                        /* @0x14005b6ac */
 extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
 extern void PECMD_GetDpiCached(HWND hwnd);                             /* @0x140062950 */
-extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern void *FUN_1400E57C0(void *obj);                    /* @0x1400e57c0 */
 extern void FUN_1400E8940(void *obj);                  /* @0x1400e8940 */
 extern int32_t FUN_1400630D0(int mode);                          /* @0x1400630d0 分配失败提示 */
@@ -59,7 +59,7 @@ extern int32_t FUN_1400630D0(int mode);                          /* @0x1400630d0
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL FUN_140101E70(LPCWSTR path);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
-extern HWND FUN_1400e8574(void *script, int64_t flag);
+extern HWND PECMD_GetOrCreateHiddenWnd(void *script, int64_t flag);
 extern int wsprintfA(LPSTR buf, LPCSTR fmt, ...);
 extern BOOL EndDialog(HWND hwnd, intptr_t result);
 
@@ -95,10 +95,10 @@ extern double g_fontSizeDef;            /* DAT_1401293c0 = -0x80000000.0 */
 extern double g_fontMinus0;             /* DAT_140125238 = -0.0 */
 extern double g_dbl25230;            /* 0.5 四舍五入常量 */
 
-/* ========== FUN_1400E411C @0x1400e411c ==========
+/* ========== PECMD_HasVirtualAllocEx @0x1400e411c ==========
  * 查询进程注入 API (VirtualAllocEx) 是否已加载。
  */
-bool FUN_1400E411C(void)
+bool PECMD_HasVirtualAllocEx(void)
 {
     return g_pfnVirtualAllocEx != NULL;
 }
@@ -204,11 +204,11 @@ LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj)
     return lpFilename;
 }
 
-/* ========== FUN_1400E4C38 @0x1400e4c38 ==========
+/* ========== PECMD_InitCrc32Table @0x1400e4c38 ==========
  * 初始化 CRC32 查表 (多项式 0xEDB88320, 256 项)。
  * 分配失败时通过 FUN_1400630D0 提示并重试。标准 CRC32, 行为与 zlib 表一致。
  */
-void FUN_1400E4C38(void)
+void PECMD_InitCrc32Table(void)
 {
     uint64_t *blk;
     uint32_t *tbl;
@@ -253,7 +253,7 @@ uint32_t PECMD_Crc32HexOfBytes(const uint8_t *data, int64_t len, char *out)
     char *base;
 
     if (g_pCrcTable == NULL)
-        FUN_1400E4C38();
+        PECMD_InitCrc32Table();
 
     crc = 0xffffffff;
     hdr = NULL;
@@ -282,10 +282,10 @@ uint32_t PECMD_Crc32HexOfBytes(const uint8_t *data, int64_t len, char *out)
     return crc;
 }
 
-/* ========== FUN_1400E4D84 @0x1400e4d84 ==========
+/* ========== PECMD_HasRasDialApi @0x1400e4d84 ==========
  * 查询 RASAPI32 是否已加载 (即 RasDialW 函数指针非空)。
  */
-bool FUN_1400E4D84(void)
+bool PECMD_HasRasDialApi(void)
 {
     return g_pfnRasDial != NULL;
 }
@@ -414,10 +414,10 @@ void PECMD_SkipEncByteToEol(uint8_t **pp, uint8_t d)
     }
 }
 
-/* ========== FUN_1400E7098 @0x1400e7098 ==========
+/* ========== PECMD_SkipCrLfEncByte @0x1400e7098 ==========
  * ANSI: 跳过紧邻的 CR/LF (各至多一个)。
  */
-void FUN_1400E7098(uint8_t **pp, uint8_t d)
+void PECMD_SkipCrLfEncByte(uint8_t **pp, uint8_t d)
 {
     if ((d ^ 0x0d) == *(*pp))
         (*pp)++;
@@ -438,10 +438,10 @@ void PECMD_SkipEncWCharToEol(uint16_t **pp, uint16_t d)
     }
 }
 
-/* ========== FUN_1400E70F4 @0x1400e70f4 ==========
+/* ========== PECMD_SkipCrLfEncWchar @0x1400e70f4 ==========
  * 宽字符: 跳过紧邻的 CR/LF (各至多一个)。
  */
-void FUN_1400E70F4(uint16_t **pp, uint16_t d)
+void PECMD_SkipCrLfEncWchar(uint16_t **pp, uint16_t d)
 {
     if ((d ^ 0x0d) == *(*pp))
         (*pp)++;
@@ -500,7 +500,7 @@ int64_t FUN_1400E8644(int64_t *obj)
     EnterCriticalSection(&g_csInit);
     v = obj[8];
     if (v == 0) {
-        hwnd = FUN_1400e8574(obj, 0);
+        hwnd = PECMD_GetOrCreateHiddenWnd(obj, 0);
         obj[8] = (int64_t)(uintptr_t)hwnd;
         if (hwnd != 0)
             PECMD_AppendFmtValue(obj, *(uint64_t *)(hwnd + 8), WSTR("&&__WinID"), WSTR("0x%I64X"));
@@ -583,11 +583,11 @@ void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color, int
     else {
         c = *(COLORREF *)((uint8_t *)obj + 0x54);
     }
-    FUN_1400E68E0(hdc, rc, c);
+    PECMD_FillRectColor(hdc, rc, c);
 
     w = rc->right - rc->left;
     rc->right = rc->left - (int)(((float)(int64_t)w * *(float *)((uint8_t *)obj + 0x50)) / g_barScaleDiv);
-    FUN_1400E68E0(hdc, rc, *(COLORREF *)((uint8_t *)obj + 0x58));
+    PECMD_FillRectColor(hdc, rc, *(COLORREF *)((uint8_t *)obj + 0x58));
     rc->right = w + rc->left;
 
     if (edge != 0)
@@ -778,10 +778,10 @@ uint64_t *FUN_1400FCF44(uint64_t *obj, uint64_t data)
     return obj;
 }
 
-/* ========== FUN_1400FECFC @0x1400fecfc ==========
+/* ========== PECMD_DtorTreeSubObj @0x1400fecfc ==========
  * 销毁"组合对象": 先执行清理回调, 再销毁基类。
  */
-void FUN_1400FECFC(uint64_t *obj)
+void PECMD_DtorTreeSubObj(uint64_t *obj)
 {
     obj[0] = (uint64_t)&PTR_FUN_14012cf00;
     if (obj[0x1b] != 0) {

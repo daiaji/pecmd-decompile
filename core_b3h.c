@@ -68,7 +68,7 @@ extern WCHAR *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3,
 extern uint64_t PECMD_ComboBoxControl(int64_t a1, uint64_t a2, LPCWSTR a3,
                               int16_t a4, LPCWSTR a5, int a6);
 extern uint64_t FUN_14005C7C4(char *a1, uint16_t *a2);
-extern int64_t FUN_1400E5AAC(int64_t *a1, uint64_t *a2);
+extern int64_t PECMD_CtlForwardSetBlock(int64_t *a1, uint64_t *a2);
 extern void PECMD_ReleaseKernelObject(uint64_t *a1);
 extern void PECMD_InitNullDaclSD(uint64_t *param_1);
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR a1, int64_t *a2, int64_t *a3,
@@ -663,7 +663,7 @@ int64_t FUN_1400B0380(int64_t *ctx, uint64_t unused, uint64_t *args)
     } else {
         uint64_t uVar2 = FUN_14005C7C4("cmd", puVar1);
         if ((char)uVar2 == '\0') {
-            lVar3 = FUN_1400E5AAC(ctx, args);
+            lVar3 = PECMD_CtlForwardSetBlock(ctx, args);
         } else {
             PECMD_StrBldCopyWide((int64_t *)(args[6] + 0x28), pWVar4);
             lVar3 = 0;

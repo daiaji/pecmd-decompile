@@ -234,7 +234,7 @@ LAB_bf7:
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam,
                               uint64_t *lParam, int64_t hwnd, uint32_t mode,
                               int64_t *out);                 /* @0x1400f172c */
-extern void FUN_140067d20(void **pp, int *out);              /* @0x140067d20 (link_stubs) */
+extern void PECMD_ParseNumTryWriteback(void **pp, int *out);              /* @0x140067d20 (link_stubs) */
 extern void PECMD_InvalidateParentRect(HWND child, int margin);           /* @0x1400fd538 */
 extern void PECMD_RestoreForegroundWindow(void);             /* @0x14005e204 */
 extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4); /* @0x1400a895c */
@@ -349,7 +349,7 @@ void PECMD_HandleControlMessage(void *param_1, int param_2, int64_t param_3, uin
             if (*(uint16_t *)wParam == 0x23) {
                 p = (uint16_t *)(wParam + 2);
             }
-            FUN_140067d20((void **)&p, (int *)&sub888);
+            PECMD_ParseNumTryWriteback((void **)&p, (int *)&sub888);
             if ((int32_t)sub888 > 0) {
                 obj[0xd1] &= 0xbf;
             } else {

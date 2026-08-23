@@ -31,7 +31,7 @@ void PECMD_OpenSharedMapping(int a, const char *s);            /* @0x140005738 *
 void PECMD_DetectCodePage(void);            /* @0x14000500c */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 */
 void PECMD_InstallWindowsService(LPCWSTR cmd);     /* @0x140008834 执行命令文本 */
-void FUN_140016ae0(void);            /* @0x140016ae0 服务主过程 */
+void PECMD_ServiceMainEntry(void);            /* @0x140016ae0 服务主过程 */
 
 /* ---- 全局 (core_globals.c) ---- */
 extern uint8_t g_flag16b;            /* DAT_14013c96b (DEBUGMDG) */
@@ -164,7 +164,7 @@ void PECMD_ServiceEntry(LPCWSTR cmd)
 
     memset(table, 0, sizeof(table));
     table[0].lpServiceName = (LPWSTR)WSTR("Service");
-    table[0].lpServiceProc = (void *)FUN_140016ae0;
+    table[0].lpServiceProc = (void *)PECMD_ServiceMainEntry;
     StartServiceCtrlDispatcherW(table);
     PECMD_InstallWindowsService(cmd);
 }

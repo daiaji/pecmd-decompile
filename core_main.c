@@ -18,13 +18,13 @@
  *   PECMD_RunBootScriptInFiber     @0x1400050c8  命令处理器 (核心)
  *   FUN_140045C90  @0x140045c90  脚本执行 (MAIN)
  *   PECMD_InitEnvironmentVars     @0x140027690  实例/ShowWindow 初始化
- *   FUN_14002CA30   @0x14002ca30  收尾钩子
- *   FUN_14005B7DC @0x14005b7dc  退出码
+ *   PECMD_BroadcastEnvChange   @0x14002ca30  收尾钩子
+ *   PECMD_GetExitCodeGlobal @0x14005b7dc  退出码
  *   FUN_14004EAA8 @0x14004eaa8  脚本结构重置
  *   FUN_1400637DC @0x1400637dc  环境表复制
  *   FUN_1400084D0     @0x1400084d0  EXEC 消息展开执行
- *   FUN_14005B0D4     @0x14005b0d4  消息处理
- *   FUN_14005B21C @0x14005b21c
+ *   PECMD_HeapFreeWithHeader     @0x14005b0d4  消息处理
+ *   PECMD_ExitProcessCall @0x14005b21c
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
@@ -38,12 +38,12 @@ WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 
 int PECMD_RunBootScriptInFiber(WCHAR *cmdline);                              /* @0x1400050c8 TODO 后续批次 */
 int FUN_140045C90(void *script, LPCWSTR text);               /* @0x140045c90 TODO 后续批次 */
 void PECMD_InitEnvironmentVars(HINSTANCE hInst, int show);                  /* @0x140027690 core_init.c */
-void FUN_14002CA30(void);                                     /* @0x14002ca30 core_init.c */
-int FUN_14005B7DC(void);                                    /* @0x14005b7dc core_init.c */
+void PECMD_BroadcastEnvChange(void);                                     /* @0x14002ca30 core_init.c */
+int PECMD_GetExitCodeGlobal(void);                                    /* @0x14005b7dc core_init.c */
 void FUN_14004EAA8(void *script, int keep);                 /* @0x14004eaa8 core_init.c */
 WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen, int64_t codepage); /* @0x1400637dc core_init.c */
 int FUN_1400084D0(WCHAR *msg);                                  /* @0x1400084d0 core_token.c */
-void FUN_14005B21C(int code);                               /* @0x14005b21c core_init.c */
+void PECMD_ExitProcessCall(int code);                               /* @0x14005b21c core_init.c */
 
 /* 全局 (core_globals.c) */
 extern WCHAR *g_pNextCmd;     /* DAT_14013cac8 */
@@ -132,7 +132,7 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
             FUN_1400084D0(pMsg);
             PECMD_FreeStrBuf(&pMsg);
             g_runFlag = 0;
-            PECMD_FreeStrBuf(&g_szMsgBuf);   /* FUN_14005B0D4 = StrFree */
+            PECMD_FreeStrBuf(&g_szMsgBuf);   /* PECMD_HeapFreeWithHeader = StrFree */
         }
 
         /* MAIN 命令: 执行脚本 */
@@ -167,9 +167,9 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
 
 after_main:
     if (g_afterMain != 0) {
-        FUN_14002CA30();
+        PECMD_BroadcastEnvChange();
     }
-    ret = FUN_14005B7DC();
+    ret = PECMD_GetExitCodeGlobal();
     PECMD_FreeStrBuf(&pCmdBuf);
     return ret;
 }

@@ -10,11 +10,11 @@
  *   对象释放         PECMD_MultiSlotDtor @0x140054958
  *   窗口回引用       FUN_14005B77C @0x14005b77c
  *   删除注册表值     FUN_14005C61C @0x14005c61c
- *   加载公共对话框   FUN_14005C904 @0x14005c904
+ *   加载公共对话框   PECMD_LoadComDlgApis @0x14005c904
  *   图标组判定       FUN_14005D7E8 @0x14005d7e8
  *   释放句柄对象     FUN_14005E310 @0x14005e310
  *   缓冲写字节       FUN_14005F158 @0x14005f158
- *   24 字节交换      FUN_14005F3BC @0x14005f3bc
+ *   24 字节交换      PECMD_SwapBufDesc24 @0x14005f3bc
  *   设备 flush       PECMD_FlushDeviceIoctl @0x140060120
  *   删除串中字符     PECMD_RemoveFirstMatchChar @0x140060290
  *   获取编辑选择     PECMD_GetEditSelRange @0x140063c70
@@ -62,7 +62,7 @@ extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t srclen,
 extern void FUN_140063A6C(uint64_t *arr, int64_t *end, uint64_t *flags,
                           uint32_t esize);
 extern uint64_t PECMD_ParseExpression(int *ctx, LPWSTR path);
-extern int64_t FUN_1400a9a84(int64_t *pp, uint64_t *out);
+extern int64_t PECMD_EvalExprSkipOneChar(int64_t *pp, uint64_t *out);
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name);
 extern void PECMD_FlushFileThrice(HANDLE hFile);
 extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
@@ -184,10 +184,10 @@ DWORD FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR name)
     return DVar1;
 }
 
-/* ========== FUN_14005C904 @0x14005c904 ==========
+/* ========== PECMD_LoadComDlgApis @0x14005c904 ==========
  * 加载通用对话框函数。
  */
-void FUN_14005C904(void)
+void PECMD_LoadComDlgApis(void)
 {
     if (g_pGetSaveFileNameW == 0) {
         PECMD_GetApiProcCached("GetOpenFileNameW", "COMDLG32.DLL", (int64_t *)&g_i64D428,
@@ -247,10 +247,10 @@ uint64_t FUN_14005F158(uint64_t *stream, uint8_t *data)
     return 1;
 }
 
-/* ========== FUN_14005F3BC @0x14005f3bc ==========
+/* ========== PECMD_SwapBufDesc24 @0x14005f3bc ==========
  * 交换 24 字节。
  */
-void FUN_14005F3BC(uint8_t *a, uint8_t *b)
+void PECMD_SwapBufDesc24(uint8_t *a, uint8_t *b)
 {
     uint8_t local_28[32];
     memcpy(local_28, a, 0x18);
@@ -558,7 +558,7 @@ void PECMD_ParseDollarShift(int64_t *pp, uint64_t *out, uint8_t *shift)
             *pp += 2;
         }
     }
-    int iVar1 = (int)FUN_1400a9a84(pp, out);
+    int iVar1 = (int)PECMD_EvalExprSkipOneChar(pp, out);
     if ((0 < iVar1) && (0 < *(int64_t *)shift)) {
         *out = *out << (*(int64_t *)shift & 0x3f);
     }

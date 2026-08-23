@@ -4,34 +4,34 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   映射文件视图      FUN_1400E3F80 @0x1400e3f80
- *   向上对齐          FUN_1400E4064 @0x1400e4064
+ *   映射文件视图      PECMD_MapFileView @0x1400e3f80
+ *   向上对齐          PECMD_AlignUpSize @0x1400e4064
  *   释放对象槽        FUN_1400E56E4 @0x1400e56e4
  *   隐藏引用窗口      FUN_1400E5708 @0x1400e5708
- *   通知控件(启用时)  FUN_1400E58D8 @0x1400e58d8
- *   验证绘制区域      FUN_1400E5AE4 @0x1400e5ae4
+ *   通知控件(启用时)  PECMD_CtlSendEraseBkgnd @0x1400e58d8
+ *   验证绘制区域      PECMD_ValidateCtlPaint @0x1400e5ae4
  *   转发取文本长度    PECMD_CtlOnSetFont @0x1400e62e4
  *   取文件大小(32位)  FUN_1400E693C @0x1400e693c
  *   格式化有符号64位  PECMD_FormatI64Dec @0x1400e6d68
  *   销毁事件对象      FUN_1400E759C @0x1400e759c
  *   销毁窗口对象      FUN_1400EBFB4 @0x1400ebfb4
  *   交换子对象        FUN_1400EC698 @0x1400ec698
- *   设置关联对象值    FUN_1400EF078 @0x1400ef078
+ *   设置关联对象值    PECMD_SetCtlHolderImage @0x1400ef078
  *   最大公约数        PECMD_CalcGcdU64 @0x1400ef8c8
  *   销毁 DC 包装对象  FUN_1400EF8EC @0x1400ef8ec
  *   销毁图标对象      FUN_1400F00C4 @0x1400f00c4
- *   销毁 GDI 对象     FUN_1400F06FC @0x1400f06fc
+ *   销毁 GDI 对象     PECMD_DtorCtlCoreObj @0x1400f06fc
  *   分发控件消息      PECMD_CtlDispatchBuddyMsg @0x1400f0a24
  *   销毁窗口对象 A    FUN_1400F1F18 @0x1400f1f18
- *   销毁窗口对象 B    FUN_1400F2924 @0x1400f2924
+ *   销毁窗口对象 B    PECMD_DtorIpadSubObj @0x1400f2924
  *   分发 GDI 消息     FUN_1400F2B1C @0x1400f2b1c
- *   设置子窗口        FUN_1400F2B44 @0x1400f2b44
- *   删除 GDI 对象     FUN_1400F2B6C @0x1400f2b6c
- *   发送控件私有消息  FUN_1400F353C @0x1400f353c
+ *   设置子窗口        PECMD_AttachChildWindow @0x1400f2b44
+ *   删除 GDI 对象     PECMD_DeleteEntryGdiHandle @0x1400f2b6c
+ *   发送控件私有消息  PECMD_ListSetExtStyle @0x1400f353c
  *   设置缩放双精度值  FUN_1400F4040 @0x1400f4040
  *   设置标志字段      FUN_1400F40BC @0x1400f40bc
- *   插入控件项        FUN_1400F5558 @0x1400f5558
- *   销毁窗口对象 C    FUN_1400FBA3C @0x1400fba3c
+ *   插入控件项        PECMD_ListAddItemFromSpec @0x1400f5558
+ *   销毁窗口对象 C    PECMD_DtorListViewObj @0x1400fba3c
  *   销毁带串窗口对象  FUN_1400FC034 @0x1400fc034
  *   设置颜色并失效    FUN_1400FE5BC @0x1400fe5bc
  *
@@ -72,18 +72,18 @@ extern uint8_t PTR_FUN_14012c410[];
 extern uint8_t PTR_FUN_14012c7b0[];
 extern uint8_t PTR_FUN_14012ca50[];
 
-/* ========== FUN_1400E3F80 @0x1400e3f80 ==========
+/* ========== PECMD_MapFileView @0x1400e3f80 ==========
  * 把文件映射为视图并返回映射基址。原 Ghidra 误标为 void，调用方实际使用返回值。
  */
-void *FUN_1400E3F80(HANDLE hFile, int64_t size, uint32_t prot, int64_t offset)
+void *PECMD_MapFileView(HANDLE hFile, int64_t size, uint32_t prot, int64_t offset)
 {
     return PECMD_MapSharedSection(hFile, size, prot, offset, NULL);
 }
 
-/* ========== FUN_1400E4064 @0x1400e4064 ==========
+/* ========== PECMD_AlignUpSize @0x1400e4064 ==========
  * 将 value 向上对齐到 align 的整数倍。
  */
-int64_t FUN_1400E4064(int64_t value, uint32_t align)
+int64_t PECMD_AlignUpSize(int64_t value, uint32_t align)
 {
     uint64_t a = align;
     uint64_t tmp = (a - 1) + (uint64_t)value;
@@ -116,10 +116,10 @@ void FUN_1400E5708(int64_t obj)
     }
 }
 
-/* ========== FUN_1400E58D8 @0x1400e58d8 ==========
+/* ========== PECMD_CtlSendEraseBkgnd @0x1400e58d8 ==========
  * 若对象 +0x78 的 bit0 未置位，则调用子控件的虚表 +0x8 通知函数。
  */
-void FUN_1400E58D8(uint64_t *obj, uint64_t param2)
+void PECMD_CtlSendEraseBkgnd(uint64_t *obj, uint64_t param2)
 {
     if ((*(uint8_t *)((char *)obj + 0x78) & 1) == 0) {
         void (*fn)(uint64_t, int, uint64_t) =
@@ -128,10 +128,10 @@ void FUN_1400E58D8(uint64_t *obj, uint64_t param2)
     }
 }
 
-/* ========== FUN_1400E5AE4 @0x1400e5ae4 ==========
+/* ========== PECMD_ValidateCtlPaint @0x1400e5ae4 ==========
  * BeginPaint + EndPaint，用于声明/结束一次空绘制（验证绘制区域）。
  */
-void FUN_1400E5AE4(HWND hwnd)
+void PECMD_ValidateCtlPaint(HWND hwnd)
 {
     PAINTSTRUCT ps;
     BeginPaint(hwnd, &ps);
@@ -161,7 +161,7 @@ DWORD FUN_1400E693C(HANDLE hFile)
 
 /* ========== PECMD_FormatI64Dec @0x1400e6d68 ==========
  * 将有符号 64 位整数按 "%I64d" 格式化到 dst。
- * 原 FUN_1400E6D38 的 wsprintfW 丢第 3 参，此处按调用语义补回数值。
+ * 原 PECMD_SprintfRetEnd 的 wsprintfW 丢第 3 参，此处按调用语义补回数值。
  */
 void PECMD_FormatI64Dec(LPWSTR dst, int64_t value)
 {
@@ -202,10 +202,10 @@ uint64_t FUN_1400EC698(int64_t obj, uint64_t child)
     return old;
 }
 
-/* ========== FUN_1400EF078 @0x1400ef078 ==========
+/* ========== PECMD_SetCtlHolderImage @0x1400ef078 ==========
  * 若 +0x110 关联对象非空，则向其 +0xd0 写入 value。
  */
-void FUN_1400EF078(int64_t obj, uint64_t value)
+void PECMD_SetCtlHolderImage(int64_t obj, uint64_t value)
 {
     int64_t link = *(int64_t *)(obj + 0x110);
     if (link != 0) {
@@ -251,10 +251,10 @@ uint64_t *FUN_1400F00C4(uint64_t *obj, uint32_t flags)
     return obj;
 }
 
-/* ========== FUN_1400F06FC @0x1400f06fc ==========
+/* ========== PECMD_DtorCtlCoreObj @0x1400f06fc ==========
  * 设置 GDI 派生对象虚表，删除 +0x48 处的 GDI 对象后调用基类析构。
  */
-void FUN_1400F06FC(uint64_t *obj)
+void PECMD_DtorCtlCoreObj(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012bfb0;
     if ((HGDIOBJ)obj[9] != (HGDIOBJ)0) {
@@ -280,10 +280,10 @@ void FUN_1400F1F18(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400F2924 @0x1400f2924 ==========
+/* ========== PECMD_DtorIpadSubObj @0x1400f2924 ==========
  * 设置派生窗口对象虚表后调用基类析构。
  */
-void FUN_1400F2924(uint64_t *obj)
+void PECMD_DtorIpadSubObj(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012c410;
     FUN_1400E8940(obj);
@@ -301,20 +301,20 @@ void FUN_1400F2B1C(HDC obj, uint64_t msg, HDC param3, uint64_t *param4)
     }
 }
 
-/* ========== FUN_1400F2B44 @0x1400f2b44 ==========
+/* ========== PECMD_AttachChildWindow @0x1400f2b44 ==========
  * 设置 +0x20 子窗口并刷新对象，返回设置是否成功。
  */
-bool FUN_1400F2B44(uint64_t *obj, uint64_t hwnd)
+bool PECMD_AttachChildWindow(uint64_t *obj, uint64_t hwnd)
 {
     obj[4] = hwnd;
     PECMD_ContainerAppend(obj);
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400F2B6C @0x1400f2b6c ==========
+/* ========== PECMD_DeleteEntryGdiHandle @0x1400f2b6c ==========
  * 删除对象 +0x8 处保存的 GDI 对象（若非空）。
  */
-void FUN_1400F2B6C(int64_t obj)
+void PECMD_DeleteEntryGdiHandle(int64_t obj)
 {
     HGDIOBJ h = *(HGDIOBJ *)(obj + 8);
     if (h != (HGDIOBJ)0) {
@@ -322,10 +322,10 @@ void FUN_1400F2B6C(int64_t obj)
     }
 }
 
-/* ========== FUN_1400F353C @0x1400f353c ==========
+/* ========== PECMD_ListSetExtStyle @0x1400f353c ==========
  * 向对象子窗口发送 0x1036 私有控件消息，wParam=0。
  */
-void FUN_1400F353C(int64_t obj, uint32_t value)
+void PECMD_ListSetExtStyle(int64_t obj, uint32_t value)
 {
     SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1036, 0, (LPARAM)value);
 }
@@ -350,11 +350,11 @@ uint64_t FUN_1400F40BC(int64_t obj, uint32_t value)
     return 1;
 }
 
-/* ========== FUN_1400F5558 @0x1400f5558 ==========
+/* ========== PECMD_ListAddItemFromSpec @0x1400f5558 ==========
  * 从 item 结构提取文本/参数，插入控件项。
  * TODO(verify): +0x10 文本、+0x4 类型、+0x8 数值的字段语义。
  */
-void FUN_1400F5558(int64_t obj, int32_t index, int64_t item,
+void PECMD_ListAddItemFromSpec(int64_t obj, int32_t index, int64_t item,
                              uint64_t arg4, int32_t param5)
 {
     (void)arg4;
@@ -366,10 +366,10 @@ void FUN_1400F5558(int64_t obj, int32_t index, int64_t item,
                   param5);
 }
 
-/* ========== FUN_1400FBA3C @0x1400fba3c ==========
+/* ========== PECMD_DtorListViewObj @0x1400fba3c ==========
  * 设置派生窗口对象虚表，销毁子窗口后调用基类析构。
  */
-void FUN_1400FBA3C(uint64_t *obj)
+void PECMD_DtorListViewObj(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012c7b0;
     DestroyWindow((HWND)obj[4]);

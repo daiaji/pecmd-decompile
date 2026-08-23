@@ -9,10 +9,10 @@
  *   解析 Int64(括号)      PECMD_EvalParenExprRounded @0x1400c11f4
  *   字符串转字节数组       PECMD_ParseHexByteList @0x1400c12fc
  *   释放 UpDown 控件      PECMD_DtorUpDownControl @0x1400c3ca4
- *   解析 UInt64 并跳格    FUN_1400C44F4 @0x1400c44f4
- *   解析 Int64 并跳格     FUN_1400C4518 @0x1400c4518
+ *   解析 UInt64 并跳格    PECMD_ParseValStepNext @0x1400c44f4
+ *   解析 Int64 并跳格     PECMD_ParseCalcStepNext @0x1400c4518
  *   解析 UInt64 并跳非空  PECMD_ParseU64SkipSep @0x1400c453c
- *   解析 Int 并跳格       FUN_1400C4580 @0x1400c4580
+ *   解析 Int 并跳格       PECMD_ParseIntStepNext @0x1400c4580
  *   添加 UpDown 控件      PECMD_AddUpDownControl @0x1400c45a4
  *   添加滚动条控件        PECMD_AddScrollBarObject @0x1400c46cc
  *   控件 Enable 命令      FUN_1400C47F4 @0x1400c47f4
@@ -48,11 +48,11 @@ extern void *PECMD_SendCtrlMessage_0834(WPARAM obj, uint64_t a2);
 extern void FUN_14005DAF8(int64_t obj, int *a2, int *a3,
                           int *a4, int *a5);
 extern void FUN_14005D9A8(int64_t obj, int a2);
-extern uint64_t *FUN_1400C3820(uint64_t *obj, int64_t a2, uint32_t a3,
+extern uint64_t *PECMD_CreateUpDownCtrl(uint64_t *obj, int64_t a2, uint32_t a3,
                                uint64_t *a4, uint32_t a5, uint32_t a6,
                                uint32_t a7, uint32_t a8, uint64_t *a9,
                                uint64_t *a10, uint64_t *a11, uint32_t a12);
-extern uint64_t *FUN_1400C3CF8(uint64_t *obj, int64_t a2, uint32_t a3,
+extern uint64_t *PECMD_CreateScrollBarObj(uint64_t *obj, int64_t a2, uint32_t a3,
                                uint64_t *a4, uint32_t a5, uint32_t a6,
                                uint32_t a7, uint32_t a8, uint16_t *a9,
                                uint64_t *a10, uint32_t a11, LPCWSTR a12);
@@ -60,7 +60,7 @@ extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern void FUN_14006764C(int64_t *obj, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
-extern char FUN_1400D5B48(int64_t obj, HDC a2);
+extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC a2);
 extern uint32_t PECMD_IsIconResource(uint16_t *obj);
 extern uint32_t PECMD_IsBitmapResource(uint16_t *obj);
 
@@ -257,11 +257,11 @@ uint64_t *PECMD_DtorUpDownControl(uint64_t *s, uint32_t out)
     return s;
 }
 
-/* ========== FUN_1400C44F4 @0x1400c44f4 ==========
+/* ========== PECMD_ParseValStepNext @0x1400c44f4 ==========
  * 解析 UInt64 后，若当前字符非 NUL 则前进一步。
  * 注: Ghidra 丢失了第二个输出参数，这里按调用语义补全。
  */
-void FUN_1400C44F4(int64_t *a, uint64_t *b)
+void PECMD_ParseValStepNext(int64_t *a, uint64_t *b)
 {
     FUN_1400C1194(a, b);
     if (*(WCHAR *)*a != L'\0') {
@@ -269,10 +269,10 @@ void FUN_1400C44F4(int64_t *a, uint64_t *b)
     }
 }
 
-/* ========== FUN_1400C4518 @0x1400c4518 ==========
+/* ========== PECMD_ParseCalcStepNext @0x1400c4518 ==========
  * 解析 Int64 后，若当前字符非 NUL 则前进一步。
  */
-void FUN_1400C4518(int64_t *a, uint64_t *b)
+void PECMD_ParseCalcStepNext(int64_t *a, uint64_t *b)
 {
     PECMD_EvalParenExprRounded(a, b);
     if (*(WCHAR *)*a != L'\0') {
@@ -294,10 +294,10 @@ uint32_t PECMD_ParseU64SkipSep(int64_t *a, uint64_t *b)
     return (uint32_t)r;
 }
 
-/* ========== FUN_1400C4580 @0x1400c4580 ==========
+/* ========== PECMD_ParseIntStepNext @0x1400c4580 ==========
  * 解析 Int 后，若当前字符非 NUL 则前进一步。
  */
-void FUN_1400C4580(int64_t *a, int *b)
+void PECMD_ParseIntStepNext(int64_t *a, int *b)
 {
     FUN_1400C11C0(a, b);
     if (*(WCHAR *)*a != L'\0') {
@@ -321,7 +321,7 @@ void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3,
         FUN_14005DAF8((int64_t)mgr, rc, &y, &w, &h);
         uint64_t *mem = (uint64_t *)malloc(0x90);
         if (mem != NULL) {
-            obj = FUN_1400C3820(mem, v2,
+            obj = PECMD_CreateUpDownCtrl(mem, v2,
                                 (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
                                 v3, (uint32_t)rc[0], (uint32_t)y,
                                 (uint32_t)w, (uint32_t)h, p8, p9,
@@ -348,7 +348,7 @@ void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3,
         FUN_14005DAF8((int64_t)mgr, rc, &y, &w, &h);
         uint64_t *mem = (uint64_t *)malloc(0x70);
         if (mem != NULL) {
-            obj = FUN_1400C3CF8(mem, v2,
+            obj = PECMD_CreateScrollBarObj(mem, v2,
                                 (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
                                 v3, (uint32_t)rc[0], (uint32_t)y,
                                 (uint32_t)w, (uint32_t)h, p8, p9,
@@ -490,7 +490,7 @@ uint64_t FUN_1400D6F8C(int64_t pp)
     HWND hwnd = *(HWND *)(pp + OBJ_HWND);
     *(uint8_t *)(pp + 0x250) = 2;
     HDC hdc = GetDC(hwnd);
-    FUN_1400D5B48(pp, hdc);
+    PECMD_CtlLoadPictureRgn(pp, hdc);
     if (hdc != (HDC)0) {
         ReleaseDC(hwnd, hdc);
     }

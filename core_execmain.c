@@ -52,7 +52,7 @@ extern void PECMD_RefCountRelease(WCHAR **ps);                       /* @0x14002
 extern void FUN_140017CDC(void *dst, void *src);            /* @0x140017cdc */
 extern void FUN_1400186BC(void *s, void *parent);           /* @0x1400186bc */
 extern void FUN_14004EAA8(void *script, int flag);           /* @0x14004eaa8 */
-extern int64_t FUN_14001B4F8(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
+extern int64_t PECMD_StrChrOffset(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
                                int64_t len);                   /* @0x14001e69c core_var3.c */
 extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0x140073ccc core_exec5.c */
@@ -79,7 +79,7 @@ extern void PECMD_DispatchExpressionBlock(void *script, LPCWSTR p);       /* @0x
 extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
                           void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
 extern void PECMD_WaitTickCount(void);                          /* @0x140061470 */
-extern void FUN_14001a640(WCHAR *buf);                    /* @0x14001a640 恢复当前目录 */
+extern void PECMD_SetCurrentDirIfChanged(WCHAR *buf);                    /* @0x14001a640 恢复当前目录 */
 extern void PECMD_SyncWorkingDirectory(void);                          /* @0x14001e2cc */
 extern void FUN_14009BB28(void *script, int flag);        /* @0x14009bb28 脚本清理 */
 
@@ -239,7 +239,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
     textPtr = *(WCHAR **)bufRef;                  /* 容器 [0] = 文本指针 */
     *(void **)((char *)pExec + 0x80) = textPtr;
     FUN_140073CCC(pExec, nameTmp, 1);
-    sepPos = FUN_14001B4F8(textPtr, *(uint16_t *)((char *)pExec + 0x48));
+    sepPos = PECMD_StrChrOffset(textPtr, *(uint16_t *)((char *)pExec + 0x48));
     *(int32_t *)((char *)pExec + 0x8c) = (int32_t)sepPos;
 
     if (hasWin) {
@@ -440,7 +440,7 @@ ref_done:
             }
         }
         if ((flags & 0x40) == 0) {
-            FUN_14001a640(savedCwd);
+            PECMD_SetCurrentDirIfChanged(savedCwd);
             PECMD_SyncWorkingDirectory();
         }
         LeaveCriticalSection(&g_csInit);
