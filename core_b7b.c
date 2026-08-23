@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   查找控件对象       FUN_1400C36C8 @0x1400c36c8
- *   HOME 命令          FUN_1400C42AC @0x1400c42ac
+ *   HOME 命令          PECMD_HomeSetStartPage @0x1400c42ac
  *   解析列表项         FUN_1400C99B4 @0x1400c99b4
  *   添加控件           FUN_1400CADEC @0x1400cadec
  *   绘制控件           FUN_1400D95F0 @0x1400d95f0
@@ -110,11 +110,11 @@ uint64_t FUN_1400C36C8(LPCWSTR name, int64_t ctx, int filter)
     return value;
 }
 
-/* ========== FUN_1400C42AC @0x1400c42ac ==========
+/* ========== PECMD_HomeSetStartPage @0x1400c42ac ==========
  * HOME 命令：设置 IE 主页，并可选设置 HomePage/DisableRegistryTools 策略。
  * 参数格式: "主页[,HomePage策略[,DisableRegistryTools策略]]"。
  */
-uint64_t FUN_1400C42AC(HKEY script, LPCWSTR args)
+uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
 {
     LPCWSTR s = args;
     FUN_14005B154((WCHAR **)&s);

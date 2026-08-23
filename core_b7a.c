@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   解析双精度(括号)      FUN_1400C1000 @0x1400c1000
- *   解析 UInt64(括号)     FUN_1400C10C0 @0x1400c10c0
+ *   解析 UInt64(括号)     PECMD_EvalParenthesizedExpr @0x1400c10c0
  *   解析 Int64(括号)      FUN_1400C11F4 @0x1400c11f4
  *   字符串转字节数组       FUN_1400C12FC @0x1400c12fc
  *   释放 UpDown 控件      FUN_1400C3CA4 @0x1400c3ca4
@@ -17,7 +17,7 @@
  *   添加滚动条控件        FUN_1400C46CC @0x1400c46cc
  *   控件 Enable 命令      FUN_1400C47F4 @0x1400c47f4
  *   解析 Int64 并跳格(带返回值) FUN_1400CADA0 @0x1400cada0
- *   解析资源规格          FUN_1400D0B2C @0x1400d0b2c
+ *   解析资源规格          PECMD_ParseItemImageSpec @0x1400d0b2c
  *   重绘控件背景          FUN_1400D6F8C @0x1400d6f8c
  *
  * 约定:
@@ -113,10 +113,10 @@ evaluate:
     return PECMD_ParseNumberToDouble(pp, out);
 }
 
-/* ========== FUN_1400C10C0 @0x1400c10c0 ==========
+/* ========== PECMD_EvalParenthesizedExpr @0x1400c10c0 ==========
  * 解析 UInt64；括号表达式先改写为 '#' 后交给求值器。
  */
-uint64_t FUN_1400C10C0(int64_t *pp, uint64_t *out)
+uint64_t PECMD_EvalParenthesizedExpr(int64_t *pp, uint64_t *out)
 {
     FUN_14005B154((WCHAR **)pp);
     WCHAR *p = (WCHAR *)*pp;
@@ -286,7 +286,7 @@ void FUN_1400C4518(int64_t *a, uint64_t *b)
  */
 uint32_t FUN_1400C453C(int64_t *a, uint64_t *b)
 {
-    uint64_t r = FUN_1400C10C0(a, b);
+    uint64_t r = PECMD_EvalParenthesizedExpr(a, b);
     WCHAR *p = (WCHAR *)*a;
     if ((*p != L'\0') && (((*p < 9) || (0xd < *p)) && (*p != L' '))) {
         *a = (int64_t)(p + 1);
@@ -420,10 +420,10 @@ void FUN_1400CADA0(int64_t *pp, int *out)
     }
 }
 
-/* ========== FUN_1400D0B2C @0x1400d0b2c ==========
+/* ========== PECMD_ParseItemImageSpec @0x1400d0b2c ==========
  * 解析资源名/ID；返回资源字符串或整数资源类型指针。
  */
-uint16_t *FUN_1400D0B2C(int64_t *pp, int64_t *out, uint16_t *token)
+uint16_t *PECMD_ParseItemImageSpec(int64_t *pp, int64_t *out, uint16_t *token)
 {
     WCHAR *p = (WCHAR *)*pp;
     WCHAR *id_start = p - 1;

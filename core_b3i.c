@@ -54,7 +54,7 @@ extern void PECMD_SyncWorkingDirectory(void);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
 extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2,
                               void *p3, void *p4, void *p5);
-extern int FUN_140050F58(int *a1, int64_t *a2, uint32_t a3);
+extern int PECMD_ParseCharClassRanges(int *a1, int64_t *a2, uint32_t a3);
 extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
@@ -174,7 +174,7 @@ int FUN_1400513B8(uint32_t *errCode, int64_t *pp, uint8_t *out)
         }
         psVar3 = (int16_t *)*pp;
         if (*psVar3 != 0x5d) {
-            iVar2 = FUN_140050F58((int *)errCode, pp, (uint32_t)(sVar1 == 0x5e));
+            iVar2 = PECMD_ParseCharClassRanges((int *)errCode, pp, (uint32_t)(sVar1 == 0x5e));
             if (iVar2 < 0) {
                 return iVar2;
             }

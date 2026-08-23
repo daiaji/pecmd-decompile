@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   解析字符类主体    FUN_140050F58 @0x140050f58
+ *   解析字符类主体    PECMD_ParseCharClassRanges @0x140050f58
  *   初始化控件标志    PECMD_InitControlFlags @0x140054380
  *   绘制控件重绘      PECMD_DispatchControlMessage @0x140061914
  *   插入控件对象 A    FUN_140063ED4 @0x140063ed4
@@ -28,7 +28,7 @@
  *   图像编码到流      FUN_14007D340 @0x14007d340
  *   解析命令行参数    FUN_14008293C @0x14008293c
  *   保存选择状态      FUN_14009CFBC @0x14009cfbc
- *   设置随机变量      FUN_1400A3F08 @0x1400a3f08
+ *   设置随机变量      PECMD_EvalRandFunction @0x1400a3f08
  *   解析 <...> 参数   FUN_1400A40E8 @0x1400a40e8
  *   插入控件对象 C    FUN_1400AA7E4 @0x1400aa7e4
  *   插入控件对象 D    FUN_1400AAA4C @0x1400aaa4c
@@ -158,10 +158,10 @@ extern uint8_t g_u897806;
 extern uint64_t g_u64_124e40;
 extern uint64_t g_u64_124e48;
 
-/* ========== FUN_140050F58 @0x140050f58 ==========
+/* ========== PECMD_ParseCharClassRanges @0x140050f58 ==========
  * 解析字符类主体，返回起始槽位或 -1。
  */
-int FUN_140050F58(int *arr, int64_t *pp, uint32_t mode)
+int PECMD_ParseCharClassRanges(int *arr, int64_t *pp, uint32_t mode)
 {
     int iVar1 = FUN_14004FE34(arr, (mode != 0) + 7);
     if (iVar1 < 0) {
@@ -1208,10 +1208,10 @@ void FUN_14009CFBC(int64_t obj, int mode)
     PECMD_FreeStrBuf((WCHAR **)&local_res8);
 }
 
-/* ========== FUN_1400A3F08 @0x1400a3f08 ==========
+/* ========== PECMD_EvalRandFunction @0x1400a3f08 ==========
  * 设置 RANDOM 或指定名称的随机数变量。
  */
-uint64_t FUN_1400A3F08(int64_t *script, WCHAR *text)
+uint64_t PECMD_EvalRandFunction(int64_t *script, WCHAR *text)
 {
     WCHAR *local_res10 = text;
     FUN_14005B154((WCHAR **)&local_res10);

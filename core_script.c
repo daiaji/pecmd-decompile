@@ -26,7 +26,7 @@ extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
 extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
 extern void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
-extern char FUN_14006CCD4(LPCWSTR *ps);                /* @0x14006ccd4 */
+extern char PECMD_NormalizeVolumeDevPath(LPCWSTR *ps);                /* @0x14006ccd4 */
 extern int32_t FUN_140006A4C(LPCWSTR path);             /* @0x140006a4c */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl); /* @0x140003864 */
@@ -202,7 +202,7 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
     }
 
     p2 = path;
-    isDev = FUN_14006CCD4((LPCWSTR *)&p2) != 0;
+    isDev = PECMD_NormalizeVolumeDevPath((LPCWSTR *)&p2) != 0;
     if (isDev && FUN_140006A4C(p2)) {
         h = (HANDLE)FUN_14001D810(p2, 0x80000000, 7);
     } else {

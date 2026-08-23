@@ -16,7 +16,7 @@
  *   初始化对象(虚表 C550)   FUN_1400F5C74    @0x1400f5c74
  *   应用字体到控件          FUN_1400FB934 @0x1400fb934
  *   设置绘制画刷            FUN_1400FBBB0     @0x1400fbbb0
- *   创建富文本控件          FUN_1400FBCB0 @0x1400fbcb0
+ *   创建富文本控件          PECMD_CreateRichEditCtrl @0x1400fbcb0
  *   启动 Tooltip 定时器     PECMD_ControlOnMouseMove  @0x1400fd764
  *   解析格式标志            FUN_1400FFA38   @0x1400ffa38
  *
@@ -565,11 +565,11 @@ uint64_t FUN_1400FBBB0(int64_t obj, HDC hdc)
     return result;
 }
 
-/* ========== FUN_1400FBCB0 @0x1400fbcb0 ==========
+/* ========== PECMD_CreateRichEditCtrl @0x1400fbcb0 ==========
  * 创建 RichEdit 控件窗口 (RICHEDIT / RichEdit20W), 存入 obj[4],
  * 追加容器并注册 0x1400f21a8 回调 (当 EDITSTREAM 标志开启)。
  */
-bool FUN_1400FBCB0(int64_t *obj, uint32_t style, int *rc,
+bool PECMD_CreateRichEditCtrl(int64_t *obj, uint32_t style, int *rc,
                               HWND parent, uint32_t id)
 {
     int iVar1, iVar2, iVar3, iVar4;

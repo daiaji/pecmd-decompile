@@ -1,7 +1,7 @@
 /*
  * core_script2.c — ExecCmd 主流程（B8b 核心）
  *
- *   FUN_14004EB34 @0x14004eb34   ExecCmd 主流程
+ *   PECMD_RunStartupScript @0x14004eb34   ExecCmd 主流程
  *
  * 流程：
  *   1. 解析命令行（&/:: 变量前缀）
@@ -47,7 +47,7 @@ static int32_t g_cmdlineMode;      /* DAT_14013ccb0 */
  * 注：窗口/线程深层交互以 TODO(verify) 简化，核心命令行解析/脚本
  * 执行链已还原。
  */
-int64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
+int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
 {
     LPCWSTR p = cmdline;
     WCHAR *cmd = NULL;

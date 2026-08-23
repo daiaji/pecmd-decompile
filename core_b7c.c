@@ -133,11 +133,11 @@ uint64_t FUN_1400C94F0(uint64_t *a1, int64_t *a2, HBITMAP a3,
     return 0;
 }
 
-/* ========== FUN_1400D0468 @0x1400d0468 ==========
+/* ========== PECMD_SiteSetFileAttrTime @0x1400d0468 ==========
  * [简化桩] 文件时间转 POINT。返回 {0,0}。
  * TODO(verify): 需完整还原时间转换。
  */
-POINT FUN_1400D0468(int64_t *a1, FILETIME a2, uint64_t a3)
+POINT PECMD_SiteSetFileAttrTime(int64_t *a1, FILETIME a2, uint64_t a3)
 {
     POINT r;
     (void)a1;
@@ -298,11 +298,11 @@ int64_t FUN_1400CD3A8(uint64_t a1, WCHAR *a2)
     return 0;
 }
 
-/* ========== FUN_1400D0C6C @0x1400d0c6c ==========
+/* ========== PECMD_GetfReadData @0x1400d0c6c ==========
  * [简化桩] 执行命令 A。返回 {0}。
  * TODO(verify): 需完整还原执行逻辑。
  */
-LARGE_INTEGER FUN_1400D0C6C(int64_t *a1, LARGE_INTEGER a2)
+LARGE_INTEGER PECMD_GetfReadData(int64_t *a1, LARGE_INTEGER a2)
 {
     LARGE_INTEGER r;
     (void)a1;

@@ -5,7 +5,7 @@
  * 保留原始 @0x 地址和 TODO(verify)，后续可读化深化阶段再逐行还原。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   FUN_1400E1228      @0x1400e1228  (简化桩)
+ *   PECMD_SockCreateIpcObj      @0x1400e1228  (简化桩)
  *   FUN_1400E9724       @0x1400e9724  (简化桩)
  *   FUN_1400F36EC  @0x1400f36ec  (简化桩)
  *   FUN_1400F6DB0     @0x1400f6db0  (简化桩)
@@ -15,11 +15,11 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-/* ========== FUN_1400E1228 @0x1400e1228 ==========
+/* ========== PECMD_SockCreateIpcObj @0x1400e1228 ==========
  * [简化桩] 原函数为 8K 大函数，按签名返回 0。
  * TODO(verify): 需完整还原脚本执行逻辑。
  */
-LARGE_INTEGER FUN_1400E1228(LARGE_INTEGER script, WCHAR *cmd, WPARAM wParam)
+LARGE_INTEGER PECMD_SockCreateIpcObj(LARGE_INTEGER script, WCHAR *cmd, WPARAM wParam)
 {
     LARGE_INTEGER r;
     (void)script;

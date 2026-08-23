@@ -773,12 +773,12 @@ uint64_t FUN_1400ECA00(int64_t obj, uint32_t msg, int64_t wParam,
     return 1;
 }
 
-/* ========== FUN_1400EBD30 @0x1400ebd30 ==========
+/* ========== PECMD_RasDialEntry @0x1400ebd30 ==========
  * RAS 拨号并等待同步事件：创建事件对、填充拨号参数、调用 RasDialW，
  * 超时/失败时取错误串到 g_pRasEntryBuf。
  * TODO(verify): RasDialW 参数布局与 0xa78 句柄槽。
  */
-uint64_t FUN_1400EBD30(int64_t conn, LPCWSTR entryName, LPCWSTR user,
+uint64_t PECMD_RasDialEntry(int64_t conn, LPCWSTR entryName, LPCWSTR user,
                               LPCWSTR pwd, LPCWSTR domain, LPCWSTR phone)
 {
     WCHAR *phonebook = NULL;

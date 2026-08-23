@@ -80,7 +80,7 @@ extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void PECMD_InitRamdataRegistry(uint32_t mode);
-extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -1020,7 +1020,7 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
     PECMD_AllocString(&local_30, iVar2 + 5);
     local_38.dwLowDateTime = 0;
     local_38.dwHighDateTime = 0;
-    FUN_14000e26c(g_Script, local_30, g_Script, NULL, 0, &local_38, NULL, NULL);
+    PECMD_ExecCmdDispatch(g_Script, local_30, g_Script, 0, 0, &local_38, 0, 0);
     if ((*(int64_t *)(ctx + 0x110) != 0) && (local_38.dwLowDateTime == 0)) {
         PECMD_AppendKeyIfMissing(ctx, hwid, mode);
     }

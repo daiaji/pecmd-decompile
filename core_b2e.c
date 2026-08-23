@@ -8,10 +8,10 @@
  *   匹配命令字(带尾界)    FUN_140023C48  @0x140023c48
  *   匹配命令字            FUN_1400240C0    @0x1400240c0
  *   取下一个命令参数      PECMD_GetNextCommandArg     @0x140024350
- *   配置页面文件          FUN_14002A910    @0x14002a910
+ *   配置页面文件          PECMD_CreatePageFile    @0x14002a910
  *   扫描 INF 寻找驱动     FUN_14002B2EC    @0x14002b2ec
  *   复制 INF/SYS 到系统   FUN_14002B9EC      @0x14002b9ec
- *   解析日期时间表达式    FUN_14002D33C  @0x14002d33c
+ *   解析日期时间表达式    PECMD_EvalSpecialToken  @0x14002d33c
  *   显示分辨率弹出菜单    PECMD_DispConfirmPopupMenu @0x14002e790
  *   解析命令路径          FUN_14002FD88     @0x14002fd88
  *   ImDisk 控制请求       PECMD_MountImDiskRamDisk        @0x140035cec
@@ -146,7 +146,7 @@ extern DWORD FUN_14002D708(LPCWSTR s, uint32_t a, int64_t *b, DWORD c,
                            DWORD d);
 extern void PECMD_ApplyDesktopWallpaper(void);
 extern uint32_t FUN_14001ab84(LPCWSTR s);
-extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);
 extern void LoadEnvi(void *a, void *b);
@@ -792,12 +792,12 @@ fail:
     return NULL;
 }
 
-/* ========== FUN_14002A910 @0x14002a910 ==========
+/* ========== PECMD_CreatePageFile @0x14002a910 ==========
  * PAGE 命令: 配置系统页面文件 (NtCreatePagingFile + PagingFiles 注册表)。
  * TODO(verify): 反编译中 pthreadlocinfo 类型实为 WCHAR* 字符串游标；
  *               lc_codepage 偏移按 local_98+0x114 对应的字节偏移保留。
  */
-uint64_t FUN_14002A910(WCHAR *cmdline)
+uint64_t PECMD_CreatePageFile(WCHAR *cmdline)
 {
     WCHAR *cmd = cmdline;
     WCHAR *dup = NULL;
@@ -1369,11 +1369,11 @@ done:
     return err;
 }
 
-/* ========== FUN_14002D33C @0x14002d33c ==========
+/* ========== PECMD_EvalSpecialToken @0x14002d33c ==========
  * 解析日期/时间表达式，支持 -mode、?、$、#、&&&、@、*、-std/-add 等。
  * TODO(verify): 反编译中 FILETIME 被用作 64 位字符串指针容器，已改为 WCHAR*。
  */
-LARGE_INTEGER FUN_14002D33C(LARGE_INTEGER script, LPCWSTR arg,
+LARGE_INTEGER PECMD_EvalSpecialToken(LARGE_INTEGER script, LPCWSTR arg,
                                         char mode, LPCWSTR arg2, int64_t param5)
 {
     WCHAR *p = (WCHAR *)arg;
@@ -2647,8 +2647,8 @@ loop_retry:
         PECMD_ExecIndataCommand(WSTR("BeforeStart"), pWVar6);
         g_answerFlag = (uint8_t)retry;
         if (cmdType == 0) {
-            FUN_14000e26c((void *)script.QuadPart, cmdCopy, (void *)script.QuadPart,
-                          (void *)(uintptr_t)0x5e, 7, NULL, NULL, NULL);
+            PECMD_ExecCmdDispatch((void *)script.QuadPart, cmdCopy, (void *)script.QuadPart,
+                          (void *)(uintptr_t)0x5e, 7, 0, 0, 0);
         } else {
             PECMD_ProcessScriptBlock(script.QuadPart, (uint64_t)(uintptr_t)cmdCopy,
                           NULL, NULL, NULL);

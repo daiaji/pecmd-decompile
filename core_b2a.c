@@ -46,7 +46,7 @@ extern void PECMD_BuildExecCommand(int64_t obj);
 extern void PECMD_CleanupTaskEnvObject(int64_t obj);
 extern void *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
 extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
-extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern int64_t PECMD_RegisterCallbackWnd(uint32_t mode);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
@@ -302,7 +302,7 @@ int64_t PECMD_RunPecmdMain(void *script, uint32_t mode)
     int64_t r;
     int i;
     memcpy(local_38, " --incmd PECMD MAIN", 0x2a);
-    FUN_14000e26c(script, local_38, script, NULL, 0, NULL, NULL, NULL);
+    PECMD_ExecCmdDispatch(script, local_38, script, 0, 0, 0, 0, 0);
     i = 199;
     do {
         r = PECMD_RegisterCallbackWnd(mode & 0x40);

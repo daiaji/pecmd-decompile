@@ -76,7 +76,7 @@ extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, 
                               BYTE *data, DWORD size);        /* @0x14005c5a0 注册表查询 */
 extern int      PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c788 串前缀比较 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 取串槽 */
-extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
+extern uint64_t PECMD_ExecCmdDispatch(uint64_t script, uint64_t cmd, uint64_t s3,
                               uint64_t s4, uint32_t flag, void *p6,
                               uint64_t s7, void *p8);         /* @0x14000e26c 脚本执行 */
 
@@ -411,7 +411,7 @@ uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
     PECMD_AppendWideStr((WCHAR **)&local_res10, pWVar2);
     local_res8 = (LPCWSTR)((uint64_t)(uintptr_t)local_res8 & 0xffffffffffff0000ULL);
     /* TODO(verify): 4/5/6/7/8 参为 Ghidra 成对残留；按原样传入 */
-    _Var1 = FUN_14000e26c((uint64_t)(uintptr_t)g_Script,
+    _Var1 = PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)g_Script,
                           local_res10,
                           (uint64_t)(uintptr_t)g_Script,
                           (uint64_t)(uintptr_t)&local_res8, 0, (void *)0,

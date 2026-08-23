@@ -11,12 +11,12 @@
  *   编辑框子类窗口过程   PECMD_EditSubclassWndProc @0x140028708
  *   应用 PELOGON 布局字体 PECMD_ApplyTextWindowLayout @0x14002a508
  *   安装/解压 INF/SYS 文件 FUN_14002C048 @0x14002c048
- *   PELOGON 初始化扩展    FUN_14002E3D4 @0x14002e3d4
+ *   PELOGON 初始化扩展    PECMD_ProcessInitCommand @0x14002e3d4
  *   PELOGON 主窗口过程    PECMD_MainMsgWndProc @0x14002ee44
  *   应用 LOGO 配置        FUN_1400389C4 @0x1400389c4
  *   处理单个安装项        FUN_14003AAD0 @0x14003aad0
  *   处理安装脚本队列      FUN_14003B010 @0x14003b010
- *   发送按键/鼠标命令     FUN_14003C9E8 @0x14003c9e8
+ *   发送按键/鼠标命令     PECMD_SendInputEvents @0x14003c9e8
  *   系统关机/重启处理     PECMD_PerformSystemShutdown @0x14003d608
  *   确认对话框过程        FUN_14003E220 @0x14003e220
  *
@@ -56,7 +56,7 @@ extern WCHAR *FUN_1400679DC(uint64_t *a1, int *a2, int16_t a3);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_ParseIntThenSkip(int64_t *a1, int *a2);
-extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern void PECMD_CrtShim(WCHAR *out, uint64_t a2, LPCWSTR a3,
@@ -1203,12 +1203,12 @@ label_02c489:
     return 0;
 }
 
-/* ========== FUN_14002E3D4 @0x14002e3d4 ==========
+/* ========== PECMD_ProcessInitCommand @0x14002e3d4 ==========
  * PELOGON 初始化扩展：解析 -dummy/-dummyx、FirstUsb、钩子选项并安装 shell 组件。
  * TODO(verify): 反编译 in_stack 残留按 0 处理；PECMD_CrtShim 的 0x140120784
  *               是 .rdata 字符串地址/格式串参数，保持原样。
  */
-uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
+uint64_t PECMD_ProcessInitCommand(int64_t *ctx, WCHAR *cmd)
 {
     uint16_t uVar1;
     uint16_t uVar8;
@@ -1284,20 +1284,20 @@ uint64_t FUN_14002E3D4(int64_t *ctx, WCHAR *cmd)
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $SHELL32.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
-        FUN_14000e26c((void *)ctx, (void *)local_178, (void *)ctx,
-                      (void *)local_res18, 0, NULL, NULL, NULL);
+        PECMD_ExecCmdDispatch((void *)ctx, (void *)local_178, (void *)ctx,
+                      (void *)local_res18, 0, 0, 0, 0);
         PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $BROWSEUI.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
-        FUN_14000e26c((void *)ctx, (void *)local_178, (void *)ctx,
-                      (void *)local_res18, 0, NULL, NULL, NULL);
+        PECMD_ExecCmdDispatch((void *)ctx, (void *)local_178, (void *)ctx,
+                      (void *)local_res18, 0, 0, 0, 0);
         PECMD_CrtShim(local_178, 0x140120784,
                       WSTR(" -timeout:#9000 -incmd -nfb =PECMD CALL $SHDOCVW.DLL,DllInstall,#1,I"),
                       (void *)(uintptr_t)0x24);
         local_res18[0] = 0;
-        FUN_14000e26c((void *)ctx, (void *)local_178, (void *)ctx,
-                      (void *)local_res18, 0, NULL, NULL, NULL);
+        PECMD_ExecCmdDispatch((void *)ctx, (void *)local_178, (void *)ctx,
+                      (void *)local_res18, 0, 0, 0, 0);
     }
     if (bVar10 < 2) {
         PECMD_WritePELogonDword(0, WSTR("HOOKKBD"), (uint32_t)bVar3);
@@ -1995,10 +1995,10 @@ label_03b48d:
     } while (true);
 }
 
-/* ========== FUN_14003C9E8 @0x14003c9e8 ==========
+/* ========== PECMD_SendInputEvents @0x14003c9e8 ==========
  * 解析并发送按键/鼠标输入命令（-gui/-m 前缀）。
  */
-uint64_t FUN_14003C9E8(LPCWSTR cmd)
+uint64_t PECMD_SendInputEvents(LPCWSTR cmd)
 {
     WCHAR wVar1;
     WCHAR WVar2;

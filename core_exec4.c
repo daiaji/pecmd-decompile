@@ -7,7 +7,7 @@
  *   PECMD_GetDeviceSize    @0x140061070   设备大小（卷信息）
  *   FUN_14006A740 @0x14006a740   数字解析（T/G/M/K/S 后缀）
  *   FUN_14006A7F4   @0x14006a7f4   数字解析包装（跳过空白）
- *   FUN_14006CCD4  @0x14006ccd4   设备路径修正（盘符→\\\\.\X:）
+ *   PECMD_NormalizeVolumeDevPath  @0x14006ccd4   设备路径修正（盘符→\\\\.\X:）
  *   FUN_14006CE38 @0x14006ce38   设备路径修正（同上，返回类型）
  *   PECMD_RefCountRelease   @0x140028270   引用计数释放
  *   FUN_1400A4020   @0x1400a4020   引用计数字符串设置
@@ -135,12 +135,12 @@ uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out)
     return (uint32_t)r & 0xffffffff;
 }
 
-/* ========== FUN_14006CCD4 @0x14006ccd4 ==========
+/* ========== PECMD_NormalizeVolumeDevPath @0x14006ccd4 ==========
  * 设备路径修正：带扩展名的普通路径不变（返回 0）；
  * 盘符 "C:" → "\\\\.\C:"（返回 2）；
  * PhysicalDrive 返回 1。
  */
-char FUN_14006CCD4(LPCWSTR *ps)
+char PECMD_NormalizeVolumeDevPath(LPCWSTR *ps)
 {
     LPCWSTR p = *ps;
     WCHAR *dot;
@@ -187,7 +187,7 @@ check_dos:
  */
 uint8_t FUN_14006CE38(LPCWSTR *ps)
 {
-    return (uint8_t)FUN_14006CCD4(ps);
+    return (uint8_t)PECMD_NormalizeVolumeDevPath(ps);
 }
 
 /* ========== PECMD_RefCountRelease @0x140028270 ==========

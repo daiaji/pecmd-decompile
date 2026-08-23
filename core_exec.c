@@ -5,7 +5,7 @@
  *   PECMD_SubclassEnterControl   @0x1400011d4   (控件子类化: Enter→WM_COMMAND)
  *   PECMD_CreateControlSubclass   @0x140001258   (创建控件+子类化)
  *   PECMD_MoveBtnTextToID9  @0x1400012fc   (按钮文字移到 ID9 静态框)
- *   FUN_140003A20     @0x140004fd4   (命令行入口: 调 FUN_14004EB34)
+ *   FUN_140003A20     @0x140004fd4   (命令行入口: 调 PECMD_RunStartupScript)
  *   PECMD_LoadLanguageFile     @0x1400166b4   (加载 .lang 语言文件)
  *   FUN_1400169BC    @0x1400169bc   (消息表按 ID 查文本)
  *   FUN_14005B6AC      @0x14005b6ac   (取字符串: lang 优先, 回退资源)
@@ -51,7 +51,7 @@ extern void FUN_1400633A8(void **ps, int64_t len);  /* FUN_1400633A8 core_thread
 extern void PECMD_ZeroLenBuf(void *p);                /* PECMD_ZeroLenBuf core_thread.c */
 
 /* 待实现 (B7 后续/声明) */
-extern uint64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmd);   /* FUN_14004EB34 */
+extern uint64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmd);   /* PECMD_RunStartupScript */
 extern int PECMD_ReadFileStr(const WCHAR *path, void **pbuf);                          /* PECMD_ReadFileStr */
 extern int PECMD_EvalExpr(WCHAR **pp, double *out);                                    /* PECMD_ParseParenthesizedExpression */
 
@@ -111,7 +111,7 @@ void PECMD_MoveBtnTextToID9(void *mbox, int btnId)
 void FUN_140003A20(const WCHAR *cmd)
 {
     SetProcessWorkingSetSize(GetCurrentProcess(), (uint64_t)-1, (uint64_t)-1);
-    FUN_14004EB34(g_hInst, 0, cmd);
+    PECMD_RunStartupScript(g_hInst, 0, cmd);
 }
 
 /* ========== 小对象分配 (头 size=2) @0x140063344 ========== */

@@ -113,7 +113,7 @@ extern HICON PECMD_LoadIconFromResource(HMODULE h, LPCWSTR name, int a, int b,
 extern HKEY FUN_1400C13F8(HKEY a1, HKEY a2, char a3);                 /* @0x1400c13f8 脚本注册表写 */
 extern bool FUN_140101E70(LPCWSTR path);                              /* @0x140101e70 路径存在判断 */
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 串复制(core_exec5.c) */
-extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
+extern uint64_t PECMD_ExecCmdDispatch(uint64_t script, uint64_t cmd, uint64_t s3,
                               uint64_t s4, uint32_t flag, void *p6,
                               uint64_t s7, void *p8);                 /* @0x14000e26c 脚本执行 */
 extern void PECMD_EnumDropFiles(void *hDrop, int64_t *a, int64_t *b);       /* @0x140006554 取拖放路径 */
@@ -1130,9 +1130,9 @@ LAB_1400040bd:
                           WSTR(" --desk %s %s --ack:%s %s%s %s"), pwVar15, pwVar16);
                 local_12c[0] = false;
                 local_12c[1] = false;
-                tmp = FUN_14000e26c((uint64_t)(uintptr_t)g_Script,
+                tmp = PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)g_Script,
                                     (uint64_t)(uintptr_t)local_138,
-                                    (uint64_t)(uintptr_t)g_Script, 0, 0, NULL, 0, NULL);
+                                    (uint64_t)(uintptr_t)g_Script, 0, 0, 0, 0, 0);
                 memcpy(&local_88, &tmp, 8);
                 local_130 = '\x01';
                 if ((iVar6 == 0) && (uVar3 == 0)) {
@@ -5548,9 +5548,9 @@ LAB_140016c8d:
             FUN_14006375C(&local_res18, pWVar1);
             FUN_14006375C(&local_res18, WSTR(" "));
             FUN_14006375C(&local_res18, param_4);
-            tmp = FUN_14000e26c((uint64_t)(intptr_t)(void *)param_1,
+            tmp = PECMD_ExecCmdDispatch((uint64_t)(intptr_t)(void *)param_1,
                                 (uint64_t)(uintptr_t)local_res18,
-                                (uint64_t)(intptr_t)(void *)param_1, 0, 0, NULL, 0, NULL);
+                                (uint64_t)(intptr_t)(void *)param_1, 0, 0, 0, 0, 0);
             memcpy(&_Var5, &tmp, 8);
             goto LAB_140016e53;
         }
@@ -6920,7 +6920,7 @@ void PECMD_BuildExecCommand(int64_t param_1)
         *((LPWSTR)lpString_00) = 0;
         *lpString = 0;
         local_res8[0] = 0;
-        FUN_14000e26c((uint64_t)(uintptr_t)g_Script,
+        PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)g_Script,
                       (uint64_t)(uintptr_t)buf,
                       (uint64_t)(uintptr_t)g_Script,
                       *(uint64_t *)local_res8,
@@ -7875,8 +7875,8 @@ LRESULT PECMD_KeyboardHookProcTaskMgr(int param_1, WPARAM param_2, int *param_3)
         uVar1 = GetAsyncKeyState(0x10);
         if ((uVar1 & 0x8000) == 0) {
             FUN_1400702B0((WCHAR **)&local_res20, WSTR("TaskMgr.exe"));
-            FUN_14000e26c((uint64_t)(uintptr_t)g_Script, local_res20,
-                          (uint64_t)(uintptr_t)g_Script, 0, 0, NULL, 0, NULL);
+            PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)g_Script, local_res20,
+                          (uint64_t)(uintptr_t)g_Script, 0, 0, 0, 0, 0);
             PECMD_FreeStrBuf((WCHAR **)&local_res20);
         } else {
             PostQuitMessage(0x2e);
@@ -9406,7 +9406,7 @@ LAB_14001ef4a:
     FUN_14006375C(&local_res18, g_szEmpty);
     FUN_14006375C(&local_res18, local_res20);
     local_res8[0] = 0;
-    FUN_14000e26c((uint64_t)(uintptr_t)g_Script, (uint64_t)(uintptr_t)local_res18,
+    PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)g_Script, (uint64_t)(uintptr_t)local_res18,
                   (uint64_t)(uintptr_t)g_Script, (uint64_t)(uintptr_t)local_res8,
                   0, (void *)0, 0, (void *)0);
     PECMD_FreeStrBuf(&local_res18);

@@ -18,7 +18,7 @@
  *   ASCII 转宽并去空格 PECMD_AsciiTrimToWide @0x14005fe34
  *   构造 DOS 设备路径 PECMD_BuildDosDevicePath @0x140060000
  *   打包位置         PECMD_PackRowCol @0x140060088
- *   更新按键状态     FUN_1400613FC @0x1400613fc
+ *   更新按键状态     PECMD_UpdateModifierKeys @0x1400613fc
  *   创建全局互斥体   FUN_140061FFC @0x140061ffc
  *   堆分配块         PECMD_AllocMagicBlock @0x1400632d8
  *   ANSI 串追加      FUN_14006345C @0x14006345c
@@ -369,11 +369,11 @@ void PECMD_PackRowCol(uint64_t pos, uint8_t *hi, char *row,
     *hi = (uint8_t)uVar1;
 }
 
-/* ========== FUN_1400613FC @0x1400613fc ==========
+/* ========== PECMD_UpdateModifierKeys @0x1400613fc ==========
  * 更新按键状态。
  * TODO(verify): 按键索引按常见 VK 布局近似。
  */
-void FUN_1400613FC(void)
+void PECMD_UpdateModifierKeys(void)
 {
     BYTE state[256];
     g_flagD7FC = 0;

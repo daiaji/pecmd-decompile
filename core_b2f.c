@@ -5,15 +5,15 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   服务命令          PECMD_ServiceControl @0x140020018
- *   创建快捷方式      FUN_140021A4C @0x140021a4c
+ *   创建快捷方式      PECMD_LinkCreateShortcut @0x140021a4c
  *   帮助对话框过程    PECMD_HelpDlgProc @0x140028a00
  *   枚举进程          FUN_14002D708 @0x14002d708
- *   安装字体          FUN_14002F454 @0x14002f454
+ *   安装字体          PECMD_FontCommand @0x14002f454
  *   IF 条件求值       PECMD_EvalLoopCondition @0x140032dc4
  *   虚拟盘菜单构建    PECMD_BuildImDiskMenu @0x140034788
  *   虚拟盘命令        FUN_1400369D0 @0x1400369d0
  *   LOGO 窗口过程     PECMD_LogoDlgProc @0x140037ba8
- *   显示模式命令      FUN_140038D30 @0x140038d30
+ *   显示模式命令      PECMD_DispCommand @0x140038d30
  *   设备目录扫描      FUN_14003B540 @0x14003b540
  *   文件操作命令      FUN_14003C06C @0x14003c06c
  *   结束进程/线程     FUN_14003CD0C @0x14003cd0c
@@ -31,7 +31,7 @@
  *
  * 本文件包含:
  *   PECMD_ServiceControl   @0x140020018   (PECMD_ServiceControl)
- *   FUN_140021A4C   @0x140021a4c   (FUN_140021A4C)
+ *   PECMD_LinkCreateShortcut   @0x140021a4c   (PECMD_LinkCreateShortcut)
  *   PECMD_HelpDlgProc   @0x140028a00   (PECMD_HelpDlgProc)
  *
  * 约定:
@@ -543,12 +543,12 @@ label_0207f7:
     return 0;
 }
 
-/* ========== FUN_140021A4C @0x140021a4c ==========
+/* ========== PECMD_LinkCreateShortcut @0x140021a4c ==========
  * 创建/查询快捷方式 (IShellLinkW)。
  * TODO(verify): COM vtable 偏移/参数按反编译保留，部分反编译缺参处未补；
  *               StrStrW 在 win32_stub.h 中返回 BOOL，实际为 LPWSTR。
  */
-int64_t FUN_140021A4C(int64_t *script, LPCWSTR text)
+int64_t PECMD_LinkCreateShortcut(int64_t *script, LPCWSTR text)
 {
     WCHAR WVar1;
     WCHAR WVar17;
@@ -1847,7 +1847,7 @@ label_02a0e6:
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   FUN_14002D708       @0x14002d708
- *   FUN_14002F454         @0x14002f454
+ *   PECMD_FontCommand         @0x14002f454
  *   PECMD_EvalLoopCondition @0x140032dc4
  *
  * 约定:
@@ -1924,7 +1924,7 @@ extern int PECMD_InstallFonts(WCHAR *s, int hwnd);
 extern void PECMD_AllocSmallObject(void *pp);
 extern LPCWSTR FUN_140079F50(WCHAR **pp, int mode);
 extern uint64_t PECMD_LoadFileToSlot(LPCWSTR path, int64_t *pp);
-extern LPCWSTR FUN_1400D0B2C(int64_t *pp, int64_t *out, const WCHAR *kind);
+extern LPCWSTR PECMD_ParseItemImageSpec(int64_t *pp, int64_t *out, const WCHAR *kind);
 extern HICON PECMD_LoadIcon(LPCWSTR p, uint64_t *a2);
 extern void FUN_1400633A8(void *pp, int64_t len);
 extern void PECMD_ParseNumSkipWs(WCHAR **pp, void *out);
@@ -2323,12 +2323,12 @@ LAB_14002e2de:
     }
 }
 
-/* ========== FUN_14002F454 @0x14002f454 ==========
- * 原 FUN_14002F454。安装/枚举字体。
+/* ========== PECMD_FontCommand @0x14002f454 ==========
+ * 原 PECMD_FontCommand。安装/枚举字体。
  * pthreadmbcinfo/pthreadlocinfo 均按 WCHAR* 游标映射。
  * TODO(verify): 若干 Ghidra 类型误标已按 WCHAR 指针语义重写。
  */
-HMODULE FUN_14002F454(int64_t *fontList, WCHAR *spec, uint64_t unused,
+HMODULE PECMD_FontCommand(int64_t *fontList, WCHAR *spec, uint64_t unused,
                           WCHAR *name)
 {
     (void)unused;
@@ -2514,7 +2514,7 @@ LAB_14002f66a:
                         HMODULE pHVar19 = 0;
                         WCHAR WVar23;
                         local_50[0] = pWVar12 + 1;
-                        pWVar13 = (WCHAR *)FUN_1400D0B2C((int64_t *)local_50, (int64_t *)&local_68,
+                        pWVar13 = (WCHAR *)PECMD_ParseItemImageSpec((int64_t *)local_50, (int64_t *)&local_68,
                                                         WSTR("FONT"));
                         pHVar15 = g_hInst;
                         WVar23 = *pWVar12;
@@ -4915,7 +4915,7 @@ LAB_1400381d8:
  * 仅用于 -fsyntax-only 验证; 最终合并进 core_b2f.c。
  *
  * 函数:
- *   uint64_t      FUN_140038D30      @0x140038d30
+ *   uint64_t      PECMD_DispCommand      @0x140038d30
  *   uint64_t      FUN_14003B540      @0x14003b540
  *   LARGE_INTEGER FUN_14003C06C    @0x14003c06c
  *   LPCRITICAL_SECTION FUN_14003CD0C @0x14003cd0c
@@ -5076,12 +5076,12 @@ extern int64_t PECMD_FindFirstFileW();
 #endif /* B2F_PART4_LOCAL */
 
 /* ==================================================================== */
-/* ========== FUN_140038D30 @0x140038d30 ========== */
+/* ========== PECMD_DispCommand @0x140038d30 ========== */
 
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* WARNING: Restarted to delay deadcode elimination for space: register */
 
-uint64_t FUN_140038D30(int64_t *script, WCHAR *cmd)
+uint64_t PECMD_DispCommand(int64_t *script, WCHAR *cmd)
 
 {
   uint16_t *puVar1;

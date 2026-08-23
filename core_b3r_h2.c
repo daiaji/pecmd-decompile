@@ -147,7 +147,7 @@ extern void      PECMD_DestroyEventSlots(undefined8 *a);                      /*
 extern ulonglong PECMD_FindRasConnection(LPCWSTR a);                          /* @0x1400e7664             */
 extern longlong  PECMD_EnumRasConnections(longlong *a);                        /* @0x1400e7758             */
 extern longlong  PECMD_EnumPhonebookEntries(longlong *a, int b);                 /* @0x1400e7840             */
-extern undefined8 FUN_1400ebd30(longlong a, LPCWSTR b, LPCWSTR c,
+extern undefined8 PECMD_RasDialEntry(longlong a, LPCWSTR b, LPCWSTR c,
                                 LPCWSTR d, LPCWSTR e, LPCWSTR f);   /* @0x1400ebd30             */
 extern void      PECMD_SetVariable(longlong *a, LPCWSTR b, LPCWSTR c);  /* @0x1400629b8 SetVar      */
 extern undefined8 PECMD_ShowBrowseFolder(longlong *a, ushort *b, longlong c, longlong *d); /* @0x140087690 */
@@ -2213,7 +2213,7 @@ LAB_14009ba25:
                                     PECMD_FreeContainer(&local_bf8);
                                     return (uint64_t)(iVar10 == 0);
                                 }
-                                uVar12 = FUN_1400ebd30((longlong)(uintptr_t)local_ab8,
+                                uVar12 = PECMD_RasDialEntry((longlong)(uintptr_t)local_ab8,
                                               (LPCWSTR)(uintptr_t)(-(ulonglong)(WVar1 != L'\0') &
                                               (ulonglong)(uintptr_t)pWVar30),
                                               local_be0, local_ba8, local_bc8, local_b88);

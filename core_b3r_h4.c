@@ -131,7 +131,7 @@ extern int64_t PECMD_GetTimeMs(void);
 extern int64_t PECMD_GetTimeNs(void);
 extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
 extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v);
-extern FILETIME FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern FILETIME PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                               uint32_t flag, void *p6, void *s7, void *p8);
 extern void  PECMD_ScriptCopy(uint64_t *obj, uint64_t *p);
 extern void  PECMD_ScriptInit(uint64_t *obj, int64_t p);
@@ -675,7 +675,7 @@ FILETIME PECMD_DirWildcardExpand(longlong *param_1, FILETIME param_2)
       PECMD_AppendWideStr(local_res10, local_res20);
       PECMD_AppendWideStr(local_res10, WSTR("=*cmd.exe /c dir /B "));
       PECMD_AppendWideStr(local_res10, (LPCWSTR)(uintptr_t)_Var1);
-      _Var3 = FUN_14000e26c(param_1, (void *)0, param_1, (void *)(uintptr_t)local_res10[0],
+      _Var3 = PECMD_ExecCmdDispatch(param_1, (void *)0, param_1, (void *)(uintptr_t)local_res10[0],
                             0, (void *)0, (void *)0, (void *)0);
       PECMD_FreeStrBuf(local_res10);
     }

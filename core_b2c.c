@@ -18,7 +18,7 @@
  *   循环执行路径列表         PECMD_ExecPathList      @0x140035860
  *   发送热键消息             FUN_140035B40     @0x140035b40
  *   解压后安装驱动           FUN_14003A810 @0x14003a810
- *   处理 DOWNCFG 关机配置    FUN_14003D92C      @0x14003d92c
+ *   处理 DOWNCFG 关机配置    PECMD_DownCheckShutdown      @0x14003d92c
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -121,7 +121,7 @@ extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void PECMD_WriteParamRecord(int64_t ctx, char type, LPCWSTR a, LPCWSTR b);
 extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t a, uint64_t b);
-extern int64_t FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                              uint32_t flag, void *p6, void *s7, void *p8);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
@@ -668,7 +668,7 @@ uint32_t FUN_14002C634(int64_t ctx, LPCWSTR inf, LPCWSTR hwid,
         PECMD_AllocString(&local_30, (int64_t)iVar1 + 5);
         memset(&local_38, 0, sizeof(local_38));
         memset(local_res8, 0, sizeof(local_res8));
-        FUN_14000e26c(&g_Script, local_30, &g_Script, local_res8, 0, &local_38, 0, (void *)0);
+        PECMD_ExecCmdDispatch(&g_Script, local_30, &g_Script, local_res8, 0, &local_38, 0, (void *)0);
         if ((*(int64_t *)(ctx + 0x110) != 0) && (local_38.dwLowDateTime == 0)) {
             PECMD_AppendKeyIfMissing(ctx, hwid, mode);
         }
@@ -1253,10 +1253,10 @@ set_result:
     return 0;
 }
 
-/* ========== FUN_14003D92C @0x14003d92c ==========
+/* ========== PECMD_DownCheckShutdown @0x14003d92c ==========
  * 读取 PELOGON 的 DOWNCFG 配置，决定 MENU 或 MENU-SKIP 流程。
  */
-int64_t FUN_14003D92C(void)
+int64_t PECMD_DownCheckShutdown(void)
 {
     uint32_t uVar1;
     DWORD DVar2;

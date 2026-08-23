@@ -53,7 +53,7 @@ void FUN_140077358(void);                     /* @0x140077358 */
 void FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack, uint64_t flags,
                    DWORD *tid, LPSECURITY_ATTRIBUTES sa);  /* @0x14005b228 线程创建 */
 void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4, void *p5); /* @0x14004c0bc 主脚本执行器 */
-uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3, uint64_t s4,
+uint64_t PECMD_ExecCmdDispatch(uint64_t script, uint64_t cmd, uint64_t s3, uint64_t s4,
                        uint32_t flag, void *p6, uint64_t s7, void *p8);  /* @0x14000e26c 脚本执行 */
 
 /* ---- 已实现引用 (core_exec2.c / core_exec4.c / core_exec5.c) ---- */
@@ -381,7 +381,7 @@ after_init:
                     PECMD_RegSetValueWithOpen(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON\\RAMDATA"),
                                   WSTR("SysStartuped"), 4, (BYTE *)&dwVal, 4);
                 }
-                FUN_14000e26c((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)(pBuf + 900),
+                PECMD_ExecCmdDispatch((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)(pBuf + 900),
                               (uint64_t)(uintptr_t)script, 0, (uint32_t)cWait,
                               (void *)0, 0, (void *)0);
             }

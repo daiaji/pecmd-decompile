@@ -4,6 +4,30 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14000e26c | FUN_14000e26c | PECMD_ExecCmdDispatch |
+| 0x140021a4c | FUN_140021a4c | PECMD_LinkCreateShortcut |
+| 0x14002a910 | FUN_14002a910 | PECMD_CreatePageFile |
+| 0x14002d33c | FUN_14002d33c | PECMD_EvalSpecialToken |
+| 0x14002e3d4 | FUN_14002e3d4 | PECMD_ProcessInitCommand |
+| 0x14002f454 | FUN_14002f454 | PECMD_FontCommand |
+| 0x140038d30 | FUN_140038d30 | PECMD_DispCommand |
+| 0x14003c9e8 | FUN_14003c9e8 | PECMD_SendInputEvents |
+| 0x14003d92c | FUN_14003d92c | PECMD_DownCheckShutdown |
+| 0x14004eb34 | FUN_14004eb34 | PECMD_RunStartupScript |
+| 0x140050f58 | FUN_140050f58 | PECMD_ParseCharClassRanges |
+| 0x1400613fc | FUN_1400613fc | PECMD_UpdateModifierKeys |
+| 0x14006ccd4 | FUN_14006ccd4 | PECMD_NormalizeVolumeDevPath |
+| 0x14006fd1c | FUN_14006fd1c | PECMD_SplitItemSpecFields |
+| 0x14008569c | FUN_14008569c | PECMD_ExpandVarsLocked |
+| 0x1400a3f08 | FUN_1400a3f08 | PECMD_EvalRandFunction |
+| 0x1400c10c0 | FUN_1400c10c0 | PECMD_EvalParenthesizedExpr |
+| 0x1400c42ac | FUN_1400c42ac | PECMD_HomeSetStartPage |
+| 0x1400d0468 | FUN_1400d0468 | PECMD_SiteSetFileAttrTime |
+| 0x1400d0b2c | FUN_1400d0b2c | PECMD_ParseItemImageSpec |
+| 0x1400d0c6c | FUN_1400d0c6c | PECMD_GetfReadData |
+| 0x1400e1228 | FUN_1400e1228 | PECMD_SockCreateIpcObj |
+| 0x1400ebd30 | FUN_1400ebd30 | PECMD_RasDialEntry |
+| 0x1400fbcb0 | FUN_1400fbcb0 | PECMD_CreateRichEditCtrl |
 | 0x14005b0b8 | FUN_14005b0b8 | PECMD_ZeroLenBuf |
 | 0x1400702f0 | FUN_1400702f0 | PECMD_StrBldCopyAnsi |
 | 0x1400702d4 | FUN_1400702d4 | PECMD_StrBldCopyWideN |

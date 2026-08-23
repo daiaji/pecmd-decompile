@@ -197,7 +197,7 @@ extern uint32_t g_dpi;
 extern uint8_t PTR_FUN_140123580[];                           /* 控件对象虚表 @0x140123580 */
 extern void *PECMD_InitSimpleWindow(void *param_1, uint64_t *param_2, uint64_t *param_3);
 extern void *PECMD_InitListViewObject(void *param_1, uint64_t *param_2, uint64_t *param_3);
-extern void FUN_1400fbcb0(int64_t *p, uint32_t a, int *b, HWND c, uint32_t d);
+extern void PECMD_CreateRichEditCtrl(int64_t *p, uint32_t a, int *b, HWND c, uint32_t d);
 extern void PECMD_LoadRichEdit(void);
 extern void PECMD_InitControlFlags(int64_t a, int32_t *b, int32_t c, WCHAR *d, int e, int f, int g, int h);
 extern void PECMD_SetObjectEnable(int64_t a, int b);                  /* @0x140053c5c */
@@ -454,7 +454,7 @@ extern bool PECMD_UpdateWindowStyleBits(HWND param_1, uint32_t param_2, uint64_t
 extern uint64_t PECMD_AppendValueNode(int64_t param_1, LPCWSTR param_2, uint64_t param_3); /* @0x1400ec71c */
 extern void PECMD_Send423ToWindow(int64_t param_1, int64_t param_2, uint64_t param_3,
                           uint8_t *param_4, uint64_t param_5); /* @0x1400ec6a8 */
-extern void FUN_14006fd1c(int64_t *param_1, int64_t *param_2, int64_t *param_3,
+extern void PECMD_SplitItemSpecFields(int64_t *param_1, int64_t *param_2, int64_t *param_3,
                           int64_t *param_4, int64_t *param_5, int64_t *param_6); /* @0x14006fd1c */
 extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
 extern uint64_t *PECMD_InitStaticCtl(uint64_t *param_1, uint64_t param_2); /* @0x1400fe130 */
@@ -7010,7 +7010,7 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
             *(uint64_t *)((char *)local_res10 + 0x20), (uint64_t)local_res18);
         pHVar8 = local_res10;
     } else {
-        FUN_1400fbcb0(plVar3_bb8, uVar12 | uVar10, &local_d8,
+        PECMD_CreateRichEditCtrl(plVar3_bb8, uVar12 | uVar10, &local_d8,
                       *(HWND *)((char *)local_res10 + 0x20), local_res18);
         SendMessageW((HWND)plVar2_bb8[4], 0x445, 0, 1);
     }
@@ -21957,7 +21957,7 @@ LAB_140099508:
                                     PECMD_AppendWideStr((WCHAR **)&local_f0, WSTR("-dir "));
                                     PECMD_AppendWideStr((WCHAR **)&local_f0, local_b8);
                                     local_res20 = (uint64_t)(uint32_t)local_res20 & 0xffffffffffff0000ULL;
-                                    _Var12 = FUN_14000e26c(param_1, local_f0, param_1, &local_res20, 0,
+                                    _Var12 = PECMD_ExecCmdDispatch(param_1, local_f0, param_1, &local_res20, 0,
                                                            (void *)0x0, (void *)0x0, (uint64_t *)0x0);
                                     goto LAB_140099eb0;
                                 }
@@ -21990,7 +21990,7 @@ LAB_140099c06:
                                 PECMD_AppendQuotedString(&local_e8, (uint8_t *)local_b0, local_120);
                                 lstrcpyW(local_e8, local_b8);
                                 local_res20 = (uint64_t)(uint32_t)local_res20 & 0xffffffffffff0000ULL;
-                                _Var12 = FUN_14000e26c(param_1, (const uint16_t *)(uintptr_t)local_70, param_1,
+                                _Var12 = PECMD_ExecCmdDispatch(param_1, (const uint16_t *)(uintptr_t)local_70, param_1,
                                                        &local_res20, 1, (void *)0x0, (void *)0x0, (uint64_t *)0x0);
                                 if (_Var13 != 0) {
                                     *(uint16_t *)(uintptr_t)(_Var13 + (uint64_t)iVar5 * 2) = 0;
@@ -22049,7 +22049,7 @@ LAB_140099c06:
                                     PECMD_AppendQuotedString(&local_res20, (uint8_t *)local_b0, local_120);
                                     lstrcpyW((uint16_t *)(uintptr_t)local_res20, local_b8);
                                     local_res20 = (uint64_t)(uint32_t)local_res20 & 0xffffffffffff0000ULL;
-                                    _Var12 = FUN_14000e26c(param_1, (const uint16_t *)(uintptr_t)_Var12b, param_1,
+                                    _Var12 = PECMD_ExecCmdDispatch(param_1, (const uint16_t *)(uintptr_t)_Var12b, param_1,
                                                            &local_res20, 0, (void *)0x0, (void *)0x0, (uint64_t *)0x0);
                                     local_128 = (uint32_t)_Var12;
                                 }
@@ -22088,11 +22088,11 @@ LAB_140099c06:
                                         lstrcpyW(local_e8, local_b8);
                                         local_res20 = (uint64_t)(uint32_t)local_res20 & 0xffffffffffff0000ULL;
                                         if ((local_108 & 8) == 0) {
-                                            FUN_14000e26c(param_1, (const uint16_t *)(uintptr_t)_Var13b, param_1,
+                                            PECMD_ExecCmdDispatch(param_1, (const uint16_t *)(uintptr_t)_Var13b, param_1,
                                                           &local_res20, 0, (void *)0x0, (void *)0x0, &local_58);
                                         }
                                         else {
-                                            _Var13 = FUN_14000e26c(param_1, (const uint16_t *)(uintptr_t)_Var13b,
+                                            _Var13 = PECMD_ExecCmdDispatch(param_1, (const uint16_t *)(uintptr_t)_Var13b,
                                                                    param_1, &local_res20, 1, (void *)0x0,
                                                                    (void *)0x0, (uint64_t *)0x0);
                                             local_128 = (uint32_t)_Var13;
@@ -24117,7 +24117,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     sVar1 = *local_60;
     lpCriticalSection = (LPCRITICAL_SECTION)&g_csInit;
     while (sVar1 != 0) {
-        FUN_14006fd1c((int64_t *)&param_9, (int64_t *)&local_88, (int64_t *)&local_70,
+        PECMD_SplitItemSpecFields((int64_t *)&param_9, (int64_t *)&local_88, (int64_t *)&local_70,
                       (int64_t *)&local_b8, (int64_t *)&local_80, &local_78);
         PECMD_AllocStrSlot(&local_c8);
         PECMD_AllocStrSlot(&local_50);
@@ -24169,7 +24169,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     param_9 = local_60;
     if (0 < (int)LVar8) {
         do {
-            FUN_14006fd1c((int64_t *)&param_9, (int64_t *)&local_88, (int64_t *)&local_70,
+            PECMD_SplitItemSpecFields((int64_t *)&param_9, (int64_t *)&local_88, (int64_t *)&local_70,
                           (int64_t *)&local_b8, (int64_t *)&local_80, &local_78);
             PECMD_AllocStrSlot((void *)&local_res10);
             FUN_14007A224((int64_t *)(uintptr_t)pWVar2, local_80, (WCHAR **)(void *)&local_res10, 0, 1);

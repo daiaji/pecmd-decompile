@@ -17,7 +17,7 @@
  *   调用 COM 对象    PECMD_DrawImageFileToDC @0x14006e588
  *   窗口区域命中测试 FUN_14006F73C @0x14006f73c
  *   弹出/载入介质    FUN_14006F908 @0x14006f908
- *   解析冒号列表     FUN_14006FD1C @0x14006fd1c
+ *   解析冒号列表     PECMD_SplitItemSpecFields @0x14006fd1c
  *   写引导扇区       FUN_140077FB8 @0x140077fb8
  *   变更设备状态     FUN_140078C68 @0x140078c68
  *   解析短整型列表   FUN_140079CF8 @0x140079cf8
@@ -25,7 +25,7 @@
  *   导入环境变量     FUN_14007BF78 @0x14007bf78
  *   显示窗口并设状态 FUN_14007E01C @0x14007e01c
  *   处理控件消息     FUN_140080B0C @0x140080b0c
- *   展开变量字符串   FUN_14008569C @0x14008569c
+ *   展开变量字符串   PECMD_ExpandVarsLocked @0x14008569c
  *   设置文件名扩展   PECMD_SetFileNameExtension @0x140096748
  *   查找/创建命名锁  FUN_1400A41FC @0x1400a41fc
  *   添加控件 A       FUN_1400AA53C @0x1400aa53c
@@ -825,10 +825,10 @@ LAB_14006fa1d:
     return BVar1;
 }
 
-/* ========== FUN_14006FD1C @0x14006fd1c ==========
+/* ========== PECMD_SplitItemSpecFields @0x14006fd1c ==========
  * 把输入串按 ; 和 : 拆成最多 4 个片段。
  */
-void FUN_14006FD1C(int64_t *pp, int64_t *out1, int64_t *out2,
+void PECMD_SplitItemSpecFields(int64_t *pp, int64_t *out1, int64_t *out2,
                           int64_t *out3, int64_t *out4, int64_t *tmp)
 {
     int64_t lVar1;
@@ -1268,10 +1268,10 @@ uint64_t FUN_140080B0C(int64_t *script, HWND hwnd, HWND target,
     return 0;
 }
 
-/* ========== FUN_14008569C @0x14008569c ==========
+/* ========== PECMD_ExpandVarsLocked @0x14008569c ==========
  * 在脚本临界区中按标志展开/替换变量字符串。
  */
-uint64_t FUN_14008569C(int64_t *script, int64_t *out, uint8_t flags)
+uint64_t PECMD_ExpandVarsLocked(int64_t *script, int64_t *out, uint8_t flags)
 {
     uint8_t bVar1;
     uint8_t bVar5;

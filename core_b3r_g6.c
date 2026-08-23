@@ -36,7 +36,7 @@ extern WCHAR    *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);    /* @0x1
 extern void      PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);       /* @0x1400679b0 解析整数 */
 extern WCHAR    *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);                /* @0x140070310 token 扫描 */
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);         /* @0x14005c7c4 (icmp) */
-extern int64_t   FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
+extern int64_t   PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
                                uint32_t flag, void *p6, void *s7, void *p8); /* @0x14000e26c 脚本执行 */
 extern int       PECMD_OnDeleteCommand(void *arg, LPCWSTR w, HWND hwnd);       /* @0x14005b2c0 */
 extern int       PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d,
@@ -236,7 +236,7 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
 
 LAB_140079428:
     {
-        int64_t _Var7 = FUN_14000e26c((void *)param_1, (void *)local_80, (void *)param_1,
+        int64_t _Var7 = PECMD_ExecCmdDispatch((void *)param_1, (void *)local_80, (void *)param_1,
                                       (void *)0, (uint32_t)1, (void *)0, (void *)0, (void *)0);
         _Var7low = (uint32_t)_Var7;                     /* _Var7.dwLowDateTime */
     }
