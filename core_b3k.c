@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   初始化对话框对象 PECMD_ItemBaseInit @0x140053dc8
  *   处理删除命令     FUN_14005B2C0 @0x14005b2c0
- *   安全复制句柄     FUN_14005B494 @0x14005b494
+ *   安全复制句柄     PECMD_HandleDuplicateValid @0x14005b494
  *   抖动光标         FUN_14005E9AC @0x14005e9ac
  *   展开 %d          FUN_14005EEFC @0x14005eefc
  *   获取盘类型名     FUN_14005FF30 @0x14005ff30
@@ -82,10 +82,10 @@ bool FUN_14005B2C0(uint64_t *obj, LPCWSTR cmd, HWND hwnd)
     return iVar1 != 0;
 }
 
-/* ========== FUN_14005B494 @0x14005b494 ==========
+/* ========== PECMD_HandleDuplicateValid @0x14005b494 ==========
  * 安全复制句柄。
  */
-HANDLE FUN_14005B494(HANDLE handle, uint64_t *out)
+HANDLE PECMD_HandleDuplicateValid(HANDLE handle, uint64_t *out)
 {
     DWORD local_res18[2] = {0, 0};
     BOOL BVar1 = GetHandleInformation(handle, local_res18);

@@ -23,7 +23,7 @@
  *   列表项矩形失效          FUN_1400F30C0 @0x1400f30c0
  *   创建列表视图控件        FUN_1400F345C @0x1400f345c
  *   绘制对象文本            FUN_1400F527C @0x1400f527c
- *   按 ID 设置表项          FUN_1400F5B54 @0x1400f5b54
+ *   按 ID 设置表项          PECMD_SetListItemParamPtr @0x1400f5b54
  *   更新映射双值 A          FUN_1400F5E2C @0x1400f5e2c
  *   更新映射双值 B          FUN_1400F5F60 @0x1400f5f60
  *   更新映射双值 C          FUN_1400F8F00 @0x1400f8f00
@@ -31,7 +31,7 @@
  *   创建自定义类控件        FUN_1400FBF00 @0x1400fbf00
  *   创建进度条控件          FUN_1400FC060 @0x1400fc060
  *   创建滚动条控件          FUN_1400FC378 @0x1400fc378
- *   绘制控件文本            FUN_1400FC7A0 @0x1400fc7a0
+ *   绘制控件文本            PECMD_PaintCtlWithCaption @0x1400fc7a0
  *   解析 buddy 前缀         FUN_1400FCE6C @0x1400fce6c
  *   创建静态控件核心        FUN_1400FD220 @0x1400fd220
  *   父窗口环绕失效          PECMD_InvalidateParentRect @0x1400fd538
@@ -55,11 +55,11 @@
 extern int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
 extern void FUN_1400F2B6C(int64_t obj);                            /* @0x1400f2b6c */
 extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1, int32_t field2);                     /* @0x1400f2b84 */
-extern void FUN_1400F5724(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
-extern void FUN_1400F578C(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f578c */
-extern void FUN_1400F586C(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f586c */
-extern void FUN_1400F58D4(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f58d4 */
-extern uint64_t FUN_1400FC458(int64_t obj, HWND hwnd);        /* @0x1400fc458 */
+extern void PECMD_TrackItemChangeList1(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
+extern void PECMD_TrackItemChangeList2(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f578c */
+extern void PECMD_TrackItemChangeList3(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f586c */
+extern void PECMD_TrackItemChangeList4(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f58d4 */
+extern uint64_t PECMD_SetTrackbarBuddyWindow(int64_t obj, HWND hwnd);        /* @0x1400fc458 */
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2,
                                  LPCWSTR a3);                         /* @0x14007d0ac */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);                          /* @0x140067d20 */
@@ -85,10 +85,8 @@ extern int64_t PECMD_ItemPropFindIdxSub2(int64_t a1, int a2, int a3,
                              int *a4);
 extern int64_t PECMD_ItemPropFindIdxList2(int64_t a1, int a2, int *a3);
 extern int64_t PECMD_ItemPropFindIdxList4(int64_t a1, int a2, int *a3);
-extern void FUN_1400F57F4(int64_t a1, int a2, int a3,
-                          uint64_t a4);
-extern void FUN_1400F5ADC(int64_t a1, int a2, int a3,
-                          uint64_t a4);
+extern void PECMD_TrackItemChangeSub1(int64_t obj, int key1, int key2, uint64_t value);
+extern void PECMD_TrackItemChangeSub2(int64_t obj, int key1, int key2, uint64_t value);
 extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2,
                               uint64_t a3, uint64_t *a4,
                               int64_t a5, uint32_t a6,
@@ -697,10 +695,10 @@ void FUN_1400F527C(int64_t obj, HDC hdc, uint64_t *info,
     }
 }
 
-/* ========== FUN_1400F5B54 @0x1400f5b54 ==========
+/* ========== PECMD_SetListItemParamPtr @0x1400f5b54 ==========
  * 按 id 查找数组项；存在则更新/删除，不存在且 value 非 0 时新增节点。
  */
-void FUN_1400F5B54(int64_t obj, int id, int64_t value)
+void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     uint64_t ignored = 0;
@@ -758,7 +756,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F5724(obj, (uint32_t)key, val2);
+            PECMD_TrackItemChangeList1(obj, (uint32_t)key, val2);
         }
     }
 
@@ -773,7 +771,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F586C(obj, (uint32_t)key, val1);
+            PECMD_TrackItemChangeList3(obj, (uint32_t)key, val1);
         }
     }
 }
@@ -799,7 +797,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F57F4(obj, key1, key2, val2);
+            PECMD_TrackItemChangeSub1(obj, key1, key2, val2);
         }
     }
 
@@ -814,7 +812,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F5ADC(obj, key1, key2, val1);
+            PECMD_TrackItemChangeSub2(obj, key1, key2, val1);
         }
     }
 }
@@ -840,7 +838,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F578C(obj, (uint32_t)key, val2);
+            PECMD_TrackItemChangeList2(obj, (uint32_t)key, val2);
         }
     }
 
@@ -855,7 +853,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
             changed = (char)r != 0;
         }
         if (changed != 0) {
-            FUN_1400F58D4(obj, (uint32_t)key, val1);
+            PECMD_TrackItemChangeList4(obj, (uint32_t)key, val1);
         }
     }
 }
@@ -959,10 +957,10 @@ bool FUN_1400FC378(int64_t *obj, uint32_t style, int *rect,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400FC7A0 @0x1400fc7a0 ==========
+/* ========== PECMD_PaintCtlWithCaption @0x1400fc7a0 ==========
  * 先做公共绘制前处理，再在客户区绘制控件内部文本。
  */
-void FUN_1400FC7A0(int64_t *obj, uint64_t wParam, uint64_t lParam)
+void PECMD_PaintCtlWithCaption(int64_t *obj, uint64_t wParam, uint64_t lParam)
 {
     HWND hwnd;
     HDC hdc;
@@ -1018,7 +1016,7 @@ uint64_t FUN_1400FCE6C(int64_t *obj, int64_t *ctx,
         p += 7;
         ok = PECMD_ParseNumSkipWs(&p, &buddy);
         if (ok && (buddy != 0)) {
-            FUN_1400FC458((int64_t)obj, (HWND)(uintptr_t)buddy);
+            PECMD_SetTrackbarBuddyWindow((int64_t)obj, (HWND)(uintptr_t)buddy);
         }
         *name = 0;
         return 0;

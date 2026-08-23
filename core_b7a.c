@@ -4,10 +4,10 @@
  * 本批新实现函数直接使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   解析双精度(括号)      FUN_1400C1000 @0x1400c1000
+ *   解析双精度(括号)      PECMD_CalcEvalParenAtom @0x1400c1000
  *   解析 UInt64(括号)     PECMD_EvalParenthesizedExpr @0x1400c10c0
  *   解析 Int64(括号)      PECMD_EvalParenExprRounded @0x1400c11f4
- *   字符串转字节数组       FUN_1400C12FC @0x1400c12fc
+ *   字符串转字节数组       PECMD_ParseHexByteList @0x1400c12fc
  *   释放 UpDown 控件      FUN_1400C3CA4 @0x1400c3ca4
  *   解析 UInt64 并跳格    FUN_1400C44F4 @0x1400c44f4
  *   解析 Int64 并跳格     FUN_1400C4518 @0x1400c4518
@@ -71,10 +71,10 @@ extern uint32_t FUN_14005D7E8(uint16_t *obj); /* @0x14005d7e8 core_b3f.c */
 /* ---- 本批引用的全局数据 ---- */
 extern double g_dbl25230;         /* 四舍五入 0.5 */
 
-/* ========== FUN_1400C1000 @0x1400c1000 ==========
+/* ========== PECMD_CalcEvalParenAtom @0x1400c1000 ==========
  * 解析 double；若遇到 '(' 则把括号内表达式交给求值器。
  */
-uint64_t FUN_1400C1000(int64_t *pp, double *out)
+uint64_t PECMD_CalcEvalParenAtom(int64_t *pp, double *out)
 {
     FUN_14005B154((WCHAR **)pp);
     WCHAR *p = (WCHAR *)*pp;
@@ -203,10 +203,10 @@ evaluate:
     return FUN_14006A7F4(pp, out);
 }
 
-/* ========== FUN_1400C12FC @0x1400c12fc ==========
+/* ========== PECMD_ParseHexByteList @0x1400c12fc ==========
  * 把字符串解析为字节数组；mode=0 时支持括号/表达式，否则按十六进制。
  */
-uint64_t FUN_1400C12FC(LPCWSTR str, int64_t *outBuf, int mode)
+uint64_t PECMD_ParseHexByteList(LPCWSTR str, int64_t *outBuf, int mode)
 {
     LPCWSTR s = str;
     FUN_14005B154((WCHAR **)&s);

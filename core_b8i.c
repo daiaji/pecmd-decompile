@@ -7,18 +7,18 @@
  *   加载 RAS API           FUN_1400E4D94         @0x1400e4d94
  *   追加菜单命令项          FUN_1400E5120  @0x1400e5120
  *   构建菜单树              FUN_1400E5248      @0x1400e5248
- *   UTF-8 转 UTF-16         FUN_1400E6DE8        @0x1400e6de8
+ *   UTF-8 转 UTF-16         PECMD_DecodeUtf8ToWide        @0x1400e6de8
  *   查找 RAS 连接           FUN_1400E7664  @0x1400e7664
  *   构建 RAS 条目列表       FUN_1400E7758  @0x1400e7758
  *   分发控件消息            FUN_1400EC500 @0x1400ec500
  *   设置文本/画刷           FUN_1400F20C0     @0x1400f20c0
- *   跟踪 Tooltip 定时器     FUN_1400F2CF0  @0x1400f2cf0
+ *   跟踪 Tooltip 定时器     PECMD_HoverTrackTimerProc  @0x1400f2cf0
  *   初始化对象(虚表 C550)   PECMD_InitTableCellModel    @0x1400f5c74
  *   应用字体到控件          FUN_1400FB934 @0x1400fb934
  *   设置绘制画刷            FUN_1400FBBB0     @0x1400fbbb0
  *   创建富文本控件          PECMD_CreateRichEditCtrl @0x1400fbcb0
  *   启动 Tooltip 定时器     PECMD_ControlOnMouseMove  @0x1400fd764
- *   解析格式标志            FUN_1400FFA38   @0x1400ffa38
+ *   解析格式标志            PECMD_ParseTreeItemRefSpec   @0x1400ffa38
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -180,12 +180,12 @@ void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
     }
 }
 
-/* ========== FUN_1400E6DE8 @0x1400e6de8 ==========
+/* ========== PECMD_DecodeUtf8ToWide @0x1400e6de8 ==========
  * 把 [src, src+len) 的 UTF-8 字节解码为 UTF-16 写入 out, 返回写入的字符数。
  * 按首字节 0x80/0xc0/0xe0/0xf0/0xf8/0xfc 判定序列长度; 非法续字节直接跳过。
  * TODO(verify): 0xfc/0xf8 超长序列的边界处理。
  */
-int64_t FUN_1400E6DE8(uint8_t *src, int64_t len, uint16_t *out)
+int64_t PECMD_DecodeUtf8ToWide(uint8_t *src, int64_t len, uint16_t *out)
 {
     uint8_t *end;
     uint8_t lead, b1, b2;
@@ -422,11 +422,11 @@ uint64_t FUN_1400F20C0(int64_t obj, HDC hdc)
     return 0;
 }
 
-/* ========== FUN_1400F2CF0 @0x1400f2cf0 ==========
+/* ========== PECMD_HoverTrackTimerProc @0x1400f2cf0 ==========
  * Timer=0x2711 的 Tooltip 跟踪: 鼠标移出窗口则停止并发 0x2a3,
  * 移入则累计计数, 达阈值发 0x2a1。阈值由 DAT_14013a860/861 控制。
  */
-void FUN_1400F2CF0(int64_t obj, int64_t msg)
+void PECMD_HoverTrackTimerProc(int64_t obj, int64_t msg)
 {
     POINT pt[3];
     RECT rc;
@@ -629,12 +629,12 @@ void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
         SetCursor(g_hArrowCursor);
 }
 
-/* ========== FUN_1400FFA38 @0x1400ffa38 ==========
+/* ========== PECMD_ParseTreeItemRefSpec @0x1400ffa38 ==========
  * 解析格式标志串 (前缀 + tailPtr 尾串):
  *   '@' -> bit4, '*' -> bit1, ':' 停止; 数字标记 bit5 并记录尾部@
  * TODO(verify): 标志位精确含义。
  */
-void FUN_1400FFA38(int64_t obj, int64_t *cursor, uint8_t *flags,
+void PECMD_ParseTreeItemRefSpec(int64_t obj, int64_t *cursor, uint8_t *flags,
                             int64_t *tailPtr)
 {
     int16_t *p;

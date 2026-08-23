@@ -7,11 +7,11 @@
  *   建进程并读远程内存     PECMD_CreateProcReadImageBase @0x1400e4324
  *   追加菜单位图项          FUN_1400E4F14   @0x1400e4f14
  *   弹出上下文菜单          FUN_1400E54D4       @0x1400e54d4
- *   创建对话框窗口          FUN_1400E6574        @0x1400e6574
- *   注入式建进程            FUN_1400E7414   @0x1400e7414
- *   构建钩子键列表          FUN_1400E8748       @0x1400e8748
+ *   创建对话框窗口          PECMD_CreateDialogWindow        @0x1400e6574
+ *   注入式建进程            PECMD_CreateInjectedProcess   @0x1400e7414
+ *   构建钩子键列表          PECMD_LoadHotkeyCodeTable       @0x1400e8748
  *   布局子窗口              PECMD_LayoutTabPageArea     @0x1400ec0f0
- *   像素缩放                FUN_1400ED7A0       @0x1400ed7a0
+ *   像素缩放                PECMD_BoxAverageScalePixels       @0x1400ed7a0
  *   GDI 消息分发            FUN_1400EEC28         @0x1400eec28
  *   控件消息分发(扩展)      FUN_1400EF694   @0x1400ef694
  *   创建静态子控件对象      FUN_1400EF91C      @0x1400ef91c
@@ -298,11 +298,11 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
     PECMD_FreeStrBuf((WCHAR **)&str);
 }
 
-/* ========== FUN_1400E6574 @0x1400e6574 ==========
+/* ========== PECMD_CreateDialogWindow @0x1400e6574 ==========
  * 创建对话框/自定义窗口: 优先 CreateDialogParamW, 失败退回
  * CreateWindowExW "#32770"; 保存虚表槽到 g_savedVtblSlot。
  */
-bool FUN_1400E6574(int64_t *obj, uint32_t id, int64_t parent)
+bool PECMD_CreateDialogWindow(int64_t *obj, uint32_t id, int64_t parent)
 {
     DWORD style = 0xcf0000;
     DWORD exStyle = 0x40000;
@@ -345,12 +345,12 @@ bool FUN_1400E6574(int64_t *obj, uint32_t id, int64_t parent)
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400E7414 @0x1400e7414 ==========
+/* ========== PECMD_CreateInjectedProcess @0x1400e7414 ==========
  * 通过远程内存注入方式创建进程: 加载 VirtualAllocEx/线程上下文 API,
  * 在目标进程分配内存写入代码, 然后创建远程线程执行。
  * TODO(verify): 注入细节 (PECMD_Wow64MapPeImage/1400e4480)。
  */
-int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
+int PECMD_CreateInjectedProcess(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
                                 uint32_t p5, LPVOID p6, LPCWSTR p7,
                                 STARTUPINFOW *p8, PROCESS_INFORMATION *p9, LPCWSTR p10)
 {
@@ -387,11 +387,11 @@ int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
     return rc;
 }
 
-/* ========== FUN_1400E8748 @0x1400e8748 ==========
+/* ========== PECMD_LoadHotkeyCodeTable @0x1400e8748 ==========
  * 解析按键串 (空格/制表分隔) 为钩子键表 (紧凑 ushort 数组), 装入全局钩子数据;
  * 先替换旧数据。返回键数 (0xffffffff=空, 0xfffffffe=内存不足)。
  */
-uint64_t FUN_1400E8748(uint16_t *text, uint64_t p2)
+uint64_t PECMD_LoadHotkeyCodeTable(uint16_t *text, uint64_t p2)
 {
     uint16_t buf[1008];
     uint16_t *p;
@@ -525,12 +525,12 @@ void PECMD_LayoutTabPageArea(int64_t obj, char track)
     }
 }
 
-/* ========== FUN_1400ED7A0 @0x1400ed7a0 ==========
+/* ========== PECMD_BoxAverageScalePixels @0x1400ed7a0 ==========
  * 最邻近均值缩放: 把 src..+w × srcH..+h 区域按比例采样,
  * 每个目标像素取块内 RGB 平均后 SetPixel 写出。业务: 缩略图/放大预览。
  * TODO(verify): 边界与整除语义。
  */
-void FUN_1400ED7A0(HDC hdcDst, int x0, uint32_t wFor, int x1, int y1,
+void PECMD_BoxAverageScalePixels(HDC hdcDst, int x0, uint32_t wFor, int x1, int y1,
                             HDC hdcSrc, int sx, int sy, int scaleX, int scaleY)
 {
     int64_t step = (int64_t)(scaleX / x1);

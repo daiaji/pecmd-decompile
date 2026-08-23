@@ -11,7 +11,7 @@
  *   安装字体          PECMD_FontCommand @0x14002f454
  *   IF 条件求值       PECMD_EvalLoopCondition @0x140032dc4
  *   虚拟盘菜单构建    PECMD_BuildImDiskMenu @0x140034788
- *   虚拟盘命令        FUN_1400369D0 @0x1400369d0
+ *   虚拟盘命令        PECMD_ParseImdiskMountArgs @0x1400369d0
  *   LOGO 窗口过程     PECMD_LogoDlgProc @0x140037ba8
  *   显示模式命令      PECMD_DispCommand @0x140038d30
  *   设备目录扫描      FUN_14003B540 @0x14003b540
@@ -3672,7 +3672,7 @@ code_r0x00014003460d:
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   菜单构建            PECMD_BuildImDiskMenu @0x140034788 (stub)
- *   RAM 盘命令行        FUN_1400369D0      @0x1400369d0
+ *   RAM 盘命令行        PECMD_ParseImdiskMountArgs      @0x1400369d0
  *   LOGO 窗口过程       PECMD_LogoDlgProc         @0x140037ba8
  *
  * 约定:
@@ -3801,11 +3801,11 @@ HMENU PECMD_BuildImDiskMenu(int64_t *a1, ULARGE_INTEGER pos,
 }
 
 
-/* ========== FUN_1400369D0 @0x1400369d0 ==========
+/* ========== PECMD_ParseImdiskMountArgs @0x1400369d0 ==========
  * RAM 盘命令行入口：解析 -a/-e/-l/-s/-v 等选项，创建/删除/查询 RAM 盘。
  * TODO(verify): 多处 Ghidra 残留寄存器值（CONCAT44/CONCAT71/extraout）按 0/低字节近似。
  */
-uint64_t FUN_1400369D0(int argc, int64_t *argv, int64_t *out)
+uint64_t PECMD_ParseImdiskMountArgs(int argc, int64_t *argv, int64_t *out)
 {
     uint16_t uVar1;
     uint16_t *puVar2;
@@ -5049,8 +5049,8 @@ extern int64_t FUN_140025f10();
 extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern int64_t PECMD_StartOnlyApp();
 extern int64_t PECMD_RunCommand();
-extern int64_t FUN_14003AAD0();
-extern int64_t FUN_14003B010();
+extern uint64_t PECMD_DeviSubPackageWorkerProc(uint64_t *task);
+extern uint64_t PECMD_DeviExtractSchedulerProc(uint64_t *tasks);
 extern LARGE_INTEGER PECMD_ProcessScriptBlock();
 extern int64_t FUN_1400547BC();
 extern void PECMD_ZeroLenBuf(void *p);
@@ -6185,7 +6185,7 @@ LAB_14003b9c8:
                             ((int)(intptr_t)local_2d0 + 0x17) * 2);
               lpParameter[4] = local_2a0;
               lpParameter[1] = (uint64_t)pwVar16;
-              pvVar12 = CreateThread((LPSECURITY_ATTRIBUTES)0x0,0x20000,FUN_14003B010,lpParameter,
+              pvVar12 = CreateThread((LPSECURITY_ATTRIBUTES)0x0,0x20000,PECMD_DeviExtractSchedulerProc,lpParameter,
                                      0x10004,(DWORD *)&g_dwC96C);
               lpParameter[2] = (uint64_t)pvVar12;
               if (pvVar12 == (HANDLE)0x0) {
@@ -6244,7 +6244,7 @@ LAB_14003b9c8:
         memcpy((uint8_t *)(*(uint64_t *)(pwVar14 + 0x14) + 0x4e + uVar9 * 2),
                       (uint8_t *)local_278.cFileName,(iVar5 + 1) * 2);
         local_318 = '\0';
-        local_2c0 = CreateThread((LPSECURITY_ATTRIBUTES)0x0,0x20000,FUN_14003AAD0,pwVar14,0x10004,
+        local_2c0 = CreateThread((LPSECURITY_ATTRIBUTES)0x0,0x20000,PECMD_DeviSubPackageWorkerProc,pwVar14,0x10004,
                                  (DWORD *)&g_dwC96C);
         if (local_2c0 != (HANDLE)0x0) {
           local_308 = (WCHAR *)0x0;

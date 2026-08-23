@@ -52,7 +52,7 @@ extern void *PECMD_PrependEnviHeader(uint32_t key, void **buf, LPCWSTR extra, ui
                                      int off);                              /* @0x140024f20 */
 extern WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name,
                                       int64_t a4);                        /* @0x140030f1c */
-extern WCHAR *FUN_14001D5F4(WCHAR *p);                                 /* @0x14001d5f4 */
+extern WCHAR * PECMD_UnquoteTokenInPlace(WCHAR *p);                                 /* @0x14001d5f4 */
 extern void FUN_1400679DC(WCHAR **pp, int64_t *out, WCHAR sep);       /* @0x1400679dc */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int64_t *out);               /* @0x140074838 */
 extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);     /* @0x1400b638c core_execmain.c */

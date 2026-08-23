@@ -768,7 +768,7 @@ extern uint64_t CreateProcessWithLogonW(void *user, void *domain, void *pwd, DWO
 extern BOOL PECMD_CreateProcessAsUser(LPCWSTR, LPWSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES,
         BOOL, uint32_t, LPVOID, LPCWSTR, LPSTARTUPINFOW, uint64_t /*LUID 值*/,
         uint32_t, LPCWSTR, LPCWSTR, LPCWSTR);                                /* def core_b1_remaining.c:3305 */
-int64_t FUN_1400e7414(void *p1, uint32_t p2, WCHAR *p3, DWORD p4, DWORD p5, void *p6,
+static int64_t PECMD_CreateInjectedProcess(void *p1, uint32_t p2, WCHAR *p3, DWORD p4, DWORD p5, void *p6,
                       LPCWSTR p7, void *p8, void *p9, LPCWSTR p10) {
     (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6;(void)p7;(void)p8;(void)p9;(void)p10;
     return 0;                                                                /* 新增桩 @0x1400e7414 (未还原 helper, 失败保守) */
@@ -3696,7 +3696,7 @@ LAB_140013555:
              ((WCHAR)local_db0 == 0)) && ((sVar51 == 0 && (sVar49 == 0)))))) {
           bVar16 = PECMD_IsFile((LPCWSTR)(uintptr_t)local_dd0.v);
           if (bVar16 != false) goto LAB_1400132d5;     /* 原 CONCAT71(extraout_var,bVar16) */
-          iVar52 = FUN_1400e7414(local_a68,(uint)local_a60,(WCHAR *)(uintptr_t)local_res10.v,local_de8,
+          iVar52 = PECMD_CreateInjectedProcess(local_a68,(uint)local_a60,(WCHAR *)(uintptr_t)local_res10.v,local_de8,
                                  local_df0,(LPVOID)(uintptr_t)local_dc8.v,(LPCWSTR)(uintptr_t)_Var39.v,
                                  &local_888,&local_af8,(LPCWSTR)(uintptr_t)local_c00);
           local_df4 = (uint)(0 < iVar52);
@@ -4180,7 +4180,7 @@ LAB_140014928:
               }
               bVar16 = PECMD_IsFile((LPCWSTR)(uintptr_t)local_dd0.v);
               if (bVar16 != false) goto LAB_140014a6b; /* 原 CONCAT71(extraout_var,bVar16) */
-              iVar52 = FUN_1400e7414((short *)(uintptr_t)_Var48.v,(DWORD)local_ba0,
+              iVar52 = PECMD_CreateInjectedProcess((short *)(uintptr_t)_Var48.v,(DWORD)local_ba0,
                                      (WCHAR *)(uintptr_t)_Var59.v,local_de8,
                                      local_df0,(LPVOID)(uintptr_t)local_dc8.v,
                                      (LPCWSTR)(uintptr_t)local_dd0.v,&local_888,
@@ -6121,7 +6121,7 @@ undefined8 *FUN_14001877C(longlong *ps, int count) { (void)ps;(void)count; retur
 COORD GetLargestConsoleWindowSize(void *h) { (void)h; COORD c = { 0, 0 }; return c; }
 int SetConsoleWindowInfo(void *h, int b, void *r) { (void)h;(void)b;(void)r; return 1; }
 uint64_t FUN_14002ca30(void) { return 0; }
-uint64_t FUN_14002ca80(void) { return 0; }   /* 新增最小桩 (PECMD_ExpandSpecialDirs 恢复体: 作线程入口指针) */
+static uint64_t PECMD_WaitOtherThreadsExit(void) { return 0; }   /* 新增最小桩 (PECMD_ExpandSpecialDirs 恢复体: 作线程入口指针) */
 /* ========== PECMD_ExpandSpecialDirs @ 14002cc30  size=1803 — 环境变量设置命令 (SETENV 语义) ==========
  * decompiled.c @26728 忠实移植: '^' 前缀跳过 → 缓冲分配 (lstrlenW+0x400) → '$'(系统)/'#'(用户)
  * 作用域前缀解析 → 星号/'*' 与 '-' 修饰 (local_78) → 空命令时按 param_4==0/0x23 走重画标志
@@ -6132,7 +6132,7 @@ uint64_t FUN_14002ca80(void) { return 0; }   /* 新增最小桩 (PECMD_ExpandSpe
  * (PECMD_ExpandVarsRecursive / PECMD_ExpandCommandLine) → 按 bVar15 模式经 FUN_140084a5c/
  * PECMD_ExpandVarsLocked 重写值 → SYSTEM\...\Environment (local_74=0x24) / HKCU\Environment
  * (local_70=0x23) 注册表写入 (RegDeleteValue/RegSetValueWithOpen) → SetEnvironmentVariableW →
- * 收尾: local_78=='-' → 起线程 FUN_14002ca80; 否则非 '*'-前缀且重画标志 → FUN_14002ca30 / g_afterMain.
+ * 收尾: local_78=='-' → 起线程 PECMD_WaitOtherThreadsExit; 否则非 '*'-前缀且重画标志 → FUN_14002ca30 / g_afterMain.
  *
  * 关键取舍:
  *  - CONCAT22(x._2_2_,v) 等价为 (x&0xffff0000u)|v; Ghidra 栈地址垃圾 (local_74=返回&0xffff0000,
@@ -6425,7 +6425,7 @@ LAB_14002d1b0:
     }
     if ((local_88 != '\0') && (local_78 != L'*')) {
         if ((local_78 == L'-') || (g_flagCCB3 == (uint8_t)L'-')) {
-            FUN_14005b228((LPTHREAD_START_ROUTINE)FUN_14002ca80, (LPVOID)0x0, (size_t)0x10000,
+            FUN_14005b228((LPTHREAD_START_ROUTINE)PECMD_WaitOtherThreadsExit, (LPVOID)0x0, (size_t)0x10000,
                           (DWORD)0x10000, (LPDWORD)&g_dwC96C, (LPSECURITY_ATTRIBUTES)0x0);
         }
         else if ((local_88 == '\x10') || (g_flagCCB3 == '\0')) {
@@ -8842,11 +8842,11 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
 /* ---------- PECMD_DdCopyCommand 新增桩 (decompiled.c 调用面; rename_map 目标已在 core_* 真实定义,
  *   仅余 6 个无既有定义者在此补 leaf 桩) ---------- */
 void FUN_14006d788(longlong *param_1, LARGE_INTEGER *param_2) { (void)param_1;(void)param_2; }  /* 参数表初始化 (leaf stub) */
-HANDLE FUN_14005b494(HANDLE h, LARGE_INTEGER *out) { (void)h;(void)out; return (HANDLE)0; }  /* 目标句柄克隆 (leaf stub) */
+static HANDLE PECMD_HandleDuplicateValid(HANDLE h, LARGE_INTEGER *out) { (void)h;(void)out; return (HANDLE)0; }  /* 目标句柄克隆 (leaf stub) */
   /* 资源名定位 (leaf stub) */
   /* 设备/文件类型探测 (leaf stub) */
-longlong FUN_140079e34(uintptr_t h, int mode, ulonglong *out) { (void)h;(void)mode;(void)out; return 0; }  /* 段/盘容量查询 (leaf stub) */
-char FUN_14006ce38(longlong *p) { (void)p; return '\0'; }  /* 行尾整理 (leaf stub) */
+static longlong PECMD_GetPartitionLayoutEntry(uintptr_t h, int mode, ulonglong *out) { (void)h;(void)mode;(void)out; return 0; }  /* 段/盘容量查询 (leaf stub) */
+static char PECMD_NormalizeDiskDevicePath(longlong *p) { (void)p; return '\0'; }  /* 行尾整理 (leaf stub) */
 void (*DAT_14013d380)(void *h, long long len) = 0;  /* SetFileValidData 装载槽 (未装载→跳过) */
 /* ---------- PECMD_DdCopyCommand 调用面前置声明 (定义在本文件后部/core 文件, 避免隐式 int 截断) ---------- */
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
@@ -9175,7 +9175,7 @@ uint64_t PECMD_DdCopyCommand(uint64_t a, uint64_t b)
           if (((WCHAR *)local_100.QuadPart != (WCHAR *)0xffffffffffffffff) &&
              ((WCHAR *)local_100.QuadPart != (WCHAR *)0x0)) {
             local_70 = (LPCWSTR)0x0;
-            pvVar12 = FUN_14005b494((HANDLE)(uintptr_t)local_100.QuadPart,&local_108);
+            pvVar12 = PECMD_HandleDuplicateValid((HANDLE)(uintptr_t)local_100.QuadPart,&local_108);
             LVar29 = local_108;
             if ((pvVar12 != (HANDLE)0x0) &&
                (local_120 = LVar18, (WCHAR *)local_108.QuadPart != (WCHAR *)0x0)) {
@@ -9636,7 +9636,7 @@ LAB_1400d4465:
           local_b8 = LVar36;
           if ((char)local_134 == '\0') {
             if (local_14c == 0x11) {
-              local_res20.QuadPart = (long long)FUN_140079e34((uintptr_t)LVar27.QuadPart,0,(ulonglong *)&local_b8.QuadPart);
+              local_res20.QuadPart = (long long)PECMD_GetPartitionLayoutEntry((uintptr_t)LVar27.QuadPart,0,(ulonglong *)&local_b8.QuadPart);
               LVar36 = local_b8;
               if (local_res20.QuadPart < 0) goto LAB_1400d453f;
             }
@@ -10213,7 +10213,7 @@ LAB_1400d52a2:
                   LVar23 = local_58;
                 } while( true );
               }
-              cVar6 = FUN_14006ce38((longlong *)&local_140.QuadPart);
+              cVar6 = PECMD_NormalizeDiskDevicePath((longlong *)&local_140.QuadPart);
               LVar25.s.LowPart = (uint)cVar6;
               local_f8 = LVar25.s.LowPart;
               PECMD_OpenFileHandle((HANDLE *)&local_120,(LPCWSTR)CONCAT44(local_140.s.HighPart,local_140.s.LowPart),
@@ -17013,7 +17013,7 @@ undefined8 * PECMD_InitControlObjField(undefined8 *param_1,undefined8 param_2,ui
 /* ---- wave-current support: 0ebd30 ---- */
 void  FUN_1400e7664(LPCWSTR a) { (void)a; }   /* ASL 串释放 (leaf stub) */
 void *FUN_1400e7840(longlong *a, int b) { (void)a;(void)b; return (void*)0; }  /* 缺省名构造 (leaf stub) */
-void  FUN_1400e4edc(void) { }                 /* 工作线程入口 (leaf stub) */
+static void  PECMD_RasDialStatusCallback(void) { }                 /* 工作线程入口 (leaf stub) */
 void *DAT_14013e1f8 = 0;    /* 0x14013e1f8 事件槽 A */
 void *DAT_14013e200 = 0;    /* 0x14013e200 事件槽 B */
 void *DAT_14013e208 = 0;    /* 0x14013e208 缓冲句柄槽 */

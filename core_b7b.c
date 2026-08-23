@@ -4,9 +4,9 @@
  * 本批新实现函数直接使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   查找控件对象       FUN_1400C36C8 @0x1400c36c8
+ *   查找控件对象       PECMD_RegiResolveKeyPath @0x1400c36c8
  *   HOME 命令          PECMD_HomeSetStartPage @0x1400c42ac
- *   解析列表项         FUN_1400C99B4 @0x1400c99b4
+ *   解析列表项         PECMD_ParseListItemSpec @0x1400c99b4
  *   添加控件           FUN_1400CADEC @0x1400cadec
  *   绘制控件           FUN_1400D95F0 @0x1400d95f0
  *
@@ -55,11 +55,11 @@ extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 /* ---- 本批引用的全局数据 ---- */
 extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
 
-/* ========== FUN_1400C36C8 @0x1400c36c8 ==========
+/* ========== PECMD_RegiResolveKeyPath @0x1400c36c8 ==========
  * 按名称路径在控件对象表中查找对象；支持 "name:name:..." 多级路径。
  * 数字/括号串直接交给 UInt64 解析。
  */
-uint64_t FUN_1400C36C8(LPCWSTR name, int64_t ctx, int filter)
+uint64_t PECMD_RegiResolveKeyPath(LPCWSTR name, int64_t ctx, int filter)
 {
     if (*name == L'\0') {
         return 0;
@@ -181,12 +181,12 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
     return 0;
 }
 
-/* ========== FUN_1400C99B4 @0x1400c99b4 ==========
+/* ========== PECMD_ParseListItemSpec @0x1400c99b4 ==========
  * 解析一个列表项/控件项：可选 #id[#id2]、修饰符 (=, +, *)、
  * 数值/类型、以及分隔符后的文本。
  * 注: mode 在反编译中同时被用作 8 字节暂存槽，这里保留该行为。
  */
-int FUN_1400C99B4(int64_t item, int64_t *pp, int64_t *out, int *id,
+int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
                         char *mode, uint32_t *value, int16_t sep)
 {
     char *pcVar3 = mode;

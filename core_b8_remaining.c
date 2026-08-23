@@ -9,7 +9,7 @@
  *   FUN_1400E9724       @0x1400e9724  (简化桩)
  *   FUN_1400F36EC  @0x1400f36ec  (简化桩)
  *   FUN_1400F6DB0     @0x1400f6db0  (简化桩)
- *   FUN_1400F94A0    @0x1400f94a0  (简化桩)
+ *   PECMD_ListHostMsgDispatch    @0x1400f94a0  (简化桩)
  * ==================================================================== */
 #include <stdint.h>
 #include <string.h>
@@ -61,11 +61,11 @@ void FUN_1400F6DB0(int64_t obj, int64_t paintInfo)
     (void)paintInfo;
 }
 
-/* ========== FUN_1400F94A0 @0x1400f94a0 ==========
+/* ========== PECMD_ListHostMsgDispatch @0x1400f94a0 ==========
  * [简化桩] 原函数为列表视图命中测试，返回 {0,0}。
  * TODO(verify): 需完整还原命中测试逻辑。
  */
-POINT FUN_1400F94A0(HDC obj, uint32_t msg, POINT *pt, POINT coord)
+POINT PECMD_ListHostMsgDispatch(HDC obj, uint32_t msg, POINT *pt, POINT coord)
 {
     POINT r;
     (void)obj;

@@ -8,7 +8,7 @@
  *   构建电话簿列表         FUN_1400E7840   @0x1400e7840
  *   更新子窗口顺序         FUN_1400EC880   @0x1400ec880
  *   编辑控件按键消息       FUN_1400EEF20    @0x1400eef20
- *   应用控件颜色           FUN_1400EFD80    @0x1400efd80
+ *   应用控件颜色           PECMD_ApplyTextPropToCtl    @0x1400efd80
  *   填充客户区颜色         PECMD_FillCtlBackground  @0x1400f0ca0
  *   查询控件值分发         FUN_1400F1234   @0x1400f1234
  *   控件按键消息处理       FUN_1400F1F78  @0x1400f1f78
@@ -16,7 +16,7 @@
  *   命中测试控件           PECMD_ListSubItemHitTest       @0x1400f3308
  *   设置映射对条目         FUN_1400F4D1C      @0x1400f4d1c
  *   设置数组项条目         FUN_1400F60A4    @0x1400f60a4
- *   按值设置项             FUN_1400F8FCC     @0x1400f8fcc
+ *   按值设置项             PECMD_SetListItemCellData     @0x1400f8fcc
  *   控件消息处理 B         FUN_1400FEF3C    @0x1400fef3c
  *   格式化控件范围串       PECMD_BuildTreeIndexPathStr  @0x1400ff2bc
  *
@@ -288,11 +288,11 @@ dispatch:
     return (uint32_t)(-(uint32_t)((r & 4) != 0) & (uint32_t)local_res8);
 }
 
-/* ========== FUN_1400EFD80 @0x1400efd80 ==========
+/* ========== PECMD_ApplyTextPropToCtl @0x1400efd80 ==========
  * 应用控件属性: 无参数时设置窗口文本并赋变量; "color" 时解析颜色值
  * 写入对象槽或关联窗口, 触发重绘。
  */
-uint64_t FUN_1400EFD80(int64_t *obj, int64_t *ctx, LPCWSTR name,
+uint64_t PECMD_ApplyTextPropToCtl(int64_t *obj, int64_t *ctx, LPCWSTR name,
                                  LPWSTR param, uint64_t a5, uint64_t a6,
                                  int64_t a7)
 {
@@ -693,12 +693,12 @@ void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
     }
 }
 
-/* ========== FUN_1400F8FCC @0x1400f8fcc ==========
+/* ========== PECMD_SetListItemCellData @0x1400f8fcc ==========
  * 按 ID 查找项并设置值/文本:
  *   - 未找到且 value 非空: 新建节点追加到 +0x2f0 数组
  *   - 找到: value 为空则删除项, 否则更新值与文本
  */
-void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
+void PECMD_SetListItemCellData(int64_t obj, int id, int64_t value, LPCWSTR text)
 {
     int64_t idx;
     int64_t *slot;

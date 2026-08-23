@@ -8,7 +8,7 @@
  *   FUN_14006A740 @0x14006a740   数字解析（T/G/M/K/S 后缀）
  *   FUN_14006A7F4   @0x14006a7f4   数字解析包装（跳过空白）
  *   PECMD_NormalizeVolumeDevPath  @0x14006ccd4   设备路径修正（盘符→\\\\.\X:）
- *   FUN_14006CE38 @0x14006ce38   设备路径修正（同上，返回类型）
+ *   PECMD_NormalizeDiskDevicePath @0x14006ce38   设备路径修正（同上，返回类型）
  *   PECMD_RefCountRelease   @0x140028270   引用计数释放
  *   FUN_1400A4020   @0x1400a4020   引用计数字符串设置
  *   FUN_14007DE70   @0x14007de70   拼接两串（新分配）
@@ -182,10 +182,10 @@ check_dos:
     return 2;
 }
 
-/* ========== FUN_14006CE38 @0x14006ce38 ==========
+/* ========== PECMD_NormalizeDiskDevicePath @0x14006ce38 ==========
  * 同上（返回 undefined1）。
  */
-uint8_t FUN_14006CE38(LPCWSTR *ps)
+uint8_t PECMD_NormalizeDiskDevicePath(LPCWSTR *ps)
 {
     return (uint8_t)PECMD_NormalizeVolumeDevPath(ps);
 }

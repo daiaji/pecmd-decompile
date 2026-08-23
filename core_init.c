@@ -23,7 +23,7 @@ void FUN_140053E78(void);            /* @0x140053e78 */
 void FUN_14001D628(void);            /* @0x14001d628 */
 void FUN_1400186BC(void *s, int a);  /* @0x1400186bc */
 void FUN_1400083c0(void);            /* @0x1400083c0 */
-void FUN_14001A220(void);            /* @0x14001a220 */
+extern void PECMD_InitPerfCounterFreq(void);            /* @0x14001a220 */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 设置内置变量 */
 void FUN_140062A2C(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变量 */
 void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置数值变量 */
@@ -81,7 +81,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     FUN_14001D628();
     FUN_1400186BC(&g_Script, 0);
     FUN_1400083c0();
-    FUN_14001A220();
+    PECMD_InitPerfCounterFreq();
     QueryPerformanceCounter(&g_QPC);
     GetSystemTimeAsFileTime((FILETIME *)&g_StartTime);
     /* thunk_PECMD_UpdateLcg = 性能计时, 忽略 */

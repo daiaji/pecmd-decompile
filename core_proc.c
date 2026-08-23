@@ -13,7 +13,7 @@
  *   PECMD_ImportSystemEnvVars     @0x14001c1d4   (环境变量 -> &变量)
  *   FUN_14001D628       @0x14001d628   (ntdll 动态导入)
  *   FUN_1400186BC      @0x1400186bc   (脚本结构初始化)
- *   FUN_14001A220         @0x14001a220   (QPC 频率带锁)
+ *   PECMD_InitPerfCounterFreq         @0x14001a220   (QPC 频率带锁)
  *
  * .rdata 环境变量名表 @0x14013a260: SystemRoot/SystemDrive/windir/TEMP/TMP
  * ==================================================================== */
@@ -259,7 +259,7 @@ int FUN_14001D628(void)
 }
 
 /* ========== QPC 频率 (带锁) @0x14001a220 ========== */
-void FUN_14001A220(void)
+void PECMD_InitPerfCounterFreq(void)
 {
     EnterCriticalSection((void *)&g_csInit);
     if (g_QPFreq == 0) {

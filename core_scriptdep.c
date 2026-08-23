@@ -4,7 +4,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   随机种子         FUN_14001B510      @0x14001b510  (实现见 core_var3.c)
  *   XOR 加/解密      FUN_14001B5AC        @0x14001b5ac  (实现见 core_var3.c)
- *   去引号截断       FUN_14001D5F4       @0x14001d5f4
+ *   去引号截断       PECMD_UnquoteTokenInPlace       @0x14001d5f4
  *   脚本编码行插入   PECMD_PrependEnviHeader @0x140024f20
  *   sysinit 执行     PECMD_RunSysInit   @0x140025180
  *   sysinit 检查     PECMD_CheckFirstStartupFlag  @0x1400251ac
@@ -79,11 +79,11 @@ extern uint16_t FUN_14001B510(void);
  */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);
 
-/* ========== FUN_14001D5F4 @0x14001d5f4 ==========
+/* ========== PECMD_UnquoteTokenInPlace @0x14001d5f4 ==========
  * 去掉字符串前导双引号, 在下一个双引号处截断 (置 NUL)。
  * 无闭合引号则原样返回; 返回去引号后的串起点。
  */
-WCHAR *FUN_14001D5F4(WCHAR *p)
+WCHAR *PECMD_UnquoteTokenInPlace(WCHAR *p)
 {
     WCHAR c;
     WCHAR *q;

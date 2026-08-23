@@ -9,13 +9,13 @@
  *   绘制控件重绘      PECMD_DispatchControlMessage @0x140061914
  *   插入控件对象 A    PECMD_CreateDtimItem @0x140063ed4
  *   插入控件对象 B    FUN_140063FF0 @0x140063ff0
- *   更新滑块变量      FUN_140066D18 @0x140066d18
+ *   更新滑块变量      PECMD_ReadSliderPosToVars @0x140066d18
  *   读文本文件为宽串  PECMD_ReadFileToWide @0x140068034
  *   查询磁盘几何      PECMD_QueryDeviceInfo @0x140069464
  *   查找分区布局      FUN_140069BD8 @0x140069bd8
  *   展开盘符字母      PECMD_ExpandDriveList @0x14006aa9c
  *   查询设备布局      FUN_14006ABB8 @0x14006abb8
- *   查找或追加对象槽  FUN_14006B6E8 @0x14006b6e8
+ *   查找或追加对象槽  PECMD_AcquireSlotEntry @0x14006b6e8
  *   应用控件属性      FUN_1400FE4A4 @0x14006b7f0
  *   调用 COM 方法     FUN_1400705AC @0x1400705ac
  *   获取网络连接名    PECMD_ReadConnectionRegistryValue @0x140072814
@@ -23,7 +23,7 @@
  *   用参数重启自身    FUN_14007724C @0x14007724c
  *   关闭设备句柄扩展  PECMD_CloseDeviceHandle @0x140078408
  *   Base64 编码为宽串 FUN_140078D8C @0x140078d8c
- *   按类型取分区起点  FUN_140079E34 @0x140079e34
+ *   按类型取分区起点  PECMD_GetPartitionLayoutEntry @0x140079e34
  *   设置变量(带&处理) FUN_14007D0AC @0x14007d0ac
  *   图像编码到流      FUN_14007D340 @0x14007d340
  *   解析命令行参数    FUN_14008293C @0x14008293c
@@ -356,10 +356,10 @@ void FUN_140063FF0(WPARAM mgr, int64_t v2, uint64_t *p3,
     }
 }
 
-/* ========== FUN_140066D18 @0x140066d18 ==========
+/* ========== PECMD_ReadSliderPosToVars @0x140066d18 ==========
  * 更新滑块位置相关变量并通知控件。
  */
-void FUN_140066D18(int64_t obj, int64_t info)
+void PECMD_ReadSliderPosToVars(int64_t obj, int64_t info)
 {
     int64_t *plVar3 = *(int64_t **)((uint8_t *)obj + 0x38);
     int iVar1 = *(int *)((uint8_t *)info + 0x1c);
@@ -617,10 +617,10 @@ uint64_t *FUN_14006ABB8(HANDLE hDevice, uint64_t *info, uint32_t *count,
     return puVar3;
 }
 
-/* ========== FUN_14006B6E8 @0x14006b6e8 ==========
+/* ========== PECMD_AcquireSlotEntry @0x14006b6e8 ==========
  * 查找空闲对象槽；找不到时追加新槽。
  */
-uint64_t FUN_14006B6E8(int64_t obj)
+uint64_t PECMD_AcquireSlotEntry(int64_t obj)
 {
     EnterCriticalSection((void *)&g_csInit);
     uint64_t uVar5 = 0;
@@ -668,7 +668,7 @@ uint64_t FUN_1400FE4A4(int64_t obj, int64_t *action)
 {
     if (*action == 1) {
         if (action[1] == 0) {
-            return FUN_14006B6E8(obj);
+            return PECMD_AcquireSlotEntry(obj);
         }
         return 0;
     }
@@ -976,10 +976,10 @@ done:
     return uVar4;
 }
 
-/* ========== FUN_140079E34 @0x140079e34 ==========
+/* ========== PECMD_GetPartitionLayoutEntry @0x140079e34 ==========
  * 按分区类型查询分区起始偏移。
  */
-uint64_t FUN_140079E34(HANDLE hDevice, int type, uint64_t *outOffset)
+uint64_t PECMD_GetPartitionLayoutEntry(HANDLE hDevice, int type, uint64_t *outOffset)
 {
     void *local_30 = NULL;
     DWORD local_38[2] = {0, 0};

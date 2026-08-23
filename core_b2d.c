@@ -10,12 +10,12 @@
  *   格式化 ImDisk 虚拟盘 PECMD_FormatImDiskDrive @0x1400279d8
  *   编辑框子类窗口过程   PECMD_EditSubclassWndProc @0x140028708
  *   应用 PELOGON 布局字体 PECMD_ApplyTextWindowLayout @0x14002a508
- *   安装/解压 INF/SYS 文件 FUN_14002C048 @0x14002c048
+ *   安装/解压 INF/SYS 文件 PECMD_DeviPlaceExtractedFile @0x14002c048
  *   PELOGON 初始化扩展    PECMD_ProcessInitCommand @0x14002e3d4
  *   PELOGON 主窗口过程    PECMD_MainMsgWndProc @0x14002ee44
- *   应用 LOGO 配置        FUN_1400389C4 @0x1400389c4
- *   处理单个安装项        FUN_14003AAD0 @0x14003aad0
- *   处理安装脚本队列      FUN_14003B010 @0x14003b010
+ *   应用 LOGO 配置        PECMD_SetBootLogoFile @0x1400389c4
+ *   处理单个安装项        PECMD_DeviSubPackageWorkerProc @0x14003aad0
+ *   处理安装脚本队列      PECMD_DeviExtractSchedulerProc @0x14003b010
  *   发送按键/鼠标命令     PECMD_SendInputEvents @0x14003c9e8
  *   系统关机/重启处理     PECMD_PerformSystemShutdown @0x14003d608
  *   确认对话框过程        FUN_14003E220 @0x14003e220
@@ -121,7 +121,7 @@ extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
 extern void PECMD_ScriptWndProc(HWND a1, uint32_t a2, HDC a3,
                           void *a4);
 extern uint64_t FUN_14003DB00(WCHAR *a1);
-extern uint64_t FUN_14003A810(int64_t *a1);
+extern uint64_t PECMD_DeviFileExtractThreadProc(int64_t *task);
 extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2, void *p3,
                               void *p4, void *p5);
 extern void FUN_14005B900(void *a1, uint64_t a2, LPCWSTR a3,
@@ -1019,11 +1019,11 @@ label_02a82c:
     return 0;
 }
 
-/* ========== FUN_14002C048 @0x14002c048 ==========
+/* ========== PECMD_DeviPlaceExtractedFile @0x14002c048 ==========
  * 将 INF/SYS 文件解压/复制到系统目录并登记到安装列表。
  * TODO(verify): 列表槽格式与 0x14e/0x29 偏移按反编译保留。
  */
-char FUN_14002C048(int64_t *ctx, int mode, void *fileInfo,
+char PECMD_DeviPlaceExtractedFile(int64_t *ctx, int mode, void *fileInfo,
                              uint64_t flags)
 {
     WCHAR *lpDst;
@@ -1455,10 +1455,10 @@ label_02effd:
     return 0;
 }
 
-/* ========== FUN_1400389C4 @0x1400389c4 ==========
+/* ========== PECMD_SetBootLogoFile @0x1400389c4 ==========
  * 解析 LOGO 命令参数，设置图标/LogoFile 并创建或通知 LOGO 窗口。
  */
-uint64_t FUN_1400389C4(uint64_t ctx, LPCWSTR text)
+uint64_t PECMD_SetBootLogoFile(uint64_t ctx, LPCWSTR text)
 {
     HWND pHVar1;
     HICON pHVar2;
@@ -1583,12 +1583,12 @@ label_038c65:
     return 1;
 }
 
-/* ========== FUN_14003AAD0 @0x14003aad0 ==========
+/* ========== PECMD_DeviSubPackageWorkerProc @0x14003aad0 ==========
  * 处理一个安装项：复制工作串、建立互斥锁名、执行 7z 解压/设备更新，
  * 最后递减任务计数。TODO(verify): ctx[4] 在反编译中同时作长度/状态，
  * 此处按“初始长度”与“-1 状态”解释。
  */
-uint64_t FUN_14003AAD0(uint64_t *task)
+uint64_t PECMD_DeviSubPackageWorkerProc(uint64_t *task)
 {
     int *piVar1;
     int64_t *plVar5;
@@ -1775,11 +1775,11 @@ label_03afca:
     return 0;
 }
 
-/* ========== FUN_14003B010 @0x14003b010 ==========
+/* ========== PECMD_DeviExtractSchedulerProc @0x14003b010 ==========
  * 逐行读取安装脚本，为每个 <INFFILE> 项创建任务并启动线程。
  * TODO(verify): 栈上的任务槽数组按 6 槽展开，线程参数布局与反编译一致。
  */
-uint64_t FUN_14003B010(uint64_t *tasks)
+uint64_t PECMD_DeviExtractSchedulerProc(uint64_t *tasks)
 {
     uint8_t bVar1;
     int iVar2;
@@ -1971,7 +1971,7 @@ label_03b225:
                         *pWVar4 = L'\\';
                     }
                 }
-                pvVar6 = CreateThread(NULL, 0x10000, (void *)FUN_14003A810,
+                pvVar6 = CreateThread(NULL, 0x10000, (void *)PECMD_DeviFileExtractThreadProc,
                                       (LPVOID)(local_d8 + lVar3 * 6), 0x10004,
                                       &g_dwC96C);
                 local_c8[lVar3 * 6] = (int64_t)(intptr_t)pvVar6;

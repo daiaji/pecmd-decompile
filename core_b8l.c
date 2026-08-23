@@ -4,10 +4,10 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   发送控件命令串        FUN_1400F1504    @0x1400f1504
+ *   发送控件命令串        PECMD_SendPostMessageSpec    @0x1400f1504
  *   调整控件项度量         PECMD_ListGetItemTextData        @0x1400f2f58
  *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8
- *   初始化列表视窗对象     FUN_1400F9134            @0x1400f9134
+ *   初始化列表视窗对象     PECMD_CtorListHostObject            @0x1400f9134
  *   销毁列表视窗对象       PECMD_DestroyCtlResources         @0x1400f9324
  *   控件消息分发(临界区)   FUN_1400FC148       @0x1400fc148
  *   设置控件颜色           FUN_1400FD014           @0x1400fd014
@@ -16,9 +16,9 @@
  *   控件悬停定时器         PECMD_ControlHoverTimer   @0x1400fd86c
  *   控件鼠标消息           FUN_1400FDEDC     @0x1400fdedc
  *   树项路径查找           PECMD_FindTreeItemByPath          @0x1400ff414
- *   树路径串构建           FUN_1400FF5D0        @0x1400ff5d0
+ *   树路径串构建           PECMD_TreeCollectCheckedText        @0x1400ff5d0
  *   树路径串构建(扩展)     PECMD_TreeCollectItems      @0x1400ff730
- *   树路径串构建(扩展2)    FUN_1400FF8A8     @0x1400ff8a8
+ *   树路径串构建(扩展2)    PECMD_TreeScanCheckedSiblings     @0x1400ff8a8
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -80,12 +80,12 @@ extern HWND g_hActiveDevWnd;        /* DAT_14013e400 当前设备窗口 */
 extern uint8_t g_tooltipThreshold;  /* DAT_14013a861 Tooltip 触发阈值 */
 extern uint8_t g_tooltipCount0;     /* DAT_14013a860 Tooltip 计数 0 */
 
-/* ========== FUN_1400F1504 @0x1400f1504 ==========
+/* ========== PECMD_SendPostMessageSpec @0x1400f1504 ==========
  * 解析 "[:var;] [#]msg ..." 控件命令串，展开变量后向控件窗口发送
  * PostMessage/SendMessage(Timeout)，并把结果写回命名变量。
  * TODO(verify): PECMD_ParseTokenResolve 参数/返回值语义。
  */
-DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
+DWORD PECMD_SendPostMessageSpec(uint64_t unused, WCHAR *cmd, int64_t obj,
                                      int64_t *script, uint8_t sync, void **ppcs)
 {
     WCHAR *p = cmd;
@@ -270,11 +270,11 @@ void PECMD_ListAddItemEntry(int64_t obj, int index, LPCWSTR text, uint32_t data,
     SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1061, (WPARAM)(int64_t)index, (LPARAM)info);
 }
 
-/* ========== FUN_1400F9134 @0x1400f9134 ==========
+/* ========== PECMD_CtorListHostObject @0x1400f9134 ==========
  * 初始化列表视窗内部对象（虚表 PTR_FUN_14012c670）。
  * TODO(verify): 各字段含义与默认值。
  */
-uint64_t *FUN_1400F9134(uint64_t *obj, uint64_t param2, uint64_t param3)
+uint64_t *PECMD_CtorListHostObject(uint64_t *obj, uint64_t param2, uint64_t param3)
 {
     uint8_t *b = (uint8_t *)obj;
 
@@ -793,10 +793,10 @@ uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out)
     return hItem;
 }
 
-/* ========== FUN_1400FF5D0 @0x1400ff5d0 ==========
+/* ========== PECMD_TreeCollectCheckedText @0x1400ff5d0 ==========
  * 递归把树项路径格式化为 "@0x%p" / 数字范围串，结果追加到 *out。
  */
-int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem,
+int64_t PECMD_TreeCollectCheckedText(int64_t obj, int64_t *out, uint64_t hItem,
                                   int64_t mode)
 {
     uint64_t value = 0;
@@ -826,7 +826,7 @@ int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem,
         {
             uint64_t next = SendMessageW(hwnd, 0x110a, 4, hItem);
             if (next != 0)
-                FUN_1400FF5D0(obj, out, next, mode);
+                PECMD_TreeCollectCheckedText(obj, out, next, mode);
         }
     }
     return out[1];
@@ -876,10 +876,10 @@ int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
     return out[1] - startLen;
 }
 
-/* ========== FUN_1400FF8A8 @0x1400ff8a8 ==========
+/* ========== PECMD_TreeScanCheckedSiblings @0x1400ff8a8 ==========
  * 树路径串构建扩展 2：用 FUN_1400FEE24 判断项并递归到 Ex。
  */
-int64_t FUN_1400FF8A8(int64_t obj, int64_t *out, uint64_t hItem,
+int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem,
                                      uint64_t flags)
 {
     int64_t startLen = out[1];

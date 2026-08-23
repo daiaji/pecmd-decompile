@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   计算 PE 映像总大小     PECMD_CalcPeImageSize @0x1400e4078
- *   树节点按名查找         FUN_1400E5458 @0x1400e5458
+ *   树节点按名查找         PECMD_SearchMenuTreeByCaption @0x1400e5458
  *   控件通知消息分发       FUN_1400E59C0 @0x1400e59c0
  *   窗口枚举命中测试       FUN_1400E63C8 @0x1400e63c8
  *   关闭对话框/销毁窗口   FUN_1400E6860 @0x1400e6860
@@ -31,14 +31,14 @@
  *   查找映射值 A           PECMD_ItemPropFindIdxList1 @0x1400f5584
  *   查找映射值 B           PECMD_ItemPropFindIdxList2 @0x1400f5608
  *   查找映射双值 A         PECMD_ItemPropFindIdxSub1 @0x1400f568c
- *   添加映射双值 A         FUN_1400F57F4 @0x1400f57f4
+ *   添加映射双值 A         PECMD_TrackItemChangeSub1 @0x1400f57f4
  *   查找映射值 C           PECMD_ItemPropFindIdxList3 @0x1400f593c
  *   查找映射值 D           PECMD_ItemPropFindIdxList4 @0x1400f59c0
  *   查找映射双值 B         PECMD_ItemPropFindIdxSub2 @0x1400f5a44
- *   添加映射双值 B         FUN_1400F5ADC @0x1400f5adc
+ *   添加映射双值 B         PECMD_TrackItemChangeSub2 @0x1400f5adc
  *   销毁静态控件对象       FUN_1400FD1A8 @0x1400fd1a8
  *   查询控件值(带类型)    PECMD_TreeGetItemState @0x1400feda4
- *   统计树节点数           FUN_1400FEE94 @0x1400fee94
+ *   统计树节点数           PECMD_TreeCountItemsRecursive @0x1400fee94
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -139,10 +139,10 @@ int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
     return total;
 }
 
-/* ========== FUN_1400E5458 @0x1400e5458 ==========
+/* ========== PECMD_SearchMenuTreeByCaption @0x1400e5458 ==========
  * 在带 0x80 标记的树/链节点中按名称 (lstrcmpiW) 查找节点。
  */
-void *FUN_1400E5458(int64_t node, LPCWSTR name)
+void *PECMD_SearchMenuTreeByCaption(int64_t node, LPCWSTR name)
 {
     int count = *(int *)(node + 4);
     void **array = *(void ***)(node + 8);
@@ -151,7 +151,7 @@ void *FUN_1400E5458(int64_t node, LPCWSTR name)
     for (i = 0; i < count; i++) {
         uint8_t *item = (uint8_t *)array[i];
         if (*(int8_t *)item == -0x80) {
-            void *found = FUN_1400E5458(*(int64_t *)(item + 0x10), name);
+            void *found = PECMD_SearchMenuTreeByCaption(*(int64_t *)(item + 0x10), name);
             if (found != NULL) {
                 return found;
             }
@@ -758,8 +758,8 @@ int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int key1, int key2, int *outValue
                                     key1, key2, outValue);
 }
 
-/* ========== FUN_1400F57F4 @0x1400f57f4 ========== */
-void FUN_1400F57F4(int64_t obj, int key1, int key2, uint64_t value)
+/* ========== PECMD_TrackItemChangeSub1 @0x1400f57f4 ========== */
+void PECMD_TrackItemChangeSub1(int64_t obj, int key1, int key2, uint64_t value)
 {
     PECMD_AddDoubleMapEntry(obj, 0x290, 0x298, 0x2a0,
                             key1, key2, value);
@@ -784,8 +784,8 @@ int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int key1, int key2, int *outValue
                                     key1, key2, outValue);
 }
 
-/* ========== FUN_1400F5ADC @0x1400f5adc ========== */
-void FUN_1400F5ADC(int64_t obj, int key1, int key2, uint64_t value)
+/* ========== PECMD_TrackItemChangeSub2 @0x1400f5adc ========== */
+void PECMD_TrackItemChangeSub2(int64_t obj, int key1, int key2, uint64_t value)
 {
     PECMD_AddDoubleMapEntry(obj, 0x2d8, 0x2e0, 0x2e8,
                             key1, key2, value);
@@ -835,11 +835,11 @@ int PECMD_TreeGetItemState(int64_t obj, uint64_t param2,
     return (int)result;
 }
 
-/* ========== FUN_1400FEE94 @0x1400fee94 ==========
+/* ========== PECMD_TreeCountItemsRecursive @0x1400fee94 ==========
  * 统计树控件从指定项开始的兄弟节点数；recurse!=0 时不深入子节点。
  * 传入 0 返回 -1。
  */
-int64_t FUN_1400FEE94(int64_t obj, LRESULT hItem, int64_t recurse)
+int64_t PECMD_TreeCountItemsRecursive(int64_t obj, LRESULT hItem, int64_t recurse)
 {
     int64_t total = 0;
 
@@ -852,7 +852,7 @@ int64_t FUN_1400FEE94(int64_t obj, LRESULT hItem, int64_t recurse)
             LRESULT child = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x110a, 4,
                                          hItem);
             if (child != 0) {
-                int64_t childCount = FUN_1400FEE94(obj, child, 0);
+                int64_t childCount = PECMD_TreeCountItemsRecursive(obj, child, 0);
                 if (childCount < 0) {
                     return -1;
                 }

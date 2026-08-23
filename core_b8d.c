@@ -30,7 +30,7 @@
  *   父窗口命令通知(值)  FUN_1400FBA68 @0x1400fba68
  *   初始化控件对象 C    FUN_1400FBE58 @0x1400fbe58
  *   初始化带串窗口对象  FUN_1400FBFE0 @0x1400fbfe0
- *   交换关联窗口        FUN_1400FC458 @0x1400fc458
+ *   交换关联窗口        PECMD_SetTrackbarBuddyWindow @0x1400fc458
  *   创建 STATIC 控件    FUN_1400FD318 @0x1400fd318
  *   初始化静态控件      FUN_1400FE130 @0x1400fe130
  *   绘制对象 B          FUN_1400FEC58 @0x1400fec58
@@ -454,10 +454,10 @@ uint64_t *FUN_1400FBFE0(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400FC458 @0x1400fc458 ==========
+/* ========== PECMD_SetTrackbarBuddyWindow @0x1400fc458 ==========
  * 交换 +0xe8 关联窗口，返回旧值；新窗口非空时发送自定义消息。
  */
-uint64_t FUN_1400FC458(int64_t obj, HWND hwnd)
+uint64_t PECMD_SetTrackbarBuddyWindow(int64_t obj, HWND hwnd)
 {
     uint64_t old = *(uint64_t *)(obj + OBJ_FLAGS);
     *(HWND *)(obj + OBJ_FLAGS) = hwnd;

@@ -7,7 +7,7 @@
  * 说明:
  *   - FUN_140102a90(...) 是 memset 别名, 直接写 memset。
  *   - g_pOleInit / g_pOleUninit 为 OleInit/OleUninit 延迟槽。
- *   - PECMD_DestroyWindowLocked / FUN_14005B9C8 / PECMD_TimerMessage 定义于 core_b3d/e/j.c (大写)。
+ *   - PECMD_DestroyWindowLocked / PECMD_GetTooltipWindow / PECMD_TimerMessage 定义于 core_b3d/e/j.c (大写)。
  *   - 消息缓冲区 (local_84/local_88/local_80/local_78/local_58) 的栈布局偏移
  *     无法从伪代码精确恢复, 以字节缓冲重建并用 TODO(verify) 标注。
  */
@@ -25,7 +25,7 @@ extern uint32_t g_msgWndState[2];                /* 消息窗口状态/定时器
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
 extern int32_t PECMD_LoadOle32Apis(void);                            /* @0x140061c44 OLE 初始化协助 */
-extern HWND   FUN_14005B9C8(uint32_t flags, int maxWidth);   /* @0x14005b9c8 获取提示窗口 */
+extern HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth);   /* @0x14005b9c8 获取提示窗口 */
 extern void   PECMD_DestroyWindowLocked(void);                            /* @0x14005ba6c 销毁窗口 */
 extern void   PECMD_TimerMessage(HWND hwnd, uint64_t wParam, int timerId); /* @0x14005bb6c 定时器过程 */
 extern DWORD  PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3,
@@ -128,7 +128,7 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
     local_90 = GetForegroundWindow();
     g_msgWndState[0] = 0;
     if ((g_hwndD310 != (HWND)0) ||
-        (FUN_14005B9C8((-(unsigned int)bVar1 & 2) | (param_8 & 1), 0x514),
+        (PECMD_GetTooltipWindow((-(unsigned int)bVar1 & 2) | (param_8 & 1), 0x514),
          g_hwndD310 != (HWND)0)) {
         hWnd = g_hwndD310;
         /* 消息缓冲区布局 (TODO(verify): 偏移无法精确恢复) */

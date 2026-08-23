@@ -13,11 +13,11 @@
  *   即插即用驱动安装         FUN_14002B7F8      @0x14002b7f8
  *   DrvLoad 命令安装驱动     FUN_14002C634 @0x14002c634
  *   创建设备信息             FUN_14002C8A4       @0x14002c8a4
- *   线程栅栏等待             FUN_14002CA80     @0x14002ca80
+ *   线程栅栏等待             PECMD_WaitOtherThreadsExit     @0x14002ca80
  *   执行子命令               PECMD_ExecSubCommand     @0x140030144
  *   循环执行路径列表         PECMD_ExecPathList      @0x140035860
  *   发送热键消息             FUN_140035B40     @0x140035b40
- *   解压后安装驱动           FUN_14003A810 @0x14003a810
+ *   解压后安装驱动           PECMD_DeviFileExtractThreadProc @0x14003a810
  *   处理 DOWNCFG 关机配置    PECMD_DownCheckShutdown      @0x14003d92c
  *
  * 约定:
@@ -745,11 +745,11 @@ done:
     return 0;
 }
 
-/* ========== FUN_14002CA80 @0x14002ca80 ==========
+/* ========== PECMD_WaitOtherThreadsExit @0x14002ca80 ==========
  * 注册当前线程并等待前面的线程完成（配合任务计数/事件）。
  * TODO(verify): 数组容量/计数的 64 位布局按 g_threadTableCap/g_threadTableCnt 合并处理。
  */
-uint64_t FUN_14002CA80(void)
+uint64_t PECMD_WaitOtherThreadsExit(void)
 {
     DWORD DVar3;
     int iVar4;
@@ -1142,10 +1142,10 @@ init_done:
     PECMD_FreeStrBuf((WCHAR **)&local_res20);
 }
 
-/* ========== FUN_14003A810 @0x14003a810 ==========
+/* ========== PECMD_DeviFileExtractThreadProc @0x14003a810 ==========
  * 解压后执行驱动安装（NewDev/DrvLoad/devcon 三种路径）。
  */
-uint64_t FUN_14003A810(int64_t *task)
+uint64_t PECMD_DeviFileExtractThreadProc(int64_t *task)
 {
     int *piVar1;
     WCHAR *pWVar2;

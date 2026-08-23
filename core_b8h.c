@@ -9,11 +9,11 @@
  *   指针表偏移搬运         PECMD_PeApplyRelocations  @0x1400e4160
  *   构建程序 exe 路径      PECMD_GetModulePathAlt      @0x1400e429c
  *   初始化 CRC32 表        FUN_1400E4C38      @0x1400e4c38
- *   计算 CRC32             FUN_1400E4CC0         @0x1400e4cc0
+ *   计算 CRC32             PECMD_Crc32HexOfBytes         @0x1400e4cc0
  *   RAS API 就绪查询      FUN_1400E4D84     @0x1400e4d84
  *   初始化事件对           FUN_1400E4E6C     @0x1400e4e6c
  *   销毁事件对             FUN_1400E4E94  @0x1400e4e94
- *   触发同步事件           FUN_1400E4EDC   @0x1400e4edc
+ *   触发同步事件           PECMD_RasDialStatusCallback   @0x1400e4edc
  *   取控件字体             FUN_1400E5890    @0x1400e5890
  *   加载控件字体           FUN_1400E66D4   @0x1400e66d4
  *   配置对话框过程         FUN_1400E6790  @0x1400e6790
@@ -240,13 +240,13 @@ void FUN_1400E4C38(void)
     }
 }
 
-/* ========== FUN_1400E4CC0 @0x1400e4cc0 ==========
+/* ========== PECMD_Crc32HexOfBytes @0x1400e4cc0 ==========
  * 计算数据块的 CRC32:
  *   - 输出缓冲按 8 字节对齐时, 可复用 arena 头部 (hdr) 做前置种子/结果结构。
  *   - 低 bit1 (out & 2) 为 0 时补码并格式化 %08X; 否则写回 arena 结构。
  * TODO(verify): arena 头部解析与 out&2 语义。
  */
-uint32_t FUN_1400E4CC0(const uint8_t *data, int64_t len, char *out)
+uint32_t PECMD_Crc32HexOfBytes(const uint8_t *data, int64_t len, char *out)
 {
     uint32_t crc;
     int64_t *hdr;
@@ -318,13 +318,13 @@ void FUN_1400E4E94(uint64_t *obj)
     }
 }
 
-/* ========== FUN_1400E4EDC @0x1400e4edc ==========
+/* ========== PECMD_RasDialStatusCallback @0x1400e4edc ==========
  * 按模式触发"事件对"之一:
  *   - value != 0          -> SetEvent(B 事件), 记录 value
  *   - mode 为 0x2000/2001 -> SetEvent(A 事件), 沿用已记录值
  * TODO(verify): mode 常量的业务含义。
  */
-void FUN_1400E4EDC(uint64_t unused, int mode, int value)
+void PECMD_RasDialStatusCallback(uint64_t unused, int mode, int value)
 {
     HANDLE evt = g_hSyncEvtB;
     int val = value;

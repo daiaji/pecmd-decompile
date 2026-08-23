@@ -19,10 +19,10 @@
  *   设置控件高度并失效      FUN_1400F4064 @0x1400f4064
  *   转发取文本长度(带链接)  FUN_1400F4194 @0x1400f4194
  *   查找数组项槽            FUN_1400F4C28 @0x1400f4c28
- *   添加映射项 A            FUN_1400F5724 @0x1400f5724
- *   添加映射项 B            FUN_1400F578C @0x1400f578c
- *   添加映射项 C            FUN_1400F586C @0x1400f586c
- *   添加映射项 D            FUN_1400F58D4 @0x1400f58d4
+ *   添加映射项 A            PECMD_TrackItemChangeList1 @0x1400f5724
+ *   添加映射项 B            PECMD_TrackItemChangeList2 @0x1400f578c
+ *   添加映射项 C            PECMD_TrackItemChangeList3 @0x1400f586c
+ *   添加映射项 D            PECMD_TrackItemChangeList4 @0x1400f58d4
  *   释放 GDI 对象数组       PECMD_ClearNamedPropArray @0x1400f5c10
  *   销毁 GDI 复合对象       FUN_1400F5D50 @0x1400f5d50
  *   取映射双值 A            FUN_1400F5DC4 @0x1400f5dc4
@@ -375,37 +375,37 @@ static void PECMD_AddMapEntryToArray(int64_t *array, int64_t *cap, int64_t *cnt,
     FUN_1400639F0(array, cap, cnt, &node, 8, 1);
 }
 
-/* ========== FUN_1400F5724 @0x1400f5724 ==========
+/* ========== PECMD_TrackItemChangeList1 @0x1400f5724 ==========
  * 向 +0x260 映射数组添加 {key,value}。
  */
-void FUN_1400F5724(int64_t obj, uint32_t key, uint64_t value)
+void PECMD_TrackItemChangeList1(int64_t obj, uint32_t key, uint64_t value)
 {
     PECMD_AddMapEntryToArray((int64_t *)(obj + 0x260), (int64_t *)(obj + 0x268),
                              (int64_t *)(obj + 0x270), key, value);
 }
 
-/* ========== FUN_1400F578C @0x1400f578c ==========
+/* ========== PECMD_TrackItemChangeList2 @0x1400f578c ==========
  * 向 +0x278 映射数组添加 {key,value}。
  */
-void FUN_1400F578C(int64_t obj, uint32_t key, uint64_t value)
+void PECMD_TrackItemChangeList2(int64_t obj, uint32_t key, uint64_t value)
 {
     PECMD_AddMapEntryToArray((int64_t *)(obj + 0x278), (int64_t *)(obj + 0x280),
                              (int64_t *)(obj + 0x288), key, value);
 }
 
-/* ========== FUN_1400F586C @0x1400f586c ==========
+/* ========== PECMD_TrackItemChangeList3 @0x1400f586c ==========
  * 向 +0x2a8 映射数组添加 {key,value}。
  */
-void FUN_1400F586C(int64_t obj, uint32_t key, uint64_t value)
+void PECMD_TrackItemChangeList3(int64_t obj, uint32_t key, uint64_t value)
 {
     PECMD_AddMapEntryToArray((int64_t *)(obj + 0x2a8), (int64_t *)(obj + 0x2b0),
                              (int64_t *)(obj + 0x2b8), key, value);
 }
 
-/* ========== FUN_1400F58D4 @0x1400f58d4 ==========
+/* ========== PECMD_TrackItemChangeList4 @0x1400f58d4 ==========
  * 向 +0x2c0 映射数组添加 {key,value}。
  */
-void FUN_1400F58D4(int64_t obj, uint32_t key, uint64_t value)
+void PECMD_TrackItemChangeList4(int64_t obj, uint32_t key, uint64_t value)
 {
     PECMD_AddMapEntryToArray((int64_t *)(obj + 0x2c0), (int64_t *)(obj + 0x2c8),
                              (int64_t *)(obj + 0x2d0), key, value);

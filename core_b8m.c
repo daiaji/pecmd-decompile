@@ -154,7 +154,7 @@ extern uint8_t g_peByteA84F;                                /* DAT_14013a84f */
 extern uint16_t g_peWordA853;                               /* DAT_14013a853 */
 extern void FUN_1400E7664(LPCWSTR entry);          /* @0x1400e7664 */
 extern int64_t FUN_1400E7840(int64_t *out, int flag); /* @0x1400e7840 */
-extern void FUN_1400E4EDC(int64_t obj, uint32_t param2, uint64_t param3); /* @0x1400e4edc */
+extern void PECMD_RasDialStatusCallback(uint64_t unused, int mode, int value); /* @0x1400e4edc */
 extern HANDLE g_hSyncEvtA;               /* DAT_14013e1f8 */
 extern HANDLE g_hSyncEvtB;               /* DAT_14013e200 */
 extern uint32_t g_syncEvtVal;            /* DAT_14013e208 */
@@ -637,11 +637,11 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
     }
 }
 
-/* ========== FUN_1400ECA00 @0x1400eca00 ==========
+/* ========== PECMD_TabHostMsgDispatch @0x1400eca00 ==========
  * 控件消息分发变体：0x462/0x463/0x465 走专用临界区路径，
  * 其余走消息映射 + FUN_1400E5B0C 兜底。
  */
-uint64_t FUN_1400ECA00(int64_t obj, uint32_t msg, int64_t wParam,
+uint64_t PECMD_TabHostMsgDispatch(int64_t obj, uint32_t msg, int64_t wParam,
                                        uint64_t *lParam)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
@@ -829,7 +829,7 @@ uint64_t PECMD_RasDialEntry(int64_t conn, LPCWSTR entryName, LPCWSTR user,
         typedef uint32_t (*RasDialFn)(void *, LPCWSTR, void *, uint32_t, void *, void **);
         RasDialFn rasDial = (RasDialFn)(void *)g_pfnRasDial;
         uint32_t rc = rasDial(NULL, NULL, (void *)(conn + 8), 0,
-                              (void *)(uintptr_t)&FUN_1400E4EDC,
+                              (void *)(uintptr_t)&PECMD_RasDialStatusCallback,
                               (void **)(conn + 0xa78));
         if (rc == 0) {
             HANDLE evts[2];
@@ -1790,11 +1790,11 @@ uint64_t FUN_1400E89FC(int64_t obj, uint64_t msg, int64_t wParam,
     return result;
 }
 
-/* ========== FUN_1400ECF90 @0x1400ecf90 ==========
+/* ========== PECMD_RescaleDcPixelsWeighted @0x1400ecf90 ==========
  * 双线性插值缩放图像：从源 DC 采样加权平均后写入目标 DC。
  * TODO(verify): 权重边界公式。
  */
-void FUN_1400ECF90(HDC hdcDst, int xDst, int yDst, int64_t dstW,
+void PECMD_RescaleDcPixelsWeighted(HDC hdcDst, int xDst, int yDst, int64_t dstW,
                               int64_t dstH, HDC hdcSrc, int xSrc, int ySrc,
                               int64_t srcW, int64_t srcH)
 {
@@ -2047,11 +2047,11 @@ after:
     return result;
 }
 
-/* ========== FUN_1400E69AC @0x1400e69ac ==========
+/* ========== PECMD_FormatDoubleToStr @0x1400e69ac ==========
  * 按模式/精度格式化 double，并做尾部零修剪、指数补零/去零。
  * TODO(verify): 与原始 wsprintfW 行为细节。
  */
-WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
+WCHAR **PECMD_FormatDoubleToStr(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
                                  char trim, char mode)
 {
     WCHAR *tmp = NULL;
@@ -2177,11 +2177,11 @@ WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
     return out;
 }
 
-/* ========== FUN_1400EDA04 @0x1400eda04 ==========
+/* ========== PECMD_DownscaleDibBlockAvg @0x1400eda04 ==========
  * DIB 平均缩放：把源位图按块平均写入目标 DIB。
  * TODO(verify): 缓冲布局与 bpp 处理。
  */
-uint64_t FUN_1400EDA04(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
+uint64_t PECMD_DownscaleDibBlockAvg(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
                                HBITMAP dstBmp, int64_t dstW, int64_t dstH)
 {
     BITMAPINFO bmiSrc;
@@ -2449,11 +2449,11 @@ int PECMD_DrawWrappedText(HDC hdc, LPCWSTR text, int64_t maxChars, RECT *rect, u
     }
 }
 
-/* ========== FUN_1400ED278 @0x1400ed278 ==========
+/* ========== PECMD_ResampleDibBoxFilter @0x1400ed278 ==========
  * DIB 双线性缩放：标准双线性插值写入目标 DIB。
  * TODO(verify): 与原整数定点权重实现的边界差异。
  */
-uint64_t FUN_1400ED278(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
+uint64_t PECMD_ResampleDibBoxFilter(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
                                 HBITMAP dstBmp, uint64_t dstW, uint64_t dstH)
 {
     BITMAPINFO bmiSrc;
@@ -2534,11 +2534,11 @@ uint64_t FUN_1400ED278(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
     return 0;
 }
 
-/* ========== FUN_1400FC8EC @0x1400fc8ec ==========
+/* ========== PECMD_ScrollHostMsgDispatch @0x1400fc8ec ==========
  * 滚动控件消息处理：滚轮/滚动信息查询与设置，未命中走映射 + GDI 兜底。
  * TODO(verify): 0x462 参数数组与滚动范围细节。
  */
-POINT FUN_1400FC8EC(int64_t obj, uint32_t msg, int64_t wParam,
+POINT PECMD_ScrollHostMsgDispatch(int64_t obj, uint32_t msg, int64_t wParam,
                                   uint64_t *lParam)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
@@ -2717,11 +2717,11 @@ dispatch:
     }
 }
 
-/* ========== FUN_1400EF14C @0x1400ef14c ==========
+/* ========== PECMD_DrawRadioButtonFace @0x1400ef14c ==========
  * 绘制单选/复选按钮图形：先复制背景，再画圆/框、焦点框和文本。
  * TODO(verify): 图形样式位与 0x110 内嵌对象分支。
  */
-void FUN_1400EF14C(int64_t obj, int64_t paintInfo)
+void PECMD_DrawRadioButtonFace(int64_t obj, int64_t paintInfo)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
     LPCWSTR text = NULL;
@@ -2841,11 +2841,11 @@ done:
     PECMD_FreeStrBuf((WCHAR **)&text);
 }
 
-/* ========== FUN_1400F69B8 @0x1400f69b8 ==========
+/* ========== PECMD_ListMouseDownGroupSelect @0x1400f69b8 ==========
  * 列表鼠标按下处理：命中测试、滚动命中、选区更新与失效。
  * TODO(verify): local_b4 原反编译未初始化，按 0 处理。
  */
-void FUN_1400F69B8(int64_t *obj, uint32_t msg, uint64_t lParam)
+void PECMD_ListMouseDownGroupSelect(int64_t *obj, uint32_t msg, uint64_t lParam)
 {
     uint8_t *b = (uint8_t *)obj;
     int64_t lVar14 = 0, lVar11 = 0, lVar9 = 0;
@@ -3382,11 +3382,11 @@ void PECMD_ControlPaint(int64_t obj, HDC hdcIn)
         DeleteDC(memDC);
 }
 
-/* ========== FUN_1400FFB64 @0x1400ffb64 ==========
+/* ========== PECMD_TreeDumpItemsText @0x1400ffb64 ==========
  * 树路径格式化到字符串缓冲（简化版）：递归输出 HTREEITEM 地址。
  * TODO(verify): 与原始 flags/分隔符/文本槽语义差异。
  */
-uint64_t FUN_1400FFB64(int64_t obj, uint16_t *path, int64_t *out,
+uint64_t PECMD_TreeDumpItemsText(int64_t obj, uint16_t *path, int64_t *out,
                                     LPCWSTR prefix, LPCWSTR suffix, uint64_t flags)
 {
     uint64_t hItem;
@@ -3458,11 +3458,11 @@ uint64_t FUN_1400FFB64(int64_t obj, uint16_t *path, int64_t *out,
     return result;
 }
 
-/* ========== FUN_1400F61DC @0x1400f61dc ==========
+/* ========== PECMD_ParseCtlLayoutFontSpec @0x1400f61dc ==========
  * 解析字体样式串（"^N*size:margins..."）并更新对象字号/高度。
  * TODO(verify): 与原始完整解析的边界差异。
  */
-uint64_t FUN_1400F61DC(int64_t obj, uint64_t param2, WCHAR *spec)
+uint64_t PECMD_ParseCtlLayoutFontSpec(int64_t obj, uint64_t param2, WCHAR *spec)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
     WCHAR *p = spec;
@@ -3508,11 +3508,11 @@ uint64_t FUN_1400F61DC(int64_t obj, uint64_t param2, WCHAR *spec)
     return 0;
 }
 
-/* ========== FUN_1400EE3D0 @0x1400ee3d0 ==========
+/* ========== PECMD_DrawCheckboxControl @0x1400ee3d0 ==========
  * 绘制复选框/单选框外观（简化版）：画框 + 文本。
  * TODO(verify): 原实现含复杂图形/图标分支，此处近似。
  */
-void FUN_1400EE3D0(int64_t obj, int64_t paintInfo)
+void PECMD_DrawCheckboxControl(int64_t obj, int64_t paintInfo)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
     LPCWSTR text = NULL;
@@ -3544,11 +3544,11 @@ void FUN_1400EE3D0(int64_t obj, int64_t paintInfo)
     PECMD_FreeStrBuf((WCHAR **)&text);
 }
 
-/* ========== FUN_1400F42FC @0x1400f42fc ==========
+/* ========== PECMD_PaintGradientHeader @0x1400f42fc ==========
  * 表头渐变绘制（简化版）：用对象前景色填充客户区。
  * TODO(verify): 原实现含逐行渐变/文本/图标，此处近似。
  */
-void FUN_1400F42FC(int64_t obj)
+void PECMD_PaintGradientHeader(int64_t obj)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
     HWND hwnd = *(HWND *)(b + OBJ_HWND);

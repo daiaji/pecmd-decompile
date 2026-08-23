@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   清理任务对象     PECMD_CleanupTaskEnvObject @0x14004f788
- *   按参数设置变量   FUN_1400544BC @0x1400544bc
+ *   按参数设置变量   PECMD_AssignTypedVariable @0x1400544bc
  *   移除索引项       FUN_14005BE68 @0x14005be68
  *   LZ 解压          FUN_14005C260 @0x14005c260
  *   设置本地时间     PECMD_SetSystemTimeFromUnix @0x14005d390
@@ -18,7 +18,7 @@
  *   窗口区域命中测试 FUN_14006F73C @0x14006f73c
  *   弹出/载入介质    FUN_14006F908 @0x14006f908
  *   解析冒号列表     PECMD_SplitItemSpecFields @0x14006fd1c
- *   写引导扇区       FUN_140077FB8 @0x140077fb8
+ *   写引导扇区       PECMD_WriteMbrPartitionEntry @0x140077fb8
  *   变更设备状态     FUN_140078C68 @0x140078c68
  *   解析短整型列表   FUN_140079CF8 @0x140079cf8
  *   查找 # 资源标记  FUN_140079F50 @0x140079f50
@@ -188,10 +188,10 @@ void PECMD_CleanupTaskEnvObject(int64_t task)
     PECMD_FreeStrBuf((WCHAR **)(task + 0x78));
 }
 
-/* ========== FUN_1400544BC @0x1400544bc ==========
+/* ========== PECMD_AssignTypedVariable @0x1400544bc ==========
  * 按参数写入脚本变量；@ 前缀表示直接复制缓冲区到已有变量。
  */
-void FUN_1400544BC(int64_t *script, LPCWSTR name, LPCWSTR key,
+void PECMD_AssignTypedVariable(int64_t *script, LPCWSTR name, LPCWSTR key,
                                 uint8_t *data, uint32_t len)
 {
     bool bAt;
@@ -876,10 +876,10 @@ void PECMD_SplitItemSpecFields(int64_t *pp, int64_t *out1, int64_t *out2,
     }
 }
 
-/* ========== FUN_140077FB8 @0x140077fb8 ==========
+/* ========== PECMD_WriteMbrPartitionEntry @0x140077fb8 ==========
  * 读回一个扇区，按需写入引导标记/签名后再写回。
  */
-uint64_t FUN_140077FB8(HANDLE hDevice, int64_t sector, uint8_t *data,
+uint64_t PECMD_WriteMbrPartitionEntry(HANDLE hDevice, int64_t sector, uint8_t *data,
                                int mode)
 {
     DWORD nNumberOfBytesToRead;

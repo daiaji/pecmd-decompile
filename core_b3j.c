@@ -9,11 +9,11 @@
  *   构造窗口对象     PECMD_CreateWindowObjectEx @0x140055368
  *   主题绘制文本     FUN_14005B3E4 @0x14005b3e4
  *   添加托盘图标     FUN_14005B900 @0x14005b900
- *   获取提示窗口     FUN_14005B9C8 @0x14005b9c8
+ *   获取提示窗口     PECMD_GetTooltipWindow @0x14005b9c8
  *   DPI 缩放         FUN_14005DAF8 @0x14005daf8
  *   释放缓存对象     PECMD_ReleaseSlotRef @0x14005e8e8
  *   创建注册表键     FUN_14005F750 @0x14005f750
- *   查找空闲字母     FUN_14005F868 @0x14005f868
+ *   查找空闲字母     PECMD_PickFreeDriveLetter @0x14005f868
  *   链接或复制文件   FUN_1400607A4 @0x1400607a4
  *   安装窗口过程     PECMD_SetWindowProcHook @0x140060870
  *   分配控制台       FUN_140060A94 @0x140060a94
@@ -225,10 +225,10 @@ void FUN_14005B900(char *data, uint64_t id, LPCWSTR tip,
     *data = (char)BVar1;
 }
 
-/* ========== FUN_14005B9C8 @0x14005b9c8 ==========
+/* ========== PECMD_GetTooltipWindow @0x14005b9c8 ==========
  * 获取/创建全局 Tooltips 窗口。
  */
-HWND FUN_14005B9C8(uint32_t flags, int maxWidth)
+HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth)
 {
     if (g_hwndD310 == (HWND)0) {
         g_hwndD310 = CreateWindowExW(
@@ -313,10 +313,10 @@ LONG FUN_14005F750(HKEY root, LPCWSTR sub, int isVolatile)
     return LVar1;
 }
 
-/* ========== FUN_14005F868 @0x14005f868 ==========
+/* ========== PECMD_PickFreeDriveLetter @0x14005f868 ==========
  * 在盘符位图中查找未占用的字母。
  */
-int FUN_14005F868(uint32_t *bitmap, int16_t start, char mode,
+int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode,
                          char *exclude)
 {
     uint64_t in_RAX = 0;
