@@ -163,7 +163,7 @@ int (*g_pImageListReplaceIcon)(void *, int, void *) = NULL;        /* DAT_14013d
 int (*g_pImageListAdd)(void *, void *) = NULL;                     /* DAT_14013d3a8 ImageList_Add */
 int64_t g_cacheTableA[3] = {0, 0, 0};   /* DAT_14013dc80 cache table A {data, cap, cnt} */
 int64_t g_cacheTableB[3] = {0, 0, 0};   /* DAT_14013dce8 cache table B {data, cap, cnt} */
-/* VirtDisk/vhdmount 动态导入槽 (FUN_14005F60C 延迟装载) */
+/* VirtDisk/vhdmount 动态导入槽 (PECMD_LoadVhdApi 延迟装载) */
 int (*g_pCreateVirtualDisk)(void *, uint64_t, uint32_t, int, uint32_t, int, uint32_t *, int, HANDLE *) = NULL; /* DAT_14013d730 */
 void *g_pAttachVirtualDisk = NULL;    /* DAT_14013d740 AttachVirtualDisk (只装载) */
 void *g_pDetachVirtualDisk = NULL;    /* DAT_14013d748 DetachVirtualDisk */

@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   写远程进程 WinExec 补丁  FUN_1400229F8   @0x1400229f8
+ *   写远程进程 WinExec 补丁  PECMD_PatchRemoteWinExec   @0x1400229f8
  *   枚举显示模式数组        PECMD_EnumDisplayModes      @0x140023338
  *   超时消息泵/钩子等待     PECMD_WaitKeyPressHooked @0x140025b10
  *   解析窗口样式关键字       FUN_140025CE0 @0x140025ce0
@@ -186,12 +186,12 @@ extern BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);
 extern BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);
 extern uint8_t g_b21728[];      /* 热键表(6 字节/项) */
 
-/* ========== FUN_1400229F8 @0x1400229f8 ==========
+/* ========== PECMD_PatchRemoteWinExec @0x1400229f8 ==========
  * 向目标进程写入一段补丁代码，用于重定向 WinExec/ExitWindowsEx。
  * TODO(verify): WinExec_exref/ExitWindowsEx_exref 为导入表地址符号，
  *               与最终 core_globals.c 的数据定义需要主代理统一。
  */
-void FUN_1400229F8(HANDLE hProcess)
+void PECMD_PatchRemoteWinExec(HANDLE hProcess)
 {
     extern unsigned char WinExec_exref[];
     extern unsigned char ExitWindowsEx_exref[];

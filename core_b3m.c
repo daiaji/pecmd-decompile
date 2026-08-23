@@ -10,7 +10,7 @@
  *   LZ 解压          FUN_14005C260 @0x14005c260
  *   设置本地时间     PECMD_SetSystemTimeFromUnix @0x14005d390
  *   获取系统版本     PECMD_GetPackedSystemVersion @0x14005ea5c
- *   加载虚拟磁盘 API FUN_14005F60C @0x14005f60c
+ *   加载虚拟磁盘 API PECMD_LoadVhdApi @0x14005f60c
  *   消息/关机任务    FUN_1400612CC @0x1400612cc
  *   解析颜色列表     FUN_1400677B0 @0x1400677b0
  *   复制路径段       FUN_14006E030 @0x14006e030
@@ -436,10 +436,10 @@ uint64_t PECMD_GetPackedSystemVersion(void)
     return g_osVersion;
 }
 
-/* ========== FUN_14005F60C @0x14005f60c ==========
+/* ========== PECMD_LoadVhdApi @0x14005f60c ==========
  * 延迟加载虚拟磁盘/VHD 相关 API，返回是否可用。
  */
-uint64_t FUN_14005F60C(void)
+uint64_t PECMD_LoadVhdApi(void)
 {
     int64_t lVar1;
     uint64_t uVar2;

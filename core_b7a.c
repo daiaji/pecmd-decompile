@@ -8,13 +8,13 @@
  *   解析 UInt64(括号)     PECMD_EvalParenthesizedExpr @0x1400c10c0
  *   解析 Int64(括号)      PECMD_EvalParenExprRounded @0x1400c11f4
  *   字符串转字节数组       PECMD_ParseHexByteList @0x1400c12fc
- *   释放 UpDown 控件      FUN_1400C3CA4 @0x1400c3ca4
+ *   释放 UpDown 控件      PECMD_DtorUpDownControl @0x1400c3ca4
  *   解析 UInt64 并跳格    FUN_1400C44F4 @0x1400c44f4
  *   解析 Int64 并跳格     FUN_1400C4518 @0x1400c4518
- *   解析 UInt64 并跳非空  FUN_1400C453C @0x1400c453c
+ *   解析 UInt64 并跳非空  PECMD_ParseU64SkipSep @0x1400c453c
  *   解析 Int 并跳格       FUN_1400C4580 @0x1400c4580
- *   添加 UpDown 控件      FUN_1400C45A4 @0x1400c45a4
- *   添加滚动条控件        FUN_1400C46CC @0x1400c46cc
+ *   添加 UpDown 控件      PECMD_AddUpDownControl @0x1400c45a4
+ *   添加滚动条控件        PECMD_AddScrollBarObject @0x1400c46cc
  *   控件 Enable 命令      FUN_1400C47F4 @0x1400c47f4
  *   解析 Int64 并跳格(带返回值) PECMD_ParseNumberToken @0x1400cada0
  *   解析资源规格          PECMD_ParseItemImageSpec @0x1400d0b2c
@@ -242,10 +242,10 @@ uint64_t PECMD_ParseHexByteList(LPCWSTR str, int64_t *outBuf, int mode)
     return count;
 }
 
-/* ========== FUN_1400C3CA4 @0x1400c3ca4 ==========
+/* ========== PECMD_DtorUpDownControl @0x1400c3ca4 ==========
  * 释放 UpDown 控件的三个字符串槽和对象本体。
  */
-uint64_t *FUN_1400C3CA4(uint64_t *s, uint32_t out)
+uint64_t *PECMD_DtorUpDownControl(uint64_t *s, uint32_t out)
 {
     PECMD_FreeStrBuf((WCHAR **)(s + 0x11));
     PECMD_FreeStrBuf((WCHAR **)(s + 0x10));
@@ -280,11 +280,11 @@ void FUN_1400C4518(int64_t *a, uint64_t *b)
     }
 }
 
-/* ========== FUN_1400C453C @0x1400c453c ==========
+/* ========== PECMD_ParseU64SkipSep @0x1400c453c ==========
  * 解析 UInt64 后，仅当当前字符不是空白/空格时前进一步。
  * 注: Ghidra 丢失了第二个输出参数，这里按调用语义补全。
  */
-uint32_t FUN_1400C453C(int64_t *a, uint64_t *b)
+uint32_t PECMD_ParseU64SkipSep(int64_t *a, uint64_t *b)
 {
     uint64_t r = PECMD_EvalParenthesizedExpr(a, b);
     WCHAR *p = (WCHAR *)*a;
@@ -305,10 +305,10 @@ void FUN_1400C4580(int64_t *a, int *b)
     }
 }
 
-/* ========== FUN_1400C45A4 @0x1400c45a4 ==========
+/* ========== PECMD_AddUpDownControl @0x1400c45a4 ==========
  * 在控件数组中加入一个新的 UpDown 控件。
  */
-void FUN_1400C45A4(WPARAM mgr, int64_t v2, uint64_t *v3,
+void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3,
                             int x, int y, int w, int h,
                             uint64_t *p8, uint64_t *p9, uint64_t *p10,
                             uint32_t flags)
@@ -332,10 +332,10 @@ void FUN_1400C45A4(WPARAM mgr, int64_t v2, uint64_t *v3,
     }
 }
 
-/* ========== FUN_1400C46CC @0x1400c46cc ==========
+/* ========== PECMD_AddScrollBarObject @0x1400c46cc ==========
  * 在控件数组中加入一个新的滚动条控件。
  */
-void FUN_1400C46CC(WPARAM mgr, int64_t v2, uint64_t *v3,
+void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3,
                                int x, int y, int w, int h,
                                uint16_t *p8, uint64_t *p9, uint32_t p10,
                                LPCWSTR text)

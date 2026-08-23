@@ -10,18 +10,18 @@
  *   隐藏引用窗口      FUN_1400E5708 @0x1400e5708
  *   通知控件(启用时)  FUN_1400E58D8 @0x1400e58d8
  *   验证绘制区域      FUN_1400E5AE4 @0x1400e5ae4
- *   转发取文本长度    FUN_1400E62E4 @0x1400e62e4
+ *   转发取文本长度    PECMD_CtlOnSetFont @0x1400e62e4
  *   取文件大小(32位)  FUN_1400E693C @0x1400e693c
  *   格式化有符号64位  PECMD_FormatI64Dec @0x1400e6d68
  *   销毁事件对象      FUN_1400E759C @0x1400e759c
  *   销毁窗口对象      FUN_1400EBFB4 @0x1400ebfb4
  *   交换子对象        FUN_1400EC698 @0x1400ec698
  *   设置关联对象值    FUN_1400EF078 @0x1400ef078
- *   最大公约数        FUN_1400EF8C8 @0x1400ef8c8
+ *   最大公约数        PECMD_CalcGcdU64 @0x1400ef8c8
  *   销毁 DC 包装对象  FUN_1400EF8EC @0x1400ef8ec
  *   销毁图标对象      FUN_1400F00C4 @0x1400f00c4
  *   销毁 GDI 对象     FUN_1400F06FC @0x1400f06fc
- *   分发控件消息      FUN_1400EC500 @0x1400f0a24
+ *   分发控件消息      PECMD_CtlDispatchBuddyMsg @0x1400f0a24
  *   销毁窗口对象 A    FUN_1400F1F18 @0x1400f1f18
  *   销毁窗口对象 B    FUN_1400F2924 @0x1400f2924
  *   分发 GDI 消息     FUN_1400F2B1C @0x1400f2b1c
@@ -138,10 +138,10 @@ void FUN_1400E5AE4(HWND hwnd)
     EndPaint(hwnd, &ps);
 }
 
-/* ========== FUN_1400E62E4 @0x1400e62e4 ==========
+/* ========== PECMD_CtlOnSetFont @0x1400e62e4 ==========
  * 对象未进入自定义模式时，把 WM_GETTEXTLENGTH(0x30) 转发给子窗口。
  */
-LRESULT FUN_1400E62E4(int64_t obj, WPARAM wParam, LPARAM lParam)
+LRESULT PECMD_CtlOnSetFont(int64_t obj, WPARAM wParam, LPARAM lParam)
 {
     if (*(int64_t *)(obj + OBJ_CUSTOMMODE) == 0) {
         *(WPARAM *)(obj + OBJ_WPARAM) = wParam;
@@ -213,10 +213,10 @@ void FUN_1400EF078(int64_t obj, uint64_t value)
     }
 }
 
-/* ========== FUN_1400EF8C8 @0x1400ef8c8 ==========
+/* ========== PECMD_CalcGcdU64 @0x1400ef8c8 ==========
  * 欧几里得最大公约数。原 Ghidra 误标为 void，调用方实际使用返回值。
  */
-int64_t FUN_1400EF8C8(uint64_t a, uint64_t b)
+int64_t PECMD_CalcGcdU64(uint64_t a, uint64_t b)
 {
     uint64_t r = a % b;
     while (r != 0) {
@@ -263,10 +263,10 @@ void FUN_1400F06FC(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400EC500 @0x1400f0a24 ==========
+/* ========== PECMD_CtlDispatchBuddyMsg @0x1400f0a24 ==========
  * 带 0x10 附加标志的控件消息分发包装。
  */
-void FUN_1400EC500(HDC obj, uint32_t msg, HDC param3, LPCWSTR param4)
+void PECMD_CtlDispatchBuddyMsg(HDC obj, uint32_t msg, HDC param3, LPCWSTR param4)
 {
     FUN_1400F0814(obj, msg, param3, param4, 0x10);
 }

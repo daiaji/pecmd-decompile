@@ -12,7 +12,7 @@
  *   获取提示窗口     PECMD_GetTooltipWindow @0x14005b9c8
  *   DPI 缩放         FUN_14005DAF8 @0x14005daf8
  *   释放缓存对象     PECMD_ReleaseSlotRef @0x14005e8e8
- *   创建注册表键     FUN_14005F750 @0x14005f750
+ *   创建注册表键     PECMD_RegCreateKeyRetryWow64 @0x14005f750
  *   查找空闲字母     PECMD_PickFreeDriveLetter @0x14005f868
  *   链接或复制文件   FUN_1400607A4 @0x1400607a4
  *   安装窗口过程     PECMD_SetWindowProcHook @0x140060870
@@ -28,7 +28,7 @@
  *   判定设备就绪     FUN_14006CAF0 @0x14006caf0
  *   释放 COM 对象    FUN_14006E4F4 @0x14006e4f4
  *   解析路径前缀     FUN_14007443C @0x14007443c
- *   解析数字或变量   FUN_1400746B0 @0x1400746b0
+ *   解析数字或变量   PECMD_ParseNumOrVar @0x1400746b0
  *   转换字符串       FUN_1400799F0 @0x1400799f0
  *   显示盘型消息     FUN_14007C7EC @0x14007c7ec
  *   创建锁对象       FUN_1400A43C4 @0x1400a43c4
@@ -291,10 +291,10 @@ void PECMD_ReleaseSlotRef(int64_t *slot, int table)
     LeaveCriticalSection(&g_csInit);
 }
 
-/* ========== FUN_14005F750 @0x14005f750 ==========
+/* ========== PECMD_RegCreateKeyRetryWow64 @0x14005f750 ==========
  * 创建注册表键，必要时以易失重试。
  */
-LONG FUN_14005F750(HKEY root, LPCWSTR sub, int isVolatile)
+LONG PECMD_RegCreateKeyRetryWow64(HKEY root, LPCWSTR sub, int isVolatile)
 {
     LONG LVar1;
     HKEY local_res20;
@@ -757,10 +757,10 @@ uint16_t *FUN_14007443C(LPCWSTR text, int64_t *out)
     } while (1);
 }
 
-/* ========== FUN_1400746B0 @0x1400746b0 ==========
+/* ========== PECMD_ParseNumOrVar @0x1400746b0 ==========
  * 解析数字，或以冒号为界解析变量 token。
  */
-uint64_t FUN_1400746B0(int64_t *pp, uint64_t *out,
+uint64_t PECMD_ParseNumOrVar(int64_t *pp, uint64_t *out,
                                   int64_t *script)
 {
     int16_t sVar1;

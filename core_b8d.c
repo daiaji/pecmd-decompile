@@ -5,29 +5,29 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   取窗口文本到串      FUN_1400E5730 @0x1400e5730
- *   设置颜色画刷        FUN_1400E5A58 @0x1400e5a58
+ *   设置颜色画刷        PECMD_SetCtlBackBrush @0x1400e5a58
  *   虚表 +0xf0 分发     FUN_1400E5AAC @0x1400e5aac
  *   点是否在窗口内      FUN_1400E6314 @0x1400e6314
  *   安全格式化串        PECMD_SafeVFormatW @0x1400e6960
  *   格式化并赋值串      FUN_1400E6CBC @0x1400e6cbc
- *   对齐扩容            FUN_1400E6CF8 @0x1400e6cf8
+ *   对齐扩容            PECMD_GrowCapacityAligned @0x1400e6cf8
  *   鼠标按下分发        FUN_1400EC9C0 @0x1400ec9c0
  *   释放串指针数组      PECMD_FreeNamedEntryArray @0x1400ecdd8
  *   初始化 DC 对象      FUN_1400EEE30 @0x1400eee30
  *   刷新可见窗口        PECMD_RefreshControlVisibility @0x1400ef654
  *   初始化图标对象      PECMD_InitImageHolder @0x1400efec8
  *   销毁图标对象主体    PECMD_DtorImageHolder @0x1400eff10
- *   绘制对象            FUN_1400F05F8 @0x1400f05f8
+ *   绘制对象            PECMD_CtlOnPaint @0x1400f05f8
  *   初始化控件对象 A    FUN_1400F11F8 @0x1400f11f8
- *   父窗口命令通知(位)  FUN_1400F1F28 @0x1400f1f28
+ *   父窗口命令通知(位)  PECMD_PostNotif203Bit @0x1400f1f28
  *   初始化窗口对象 B    FUN_1400F28E8 @0x1400f28e8
- *   消息预翻译          FUN_1400F2A00 @0x1400f2a00
- *   矩形折线绘制        FUN_1400F2BF0 @0x1400f2bf0
+ *   消息预翻译          PECMD_CtlPreTranslateMsg @0x1400f2a00
+ *   矩形折线绘制        PECMD_PolylineRectOutline @0x1400f2bf0
  *   按 ID 查找表项      PECMD_ItemPropFindIdxList5 @0x1400f40c8
  *   释放 GDI 表项数组   PECMD_ClearPropArrayItems @0x1400f4208
  *   释放普通表项数组    PECMD_ClearPtrArrayItems @0x1400f425c
- *   跳到目标字符之后    FUN_1400F42C4 @0x1400f42c4
- *   父窗口命令通知(值)  FUN_1400FBA68 @0x1400fba68
+ *   跳到目标字符之后    PECMD_SkipPastChar @0x1400f42c4
+ *   父窗口命令通知(值)  PECMD_PostNotif203Byte @0x1400fba68
  *   初始化控件对象 C    FUN_1400FBE58 @0x1400fbe58
  *   初始化带串窗口对象  FUN_1400FBFE0 @0x1400fbfe0
  *   交换关联窗口        PECMD_SetTrackbarBuddyWindow @0x1400fc458
@@ -87,10 +87,10 @@ void FUN_1400E5730(HWND hwnd, WCHAR **ps)
     GetWindowTextW(hwnd, *ps, len + 1);
 }
 
-/* ========== FUN_1400E5A58 @0x1400e5a58 ==========
+/* ========== PECMD_SetCtlBackBrush @0x1400e5a58 ==========
  * 设置对象画刷颜色；COLORREF 为 -1 时只保存颜色不创建画刷。
  */
-void FUN_1400E5A58(int64_t obj, COLORREF color, int64_t mode)
+void PECMD_SetCtlBackBrush(int64_t obj, COLORREF color, int64_t mode)
 {
     HGDIOBJ old = *(HGDIOBJ *)(obj + OBJ_BRUSH);
     HBRUSH brush = (HBRUSH)0;
@@ -148,10 +148,10 @@ void FUN_1400E6CBC(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
     PECMD_StrBldCopyWide(ps, buf);
 }
 
-/* ========== FUN_1400E6CF8 @0x1400e6cf8 ==========
+/* ========== PECMD_GrowCapacityAligned @0x1400e6cf8 ==========
  * 字符串容器容量不足时按 align 对齐后扩容。
  */
-uint64_t *FUN_1400E6CF8(uint64_t *container, int64_t needed,
+uint64_t *PECMD_GrowCapacityAligned(uint64_t *container, int64_t needed,
                                       int64_t align)
 {
     if ((int64_t)container[2] <= needed) {
@@ -258,10 +258,10 @@ void PECMD_DtorImageHolder(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400F05F8 @0x1400f05f8 ==========
+/* ========== PECMD_CtlOnPaint @0x1400f05f8 ==========
  * BeginPaint 后调用绘图回调 PECMD_DrawItemContent，再 EndPaint。
  */
-void FUN_1400F05F8(int64_t obj)
+void PECMD_CtlOnPaint(int64_t obj)
 {
     HWND hwnd = *(HWND *)(obj + OBJ_HWND);
     PAINTSTRUCT ps;
@@ -282,10 +282,10 @@ uint64_t *FUN_1400F11F8(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400F1F28 @0x1400f1f28 ==========
+/* ========== PECMD_PostNotif203Bit @0x1400f1f28 ==========
  * 若 +0xd0 的 bit0 置位，则向父窗口发送 WM_COMMAND(控件ID, 0x203)。
  */
-void FUN_1400F1F28(int64_t obj)
+void PECMD_PostNotif203Bit(int64_t obj)
 {
     if ((*(uint8_t *)(obj + OBJ_LINK) & 1) != 0) {
         HWND hwnd = *(HWND *)(obj + OBJ_HWND);
@@ -307,10 +307,10 @@ uint64_t *FUN_1400F28E8(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400F2A00 @0x1400f2a00 ==========
+/* ========== PECMD_CtlPreTranslateMsg @0x1400f2a00 ==========
  * 消息预翻译/过滤：走 FUN_1400F172C(0x233) 通道，命中时返回结果，否则 0x100。
  */
-uint64_t FUN_1400F2A00(int64_t obj, int64_t msg)
+uint64_t PECMD_CtlPreTranslateMsg(int64_t obj, int64_t msg)
 {
     int64_t result = 0;
     uint16_t flags = FUN_1400F172C(*(int64_t **)(obj + OBJ_LINK), 0x233,
@@ -324,10 +324,10 @@ uint64_t FUN_1400F2A00(int64_t obj, int64_t msg)
     return 0x100;
 }
 
-/* ========== FUN_1400F2BF0 @0x1400f2bf0 ==========
+/* ========== PECMD_PolylineRectOutline @0x1400f2bf0 ==========
  * 用 5 个折线点绘制矩形边框：(x0,y0)-(x1,y0)-(x1,y1)-(x0,y1)-(x0,y0)。
  */
-void FUN_1400F2BF0(HDC hdc, LONG *rect)
+void PECMD_PolylineRectOutline(HDC hdc, LONG *rect)
 {
     POINT pts[5];
     pts[0].x = rect[0]; pts[0].y = rect[1];
@@ -393,10 +393,10 @@ void PECMD_ClearPtrArrayItems(uint64_t *arr)
     }
 }
 
-/* ========== FUN_1400F42C4 @0x1400f42c4 ==========
+/* ========== PECMD_SkipPastChar @0x1400f42c4 ==========
  * 从当前 WCHAR 指针位置前进到指定字符，并越过该字符（若存在）。
  */
-uint64_t *FUN_1400F42C4(uint64_t *slot, uint16_t ch)
+uint64_t *PECMD_SkipPastChar(uint64_t *slot, uint16_t ch)
 {
     WCHAR **pp = (WCHAR **)slot;
     WCHAR *p = *pp;
@@ -413,10 +413,10 @@ uint64_t *FUN_1400F42C4(uint64_t *slot, uint16_t ch)
     return slot;
 }
 
-/* ========== FUN_1400FBA68 @0x1400fba68 ==========
+/* ========== PECMD_PostNotif203Byte @0x1400fba68 ==========
  * 若 +0xd0 非零，则向父窗口发送 WM_COMMAND(控件ID, 0x203)。
  */
-void FUN_1400FBA68(int64_t obj)
+void PECMD_PostNotif203Byte(int64_t obj)
 {
     if (*(uint8_t *)(obj + OBJ_LINK) != 0) {
         HWND hwnd = *(HWND *)(obj + OBJ_HWND);

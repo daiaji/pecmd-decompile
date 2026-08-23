@@ -24,14 +24,14 @@
  *   ANSI 串追加      FUN_14006345C @0x14006345c
  *   数组增长原始     PECMD_ArrayGrowRaw @0x140063978
  *   初始化指针数组   PECMD_ResizePtrTable @0x140063be8
- *   读取加密字节     FUN_14006857C @0x14006857c
- *   解析 token       FUN_140069B68 @0x140069b68
+ *   读取加密字节     PECMD_ReadEncByte @0x14006857c
+ *   解析 token       PECMD_ReadTokenString @0x140069b68
  *   清理解析器       FUN_140073C58 @0x140073c58
  *   读取剪贴板文本   PECMD_AssignClipboardText @0x140078e90
  *   解析数字字段     PECMD_ParseNumericField @0x140079980
  *   连接 tokens      FUN_140079C80 @0x140079c80
- *   解析路径记录2    FUN_14007EFA4 @0x14007efa4
- *   释放互斥体对象   FUN_1400A4350 @0x1400a4350
+ *   解析路径记录2    PECMD_ParsePathRecord2 @0x14007efa4
+ *   释放互斥体对象   PECMD_FreeMutexGuardObj @0x1400a4350
  *   释放对象 L       PECMD_DtorTimerItem @0x1400a9c40
  *   运行命令或函数   FUN_1400B0380 @0x1400b0380
  *
@@ -476,10 +476,10 @@ void PECMD_ResizePtrTable(int64_t *arr, int64_t count)
     arr[1] = lVar1;
 }
 
-/* ========== FUN_14006857C @0x14006857c ==========
+/* ========== PECMD_ReadEncByte @0x14006857c ==========
  * 读取加密字节。
  */
-uint64_t FUN_14006857C(int64_t stream)
+uint64_t PECMD_ReadEncByte(int64_t stream)
 {
     uint8_t local_res8[8] = {0};
     DWORD local_res10[6] = {0};
@@ -494,10 +494,10 @@ uint64_t FUN_14006857C(int64_t stream)
                   (uint8_t)(uVar3 >> 7) ^ (uint8_t)uVar3);
 }
 
-/* ========== FUN_140069B68 @0x140069b68 ==========
+/* ========== PECMD_ReadTokenString @0x140069b68 ==========
  * 解析 token。
  */
-void FUN_140069B68(uint64_t ctx, int64_t *pp, uint32_t flags)
+void PECMD_ReadTokenString(uint64_t ctx, int64_t *pp, uint32_t flags)
 {
     int16_t sVar1 = (int16_t)flags;
     LPCWSTR local_res10 = (LPCWSTR)*pp;
@@ -586,10 +586,10 @@ int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out)
     return lVar1;
 }
 
-/* ========== FUN_14007EFA4 @0x14007efa4 ==========
+/* ========== PECMD_ParsePathRecord2 @0x14007efa4 ==========
  * 解析路径记录（变体）。
  */
-uint64_t FUN_14007EFA4(LPWSTR path, uint8_t *flags)
+uint64_t PECMD_ParsePathRecord2(LPWSTR path, uint8_t *flags)
 {
     int local_68[2];
     uint8_t local_60 = 0;
@@ -606,10 +606,10 @@ uint64_t FUN_14007EFA4(LPWSTR path, uint8_t *flags)
     return uVar1;
 }
 
-/* ========== FUN_1400A4350 @0x1400a4350 ==========
+/* ========== PECMD_FreeMutexGuardObj @0x1400a4350 ==========
  * 释放互斥体对象。
  */
-uint64_t *FUN_1400A4350(uint64_t *obj, uint64_t flags)
+uint64_t *PECMD_FreeMutexGuardObj(uint64_t *obj, uint64_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140128ed0;
     if (*(char *)((uint8_t *)obj + 16) != '\0') {

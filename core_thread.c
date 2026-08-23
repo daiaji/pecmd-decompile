@@ -7,7 +7,7 @@
  *   PECMD_ZeroLenBuf      @0x14005b0b8   (按头长度清零)
  *   PECMD_ReleaseRefCount       @0x140017110   (引用计数减/释放)
  *   FUN_1400660AC  @0x1400660ac   (前缀词比较 + 推进)
- *   FUN_14001FD60 @0x14001fd60  (SendMessage 子线程)
+ *   PECMD_SendMsgThreadProc @0x14001fd60  (SendMessage 子线程)
  *   PECMD_EnumWindowsCallback  @0x14001fde4   (EnumWindows 回调: 每窗口建线程)
  *   PECMD_ThreadMainLoop   @0x14001ff24   (线程主函数: 等句柄数组)
  *   FUN_1400195F0     @0x1400195f0   (消息等待循环)
@@ -113,7 +113,7 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
 /* ========== SendMessage 子线程 @0x14001fd60 ========== */
 /* 任务结构: +0x18 消息 +0x20 wParam +0x28 lParam +0x30 flags
  *           +0x38 timeout +0x40 hwnd +0x48 回调(引用计数) */
-uint64_t FUN_14001FD60(void *task)
+uint64_t PECMD_SendMsgThreadProc(void *task)
 {
     uint64_t refs[4];
     uint32_t *msg = (uint32_t *)((uint8_t *)task + 0x18);
@@ -170,7 +170,7 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
             *(uint64_t *)(t + 0x48) = c[9];  /* +0x50 回调 */
             *(uint64_t *)(t + 0x50) = (uint64_t)ctx;
         }
-        hThread = CreateThread(NULL, 0x10000, (void *)FUN_14001FD60, task,
+        hThread = CreateThread(NULL, 0x10000, (void *)PECMD_SendMsgThreadProc, task,
                                0x10004, &g_threadId);
         arr[idx * 0x18 / 8] = (uintptr_t)hThread;  /* 每项 0x18 字节, 首 qword 存句柄 */
         if (hThread) {

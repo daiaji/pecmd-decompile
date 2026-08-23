@@ -4,7 +4,7 @@
  * 本批开始新实现函数直接使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   参数解析扩展     FUN_1400402EC @0x1400402ec
+ *   参数解析扩展     PECMD_CreateVarWithValue @0x1400402ec
  *   去尾反斜杠       PECMD_StripTrailingSlash @0x140040874
  *   加载 RichEdit    PECMD_LoadRichEdit @0x140054110
  *   对象释放         PECMD_MultiSlotDtor @0x140054958
@@ -25,14 +25,14 @@
  *   解析 int64 取整  PECMD_ParseInt64Round @0x140067e88
  *   初始化流         PECMD_InitStreamObject @0x140068440
  *   关闭流           FUN_14006849C @0x14006849c
- *   写加密字节       FUN_1400684FC @0x1400684fc
+ *   写加密字节       PECMD_WriteEncByte @0x1400684fc
  *   写 XOR 字节      PECMD_WriteXorByte @0x140068880
  *   转换串编码       FUN_14006CA94 @0x14006ca94
  *   打包串记录       FUN_14006D788 @0x14006d788
  *   初始化解析上下文 FUN_1400706B4 @0x1400706b4
  *   重置解析上下文   FUN_14007E34C @0x14007e34c
- *   解析路径记录     FUN_14007F018 @0x14007f018
- *   解析 $ 移位      FUN_1400857E4 @0x1400857e4
+ *   解析路径记录     PECMD_ParsePathRecord @0x14007f018
+ *   解析 $ 移位      PECMD_ParseDollarShift @0x1400857e4
  *   创建字体 DPI     PECMD_CreateFontAdjusted @0x1400b2218
  *
  * 约定:
@@ -82,10 +82,10 @@ extern double g_dbl20b28;
 extern double g_dbl25230;
 extern double g_fontRound;
 
-/* ========== FUN_1400402EC @0x1400402ec ==========
+/* ========== PECMD_CreateVarWithValue @0x1400402ec ==========
  * 参数解析扩展：特殊标志时写回参数。
  */
-int64_t *FUN_1400402EC(int64_t *obj, uint64_t value, LPCWSTR text,
+int64_t *PECMD_CreateVarWithValue(int64_t *obj, uint64_t value, LPCWSTR text,
                             int64_t *extra)
 {
     int64_t *plVar2 = PECMD_CreateVariable(obj, value, text, extra);
@@ -429,10 +429,10 @@ void FUN_14006849C(uint64_t *stream)
     *stream = 0;
 }
 
-/* ========== FUN_1400684FC @0x1400684fc ==========
+/* ========== PECMD_WriteEncByte @0x1400684fc ==========
  * 写加密字节。
  */
-void FUN_1400684FC(int64_t stream, uint8_t value)
+void PECMD_WriteEncByte(int64_t stream, uint8_t value)
 {
     uint8_t local_res10[24];
     uint32_t uVar1 = (*(int *)(stream + 0x34) * 2 + 3) * *(int *)(stream + 0x30);
@@ -525,10 +525,10 @@ uint32_t *FUN_14007E34C(uint32_t *ctx, uint8_t mode)
     return ctx;
 }
 
-/* ========== FUN_14007F018 @0x14007f018 ==========
+/* ========== PECMD_ParsePathRecord @0x14007f018 ==========
  * 解析路径记录。
  */
-uint64_t FUN_14007F018(LPWSTR path, uint8_t *flags)
+uint64_t PECMD_ParsePathRecord(LPWSTR path, uint8_t *flags)
 {
     int local_58[2];
     uint8_t local_50 = 0;
@@ -545,10 +545,10 @@ uint64_t FUN_14007F018(LPWSTR path, uint8_t *flags)
     return uVar1;
 }
 
-/* ========== FUN_1400857E4 @0x1400857e4 ==========
+/* ========== PECMD_ParseDollarShift @0x1400857e4 ==========
  * 解析 $ 移位计数。
  */
-void FUN_1400857E4(int64_t *pp, uint64_t *out, uint8_t *shift)
+void PECMD_ParseDollarShift(int64_t *pp, uint64_t *out, uint8_t *shift)
 {
     if (*(uint16_t *)*pp == 0x24) {
         shift[0] = 0;

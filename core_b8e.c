@@ -10,14 +10,14 @@
  *   填充矩形背景色          FUN_1400E68E0 @0x1400e68e0
  *   初始化窗口查找结构      FUN_1400EC084 @0x1400ec084
  *   发送对象查找消息 0x432   FUN_1400EC6A8 @0x1400ec6a8
- *   销毁对象(带释放) F      FUN_1400ECEB4 @0x1400eceb4
+ *   销毁对象(带释放) F      PECMD_DtorWinObjWithStrings @0x1400eceb4
  *   初始化窗口对象 F        FUN_1400ECF18 @0x1400ecf18
  *   清空对象数组            PECMD_ClearStringItemList @0x1400f1490
- *   发送控件按下通知        FUN_1400F230C @0x1400f230c
+ *   发送控件按下通知        PECMD_PostCtlPressNotify @0x1400f230c
  *   更新数组项值            PECMD_ItemPropUpsertEntry @0x1400f2b84
  *   查询组合框度量          FUN_1400F3554 @0x1400f3554
  *   设置控件高度并失效      FUN_1400F4064 @0x1400f4064
- *   转发取文本长度(带链接)  FUN_1400F4194 @0x1400f4194
+ *   转发取文本长度(带链接)  PECMD_CtlOnSetFontLinked @0x1400f4194
  *   查找数组项槽            FUN_1400F4C28 @0x1400f4c28
  *   添加映射项 A            PECMD_TrackItemChangeList1 @0x1400f5724
  *   添加映射项 B            PECMD_TrackItemChangeList2 @0x1400f578c
@@ -25,11 +25,11 @@
  *   添加映射项 D            PECMD_TrackItemChangeList4 @0x1400f58d4
  *   释放 GDI 对象数组       PECMD_ClearNamedPropArray @0x1400f5c10
  *   销毁 GDI 复合对象       FUN_1400F5D50 @0x1400f5d50
- *   取映射双值 A            FUN_1400F5DC4 @0x1400f5dc4
- *   取映射双值 B            FUN_1400F5EF8 @0x1400f5ef8
- *   取映射双值 C            FUN_1400F6034 @0x1400f6034
- *   刷新控件当前选择        FUN_1400F6944 @0x1400f6944
- *   发送控件按下通知 B      FUN_1400FBDE0 @0x1400fbde0
+ *   取映射双值 A            PECMD_ItemPropGetPair24 @0x1400f5dc4
+ *   取映射双值 B            PECMD_ItemPropGetPair13 @0x1400f5ef8
+ *   取映射双值 C            PECMD_ItemPropGetPairSub @0x1400f6034
+ *   刷新控件当前选择        PECMD_ListSelectFromHit @0x1400f6944
+ *   发送控件按下通知 B      PECMD_PostCtlPressNotify2 @0x1400fbde0
  *   初始化 GDI 对象 C       FUN_1400FC2E0 @0x1400fc2e0
  *   初始化 GDI 对象 D       FUN_1400FEC9C @0x1400fec9c
  *   查询控件值              PECMD_TreeGetItemParam @0x1400fed38
@@ -185,11 +185,11 @@ void FUN_1400EC6A8(int64_t obj, int64_t target, uint64_t param3,
     SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x432, 0, (LPARAM)msg);
 }
 
-/* ========== FUN_1400ECEB4 @0x1400eceb4 ==========
+/* ========== PECMD_DtorWinObjWithStrings @0x1400eceb4 ==========
  * 销毁对象 F；清理 +0x108 与 +0xd8 处资源后调用基类析构。
  * flags&1 时同时 free 容器。
  */
-uint64_t *FUN_1400ECEB4(uint64_t *obj, uint32_t flags)
+uint64_t *PECMD_DtorWinObjWithStrings(uint64_t *obj, uint32_t flags)
 {
     PECMD_FreeNamedEntryArray(obj + 0x21);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x21));
@@ -236,10 +236,10 @@ void PECMD_ClearStringItemList(int64_t arr)
     PECMD_FreeStrBuf((WCHAR **)(base + 8));
 }
 
-/* ========== FUN_1400F230C @0x1400f230c ==========
+/* ========== PECMD_PostCtlPressNotify @0x1400f230c ==========
  * 通过虚表把 0x201 按下事件发给子控件；若未屏蔽则向父窗口投递 WM_COMMAND。
  */
-void FUN_1400F230C(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
+void PECMD_PostCtlPressNotify(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
 {
     void (*fn)(uint64_t, uint32_t, uint32_t, uint64_t) =
         *(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8);
@@ -328,11 +328,11 @@ void FUN_1400F4064(int64_t obj, int height, int mode)
     }
 }
 
-/* ========== FUN_1400F4194 @0x1400f4194 ==========
+/* ========== PECMD_CtlOnSetFontLinked @0x1400f4194 ==========
  * 对象未进入自定义模式时，把 WM_GETTEXTLENGTH(0x30) 转发给子窗口，
  * 并向 +0xf8 关联窗口发送 0x452。
  */
-LRESULT FUN_1400F4194(int64_t obj, WPARAM wParam, LPARAM lParam)
+LRESULT PECMD_CtlOnSetFontLinked(int64_t obj, WPARAM wParam, LPARAM lParam)
 {
     LRESULT result;
 
@@ -450,10 +450,10 @@ void FUN_1400F5D50(uint64_t *obj)
     FUN_1400E8940(obj);
 }
 
-/* ========== FUN_1400F5DC4 @0x1400f5dc4 ==========
+/* ========== PECMD_ItemPropGetPair24 @0x1400f5dc4 ==========
  * 分别查 +0x278 与 +0x2c0 映射数组；找到时写出/覆盖返回值。
  */
-int FUN_1400F5DC4(int64_t obj, int key, int fallback, int *out)
+int PECMD_ItemPropGetPair24(int64_t obj, int key, int fallback, int *out)
 {
     int value;
     int64_t idx;
@@ -469,10 +469,10 @@ int FUN_1400F5DC4(int64_t obj, int key, int fallback, int *out)
     return fallback;
 }
 
-/* ========== FUN_1400F5EF8 @0x1400f5ef8 ==========
+/* ========== PECMD_ItemPropGetPair13 @0x1400f5ef8 ==========
  * 分别查 +0x260 与 +0x2a8 映射数组；找到时写出/覆盖返回值。
  */
-int FUN_1400F5EF8(int64_t obj, int key, int fallback, int *out)
+int PECMD_ItemPropGetPair13(int64_t obj, int key, int fallback, int *out)
 {
     int value;
     int64_t idx;
@@ -488,10 +488,10 @@ int FUN_1400F5EF8(int64_t obj, int key, int fallback, int *out)
     return fallback;
 }
 
-/* ========== FUN_1400F6034 @0x1400f6034 ==========
+/* ========== PECMD_ItemPropGetPairSub @0x1400f6034 ==========
  * 分别查 +0x290 与 +0x2d8 双键映射数组；找到时写出/覆盖返回值。
  */
-int FUN_1400F6034(int64_t obj, int key1, int key2, int fallback, int *out)
+int PECMD_ItemPropGetPairSub(int64_t obj, int key1, int key2, int fallback, int *out)
 {
     int value;
     int64_t idx;
@@ -507,10 +507,10 @@ int FUN_1400F6034(int64_t obj, int key1, int key2, int fallback, int *out)
     return fallback;
 }
 
-/* ========== FUN_1400F6944 @0x1400f6944 ==========
+/* ========== PECMD_ListSelectFromHit @0x1400f6944 ==========
  * 刷新控件当前选择/项索引；根据标志从缓存数组取值并回调更新函数。
  */
-void FUN_1400F6944(int64_t obj)
+void PECMD_ListSelectFromHit(int64_t obj)
 {
     int local_res8[6];
     int local_res20[2];
@@ -535,10 +535,10 @@ void FUN_1400F6944(int64_t obj)
     }
 }
 
-/* ========== FUN_1400FBDE0 @0x1400fbde0 ==========
+/* ========== PECMD_PostCtlPressNotify2 @0x1400fbde0 ==========
  * 通过虚表发送 0x201；若 +0xd0 低字节为 0 则向父窗口投递 WM_COMMAND。
  */
-void FUN_1400FBDE0(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
+void PECMD_PostCtlPressNotify2(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
 {
     void (*fn)(uint64_t, uint32_t, uint32_t, uint64_t) =
         *(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8);

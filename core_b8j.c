@@ -11,7 +11,7 @@
  *   应用控件颜色           PECMD_ApplyTextPropToCtl    @0x1400efd80
  *   填充客户区颜色         PECMD_FillCtlBackground  @0x1400f0ca0
  *   查询控件值分发         FUN_1400F1234   @0x1400f1234
- *   控件按键消息处理       FUN_1400F1F78  @0x1400f1f78
+ *   控件按键消息处理       PECMD_CtlKeyEnterNotify  @0x1400f1f78
  *   控件消息处理 A         FUN_1400F2DD4    @0x1400f2dd4
  *   命中测试控件           PECMD_ListSubItemHitTest       @0x1400f3308
  *   设置映射对条目         FUN_1400F4D1C      @0x1400f4d1c
@@ -422,11 +422,11 @@ int64_t FUN_1400F1234(int64_t obj, uint32_t msg, int64_t wParam,
     return result;
 }
 
-/* ========== FUN_1400F1F78 @0x1400f1f78 ==========
+/* ========== PECMD_CtlKeyEnterNotify @0x1400f1f78 ==========
  * 控件按键消息: Enter 且开启风格时向父窗口发 WM_COMMAND (0x111),
  * 随后经 0x80 通用分发; 返回处理后消息码 (0x102 / 0x10102)。
  */
-uint64_t FUN_1400F1F78(int64_t obj, int64_t pmsg)
+uint64_t PECMD_CtlKeyEnterNotify(int64_t obj, int64_t pmsg)
 {
     int id;
     HWND hparent;

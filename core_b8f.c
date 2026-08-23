@@ -6,28 +6,28 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   计算 PE 映像总大小     PECMD_CalcPeImageSize @0x1400e4078
  *   树节点按名查找         PECMD_SearchMenuTreeByCaption @0x1400e5458
- *   控件通知消息分发       FUN_1400E59C0 @0x1400e59c0
+ *   控件通知消息分发       PECMD_CtlNotifyDispatch @0x1400e59c0
  *   窗口枚举命中测试       FUN_1400E63C8 @0x1400e63c8
  *   关闭对话框/销毁窗口   FUN_1400E6860 @0x1400e6860
  *   是否管理员             PECMD_IsAdminGroupMember @0x1400e6f18
  *   销毁基类窗口对象       FUN_1400E8940 @0x1400e8940
- *   创建 tooltips 窗口     FUN_1400EBFE4 @0x1400ebfe4
+ *   创建 tooltips 窗口     PECMD_CreateTooltipWnd @0x1400ebfe4
  *   添加字符串列表项       FUN_1400EC71C @0x1400ec71c
  *   初始化字符串对象       FUN_1400ECE2C @0x1400ece2c
  *   销毁 DC 对象           PECMD_DtorMemDcCanvas @0x1400eeea0
  *   居中绘制文本           PECMD_DrawVertCenteredText @0x1400ef08c
  *   矩形内绘制图标         PECMD_DrawIconInRect @0x1400eff58
- *   取/建对象画刷          FUN_1400F0A3C @0x1400f0a3c
- *   刷新滚动条可见性       FUN_1400F2C44 @0x1400f2c44
+ *   取/建对象画刷          PECMD_GetOrCreateCtlBrush @0x1400f0a3c
+ *   刷新滚动条可见性       PECMD_RefreshListScrollbar @0x1400f2c44
  *   滚动列表到指定项       FUN_1400F31CC @0x1400f31cc
- *   滚动列表项到可见区     FUN_1400F3264 @0x1400f3264
- *   取图标尺寸             FUN_1400F35B8 @0x1400f35b8
+ *   滚动列表项到可见区     PECMD_ListScrollIntoView @0x1400f3264
+ *   取图标尺寸             PECMD_GetIconSize @0x1400f35b8
  *   发送窗口几何通知       PECMD_ForcePosChanged @0x1400f3674
  *   按 ID 查找项(带串)    PECMD_ItemPropFindIdxNamed @0x1400f4114
  *   查找映射对槽           FUN_1400F4CA0 @0x1400f4ca0
  *   设置列表选择           PECMD_TableSetCurSel @0x1400f5104
  *   设置列表选择(单值)    PECMD_TableSetHoverIdx @0x1400f51d8
- *   发送控件 0x83 消息     FUN_1400F5338 @0x1400f5338
+ *   发送控件 0x83 消息     PECMD_CtlSendNcCalcSize @0x1400f5338
  *   查找映射值 A           PECMD_ItemPropFindIdxList1 @0x1400f5584
  *   查找映射值 B           PECMD_ItemPropFindIdxList2 @0x1400f5608
  *   查找映射双值 A         PECMD_ItemPropFindIdxSub1 @0x1400f568c
@@ -162,10 +162,10 @@ void *PECMD_SearchMenuTreeByCaption(int64_t node, LPCWSTR name)
     return NULL;
 }
 
-/* ========== FUN_1400E59C0 @0x1400e59c0 ==========
+/* ========== PECMD_CtlNotifyDispatch @0x1400e59c0 ==========
  * 把 0..6 的控件通知索引映射为 0x132..0x138 消息并调用虚表 +8。
  */
-LRESULT FUN_1400E59C0(int64_t *obj, WPARAM wParam,
+LRESULT PECMD_CtlNotifyDispatch(int64_t *obj, WPARAM wParam,
                                      LPARAM lParam, int index)
 {
     UINT msg;
@@ -285,10 +285,10 @@ void FUN_1400E8940(uint64_t *obj)
     PECMD_FreeContainer((int64_t *)(obj + 0x18));
 }
 
-/* ========== FUN_1400EBFE4 @0x1400ebfe4 ==========
+/* ========== PECMD_CreateTooltipWnd @0x1400ebfe4 ==========
  * 创建 tooltips_class32 顶层子窗口并挂到对象 +0x20，随后容器追加。
  */
-BOOL FUN_1400EBFE4(int64_t *obj, HWND parent, uint32_t style)
+BOOL PECMD_CreateTooltipWnd(int64_t *obj, HWND parent, uint32_t style)
 {
     HINSTANCE hInst = (HINSTANCE)GetWindowLongPtrW(parent, GWLP_HINSTANCE);
     HWND hwnd = CreateWindowExW(0, WSTR("tooltips_class32"), NULL,
@@ -416,10 +416,10 @@ void PECMD_DrawIconInRect(int64_t obj, HDC hdc, RECT *rect, int centerX)
     DrawIconEx(hdc, xLeft, yTop, icon, width, height, 0, (HBRUSH)0, 3);
 }
 
-/* ========== FUN_1400F0A3C @0x1400f0a3c ==========
+/* ========== PECMD_GetOrCreateCtlBrush @0x1400f0a3c ==========
  * 取对象缓存画刷；无缓存时创建，特殊负值模式转交 PECMD_CtlCalcColorBrush。
  */
-uint64_t FUN_1400F0A3C(int64_t obj, HDC hdc)
+uint64_t PECMD_GetOrCreateCtlBrush(int64_t obj, HDC hdc)
 {
     if (*(int *)(obj + 0xa8) < -1 && *(int *)(obj + 0x44) < 0) {
         return (uint64_t)PECMD_CtlCalcColorBrush(obj, hdc);
@@ -438,11 +438,11 @@ uint64_t FUN_1400F0A3C(int64_t obj, HDC hdc)
     return *(uint64_t *)(obj + 0x48);
 }
 
-/* ========== FUN_1400F2C44 @0x1400f2c44 ==========
+/* ========== PECMD_RefreshListScrollbar @0x1400f2c44 ==========
  * 列表/滚动控件刷新：根据消息 0x1004 的结果判断是否需要隐藏/显示滚动条。
  * TODO(verify): 0x1022 输出缓冲布局。
  */
-void FUN_1400F2C44(int64_t obj)
+void PECMD_RefreshListScrollbar(int64_t obj)
 {
     uint8_t buf[0x10] = { 0 };
     RECT client;
@@ -489,10 +489,10 @@ void FUN_1400F31CC(int64_t obj, int index)
     }
 }
 
-/* ========== FUN_1400F3264 @0x1400f3264 ==========
+/* ========== PECMD_ListScrollIntoView @0x1400f3264 ==========
  * 发送列表项矩形/滚动消息并只失效对应区域。
  */
-void FUN_1400F3264(int64_t obj, int index)
+void PECMD_ListScrollIntoView(int64_t obj, int index)
 {
     RECT area = { 0, 0, 0, 0 };
     RECT client = { 0, 0, 0, 0 };
@@ -512,10 +512,10 @@ void FUN_1400F3264(int64_t obj, int index)
     InvalidateRect(*(HWND *)(obj + OBJ_HWND), &area, TRUE);
 }
 
-/* ========== FUN_1400F35B8 @0x1400f35b8 ==========
+/* ========== PECMD_GetIconSize @0x1400f35b8 ==========
  * 从图标位图获取宽高；成功返回 1，*width 与 *height 为 BITMAP 宽高。
  */
-BOOL FUN_1400F35B8(HICON icon, int *width, int *height)
+BOOL PECMD_GetIconSize(HICON icon, int *width, int *height)
 {
     PECMD_ICONINFO info;
     uint8_t bitmap[32];
@@ -657,10 +657,10 @@ void PECMD_TableSetHoverIdx(int64_t obj, int current)
     }
 }
 
-/* ========== FUN_1400F5338 @0x1400f5338 ==========
+/* ========== PECMD_CtlSendNcCalcSize @0x1400f5338 ==========
  * 发送 WM_SETREDRAW(0x83) 前清除控件滚动样式位。
  */
-void FUN_1400F5338(int64_t *obj, WPARAM wParam, LPARAM lParam)
+void PECMD_CtlSendNcCalcSize(int64_t *obj, WPARAM wParam, LPARAM lParam)
 {
     uint32_t bits = 0;
     uint32_t style;

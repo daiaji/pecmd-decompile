@@ -7,7 +7,7 @@
  *   PECMD_EncodeBuffer   @0x140068984   资源解码加载
  *   PECMD_LoadOle32Apis      @0x140061c44   OLE/COM 初始化
  *   FUN_14005B7E8  @0x14005b7e8   托盘图标清理
- *   FUN_14001BB30  @0x14001bb30   钩子/资源清理
+ *   PECMD_UninstallInputHook  @0x14001bb30   钩子/资源清理
  *   PECMD_WaitCountPumpMessages  @0x14001bbdc   等待条件 + 消息泵
  *   PECMD_ShutdownCom  @0x140064328   退出清理（COM/回调）
  *   FUN_14006E8F4   @0x14006e8f4   脚本释放（引用计数）
@@ -140,10 +140,10 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
     return 0;
 }
 
-/* ========== FUN_14001BB30 @0x14001bb30 ==========
+/* ========== PECMD_UninstallInputHook @0x14001bb30 ==========
  * 清理钩子/堆块（托盘图标 + 消息钩子）。
  */
-void FUN_14001BB30(void)
+void PECMD_UninstallInputHook(void)
 {
     EnterCriticalSection(&g_csInit);
     EnterCriticalSection(&g_csHook);

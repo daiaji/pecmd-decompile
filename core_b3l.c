@@ -14,9 +14,9 @@
  *   查询磁盘几何      PECMD_QueryDeviceInfo @0x140069464
  *   查找分区布局      FUN_140069BD8 @0x140069bd8
  *   展开盘符字母      PECMD_ExpandDriveList @0x14006aa9c
- *   查询设备布局      FUN_14006ABB8 @0x14006abb8
+ *   查询设备布局      PECMD_UpdatePartitionLayout @0x14006abb8
  *   查找或追加对象槽  PECMD_AcquireSlotEntry @0x14006b6e8
- *   应用控件属性      FUN_1400FE4A4 @0x14006b7f0
+ *   应用控件属性      PECMD_ApplyControlProperty @0x14006b7f0
  *   调用 COM 方法     FUN_1400705AC @0x1400705ac
  *   获取网络连接名    PECMD_ReadConnectionRegistryValue @0x140072814
  *   查找网卡信息      FUN_140072D8C @0x140072d8c
@@ -583,10 +583,10 @@ void PECMD_ExpandDriveList(uint8_t *out, uint16_t *start, uint16_t *end)
     }
 }
 
-/* ========== FUN_14006ABB8 @0x14006abb8 ==========
+/* ========== PECMD_UpdatePartitionLayout @0x14006abb8 ==========
  * 获取设备布局信息并计算偏移/大小。
  */
-uint64_t *FUN_14006ABB8(HANDLE hDevice, uint64_t *info, uint32_t *count,
+uint64_t *PECMD_UpdatePartitionLayout(HANDLE hDevice, uint64_t *info, uint32_t *count,
                                   uint8_t *outType, uint32_t flags)
 {
     uint64_t *puVar3 = FUN_14005FEAC(hDevice, (uint64_t *)*info, count);
@@ -661,10 +661,10 @@ done:
     return uVar5;
 }
 
-/* ========== FUN_1400FE4A4 @0x14006b7f0 ==========
+/* ========== PECMD_ApplyControlProperty @0x14006b7f0 ==========
  * 应用控件属性更新（1/3/4/5 类型）。
  */
-uint64_t FUN_1400FE4A4(int64_t obj, int64_t *action)
+uint64_t PECMD_ApplyControlProperty(int64_t obj, int64_t *action)
 {
     if (*action == 1) {
         if (action[1] == 0) {

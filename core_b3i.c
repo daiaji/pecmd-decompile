@@ -13,7 +13,7 @@
  *   发送 UDP 包        FUN_14005D30C @0x14005d30c
  *   释放 GDI 资源      FUN_14005D558 @0x14005d558
  *   初始化 LogPixels   FUN_14005D770 @0x14005d770
- *   复制图像           FUN_14005D8BC @0x14005d8bc
+ *   复制图像           PECMD_CopyImageFallback @0x14005d8bc
  *   获取扇区大小       FUN_14005F96C @0x14005f96c
  *   获取设备信息       FUN_14005FEAC @0x14005feac
  *   启用备份特权       PECMD_EnableBackupPrivileges @0x140060698
@@ -33,7 +33,7 @@
  *   解析单词 token     PECMD_ParseFirstWordToken @0x140085844
  *   释放热键对象       PECMD_DtorHotkeyItem @0x1400aa484
  *   从对象创建字体     FUN_1400B8960 @0x1400b8960
- *   释放位图控件对象   FUN_1400BCBE0 @0x1400bcbe0
+ *   释放位图控件对象   PECMD_DtorBitmapControl @0x1400bcbe0
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -315,10 +315,10 @@ void FUN_14005D770(void)
     }
 }
 
-/* ========== FUN_14005D8BC @0x14005d8bc ==========
+/* ========== PECMD_CopyImageFallback @0x14005d8bc ==========
  * 复制图像；CopyImage 失败时通过 GDI+ 转换图标。
  */
-HANDLE FUN_14005D8BC(HANDLE src, uint8_t type, int cx, int cy,
+HANDLE PECMD_CopyImageFallback(HANDLE src, uint8_t type, int cx, int cy,
                        UINT flags)
 {
     HANDLE local_10 = CopyImage(src, (UINT)type, cx, cy, flags);
@@ -744,10 +744,10 @@ void FUN_1400B8960(HANDLE hFont, int *size, LPCWSTR name)
     PECMD_CreateFontAdjusted(&local_68, size, name);
 }
 
-/* ========== FUN_1400BCBE0 @0x1400bcbe0 ==========
+/* ========== PECMD_DtorBitmapControl @0x1400bcbe0 ==========
  * 释放位图控件对象（vtable 1401296e8）。
  */
-uint64_t *FUN_1400BCBE0(uint64_t *obj, uint32_t flags)
+uint64_t *PECMD_DtorBitmapControl(uint64_t *obj, uint32_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401296e8;
     PECMD_ReleaseImageHandle((int64_t)obj);

@@ -17,7 +17,7 @@
  *   创建符号链接     PECMD_CreateSymbolicLink @0x140060600
  *   100ns 时间       PECMD_GetTime100ns @0x140060f68
  *   递减任务计数     PECMD_DecrementInitRef @0x140061264
- *   释放句柄数组     FUN_14006306C @0x14006306c
+ *   释放句柄数组     PECMD_FreeHandleRecordArray @0x14006306c
  *   数组增长         FUN_140063B00 @0x140063b00
  *   复制到字符       PECMD_CopyUpToChar @0x140067748
  *   十六进制转字节   PECMD_HexStringToBytes @0x14006ad9c
@@ -348,10 +348,10 @@ void PECMD_DecrementInitRef(uint8_t force)
     }
 }
 
-/* ========== FUN_14006306C @0x14006306c ==========
+/* ========== PECMD_FreeHandleRecordArray @0x14006306c ==========
  * 释放句柄数组。
  */
-void FUN_14006306C(int64_t *arr)
+void PECMD_FreeHandleRecordArray(int64_t *arr)
 {
     int64_t lVar2 = arr[2];
     int64_t lVar1 = *arr;

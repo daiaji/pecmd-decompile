@@ -10,12 +10,12 @@
  *   UTF-8 转 UTF-16         PECMD_DecodeUtf8ToWide        @0x1400e6de8
  *   查找 RAS 连接           FUN_1400E7664  @0x1400e7664
  *   构建 RAS 条目列表       FUN_1400E7758  @0x1400e7758
- *   分发控件消息            FUN_1400EC500 @0x1400ec500
- *   设置文本/画刷           FUN_1400F20C0     @0x1400f20c0
+ *   分发控件消息            PECMD_CtlDispatchBuddyMsg @0x1400ec500
+ *   设置文本/画刷           PECMD_SetCtlStateBrush     @0x1400f20c0
  *   跟踪 Tooltip 定时器     PECMD_HoverTrackTimerProc  @0x1400f2cf0
  *   初始化对象(虚表 C550)   PECMD_InitTableCellModel    @0x1400f5c74
- *   应用字体到控件          FUN_1400FB934 @0x1400fb934
- *   设置绘制画刷            FUN_1400FBBB0     @0x1400fbbb0
+ *   应用字体到控件          PECMD_ApplyFontToControl @0x1400fb934
+ *   设置绘制画刷            PECMD_SetCtlStateBrush2     @0x1400fbbb0
  *   创建富文本控件          PECMD_CreateRichEditCtrl @0x1400fbcb0
  *   启动 Tooltip 定时器     PECMD_ControlOnMouseMove  @0x1400fd764
  *   解析格式标志            PECMD_ParseTreeItemRefSpec   @0x1400ffa38
@@ -352,7 +352,7 @@ int64_t FUN_1400E7758(int64_t *out)
     return r;
 }
 
-/* ========== FUN_1400EC500 @0x1400ec500 ==========
+/* ========== PECMD_CtlDispatchBuddyMsg @0x1400ec500 ==========
  * 控件消息分发: 转发 WM_0x407, 0x200 走虚表 0x48 槽, 0x233 查映射表;
  * 命中 (返回值 bit2) 返回映射结果, 否则走通用 0x80 分发。
  */
@@ -384,11 +384,11 @@ uint64_t PECMD_DispatchControlMsgEc500(int64_t *obj, int64_t pmsg)
     return 0;
 }
 
-/* ========== FUN_1400F20C0 @0x1400f20c0 ==========
+/* ========== PECMD_SetCtlStateBrush @0x1400f20c0 ==========
  * 按当前主题槽 (对象 +0x94/+0x90 的槽位数组) 设置 DC 的文本/背景色,
  * 必要时重建画刷; 返回画刷句柄。
  */
-uint64_t FUN_1400F20C0(int64_t obj, HDC hdc)
+uint64_t PECMD_SetCtlStateBrush(int64_t obj, HDC hdc)
 {
     uint32_t flags;
     uint32_t w;
@@ -489,11 +489,11 @@ uint64_t *PECMD_InitTableCellModel(uint64_t *obj)
     return obj;
 }
 
-/* ========== FUN_1400FB934 @0x1400fb934 ==========
+/* ========== PECMD_ApplyFontToControl @0x1400fb934 ==========
  * 把字体应用到控件 (WM_0x30 设置字体), 并按 DPI 重算行高后
  * 通过 WM_0x444 让控件重新应用格式。
  */
-int64_t FUN_1400FB934(int64_t obj, HANDLE font, int flag)
+int64_t PECMD_ApplyFontToControl(int64_t obj, HANDLE font, int flag)
 {
     LRESULT res;
     int lh;
@@ -527,11 +527,11 @@ int64_t FUN_1400FB934(int64_t obj, HANDLE font, int flag)
     return r;
 }
 
-/* ========== FUN_1400FBBB0 @0x1400fbbb0 ==========
- * 绘制前设置画刷 (与 FUN_1400F20C0 同族, 按 short 槽索引):
+/* ========== PECMD_SetCtlStateBrush2 @0x1400fbbb0 ==========
+ * 绘制前设置画刷 (与 PECMD_SetCtlStateBrush 同族, 按 short 槽索引):
  * 槽色无效则取 GetBkColor 并重建画刷, 再设置文本/背景色, 返回画刷。
  */
-uint64_t FUN_1400FBBB0(int64_t obj, HDC hdc)
+uint64_t PECMD_SetCtlStateBrush2(int64_t obj, HDC hdc)
 {
     HGDIOBJ old;
     COLORREF c;

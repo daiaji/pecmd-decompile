@@ -818,7 +818,7 @@ extern WCHAR *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3, uint3
 extern void PECMD_StartOnlyApp(LPCWSTR cmdline);                             /* def core_b2b.c:844 */
 extern HWND g_hwndC9C8;                                                      /* DAT_14013c9c8 (core_globals.c:529) */
 uint8_t DAT_14013cb09 = 0;                                                   /* @0x14013cb09 标志 (运行时置位) */
-void FUN_1400229f8(void *h) { (void)h; }                                     /* 新增桩 @0x1400229f8 (未映射 helper) */
+static void PECMD_PatchRemoteWinExec(void *h) { (void)h; }                                     /* 新增桩 @0x1400229f8 (未映射 helper) */
 BOOL ConnectNamedPipe(void *pipe, OVERLAPPED *ol) { (void)pipe;(void)ol; return 1; }          /* 新增桩 */
 BOOL GetOverlappedResult(void *pipe, OVERLAPPED *ol, DWORD *bytes, BOOL wait) {               /* 新增桩 */
     (void)pipe;(void)ol;(void)wait; if (bytes) *bytes = 0; return 1;
@@ -4354,7 +4354,7 @@ LAB_140014c93:
         _Var43.v = lpString.v;
         if (pvVar32 == (HANDLE)0x0) goto LAB_140014f8e;
       }
-      FUN_1400229f8(pvVar32);
+      PECMD_PatchRemoteWinExec(pvVar32);
       if (local_af8.hProcess == (HANDLE)0x0) {
         CloseHandle(pvVar32);
       }

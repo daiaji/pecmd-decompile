@@ -8,9 +8,9 @@
  *   按进程 ID 找窗口  FUN_1400E6458 @0x1400e6458
  *   存储格式化 I64    PECMD_NewFormattedI64Str @0x1400e96ec
  *   分发窗口消息 F    FUN_1400EF620 @0x1400ef620
- *   取组合框选择      FUN_1400F3640 @0x1400f3640
- *   设置控件布局      FUN_1400F400C @0x1400f400c
- *   设置滑块位置      FUN_1400FC114 @0x1400fc114
+ *   取组合框选择      PECMD_ListGetNextSelected @0x1400f3640
+ *   设置控件布局      PECMD_SetCtlLayoutMetrics @0x1400f400c
+ *   设置滑块位置      PECMD_SetSliderPos @0x1400fc114
  *   销毁 GDI 对象 C   FUN_1400FC33C @0x1400fc33c
  *   销毁对象(带释放) D FUN_1400FE5E0 @0x1400fe5e0
  *   销毁对象(带释放) E FUN_1400FF5A0 @0x1400ff5a0
@@ -91,10 +91,10 @@ void FUN_1400EF620(uint64_t *obj, uint64_t wParam, uint64_t lParam)
     }
 }
 
-/* ========== FUN_1400F3640 @0x1400f3640 ==========
+/* ========== PECMD_ListGetNextSelected @0x1400f3640 ==========
  * 取组合框当前选择；若启用了特殊标志则直接读缓存字段。
  */
-uint64_t FUN_1400F3640(int64_t obj, int index)
+uint64_t PECMD_ListGetNextSelected(int64_t obj, int index)
 {
     uint64_t result;
 
@@ -107,10 +107,10 @@ uint64_t FUN_1400F3640(int64_t obj, int index)
     return result;
 }
 
-/* ========== FUN_1400F400C @0x1400f400c ==========
+/* ========== PECMD_SetCtlLayoutMetrics @0x1400f400c ==========
  * 更新控件布局字段；负数表示不修改对应项。
  */
-void FUN_1400F400C(int64_t obj, int left, int top, int right,
+void PECMD_SetCtlLayoutMetrics(int64_t obj, int left, int top, int right,
                             uint32_t flags)
 {
     if (-1 < left) {
@@ -125,10 +125,10 @@ void FUN_1400F400C(int64_t obj, int left, int top, int right,
     *(uint32_t *)(obj + 0x1fc) = flags;
 }
 
-/* ========== FUN_1400FC114 @0x1400fc114 ==========
+/* ========== PECMD_SetSliderPos @0x1400fc114 ==========
  * 设置滑块/进度位置；根据标志选择发消息或直接写缓存。
  */
-void FUN_1400FC114(int64_t obj, int pos, uint64_t flags)
+void PECMD_SetSliderPos(int64_t obj, int pos, uint64_t flags)
 {
     if (pos < 0) {
         pos = -0x1000000;

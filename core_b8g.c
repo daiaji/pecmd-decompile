@@ -5,40 +5,40 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   枚举窗口查找            PECMD_FindTargetWindow @0x1400e3d60
- *   刷新桌面                FUN_1400E3F94 @0x1400e3f94
+ *   刷新桌面                PECMD_RefreshDesktopIcons @0x1400e3f94
  *   树查找并格式化路径      PECMD_SearchMenuTreeById @0x1400e537c
  *   初始化基类对象          FUN_1400E57C0 @0x1400e57c0
- *   是否进程提升权限        FUN_1400E6FB8 @0x1400e6fb8
+ *   是否进程提升权限        PECMD_IsProcessElevated @0x1400e6fb8
  *   初始化窗口对象 G        FUN_1400E9048 @0x1400e9048
  *   标签选择变更处理        PECMD_OnTabSelChange @0x1400ec310
  *   设置标签选择            PECMD_SelectTabPageIndex @0x1400ec428
- *   创建标签控件            FUN_1400EC5E4 @0x1400ec5e4
+ *   创建标签控件            PECMD_CreateTabCtrl @0x1400ec5e4
  *   更新控件显示顺序        PECMD_ShowFirstTabPage @0x1400ec7c0
  *   创建静态控件 B          PECMD_CreateStaticWindow @0x1400efff8
  *   初始化窗口基类对象      FUN_1400F0648 @0x1400f0648
  *   创建按钮控件            PECMD_CreateButtonWindow @0x1400f072c
  *   创建日期时间控件        FUN_1400F1378 @0x1400f1378
- *   创建编辑控件            FUN_1400F21C0 @0x1400f21c0
+ *   创建编辑控件            PECMD_CreateEditCtrl @0x1400f21c0
  *   创建 IP 地址控件        FUN_1400F2934 @0x1400f2934
  *   列表项矩形失效          FUN_1400F30C0 @0x1400f30c0
- *   创建列表视图控件        FUN_1400F345C @0x1400f345c
- *   绘制对象文本            FUN_1400F527C @0x1400f527c
+ *   创建列表视图控件        PECMD_CreateListViewCtrl @0x1400f345c
+ *   绘制对象文本            PECMD_DrawAlignedText @0x1400f527c
  *   按 ID 设置表项          PECMD_SetListItemParamPtr @0x1400f5b54
- *   更新映射双值 A          FUN_1400F5E2C @0x1400f5e2c
- *   更新映射双值 B          FUN_1400F5F60 @0x1400f5f60
- *   更新映射双值 C          FUN_1400F8F00 @0x1400f8f00
- *   翻译控件按键            FUN_1400FBAB8 @0x1400fbab8
+ *   更新映射双值 A          PECMD_ItemPropSetPair13 @0x1400f5e2c
+ *   更新映射双值 B          PECMD_ItemPropSetPairSub @0x1400f5f60
+ *   更新映射双值 C          PECMD_ItemPropSetPair24 @0x1400f8f00
+ *   翻译控件按键            PECMD_CtlTranslateKey @0x1400fbab8
  *   创建自定义类控件        FUN_1400FBF00 @0x1400fbf00
  *   创建进度条控件          FUN_1400FC060 @0x1400fc060
- *   创建滚动条控件          FUN_1400FC378 @0x1400fc378
+ *   创建滚动条控件          PECMD_CreateScrollBarCtrl @0x1400fc378
  *   绘制控件文本            PECMD_PaintCtlWithCaption @0x1400fc7a0
- *   解析 buddy 前缀         FUN_1400FCE6C @0x1400fce6c
+ *   解析 buddy 前缀         PECMD_ParseBuddyPrefix @0x1400fce6c
  *   创建静态控件核心        FUN_1400FD220 @0x1400fd220
  *   父窗口环绕失效          PECMD_InvalidateParentRect @0x1400fd538
- *   应用控件属性            FUN_1400FE4A4 @0x1400fe4a4
+ *   应用控件属性            PECMD_ApplyControlProperty @0x1400fe4a4
  *   创建树视图控件          FUN_1400FF080 @0x1400ff080
- *   发送控件设置信息消息    FUN_1400FF154 @0x1400ff154
- *   发送控件查询消息        FUN_1400FF20C @0x1400ff20c
+ *   发送控件设置信息消息    PECMD_TreeInsertItem @0x1400ff154
+ *   发送控件查询消息        PECMD_TreeSetItemInfo @0x1400ff20c
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -151,10 +151,10 @@ uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord,
     return result;
 }
 
-/* ========== FUN_1400E3F94 @0x1400e3f94 ==========
+/* ========== PECMD_RefreshDesktopIcons @0x1400e3f94 ==========
  * 通知 Shell 刷新并给桌面 ListView 发送 F5 键按下/抬起。
  */
-void FUN_1400E3F94(void)
+void PECMD_RefreshDesktopIcons(void)
 {
     HWND defView;
     HWND listView;
@@ -261,10 +261,10 @@ uint64_t *FUN_1400E57C0(uint64_t *obj)
     return obj;
 }
 
-/* ========== FUN_1400E6FB8 @0x1400e6fb8 ==========
+/* ========== PECMD_IsProcessElevated @0x1400e6fb8 ==========
  * 先做前置检查，再在 Vista 以上系统通过 TokenElevation 查询提升状态。
  */
-uint32_t FUN_1400E6FB8(void)
+uint32_t PECMD_IsProcessElevated(void)
 {
     uint32_t u;
     DWORD ver;
@@ -405,10 +405,10 @@ int PECMD_SelectTabPageIndex(int64_t obj, int index)
     return old_sel;
 }
 
-/* ========== FUN_1400EC5E4 @0x1400ec5e4 ==========
+/* ========== PECMD_CreateTabCtrl @0x1400ec5e4 ==========
  * 创建 SysTabControl32 子控件并挂到对象容器。
  */
-bool FUN_1400EC5E4(int64_t *obj, DWORD style, int *rect,
+bool PECMD_CreateTabCtrl(int64_t *obj, DWORD style, int *rect,
                             HWND parent, uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
@@ -546,10 +546,10 @@ bool FUN_1400F1378(int64_t *obj, uint32_t style,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400F21C0 @0x1400f21c0 ==========
+/* ========== PECMD_CreateEditCtrl @0x1400f21c0 ==========
  * 创建 EDIT 子控件并挂到对象容器；指定标志时安装编辑回调。
  */
-bool FUN_1400F21C0(int64_t *obj, uint32_t flags, DWORD style,
+bool PECMD_CreateEditCtrl(int64_t *obj, uint32_t flags, DWORD style,
                              int *rect, HWND parent, uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
@@ -637,10 +637,10 @@ void FUN_1400F30C0(int64_t obj, int row, int top)
     InvalidateRect(*(HWND *)(self + OBJ_HWND), &rc, 1);
 }
 
-/* ========== FUN_1400F345C @0x1400f345c ==========
+/* ========== PECMD_CreateListViewCtrl @0x1400f345c ==========
  * 创建 SysListView32 子控件并挂到对象容器，保存自引用后立即更新。
  */
-bool FUN_1400F345C(int64_t *obj, uint32_t style,
+bool PECMD_CreateListViewCtrl(int64_t *obj, uint32_t style,
                                  int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
@@ -661,10 +661,10 @@ bool FUN_1400F345C(int64_t *obj, uint32_t style,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400F527C @0x1400f527c ==========
+/* ========== PECMD_DrawAlignedText @0x1400f527c ==========
  * 用对象字体/颜色在指定矩形内绘制文本。
  */
-void FUN_1400F527C(int64_t obj, HDC hdc, uint64_t *info,
+void PECMD_DrawAlignedText(int64_t obj, HDC hdc, uint64_t *info,
                           LPRECT rc)
 {
     HGDIOBJ font;
@@ -735,10 +735,10 @@ void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
     }
 }
 
-/* ========== FUN_1400F5E2C @0x1400f5e2c ==========
+/* ========== PECMD_ItemPropSetPair13 @0x1400f5e2c ==========
  * 更新两组单键映射值；未找到且值非负/更新成功时补加新项。
  */
-void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
+void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1,
                                 uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
@@ -776,10 +776,10 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
     }
 }
 
-/* ========== FUN_1400F5F60 @0x1400f5f60 ==========
+/* ========== PECMD_ItemPropSetPairSub @0x1400f5f60 ==========
  * 更新两组双键映射值；未找到且值非负/更新成功时补加新项。
  */
-void FUN_1400F5F60(int64_t obj, int key1, int key2,
+void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2,
                                 uint32_t val1, uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
@@ -817,10 +817,10 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
     }
 }
 
-/* ========== FUN_1400F8F00 @0x1400f8f00 ==========
+/* ========== PECMD_ItemPropSetPair24 @0x1400f8f00 ==========
  * 更新另一组单键映射值；未找到且值非负/更新成功时补加新项。
  */
-void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
+void PECMD_ItemPropSetPair24(int64_t obj, int key, uint32_t val1,
                                 uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
@@ -858,10 +858,10 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
     }
 }
 
-/* ========== FUN_1400FBAB8 @0x1400fbab8 ==========
+/* ========== PECMD_CtlTranslateKey @0x1400fbab8 ==========
  * 控件按键翻译：Enter 触发父命令，Esc 返回 1，其余走消息过滤通道。
  */
-uint32_t FUN_1400FBAB8(int64_t obj, int64_t pmsg)
+uint32_t PECMD_CtlTranslateKey(int64_t obj, int64_t pmsg)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int msg = *(int *)(pmsg + 8);
@@ -932,10 +932,10 @@ bool FUN_1400FC060(int64_t *obj, DWORD style, int *rect,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400FC378 @0x1400fc378 ==========
+/* ========== PECMD_CreateScrollBarCtrl @0x1400fc378 ==========
  * 创建 ScrollBar 子控件并挂到对象容器。
  */
-bool FUN_1400FC378(int64_t *obj, uint32_t style, int *rect,
+bool PECMD_CreateScrollBarCtrl(int64_t *obj, uint32_t style, int *rect,
                                   HWND parent, uint32_t id)
 {
     int x0 = rect[0];
@@ -998,11 +998,11 @@ void PECMD_PaintCtlWithCaption(int64_t *obj, uint64_t wParam, uint64_t lParam)
     }
 }
 
-/* ========== FUN_1400FCE6C @0x1400fce6c ==========
+/* ========== PECMD_ParseBuddyPrefix @0x1400fce6c ==========
  * 识别 "cmd<buddy>..." 前缀：解析 buddy 窗口并交换关联窗口后返回 0；
  * 否则转发到普通控件创建/解析流程。
  */
-uint64_t FUN_1400FCE6C(int64_t *obj, int64_t *ctx,
+uint64_t PECMD_ParseBuddyPrefix(int64_t *obj, int64_t *ctx,
                                 LPCWSTR text, uint16_t *name,
                                 uint64_t a5, uint64_t a6,
                                 int64_t a7)
@@ -1078,7 +1078,7 @@ void PECMD_InvalidateParentRect(HWND child, int margin)
     InvalidateRect(parent, &rc, 1);
 }
 
-/* ========== FUN_1400FE4A4 @0x1400fe4a4 ==========
+/* ========== PECMD_ApplyControlProperty @0x1400fe4a4 ==========
  * 处理控件属性：空文本/color/enable 就地应用，其余转发到通用解析器。
  */
 uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx,
@@ -1138,10 +1138,10 @@ bool FUN_1400FF080(int64_t *obj, DWORD style, int *rect,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400FF154 @0x1400ff154 ==========
+/* ========== PECMD_TreeInsertItem @0x1400ff154 ==========
  * 组装 0x60 字节参数块并发送消息 0x1132。TODO(verify): 字段语义。
  */
-void FUN_1400FF154(int64_t obj, uint32_t a2,
+void PECMD_TreeInsertItem(int64_t obj, uint32_t a2,
                                      uint64_t a3, uint32_t a4,
                                      uint32_t a5, uint32_t a6,
                                      uint32_t a7, uint64_t a8,
@@ -1162,10 +1162,10 @@ void FUN_1400FF154(int64_t obj, uint32_t a2,
     SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1132, 0, (LPARAM)msg);
 }
 
-/* ========== FUN_1400FF20C @0x1400ff20c ==========
+/* ========== PECMD_TreeSetItemInfo @0x1400ff20c ==========
  * 组装 0x50 字节参数块并发送消息 0x113f。TODO(verify): 字段语义。
  */
-void FUN_1400FF20C(int64_t obj, uint64_t a2,
+void PECMD_TreeSetItemInfo(int64_t obj, uint64_t a2,
                                    uint32_t a3, uint64_t a4,
                                    uint32_t a5, uint32_t a6,
                                    uint32_t a7, uint32_t a8,
