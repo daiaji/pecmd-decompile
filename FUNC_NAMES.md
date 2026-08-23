@@ -4,6 +4,13 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140061c44 | FUN_140061c44 | PECMD_LoadOle32Apis |
+| 0x14005e7dc | FUN_14005e7dc | PECMD_InitNullDaclSD |
+| 0x1400e6d74 | FUN_1400e6d74 | PECMD_FormatU64Dec |
+| 0x1400e6d68 | FUN_1400e6d68 | PECMD_FormatI64Dec |
+| 0x1400669c4 | FUN_1400669c4 | PECMD_AppendLongDecimal |
+| 0x1400668ec | FUN_1400668ec | PECMD_AppendFmtValue |
+| 0x14005b104 | FUN_14005b104 | PECMD_FreeStrBuf |
 | 0x1400dc9fc | FUN_1400dc9fc | PECMD_EvalAtCommand |
 | 0x140032dc4 | FUN_140032dc4 | PECMD_EvalLoopCondition |
 | 0x1400cb820 | FUN_1400cb820 | PECMD_EvalQueryValue |

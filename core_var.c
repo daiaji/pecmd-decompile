@@ -5,9 +5,9 @@
  *   FUN_1400629B8     @0x1400629b8   (变量设置核心: & 前缀/脚本标志分支)
  *   FUN_140062A2C  @0x140062a2c   (SetVar + SetEnvironmentVariableW(key+2))
  *   PECMD_AllocWStringBuffer  @0x140063694   (缓冲分配变体, size=count*2+2, 分配+10)
- *   FUN_1400668EC  @0x1400668ec   (格式化设置: FUN_1400E6D38 + SetVar)
+ *   PECMD_AppendFmtValue  @0x1400668ec   (格式化设置: FUN_1400E6D38 + SetVar)
  *   PECMD_VarSetUInt    @0x140066978   (wsprintfW "%lu" + SetVar)
- *   FUN_1400669C4    @0x1400669c4   (wsprintfW "%ld" + SetVar)
+ *   PECMD_AppendLongDecimal    @0x1400669c4   (wsprintfW "%ld" + SetVar)
  *
  * 反编译缺陷: PECMD_VarSetUInt/1400669c4 的 wsprintfW 参数被 Ghidra 丢弃
  * (寄存器残留), 按调用语义还原为 value (REVIEW.md §2).
@@ -69,7 +69,7 @@ void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count)
 }
 
 /* ========== 格式化设置 @0x1400668ec ========== */
-void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt)
+void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt)
 {
     WCHAR buf[64];
 
@@ -87,7 +87,7 @@ void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key)
 }
 
 /* ========== 数值变量 (有符号) @0x1400669c4 ========== */
-void FUN_1400669C4(void *script, int64_t value, LPCWSTR key)
+void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key)
 {
     WCHAR buf[56];
 

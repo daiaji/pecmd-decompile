@@ -26,7 +26,7 @@
 /* ---- 待重构函数原型 (后续批次) ---- */
 void FUN_140053E78(void);            /* @0x140053e78 */
 void PECMD_SetRdataTablePtr(void);            /* @0x14005d694 */
-void FUN_1400669C4(void *s, uint64_t v, LPCWSTR k);  /* @0x1400669c4 设置变量 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);  /* @0x1400669c4 设置变量 */
 void PECMD_OpenSharedMapping(int a, const char *s);            /* @0x140005738 */
 void PECMD_DetectCodePage(void);            /* @0x14000500c */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 */

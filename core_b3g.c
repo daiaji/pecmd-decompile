@@ -194,10 +194,10 @@ void FUN_140054A50(uint64_t *obj)
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_140054AB4 @0x140054ab4 ==========
@@ -213,10 +213,10 @@ void FUN_140054AB4(uint64_t *obj)
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14005C898 @0x14005c898 ==========
@@ -363,7 +363,7 @@ void FUN_14006306C(int64_t *arr)
             if ((HANDLE)*_Memory != 0) {
                 CloseHandle((HANDLE)*_Memory);
             }
-            FUN_14005B104((WCHAR **)(_Memory + 1));
+            PECMD_FreeStrBuf((WCHAR **)(_Memory + 1));
             free(_Memory);
             *(uint64_t *)(lVar1 + lVar2 * 8) = 0;
         }
@@ -446,7 +446,7 @@ uint16_t *FUN_14006B1E8(LPCWSTR name, uint64_t *out, char mode)
     PECMD_AllocSmallObject(&local_res20);
     PECMD_WideToAnsiStr((int64_t *)&local_res20, name, -1, 0xfde9);
     uint16_t *puVar1 = PECMD_Base64Encode(local_res20, out, mode);
-    FUN_14005B104((WCHAR **)&local_res20);
+    PECMD_FreeStrBuf((WCHAR **)&local_res20);
     return puVar1;
 }
 
@@ -479,10 +479,10 @@ void PECMD_DtorTrackbarControl(uint64_t *obj)
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14006C3CC @0x14006c3cc ==========
@@ -498,10 +498,10 @@ void FUN_14006C3CC(uint64_t *obj)
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14006C430 @0x14006c430 ==========
@@ -518,10 +518,10 @@ void FUN_14006C430(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14006CC70 @0x14006cc70 ==========
@@ -552,10 +552,10 @@ void FUN_14006FC4C(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14006FCB4 @0x14006fcb4 ==========
@@ -572,10 +572,10 @@ void FUN_14006FCB4(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14006FFDC @0x14006ffdc ==========
@@ -599,7 +599,7 @@ void FUN_14006FFDC(int64_t *obj)
         DeleteDC((HDC)obj[9]);
         obj[9] = 0;
     }
-    FUN_14005B104((WCHAR **)obj);
+    PECMD_FreeStrBuf((WCHAR **)obj);
 }
 
 /* ========== FUN_1400738D0 @0x1400738d0 ==========
@@ -643,10 +643,10 @@ void FUN_1400AA094(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_1400AA2FC @0x1400aa2fc ==========
@@ -663,10 +663,10 @@ void FUN_1400AA2FC(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_1400B916C @0x1400b916c ==========
@@ -683,8 +683,8 @@ void FUN_1400B916C(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }

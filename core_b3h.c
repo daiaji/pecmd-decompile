@@ -70,7 +70,7 @@ extern uint64_t PECMD_ComboBoxControl(int64_t a1, uint64_t a2, LPCWSTR a3,
 extern uint64_t FUN_14005C7C4(char *a1, uint16_t *a2);
 extern int64_t FUN_1400E5AAC(int64_t *a1, uint64_t *a2);
 extern void PECMD_ReleaseKernelObject(uint64_t *a1);
-extern void FUN_14005e7dc(uint64_t *a1);
+extern void PECMD_InitNullDaclSD(uint64_t *param_1);
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR a1, int64_t *a2, int64_t *a3,
                              int64_t *a4);
 extern void PECMD_FillSpaces(int64_t *a1, int a2);
@@ -110,7 +110,7 @@ uint64_t FUN_1400458A8(LPCWSTR text)
         g_pAppData = NULL;
         uVar1 &= 0xffffffff;
     }
-    FUN_14005B104((WCHAR **)local_28);
+    PECMD_FreeStrBuf((WCHAR **)local_28);
     return uVar1;
 }
 
@@ -179,10 +179,10 @@ void FUN_140054B18(uint64_t *obj)
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_14005B888 @0x14005b888 ==========
@@ -198,10 +198,10 @@ void *FUN_14005B888(void *obj, uint32_t flags)
         FreeLibrary(*(HMODULE *)((uint8_t *)obj + 0x40));
         *(uint64_t *)((uint8_t *)obj + 0x40) = 0;
     }
-    FUN_14005B104((WCHAR **)((uint8_t *)obj + 0x30));
-    FUN_14005B104((WCHAR **)((uint8_t *)obj + 0x18));
-    FUN_14005B104((WCHAR **)((uint8_t *)obj + 0x10));
-    FUN_14005B104((WCHAR **)((uint8_t *)obj + 8));
+    PECMD_FreeStrBuf((WCHAR **)((uint8_t *)obj + 0x30));
+    PECMD_FreeStrBuf((WCHAR **)((uint8_t *)obj + 0x18));
+    PECMD_FreeStrBuf((WCHAR **)((uint8_t *)obj + 0x10));
+    PECMD_FreeStrBuf((WCHAR **)((uint8_t *)obj + 8));
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -399,7 +399,7 @@ void FUN_140061FFC(uint64_t unused, BOOL initialOwner, LPCWSTR name)
     sa.nLength = 0x18;
     sa.lpSecurityDescriptor = sd_buffer;
     sa.bInheritHandle = 0;
-    FUN_14005e7dc((uint64_t *)&sa.lpSecurityDescriptor);
+    PECMD_InitNullDaclSD((uint64_t *)&sa.lpSecurityDescriptor);
     CreateMutexW(&sa, initialOwner, name);
 }
 
@@ -508,7 +508,7 @@ void FUN_140069B68(uint64_t ctx, int64_t *pp, uint32_t flags)
     }
     int local_res18[2] = {sVar1 - 1, 0};
     PECMD_ExtractTokenByIndex(ctx, local_res18, local_res10, pp, 0x40000, NULL);
-    FUN_14005B104((WCHAR **)&local_res20);
+    PECMD_FreeStrBuf((WCHAR **)&local_res20);
 }
 
 /* ========== FUN_140073C58 @0x140073c58 ==========
@@ -582,7 +582,7 @@ int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out)
     PECMD_ResolveVariable(ctx, local_res10, (uint64_t *)out, 0);
     int64_t lVar1 = *out;
     *pp = lVar1;
-    FUN_14005B104((WCHAR **)&local_res10);
+    PECMD_FreeStrBuf((WCHAR **)&local_res10);
     return lVar1;
 }
 
@@ -601,8 +601,8 @@ uint64_t FUN_14007EFA4(LPWSTR path, uint8_t *flags)
     uint64_t *puVar2 = (uint64_t *)PECMD_ParseExpression(local_68, path);
     uint64_t uVar1 = *puVar2;
     *flags = (uint8_t)(local_60 | local_40 | local_20);
-    FUN_14005B104((WCHAR **)local_38);
-    FUN_14005B104((WCHAR **)local_58);
+    PECMD_FreeStrBuf((WCHAR **)local_38);
+    PECMD_FreeStrBuf((WCHAR **)local_58);
     return uVar1;
 }
 
@@ -641,10 +641,10 @@ void FUN_1400A9C40(uint64_t *obj)
     *(uint32_t *)((uint8_t *)obj + 0x84) = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
 /* ========== FUN_1400B0380 @0x1400b0380 ==========

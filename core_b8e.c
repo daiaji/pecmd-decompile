@@ -192,8 +192,8 @@ void FUN_1400EC6A8(int64_t obj, int64_t target, uint64_t param3,
 uint64_t *FUN_1400ECEB4(uint64_t *obj, uint32_t flags)
 {
     FUN_1400ECDD8(obj + 0x21);
-    FUN_14005B104((WCHAR **)(obj + 0x21));
-    FUN_14005B104((WCHAR **)(obj + 0x1b));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x21));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x1b));
     FUN_1400E8940(obj);
     if ((flags & 1) != 0) {
         free(obj);
@@ -233,7 +233,7 @@ void FUN_1400F1490(int64_t arr)
             FUN_14005B0D4((void *)(data + 0x10 + (int64_t)i * 0x28));
         }
     }
-    FUN_14005B104((WCHAR **)(base + 8));
+    PECMD_FreeStrBuf((WCHAR **)(base + 8));
 }
 
 /* ========== FUN_1400F230C @0x1400f230c ==========
@@ -425,7 +425,7 @@ void FUN_1400F5C10(int64_t *array)
         count--;
         item = *(void **)(base + count * 8);
         if (item != NULL) {
-            FUN_14005B104((WCHAR **)((char *)item + 0x10));
+            PECMD_FreeStrBuf((WCHAR **)((char *)item + 0x10));
             FUN_1400F2B6C((int64_t)item);
             free(item);
             *(uint64_t *)(base + count * 8) = 0;
@@ -443,10 +443,10 @@ void FUN_1400F5D50(uint64_t *obj)
         DeleteObject((HGDIOBJ)obj[0x22]);
         obj[0x22] = 0;
     }
-    FUN_14005B104((WCHAR **)(obj + 0x20));
-    FUN_14005B104((WCHAR **)(obj + 0x1d));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x20));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x1d));
     PECMD_FreeArray_ddf8((int64_t *)(obj + 0x1a));
-    FUN_14005B104((WCHAR **)(obj + 0x1a));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x1a));
     FUN_1400E8940(obj);
 }
 

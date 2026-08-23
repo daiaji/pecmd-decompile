@@ -1233,5 +1233,12 @@
   "FUN_14001c1d4": "PECMD_ImportSystemEnvVars",
   "FUN_14005e8e8": "PECMD_ReleaseSlotRef",
   "FUN_1400f0abc": "PECMD_BltTransparentBits",
-  "FUN_1400eff58": "PECMD_DrawIconInRect"
+  "FUN_1400eff58": "PECMD_DrawIconInRect",
+  "FUN_140061c44": "PECMD_LoadOle32Apis",
+  "FUN_14005e7dc": "PECMD_InitNullDaclSD",
+  "FUN_1400e6d74": "PECMD_FormatU64Dec",
+  "FUN_1400e6d68": "PECMD_FormatI64Dec",
+  "FUN_1400669c4": "PECMD_AppendLongDecimal",
+  "FUN_1400668ec": "PECMD_AppendFmtValue",
+  "FUN_14005b104": "PECMD_FreeStrBuf"
 }

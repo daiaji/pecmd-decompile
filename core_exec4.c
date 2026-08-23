@@ -200,7 +200,7 @@ void PECMD_RefCountRelease(WCHAR **ps)
         EnterCriticalSection(&g_csInit);
         *(int *)(s + 8) = *(int *)(s + 8) - 1;
         if (*(int *)(s + 8) < 1 && s != NULL) {
-            FUN_14005B104(&s);
+            PECMD_FreeStrBuf(&s);
             free(s);
         }
         *ps = NULL;
@@ -219,7 +219,7 @@ void FUN_1400A4020(WCHAR **ps, LPCWSTR src)
         *(int *)(*ps + 8) = *(int *)(*ps + 8) - 1;
         s = *ps;
         if (*(int *)(s + 8) < 1 && s != NULL) {
-            FUN_14005B104(&s);
+            PECMD_FreeStrBuf(&s);
             free(s);
         }
         *ps = NULL;
@@ -325,10 +325,10 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
                 FUN_1400702B0(out, (LPCWSTR)*(int64_t *)curdir);
                 FUN_14006375C(out, WSTR("\\"));
                 FUN_14006375C(out, old);
-                FUN_14005B104(&old);
+                PECMD_FreeStrBuf(&old);
             }
         }
-        FUN_14005B104(&tmp);
+        PECMD_FreeStrBuf(&tmp);
     }
 }
 

@@ -118,7 +118,7 @@ uint64_t *PECMD_ReleaseObject_b270(uint64_t *obj, uint32_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_140124e50;
     PECMD_ReleaseGdiImage((int64_t)obj);
-    FUN_14005B104((WCHAR **)(obj + 0x1e));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x1e));
     FUN_1400FD1A8(obj);
     if ((flags & 1) != 0) {
         free(obj);
@@ -562,7 +562,7 @@ void PECMD_FreeArray_ddf8(int64_t *arr)
         lVar2--;
         int64_t *_Memory = *(int64_t **)(lVar1 + lVar2 * 8);
         if (_Memory != NULL) {
-            FUN_14005B104((WCHAR **)_Memory);
+            PECMD_FreeStrBuf((WCHAR **)_Memory);
             free(_Memory);
             *(uint64_t *)(lVar1 + lVar2 * 8) = 0;
         }

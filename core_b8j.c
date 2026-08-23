@@ -183,7 +183,7 @@ int64_t FUN_1400E7840(int64_t *out, int flag)
         } while ((int32_t)i < (int32_t)count);
     }
     int64_t r = *out;
-    FUN_14005B104((WCHAR **)&blk);
+    PECMD_FreeStrBuf((WCHAR **)&blk);
     return r;
 }
 
@@ -587,7 +587,7 @@ void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
             node = (uint64_t *)*slot;
             *slot = 0;
             if (node != NULL) {
-                FUN_14005B104((WCHAR **)node);
+                PECMD_FreeStrBuf((WCHAR **)node);
                 free(node);
             }
         }
@@ -650,7 +650,7 @@ void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
             node = (uint64_t *)*slot;
             *slot = 0;
             if (node != NULL) {
-                FUN_14005B104((WCHAR **)node);
+                PECMD_FreeStrBuf((WCHAR **)node);
                 free(node);
             }
         }
@@ -730,7 +730,7 @@ void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
         if (m != NULL) {
             if (value == 0) {
                 *slot = 0;
-                FUN_14005B104((WCHAR **)((uint8_t *)m + 0x10));
+                PECMD_FreeStrBuf((WCHAR **)((uint8_t *)m + 0x10));
                 FUN_1400F2B6C((int64_t)(intptr_t)m);
                 free(m);
             }

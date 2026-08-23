@@ -25,7 +25,7 @@ extern void FUN_14006D880(void *s[6], int need);                       /* @0x140
 extern void PECMD_StrBldGrowWide(void *s[6]);                             /* @0x14006d92c */
 extern WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec,
                            WCHAR *dst, WCHAR *width);                    /* @0x14006d9d0 */
-extern void FUN_1400E6D74(WCHAR *dst, uint64_t v);                        /* @0x1400e6d74 */
+extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v);                        /* @0x1400e6d74 */
 
 /* 核心分配/变量辅助 */
 extern uint8_t *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
@@ -101,7 +101,7 @@ int64_t FUN_14007BDA8(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
         } while (i >= 0);
     }
     chain = in;
-    FUN_14005B104(&chain);
+    PECMD_FreeStrBuf(&chain);
     LeaveCriticalSection(&g_csInit);
     return r;
 }
@@ -157,7 +157,7 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             *cur = L'\0';
             PECMD_AllocString(out, (int64_t)(cur - base) + 2);
             lVar11 = (int64_t)(cur - base);
-            FUN_14005B104(&envBuf);
+            PECMD_FreeStrBuf(&envBuf);
             LeaveCriticalSection(&g_csInit);
             return lVar11 >> 1;
         }
@@ -314,7 +314,7 @@ var_expand:  /* 变量/环境变量展开 */
                 WCHAR a8[81];
                 inP = p6v + 7;
                 a8[0] = L'\0';
-                FUN_1400E6D74(a8, (uint64_t)uVar5);
+                PECMD_FormatU64Dec(a8, (uint64_t)uVar5);
                 iVar3 = lstrlenW(a8);
                 lVar12 = (int64_t)iVar3;
                 if (iVar3 < 1) lVar12 = lVar11;
@@ -631,7 +631,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             }
             PECMD_AllocString(out, (int64_t)(cur - base) + 2);
             lVar7 = (int64_t)(cur - base);
-            FUN_14005B104(&envBuf);
+            PECMD_FreeStrBuf(&envBuf);
             return lVar7 >> 1;
         }
         PECMD_StrBldGrowWide(xb);
@@ -781,7 +781,7 @@ var_b38c:  /* 变量/环境变量展开 */
             {
                 WCHAR a8[81];
                 a8[0] = L'\0';
-                FUN_1400E6D74(a8, uVar14);
+                PECMD_FormatU64Dec(a8, uVar14);
                 iVar10 = (int64_t)lstrlenW(a8);
                 uVar14 = (uint64_t)iVar10;
                 if (iVar10 < 1) uVar14 = 0;

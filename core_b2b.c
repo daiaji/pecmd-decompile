@@ -193,7 +193,7 @@ uint32_t PECMD_CheckSystemStartOptions(void)
                               WSTR("SystemStartOptions"), (int64_t *)&local_res10,
                               local_res8, NULL);
         if ((iVar3 < 0) || ((int)local_res8[0] < 0)) {
-            FUN_14005B104((WCHAR **)&local_res10);
+            PECMD_FreeStrBuf((WCHAR **)&local_res10);
             uVar2 = 0xffffffff;
         } else {
             local_res18 = local_res10;
@@ -202,7 +202,7 @@ uint32_t PECMD_CheckSystemStartOptions(void)
                 if ((iVar3 == 0) ||
                     (iVar3 = StrCmpNW(lpStr1, WSTR("WIMHB="), 6), iVar3 == 0)) {
                     g_sysStartFlag = 1;
-                    FUN_14005B104((WCHAR **)&local_res10);
+                    PECMD_FreeStrBuf((WCHAR **)&local_res10);
                     return 1;
                 }
                 WVar1 = *lpStr1;
@@ -216,7 +216,7 @@ uint32_t PECMD_CheckSystemStartOptions(void)
                 PECMD_SkipLeadingControls((WCHAR **)&local_res18);
             }
             g_sysStartFlag = 0x10;
-            FUN_14005B104((WCHAR **)&local_res10);
+            PECMD_FreeStrBuf((WCHAR **)&local_res10);
             uVar2 = 0;
         }
     } else {
@@ -313,7 +313,7 @@ void PECMD_AppendParamToken(int64_t *list, LPCWSTR token, char filter)
                           local_res20, iVar3 * 2);
             list[1] += iVar3;
         }
-        FUN_14005B104((WCHAR **)&local_res20);
+        PECMD_FreeStrBuf((WCHAR **)&local_res20);
     }
 }
 
@@ -428,7 +428,7 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
                 }
             }
         }
-        FUN_14005B104((WCHAR **)&local_res18);
+        PECMD_FreeStrBuf((WCHAR **)&local_res18);
         WVar1 = path[iVar2 + (int)(flags & 1)];
         path += iVar2 + (int)(flags & 1);
     }
@@ -835,7 +835,7 @@ void PECMD_BubbleSort(uint8_t *base, int64_t count, int64_t width, void *cmp)
             lVar5--;
         } while (lVar5 != 0);
     }
-    FUN_14005B104((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8);
 }
 
 /* ========== PECMD_StartOnlyApp @0x14002ae88 ==========
@@ -871,7 +871,7 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
                 FUN_14006375C(&local_res20, cmdline);
             }
             FUN_1400DFB14(g_Script, local_res20, 0);
-            FUN_14005B104(&local_res20);
+            PECMD_FreeStrBuf(&local_res20);
         }
     }
 }
@@ -995,7 +995,7 @@ LAB_14002b28d:
                       (void *)0x1100, NULL, NULL);
     }
     DVar2 = local_res18[0];
-    FUN_14005B104((WCHAR **)&local_d0);
+    PECMD_FreeStrBuf((WCHAR **)&local_d0);
     return DVar2;
 }
 
@@ -1028,9 +1028,9 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
     _snwprintf(local_28[0], 0x27ff, WSTR("Devcon安装驱动【%s】[%s]"), hwid, inf);
     FUN_140025f10(ctx + 8, local_28[0], local_38.dwLowDateTime, (void *)0x1100,
                   NULL, NULL);
-    FUN_14005B104(local_28);
+    PECMD_FreeStrBuf(local_28);
     DVar1 = local_38.dwLowDateTime;
-    FUN_14005B104(&local_30);
+    PECMD_FreeStrBuf(&local_30);
     return DVar1;
 }
 
@@ -1053,7 +1053,7 @@ uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c,
     _snwprintf(local_18[0], 0x27ff, WSTR("MyInstallHinfSection安装驱动%s【%s】\r\n"),
                puVar1, (LPCWSTR)c, 0);
     FUN_140025f10(0x14013d130, local_18[0], 0, (void *)0x11, NULL, NULL);
-    FUN_14005B104(local_18);
+    PECMD_FreeStrBuf(local_18);
     return 0;
 }
 
@@ -1132,7 +1132,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
         FindClose(local_res18);
     }
     local_res18 = 0;
-    FUN_14005B104(&local_res20);
+    PECMD_FreeStrBuf(&local_res20);
     return iVar4 == 0;
 }
 
@@ -1181,8 +1181,8 @@ uint64_t PECMD_RunRamdriv(int64_t *ctx, LPCWSTR cmd)
             PECMD_SetRamdrivDiskSize((int)(uVar2 << 0x14), local_res18);
             PECMD_QueryDiskSpace(local_res18);
             uVar3 = 1;
-            FUN_14005B104(local_28);
-            FUN_14005B104(&local_res18);
+            PECMD_FreeStrBuf(local_28);
+            PECMD_FreeStrBuf(&local_res18);
         }
     }
     return uVar3;
@@ -1244,8 +1244,8 @@ void PECMD_RunShutdownScript(LPCWSTR args, uint32_t flags)
     if ((flags & 0x70) != 0) {
         PECMD_RunCommand(g_Script, local_res18);
     }
-    FUN_14005B104(&local_res18);
-    FUN_14005B104(&local_res8);
+    PECMD_FreeStrBuf(&local_res18);
+    PECMD_FreeStrBuf(&local_res8);
 }
 
 /* ========== PECMD_WriteSysAck @0x14003e694 ==========

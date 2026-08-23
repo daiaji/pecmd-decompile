@@ -130,9 +130,9 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
             PECMD_AllocString(&g_szMsgBuf, (int64_t)lstrlenW(g_szMsgBuf) + 2);
             FUN_1400702B0(&pMsg, pMain);
             FUN_1400084D0(pMsg);
-            FUN_14005B104(&pMsg);
+            PECMD_FreeStrBuf(&pMsg);
             g_runFlag = 0;
-            FUN_14005B104(&g_szMsgBuf);   /* FUN_14005B0D4 = StrFree */
+            PECMD_FreeStrBuf(&g_szMsgBuf);   /* FUN_14005B0D4 = StrFree */
         }
 
         /* MAIN 命令: 执行脚本 */
@@ -146,7 +146,7 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
                 /* 无参数或 **u 前缀: 直接执行脚本 */
                 FUN_1400702B0(&pMain2, pToken + 4);
                 FUN_140045C90(&g_Script, pMain2);
-                FUN_14005B104(&pMain2);
+                PECMD_FreeStrBuf(&pMain2);
                 goto after_main;
             }
         }
@@ -170,7 +170,7 @@ after_main:
         FUN_14002CA30();
     }
     ret = FUN_14005B7DC();
-    FUN_14005B104(&pCmdBuf);
+    PECMD_FreeStrBuf(&pCmdBuf);
     return ret;
 }
 

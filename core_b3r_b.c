@@ -42,7 +42,7 @@ extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);
 
 /* free a string buffer through *ps. */
-extern void    FUN_14005b104(WCHAR **ps);
+extern void PECMD_FreeStrBuf(void *ps);
 
 /* string append: *ps keeps old content and appends src; returns *ps. */
 extern WCHAR  *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);
@@ -329,7 +329,7 @@ int64_t *PECMD_CacheLookupInsert(LPCWSTR param_1, int64_t param_2, uint64_t para
         if (lVar14 < 1) {
             plVar8[2] = lVar9;
         }
-        FUN_14005b104((WCHAR **)&local_48);
+        PECMD_FreeStrBuf((WCHAR **)&local_48);
     }
 LAB_140074e2e:
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -462,6 +462,6 @@ LAB_1400759c5:
     }
     pvVar8 = (void *)0x1;
 LAB_140075ae2:
-    FUN_14005b104((WCHAR **)&local_b0);
+    PECMD_FreeStrBuf((WCHAR **)&local_b0);
     return pvVar8;
 }

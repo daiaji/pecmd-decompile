@@ -41,7 +41,7 @@ extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x1400
 extern void FUN_14005b0b8(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
 extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);            /* @0x1400b568c 线程过程 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
-extern void FUN_14005b104(int64_t *ps);                    /* @0x14005b104 */
+extern void PECMD_FreeStrBuf(void *ps);                    /* @0x14005b104 */
 extern uint64_t *PECMD_CreateWindowObject(uint64_t *param_1, uint64_t param_2, uint32_t param_3);
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
 extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);            /* @0x14005b77c */
@@ -317,7 +317,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
             }
         }
         PECMD_VarSetUInt(param_1, (uint64_t)param_7, WSTR("&&__LastTID"));
-        FUN_14005b104((int64_t *)&param_14);
+        PECMD_FreeStrBuf((WCHAR **)&param_14);
     } else {
         plVar6 = (int64_t *)0x0;
         if ((param_2 != NULL) && ((int)param_2[0x3a] != 0)) {

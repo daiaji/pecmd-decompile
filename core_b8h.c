@@ -46,8 +46,7 @@
 
 #include "pecmd_defs.h"
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key,
-                            LPCWSTR fmt);                        /* @0x1400668ec */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);                        /* @0x1400668ec */
 extern LPCWSTR FUN_14005B6AC(HINSTANCE inst, UINT id, LPWSTR buf,
                              int buflen);                        /* @0x14005b6ac */
 extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
@@ -380,7 +379,7 @@ void FUN_1400E66D4(int64_t *pfont, UINT id, HANDLE base)
     sz = g_fontSizeDef;
     f = FUN_1400B89DC(base, &sz, face);
     *pfont = (int64_t)(uintptr_t)f;
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&tmp);
 }
 
 /* ========== FUN_1400E6790 @0x1400e6790 ==========
@@ -504,7 +503,7 @@ int64_t FUN_1400E8644(int64_t *obj)
         hwnd = FUN_1400e8574(obj, 0);
         obj[8] = (int64_t)(uintptr_t)hwnd;
         if (hwnd != 0)
-            FUN_1400668EC(obj, *(uint64_t *)(hwnd + 8), WSTR("&&__WinID"), WSTR("0x%I64X"));
+            PECMD_AppendFmtValue(obj, *(uint64_t *)(hwnd + 8), WSTR("&&__WinID"), WSTR("0x%I64X"));
         v = obj[8];
     }
     LeaveCriticalSection(&g_csInit);
@@ -561,7 +560,7 @@ void FUN_1400E9138(uint64_t *obj)
         DeleteObject((HGDIOBJ)obj[0x1e]);
         obj[0x1e] = 0;
     }
-    FUN_14005B104((WCHAR **)(obj + 0x25));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x25));
     FUN_1400E8940(obj);
 }
 

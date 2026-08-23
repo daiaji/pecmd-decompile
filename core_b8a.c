@@ -12,7 +12,7 @@
  *   验证绘制区域      FUN_1400E5AE4 @0x1400e5ae4
  *   转发取文本长度    FUN_1400E62E4 @0x1400e62e4
  *   取文件大小(32位)  FUN_1400E693C @0x1400e693c
- *   格式化有符号64位  FUN_1400E6D68 @0x1400e6d68
+ *   格式化有符号64位  PECMD_FormatI64Dec @0x1400e6d68
  *   销毁事件对象      FUN_1400E759C @0x1400e759c
  *   销毁窗口对象      FUN_1400EBFB4 @0x1400ebfb4
  *   交换子对象        FUN_1400EC698 @0x1400ec698
@@ -159,11 +159,11 @@ DWORD FUN_1400E693C(HANDLE hFile)
     return GetFileSize(hFile, &high);
 }
 
-/* ========== FUN_1400E6D68 @0x1400e6d68 ==========
+/* ========== PECMD_FormatI64Dec @0x1400e6d68 ==========
  * 将有符号 64 位整数按 "%I64d" 格式化到 dst。
  * 原 FUN_1400E6D38 的 wsprintfW 丢第 3 参，此处按调用语义补回数值。
  */
-void FUN_1400E6D68(LPWSTR dst, int64_t value)
+void PECMD_FormatI64Dec(LPWSTR dst, int64_t value)
 {
     wsprintfW(dst, WSTR("%I64d"), value);
 }
@@ -382,7 +382,7 @@ void FUN_1400FBA3C(uint64_t *obj)
 void FUN_1400FC034(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012ca50;
-    FUN_14005B104((WCHAR **)(obj + 0x1b));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x1b));
     FUN_1400E8940(obj);
 }
 

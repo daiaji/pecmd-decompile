@@ -24,7 +24,7 @@ extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap,
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);        /* @0x140063720 串扩容 */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern WCHAR *PECMD_AllocStrSlot(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
-extern void  FUN_14005b104(void *ps);                               /* @0x14005b104 释放引用串容器 */
+extern void PECMD_FreeStrBuf(void *ps);                               /* @0x14005b104 释放引用串容器 */
 extern void  PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
                            int mode, int flag);                      /* @0x14007bf44 */
 
@@ -426,8 +426,8 @@ LAB_140075f08:
     *(uint16_t *)puVar10 = uVar19;
     FUN_14005b0b8((void *)local_98);
     uVar4 = (uint64_t)(uintptr_t)*param_2;
-    FUN_14005b104((void *)&local_98);
-    FUN_14005b104((void *)&local_90);
+    PECMD_FreeStrBuf((void *)&local_98);
+    PECMD_FreeStrBuf((void *)&local_90);
     return uVar4;
 }
 
@@ -440,7 +440,7 @@ int64_t *PECMD_SplitTokenAssignVar(int64_t *cursor, WCHAR **pp, uint16_t sep, in
     PECMD_ExtractTokenByDelim(pp, &tok, (int16_t)sep);
     PECMD_ExpandVarDispatch((int64_t *)(cursor[1]), tok, (int64_t *)cursor, 0, flag);
     cursor[2] = cursor[0];
-    FUN_14005b104(&tok);
+    PECMD_FreeStrBuf(&tok);
     return cursor + 2;
 }
 

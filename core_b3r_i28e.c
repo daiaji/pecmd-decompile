@@ -51,7 +51,7 @@ extern void     PECMD_PositionMessageWindow(HWND h, LPCWSTR a, LPARAM b, uint32_
 extern void     PECMD_AllocStrSlot(void *out);                  /* release/init slot */
 extern WCHAR   *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
 extern void     PECMD_StrDupAssign(void *ps, const WCHAR *src); /* assign string slot */
-extern void     FUN_14005b104(void *ps);                   /* free string slot */
+extern void PECMD_FreeStrBuf(void *ps);                   /* free string slot */
 extern void     PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void     PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -233,10 +233,10 @@ uint64_t PECMD_ParseWindowPosition(int64_t *param_1, WCHAR *param_2, WPARAM para
             uVar6 = 0;
         }
     }
-    FUN_14005b104(&local_70);
-    FUN_14005b104(&local_40);
-    FUN_14005b104(&local_68);
-    FUN_14005b104(&local_78);
+    PECMD_FreeStrBuf(&local_70);
+    PECMD_FreeStrBuf(&local_40);
+    PECMD_FreeStrBuf(&local_68);
+    PECMD_FreeStrBuf(&local_78);
     return uVar6;
 }
 
@@ -512,11 +512,11 @@ icon_parse_ba800:
                 PECMD_ResetScriptChain(param_1, 0);
                 param_3 = param_1[8];
                 if (param_3 == 0) {
-                    FUN_14005b104(&local_98);
-                    FUN_14005b104(&local_90);
-                    FUN_14005b104(&local_a8);
-                    FUN_14005b104(&local_a0);
-                    FUN_14005b104(&local_68);
+                    PECMD_FreeStrBuf(&local_98);
+                    PECMD_FreeStrBuf(&local_90);
+                    PECMD_FreeStrBuf(&local_a8);
+                    PECMD_FreeStrBuf(&local_a0);
+                    PECMD_FreeStrBuf(&local_68);
                     return (HICON)0xffffffff80070057;
                 }
             }
@@ -685,30 +685,30 @@ icon_ba6a5:
     goto icon_cleanup_ba6aa;
 
 icon_cleanup_ba6aa:
-    FUN_14005b104(&local_98);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_a8);
-    FUN_14005b104(&local_a0);
-    FUN_14005b104(&local_68);
+    PECMD_FreeStrBuf(&local_98);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_a8);
+    PECMD_FreeStrBuf(&local_a0);
+    PECMD_FreeStrBuf(&local_68);
     return (HICON)0;
 
 icon_release_ba9ad:
-    FUN_14005b104(&local_98);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_a8);
-    FUN_14005b104(&local_a0);
-    FUN_14005b104(&local_68);
+    PECMD_FreeStrBuf(&local_98);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_a8);
+    PECMD_FreeStrBuf(&local_a0);
+    PECMD_FreeStrBuf(&local_68);
     return pHVar20;
 
 icon_error_badd0:
     if (bVar22) {
         pHVar17 = pHVar20;
     }
-    FUN_14005b104(&local_98);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_a8);
-    FUN_14005b104(&local_a0);
-    FUN_14005b104(&local_68);
+    PECMD_FreeStrBuf(&local_98);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_a8);
+    PECMD_FreeStrBuf(&local_a0);
+    PECMD_FreeStrBuf(&local_68);
     return pHVar17;
 
 icon_noop_badc4:
@@ -938,7 +938,7 @@ uint64_t PECMD_CreateButtonControl(int64_t *param_1, WCHAR *param_2, WPARAM para
                                                                     pHVar18 = (HWND)local_c0_hwnd;
                                                                 }
 bd_font_cleanup:
-                                                                FUN_14005b104((void *)ppHVar10);
+                                                                PECMD_FreeStrBuf((void *)ppHVar10);
                                                                 pHVar19 = pHVar6;
                                                             }
                                                         }
@@ -1031,11 +1031,11 @@ bd_option_done:
                   local_b0[0], local_res18[0], (uint64_t *)&local_c8, (uint64_t *)&local_50,
                   (uint64_t *)&local_c0_hwnd, (uVar16 & 0xffff) | uVar14 | uVar11,
                   (LPCWSTR)pHVar12, pHVar18, (int *)&local_a0);
-    FUN_14005b104(&local_50);
-    FUN_14005b104((void *)&local_c0_hwnd);
-    FUN_14005b104(&local_c8);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_68);
-    FUN_14005b104(&local_70);
+    PECMD_FreeStrBuf(&local_50);
+    PECMD_FreeStrBuf((void *)&local_c0_hwnd);
+    PECMD_FreeStrBuf(&local_c8);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_68);
+    PECMD_FreeStrBuf(&local_70);
     return 0;
 }

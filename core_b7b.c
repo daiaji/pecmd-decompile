@@ -176,8 +176,8 @@ uint64_t FUN_1400C42AC(HKEY script, LPCWSTR args)
     FUN_14006375C(&res, regValue);
     FUN_1400C13F8(script, (HKEY)((uintptr_t)res + (disableRegTools == 0) * 2), '\0');
 
-    FUN_14005B104(&res);
-    FUN_14005B104(&expanded);
+    PECMD_FreeStrBuf(&res);
+    PECMD_FreeStrBuf(&expanded);
     return 0;
 }
 

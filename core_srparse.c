@@ -185,7 +185,7 @@ int64_t PECMD_SrParsePrefix(void *script, WCHAR **pp, int *flags, int *flags2,
                     WCHAR *copy = NULL;
                     PECMD_StrCopyW(&copy, tok, (int64_t)toklen); /* 268 */
                     FUN_14007A224(script, copy, p_outbuf, 0, 1); /* 269 */
-                    FUN_14005B104(&copy);           /* 270 */
+                    PECMD_FreeStrBuf(&copy);           /* 270 */
                 }
                 FUN_14005B154(pp);                /* 272 PECMD_SkipLeadingControls */
             }

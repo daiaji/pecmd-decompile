@@ -143,7 +143,7 @@ void PECMD_SetThreeSlots(uint64_t *slot, uint64_t a, uint64_t b,
 static void PECMD_FreeContainer(int64_t *container)
 {
     FUN_14005B0B8((uint64_t *)*container);
-    FUN_14005B104((WCHAR **)container);
+    PECMD_FreeStrBuf((WCHAR **)container);
 }
 
 /* ========== PECMD_ReadPtr20 @0x14005b488 ==========

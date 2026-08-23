@@ -148,7 +148,7 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
             pNum++;
             FUN_1400C11C0(&pNum, (int *)&cpArg);
         }
-        FUN_14005B104((WCHAR **)&work);
+        PECMD_FreeStrBuf((WCHAR **)&work);
     }
     goto main_decode;
 
@@ -277,7 +277,7 @@ postproc:
             PECMD_ResReenc(w, ps, (uint32_t)(cpArg == 0x3b6), key16 & 0xffff);
             iVar3 = (int)FUN_14001B4F8((WCHAR *)(intptr_t)ps[0], key16);
             mode |= 0x1000;
-            FUN_14005B104((WCHAR **)&w);
+            PECMD_FreeStrBuf((WCHAR **)&w);
         }
     }
     /* 收尾：恢复 "#code=" 的 'c'，回填长度，可选擦除临时缓冲 */
@@ -291,8 +291,8 @@ postproc:
         FUN_14005B0B8(pNew);
         FUN_14005B0B8(pOld);
     }
-    FUN_14005B104((WCHAR **)&pOld);
-    FUN_14005B104((WCHAR **)&pNew);
-    FUN_14005B104((WCHAR **)&pHead);
+    PECMD_FreeStrBuf((WCHAR **)&pOld);
+    PECMD_FreeStrBuf((WCHAR **)&pNew);
+    PECMD_FreeStrBuf((WCHAR **)&pHead);
     return spec;
 }

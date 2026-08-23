@@ -92,7 +92,7 @@ extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src);
 extern uint8_t  *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                                int64_t len, void **out);
 extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
-extern void      FUN_14005b104(void *ps);
+extern void PECMD_FreeStrBuf(void *ps);
 extern HWND      PECMD_QueryState_f414(int64_t a);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern void      FUN_1400702f0(void *out, const char *src, uint64_t len);
@@ -127,7 +127,7 @@ extern uint32_t  PECMD_GetDiskGeometry(LPCWSTR p, HANDLE h);
 extern int       PECMD_QueryDiskGeometry(HANDLE param_1, uint64_t *param_2,
                                int param_3, int param_4);
 extern int64_t   PECMD_FindPartitionStartSector(HANDLE param_1, int *param_2, int64_t *param_3);
-extern void      FUN_1400e6d68(LPCWSTR param_1, uint64_t param_2);
+extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
 extern LPCWSTR   PECMD_StripTrailingSpaces(LPCWSTR s);
 
 /* ---- Globals (project convention keeps realistic-ish pointers) ---- */
@@ -613,7 +613,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
 LAB_140087be8:
             PECMD_SetVariable(param_1, pWVar11, WSTR("0"));
         }
-        FUN_14005b104((void *)&local_5a0);
+        PECMD_FreeStrBuf((void *)&local_5a0);
     }
     pHVar13 = (HWND)PECMD_QueryState_f414(param_3);
     if (cVar23 == '\x01') {
@@ -729,9 +729,9 @@ LAB_140088096:
                     PECMD_AppendWideStr(&local_5b0, WSTR("."));
                     PECMD_AppendWideStr(&local_5b0, local_570);
                 }
-                FUN_14005b104((void *)&local_5a8);
+                PECMD_FreeStrBuf((void *)&local_5a8);
             }
-            FUN_14005b104((void *)&local_5a0);
+            PECMD_FreeStrBuf((void *)&local_5a0);
             goto LAB_14008822a;
         }
         piVar16 = (int *)FUN_140063060(local_598);
@@ -777,10 +777,10 @@ LAB_140088096:
                                       (int64_t)(pBVar4 - pBVar17));
                         PECMD_AppendWideStr(&local_5b0, (const WCHAR *)local_540);
                         PECMD_SkipLeadingControlChars(&local_5a8);
-                        FUN_14005b104((void *)&local_540);
+                        PECMD_FreeStrBuf((void *)&local_540);
                     } while (*(WCHAR *)local_5a8 != L'\0');
                 }
-                FUN_14005b104((void *)&local_588);
+                PECMD_FreeStrBuf((void *)&local_588);
             } else {
                 iVar6 = lstrlenW((LPCWSTR)local_508);
                 pBVar21 = pBVar17 + (longlong)iVar6 + 1;
@@ -807,27 +807,27 @@ LAB_140088096:
             }
             goto LAB_140088096;
         }
-        FUN_14005b104((void *)&local_5a0);
+        PECMD_FreeStrBuf((void *)&local_5a0);
 LAB_14008822f:
         if (param_4 == (longlong *)0x0) {
             PECMD_StrDupAssign(&local_588, local_5b0);
             PECMD_SetVariable(param_1, local_590, (LPCWSTR)local_588);
-            FUN_14005b104((void *)&local_588);
+            PECMD_FreeStrBuf((void *)&local_588);
         } else {
             FUN_1400703e4(param_4, local_5b0);
         }
     }
     SetCurrentDirectoryW(local_568);
     PECMD_SyncWorkingDirectory();
-    FUN_14005b104((void *)&local_5b0);
-    FUN_14005b104((void *)&local_580);
+    PECMD_FreeStrBuf((void *)&local_5b0);
+    PECMD_FreeStrBuf((void *)&local_580);
 LAB_14008829d:
-    FUN_14005b104((void *)&local_570);
-    FUN_14005b104((void *)&local_578);
-    FUN_14005b104((void *)&local_560);
-    FUN_14005b104((void *)&local_590);
-    FUN_14005b104((void *)&local_558);
-    FUN_14005b104((void *)&local_568);
+    PECMD_FreeStrBuf((void *)&local_570);
+    PECMD_FreeStrBuf((void *)&local_578);
+    PECMD_FreeStrBuf((void *)&local_560);
+    PECMD_FreeStrBuf((void *)&local_590);
+    PECMD_FreeStrBuf((void *)&local_558);
+    PECMD_FreeStrBuf((void *)&local_568);
     return 0;
 }
 
@@ -1002,8 +1002,8 @@ LAB_14008aeda:
                         wsprintfW(local_1c8, WSTR(" %I64d %u %I64d"),
                                   lVar8, local_res10[0]);
                     }
-                    FUN_1400e6d68(local_c8, (uint64_t)local_2a8);
-                    FUN_1400e6d68(local_148,
+                    PECMD_FormatI64Dec(local_c8, (uint64_t)local_2a8);
+                    PECMD_FormatI64Dec(local_148,
                                   CONCAT44(auStack_29c[0], local_2a0));
                     pwVar9 = WSTR("%2d %14s %14s %6lu %4lu %4lu %4lu %s %2d %s %c%s");
                     if (local_2f0 != 0) {
@@ -1058,7 +1058,7 @@ LAB_14008ada9:
         uVar10 = local_res10[0];
     } while ((int)uVar12 < 16000);
     PECMD_StripTrailingSpaces((LPCWSTR)*param_1);
-    FUN_14005b104((void *)&local_2d8);
+    PECMD_FreeStrBuf((void *)&local_2d8);
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     return uVar10;
 }

@@ -260,8 +260,8 @@ uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
         *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8) = (int64_t)base + (cap + 0) * 2;
         *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8 + 8) = (int64_t)(base - buf + buf) + 0;
     }
-    FUN_14005B104((WCHAR **)&argv);
-    FUN_14005B104(&buf);
+    PECMD_FreeStrBuf((WCHAR **)&argv);
+    PECMD_FreeStrBuf(&buf);
     return argc;
 }
 

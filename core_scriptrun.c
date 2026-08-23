@@ -182,7 +182,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                 }
                 /* 若结果以引号开头则保留 */
             }
-            FUN_14005B104(&out2);
+            PECMD_FreeStrBuf(&out2);
         }
 
         /* ---- *map: 映射处理（反编译 344-390）---- */
@@ -192,7 +192,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             WCHAR *mapOut = NULL;
             FUN_14007BF44(script, tok2, &mapOut, 0, 1);
             FUN_14006375C(&local_278, mapOut);
-            FUN_14005B104(&mapOut);
+            PECMD_FreeStrBuf(&mapOut);
             if (FUN_14005C788("*map:", local_278, 5) == 1) {
                 mapStr = local_278;
             }
@@ -240,7 +240,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_1400702B0(&rname, resTok);
                     /* 资源名 = token 中 '#' 后的部分（TODO(verify)） */
                     FUN_14001EA18(hmod, rname, WSTR("PECMD"), (void **)&local_1e8, &resFlags);
-                    FUN_14005B104(&rname);
+                    PECMD_FreeStrBuf(&rname);
                 }
                 if (local_1e8 != NULL && *local_1e8 != L'\0') {
                     /* XOR 解码 + 脚本对象构造 */
@@ -257,11 +257,11 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                                                ((uint64_t)uVar42 << 16) | kf | 0x40,
                                                local_240, NULL);
                     }
-                    FUN_14005B104(&local_1e8);
+                    PECMD_FreeStrBuf(&local_1e8);
                 }
                 FreeLibrary(hmod);
             }
-            FUN_14005B104(&local_260);
+            PECMD_FreeStrBuf(&local_260);
         }
 
         /* ---- 变量执行路径（反编译 753-852）---- */
@@ -300,11 +300,11 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_1400702B0(&local_150, WSTR("**mem"));
                     DVar13 = FUN_1400B638C(script, local_210, local_278, local_150,
                                            ((uint64_t)seed << 16) | 0x40, NULL, NULL);
-                    FUN_14005B104(&local_150);
+                    PECMD_FreeStrBuf(&local_150);
                 }
-                FUN_14005B104(&local_210);
+                PECMD_FreeStrBuf(&local_210);
             }
-            FUN_14005B104(&local_1b8);
+            PECMD_FreeStrBuf(&local_1b8);
         }
 
         /* ---- 收尾（反编译 853-871）---- */
@@ -316,11 +316,11 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             PECMD_RunSysInit(script, WSTR("sysinit_end"));
         }
         FUN_14009BB28(script, 0);
-        FUN_14005B104(&local_1f8);
-        FUN_14005B104(&local_240);
-        FUN_14005B104(&local_260);
-        FUN_14005B104(&local_278);
-        FUN_14005B104(&outbuf);
+        PECMD_FreeStrBuf(&local_1f8);
+        PECMD_FreeStrBuf(&local_240);
+        PECMD_FreeStrBuf(&local_260);
+        PECMD_FreeStrBuf(&local_278);
+        PECMD_FreeStrBuf(&outbuf);
         (void)flags; (void)flags2; (void)m_flag; (void)mem_flag;
         (void)uVar24; (void)uVar31; (void)uVar34; (void)uVar35;
         (void)local_1a0; (void)local_1d0; (void)local_160;

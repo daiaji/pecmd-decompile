@@ -115,8 +115,8 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                 PECMD_AbsPathFromCurDir(fnbuf, &fn, (void *)script);
                                 /* 检查是否已 import */
                                 found = (uint64_t)(intptr_t)StrStrW((LPCWSTR)out[0], fn);
-                                FUN_14005B104(&fn);
-                                FUN_14005B104(&fnbuf);
+                                PECMD_FreeStrBuf(&fn);
+                                PECMD_FreeStrBuf(&fnbuf);
                                 if (found == 0) {
                                     /* 跳过分隔符后递归处理 import 文件 */
                                     WCHAR *r2 = qe;
@@ -158,7 +158,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
         ctrl[2] = l17;
     }
     FUN_14005B0B8(tmp, 0);
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&tmp);
     return ret;
 }
 
@@ -270,13 +270,13 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
             PECMD_EncodeBuffer(in, out2, (uint8_t)u17);
             ret = (u13 << 0x10) | (flags & 0xffff) | (int)(uint8_t)enc;
             flags = (int)(uint8_t)enc | flags;
-            FUN_14005B104((WCHAR **)&out2[0]);
+            PECMD_FreeStrBuf((WCHAR **)&out2[0]);
         }
     }
-    FUN_14005B104((WCHAR **)&buf);
+    PECMD_FreeStrBuf((WCHAR **)&buf);
     return ret;
 done:
-    if (buf) FUN_14005B104((WCHAR **)&buf);
-    FUN_14005B104(&path);
+    if (buf) PECMD_FreeStrBuf((WCHAR **)&buf);
+    PECMD_FreeStrBuf(&path);
     return 0xffffffff;
 }

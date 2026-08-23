@@ -56,7 +56,7 @@ extern undefined8 *PECMD_AllocSmallObject(undefined8 *arr);            /* @0x140
 extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out,
                                 undefined1 cp);               /* @0x140068984 */
 extern HANDLE   PECMD_LoadImageFromMemory(undefined8 *param_1, longlong *param_2); /* @0x14006eaac */
-extern void     FUN_14005b104(void *ps);                      /* @0x14005b104 释放字符串槽 */
+extern void PECMD_FreeStrBuf(void *ps);                      /* @0x14005b104 释放字符串槽 */
 extern WCHAR   *PECMD_SkipLeadingControlChars(WCHAR **ps);                    /* @0x14005b154 跳过空白 */
 extern WCHAR   *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);       /* @0x14006375c 串追加 */
 extern void     PECMD_AllocStrSlot(WCHAR **out);                   /* @0x140063620 初始化串缓冲 */
@@ -106,8 +106,8 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
             local_38[2] = 0;
             PECMD_EncodeBuffer((longlong *)&local_20, local_38, 0);
             pvVar2 = PECMD_LoadImageFromMemory((undefined8 *)local_38, (longlong *)0);
-            FUN_14005b104(local_38);
-            FUN_14005b104((void *)&local_20);
+            PECMD_FreeStrBuf(local_38);
+            PECMD_FreeStrBuf((void *)&local_20);
             return pvVar2;
         }
     }
@@ -312,7 +312,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
     FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_58, 0x2c, 0);
     if ((*local_res10 == 0) ||
         (bVar3 = PECMD_ParseHexOrDec((WCHAR **)&local_res10, &local_48), !bVar3)) {
-        FUN_14005b104((void *)&local_58);
+        PECMD_FreeStrBuf((void *)&local_58);
         lVar12 = -0x7ff8ffa9;
     } else {
         bVar3 = *local_58 != L'*';
@@ -376,9 +376,9 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
             iVar10 = lstrlenW(lpRootPathName);
             lpRootPathName = lpRootPathName + (int64_t)iVar10 + 1;
         } while (*lpRootPathName != L'\0');
-        FUN_14005b104((void *)&local_40);
-        FUN_14005b104((void *)&local_50);
-        FUN_14005b104((void *)&local_58);
+        PECMD_FreeStrBuf((void *)&local_40);
+        PECMD_FreeStrBuf((void *)&local_50);
+        PECMD_FreeStrBuf((void *)&local_58);
         lVar12 = (int64_t)(int)uVar7;
     }
     return lVar12;
@@ -416,6 +416,6 @@ uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
                           (uint64_t)(uintptr_t)g_Script,
                           (uint64_t)(uintptr_t)&local_res8, 0, (void *)0,
                           0, (void *)0);
-    FUN_14005b104((void *)&local_res10);
+    PECMD_FreeStrBuf((void *)&local_res10);
     return _Var1 & 0xffffffff;
 }

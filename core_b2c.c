@@ -635,7 +635,7 @@ success:
         _snwprintf(local_38[0], 0x27ff,
                    WSTR("PECMD安装驱动【%s】[%s][%s]"), pwVar6, inf, pwVar5);
         FUN_140025f10(ctx + 8, local_38[0], DVar2, (void *)0x1100, (void *)0, (int64_t *)0);
-        FUN_14005B104(local_38);
+        PECMD_FreeStrBuf(local_38);
         PECMD_WriteParamRecord(ctx, 'I', pwVar6, inf);
     }
     return DVar2;
@@ -681,9 +681,9 @@ uint32_t FUN_14002C634(int64_t ctx, LPCWSTR inf, LPCWSTR hwid,
                    pWVar3, inf);
         FUN_140025f10(ctx + 8, local_28[0], local_38.dwLowDateTime,
                       (void *)0x1100, (void *)0, (int64_t *)0);
-        FUN_14005B104(local_28);
+        PECMD_FreeStrBuf(local_28);
         DVar2 = local_38.dwLowDateTime;
-        FUN_14005B104(&local_30);
+        PECMD_FreeStrBuf(&local_30);
     } else {
         DVar2 = 0;
     }
@@ -1048,7 +1048,7 @@ int64_t PECMD_ExecPathList(int64_t *script, LPCWSTR paths, uint64_t flags,
         }
         if (*(WCHAR *)(uintptr_t)LVar10.QuadPart == L'\0') {
             if (!bVar4) {
-                FUN_14005B104((WCHAR **)&local_40);
+                PECMD_FreeStrBuf((WCHAR **)&local_40);
                 return -0x7ff8ffa9;
             }
             PECMD_AdvanceTokenPointer((int64_t)script, out, 0, (int64_t *)0);
@@ -1060,7 +1060,7 @@ int64_t PECMD_ExecPathList(int64_t *script, LPCWSTR paths, uint64_t flags,
             FUN_1400702B0((WCHAR **)&local_50.QuadPart, pWVar11);
             UVar8 = PECMD_EvalLoopCondition(script, (LPCWSTR)local_50.QuadPart, 2, (LPCWSTR)0);
             bVar3 = 0 < (int64_t)UVar8.QuadPart;
-            FUN_14005B104((WCHAR **)&local_50.QuadPart);
+            PECMD_FreeStrBuf((WCHAR **)&local_50.QuadPart);
             if (sVar2 == 0x21) {
                 bVar3 = !bVar3;
             }
@@ -1088,7 +1088,7 @@ int64_t PECMD_ExecPathList(int64_t *script, LPCWSTR paths, uint64_t flags,
         }
         *(uint16_t *)((char *)script + 0x19) =
             *(uint16_t *)((char *)script + 0x19) & 0x87;
-        FUN_14005B104((WCHAR **)&local_40);
+        PECMD_FreeStrBuf((WCHAR **)&local_40);
         lVar6 = (int64_t)iVar13;
     }
     return lVar6;
@@ -1141,7 +1141,7 @@ init_done:
     }
     PECMD_ReleaseRefCount((int64_t *)&local_res20);
     local_res20 = (uint64_t *)0;
-    FUN_14005B104((WCHAR **)&local_res20);
+    PECMD_FreeStrBuf((WCHAR **)&local_res20);
 }
 
 /* ========== FUN_14003A810 @0x14003a810 ==========

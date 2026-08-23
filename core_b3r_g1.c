@@ -24,7 +24,7 @@ extern uint8_t g_msgWndMode;                 /* 消息窗口模式字节 */
 extern uint32_t g_msgWndState[2];                /* 消息窗口状态/定时器标志 */
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
-extern void   FUN_140061c44(void);                            /* @0x140061c44 OLE 初始化协助 */
+extern int32_t PECMD_LoadOle32Apis(void);                            /* @0x140061c44 OLE 初始化协助 */
 extern HWND   FUN_14005B9C8(uint32_t flags, int maxWidth);   /* @0x14005b9c8 获取提示窗口 */
 extern void   PECMD_DestroyWindowLocked(void);                            /* @0x14005ba6c 销毁窗口 */
 extern void   PECMD_TimerMessage(HWND hwnd, uint64_t wParam, int timerId); /* @0x14005bb6c 定时器过程 */
@@ -46,7 +46,7 @@ uint32_t PECMD_ComWriteSlot(int64_t param_1, uint64_t param_2)
     }
     else {
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csCom);
-        FUN_140061c44();
+        PECMD_LoadOle32Apis();
         iVar1 = -3;
         if (g_pOleInit != (int (*)(int))0) {
             iVar1 = (*g_pOleInit)(0);

@@ -189,7 +189,7 @@ void FUN_1400ECDD8(uint64_t *arr)
         count--;
         void *item = (void *)base[count];
         if (item != (void *)0) {
-            FUN_14005B104((WCHAR **)((char *)item + 8));
+            PECMD_FreeStrBuf((WCHAR **)((char *)item + 8));
             free(item);
             base[count] = 0;
         }

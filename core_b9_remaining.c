@@ -23,8 +23,8 @@ extern uint64_t g_u64F520;
 /* ---- 业务辅助函数声明 (已实现于 core_b8* / core_* ) ---- */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);            /* @0x140063720 */
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);        /* @0x140070398 */
-extern void FUN_14005B104(WCHAR **ps);                             /* @0x14005b104 */
-extern void FUN_14005b104(WCHAR **ps);                             /* @0x14005b104 (本批构造函数调用用小写) */
+extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 */
+extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 (本批构造函数调用用小写) */
 extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
 extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
 extern int64_t *FUN_1400702f0(int64_t *out, char *src, uint64_t len); /* @0x1400702f0 */
@@ -220,7 +220,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
             local_res10 = PathFileExistsW(param_1);
             param_1[lVar3] = L'\0';
             if (local_res10 != 0) {
-                FUN_14005B104((WCHAR **)&local_res8);
+                PECMD_FreeStrBuf((WCHAR **)&local_res8);
                 return local_res10;
             }
         }
@@ -267,7 +267,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
         local_res10 = 1;
     }
 LAB_140102142:
-    FUN_14005B104((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8);
     if ((hFindFile != (HANDLE)0x0) && (hFindFile != (HANDLE)0xffffffffffffffff)) {
         FindClose(hFindFile);
     }
@@ -293,7 +293,7 @@ uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2)
     *((uint8_t *)param_1 + 0xfc) = 0;
     FUN_1400702f0((int64_t *)&local_res8, (char *)&g_DefEnv, 0xffffffffffffffffULL);
     PECMD_ReplaceStringSlot((int64_t *)(param_1 + 0x1e), (uint64_t *)&local_res8);
-    FUN_14005b104((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8);
     *((uint32_t *)((uint8_t *)param_1 + 0x11c)) = 0;
     *((uint32_t *)((uint8_t *)param_1 + 0x118)) = 0;            /* *(undefined4 *)(param_1 + 0x23) */
     *((uint32_t *)((uint8_t *)param_1 + 0x114)) = 0;

@@ -331,7 +331,7 @@ uint64_t PECMD_ApplyWallpaper(WCHAR *path)
     PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, WSTR("Control Panel\\Desktop"),
                   WSTR("Wallpaper.PECMD"), 1, (BYTE *)ps, (int)len * 2);
     r = PECMD_SetDesktopWallpaper(ps, 1);
-    FUN_14005B104(&local_res10);
+    PECMD_FreeStrBuf(&local_res10);
     return r;
 }
 
@@ -546,5 +546,5 @@ void PECMD_ExecIndataCommand(LPCWSTR key, LPCWSTR value)
     FUN_14006375C(&line, WSTR(" "));
     FUN_14006375C(&line, value);
     PECMD_RunCommand(g_Script, line);
-    FUN_14005B104(&line);
+    PECMD_FreeStrBuf(&line);
 }

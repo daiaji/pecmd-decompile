@@ -70,7 +70,7 @@ extern int  (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int); /* 全局�
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
 extern void *operator_new(size_t size);
-extern void  FUN_14005b104(void *ps);
+extern void PECMD_FreeStrBuf(void *ps);
 extern WCHAR *PECMD_SkipLeadingControlChars(void *pp);
 extern char  PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern int64_t PECMD_AsciiPrefixICmp(const char *a, const void *w, int n);
@@ -82,7 +82,7 @@ extern void  PECMD_AllocStrSlot(void *out);
 extern WCHAR *PECMD_AppendWideStr(void *ps, const WCHAR *src);
 extern WCHAR *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len);
 extern void  PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
-extern void  FUN_1400669c4(int64_t *a, uint64_t b, LPCWSTR c);
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);
 extern void  PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim);
 extern void  PECMD_AppendFormattedI64(int64_t *list, int64_t pos);
 extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d);
@@ -95,7 +95,7 @@ extern int64_t *PECMD_SplitTokenAssignVar(void *out, void *pp, uint32_t sep, int
 extern void  PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
 extern int64_t PECMD_VectorSlotPtr(int64_t a, int64_t *b, int64_t *c, uint32_t d);
 extern void  PECMD_VectorAppendGen(int64_t *a, int64_t *b, int64_t *c, void *d, int e, int f);
-extern void  FUN_140061c44(void);
+extern int32_t PECMD_LoadOle32Apis(void);
 extern int64_t PECMD_DelayLoadOleaut32(void);
 extern void  PECMD_UpdateTrayIcon(void *pc, uint64_t hwnd, LPCWSTR s, void *hicon, uint32_t flag);
 extern void  PECMD_ScaleWindowPos(int64_t param_1, uint32_t param_2, int *param_3);
@@ -129,8 +129,8 @@ extern int   PECMD_CalcCalendarMonthRows(uint16_t *a, int b);
 extern void  PECMD_GetTime100ns(int64_t *out);
 extern int64_t PECMD_GetTimeMs(void);
 extern int64_t PECMD_GetTimeNs(void);
-extern void  FUN_1400e6d68(LPCWSTR param_1, uint64_t param_2);
-extern void  FUN_1400e6d74(LPCWSTR param_1, uint64_t param_2);
+extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
+extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v);
 extern FILETIME FUN_14000e26c(void *script, void *cmd, void *s3, void *s4,
                               uint32_t flag, void *p6, void *s7, void *p8);
 extern void  PECMD_ScriptCopy(uint64_t *obj, uint64_t *p);
@@ -230,7 +230,7 @@ LPCWSTR *PECMD_VarSearchReplace(longlong *param_1, LPCWSTR param_2)
     pWVar13 = local_res10;
   }
   if (*pWVar13 == L'\0') {
-    FUN_14005b104(&local_a8);
+    PECMD_FreeStrBuf(&local_a8);
     return (LPCWSTR *)0x0;
   }
   PECMD_SplitTokenTrimWs(&local_res10, &local_a8, 0x3d);
@@ -333,7 +333,7 @@ LAB_1400a1bd9:
     local_b8 = (WCHAR *)0x0;
     PECMD_JoinTokensAndResolve(param_1, &local_d8, (int64_t *)&local_b8);
     local_d8 = local_b8;
-    FUN_14005b104(&local_c8);
+    PECMD_FreeStrBuf(&local_c8);
   }
   WVar20 = *local_d8;
   uVar11 = 0;
@@ -350,9 +350,9 @@ LAB_1400a1bd9:
     local_b0[0] = 0;
     PECMD_ParseShortStore(&local_res10, local_b0, 0x2c);
     if (*local_res10 != L',') {
-      FUN_14005b104(&local_b8);
-      FUN_14005b104(&local_90);
-      FUN_14005b104(&local_80);
+      PECMD_FreeStrBuf(&local_b8);
+      PECMD_FreeStrBuf(&local_90);
+      PECMD_FreeStrBuf(&local_80);
       goto LAB_1400a1bd9;
     }
     local_res10 = local_res10 + 1;
@@ -501,7 +501,7 @@ LAB_1400a1e3b:
       if (0 < (longlong)ppWVar18) {
         uVar11 = PECMD_CountNewlines((ulonglong *)pWVar13, (int)(uintptr_t)ppWVar18, (void *)(longlong)local_d0, iVar7);
       }
-      FUN_1400669c4(param_1, uVar11, pWVar17);
+      PECMD_AppendLongDecimal(param_1, uVar11, pWVar17);
     }
   }
   else {
@@ -511,18 +511,18 @@ LAB_1400a1e3b:
     if ((local_c0 < 1) && (0 < (longlong)ppWVar18)) {
       ppWVar18 = (LPCWSTR *)((longlong)pWVar19 - (longlong)ppWVar18);
     }
-    FUN_1400669c4(param_1, (ulonglong)ppWVar18 & 0xffffffff, local_98);
+    PECMD_AppendLongDecimal(param_1, (ulonglong)ppWVar18 & 0xffffffff, local_98);
   }
   else {
     PECMD_SetVariable(param_1, local_98, local_50);
   }
-  FUN_14005b104(&local_b8);
-  FUN_14005b104(&local_90);
-  FUN_14005b104(&local_80);
+  PECMD_FreeStrBuf(&local_b8);
+  PECMD_FreeStrBuf(&local_90);
+  PECMD_FreeStrBuf(&local_80);
 LAB_1400a234b:
-  FUN_14005b104(&local_68);
-  FUN_14005b104(&local_50);
-  FUN_14005b104(&local_a8);
+  PECMD_FreeStrBuf(&local_68);
+  PECMD_FreeStrBuf(&local_50);
+  PECMD_FreeStrBuf(&local_a8);
   return ppWVar16;
 }
 
@@ -585,7 +585,7 @@ int PECMD_ParseCommaParams(longlong *param_1, int16_t *param_2, longlong *param_
       }
     }
   }
-  FUN_14005b104(&local_40);
+  PECMD_FreeStrBuf(&local_40);
   return iVar4;
 }
 
@@ -677,10 +677,10 @@ FILETIME PECMD_DirWildcardExpand(longlong *param_1, FILETIME param_2)
       PECMD_AppendWideStr(local_res10, (LPCWSTR)(uintptr_t)_Var1);
       _Var3 = FUN_14000e26c(param_1, (void *)0, param_1, (void *)(uintptr_t)local_res10[0],
                             0, (void *)0, (void *)0, (void *)0);
-      FUN_14005b104(local_res10);
+      PECMD_FreeStrBuf(local_res10);
     }
   }
-  FUN_14005b104(&local_res20);
+  PECMD_FreeStrBuf(&local_res20);
   return _Var3;
 }
 
@@ -788,7 +788,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
                       (LPCWSTR)(uintptr_t)(((uint64_t)(uint32_t)uStackX_1c << 32) | (uint32_t)local_res18),
                       pWVar12);
       }
-      FUN_14005b104(&local_res18);
+      PECMD_FreeStrBuf(&local_res18);
     }
     ((LARGE_INTEGER *)(uintptr_t)(*(longlong *)(pcVar13 + 8) +
                      (longlong)*(int *)(pcVar13 + 4) * 8))->QuadPart = (int64_t)LVar10.QuadPart;
@@ -843,7 +843,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
         }
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         PECMD_ClearTaskTable(LVar5.QuadPart, 0);
-        FUN_14005b104((void *)(uintptr_t)(LVar5.QuadPart + 0x70));
+        PECMD_FreeStrBuf((void *)(uintptr_t)(LVar5.QuadPart + 0x70));
         free((void *)(uintptr_t)LVar5.QuadPart);
         if (param_1[3] != 0) goto LAB_1400a65de;
         pHVar8 = CreatePopupMenu();
@@ -897,10 +897,10 @@ LAB_1400a657f:
 LAB_1400a65de:
   LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
 LAB_1400a65eb:
-  FUN_14005b104((void *)&local_78);
-  FUN_14005b104((void *)&local_70);
-  FUN_14005b104((void *)&local_res20);
-  FUN_14005b104(&local_68);
+  PECMD_FreeStrBuf((void *)&local_78);
+  PECMD_FreeStrBuf((void *)&local_70);
+  PECMD_FreeStrBuf((void *)&local_res20);
+  PECMD_FreeStrBuf(&local_68);
   return (byte *)(uintptr_t)(uint32_t)LVar11.LowPart;
 }
 
@@ -1240,7 +1240,7 @@ LAB_1400a3e8c:
             }
           }
 LAB_1400a3dce:
-          FUN_1400e6d74(lpString, (uint64_t)LVar10.QuadPart);
+          PECMD_FormatU64Dec(lpString, (uint64_t)LVar10.QuadPart);
         }
         else {
           local_18d8.Bias = 0;
@@ -1250,13 +1250,13 @@ LAB_1400a3dce:
                   local_18d8.Bias;
           lVar12 = (longlong)((iVar7 >> 5) - (iVar7 >> 0x1f));
 LAB_1400a3d8f:
-          FUN_1400e6d68(lpString, (uint64_t)lVar12);
+          PECMD_FormatI64Dec(lpString, (uint64_t)lVar12);
         }
       }
       else {
         lVar12 = (longlong)((__int128)(int64_t)-0x29406b2a1a85bd43LL * (__int128)local_1908.QuadPart) +
                  local_1908.QuadPart;
-        FUN_1400e6d68(lpString, (uint64_t)(((lVar12 >> 0x17) + -0x2b6109100) - (lVar12 >> 0x3f)));
+        PECMD_FormatI64Dec(lpString, (uint64_t)(((lVar12 >> 0x17) + -0x2b6109100) - (lVar12 >> 0x3f)));
         local_18f0.dwLowDateTime = 0;
         local_18f0.dwHighDateTime = 0;
         GetSystemTimeAsFileTime(&local_18f0);
@@ -1269,7 +1269,7 @@ LAB_1400a3e98:
     if (local_1828[0] != L'\0') {
 LAB_1400a3ec4:
       PECMD_SetVariable(param_1, local_18f8, local_1828);
-      FUN_14005b104((longlong *)&local_18f8);
+      PECMD_FreeStrBuf((WCHAR **)&local_18f8);
       return (longlong)iVar16;
     }
   } while(true);
@@ -1458,7 +1458,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                                          (uint32_t *)(-(ulonglong)((int)local_100 != 0) &
                                                      (ulonglong)local_f8));
                   if (iVar16 != 0) {
-                    FUN_1400669c4(param_1, (ulonglong)local_f8[0], local_e0);
+                    PECMD_AppendLongDecimal(param_1, (ulonglong)local_f8[0], local_e0);
                   }
                   if (puVar7 != (uint64_t *)0x0) {
                     *(int *)((longlong)puVar7 + 0x14) = local_res20[0];
@@ -1493,7 +1493,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
                     }
                   }
                   PECMD_DelayLoadOleaut32();
-                  FUN_140061c44();
+                  PECMD_LoadOle32Apis();
                   if ((((*(byte *)((longlong)param_1 + 0x12) & 4) == 0) &&
                       (*(byte *)((longlong)param_1 + 0x12) =
                           *(byte *)((longlong)param_1 + 0x12) | 4,
@@ -1505,7 +1505,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
               }
               else {
                 PECMD_DelayLoadOleaut32();
-                FUN_140061c44();
+                PECMD_LoadOle32Apis();
                 if ((*(byte *)((longlong)param_1 + 0x12) & 2) == 0) {
                   EnterCriticalSection((LPCRITICAL_SECTION)&g_csCom);
                   *(byte *)((longlong)param_1 + 0x12) = *(byte *)((longlong)param_1 + 0x12) | 2;
@@ -1517,7 +1517,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
             }
             else {
               PECMD_DelayLoadOleaut32();
-              FUN_140061c44();
+              PECMD_LoadOle32Apis();
               if ((*(byte *)((longlong)param_1 + 0x12) & 1) == 0) {
                 *(byte *)((longlong)param_1 + 0x12) = *(byte *)((longlong)param_1 + 0x12) | 1;
                 EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -1596,23 +1596,23 @@ LAB_1400a4d06:
         }
       }
       if (*local_e0 != L'\0') {
-        FUN_1400669c4(param_1, uVar10, local_e0);
+        PECMD_AppendLongDecimal(param_1, uVar10, local_e0);
       }
       PECMD_NotifyMainWindowRefresh(param_1, 0);
-      FUN_14005b104(&local_100);
-      FUN_14005b104(&local_98);
-      FUN_14005b104(&local_b0);
-      FUN_14005b104(&local_b8);
-      FUN_14005b104(&local_d0);
-      FUN_14005b104(&local_e0);
+      PECMD_FreeStrBuf(&local_100);
+      PECMD_FreeStrBuf(&local_98);
+      PECMD_FreeStrBuf(&local_b0);
+      PECMD_FreeStrBuf(&local_b8);
+      PECMD_FreeStrBuf(&local_d0);
+      PECMD_FreeStrBuf(&local_e0);
       return (longlong)(int)uVar10;
     }
 LAB_1400a4b62:
-    FUN_14005b104(&local_98);
+    PECMD_FreeStrBuf(&local_98);
   }
-  FUN_14005b104(&local_b0);
-  FUN_14005b104(&local_b8);
-  FUN_14005b104(&local_d0);
-  FUN_14005b104(&local_e0);
+  PECMD_FreeStrBuf(&local_b0);
+  PECMD_FreeStrBuf(&local_b8);
+  PECMD_FreeStrBuf(&local_d0);
+  PECMD_FreeStrBuf(&local_e0);
   return uVar11;
 }

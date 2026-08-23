@@ -188,7 +188,7 @@ void PECMD_FreeContainer(int64_t *container)
     if (*container != 0) {
         FUN_14005D558(container, (HWND)0);
     }
-    FUN_14005B104((WCHAR **)container);
+    PECMD_FreeStrBuf((WCHAR **)container);
 }
 
 /* ========== PECMD_UpdateLcg @0x14005e028 ==========

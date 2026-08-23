@@ -43,7 +43,7 @@ extern void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn,
                           uint32_t flags, int thickness); /* @0x14005d600 */
 
 /* ---- 字符串/脚本工具 (extern) ---- */
-extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
@@ -507,7 +507,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
         int cVar11 = 0;
 
         if (count < 1) {
-            FUN_14005B104(&cmdCopy);
+            PECMD_FreeStrBuf(&cmdCopy);
             return ret;
         }
         script = map[0];
@@ -515,7 +515,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
             idx++;
             entIdx++;
             if (count <= idx) {
-                FUN_14005B104(&cmdCopy);
+                PECMD_FreeStrBuf(&cmdCopy);
                 return ret;
             }
             e = (uint8_t *)(base + entIdx * 0x28);
@@ -545,7 +545,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
         }
 
         if (*(WCHAR **)(e + 0x10) == NULL || **(WCHAR **)(e + 0x10) == L'\0') {
-            FUN_14005B104(&cmdCopy);
+            PECMD_FreeStrBuf(&cmdCopy);
             return ret;
         }
         ret = flags;
@@ -562,27 +562,27 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
             if (msg == 0x111 || ((flags >> 8) & 1) != 0) {
                 PECMD_FormatSetVar((int64_t *)script, wParam & 0xffff,
                               WSTR("&&__wParam.wID"), WSTR("0x%X"));
-                FUN_1400668EC((void *)script, wParam >> 16,
+                PECMD_AppendFmtValue((void *)script, wParam >> 16,
                                 WSTR("&&__wParam.wNotifyCode"), WSTR("0x%I64X"));
                 extra |= 0x1000;
             } else if (msg == 0x4e || ((flags >> 9) & 1) != 0) {
-                FUN_1400668EC((void *)script, lParam[1],
+                PECMD_AppendFmtValue((void *)script, lParam[1],
                                 WSTR("&&__NMHDR.idFrom"), WSTR("0x%I64X"));
                 PECMD_FormatSetVar((int64_t *)script, (uint32_t)lParam[2],
                               WSTR("&&__NMHDR.code"), WSTR("0x%X"));
-                FUN_1400668EC((void *)script, *lParam,
+                PECMD_AppendFmtValue((void *)script, *lParam,
                                 WSTR("&&__NMHDR.hwndFrom"), WSTR("0x%I64X"));
                 extra |= 0x1000;
             }
             if (varVal != NULL && *varVal != L'\0') {
-                FUN_1400668EC((void *)script, wParam, varVal, WSTR("0x%I64X"));
+                PECMD_AppendFmtValue((void *)script, wParam, varVal, WSTR("0x%I64X"));
             }
             if (*p == L',') {
                 p++;
                 PECMD_SplitTokenTrimWs((int64_t *)&p, (int64_t *)&varKey, 0x2c);
                 FUN_14007BF44((int64_t *)script, varKey, &varVal, 0, 1);
                 if (varVal != NULL && *varVal != L'\0') {
-                    FUN_1400668EC((void *)script, (uint64_t)(uintptr_t)lParam,
+                    PECMD_AppendFmtValue((void *)script, (uint64_t)(uintptr_t)lParam,
                                     varVal, WSTR("0x%I64X"));
                 }
                 if (*p == L',')
@@ -628,10 +628,10 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
         if (out != NULL)
             *out = (uint64_t)execResult;
 
-        FUN_14005B104(&varKey);
-        FUN_14005B104(&varVal);
-        FUN_14005B104(&varName);
-        FUN_14005B104(&cmdCopy);
+        PECMD_FreeStrBuf(&varKey);
+        PECMD_FreeStrBuf(&varVal);
+        PECMD_FreeStrBuf(&varName);
+        PECMD_FreeStrBuf(&cmdCopy);
         if (extra == 0 || extra == 0x1060)
             return ret;
     }
@@ -855,7 +855,7 @@ uint64_t FUN_1400EBD30(int64_t conn, LPCWSTR entryName, LPCWSTR user,
         }
     }
 done:
-    FUN_14005B104(&phonebook);
+    PECMD_FreeStrBuf(&phonebook);
     return result;
 }
 
@@ -1169,7 +1169,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
         PECMD_DrawVertCenteredText(hdc, text, -1, &rc, align);
     }
     SelectObject(hdc, oldFont);
-    FUN_14005B104((WCHAR **)&text);
+    PECMD_FreeStrBuf((WCHAR **)&text);
 }
 
 /* ========== PECMD_Wow64MapPeImage @0x1400e7124 ==========
@@ -1908,7 +1908,7 @@ uint64_t FUN_1400F1C8C(int64_t obj, uint64_t msg, int64_t wParam,
                                              key, drop);
                     SetWindowTextW(*(HWND *)(b + OBJ_HWND), drop);
                 }
-                FUN_14005B104(&drop);
+                PECMD_FreeStrBuf(&drop);
             }
             goto after;
         }
@@ -2003,7 +2003,7 @@ uint64_t FUN_1400FB654(int64_t obj, uint64_t msg, int64_t wParam,
                                          key, drop);
                 SetWindowTextW(*(HWND *)(b + OBJ_HWND), drop);
             }
-            FUN_14005B104(&drop);
+            PECMD_FreeStrBuf(&drop);
         }
         goto after;
     }
@@ -2167,13 +2167,13 @@ WCHAR **FUN_1400E69AC(WCHAR **out, double value, LPCWSTR fmt, uint32_t prec,
         *out = NULL;
         joined = FUN_14007DE70(&old, &result, expPart);
         PECMD_ReplaceStringSlot((int64_t *)out, (uint64_t *)joined);
-        FUN_14005B104((WCHAR **)&result);
-        FUN_14005B104((WCHAR **)&old);
+        PECMD_FreeStrBuf((WCHAR **)&result);
+        PECMD_FreeStrBuf((WCHAR **)&old);
     }
 
-    FUN_14005B104(&expBuf);
-    FUN_14005B104(&suffix);
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&expBuf);
+    PECMD_FreeStrBuf(&suffix);
+    PECMD_FreeStrBuf(&tmp);
     return out;
 }
 
@@ -2254,7 +2254,7 @@ uint64_t FUN_1400EDA04(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
     bmiDst.bmiHeader.biWidth = (LONG)dstW;
     bmiDst.bmiHeader.biHeight = (LONG)cLines;
     SetDIBits(hdc, dstBmp, 0, cLines, dstBits, &bmiDst, 0);
-    FUN_14005B104((WCHAR **)&buf);
+    PECMD_FreeStrBuf((WCHAR **)&buf);
     return 0;
 }
 
@@ -2413,7 +2413,7 @@ int PECMD_DrawWrappedText(HDC hdc, LPCWSTR text, int64_t maxChars, RECT *rect, u
         RECT rc;
         width = rect->right - rect->left;
         if (n < 1 || rect->bottom <= rect->top) {
-            FUN_14005B104((WCHAR **)&lineLens);
+            PECMD_FreeStrBuf((WCHAR **)&lineLens);
             return drawn;
         }
         if (lineIter == NULL) {
@@ -2530,7 +2530,7 @@ uint64_t FUN_1400ED278(HDC hdc, HBITMAP srcBmp, uint64_t param3, UINT param4,
     bmiDst.bmiHeader.biWidth = (LONG)dstW;
     bmiDst.bmiHeader.biHeight = (LONG)cLines;
     SetDIBits(hdc, dstBmp, 0, cLines, dstBits, &bmiDst, 0);
-    FUN_14005B104((WCHAR **)&buf);
+    PECMD_FreeStrBuf((WCHAR **)&buf);
     return 0;
 }
 
@@ -2838,7 +2838,7 @@ done:
     BitBlt(hdc, 0, 0, draw.right - draw.left, draw.bottom - draw.top, memDC, 0, 0, 0xcc0020);
     DeleteDC(memDC);
     PECMD_RestoreAndDeleteObject(slot);
-    FUN_14005B104((WCHAR **)&text);
+    PECMD_FreeStrBuf((WCHAR **)&text);
 }
 
 /* ========== FUN_1400F69B8 @0x1400f69b8 ==========
@@ -3136,12 +3136,12 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
                 extra64 = extraVal;
         }
         if (msg <= 0) {
-            FUN_14005B104(&expanded);
-            FUN_14005B104(&name);
+            PECMD_FreeStrBuf(&expanded);
+            PECMD_FreeStrBuf(&name);
             return -0x7ff8ffa9;
         }
-        FUN_14005B104(&expanded);
-        FUN_14005B104(&name);
+        PECMD_FreeStrBuf(&expanded);
+        PECMD_FreeStrBuf(&name);
     }
 
     count = *(int32_t *)(b + 0x10);
@@ -3377,7 +3377,7 @@ void PECMD_ControlPaint(int64_t obj, HDC hdcIn)
         SelectObject(hdc, oldBmp);
         DeleteObject(bmp);
     }
-    FUN_14005B104((WCHAR **)&text);
+    PECMD_FreeStrBuf((WCHAR **)&text);
     if (memDC != 0)
         DeleteDC(memDC);
 }
@@ -3541,7 +3541,7 @@ void FUN_1400EE3D0(int64_t obj, int64_t paintInfo)
         SetTextColor(hdc, GetSysColor(0x10));
     }
     DrawTextW(hdc, text, -1, &rc, 0x24);
-    FUN_14005B104((WCHAR **)&text);
+    PECMD_FreeStrBuf((WCHAR **)&text);
 }
 
 /* ========== FUN_1400F42FC @0x1400f42fc ==========
@@ -3616,8 +3616,8 @@ start:
         if (r != 0) {
             if (key != (HKEY)0)
                 RegCloseKey(key);
-            FUN_14005B104(&expanded);
-            FUN_14005B104(&allPath);
+            PECMD_FreeStrBuf(&expanded);
+            PECMD_FreeStrBuf(&allPath);
             return r;
         }
         PECMD_AllocWStringBuffer(&nameBuf, (int64_t)(nameLen * 4 + 8));
@@ -3642,8 +3642,8 @@ start:
                 }
             }
         }
-        FUN_14005B104(&dataBuf);
-        FUN_14005B104(&nameBuf);
+        PECMD_FreeStrBuf(&dataBuf);
+        PECMD_FreeStrBuf(&nameBuf);
         if (key != (HKEY)0)
             RegCloseKey(key);
 
@@ -3659,7 +3659,7 @@ start:
         FUN_14007A224((void *)(uintptr_t)g_Script, allPath, &expanded, -1, 0);
         SetEnvironmentVariableW(WSTR("PATH"), expanded);
     }
-    FUN_14005B104(&expanded);
-    FUN_14005B104(&allPath);
+    PECMD_FreeStrBuf(&expanded);
+    PECMD_FreeStrBuf(&allPath);
     return 0;
 }

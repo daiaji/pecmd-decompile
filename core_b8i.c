@@ -33,7 +33,7 @@
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
-extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400633A8(void **ps, int64_t len);               /* @0x1400633a8 */
 extern int64_t FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);       /* @0x1400e75cc */
@@ -134,14 +134,14 @@ void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
     PECMD_AllocWStringBuffer(&tmp, 100);
     wsprintfW(tmp, WSTR("&%s.id"), WSTR(""));            /* TODO(verify) 缺实参 */
     if (varTable != NULL)
-        FUN_1400669C4(varTable, *(uint16_t *)(item + 2), tmp);
+        PECMD_AppendLongDecimal(varTable, *(uint16_t *)(item + 2), tmp);
 
     if ((script != 0) && (**(int16_t **)(item + 0x10) != 0)) {
         wsprintfW(tmp, WSTR("_COMMAND#%d:"), 0);         /* TODO(verify) 缺实参 */
         FUN_14006375C(&tmp, *(LPCWSTR *)(item + 0x10));
         FUN_1400F2384(cmdCtx, tmp, varTable, script, 0, 1);
     }
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&tmp);
 }
 
 /* ========== FUN_1400E5248 @0x1400e5248 ==========
@@ -308,7 +308,7 @@ uint64_t FUN_1400E7664(LPCWSTR name)
                 i++;
             } while ((int)(i) < (int)count);
         }
-        FUN_14005B104((WCHAR **)&blk);
+        PECMD_FreeStrBuf((WCHAR **)&blk);
     }
     return result;
 }
@@ -348,7 +348,7 @@ int64_t FUN_1400E7758(int64_t *out)
         pos += len;
     }
     int64_t r = *out;
-    FUN_14005B104((WCHAR **)&blk);
+    PECMD_FreeStrBuf((WCHAR **)&blk);
     return r;
 }
 
@@ -480,7 +480,7 @@ uint64_t *FUN_1400F5C74(uint64_t *obj)
     *(uint8_t *)((uint8_t *)obj + 0x130) = 1;
     FUN_1400702F0((int64_t *)&local_res8, (const char *)g_DefEnv, 0xffffffffffffffff);
     PECMD_ReplaceStringSlot((int64_t *)(obj + 0x20), &local_res8);
-    FUN_14005B104((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8);
     *(uint32_t *)((uint8_t *)obj + 0x134) = 0;
     obj[0x22] = 0;
     obj[0x21] = 0;

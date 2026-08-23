@@ -75,7 +75,7 @@ extern int32_t FUN_1400630D0(int mode);
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                            HANDLE tmpl);
-extern int32_t FUN_140061C44(void);
+extern int32_t PECMD_LoadOle32Apis(void);
 extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len);
 extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
@@ -287,7 +287,7 @@ void PECMD_ReleaseSlotRef(int64_t *slot, int table)
                 *(int64_t *)(lVar1 + lVar4 * 8) = 0;
                 plVar3[1] = plVar3[1] - 1;
                 local_res18[0] = lVar2;
-                FUN_14005B104((WCHAR **)local_res18);
+                PECMD_FreeStrBuf((WCHAR **)local_res18);
             }
         }
     }
@@ -696,7 +696,7 @@ bool FUN_14006E4F4(LPCWSTR name)
     int64_t *plVar2;
 
     EnterCriticalSection(&g_csCom);
-    FUN_140061C44();
+    PECMD_LoadOle32Apis();
     iVar1 = -3;
     if (g_pOleInit != NULL) {
         int (*initFn)(int) = (int (*)(int))(void *)g_pOleInit;
@@ -816,7 +816,7 @@ uint64_t FUN_1400799F0(uint64_t src, uint64_t len)
     }
     uVar2 = 0;
 converted:
-    FUN_14005B104((WCHAR **)&local_res10);
+    PECMD_FreeStrBuf((WCHAR **)&local_res10);
     return uVar2;
 }
 
@@ -871,7 +871,7 @@ uint64_t *FUN_1400A43C4(LPCWSTR name, char wait)
         WaitForSingleObject((HANDLE)(uintptr_t)puVar1[1], 0xffffffff);
         *(uint8_t *)((uint8_t *)puVar1 + 0x10) = 1;
     }
-    FUN_14005B104((WCHAR **)local_res18);
+    PECMD_FreeStrBuf((WCHAR **)local_res18);
     return puVar1;
 }
 
@@ -899,7 +899,7 @@ uint64_t *FUN_1400A4460(LPCWSTR name, char wait, uint32_t *out)
         FUN_1400702F0((int64_t *)&local_res8, pcVar3, (uint64_t)-1);
         FUN_14006375C((WCHAR **)&local_res8, pWVar4);
         puVar2 = PECMD_CreateGlobalMutex(local_res8, wait, out);
-        FUN_14005B104((WCHAR **)&local_res8);
+        PECMD_FreeStrBuf((WCHAR **)&local_res8);
     } else {
         puVar2 = FUN_1400A43C4(name, wait);
     }

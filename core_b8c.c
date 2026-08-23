@@ -24,7 +24,7 @@
 
 #include "pecmd_defs.h"
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void FUN_1400E6D68(WCHAR *dst, uint64_t v);          /* @0x1400e6d68 */
+extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);          /* @0x1400e6d68 */
 
 /* ---- 全局数据符号 ---- */
 extern uint8_t PTR_FUN_14012cb90[];
@@ -71,7 +71,7 @@ uint64_t *PECMD_NewFormattedI64Str(uint64_t *out, uint64_t unused, uint64_t valu
     WCHAR buf[104];
 
     (void)unused;
-    FUN_1400E6D68(buf, value);
+    PECMD_FormatI64Dec(buf, value);
     *out = 0;
     *out = (uint64_t)(uintptr_t)PECMD_AllocMagicString(buf);
     return out;

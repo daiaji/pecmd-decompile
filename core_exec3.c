@@ -5,7 +5,7 @@
  *   PECMD_SetEnvIfChanged    @0x140061508   环境变量设置（值不同才写）
  *   PECMD_SetVarEn    @0x1400629b8   (已声明 FUN_1400629B8) 变量写（锁/直写分派）
  *   PECMD_EncodeBuffer   @0x140068984   资源解码加载
- *   FUN_140061C44      @0x140061c44   OLE/COM 初始化
+ *   PECMD_LoadOle32Apis      @0x140061c44   OLE/COM 初始化
  *   FUN_14005B7E8  @0x14005b7e8   托盘图标清理
  *   FUN_14001BB30  @0x14001bb30   钩子/资源清理
  *   PECMD_WaitCountPumpMessages  @0x14001bbdc   等待条件 + 消息泵
@@ -135,8 +135,8 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
         if (bSet) PECMD_SetEnvIfChanged(WSTR("CurDrv"), file);
     }
 
-    FUN_14005B104(&file);
-    FUN_14005B104(&cur);
+    PECMD_FreeStrBuf(&file);
+    PECMD_FreeStrBuf(&cur);
     return 0;
 }
 
@@ -196,10 +196,10 @@ void FUN_14005B7E8(char *nid)
     LeaveCriticalSection(&g_csInit);
 }
 
-/* ========== FUN_140061C44 @0x140061c44 ==========
+/* ========== PECMD_LoadOle32Apis @0x140061c44 ==========
  * 惰性加载 OLE32 COM 函数指针（失败静默）。
  */
-int32_t FUN_140061C44(void)
+int32_t PECMD_LoadOle32Apis(void)
 {
     /* TODO(verify): 原实现 GetProcAddress 加载 OLE32 导出；
      *   g_guidPtrState 为 StringFromGUID2 指针（非 0 即已初始化）。
@@ -235,7 +235,7 @@ void PECMD_ShutdownCom(void)
     int r;
     if (g_pComState != NULL) {
         EnterCriticalSection(&g_csCom);
-        FUN_140061C44();
+        PECMD_LoadOle32Apis();
         r = -3;
         if (g_pOleInit != NULL) {
             r = ((int (*)(int))g_pOleInit)(0);
@@ -316,12 +316,12 @@ void FUN_14004E2CC(int64_t table, int64_t *task)
             buf[i2 + 2 + i3] = L' ';
             lstrcpyW(buf + i2 + 3 + i3, lpStr0);
             /* TODO(verify): FUN_140045C90(table, buf) */
-            FUN_14005B104(&buf);
+            PECMD_FreeStrBuf(&buf);
         }
         if ((*(uint8_t *)(table + 0x11) & 1) != 0) {
             FUN_14005B0B8(old, 0);
         }
-        FUN_14005B104((WCHAR **)&old);
+        PECMD_FreeStrBuf((WCHAR **)&old);
     }
     if ((*(uint8_t *)(table + 0x11) & 1) != 0) {
         FUN_14005B0B8((void *)*task, 0);

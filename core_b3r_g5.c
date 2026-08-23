@@ -24,7 +24,7 @@ extern DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
  * 本文件引用的辅助函数 (均为 extern, 正文不在此定义)
  * ------------------------------------------------------------------ */
 extern void    PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);                /* @0x140063694 分配 */
-extern void    FUN_14005b104(void *ps);                                 /* @0x14005b104 释放字符串槽 */
+extern void PECMD_FreeStrBuf(void *ps);                                 /* @0x14005b104 释放字符串槽 */
 extern void    PECMD_AllocStrSlot(WCHAR **out);                              /* @0x140063620 初始化串缓冲 */
 extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);                /* @0x140063720 分配串 */
 extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);                   /* @0x1400633a8 分配 */
@@ -307,7 +307,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
         (*g_pWIMCloseHandleSlot)(lVar4);
     }
 LAB_14007581a:
-    FUN_14005b104((void *)local_248);
+    PECMD_FreeStrBuf((void *)local_248);
     return iVar3;
 }
 
@@ -452,9 +452,9 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
                 PECMD_AllocString((WCHAR **)param_2, (int64_t)(iVar3 + iVar2 + 8));
                 wsprintfW((LPWSTR)*param_2, WSTR("%s%s"),
                           lpString_00, lpString);   /* TODO(verify) varargs */
-                FUN_14005b104((void *)&local_108);
+                PECMD_FreeStrBuf((void *)&local_108);
             }
-            FUN_14005b104((void *)&local_100);
+            PECMD_FreeStrBuf((void *)&local_100);
             if (hObject != (HANDLE)0xffffffffffffffff) {
                 CloseHandle(hObject);
             }

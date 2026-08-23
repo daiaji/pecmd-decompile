@@ -152,8 +152,8 @@ int FUN_1400084D0(WCHAR *msg)
     FUN_14007A224(&g_Script, pCopy, &pOut, 0, 1);   /* 解析命令文本 */
     FUN_1400703E4(&pParsed, pOut);
     p = pParsed;
-    FUN_14005B104(&pOut);
-    FUN_14005B104(&pCopy);
+    PECMD_FreeStrBuf(&pOut);
+    PECMD_FreeStrBuf(&pCopy);
 
     p = FUN_14000531C(p);       /* 跳空白 */
 
@@ -170,7 +170,7 @@ int FUN_1400084D0(WCHAR *msg)
                 FUN_140008B2C(p);
                 ExitProcess(0);
             }
-            FUN_14005B104(&pParsed);
+            PECMD_FreeStrBuf(&pParsed);
             return 0;
         }
         marker = 'S';

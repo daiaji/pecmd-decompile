@@ -492,7 +492,7 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
                               (uint8_t)b6, (uint8_t)(b6 >> 8),
                               (uint8_t)(b6 >> 16), (uint8_t)(b6 >> 24),
                               face);
-        FUN_14005B104(&buf);
+        PECMD_FreeStrBuf(&buf);
         return f;
     }
 }
@@ -510,7 +510,7 @@ HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name)
     *(uint32_t *)buf = 0;                       /* lfHeight */
     *(uint8_t *)((uint8_t *)buf + 0x17) = 1;    /* DEFAULT_CHARSET */
     f = FUN_1400B1F34((int *)buf, size, name);
-    FUN_14005B104((WCHAR **)&buf);
+    PECMD_FreeStrBuf((WCHAR **)&buf);
     return f;
 }
 
@@ -549,7 +549,7 @@ void FUN_1400E648C(void **pfont, UINT id)
     }
     f = FUN_1400B89DC(base, &sz, face);
     *pfont = (void *)f;
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&tmp);
 }
 
 /* ========== 语言文件加载 @0x1400166b4 ========== */
@@ -576,14 +576,14 @@ int64_t PECMD_LoadLanguageFile(void)
             WCHAR *s = NULL;
             FUN_1400637DC(&s, ".", -1, -1);
             FUN_14006375C((WCHAR **)&buf, s);
-            FUN_14005B104(&s);
+            PECMD_FreeStrBuf(&s);
         }
         FUN_14006375C((WCHAR **)&buf, g_pLocale);       /* DAT_14013ca70 代码页串 */
         {
             WCHAR *s = NULL;
             FUN_1400637DC(&s, ".lang", -1, -1);
             FUN_14006375C((WCHAR **)&buf, s);
-            FUN_14005B104(&s);
+            PECMD_FreeStrBuf(&s);
         }
         ftmp = NULL;
         r = PECMD_ReadFileStr(buf, &ftmp);
@@ -592,7 +592,7 @@ int64_t PECMD_LoadLanguageFile(void)
             WCHAR *s = NULL;
             FUN_1400637DC(&s, ".lang", -1, -1);
             FUN_14006375C((WCHAR **)&buf, s);
-            FUN_14005B104(&s);
+            PECMD_FreeStrBuf(&s);
             r = PECMD_ReadFileStr(buf, &ftmp);
         }
         if (r > 0) {
@@ -654,8 +654,8 @@ int64_t PECMD_LoadLanguageFile(void)
                 g_langLen = (int64_t)i * 2;
             }
         }
-        FUN_14005B104((WCHAR **)&ftmp);
-        FUN_14005B104(&buf);
+        PECMD_FreeStrBuf((WCHAR **)&ftmp);
+        PECMD_FreeStrBuf(&buf);
     }
     return (int64_t)(uintptr_t)g_pLangBuf;
 }

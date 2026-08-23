@@ -30,7 +30,7 @@ extern void      PECMD_AllocStrSlot(void *out);         /* @0x140063620 release 
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);        /* @0x14005b154 skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* @0x1400702b0 assign */
 extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
-extern void      FUN_14005b104(void *ps);          /* @0x14005b104 free slot */
+extern void PECMD_FreeStrBuf(void *ps);          /* @0x14005b104 free slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -137,7 +137,7 @@ uint64_t PECMD_ProcessTitleTipSelect(uint64_t *param_1, int64_t *param_2, LPCWST
                 PECMD_SetVariableWithPrefix((int64_t *)param_1[10],
                               (LPCWSTR)(uintptr_t)local_res8, local_98);
             }
-            FUN_14005b104(&local_res8);
+            PECMD_FreeStrBuf(&local_res8);
             SendMessageW(hWnd, 0x462, (WPARAM)(long long)(iVar3 + -1), 0);
         } else {
             /* "Tip" setter */
@@ -370,19 +370,19 @@ uint64_t PECMD_ParseComboList(longlong *param_1, ushort *param_2, WPARAM param_3
         PECMD_AddControlA(param_3, (int64_t)param_1, &local_a0, local_a8, local_a4,
                       local_res18[0], local_res8[0], &local_98, &local_78,
                       (uVar14 & 0xffff) | uVar16, local_90);
-        FUN_14005b104(&local_78);
-        FUN_14005b104(&local_98);
-        FUN_14005b104(&local_a0);
-        FUN_14005b104(&local_88);
+        PECMD_FreeStrBuf(&local_78);
+        PECMD_FreeStrBuf(&local_98);
+        PECMD_FreeStrBuf(&local_a0);
+        PECMD_FreeStrBuf(&local_88);
     } else {
-        FUN_14005b104(&local_78);
-        FUN_14005b104(&local_98);
-        FUN_14005b104(&local_a0);
-        FUN_14005b104(&local_88);
+        PECMD_FreeStrBuf(&local_78);
+        PECMD_FreeStrBuf(&local_98);
+        PECMD_FreeStrBuf(&local_a0);
+        PECMD_FreeStrBuf(&local_88);
         uVar12 = 1;
     }
 LAB_1400ab01b:
-    FUN_14005b104(&local_68);
+    PECMD_FreeStrBuf(&local_68);
     return (uint64_t)uVar12;
 }
 
@@ -506,11 +506,11 @@ uint64_t PECMD_ParseListControl(longlong *param_1, ushort *param_2, WPARAM param
                               (WCHAR *)(uintptr_t)local_80);
                 uVar9 = 0;
             }
-            FUN_14005b104(&local_48);
-            FUN_14005b104(&local_78);
-            FUN_14005b104(&local_88);
-            FUN_14005b104(&local_68);
-            FUN_14005b104(&local_60);
+            PECMD_FreeStrBuf(&local_48);
+            PECMD_FreeStrBuf(&local_78);
+            PECMD_FreeStrBuf(&local_88);
+            PECMD_FreeStrBuf(&local_68);
+            PECMD_FreeStrBuf(&local_60);
             return (uint64_t)uVar9;
         }
         lVar5 = FUN_14005c72c("-center", (const WCHAR *)puVar11, 7);
@@ -619,6 +619,6 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
                       (uint32_t)(cVar2 != '\0'));
         uVar4 = 0;
     }
-    FUN_14005b104(&local_48);
+    PECMD_FreeStrBuf(&local_48);
     return (uint64_t)uVar4;
 }

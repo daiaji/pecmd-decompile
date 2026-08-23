@@ -10,7 +10,7 @@
  *   FUN_1400637DC @0x1400637dc   (ANSI->Unicode 表复制)
  *
  * 注意: PECMD_SkipLeadingControls / FUN_14005B0D4 与 FUN_14005B154 /
- *       FUN_14005B104 字节级相同 (core_string.c), 不重复实现.
+ *       PECMD_FreeStrBuf 字节级相同 (core_string.c), 不重复实现.
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
@@ -27,7 +27,7 @@ void FUN_14001A220(void);            /* @0x14001a220 */
 void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 设置内置变量 */
 void FUN_140062A2C(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变量 */
 void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置数值变量 */
-void FUN_1400668EC(void *s, uint64_t v, LPCWSTR k, LPCWSTR fmt); /* @0x1400668ec */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 uint64_t PECMD_GetParentProcessId(DWORD pid);   /* @0x140006988 父进程 PID */
 void PECMD_AllocWStringBuffer(WCHAR **ps, size_t n);  /* @0x140063694 分配 */
 void PECMD_ImportSystemEnvVars(void);            /* @0x14001c1d4 */
@@ -108,7 +108,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     PECMD_VarSetUInt(&g_Script, pid, WSTR("&__PID"));
     pid = GetCurrentProcessId();
     PECMD_VarSetUInt(&g_Script, (uint64_t)PECMD_GetParentProcessId(pid), WSTR("&__PPID"));
-    FUN_1400668EC(&g_Script, (uint64_t)(uintptr_t)g_hInst, WSTR("&__HINST"), WSTR("%I64u"));
+    PECMD_AppendFmtValue(&g_Script, (uint64_t)(uintptr_t)g_hInst, WSTR("&__HINST"), WSTR("%I64u"));
     g_Tid = GetCurrentThreadId();
     PECMD_VarSetUInt(&g_Script, g_Tid, WSTR("&__TID"));
     pid = GetTickCount();
@@ -124,8 +124,8 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     GetModuleFileNameW((HMODULE)0, pBuf, 0x208);
     FUN_140062A2C(&g_Script, WSTR("&&CurFile"), pBuf);
     PECMD_ImportSystemEnvVars();
-    FUN_14005B104(&pBuf);
-    FUN_14005B104(&pVer);
+    PECMD_FreeStrBuf(&pBuf);
+    PECMD_FreeStrBuf(&pVer);
 }
 
 /* ========== 收尾钩子 @0x14002ca30 ========== */

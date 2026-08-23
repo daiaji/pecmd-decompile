@@ -145,8 +145,8 @@ DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
             result = 0x80070057;
         }
     }
-    FUN_14005B104(&key);
-    FUN_14005B104(&expanded);
+    PECMD_FreeStrBuf(&key);
+    PECMD_FreeStrBuf(&expanded);
     return result;
 }
 
@@ -208,7 +208,7 @@ uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam)
     }
     rect[0] += iVar5;
     rect[2] += iVar5;
-    FUN_14005B104((WCHAR **)&items);
+    PECMD_FreeStrBuf((WCHAR **)&items);
     return count & 0xffffffff;
 }
 
@@ -238,7 +238,7 @@ void PECMD_ListAddItemEntry(int64_t obj, int index, LPCWSTR text, uint32_t data,
         FUN_1400702B0(item, text);
     *slot = (WCHAR *)item;
     if (old != NULL) {
-        FUN_14005B104(old);
+        PECMD_FreeStrBuf(old);
         free(old);
     }
 
@@ -347,31 +347,31 @@ void PECMD_DestroyCtlResources(uint64_t *obj)
         DeleteObject((HGDIOBJ)obj[0x49]);
         obj[0x49] = 0;
     }
-    FUN_14005B104((WCHAR **)(obj + 0x73));
-    FUN_14005B104((WCHAR **)(obj + 0x70));
-    FUN_14005B104((WCHAR **)(obj + 0x6d));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x73));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x70));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x6d));
     PECMD_FreeArray_ddf8((int64_t *)(obj + 0x6a));
-    FUN_14005B104((WCHAR **)(obj + 0x6a));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x6a));
     PECMD_FreeArray_ddf8((int64_t *)(obj + 0x67));
-    FUN_14005B104((WCHAR **)(obj + 0x67));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x67));
     FUN_1400F425C(obj + 0x64);
-    FUN_14005B104((WCHAR **)(obj + 0x64));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x64));
     FUN_1400F4208(obj + 0x61);
-    FUN_14005B104((WCHAR **)(obj + 0x61));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x61));
     FUN_1400F5C10((int64_t *)(obj + 0x5e));
-    FUN_14005B104((WCHAR **)(obj + 0x5e));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x5e));
     FUN_1400F425C(obj + 0x5b);
-    FUN_14005B104((WCHAR **)(obj + 0x5b));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x5b));
     FUN_1400F425C(obj + 0x58);
-    FUN_14005B104((WCHAR **)(obj + 0x58));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x58));
     FUN_1400F425C(obj + 0x55);
-    FUN_14005B104((WCHAR **)(obj + 0x55));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x55));
     FUN_1400F425C(obj + 0x52);
-    FUN_14005B104((WCHAR **)(obj + 0x52));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x52));
     FUN_1400F425C(obj + 0x4f);
-    FUN_14005B104((WCHAR **)(obj + 0x4f));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x4f));
     FUN_1400F425C(obj + 0x4c);
-    FUN_14005B104((WCHAR **)(obj + 0x4c));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 0x4c));
     FUN_1400F5D50(obj + 0x1b);
     FUN_1400E8940(obj);
     (void)b;

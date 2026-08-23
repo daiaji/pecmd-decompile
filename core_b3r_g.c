@@ -70,10 +70,10 @@ extern int  (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **); /
  * ================================================================ */
 extern void      PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void     *PECMD_GrowByteBuffer(void **ps, int64_t len);
-extern void      FUN_14005b104(void *ps);
+extern void PECMD_FreeStrBuf(void *ps);
 extern int       PECMD_AdapterMacIpLookup(void *a, int64_t *b, int c);
 extern int64_t   PECMD_ParseVolumeGuid(int64_t *param_1, uint32_t *param_2, int param_3);
-extern void      FUN_140061c44(void);
+extern int32_t PECMD_LoadOle32Apis(void);
 extern void      PECMD_AllocMagicBlock(void **p, int64_t len);
 extern int       PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
@@ -325,7 +325,7 @@ LAB_14007f219:
     if (cVar9 == '\x03') {
         iVar4 = PECMD_AdapterMacIpLookup(local_a0, (int64_t *)param_2, 0);
         if (iVar4 == 0) {
-            FUN_14005b104((int64_t *)&local_90);
+            PECMD_FreeStrBuf((WCHAR **)&local_90);
             return (uint32_t *)0;
         }
         cVar9 = '\x04';
@@ -367,7 +367,7 @@ LAB_14007f319:
         local_88 = (int64_t *)0;
         local_78 = (int64_t *)0;
         EnterCriticalSection(&g_csCom);
-        FUN_140061c44();
+        PECMD_LoadOle32Apis();
         iVar4 = -3;
         if ((g_pOleInit != (int (*)(int))0) &&
             (iVar4 = (*g_pOleInit)(0), iVar4 != 0) && (iVar4 == 1))
@@ -424,7 +424,7 @@ LAB_14007f319:
         plVar13[1] = (int64_t)puVar16;
         plVar13[2] = (int64_t)puVar12;
         local_98 = (uint32_t *)0;
-        FUN_14005b104((int64_t *)&local_98);
+        PECMD_FreeStrBuf((WCHAR **)&local_98);
         if ((g_pOleUninit != (void (*)(void))0) && (iVar4 == 0)) {
             (*g_pOleUninit)();
         }
@@ -527,7 +527,7 @@ LAB_14007f55f:
 LAB_14007f6c3_zeroterm:
     *(uint16_t *)*param_2 = 0;
 LAB_14007f6c3:
-    FUN_14005b104((int64_t *)&local_90);
+    PECMD_FreeStrBuf((WCHAR **)&local_90);
     return puVar11;
 }
 
@@ -577,7 +577,7 @@ uint32_t PECMD_QueryWindowState(int64_t *param_1, HWND param_2, LPCWSTR param_3,
         FUN_14006764c((int64_t *)local_28, (int64_t *)&local_res18, 0x3b, 0x3a);
         uVar3 = IsWindowVisible(param_2);
         PECMD_VarSetUInt(param_1, (uint64_t)uVar3, local_res18);
-        FUN_14005b104((int64_t *)&local_res18);
+        PECMD_FreeStrBuf((WCHAR **)&local_res18);
     }
     return 0;
 }
@@ -734,7 +734,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
                             PECMD_ParseNumSkipWs((int64_t *)&local_a0, &local_98);
                             /* important detail: local_98 re-cast as (ulonglong)(char) */
                             local_98 = (uint64_t)(char)local_98;
-                            FUN_14005b104((int64_t *)&local_c0);
+                            PECMD_FreeStrBuf((WCHAR **)&local_c0);
                             pWVar16 = local_res10;
                         }
                     }
@@ -791,11 +791,11 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
     }
     FUN_1400547bc(param_1, (WCHAR **)&local_res10, (WCHAR **)&local_a8, 0x2c, 0);
     if (*local_res10 == L'\0') {
-        FUN_14005b104((int64_t *)&local_88);
-        FUN_14005b104((int64_t *)&local_c0);
-        FUN_14005b104((int64_t *)&local_a0);
-        FUN_14005b104((int64_t *)&local_b8);
-        FUN_14005b104(&local_a8);
+        PECMD_FreeStrBuf((WCHAR **)&local_88);
+        PECMD_FreeStrBuf((WCHAR **)&local_c0);
+        PECMD_FreeStrBuf((WCHAR **)&local_a0);
+        PECMD_FreeStrBuf((WCHAR **)&local_b8);
+        PECMD_FreeStrBuf(&local_a8);
         uVar5 = 1;
     }
     else {
@@ -832,7 +832,7 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
             local_88 = (WCHAR *)0;
             local_res8 = pWVar16;
             PECMD_ExpandVarDispatch(param_1, pWVar16, (WCHAR **)&local_88, 0, 1);
-            FUN_14005b104((int64_t *)&local_res8);
+            PECMD_FreeStrBuf((WCHAR **)&local_res8);
         }
         if ((!bVar2) && ((uVar8 & 4) != 0)) {
             PECMD_ExpandBackslashNewline(local_b8, '\0');
@@ -854,13 +854,13 @@ uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, WPARAM param_
                       (int)(int32_t)local_res18, (WCHAR **)&local_b8,
                       (WCHAR **)&local_88, (uVar12 & 0xffff) | uVar10 | uVar11,
                       local_78, local_c0, local_98);
-        FUN_14005b104((int64_t *)&local_88);
-        FUN_14005b104((int64_t *)&local_c0);
-        FUN_14005b104((int64_t *)&local_a0);
-        FUN_14005b104((int64_t *)&local_b8);
-        FUN_14005b104(&local_a8);
+        PECMD_FreeStrBuf((WCHAR **)&local_88);
+        PECMD_FreeStrBuf((WCHAR **)&local_c0);
+        PECMD_FreeStrBuf((WCHAR **)&local_a0);
+        PECMD_FreeStrBuf((WCHAR **)&local_b8);
+        PECMD_FreeStrBuf(&local_a8);
     }
 LAB_140083250:
-    FUN_14005b104(&local_60);
+    PECMD_FreeStrBuf(&local_60);
     return uVar5;
 }

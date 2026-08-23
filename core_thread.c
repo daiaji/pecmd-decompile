@@ -67,7 +67,7 @@ void FUN_14005B0B8(void *p)
 }
 
 /* ========== 引用计数减 @0x140017110 ========== */
-/* 计数到 0 释放 (FUN_14005B0D4 = FUN_14005B104), 返回 NULL */
+/* 计数到 0 释放 (FUN_14005B0D4 = PECMD_FreeStrBuf), 返回 NULL */
 void *PECMD_ReleaseRefCount(void **pp)
 {
     void *p;
@@ -81,7 +81,7 @@ void *PECMD_ReleaseRefCount(void **pp)
     if (*(int *)p > 0) {
         *(int *)p = *(int *)p - 1;
         if (*(int *)*pp < 1) {
-            FUN_14005B104((WCHAR **)pp);
+            PECMD_FreeStrBuf((WCHAR **)pp);
             *pp = NULL;
             LeaveCriticalSection(&g_csInit);
             return NULL;
@@ -135,8 +135,8 @@ uint64_t FUN_14001FD60(void *task)
     }
     PECMD_ReleaseRefCount((void **)&refs[0]);
     refs[0] = 0;
-    FUN_14005B104((WCHAR **)&refs[0]);
-    FUN_14005B104((WCHAR **)&refs[2]);
+    PECMD_FreeStrBuf((WCHAR **)&refs[0]);
+    PECMD_FreeStrBuf((WCHAR **)&refs[2]);
     return 0;
 }
 
@@ -184,7 +184,7 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
             ResumeThread(hThread);
             c[2] = c[2] + 1;
         }
-        FUN_14005B104((WCHAR **)&task);
+        PECMD_FreeStrBuf((WCHAR **)&task);
     }
     return 1;   /* 继续枚举 */
 }
@@ -224,8 +224,8 @@ uint64_t PECMD_ThreadMainLoop(void *task)
         CloseHandle(handles[i]);
     }
     PECMD_ReleaseRefCount((void **)&refs);
-    FUN_14005B104((WCHAR **)&refs);
-    FUN_14005B104((WCHAR **)&r);
+    PECMD_FreeStrBuf((WCHAR **)&refs);
+    PECMD_FreeStrBuf((WCHAR **)&r);
     return 0;
 }
 
@@ -395,9 +395,9 @@ uint64_t FUN_140027EAC(void *script, void **pref, uint32_t a3, uint64_t a4,
     }
     PECMD_ReleaseRefCount((void **)&pref);
     pref = NULL;
-    FUN_14005B104((WCHAR **)&pref);
+    PECMD_FreeStrBuf((WCHAR **)&pref);
     PECMD_ReleaseRefCount((void **)&task);
     task = NULL;
-    FUN_14005B104((WCHAR **)&task);
+    PECMD_FreeStrBuf((WCHAR **)&task);
     return 0;
 }

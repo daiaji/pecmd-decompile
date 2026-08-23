@@ -46,7 +46,7 @@ extern void      PECMD_AllocStrSlot(void *out);                       /* @0x1400
 extern WCHAR    *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @0x140063694 分配串槽 */
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);       /* @0x140063720 PECMD_StrAlloc */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
-extern void      FUN_14005b104(void *ps);                         /* @0x14005b104 释放串槽 */
+extern void PECMD_FreeStrBuf(void *ps);                         /* @0x14005b104 释放串槽 */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                       /* @0x14005b154 跳过空白 */
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);     /* @0x1400702b0 赋值串 */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);     /* @0x14007034c 追加串 */
@@ -121,7 +121,7 @@ extern int64_t   PECMD_DescribePartitionInfo(int64_t *param_1, LPCWSTR param_2, 
                                uint32_t *param_6, char param_7);
 extern int64_t   PECMD_StripDevicePrefix(int64_t param_1);            /* 变量值读取 */
 extern void      PECMD_QuoteTokenString(int64_t *param_1, int64_t *param_2, int param_3);
-extern void      FUN_1400e6d74(LPCWSTR param_1, uint64_t param_2); /* %I64u 格式化 */
+extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v); /* %I64u 格式化 */
 
 /* ---- 流/加密流栈 ---- */
 extern int64_t  *PECMD_InitStreamObject(int64_t *stream, int64_t handle);   /* 初始化流 */
@@ -276,7 +276,7 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
                             local_98 = local_c8;
                             PECMD_ParseNumSkipWs((int64_t *)&local_98, &local_88);
                             local_88 = (uint64_t)(char)local_88;
-                            FUN_14005b104((void *)&local_c8);
+                            PECMD_FreeStrBuf((void *)&local_c8);
                             pWVar14 = local_res10;
                         }
                     }
@@ -331,11 +331,11 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
     }
     FUN_1400547bc(param_1, (int64_t *)&local_res10, (int64_t *)&local_a0, 0x2c, 0);
     if (*local_res10 == L'\0') {
-        FUN_14005b104((void *)&local_80);
-        FUN_14005b104((void *)&local_c8);
-        FUN_14005b104((void *)&local_98);
-        FUN_14005b104((void *)&local_c0);
-        FUN_14005b104((void *)&local_a0);
+        PECMD_FreeStrBuf((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_c8);
+        PECMD_FreeStrBuf((void *)&local_98);
+        PECMD_FreeStrBuf((void *)&local_c0);
+        PECMD_FreeStrBuf((void *)&local_a0);
         uVar4 = 1;
     }
     else {
@@ -389,15 +389,15 @@ uint64_t PECMD_MsgCommand(int64_t *param_1, WCHAR *param_2, WPARAM param_3, uint
                       local_b8[0], local_res8[0], (int)(uintptr_t)local_res18,
                       (WCHAR **)&local_c0, (WCHAR **)&local_80, (((uVar9 & 0xfffe) | 4)) | uVar8,
                       &local_b0, local_c8, local_88);
-        FUN_14005b104((void *)&local_80);
-        FUN_14005b104((void *)&local_c8);
-        FUN_14005b104((void *)&local_98);
-        FUN_14005b104((void *)&local_c0);
-        FUN_14005b104((void *)&local_a0);
+        PECMD_FreeStrBuf((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_c8);
+        PECMD_FreeStrBuf((void *)&local_98);
+        PECMD_FreeStrBuf((void *)&local_c0);
+        PECMD_FreeStrBuf((void *)&local_a0);
     }
     (void)local_58; (void)local_60; (void)local_78; (void)local_a4; (void)local_a8;
 LAB_140083a22:
-    FUN_14005b104((void *)&local_68);
+    PECMD_FreeStrBuf((void *)&local_68);
     return uVar4;
 }
 
@@ -504,21 +504,21 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
         }
         FUN_140063ed4(param_3, (int64_t)param_1, &local_80, local_88, local_84, local_res18[0],
                       local_res8[0], &local_78, &local_68, uVar9);
-        FUN_14005b104((void *)&local_68);
-        FUN_14005b104((void *)&local_70);
-        FUN_14005b104((void *)&local_78);
-        FUN_14005b104((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_68);
+        PECMD_FreeStrBuf((void *)&local_70);
+        PECMD_FreeStrBuf((void *)&local_78);
+        PECMD_FreeStrBuf((void *)&local_80);
     }
     else {
-        FUN_14005b104((void *)&local_68);
-        FUN_14005b104((void *)&local_70);
-        FUN_14005b104((void *)&local_78);
-        FUN_14005b104((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_68);
+        PECMD_FreeStrBuf((void *)&local_70);
+        PECMD_FreeStrBuf((void *)&local_78);
+        PECMD_FreeStrBuf((void *)&local_80);
         uVar6 = 1;
     }
     (void)local_40; (void)local_48; (void)local_60;
 LAB_1400842e0:
-    FUN_14005b104((void *)&local_50);
+    PECMD_FreeStrBuf((void *)&local_50);
     return uVar6;
 }
 
@@ -625,21 +625,21 @@ uint64_t PECMD_MsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM param_3, 
         }
         PECMD_InsertControlObject(param_3, (int64_t)param_1, &local_80, local_88, local_84, local_res18[0],
                       local_res8[0], &local_78, &local_68, uVar9);
-        FUN_14005b104((void *)&local_68);
-        FUN_14005b104((void *)&local_70);
-        FUN_14005b104((void *)&local_78);
-        FUN_14005b104((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_68);
+        PECMD_FreeStrBuf((void *)&local_70);
+        PECMD_FreeStrBuf((void *)&local_78);
+        PECMD_FreeStrBuf((void *)&local_80);
     }
     else {
-        FUN_14005b104((void *)&local_68);
-        FUN_14005b104((void *)&local_70);
-        FUN_14005b104((void *)&local_78);
-        FUN_14005b104((void *)&local_80);
+        PECMD_FreeStrBuf((void *)&local_68);
+        PECMD_FreeStrBuf((void *)&local_70);
+        PECMD_FreeStrBuf((void *)&local_78);
+        PECMD_FreeStrBuf((void *)&local_80);
         uVar6 = 1;
     }
     (void)local_40; (void)local_48; (void)local_60;
 LAB_140084678:
-    FUN_14005b104((void *)&local_50);
+    PECMD_FreeStrBuf((void *)&local_50);
     return uVar6;
 }
 
@@ -955,7 +955,7 @@ LAB_140085eeb:
             local_178 = (WCHAR *)0x0;
             local_140 = pWVar20;
             PECMD_ExpandCommandLine(param_1, pWVar20, (WCHAR **)&local_178, 0, 1);
-            FUN_14005b104((void *)&local_140);
+            PECMD_FreeStrBuf((void *)&local_140);
         }
         local_e0 = local_178;
         local_80 = (uint64_t)(int)uVar6;
@@ -1162,7 +1162,7 @@ LAB_14008638a:
                         pWVar20 = local_130;
                         local_130 = local_1a0;
                         local_1a0 = pWVar20;
-                        FUN_14005b104((void *)&local_1a0);
+                        PECMD_FreeStrBuf((void *)&local_1a0);
                     }
                     if ((1 < (int)uVar6) && (*local_180 != L'\0')) {
                         local_1a0 = (WCHAR *)0x0;
@@ -1170,7 +1170,7 @@ LAB_14008638a:
                         pWVar20 = local_148;
                         local_148 = local_1a0;
                         local_1a0 = pWVar20;
-                        FUN_14005b104((void *)&local_1a0);
+                        PECMD_FreeStrBuf((void *)&local_1a0);
                     }
                     if ((uVar6 != 0) && (*local_188 != L'\0')) {
                         local_1a0 = (WCHAR *)0x0;
@@ -1222,35 +1222,35 @@ LAB_14008638a:
                                 local_1a0 = pWVar22;
                             }
                         }
-                        FUN_14005b104((void *)&local_1a0);
+                        PECMD_FreeStrBuf((void *)&local_1a0);
                     }
                     pWVar14 = (WCHAR *)PECMD_RegexReplace((int64_t *)&local_a8, local_180, local_190, local_188,
                                             local_e0, param_1);
                 } while (0 < local_198);
             }
-            FUN_14005b104((void *)&local_158);
-            FUN_14005b104((void *)&local_120);
-            FUN_14005b104((void *)&local_128);
-            FUN_14005b104((void *)&local_150);
-            FUN_14005b104((void *)&local_130);
-            FUN_14005b104((void *)&local_148);
-            FUN_14005b104((void *)&local_f0);
-            FUN_14005b104((void *)&local_108);
-            FUN_14005b104((void *)&local_f8);
-            FUN_14005b104((void *)&local_178);
+            PECMD_FreeStrBuf((void *)&local_158);
+            PECMD_FreeStrBuf((void *)&local_120);
+            PECMD_FreeStrBuf((void *)&local_128);
+            PECMD_FreeStrBuf((void *)&local_150);
+            PECMD_FreeStrBuf((void *)&local_130);
+            PECMD_FreeStrBuf((void *)&local_148);
+            PECMD_FreeStrBuf((void *)&local_f0);
+            PECMD_FreeStrBuf((void *)&local_108);
+            PECMD_FreeStrBuf((void *)&local_f8);
+            PECMD_FreeStrBuf((void *)&local_178);
             return (uint64_t)(pWVar14 == (LPCWSTR)0x0);
         }
-        FUN_14005b104((void *)&local_120);
-        FUN_14005b104((void *)&local_128);
-        FUN_14005b104((void *)&local_150);
-        FUN_14005b104((void *)&local_130);
-        FUN_14005b104((void *)&local_148);
-        FUN_14005b104((void *)&local_f0);
+        PECMD_FreeStrBuf((void *)&local_120);
+        PECMD_FreeStrBuf((void *)&local_128);
+        PECMD_FreeStrBuf((void *)&local_150);
+        PECMD_FreeStrBuf((void *)&local_130);
+        PECMD_FreeStrBuf((void *)&local_148);
+        PECMD_FreeStrBuf((void *)&local_f0);
     (void)local_58; (void)local_60; (void)local_70;
 LAB_1400859c1:
-        FUN_14005b104((void *)&local_108);
-        FUN_14005b104((void *)&local_f8);
-        FUN_14005b104((void *)&local_178);
+        PECMD_FreeStrBuf((void *)&local_108);
+        PECMD_FreeStrBuf((void *)&local_f8);
+        PECMD_FreeStrBuf((void *)&local_178);
         return (uint64_t)(int64_t)(int32_t)0xffffffff80070057;
 }
 
@@ -1480,8 +1480,8 @@ LAB_140086cae:
     }
     local_d578 = pWVar9;
     if ((*pWVar9 == L'\0') || (*lpString2 == L'\0')) {
-        FUN_14005b104((void *)&local_d590);
-        FUN_14005b104((void *)&local_d598);
+        PECMD_FreeStrBuf((void *)&local_d590);
+        PECMD_FreeStrBuf((void *)&local_d598);
         return (uint64_t)(int64_t)(int32_t)0xffffffff80070057;
     }
     iVar22 = lstrcmpW(WSTR("-"), lpString2);
@@ -1696,15 +1696,15 @@ LAB_1400871d8:
             if (local_d5a3 != '\0') {
                 local_d568 = (HANDLE)0x0;
             }
-            FUN_14005b104((void *)&local_d588);
+            PECMD_FreeStrBuf((void *)&local_d588);
             local_d538 = (int64_t *)&PTR_FUN_140126540;
             PECMD_StreamClose((int64_t *)local_d530);
             local_d570 = (int64_t *)&PTR_FUN_140126540;
             ppvVar14 = &local_d568;
 LAB_140087639:
             PECMD_StreamClose((int64_t *)ppvVar14);
-            FUN_14005b104((void *)&local_d590);
-            FUN_14005b104((void *)&local_d598);
+            PECMD_FreeStrBuf((void *)&local_d590);
+            PECMD_FreeStrBuf((void *)&local_d598);
             return 0;
         }
         if (bVar29) {
@@ -1732,7 +1732,7 @@ LAB_140087639:
             local_d550 = (int64_t)iVar22 * 2;
             goto LAB_1400871d8;
         }
-        FUN_14005b104((void *)&local_d588);
+        PECMD_FreeStrBuf((void *)&local_d588);
     }
     else {
         lVar11 = PECMD_VarLookup(param_1, lpString2, (void *)0x0, -1, (void *)0x0);
@@ -1754,8 +1754,8 @@ LAB_140087144:
     ppvVar14 = &local_d568;
 LAB_14008755e:
     PECMD_StreamClose((int64_t *)ppvVar14);
-    FUN_14005b104((void *)&local_d590);
-    FUN_14005b104((void *)&local_d598);
+    PECMD_FreeStrBuf((void *)&local_d590);
+    PECMD_FreeStrBuf((void *)&local_d598);
     return uVar23;
 }
 /* ==================================================================
@@ -1859,7 +1859,7 @@ LPCWSTR PECMD_GetDiskFreeSpace(int64_t *param_1, WCHAR *param_2)
     local_128 = (LPWSTR)0x0;
     pWVar8 = PECMD_UnquoteString((WCHAR *)local_res10);
     PECMD_AssignString((WCHAR **)&local_128, pWVar8);
-    FUN_14005b104((void *)&local_res10);
+    PECMD_FreeStrBuf((void *)&local_res10);
     for (pWVar8 = local_130; *pWVar8 != L'\0'; pWVar8 = pWVar8 + 1) {
         if (*pWVar8 == L',') {
             *pWVar8 = L'\0';
@@ -1955,11 +1955,11 @@ LAB_1400949c9:
             PECMD_SetVariable(param_1, local_120, local_f8);
         }
         if (*pWVar10 == L'\0') {
-            FUN_14005b104((void *)&local_118);
+            PECMD_FreeStrBuf((void *)&local_118);
             pWVar12 = (LPCWSTR)0x1;
         }
         else {
-            FUN_14005b104((void *)&local_118);
+            PECMD_FreeStrBuf((void *)&local_118);
         }
         goto LAB_140094bba;
     }
@@ -1987,14 +1987,14 @@ LAB_140094864:
     local_110[2].QuadPart = 0;
     BVar6 = GetDiskFreeSpaceExW(pWVar8, local_110, local_110 + 1, local_110 + 2);
     if (BVar6 != 0) {
-        FUN_1400e6d74((LPCWSTR)&local_b8, local_110[(int)cVar11].QuadPart);
+        PECMD_FormatU64Dec((LPCWSTR)&local_b8, local_110[(int)cVar11].QuadPart);
     }
     PECMD_SetVariable(param_1, local_130, (LPCWSTR)&local_b8);
     pWVar12 = (LPCWSTR)(uintptr_t)(BVar6 == 0);
 LAB_140094bba:
-    FUN_14005b104((void *)&local_120);
-    FUN_14005b104((void *)&local_130);
-    FUN_14005b104((void *)&local_128);
+    PECMD_FreeStrBuf((void *)&local_120);
+    PECMD_FreeStrBuf((void *)&local_130);
+    PECMD_FreeStrBuf((void *)&local_128);
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     return pWVar12;
 }
@@ -2132,8 +2132,8 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
     }
     pWVar12 = (LPWSTR)PECMD_StripDevicePrefix(local_48[0]);
     if ((*local_50 == L'\0') || (*pWVar12 == L'\0')) {
-        FUN_14005b104((void *)local_48);
-        FUN_14005b104((void *)&local_50);
+        PECMD_FreeStrBuf((void *)local_48);
+        PECMD_FreeStrBuf((void *)&local_50);
         return (uint64_t)(int64_t)(int32_t)0xffffffff80070057;
     }
     iVar9 = lstrlenW(pWVar12);
@@ -2164,7 +2164,7 @@ uint64_t PECMD_NormalizePath(int64_t *param_1, LPCWSTR param_2)
             local_res20 = StrRChrW(pWVar12, (LPCWSTR)0x0, L'\\');
         }
 LAB_140094f98:
-        FUN_14005b104((void *)&local_60);
+        PECMD_FreeStrBuf((void *)&local_60);
     }
     if ((cVar14 == '\x01') && (local_res20 != (LPWSTR)0x0)) {
         *local_res20 = L'\0';
@@ -2201,7 +2201,7 @@ LAB_14009509b:
         local_60 = lpszLongPath;
         local_58 = (LPWSTR)pWVar13;
     }
-    FUN_14005b104((void *)&local_60);
+    PECMD_FreeStrBuf((void *)&local_60);
 LAB_1400950ce:
     local_60 = (LPWSTR)0x0;
     local_res10[0] = pWVar12;
@@ -2209,9 +2209,9 @@ LAB_1400950ce:
         PECMD_QuoteTokenString((int64_t *)local_res10, (int64_t *)&local_60, -1);
     }
     PECMD_SetVariable(param_1, local_50, local_res10[0]);
-    FUN_14005b104((void *)&local_60);
-    FUN_14005b104((void *)&local_58);
-    FUN_14005b104((void *)local_48);
-    FUN_14005b104((void *)&local_50);
+    PECMD_FreeStrBuf((void *)&local_60);
+    PECMD_FreeStrBuf((void *)&local_58);
+    PECMD_FreeStrBuf((void *)local_48);
+    PECMD_FreeStrBuf((void *)&local_50);
     return 0;
 }

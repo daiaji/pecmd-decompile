@@ -247,9 +247,9 @@ uint64_t FUN_1400C12FC(LPCWSTR str, int64_t *outBuf, int mode)
  */
 uint64_t *FUN_1400C3CA4(uint64_t *s, uint32_t out)
 {
-    FUN_14005B104((WCHAR **)(s + 0x11));
-    FUN_14005B104((WCHAR **)(s + 0x10));
-    FUN_14005B104((WCHAR **)(s + 0xf));
+    PECMD_FreeStrBuf((WCHAR **)(s + 0x11));
+    PECMD_FreeStrBuf((WCHAR **)(s + 0x10));
+    PECMD_FreeStrBuf((WCHAR **)(s + 0xf));
     PECMD_DtorTrackbarControl(s);
     if ((out & 1) != 0) {
         free(s);
@@ -375,7 +375,7 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
         FUN_14006764C((int64_t *)&key, (int64_t *)&s, 0x3b, 0x3a);
         uint32_t enabled = (uint32_t)IsWindowEnabled(target);
         PECMD_VarSetUInt(ctx, (uint64_t)enabled, s);
-        FUN_14005B104((WCHAR **)&s);
+        PECMD_FreeStrBuf((WCHAR **)&s);
     } else {
         WCHAR first = *spec;
         if (first == L'#') {

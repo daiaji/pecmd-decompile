@@ -156,7 +156,7 @@ WCHAR *PECMD_PrependEnviHeader(uint32_t key, WCHAR **pbuf, LPCWSTR line,
     memcpy(ins, tmp, linelen * 2);
     /* 新行尾写 key 分隔 (PECMD_FillChar6 = 写 ushort) */
     *(uint16_t *)((uint8_t *)nb + (linelen + seglen + (size_t)off) * 2) = (uint16_t)key;
-    FUN_14005B104(&tmp);
+    PECMD_FreeStrBuf(&tmp);
     return ins;
 }
 
@@ -229,9 +229,9 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
     v98 = NULL;                         /* 反编译 local_98[1]=0 (死写) TODO(verify) */
     LeaveCriticalSection(&g_csInit);
     FUN_14004EAA8(sub, 0);              /* TODO(verify) @0x14004eaa8 脚本结构清理 */
-    FUN_14005B104(&v98);
-    FUN_14005B104(&cwd);
-    FUN_14005B104(&nls);
+    PECMD_FreeStrBuf(&v98);
+    PECMD_FreeStrBuf(&cwd);
+    PECMD_FreeStrBuf(&nls);
     return (r & 0xffff) | flags;
 }
 
@@ -271,7 +271,7 @@ WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name, int64_t 
     memcpy(ins, line, (clen + 1) * 2);
     /* 行尾写 key 分隔 (PECMD_FillChar6 = 写 ushort) */
     *(uint16_t *)((uint8_t *)ins + (clen + 1) * 2) = (uint16_t)key;
-    FUN_14005B104(&line);
+    PECMD_FreeStrBuf(&line);
     return ins;
 }
 
@@ -386,12 +386,12 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
             }
         }
     }
-    FUN_14005B104(&l1a8);
+    PECMD_FreeStrBuf(&l1a8);
     FUN_14004EAA8(sub, 0);          /* TODO(verify) 脚本结构清理 */
-    FUN_14005B104(&v8);
-    FUN_14005B104(&l1a0);
-    FUN_14005B104(&l178);
-    FUN_14005B104(&l198);
+    PECMD_FreeStrBuf(&v8);
+    PECMD_FreeStrBuf(&l1a0);
+    PECMD_FreeStrBuf(&l178);
+    PECMD_FreeStrBuf(&l198);
     return ret;
 }
 

@@ -71,7 +71,7 @@ extern void             PECMD_AllocStrSlot(void *out);        /* release slot */
 extern WCHAR           *PECMD_SkipLeadingControlChars(WCHAR **pp);       /* skip spaces */
 extern WCHAR           *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src);  /* cat */
 extern void             PECMD_StrDupAssign(void *ps, const WCHAR *src);    /* assign */
-extern void             FUN_14005b104(void *ps);         /* free slot */
+extern void PECMD_FreeStrBuf(void *ps);         /* free slot */
 extern void             PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim);
 extern int64_t         *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void             PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
@@ -400,14 +400,14 @@ int64_t PECMD_PcipCommand(int64_t *param_1, LPCWSTR param_2)
             if (iVar8 != 0) {
                 PECMD_AssignString((WCHAR **)&local_138, local_128);
             }
-            FUN_14005b104(&local_160);
+            PECMD_FreeStrBuf(&local_160);
             goto LAB_1400af515;
         }
         PECMD_ParseHexOrDecBool(&local_108, local_140);
         bVar6 = 1;
         pWVar18 = local_108;
         if (-1 < local_140[0]) goto LAB_1400af4cc;
-        FUN_14005b104(&local_160);
+        PECMD_FreeStrBuf(&local_160);
     } else {
         /* "query" 前缀: 解析逗号字段进入查询分支 */
 LAB_1400af4cc:
@@ -422,7 +422,7 @@ LAB_1400af4cc:
         if (iVar8 != 0) {
             PECMD_AssignString((WCHAR **)&local_138, local_128);
         }
-        FUN_14005b104(&local_160);
+        PECMD_FreeStrBuf(&local_160);
         goto LAB_1400af515;
     }
 LAB_1400af515:
@@ -604,19 +604,19 @@ LAB_1400af515:
                                 uVar9 = (uint)uVar12;
                             }
                             if (-1 < (int32_t)local_150) {
-                                FUN_14005b104(&local_160);
-                                FUN_14005b104(&local_148);
-                                FUN_14005b104(&local_180);
-                                FUN_14005b104(&local_158);
+                                PECMD_FreeStrBuf(&local_160);
+                                PECMD_FreeStrBuf(&local_148);
+                                PECMD_FreeStrBuf(&local_180);
+                                PECMD_FreeStrBuf(&local_158);
                                 goto LAB_1400afff3;
                             }
                             if (uVar9 == 0) {
                                 DVar10 = GetLastError();
                             }
-                            FUN_14005b104(&local_160);
-                            FUN_14005b104(&local_148);
-                            FUN_14005b104(&local_180);
-                            FUN_14005b104(&local_158);
+                            PECMD_FreeStrBuf(&local_160);
+                            PECMD_FreeStrBuf(&local_148);
+                            PECMD_FreeStrBuf(&local_180);
+                            PECMD_FreeStrBuf(&local_158);
                             DVar4 = DVar10;
                         }
                         DVar26 = DVar4;
@@ -655,7 +655,7 @@ LAB_1400afff3:
             if (*local_c0 != L'\0') {
                 plVar11 = FUN_1400702f0((int64_t *)&local_res20, local_e0, 0xffffffffffffffffULL);
                 PECMD_SetVariable(param_1, local_c0, (LPCWSTR)*plVar11);
-                FUN_14005b104(&local_res20);
+                PECMD_FreeStrBuf(&local_res20);
             }
             if (*local_f8 != L'\0') {
                 PECMD_SetVariable(param_1, local_f8, local_a8);
@@ -740,34 +740,34 @@ LAB_1400afff3:
         } else {
             /* local_a0 != 0 && local_188 != 0: 正常 */
         }
-        FUN_14005b104(&local_78);
-        FUN_14005b104(&local_98);
-        FUN_14005b104(&local_a8);
-        FUN_14005b104(&local_e0);
+        PECMD_FreeStrBuf(&local_78);
+        PECMD_FreeStrBuf(&local_98);
+        PECMD_FreeStrBuf(&local_a8);
+        PECMD_FreeStrBuf(&local_e0);
         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
-        FUN_14005b104(&local_138);
+        PECMD_FreeStrBuf(&local_138);
         lVar14 = (int64_t)(int)DVar26;
         goto LAB_1400b01d8;
     }
-    FUN_14005b104(&local_138);
+    PECMD_FreeStrBuf(&local_138);
     lVar14 = -0x7ff8ffa9;
 LAB_1400b01d8:
-    FUN_14005b104(&local_a0);
-    FUN_14005b104(&local_b8);
-    FUN_14005b104(&local_170);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_80);
-    FUN_14005b104(&local_88);
-    FUN_14005b104(&local_d0);
-    FUN_14005b104(&local_b0);
-    FUN_14005b104(&local_c8);
-    FUN_14005b104(&local_f8);
-    FUN_14005b104(&local_c0);
-    FUN_14005b104(&local_d8);
-    FUN_14005b104(&local_f0);
-    FUN_14005b104(&local_130);
-    FUN_14005b104(&local_e8);
-    FUN_14005b104(&local_120);
+    PECMD_FreeStrBuf(&local_a0);
+    PECMD_FreeStrBuf(&local_b8);
+    PECMD_FreeStrBuf(&local_170);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_80);
+    PECMD_FreeStrBuf(&local_88);
+    PECMD_FreeStrBuf(&local_d0);
+    PECMD_FreeStrBuf(&local_b0);
+    PECMD_FreeStrBuf(&local_c8);
+    PECMD_FreeStrBuf(&local_f8);
+    PECMD_FreeStrBuf(&local_c0);
+    PECMD_FreeStrBuf(&local_d8);
+    PECMD_FreeStrBuf(&local_f0);
+    PECMD_FreeStrBuf(&local_130);
+    PECMD_FreeStrBuf(&local_e8);
+    PECMD_FreeStrBuf(&local_120);
     return lVar14;
 }
 
@@ -1265,11 +1265,11 @@ LAB_1400b10dd:
                     PECMD_DispatchSystemCommandLine(param_1, local_88);
                 }
                 lVar18 = (int64_t)(int)DVar5;
-                FUN_14005b104(&local_e8);
-                FUN_14005b104(&local_f0);
+                PECMD_FreeStrBuf(&local_e8);
+                PECMD_FreeStrBuf(&local_f0);
                 if (_Memory_00.QuadPart != 0) {
                     PECMD_ClearTaskTable((int64_t)(uintptr_t)_Memory_00.QuadPart, 0);
-                    FUN_14005b104((void *)(_Memory_00.QuadPart + 0x70));
+                    PECMD_FreeStrBuf((void *)(_Memory_00.QuadPart + 0x70));
                     free((void *)(uintptr_t)_Memory_00.QuadPart);
                 }
                 if (_Memory.QuadPart != 0) {
@@ -1277,15 +1277,15 @@ LAB_1400b10dd:
                     free((void *)(uintptr_t)_Memory.QuadPart);
                 }
             }
-            FUN_14005b104(&local_d8);
-            FUN_14005b104(&local_c8);
-            FUN_14005b104(&local_e0);
+            PECMD_FreeStrBuf(&local_d8);
+            PECMD_FreeStrBuf(&local_c8);
+            PECMD_FreeStrBuf(&local_e0);
             return lVar18;
         }
-        FUN_14005b104(&local_d8);
+        PECMD_FreeStrBuf(&local_d8);
     }
-    FUN_14005b104(&local_c8);
-    FUN_14005b104(&local_e0);
+    PECMD_FreeStrBuf(&local_c8);
+    PECMD_FreeStrBuf(&local_e0);
     return -0x7ff8ffa9;
 }
 
@@ -1328,7 +1328,7 @@ uint64_t PECMD_PcipDispatch(int64_t *param_1, ushort *param_2, WPARAM param_3,
         PECMD_ResetScriptChain(param_1, (int64_t *)0);
         param_3 = (WPARAM)param_1[8];
         if (param_3 == 0) {
-            FUN_14005b104(&local_58);
+            PECMD_FreeStrBuf(&local_58);
             return 0xffffffff80070057ULL;
         }
     }
@@ -1404,8 +1404,8 @@ LAB_1400b47a6:
     }
     uVar5 = 0xffffffff80070057ULL;
 LAB_1400b48af:
-    FUN_14005b104(&local_68);
-    FUN_14005b104(&local_78);
-    FUN_14005b104(&local_58);
+    PECMD_FreeStrBuf(&local_68);
+    PECMD_FreeStrBuf(&local_78);
+    PECMD_FreeStrBuf(&local_58);
     return uVar5;
 }

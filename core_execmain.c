@@ -59,8 +59,7 @@ extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0
 extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c core_exec3.c */
 extern void PECMD_SetEnvIfChanged(LPCWSTR name, LPCWSTR value);      /* @0x140061508 core_exec3.c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 core_exec5.c */
-extern void FUN_1400668EC(void *script, uint64_t value, LPCWSTR key,
-                           LPCWSTR fmt);                       /* @0x1400668ec core_var.c */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);                       /* @0x1400668ec core_var.c */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 extern void FUN_140053E78(void);                                 /* @0x140053e78 core_sys.c */
 
@@ -309,7 +308,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         FUN_1400702B0((WCHAR **)&curFileTmp, WSTR("ENTER:"));
         FUN_14006375C((WCHAR **)&curFileTmp, pWinName);
         FUN_140025f10(pExec, curFileTmp, 0, (void *)(intptr_t)0x11, NULL, NULL);
-        FUN_14005B104((WCHAR **)&curFileTmp);
+        PECMD_FreeStrBuf((WCHAR **)&curFileTmp);
     }
     *(uint8_t *)((char *)pExec + 0xd8) = 1;
 
@@ -325,7 +324,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
             vtbl = *(void **)pWin;
             (*(void (**)(void *, uint32_t, int))(*(void **)((char *)vtbl + 0x10)))(
                 pWin, 0x271d, 0);
-            FUN_1400668EC(pExec, *(int64_t *)((char *)pWin + 0x20),
+            PECMD_AppendFmtValue(pExec, *(int64_t *)((char *)pWin + 0x20),
                             WSTR("&&__WinID"), WSTR("0x%I64X"));
             *(int64_t *)((char *)pWin + 0x2a0) = 0;
             PECMD_DispatchExpressionBlock(pExec, pFile);
@@ -363,7 +362,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         FUN_1400702B0((WCHAR **)&nameTmp, WSTR("LEAVE:"));
         FUN_14006375C((WCHAR **)&nameTmp, pWinName);
         FUN_140025f10(pExec, nameTmp, 0, (void *)(intptr_t)0x11, NULL, NULL);
-        FUN_14005B104((WCHAR **)&nameTmp);
+        PECMD_FreeStrBuf((WCHAR **)&nameTmp);
     }
     ret = *(int32_t *)((char *)pExec + 0xd0);
 
@@ -386,7 +385,7 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
     }
     if (pScriptNew != NULL) {
         FUN_14004EAA8(pScriptNew, 0);
-        FUN_14005B104((WCHAR **)((char *)pScriptNew + 0x70));
+        PECMD_FreeStrBuf((WCHAR **)((char *)pScriptNew + 0x70));
         free(pScriptNew);
     }
     if (pWinNew != NULL) {
@@ -452,10 +451,10 @@ ref_done:
     if (cInitFlag == '\0') {
         FUN_14009BB28(pScript, 0);
     }
-    FUN_14005B104(&savedCurFile);
-    FUN_14005B104(&savedCurDrv);
-    FUN_14005B104(&savedCurDir);
-    FUN_14005B104(&savedCwd);
+    PECMD_FreeStrBuf(&savedCurFile);
+    PECMD_FreeStrBuf(&savedCurDrv);
+    PECMD_FreeStrBuf(&savedCurDir);
+    PECMD_FreeStrBuf(&savedCwd);
     PECMD_RefCountRelease(&bufRef);
     return ret;
 }

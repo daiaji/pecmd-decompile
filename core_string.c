@@ -7,7 +7,7 @@
  *   FUN_14006375C       @0x14006375c  (追加)
  *   PECMD_StrDupAlloc       @0x1400700c4
  *   FUN_1400702B0    @0x1400702b0  (直接覆盖指针, 不释放旧值)
- *   FUN_14005B104      @0x14005b104
+ *   PECMD_FreeStrBuf      @0x14005b104
  *   FUN_14005B154    @0x14005b154
  *   FUN_14005C788     @0x14005c788  (ASCII 前缀词比较, 忽略大小写)
  *   FUN_14005C72C    @0x14005c72c  (同语义变体)
@@ -131,7 +131,7 @@ void FUN_1400702B0(WCHAR **ps, LPCWSTR src)
 }
 
 /* ========== 字符串释放 @0x14005b104 ========== */
-void FUN_14005B104(WCHAR **ps)
+void PECMD_FreeStrBuf(WCHAR **ps)
 {
     if (*ps != NULL) {
         HeapFree(g_hHeap, 0, (uint8_t *)*ps - 8);

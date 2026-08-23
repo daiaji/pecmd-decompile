@@ -29,7 +29,7 @@ extern int      g_dblClickFlag;              /* 双击/触发标记 */
 extern void      PECMD_AllocStrSlot(void *out);         /* release/init slot */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);        /* skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src);  /* assign string slot */
-extern void      FUN_14005b104(void *ps);          /* free string slot */
+extern void PECMD_FreeStrBuf(void *ps);          /* free string slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -149,10 +149,10 @@ uint64_t PECMD_AddControlStar(LPCWSTR param_1, ushort *param_2, WPARAM param_3)
                       local_res20, local_res8, (int16_t *)&local_68, (uint32_t)uVar4);
         uVar4 = (int)uVar5;
     }
-    FUN_14005b104(&local_60);
-    FUN_14005b104(&local_68);
-    FUN_14005b104(&local_70);
-    FUN_14005b104(&local_58);
+    PECMD_FreeStrBuf(&local_60);
+    PECMD_FreeStrBuf(&local_68);
+    PECMD_FreeStrBuf(&local_70);
+    PECMD_FreeStrBuf(&local_58);
     return (uint64_t)uVar4;
 }
 
@@ -203,7 +203,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
         PECMD_ResetScriptChain(param_1, (void *)0);
         param_3 = param_1[8];
         if (param_3 == 0) {
-            FUN_14005b104(&local_60);
+            PECMD_FreeStrBuf(&local_60);
             return (uint64_t)0xffffffff80070057;
         }
     }
@@ -239,7 +239,7 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
                                               bVar11);
                                 local_98 = local_a0;
                                 PECMD_ParseUIntValue(&local_98, &local_a8);
-                                FUN_14005b104(&local_a0);
+                                PECMD_FreeStrBuf(&local_a0);
                             }
                         } else {
                             local_res18 = 0x4000000;
@@ -319,18 +319,18 @@ uint64_t PECMD_AddControlWide(longlong *param_1, WCHAR *param_2, WPARAM param_3,
                       local_88, local_a8, local_res8, (int64_t *)&local_78,
                       local_a0, local_98, uVar16 | (uint32_t)local_res18,
                       '\0', (int)uVar15);
-        FUN_14005b104(&local_78);
-        FUN_14005b104((void *)&local_98);
-        FUN_14005b104((void *)&local_a0);
-        FUN_14005b104(&local_90);
+        PECMD_FreeStrBuf(&local_78);
+        PECMD_FreeStrBuf((void *)&local_98);
+        PECMD_FreeStrBuf((void *)&local_a0);
+        PECMD_FreeStrBuf(&local_90);
     } else {
-        FUN_14005b104(&local_78);
-        FUN_14005b104((void *)&local_98);
-        FUN_14005b104((void *)&local_a0);
-        FUN_14005b104(&local_90);
+        PECMD_FreeStrBuf(&local_78);
+        PECMD_FreeStrBuf((void *)&local_98);
+        PECMD_FreeStrBuf((void *)&local_a0);
+        PECMD_FreeStrBuf(&local_90);
         return 1;
     }
-    FUN_14005b104(&local_60);
+    PECMD_FreeStrBuf(&local_60);
     return 0;
 }
 
@@ -411,7 +411,7 @@ LAB_1400b5137:
             PECMD_AppendCheckboxChild(param_3, (int64_t)param_1, (int64_t *)&local_40, iVar5,
                           (uint32_t)local_48, (int)cVar6);
         }
-        FUN_14005b104(&local_40);
+        PECMD_FreeStrBuf(&local_40);
     }
     return 0;
 }
@@ -731,7 +731,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
         PECMD_ExpandVarDispatch(param_1, local_68, (int64_t *)&local_b0, 0, 1);
         local_68 = local_b0;
         local_b0 = pWVar4;
-        FUN_14005b104(&local_b0);
+        PECMD_FreeStrBuf(&local_b0);
     }
     if (!bVar2) {
         PECMD_ExpandBackslashNewline(local_90, '\0');
@@ -756,10 +756,10 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     FUN_1400B9204(local_res18, (int64_t)param_1, (int64_t *)&local_78, local_98,
                   local_84, local_88, local_80, (int64_t *)&local_90,
                   (int64_t *)&local_68, (int64_t *)&local_a8, local_70, uVar16);
-    FUN_14005b104((void *)&local_68);
-    FUN_14005b104((void *)&local_70);
-    FUN_14005b104(&local_90);
-    FUN_14005b104(&local_78);
-    FUN_14005b104(&local_50);
+    PECMD_FreeStrBuf((void *)&local_68);
+    PECMD_FreeStrBuf((void *)&local_70);
+    PECMD_FreeStrBuf(&local_90);
+    PECMD_FreeStrBuf(&local_78);
+    PECMD_FreeStrBuf(&local_50);
     return 0;
 }

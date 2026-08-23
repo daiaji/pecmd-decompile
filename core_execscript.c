@@ -29,7 +29,7 @@
 /* ---- 待重构函数原型 (后续批次, extern) ---- */
 void PECMD_InitDynamicImports(void);                     /* @0x140017908 初始化 */
 int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词比较+推进 (非0=匹配) */
-void FUN_14005e7dc(LPVOID *psd);              /* @0x14005e7dc 安全描述符初始化 */
+extern void PECMD_InitNullDaclSD(uint64_t *param_1);              /* @0x14005e7dc 安全描述符初始化 */
 void PECMD_ScriptInitParse(void *script, LPCWSTR path, int64_t flag);  /* @0x140026338 脚本初始化 */
 void PECMD_DebugScriptString(void *script, LPCWSTR fmt, ...);  /* @0x140018c6c 调试日志 */
 void PECMD_TlsLogWrite(void *script, LPCWSTR fmt, ...);  /* @0x140018d8c 调试日志 */
@@ -174,7 +174,7 @@ int64_t FUN_140045C90(void *script, LPCWSTR cmdline)
     sa.lpSecurityDescriptor = sd;
     sa.nLength = 0x18;
     sa.bInheritHandle = 0;
-    FUN_14005e7dc(&sa.lpSecurityDescriptor);
+    PECMD_InitNullDaclSD((uint64_t *)&sa.lpSecurityDescriptor);
     mutexName = "Global\\PECMD:main";
     if (bUser) {
         mutexName = "Global\\PECMD:main_u";
@@ -269,7 +269,7 @@ after_init:
         pS[0x10] = (int64_t)(uintptr_t)*(WCHAR **)g_pMainArgStr;
         FUN_140073CCC(script, cmdline, 1);
         *(uint32_t *)((uint8_t *)script + 0x8c) = 0;
-        FUN_14005B104(&pTmp);
+        PECMD_FreeStrBuf(&pTmp);
     }
     if (g_logFlag != 0) {
         PECMD_TlsLogWrite(&g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x2f36, r);
@@ -364,8 +364,8 @@ after_init:
             if (hFile != (HANDLE)0 && hFile != (HANDLE)(uintptr_t)-1) {
                 CloseHandle(hFile);
             }
-            FUN_14005B104(&pContent);
-            FUN_14005B104(&pPath);
+            PECMD_FreeStrBuf(&pContent);
+            PECMD_FreeStrBuf(&pPath);
             if (bStar) {
                 wsprintfW(pBuf + 900, WSTR("LOAD *sysinit %s"), p, (void *)&nRead);
                 g_flagD032 = 1;
@@ -394,9 +394,9 @@ after_init:
             }
             PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)script, (uint64_t)(uintptr_t)pTmp,
                           (void *)0, (void *)0, (void *)0);
-            FUN_14005B104(&pTmp);
+            PECMD_FreeStrBuf(&pTmp);
         }
-        FUN_14005B104(&pBuf);
+        PECMD_FreeStrBuf(&pBuf);
     }
     /* ---- 消息循环 ---- */
     while (GetMessageW(&msg, (HWND)0, 0, 0) != 0) {

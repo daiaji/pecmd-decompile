@@ -113,9 +113,9 @@ void PECMD_InitShellFolderEnvVars(void)
     memset(pBuf, 0, 0x822);
     lpFilename = pBuf + 0x82;
     GetModuleFileNameW((HMODULE)0, lpFilename, 0x104);
-    FUN_1400669C4(&g_Script, 0x1000, WSTR("&PE_IDBASE"));
-    FUN_1400669C4(&g_Script, 0x5000, WSTR("&WM_PE_BASE"));
-    FUN_1400669C4(&g_Script, 0x100, WSTR("&PE_MENU_IDBASE"));
+    PECMD_AppendLongDecimal(&g_Script, 0x1000, WSTR("&PE_IDBASE"));
+    PECMD_AppendLongDecimal(&g_Script, 0x5000, WSTR("&WM_PE_BASE"));
+    PECMD_AppendLongDecimal(&g_Script, 0x100, WSTR("&PE_MENU_IDBASE"));
     SetEnvironmentVariableW(WSTR("MyName"), lpFilename);
     FUN_1400629B8(&g_Script, WSTR("&MyName"), lpFilename);
     p = StrRChrW(lpFilename, NULL, L'\\');
@@ -133,7 +133,7 @@ void PECMD_InitShellFolderEnvVars(void)
     FUN_14001BF20(WSTR("&Startup"), NULL, NULL);
     FUN_14001BF20(WSTR("&QuickLaunch"), WSTR("AppData"),
                         WSTR("\\Microsoft\\Internet Explorer\\Quick Launch"));
-    FUN_14005B104(&pBuf);
+    PECMD_FreeStrBuf(&pBuf);
 }
 
 /* ========== 空函数 @0x140053e78 ========== */
@@ -204,7 +204,7 @@ void FUN_14001BF20(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
     } else {
         FUN_1400629B8(&g_Script, var, buf);
     }
-    FUN_14005B104(&pBuf);
+    PECMD_FreeStrBuf(&pBuf);
 }
 
 /* ========== 注册表值 -> 变量 @0x14001bea8 ========== */

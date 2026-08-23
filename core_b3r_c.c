@@ -13,7 +13,7 @@
 /* ---------- extern helpers / globals / Win32 APIs (not in headers) ---------- */
 /* helpers */
 extern void PECMD_AllocStringSlot2(void **ps, int64_t len);          /* @0x1400633a8 alloc */
-extern void FUN_14005b104(void *ps);                         /* @0x14005b104 free */
+extern void PECMD_FreeStrBuf(void *ps);                         /* @0x14005b104 free */
 extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
@@ -282,7 +282,7 @@ L1400777ea:
             } while (cVar14 == '\0');
         } while (!bVar6);
 L140077bf4:
-        FUN_14005b104((void *)&buf);
+        PECMD_FreeStrBuf((void *)&buf);
     } else {
         int iVarN;
         iVarN = wsprintfW(run + 1, WSTR(" %d %d %d %d %d \""),
@@ -306,7 +306,7 @@ L140077bf4:
         }
         *run = 0x22;
         run[1] = 0;
-        FUN_14005b104((void *)&buf);
+        PECMD_FreeStrBuf((void *)&buf);
         uVar13 = uVar8;
     }
     return uVar13;
@@ -389,7 +389,7 @@ int64_t PECMD_ReadModifyWrite(HANDLE param_1, uint8_t *param_2, int64_t param_3,
         lVar5 = 0;
         param_2 = param_2 + uVar6;
     }
-    FUN_14005b104((void *)&local_50);
+    PECMD_FreeStrBuf((void *)&local_50);
     return local_40;
 }
 
@@ -600,7 +600,7 @@ L14007c4e0:
         }
     }
 L14007c5b0:
-    FUN_14005b104((void *)&local_60);
+    PECMD_FreeStrBuf((void *)&local_60);
     return puVar7;
 }
 
@@ -880,9 +880,9 @@ L14007dc6e:
                 *puVar6 = (int)uVar12;
             }
             uVar7 = *(uint32_t *)(param_1 + 3);
-            FUN_14005b104((void *)local_38);
+            PECMD_FreeStrBuf((void *)local_38);
         }
-        FUN_14005b104((void *)&local_40);
+        PECMD_FreeStrBuf((void *)&local_40);
         return uVar7;
     }
     return 0xfffffffe;

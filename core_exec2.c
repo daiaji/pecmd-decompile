@@ -323,7 +323,7 @@ void FUN_14002487C(void *script, WCHAR *buf, bool stopMain)
         *p = sep;
         p++;
     }
-    FUN_14005B104((WCHAR **)&tmp);
+    PECMD_FreeStrBuf((WCHAR **)&tmp);
 }
 
 /* ========== FUN_14001EA18 @0x14001ea18 ==========

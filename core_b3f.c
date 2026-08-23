@@ -140,10 +140,10 @@ uint64_t *PECMD_MultiSlotDtor(uint64_t *obj, uint32_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
     FUN_1400F1490((int64_t)(obj + 0xb));
-    FUN_14005B104((WCHAR **)(obj + 5));
-    FUN_14005B104((WCHAR **)(obj + 4));
-    FUN_14005B104((WCHAR **)(obj + 3));
-    FUN_14005B104((WCHAR **)(obj + 2));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 5));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 4));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 3));
+    PECMD_FreeStrBuf((WCHAR **)(obj + 2));
     if ((flags & 1) != 0) {
         free(obj);
     }
@@ -421,7 +421,7 @@ void FUN_14006849C(uint64_t *stream)
                   local_res8, NULL);
     }
     stream[2] = 0;
-    FUN_14005B104((WCHAR **)(stream + 1));
+    PECMD_FreeStrBuf((WCHAR **)(stream + 1));
     HANDLE hObject = (HANDLE)*stream;
     if ((hObject != (HANDLE)0) && (hObject != INVALID_HANDLE_VALUE)) {
         CloseHandle(hObject);
@@ -471,7 +471,7 @@ int64_t FUN_14006CA94(int64_t *ps, uint32_t codepage)
         int64_t lVar1 = *ps;
         *ps = local_res8[0];
         local_res8[0] = lVar1;
-        FUN_14005B104((WCHAR **)local_res8);
+        PECMD_FreeStrBuf((WCHAR **)local_res8);
     }
     return *ps;
 }
@@ -540,8 +540,8 @@ uint64_t FUN_14007F018(LPWSTR path, uint8_t *flags)
     uint64_t *puVar2 = (uint64_t *)PECMD_ParseExpression(local_58, path);
     uint64_t uVar1 = *puVar2;
     *flags = (uint8_t)(local_50 | local_30 | local_10);
-    FUN_14005B104((WCHAR **)local_28);
-    FUN_14005B104((WCHAR **)local_48);
+    PECMD_FreeStrBuf((WCHAR **)local_28);
+    PECMD_FreeStrBuf((WCHAR **)local_48);
     return uVar1;
 }
 

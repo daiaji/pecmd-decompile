@@ -27,7 +27,7 @@ extern int (*g_pGdipGetImageHeight)();     /* GdipGetImageHeight (function ptr) 
 extern void      PECMD_AllocStrSlot(void *out);                  /* init/release slot */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
 extern void      PECMD_StrDupAssign(void *ps, const WCHAR *src); /* assign string slot */
-extern void      FUN_14005b104(void *ps);                   /* free string slot */
+extern void PECMD_FreeStrBuf(void *ps);                   /* free string slot */
 extern void      PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
 extern void      PECMD_RunCommandLine(void *script, void *str, int mode);   /* expand */
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -235,12 +235,12 @@ uint64_t PECMD_ParseControlDef(int64_t *param_1, LPCWSTR param_2, WPARAM param_3
                                   (double)(uVar10 | uVar11), (uint64_t)&local_res20, 0);
                 }
             }
-            FUN_14005b104(&local_88);
-            FUN_14005b104(&local_68);
-            FUN_14005b104(&local_78);
-            FUN_14005b104(&local_80);
-            FUN_14005b104((void *)local_a0);
-            FUN_14005b104(&local_58);
+            PECMD_FreeStrBuf(&local_88);
+            PECMD_FreeStrBuf(&local_68);
+            PECMD_FreeStrBuf(&local_78);
+            PECMD_FreeStrBuf(&local_80);
+            PECMD_FreeStrBuf((void *)local_a0);
+            PECMD_FreeStrBuf(&local_58);
             return uVar12;
         }
 
@@ -522,11 +522,11 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 /* TODO(verify): Ghidra 丢弃了 wsprintfW 实参, 宽度/高度来自图像尺寸 */
                 wsprintfW(local_e8, WSTR("%d %d"), local_res18[0], (int)(uint32_t)local_res8);
                 PECMD_SetVariable((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
-                FUN_14005b104(&local_150);
-                FUN_14005b104(&local_160);
-                FUN_14005b104(&local_158);
-                FUN_14005b104(&local_168);
-                FUN_14005b104(&local_128);
+                PECMD_FreeStrBuf(&local_150);
+                PECMD_FreeStrBuf(&local_160);
+                PECMD_FreeStrBuf(&local_158);
+                PECMD_FreeStrBuf(&local_168);
+                PECMD_FreeStrBuf(&local_128);
                 return (int64_t)(int32_t)uVar5;
             }
             if (*local_res10 == L',') {
@@ -561,7 +561,7 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                 FUN_1400bd620(param_3, param_1, &local_168, local_148, local_144[0],
                               (int)(uint32_t)local_res20, local_res18[0], &local_138,
                               &local_160, local_144 + 1, (uint32_t)local_res8, local_130);
-                FUN_14005b104(&local_138);
+                PECMD_FreeStrBuf(&local_138);
             } else {
                 uVar6 = uVar6 & 0xff;
                 local_108 = 0;
@@ -591,16 +591,16 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                           (int)(uint32_t)local_f8);
                 PECMD_SetVariable((int64_t *)param_1, (LPCWSTR)local_168, local_e8);
             }
-            FUN_14005b104(&local_150);
-            FUN_14005b104(&local_160);
-            FUN_14005b104(&local_158);
-            FUN_14005b104(&local_168);
-            FUN_14005b104(&local_128);
+            PECMD_FreeStrBuf(&local_150);
+            PECMD_FreeStrBuf(&local_160);
+            PECMD_FreeStrBuf(&local_158);
+            PECMD_FreeStrBuf(&local_168);
+            PECMD_FreeStrBuf(&local_128);
             return 0;
         }
-        FUN_14005b104(&local_150);
-        FUN_14005b104(&local_160);
-        FUN_14005b104(&local_158);
+        PECMD_FreeStrBuf(&local_150);
+        PECMD_FreeStrBuf(&local_160);
+        PECMD_FreeStrBuf(&local_158);
         pptVar11 = &local_168;
     } else {
         /* ---- -gui 分支 ---- */
@@ -609,9 +609,9 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
         lVar18 = PECMD_RunCommand((int64_t *)param_1, (LPCWSTR)local_res8);
         pptVar11 = &local_res8;
     }
-    FUN_14005b104(pptVar11);
+    PECMD_FreeStrBuf(pptVar11);
 LAB_1400beace:
-    FUN_14005b104(&local_128);
+    PECMD_FreeStrBuf(&local_128);
     return lVar18;
 }
 
@@ -687,16 +687,16 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
     }
     if (bVar2) {
         if (cVar8 == '\0') {
-            FUN_14005b104(&local_res10);
-            FUN_14005b104(&local_res18);
-            FUN_14005b104(&local_res20);
-            FUN_14005b104(&local_58);
+            PECMD_FreeStrBuf(&local_res10);
+            PECMD_FreeStrBuf(&local_res18);
+            PECMD_FreeStrBuf(&local_res20);
+            PECMD_FreeStrBuf(&local_58);
             return 0xffffffff80070057ULL;
         }
         local_res8 = 0;
         PECMD_WideToAnsiStr((int64_t *)&local_res8, (LPCWSTR)local_res20, -1, 0xffffffffffffffffULL);
         puVar6 = (WCHAR *)PECMD_DecodeBase64ToWideStr((byte *)local_res8, (ulonglong *)&local_res10);
-        FUN_14005b104(&local_res8);
+        PECMD_FreeStrBuf(&local_res8);
     } else {
         puVar6 = (WCHAR *)PECMD_EncodeStringId((LPCWSTR)local_res20, &local_res10, cVar8);
     }
@@ -710,9 +710,9 @@ uint64_t PECMD_AttachControlImage(int64_t *param_1, LPCWSTR param_2)
             PECMD_SetVariable(param_1, (LPCWSTR)local_res18, local_res10 + 1);
         }
     }
-    FUN_14005b104(&local_res10);
-    FUN_14005b104(&local_res18);
-    FUN_14005b104(&local_res20);
-    FUN_14005b104(&local_58);
+    PECMD_FreeStrBuf(&local_res10);
+    PECMD_FreeStrBuf(&local_res18);
+    PECMD_FreeStrBuf(&local_res20);
+    PECMD_FreeStrBuf(&local_58);
     return uVar7;
 }

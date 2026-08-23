@@ -61,7 +61,7 @@ extern uint64_t PECMD_GetPackedSystemVersion(void);                     /* @0x14
 extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out,
                                 int64_t *hmod);               /* @0x14005c898 */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
-extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);  /* @0x1400629b8 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
 extern bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style,
@@ -287,7 +287,7 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
     }
     if (q.QuadPart != 0) {
         if (FUN_14005C7C4("***", (const WCHAR *)(uintptr_t)q.QuadPart) == 0) {
-            FUN_1400669C4(info, (int64_t)(uint64_t)sel, WSTR("&&__MemuId"));
+            PECMD_AppendLongDecimal(info, (int64_t)(uint64_t)sel, WSTR("&&__MemuId"));
             FUN_1400629B8(info, WSTR("&&__MenuInx"), str);
             PECMD_ProcessScriptBlock((int64_t)info, q.QuadPart, NULL, NULL, NULL);
         }
@@ -296,7 +296,7 @@ void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
         }
     }
     DestroyMenu(menu);
-    FUN_14005B104((WCHAR **)&str);
+    PECMD_FreeStrBuf((WCHAR **)&str);
 }
 
 /* ========== FUN_1400E6574 @0x1400e6574 ==========
@@ -383,7 +383,7 @@ int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
         rc = PECMD_RunPeInjectStart(p3, saved, local_10, local_20, (uint32_t)local_18, p4,
                            p5, p6, p7, p8, p9, p10);
         VirtualFree((LPVOID)local_20, dwSize, 0x4000);
-        FUN_14005B104((WCHAR **)&local_28);
+        PECMD_FreeStrBuf((WCHAR **)&local_28);
     }
     return rc;
 }
@@ -773,7 +773,7 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
     font = FUN_1400E5890((int64_t)obj);
     ((void (*)(uint64_t *, LRESULT, int))((void **)*child)[0x21])(child, font, 1);
     InvalidateRect((HWND)child[4], NULL, 1);
-    FUN_14005B104((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8);
 }
 
 /* ========== FUN_1400EFB08 @0x1400efb08 ==========
@@ -986,7 +986,7 @@ void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
         if (old != 0)
             SelectObject(hdc, old);
         EndPaint((HWND)obj[4], &ps);
-        FUN_14005B104((WCHAR **)&txt);
+        PECMD_FreeStrBuf((WCHAR **)&txt);
         return;
     }
 

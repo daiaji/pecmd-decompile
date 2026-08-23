@@ -27,7 +27,7 @@
 /* ---- 已实现 (core_string.c / core_var2.c / core_var.c) ---- */
 extern void   PECMD_GrowByteBuffer(void **ps, int64_t len);         /* @0x140063424 */
 extern void   FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);  /* @0x1400629b8 */
-extern void   FUN_1400668EC(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);   /* @0x14005c7c4 1=相等 */
 extern char    FUN_1400660AC(const char *word, WCHAR **pp, int n); /* @0x1400660ac 非0=匹配并推进 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                      /* @0x14005b154 */
@@ -210,11 +210,11 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             PECMD_SplitTokenTrimWs(plVar9, &sArg4, 0);
         }
         if ((*sTok == 0) || (*sArg2 == 0) || (*sArg3 == 0) || (*sArg4 == 0)) {
-            FUN_14005B104(&sArg4);
-            FUN_14005B104(&sArg3);
-            FUN_14005B104(&sArg2);
-            FUN_14005B104(&sTok);
-            FUN_14005B104(&bufScr);
+            PECMD_FreeStrBuf(&sArg4);
+            PECMD_FreeStrBuf(&sArg3);
+            PECMD_FreeStrBuf(&sArg2);
+            PECMD_FreeStrBuf(&sTok);
+            PECMD_FreeStrBuf(&bufScr);
             return 1;
         }
 
@@ -531,8 +531,8 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     PECMD_VarWriteLine(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
                                   (int64_t *)&sArg4, '\0');
                 }
-                FUN_14005B104(&sStr);
-                FUN_14005B104((WCHAR **)&data);
+                PECMD_FreeStrBuf(&sStr);
+                PECMD_FreeStrBuf((WCHAR **)&data);
                 goto L_done;
             }
             /* ---- 需转换 ---- */
@@ -546,7 +546,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 WCHAR *fn = FUN_14001BE14(sArg4);
                 PECMD_OpenFileHandle(&hOut, fn, 0x40000000, 7, NULL, 4, 0x80, 0);
                 if (hOut == 0) {
-                    FUN_14005B104(&sStr);
+                    PECMD_FreeStrBuf(&sStr);
                     goto L_err1;
                 }
             }
@@ -566,10 +566,10 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     if (datalen > 0) {
                         WriteFile(hOut, data, (DWORD)datalen, &written, 0);
                     }
-                    FUN_14005B104(&sStr3);
+                    PECMD_FreeStrBuf(&sStr3);
                     goto L_ab5e;
                 }
-                FUN_14005B104(&sStr3);
+                PECMD_FreeStrBuf(&sStr3);
             }
             /* ---- 字节源 → WCHAR (MB→WC) ---- */
             nSmall = (int32_t)(datalen / 2);
@@ -628,9 +628,9 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     if (dstStar != 0) {
                         PECMD_VarWriteLine(script, sArg4, (LPCWSTR)data, datalen & 0xffffffff,
                                       (int64_t *)&sArg4, '\0');
-                        FUN_14005B104(&sStr2);
-                        FUN_14005B104(&sStr);
-                        FUN_14005B104((WCHAR **)&data);
+                        PECMD_FreeStrBuf(&sStr2);
+                        PECMD_FreeStrBuf(&sStr);
+                        PECMD_FreeStrBuf((WCHAR **)&data);
                         if (hOut != 0 && hOut != (HANDLE)-1) CloseHandle(hOut);
                         goto L_done;
                     }
@@ -647,7 +647,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                         PECMD_AllocWStringBuffer(&sv, 0);
                         FUN_1400692d8(&sv, (LPCWSTR)data, nSmall);
                         FUN_1400629B8(script, sArg4, sv);
-                        FUN_14005B104(&sv);
+                        PECMD_FreeStrBuf(&sv);
                         goto L_ab5e;
                     }
                 }
@@ -655,15 +655,15 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             }
         L_ab5e:
             if (hOut != 0) FlushFileBuffers(hOut);
-            FUN_14005B104(&sStr2);
-            FUN_14005B104(&sStr);
-            FUN_14005B104((WCHAR **)&data);
+            PECMD_FreeStrBuf(&sStr2);
+            PECMD_FreeStrBuf(&sStr);
+            PECMD_FreeStrBuf((WCHAR **)&data);
             if (hOut != 0 && hOut != (HANDLE)-1) CloseHandle(hOut);
-            FUN_14005B104(&sArg4);
-            FUN_14005B104(&sArg3);
-            FUN_14005B104(&sArg2);
-            FUN_14005B104(&sTok);
-            FUN_14005B104(&bufScr);
+            PECMD_FreeStrBuf(&sArg4);
+            PECMD_FreeStrBuf(&sArg3);
+            PECMD_FreeStrBuf(&sArg2);
+            PECMD_FreeStrBuf(&sTok);
+            PECMD_FreeStrBuf(&bufScr);
             return 0;
         }
     }
@@ -862,15 +862,15 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 L_jm_found:
                     /* 若指定输出变量, 把累加器/命中位置写回 */
                     if (pOut != NULL) {
-                        FUN_1400668EC(script, (uint64_t)acc, pOut, WSTR("%I64d"));
+                        PECMD_AppendFmtValue(script, (uint64_t)acc, pOut, WSTR("%I64d"));
                     }
                 }
             }
         }
 
         /* ---- 模式B清理 ---- */
-        FUN_14005B104(&sExp);
-        FUN_14005B104(&sLine);
+        PECMD_FreeStrBuf(&sExp);
+        PECMD_FreeStrBuf(&sLine);
         err = 0;
         goto L_done;
     }
@@ -883,10 +883,10 @@ L_err1:
     err = 1;
 
 L_done:
-    FUN_14005B104(&sArg4);
-    FUN_14005B104(&sArg3);
-    FUN_14005B104(&sArg2);
-    FUN_14005B104(&sTok);
-    FUN_14005B104(&bufScr);
+    PECMD_FreeStrBuf(&sArg4);
+    PECMD_FreeStrBuf(&sArg3);
+    PECMD_FreeStrBuf(&sArg2);
+    PECMD_FreeStrBuf(&sTok);
+    PECMD_FreeStrBuf(&bufScr);
     return err;
 }

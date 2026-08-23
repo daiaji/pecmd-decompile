@@ -56,7 +56,7 @@ BOOL CryptGetProvParam(HCRYPTPROV hProv, DWORD dwParam, BYTE *pbData,
 extern int64_t *FUN_1400634D4(int64_t *ps, LPCSTR src, int64_t len);   /* @0x1400634d4 ANSI 串写入容器 */
 extern void     FUN_1400633A8(void **ps, int64_t len);                 /* @0x1400633a8 分配 */
 extern int64_t *FUN_14006345C(int64_t *ps, LPCSTR src);                /* @0x14006345c ANSI 串追加 */
-extern void     FUN_14005B104(WCHAR **ps);                             /* @0x14005b104 释放 */
+extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 释放 */
 
 /* @0x1400e4864 size=980 — 作用(asm→C重建)：CryptAPI 哈希/算法信息辅助。
  * 按 alg 分两路：
@@ -167,7 +167,7 @@ DWORD PECMD_CryptoHashCompute(BYTE *data, DWORD len, ALG_ID alg, uint64_t extra)
             edi = 0;
         }
     LAB_aa6:
-        FUN_14005B104((WCHAR **)&pC);
+        PECMD_FreeStrBuf((WCHAR **)&pC);
         return (DWORD)edi;
     }
 
@@ -210,7 +210,7 @@ LAB_b0e:
             q += 1;
         }
     }
-    FUN_14005B104((WCHAR **)&pE);
+    PECMD_FreeStrBuf((WCHAR **)&pE);
 
 LAB_bf7:
     if (*hashSlot != (HCRYPTHASH)0) {

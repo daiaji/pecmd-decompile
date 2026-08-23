@@ -48,7 +48,7 @@ extern void PECMD_SetChildFont(HWND hwnd, int64_t font);
 extern bool FUN_1400E5900(HWND hwnd, uint32_t clear, uint64_t set);
 extern HWND PECMD_CreateControlSubclass(LPCWSTR cls, LPCWSTR text, DWORD style, int x, int y,
                              int w, int h, HWND parent, HMENU id, HINSTANCE inst, void *extra);
-extern void FUN_1400668EC(void *script, void *a, LPCWSTR fmt, ...);
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);
 
 /* 待实现 (B7 后续) */
 extern void FUN_140017CDC(void *dst, void *src);   /* FUN_140017CDC */
@@ -485,7 +485,7 @@ noicon:
             }
         }
         if (mbox[0x7b] != 0 && mbox[0x7a] != 0) {
-            FUN_1400668EC((void *)mbox[0x7a], (void *)mbox[0x40], (LPCWSTR)mbox[0x7b], WSTR("%I64u"));
+            PECMD_AppendFmtValue((void *)mbox[0x7a], (uint64_t)(uintptr_t)mbox[0x40], (LPCWSTR)(uintptr_t)mbox[0x7b], WSTR("%I64u"));
         }
     }
     return 1;

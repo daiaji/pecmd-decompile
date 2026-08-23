@@ -378,8 +378,8 @@ void PECMD_OnTabSelChange(int64_t obj)
     FUN_1400702B0(&var, WSTR("&&"));
     FUN_14006375C(&var, *(LPCWSTR *)(self + 0xd8));
     FUN_14006375C(&var, WSTR(".Select"));
-    FUN_1400669C4(*(void **)(self + 0xe0), (int64_t)(new_sel + 1), var);
-    FUN_14005B104(&var);
+    PECMD_AppendLongDecimal(*(void **)(self + 0xe0), (int64_t)(new_sel + 1), var);
+    PECMD_FreeStrBuf(&var);
 }
 
 /* ========== FUN_1400EC428 @0x1400ec428 ==========

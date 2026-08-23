@@ -25,7 +25,7 @@ extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
 extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
-extern void FUN_1400669C4(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern uint16_t FUN_14001B510(void);                     /* @0x14001b510 */
 extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
@@ -77,7 +77,7 @@ int64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
             /* TODO(verify): 原实现 FUN_14002487C 行分割后执行 init */
         }
         if (initBuf != NULL && initBuf[0] != L'\0') {
-            FUN_1400669C4(&g_Script, 0, WSTR("&PeExe"));
+            PECMD_AppendLongDecimal((int64_t *)&g_Script, 0, WSTR("&PeExe"));
             g_autoAppFlag = 1;
             FUN_1400702B0(&initBuf, cmdline);
             /* TODO(verify): 执行 init 段脚本 */
@@ -89,9 +89,9 @@ int64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
                 FUN_1400702B0(&cmd, s + 1);
             }
         }
-        FUN_14005B104(&initBuf);
+        PECMD_FreeStrBuf(&initBuf);
     }
-    FUN_1400669C4(&g_Script, 1, WSTR("&PeExe"));
+    PECMD_AppendLongDecimal((int64_t *)&g_Script, 1, WSTR("&PeExe"));
 
     /* SCRIPT 资源（非命令行模式时） */
     {
@@ -150,14 +150,14 @@ run_script:
             PECMD_SetCurFileVariables(&g_Script, cmdline, 0);
             /* 执行主脚本 */
             r = PECMD_RunCommand(&g_Script, cmdline, NULL, NULL, NULL, NULL);
-            FUN_14005B104(&p2);
+            PECMD_FreeStrBuf(&p2);
         }
     }
 
     /* 清理 */
-    FUN_14005B104(&scriptBuf);
-    FUN_14005B104(&cmd);
+    PECMD_FreeStrBuf(&scriptBuf);
+    PECMD_FreeStrBuf(&cmd);
     FUN_14005B0B8(initBuf, 0);
-    FUN_14005B104(&initBuf);
+    PECMD_FreeStrBuf(&initBuf);
     return r;
 }
