@@ -2165,6 +2165,7 @@ int64_t PECMD_PartShowHideDrive(uint64_t a1, WCHAR *a2)
     int iVar9;
     int iVar10;
     DWORD DVar11;
+    uint8_t uVar3;                       /* SetDriveMount 返回旗标 (原体 uVar3, CONCAT71 低字节) */
     uint uVar12;
     BOOL BVar13;
     longlong lVar17;
@@ -3710,6 +3711,120 @@ LAB_1400cf332:
                                                             }
                                                         }
                                                     }
+                                                }
+                                                else {
+                                                    /* 原体 @127889 unshow 直除路径 (else-of-E):
+                                                     * SetDriveMount 以 (91c<<8|98c) 模式对当前盘/分区做卷映射删除 */
+                                                    uVar3 = PECMD_SetDriveMount(
+                                                        (int64_t)(intptr_t)local_8e8, local_978,
+                                                        local_8f8, local_944,
+                                                        ((uint)local_91c << 8) | local_98c,
+                                                        local_950, (uint16_t *)local_958,
+                                                        &local_908);
+                                                    puVar20 = local_8b8;
+                                                    uVar8 = local_8f8;
+                                                    if ((short)local_878 == 0) {
+                                                        if (local_98c != 0) {
+                                                            goto LAB_1400d0018;
+                                                        }
+                                                        if ((local_987 == '\0') ||
+                                                            ((((uVar12 & 0x10) == 0 &&
+                                                               (uVar12 != 0x84)) &&
+                                                              ((uVar12 != 0xef &&
+                                                                ((local_986 == '\0' ||
+                                                                  ((*(ulonglong *)
+                                                                    ((uintptr_t)ent + 0x40 +
+                                                                     (uintptr_t)local_8b8) &
+                                                                    0xc000000000000000ULL) ==
+                                                                   0)))))))) {
+                                                            /* 原体 CONCAT71(extraout_var,uVar3):
+                                                             * SetDriveMount 返回 uint8_t 成功旗标 */
+                                                            if ((uVar3 != 0) &&
+                                                                (((short)local_920 == 0 ||
+                                                                  (local_979 != '\0')))) {
+LAB_1400d0018:;
+                                                                /* 移除模式命中或已完成: 关句柄+五连释放+
+                                                                 * LeaveCriticalSection 后按 rbx_ret 返回 */
+                                                                if (pWVar27 !=
+                                                                    (WCHAR *)0xffffffffffffffff) {
+                                                                    CloseHandle((HANDLE)pWVar27);
+                                                                }
+                                                                PECMD_FreeStrBuf((WCHAR **)&local_918);
+                                                                PECMD_FreeStrBuf((WCHAR **)&local_8c0);
+                                                                PECMD_FreeStrBuf(&local_8d0);
+                                                                PECMD_FreeStrBuf(&local_958);
+                                                                PECMD_FreeStrBuf(&local_900);
+                                                                LeaveCriticalSection(&g_csDisk);
+                                                                return rbx_ret;
+                                                            }
+                                                            wsprintfW(local_958,
+                                                                      (LPCWSTR)L"\\Device\\Harddisk%d\\Partition%d",
+                                                                      (int)(short)local_978,
+                                                                      (int)(short)local_8f8);
+                                                            if (-1 < (char)local_990) {
+                                                                PECMD_FindVolumeByDeviceId(
+                                                                    (uint32_t *)(uintptr_t)
+                                                                        ((uintptr_t)ent + 0x30 +
+                                                                         (uintptr_t)local_8b8),
+                                                                    (int64_t *)&local_958,
+                                                                    (LPWSTR)1);
+                                                            }
+                                                            uVar12 = mount_root[0];
+                                                            if (letter_str[0] == L'\0') {
+                                                                uVar12 =
+                                                                    (uint)PECMD_PickFreeDriveLetter(
+                                                                        &local_8f0, 0xc,
+                                                                        (char)(local_97b + 0xbf),
+                                                                        local_898);
+                                                                letter_str[0] = (WCHAR)uVar12;
+                                                                mount_root[0] = letter_str[0];
+                                                            }
+                                                            if ((local_820 != 0) ||
+                                                                ((ushort)(letter_str[0] +
+                                                                          0xffbf) < 0x1a)) {
+                                                                if ((short)uVar12 != 0) {
+                                                                    if (local_91c != 0) {
+                                                                        /* 原体第 3 参为盘符 (栈变参截断) TODO(verify) */
+                                                                        PECMD_TlsLogWrite(
+                                                                            (uint64_t)(uintptr_t)g_Script,
+                                                                            (LPCWSTR)L"unshow pt: %d:%d %c\r\n",
+                                                                            (uint64_t)local_978,
+                                                                            (uint64_t)uVar8);
+                                                                    }
+                                                                    BVar13 = PECMD_DosDeviceMount(
+                                                                        (LPCWSTR)local_958,
+                                                                        (LPCWSTR)letter_str,
+                                                                        (WCHAR *)mount_root,
+                                                                        local_944,
+                                                                        (char)local_950);
+                                                                    if (BVar13 == 0) {
+                                                                        local_908 = GetLastError();
+                                                                    } else {
+                                                                        local_908 = 0;
+                                                                    }
+                                                                }
+                                                                local_938 = local_908;
+                                                                uVar8 = local_8a8;
+                                                                if (-1 < (int)local_984) {
+                                                                    goto LAB_1400d0018;
+                                                                }
+                                                                goto LAB_1400ceefb;
+                                                            }
+                                                            if (pWVar27 !=
+                                                                (WCHAR *)0xffffffffffffffff) {
+                                                                CloseHandle((HANDLE)pWVar27);
+                                                            }
+                                                            PECMD_FreeStrBuf((WCHAR **)&local_918);
+                                                            PECMD_FreeStrBuf((WCHAR **)&local_8c0);
+                                                            PECMD_FreeStrBuf(&local_8d0);
+                                                            PECMD_FreeStrBuf(&local_958);
+                                                            PECMD_FreeStrBuf(&local_900);
+                                                            /* 原体 LAB_1400cfff4: LeaveCriticalSection + 返回 */
+                                                            goto LAB_1400cfff4;
+                                                        }
+                                                    }
+                                                    local_938 = local_908;
+                                                    uVar8 = local_8a8;
                                                 }
                                             }
                                         }
