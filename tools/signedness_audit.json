@@ -654,10 +654,87 @@
    "verdict": "REAL_BUG",
    "fix": "低危: 两处补 = (-0x80000000);(PE INT_MIN 哨兵)。现零初值使哨兵检查在未配置 TIP= 时永不命中, 回退分支以 0 参与运算, 默认窗口矩形与原版不同。",
    "pe_init": "0x14013a240/a244 = 00 00 00 80 (INT_MIN)"
+  },
+  {
+   "file": "core_b8a.c",
+   "line": 111,
+   "pattern": "B",
+   "ours": "uint8_t *ref = (uint8_t *)(obj + 0x123);\n    if (*ref > 0) {\n        *ref = (uint8_t)(*ref - 1);\n        ShowWindow(*(HWND *)(obj + OBJ_HWND), SW_HIDE);",
+   "dc_line": 140194,
+   "dc": "if ('\\0' < *(char *)(param_1 + 0x123)) { *(char *)(param_1 + 0x123) = *(char *)(param_1 + 0x123) + -1; ShowWindow(...,0); }   /* FUN_1400e5708 控件虚表方法 */",
+   "verdict": "REAL_BUG",
+   "fix": "uint8_t *ref 改 int8_t *ref(或比较处显式 (int8_t))。分歧域: 字节≥0x80 时 dc 跳过递减与隐藏, 我们误递减标志并错误 SW_HIDE。可达性: 同族代码将该字节当带 bit0x80 标志用(dc@133005 |=0x80, @134941 显式测 bit7, @83025 |=0x20), 高位值运行期真实存在; 当前无直接调用点(经 vtable 间接), 属潜在缺陷。",
+   "round2_verification": {
+    "status": "OPEN",
+    "note": "字段读取类别扫描代理(524959a0)立案 RC-1, 主审计亲证双侧原文成立"
+   }
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 4832,
+   "pattern": "D",
+   "ours": "(WCHAR *)(uintptr_t)(((int64_t)iVar6 * (int64_t)uVar14) / (int64_t)uVar15);  /* 同型 ×4: 4832/4833/4841/4844 */",
+   "dc_line": 33076,
+   "dc": "(LPCWSTR)(((longlong)iVar6 * uVar14) / uVar15);   /* uVar14/uVar15 为 ulonglong → 64位无符号 DIV; 提示窗/logo GDI 缩放 */",
+   "verdict": "REAL_BUG",
+   "fix": "恢复混合提升: ((uint64_t)(int64_t)iVar6 * uVar14) / uVar15。操作数含 g_tipOffX/Y(脚本可写配置)与图像宽高, ≥0x80000000 或乘积高位时商分叉。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 7309,
+   "pattern": "B",
+   "ours": "(int)(((uint32_t)local_160v * w_ic) / (int32_t)local_158)",
+   "dc_line": 131644,
+   "dc": "(int)(((int)(uint)local_160 * local_128) / (longlong)(int)local_158)   /* FUN_1400d5b48 图标拉伸: (int)(uint) 先截断再符号扩展进64位乘法 */",
+   "verdict": "REAL_BUG",
+   "fix": "改 (int64_t)(int32_t)(uint32_t)local_160v * w_ic。bit31 置位的脚本宽度值两侧被乘数完全不同; 同函数 7310-7312 已正确无需动。",
+   "discovery": "算术语义类别扫描(ad4185a0)"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 13231,
+   "pattern": "D",
+   "ours": "uVar10 = 0xffc00 / uVar9;   /* 旁注 TODO */",
+   "dc_line": 65965,
+   "dc": "auVar3._0_8_ = SUB168(SEXT816(0xffc00),8); uVar10 = SUB168((auVar3 << 0x40 | ZEXT816(0xffc00)) / SEXT816((longlong)uVar9),0);  /* 128÷64 位除法建模 */",
+   "verdict": "REAL_BUG",
+   "fix": "待汇编定谳: 需确认原指令是否显式双半装载(0xFFC00·2^64+0xFFC00 ÷ uVar9)。若属实且除数 ≤0xFFC00 量级则现标量式商差数量级; 下游作 ReadFile 长度。修复按汇编如实转写或证明运行域等价后注释销案。",
+   "discovery": "算术语义类别扫描(ad4185a0)"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 20576,
+   "pattern": "D",
+   "ours": "uVar15 = (uint64_t)*puVar12 / (uint64_t)(int)local_508;",
+   "dc_line": 88770,
+   "dc": "LVar7.QuadPart = (longlong)*puVar6 / lVar19;   /* 有符号64位除法; 同文件 20030 行同型表达式逐字忠实, 两处不一致即转写漂移铁证 */",
+   "verdict": "REAL_BUG",
+   "fix": "改 (int64_t)*puVar12 / (int64_t)(int)local_508 与 dc 对齐。(int) 后为负的配置值时商完全不同。"
+  },
+  {
+   "file": "core_b8m.c",
+   "line": 1982,
+   "pattern": "D",
+   "ours": "delta = (scroll * delta) / 0x78 - 1;",
+   "dc_line": 154386,
+   "dc": "iVar6 = (uint)(local_res10[0] * iVar6) / 0x78 - 1;   /* SPI_GETWHEELSCROLLLINES 可返回 WHEEL_PAGESCROLL(-1) */",
+   "verdict": "REAL_BUG",
+   "fix": "delta = (int)((uint32_t)(scroll * delta) / 0x78u) - 1。分歧: pagescroll 配置下 dc 发约 3579 万条 WM_VSCROLL(病态但真实), 我们得 -2 一条不发——副作用双重分叉。主审计亲证双侧原文。"
+  },
+  {
+   "file": "core_b3r_i28c.c",
+   "line": 880,
+   "pattern": "B",
+   "ours": ":880 local_f0 = 0;  :960 local_f0 = CONCAT44((uint32_t)uVar10, uVar10) | 0x100;",
+   "dc_line": 109882,
+   "dc": ":109882 local_f0 = local_f0 & 0xffffffff00000000;  :109964 local_f0 = CONCAT44(local_f0._4_4_, uVar10) | 0x100;   /* 高半为栈槽残留, 应 AND 保留后并入 */",
+   "verdict": "REAL_BUG",
+   "fix": "忠实性修复: :880 改 local_f0 &= 0xffffffff00000000ULL; :960 改 (local_f0 & 0xffffffff00000000ULL) | uVar10 | 0x100。下游 FUN_1400702b0/lpParameter[1] 消费完整 64 位。「正确值」需汇编定夺, 但现转写偏离 dc 文本结构。",
+   "discovery": "算术语义类别扫描(ad4185a0)"
   }
  ],
  "summary": {
-  "real_bugs": 15,
+  "real_bugs": 22,
   "faithful": 45,
   "unsure": 0
  },
@@ -841,6 +918,12 @@
     "全表明细 /tmp/final_table.txt"
    ],
    "style_note": "b3_remaining.c:20895 冗余恒等转换链 (int)(int64_t)(uintptr_t) 可顺手清理(非问题)"
+  },
+  "exhaustive_retry_2": {
+   "agent": "953875ce(用户恢复续跑)",
+   "scope": "95 文件哨兵族(-1/0xffffffff/INVALID_HANDLE_VALUE/(HANDLE)-1/-2/-100)153 处命中(含 2 注释行), @0x+LAB 双重定位, 修正 2 处标记错配(b3r:10216→1400604b0, b3r:1892→140046ac4)",
+   "result": "real_candidates=0 equiv=145 unclear=0 —— 与收窄版重扫(98点)+主审自查(6点)三方交叉一致, 类别彻底干净",
+   "special": "唯一 dc 反编译失败位点 b8_failed:105 以 ghidra_out/asm/1400e4864.asm 第39行 cmp r8d,0xffffcfc7 落实等价"
   }
  },
  "regression_review": {
@@ -901,6 +984,23 @@
     "site": "FUN_1400f6db0/1400d85d0",
     "verdict": "我方为纯桩, 无转写对象"
    }
-  ]
- }
+  ],
+  "exhaustive_retry": {
+   "agent": "524959a0",
+   "result": "candidates=1(RC-1 b8a +0x123 已立案) faithful=27组 benign=18组 not_ported=5函数",
+   "scale": "185 个 dc 命中行 → 60 个有序比较位点组 → 45 函数逐一锚定核对读侧类型",
+   "reconciliation": "该代理对 DAT_14013a248 判 BENIGN({0,1} 写入域)忽略了 PE 初值 0xFF 维度——以全局普查代理的 pe_registry 实读证据为准, A248 维持 REAL_BUG 立案",
+   "port_later_checklist": [
+    "FUN_140058ae4 的 _2_2_<0 (dc@52290)",
+    "FUN_1400a6874 的 +600(char)<1 (dc@104718/104735)",
+    "FUN_1400f94a0/FUN_1400c3820 当前为简化桩"
+   ]
+  }
+ },
+ "side_observations": [
+  "link_stubs.c:110 unsigned long GetTickCount 与 :10594 DWORD GetTickCount 声明冲突(LP64 下 64位); 调用侧均存 DWORD 暂不影响, 建议统一",
+  "FUN_1400f53c8(LVM_INSERTCOLUMNW) 被移植两份: core_b7c.c 版与 core_b8l.c PECMD_ListAddItemEntry, 两份哨兵写法均忠实但重复覆盖同一地址, 疑函数归属误标",
+  "core_b3l.c:419 多出 hFile!=INVALID 死条件(OpenFileHandle 已将 -1 归零 NULL), 等价偏保守",
+  "build.sh 无参数循环为空, '默认全部'注释失效"
+ ]
 }
