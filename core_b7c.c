@@ -22,6 +22,9 @@ typedef uint64_t ulonglong;
 
 #include "pecmd_defs.h"
 
+/* 前向声明: 本文件 TABL 段私有 thunk_FUN_1400f429c (定义于文件后部) */
+static void b7c_skip_to(WCHAR **pp, WCHAR c);
+
 /* ====================================================================
  * 真体移植 (decompiled.c 忠实直移) 所需依赖声明。
  * 实现位置: 各 core_*.c 真体 / link_stubs.c (仅 DAT 槽)。
@@ -1923,9 +1926,1450 @@ void *PECMD_EnviMemReadWrite(WCHAR *a1, void *a2, uint64_t a3,
     return NULL;
 }
 
+/* ---- TABL 列表控件族新增依赖声明 (实现位置见各函数注记) ---- */
+#include <stdlib.h>
+#include <string.h>
+extern void *operator_new(size_t size);                                   /* @link_stubs.c 全局 new 包装 */
+extern uint64_t FUN_1400630d0(int kind);                                  /* @0x1400630d0 内存告警重试 (link_stubs.c) */
+extern void FUN_140063888(void *dst, const WCHAR *src, int64_t nbytes);   /* @0x140063888 定长串赋值 (link_stubs.c) */
+extern short FUN_1400677b0(longlong *pcursor, longlong out4);             /* @0x1400677b0 四连整数解析 (link_stubs.c 真体) */
+extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);                    /* @0x1400c1194 表达式→整数 (core_exec5.c) */
+extern void *FUN_1400bf358(void *ctx, void *expr, double *out);           /* @0x1400bf358 括号表达式求值 (link_stubs.c leaf 桩) */
+extern uint64_t FUN_140067b54(uint16_t *pcursor, double *out);            /* @0x140067b54 数词解析 (link_stubs.c leaf 桩) */
+extern longlong FUN_14006b8fc(longlong *self);                            /* @0x14006b8fc 控件尺寸计算 (link_stubs.c 桩) */
+extern void FUN_14007d0ac(longlong *script, LPCWSTR key, LPCWSTR val);    /* @0x14007d0ac SetVariable (link_stubs.c 真体) */
+extern void PECMD_ParseNumSkipChar_0224(int64_t *pp, int *out);           /* @0x140070224 数字+跳字 (core_b3b.c) */
+extern void FUN_140053e78(void);                                          /* @0x140053e78 (link_stubs.c) */
+
+/* 本批引用的全局数据槽 */
+extern WCHAR g_szEmpty[];                 /* DAT_14011c638 .rdata 空串 */
+extern uint8_t g_Script[0x200];           /* DAT_14013d130 表达式求值上下文 */
+extern HANDLE g_hHeap;                    /* DAT_14013d328 进程堆 */
+extern uint64_t g_u6435a0;                /* DAT_1401235a0 空 double 槽种子 */
+extern double g_scrollLimit;              /* DAT_140129ee8 = 32768.0 */
+extern double g_fontSizeDef;              /* DAT_1401293c0 默认字号位型 */
+extern double g_dbl20b28;                 /* _DAT_140120b28 = 0.0 */
+extern double g_dbl25230;                 /* DAT_140125230 = 0.5 四舍五入 */
+extern double g_fontMinus0;               /* DAT_140125238 = -0.0 符号翻转 */
+extern double g_fontRound;                /* DAT_140126070 ≈0.5 舍入补偿 */
+extern double g_dpiBase;                  /* _DAT_140126078 = 72.0 基准字高 */
+extern uint32_t g_dpi;                    /* DAT_14013d868 当前 DPI */
+extern uint64_t g_pFontBase;              /* DAT_14013e2a8 默认字体句柄槽 */
+extern uint8_t DAT_14011d308[];           /* 0x14011d308 缺省串 (link_stubs.c) */
+
+/* win32_stub.h 已含 ShowWindow/HeapReAlloc 等声明; FUN_14001d78c 见文件后部 REGI 段 extern。 */
+
+/* ---- .rdata 虚表地址占位 ----
+ * 对象头仅存储虚表地址; 本 TU 内唯一被分派的虚方法是 +0x108 (应用字体),
+ * 以具名数组承接保证可安全调用; 其余槽保持 0 (未被本批代码触及)。TODO(verify) */
+typedef void (*b7c_vt_fn_t)(void *self, HFONT font, int flag);
+static void b7c_listctrl_applyfont(void *self, HFONT font, int flag);
+static const void *b7c_vt_PTR_1401234f0 = NULL;          /* 控件基类虚表 @0x1401234f0 */
+static const void *b7c_vt_PTR_14012c550[0x120 / 8];      /* 表头子对象虚表 @0x14012c550 (任务所指「虚表 14012c550 关联」) */
+static const void *b7c_vt_PTR_14012c670[0x120 / 8] = {   /* 列表控件对象虚表 @0x14012c670 */
+    [0x108 / 8] = (const void *)&b7c_listctrl_applyfont
+};
+static const void *b7c_vt_PTR_140126888[0x120 / 8];      /* TABL 宿主对象虚表 @0x140126888 */
+
+/* ========== FUN_140053dc8 @0x140053dc8 (控件宿主基类构造, 直移) ========== */
+void *FUN_140053dc8(uint64_t *self, uint32_t cmd, uint64_t id,
+                    LPCWSTR name, LPCWSTR clsA, LPCWSTR clsW,
+                    uint32_t x, uint32_t y, uint32_t w, uint32_t h)
+{
+    *(uint32_t *)(self + 1) = cmd;                        /* [0x08] = 0x10 */
+    *(const void **)self = (const void *)&b7c_vt_PTR_1401234f0;
+    PECMD_StrAssign((WCHAR **)(self + 2), name);          /* [0x10] 名称串槽 */
+    self[3] = 0;
+    FUN_14006355c(self + 3, name, -1, ~(uint64_t)0);      /* [0x18] ANSI 名称槽 */
+    PECMD_StrAssign((WCHAR **)(self + 4), clsW);          /* [0x20] 类名 W */
+    PECMD_StrAssign((WCHAR **)(self + 5), clsA);          /* [0x28] 类名 A */
+    self[6] = 0;
+    self[7] = 0;
+    self[10] = id;                                        /* [0x50] 命令 id */
+    *(uint32_t *)(self + 8) = x;                          /* [0x40] X */
+    *(uint32_t *)((char *)self + 0x44) = y;               /* Y */
+    *(uint32_t *)(self + 9) = w;                          /* [0x48] W */
+    *(uint32_t *)((char *)self + 0x4c) = h;               /* H */
+    self[0xb] = id;                                       /* [0x58] */
+    self[0xc] = 0;
+    *(uint32_t *)(self + 0xd) = 0;                        /* [0x68] 子项计数 */
+    return self;
+}
+
+/* ========== FUN_140053cec @0x140053cec (写 <名>.Visible/.Visable 环境变量, 直移) ========== */
+void FUN_140053cec(longlong host, int visible)
+{
+    LPCWSTR name;
+    LPWSTR buf;
+    int len;
+    LPCWSTR val;
+
+    name = *(LPCWSTR *)((char *)host + 0x80);
+    if (*name != L'\0') {
+        val = (LPCWSTR)(const uint16_t *)L"0";
+        if (visible != 0) {
+            val = (LPCWSTR)(const uint16_t *)L"1";
+        }
+        len = lstrlenW(name);
+        PECMD_AllocWStringBuffer(&buf, (int64_t)len + 0xb);
+        lstrcpyW(buf, name);
+        lstrcpyW(buf + len, (LPCWSTR)(const uint16_t *)L".Visible");
+        if (**(short **)((char *)host + 0x80) != 0) {
+            FUN_14007d0ac(*(longlong **)((char *)host + 0x50), buf, val);
+        }
+        buf[len + 4] = L'a';                              /* 二进制原样: 第二次改写为 .Visable */
+        if (**(short **)((char *)host + 0x80) != 0) {
+            FUN_14007d0ac(*(longlong **)((char *)host + 0x50), buf, val);
+        }
+        PECMD_FreeStrBuf((WCHAR **)&buf);
+    }
+}
+
+/* ========== FUN_140063118 @0x140063118 (向量缓冲分配/扩容, 直移) ========== */
+longlong *FUN_140063118(unsigned char *old, longlong nbytes)
+{
+    longlong *hdr;
+    longlong oldcap;
+    int rv;
+
+    if (old == NULL) {
+        for (;;) {
+            hdr = (longlong *)HeapAlloc(g_hHeap, 0, nbytes + 8);
+            if (hdr != NULL) break;
+            rv = (int)FUN_1400630d0(2);
+            if (rv != 4) break;                           /* 原体 while(iVar==4) 重试 */
+        }
+        *(uint32_t *)((char *)hdr + 4) = 0xaa55;
+        hdr[0] = nbytes;
+        return hdr + 1;
+    }
+    oldcap = *(longlong *)(old - 8);
+    hdr = (longlong *)HeapReAlloc(g_hHeap, 0, old - 8, nbytes + 8);
+    if (hdr == NULL) {
+        for (;;) {
+            hdr = (longlong *)HeapAlloc(g_hHeap, 0, nbytes + 8);
+            if (hdr != NULL) break;
+            rv = (int)FUN_1400630d0(2);
+            if (rv != 4) break;
+        }
+        *(uint32_t *)((char *)hdr + 4) = 0xaa55;
+        hdr[0] = nbytes;
+        if (nbytes < oldcap) {
+            oldcap = nbytes;
+        }
+        hdr = hdr + 1;
+        FUN_14001d78c((unsigned char *)hdr, old, oldcap);
+        HeapFree(g_hHeap, 0, old - 8);
+    }
+    else {
+        *(uint32_t *)((char *)hdr + 4) = 0xaa55;
+        hdr[0] = nbytes;
+        hdr = hdr + 1;
+    }
+    return hdr;
+}
+
+/* ========== FUN_140063978 @0x140063978 (向量按增量扩容, 直移) ========== */
+void FUN_140063978(longlong *pdata, longlong *pcapa, uint32_t elemsz, longlong grow)
+{
+    int newcap;
+
+    newcap = (int)grow + (int)*pcapa;
+    *pdata = (longlong)(uintptr_t)FUN_140063118((unsigned char *)(uintptr_t)*pdata, (ulonglong)newcap * elemsz);
+    memset((unsigned char *)*pdata + *pcapa * elemsz, 0, (size_t)(elemsz * grow));
+    *pcapa = newcap;
+}
+
+/* ========== FUN_140063b00 @0x140063b00 (向量第 idx 元素地址, 自动扩容, 直移) ========== */
+longlong FUN_140063b00(longlong idx, longlong *pdata, longlong *pcapa, uint32_t elemsz)
+{
+    if (idx < 0) {
+        idx = 0;
+    }
+    if ((ulonglong)(*pcapa - 1) <= (ulonglong)idx) {
+        FUN_140063978(pdata, pcapa, elemsz, idx - *pcapa + 2);
+    }
+    return (ulonglong)elemsz * idx + *pdata;
+}
+
+/* ========== FUN_1400639f0 @0x1400639f0 (向量 push_back, 直移) ========== */
+longlong FUN_1400639f0(longlong *pdata, longlong *pcapa, longlong *pcount,
+                       unsigned char *elem, uint32_t elemsz, longlong grow)
+{
+    longlong oldcnt;
+    longlong base;
+
+    if ((ulonglong)(*pcapa - 1) <= (ulonglong)*pcount) {
+        oldcnt = *pcapa + grow;
+        *pcapa = oldcnt;
+        *pdata = (longlong)FUN_140063118((unsigned char *)*pdata, elemsz * oldcnt);
+    }
+    FUN_14001d78c((unsigned char *)(*pcount * elemsz + *pdata), elem, elemsz);
+    oldcnt = *pcount;
+    base = *pdata;
+    *pcount = oldcnt + 1;
+    return base + oldcnt;
+}
+
+/* ========== FUN_140063b64 @0x140063b64 (向量槽初始化 {data,cap=1,count=0}, 直移) ========== */
+longlong *FUN_140063b64(longlong *v)
+{
+    longlong cap;
+    longlong i;
+    unsigned char *p;
+    int rv;
+
+    v[2] = 0;
+    v[0] = 0;
+    v[1] = 1;
+    for (;;) {
+        p = (unsigned char *)HeapAlloc(g_hHeap, 0, 0x10);
+        if (p != NULL) break;
+        rv = (int)FUN_1400630d0(2);
+        if (rv != 4) break;
+    }
+    *(uint32_t *)(p + 4) = 0xaa55;
+    *(longlong *)p = 8;
+    cap = v[1];
+    v[0] = (longlong)(uintptr_t)(p + 8);
+    for (i = 0; i < cap; i++) {
+        *(uint64_t *)(v[0] + i * 8) = 0;
+    }
+    return v;
+}
+
+/* ========== FUN_1400e57c0 @0x1400e57c0 (控件对象基类构造, 直移) ========== */
+void *FUN_1400e57c0(uint64_t *o)
+{
+    *(const void **)o = (const void *)&b7c_vt_PTR_1401234f0;
+    o[4] = 0;                                   /* HWND @byte 0x20 */
+    o[7] = 0;
+    o[0x18] = 0;
+    *(uint8_t *)((char *)o + 0xf * 8) &= (uint8_t)~3u;
+    *(uint8_t *)((char *)o + 0x14 * 8) = 0xff;  /* byte 0xa0 */
+    *(uint8_t *)((char *)o + 0x17 * 8) = 0xff;  /* byte 0xb8 */
+    *(uint16_t *)((char *)o + 0xa2) = 0xffff;
+    o[0x19] = 0;
+    *(uint32_t *)(o + 8) = 0x80000000u;         /* byte 0x40 */
+    o[6] = 0;
+    o[5] = 0;
+    *(uint8_t *)((char *)o + 0x61) = 0;
+    o[0x11] = 0;
+    o[0x10] = 0;
+    *(uint32_t *)(o + 0x15) = 0x80000000u;      /* byte 0xa8 */
+    *(uint8_t *)((char *)o + 0xac) = 0;
+    *(uint8_t *)((char *)o + 0xa4) = 0;
+    *(uint32_t *)((char *)o + 0x9c) = 0x80000000u;
+    *(uint32_t *)(o + 0x13) = 0x80000000u;      /* byte 0x98 */
+    *(uint32_t *)((char *)o + 0x94) = 0x80000000u;
+    *(uint32_t *)(o + 0x12) = 0x80000000u;      /* byte 0x90 */
+    *(uint8_t *)((char *)o + 0xa5) = 0;
+    *(uint8_t *)((char *)o + 0xad) = 0;
+    *(uint8_t *)((char *)o + 0xa1) = 0;
+    *(uint32_t *)((char *)o + 0x44) = 0x80000000u;
+    o[9] = 0;
+    *(uint32_t *)((char *)o + 0x54) = 0x80000000u;
+    *(uint32_t *)(o + 0xb) = 0xdefbacu;         /* byte 0x58 缺省底色 */
+    *(uint32_t *)((char *)o + 0x5c) = 0xff0000u;
+    *(uint32_t *)(o + 10) = 0xbf800000u;        /* byte 0x50 位型 */
+    *(uint8_t *)((char *)o + 0xc * 8) = 0x4c;   /* byte 0x60 */
+    o[0xe] = 0;
+    o[0xd] = 0;
+    return o;
+}
+
+/* ========== FUN_1400f5c74 @0x1400f5c74 (列表表头子对象构造, 直移;
+ *   安装虚表 PTR_FUN_14012c550 — 即任务所指「虚表 14012c550 关联」) ========== */
+void *FUN_1400f5c74(uint64_t *o)
+{
+    int64_t tmp;
+
+    FUN_1400e57c0(o);
+    *(const void **)o = (const void *)&b7c_vt_PTR_14012c550;
+    FUN_140063b64((longlong *)(o + 0x1a));
+    FUN_140063b64((longlong *)(o + 0x1d));
+    PECMD_AllocStrSlot((WCHAR **)(o + 0x20));
+    *(uint32_t *)((char *)o + 0x124) = 0;
+    *(uint32_t *)(o + 0x23) = 0xabu;            /* byte 0x118 */
+    *(uint32_t *)((char *)o + 0x11c) = 199;
+    *(uint32_t *)(o + 0x24) = 0xebu;            /* byte 0x120 */
+    *(uint8_t *)((char *)o + 0x26 * 8) = 1;     /* byte 0x130 */
+    PECMD_StrBldCopyAnsi(&tmp, (const char *)DAT_14011d308, ~(uint64_t)0);
+    PECMD_AssignString((int64_t *)(o + 0x20), *(LPCWSTR *)&tmp);  /* = FUN_140070398 同体 */
+    PECMD_FreeStrBuf((WCHAR **)&tmp);
+    *(uint32_t *)((char *)o + 0x134) = 0;
+    o[0x22] = 0;
+    o[0x21] = 0;
+    o[0x27] = 0;
+    o[0x25] = 0x3ff0000000000000ULL;            /* double 1.0 */
+    return o;
+}
+
+/* ========== FUN_1400f9134 @0x1400f9134 (列表控件对象构造, operator_new(0x400) 体, 直移) ========== */
+uint64_t *FUN_1400f9134(uint64_t *mem, uint64_t owner, uint64_t host)
+{
+    FUN_1400e57c0(mem);
+    *(const void **)mem = (const void *)&b7c_vt_PTR_14012c670;
+    mem[0x1a] = host;
+    FUN_1400f5c74(mem + 0x1b);
+    *(uint32_t *)((char *)mem + 0x43 * 8) = 0;  /* byte 0x218 */
+    FUN_140063b64((longlong *)(mem + 0x4c));
+    FUN_140063b64((longlong *)(mem + 0x4f));
+    FUN_140063b64((longlong *)(mem + 0x52));
+    FUN_140063b64((longlong *)(mem + 0x55));
+    FUN_140063b64((longlong *)(mem + 0x58));
+    FUN_140063b64((longlong *)(mem + 0x5b));
+    FUN_140063b64((longlong *)(mem + 0x5e));
+    FUN_140063b64((longlong *)(mem + 0x61));
+    FUN_140063b64((longlong *)(mem + 100));     /* 元素 100 = byte 0x320 */
+    FUN_140063b64((longlong *)(mem + 0x67));
+    FUN_140063b64((longlong *)(mem + 0x6a));
+    mem[0x6d] = 0;
+    mem[0x6e] = 0;
+    mem[0x6f] = 0;
+    mem[0x70] = 0;
+    mem[0x71] = 0;
+    mem[0x72] = 0;
+    mem[0x73] = 0;
+    mem[0x74] = 0;
+    mem[0x75] = 0;
+    mem[0x7b] = 0x4028000000000000ULL;          /* double 12.0 行高系数槽 */
+    *(uint32_t *)((char *)mem + 0x3b4) = 0;
+    *(uint32_t *)((char *)mem + 0x3bc) = 0xffffffffu;
+    *(uint32_t *)((char *)mem + 0x77 * 8) = 0xffffffffu;  /* byte 0x3b8 */
+    *(uint32_t *)((char *)mem + 0x3d4) = 0xffffffe0u;
+    *(uint32_t *)((char *)mem + 0x7a * 8) = 0xffffffe0u;  /* byte 0x3d0 */
+    *(uint32_t *)((char *)mem + 0x3cc) = 0xffffffe0u;
+    mem[0x7c] = 0;
+    *(uint16_t *)((char *)mem + 0x7f * 8) = 0;  /* byte 0x3f8 标志字 */
+    *(uint8_t *)((char *)mem + 0x14 * 8) = 0;   /* byte 0xa0 */
+    *(uint8_t *)((char *)mem + 0x4a * 8) = 0;   /* byte 0x250 */
+    *(uint32_t *)((char *)mem + 0x21c) = 0;
+    mem[0x46] = 0;
+    mem[0x45] = 0;
+    mem[0x44] = 0;
+    *(uint16_t *)((char *)mem + 0x76 * 8) = 0;  /* byte 0x3b0 */
+    *(uint8_t *)((char *)mem + 0x4b * 8) = 0;   /* byte 0x258 */
+    mem[0x49] = 0;
+    mem[0x48] = 0;
+    *(uint16_t *)((char *)mem + 0x23a) = 0;
+    *(uint16_t *)((char *)mem + 0x47 * 8) = 0;  /* byte 0x238 */
+    *(uint32_t *)((char *)mem + 0x78 * 8) = 0xfffff000u;  /* byte 0x3c0 */
+    mem[0x7d] = owner;                          /* 宿主 TABL 对象 */
+    *(uint32_t *)((char *)mem + 0x79 * 8) = 0x80000000u;  /* byte 0x3c8 文本色 */
+    *(uint32_t *)((char *)mem + 0x3c4) = 0xffffffu;       /* 文本底色 */
+    mem[0x42] = (uint64_t)(uintptr_t)mem;       /* 自引用 */
+    mem[0x7e] = 0xfffffffffffffff0ULL;
+    *(uint32_t *)((char *)mem + 0x254) = 0x80000000u;
+    return mem;
+}
+
+/* ========== FUN_140064a88 @0x140064a88 (十进数字串取值, 直移) ========== */
+longlong PECMD_ParseDecDigits_b7c(uint16_t *p)
+{
+    longlong v = 0;
+    for (; (uint16_t)(*p - '0') < 10; p++) {
+        v = (longlong)(int32_t)(*p - '0') + v * 10;
+    }
+    return v;
+}
+
+/* ========== FUN_140067b78 @0x140067b78 (整词解析 hex/oct/bin/dec, 直移) ========== */
+uint64_t FUN_140067b78(longlong *pcursor, uint64_t *out)
+{
+    uint16_t *p;
+    char neg;
+    uint16_t ch;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    p = (uint16_t *)(uintptr_t)*pcursor;
+    neg = '\0';
+    if (*p == '-') {
+        p++;
+        neg = -1;
+    }
+    if (*p == '0') {
+        ch = (uint16_t)(p[1] | 0x20);
+        if (ch == 'x') {
+            *out = 0;
+            p += 2;
+            *out = PECMD_ParseHex_4a34(p);
+            *pcursor = (longlong)(uintptr_t)p;
+            for (;;) {
+                ch = *(uint16_t *)(uintptr_t)*pcursor;
+                if (((ch < '0') || ('9' < ch)) && (5 < (uint16_t)((ch | 0x20) - 'a'))) break;
+                *pcursor += 2;
+            }
+            goto neg_done;
+        }
+        if (ch == 'o') {
+            *out = 0;
+            p += 2;
+            *pcursor = (longlong)(uintptr_t)p;
+            while ((*p > '/') && (*(uint16_t *)(uintptr_t)*pcursor < '8')) {
+                *out = (longlong)(int32_t)(*(uint16_t *)(uintptr_t)*pcursor - '0') | (*out << 3);
+                *pcursor += 2;
+                p = (uint16_t *)(uintptr_t)*pcursor;
+            }
+            goto neg_done;
+        }
+        if (ch == 'b') {
+            *out = 0;
+            p += 2;
+            *pcursor = (longlong)(uintptr_t)p;
+            while ((*p > '/') && (*(uint16_t *)(uintptr_t)*pcursor < '2')) {
+                *out = (longlong)(int32_t)(*(uint16_t *)(uintptr_t)*pcursor - '0') | (*out * 2);
+                *pcursor += 2;
+                p = (uint16_t *)(uintptr_t)*pcursor;
+            }
+            goto neg_done;
+        }
+    }
+    if (9 < (uint16_t)(*p - '0')) {
+        return 0;
+    }
+    *out = (uint64_t)PECMD_ParseDecDigits_b7c(p);
+    *pcursor = (longlong)(uintptr_t)p;
+    ch = *p;
+    while ((ch > '/') && (*(uint16_t *)(uintptr_t)*pcursor < ':')) {
+        p = (uint16_t *)(uintptr_t)*pcursor + 1;
+        *pcursor = (longlong)(uintptr_t)p;
+        ch = *p;
+    }
+neg_done:
+    if (neg != '\0') {
+        *out = -*out;
+    }
+    return 1;
+}
+
+/* ========== FUN_14006a740 @0x14006a740 (整词 + T/G/M/K/S 单位尾, 直移) ========== */
+uint64_t FUN_14006a740(longlong *pcursor, uint64_t *out)
+{
+    uint16_t ch;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    if (FUN_140067b78(pcursor, out) < 1) {
+        return 0;
+    }
+    ch = *(uint16_t *)(uintptr_t)*pcursor & 0xffdf;
+    if (ch == 'T') {
+        *out = *out << 40;
+    }
+    else if (ch == 'G') {
+        *out = *out << 30;
+    }
+    else if (ch == 'M') {
+        *out = *out << 20;
+    }
+    else if (ch == 'K') {
+        *out = *out << 10;
+    }
+    else {
+        if (ch != 'S') {
+            return 1;                     /* 非单位: 原体 -2 再 +2 抵消, 字符不消费 */
+        }
+        *out = *out << 9;
+        *pcursor += 2;
+        return 1;
+    }
+    *pcursor += 2;
+    return 1;
+}
+
+/* ========== FUN_14006a7f4 @0x14006a7f4 (整数解析包装, 成功后跳空白, 直移) ========== */
+uint64_t FUN_14006a7f4(longlong *pcursor, uint64_t *out)
+{
+    uint64_t rv = FUN_14006a740(pcursor, out);
+    if ((int)rv != 0) {
+        FUN_14005B154((WCHAR **)pcursor);
+    }
+    return rv & 0xffffffffULL;
+}
+
+/* ========== FUN_1400c11f4 @0x1400c11f4 (整数解析: 括号表达式优先, 直移) ========== */
+uint64_t FUN_1400c11f4(longlong *pcursor, uint64_t *out)
+{
+    uint16_t *p;
+    uint16_t *close;
+    WCHAR *start;
+    int depth;
+    double val;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    p = (uint16_t *)(uintptr_t)*pcursor;
+    close = NULL;
+    if (*p == '(') {
+        start = (WCHAR *)(p + 1);
+        depth = 1;
+        p++;
+        for (;;) {
+            if (*p == 0) {
+                *pcursor = (longlong)(uintptr_t)p;
+                break;
+            }
+            if (*p == '(') {
+                depth++;
+            }
+            else if (*p == ')') {
+                depth--;
+                if (depth <= 0) {
+                    close = p;
+                    *pcursor = (longlong)(uintptr_t)(close + 1);
+                    *close = 0;
+                    break;
+                }
+            }
+            p++;
+        }
+        val = (double)(longlong)*out;
+        FUN_1400bf358((void *)g_Script, start, &val);
+        if (close != NULL) {
+            *close = ')';
+        }
+        FUN_14005B154((WCHAR **)pcursor);
+        if (0.0 <= val) {
+            if (0.0 < val) {
+                val += g_dbl25230;
+            }
+        }
+        else {
+            val -= g_dbl25230;
+        }
+        *out = (uint64_t)(int64_t)val;
+        return 1;
+    }
+    return FUN_14006a7f4(pcursor, out);
+}
+
+/* ========== FUN_140077e48 @0x140077e48 (浮点词 + T/G/M/K/S 乘数尾, 直移) ========== */
+uint64_t FUN_140077e48(longlong *pcursor, double *out)
+{
+    uint16_t *q;
+    uint16_t ch;
+    double scaled;
+    uint64_t rv;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    q = (uint16_t *)(uintptr_t)*pcursor;
+    rv = FUN_140067b54((uint16_t *)pcursor, out);
+    if (0 < (int)rv) {
+        if (*q == '-') {
+            q++;
+        }
+        ch = *q;
+        if ((ch == '0') && ((q[1] | 0x20) == 'x')) {
+            for (q += 2; (((ch = *q) > '/') && (ch < ':')) ||
+                         ((((ch | 0x20)) > '`') && ((ch | 0x20) < 'g')); q += 1) {
+            }
+        }
+        else {
+            while ((ch > '/') && (ch < ':')) {
+                q++;
+                ch = *q;
+            }
+            if (*q == '.') {
+                do {
+                    q++;
+                    if (*q < '0') break;
+                } while (*q < ':');
+            }
+        }
+        ch = *q & 0xffdf;
+        if (ch == 'T') {
+            scaled = *out * 1099511627776.0;       /* _DAT_1401270a8 */
+        }
+        else if (ch == 'G') {
+            scaled = *out * 1073741824.0;          /* _DAT_1401270a0 */
+        }
+        else if (ch == 'M') {
+            scaled = *out * 1048576.0;             /* _DAT_140127098 */
+        }
+        else if (ch == 'K') {
+            scaled = *out * 1024.0;                /* _DAT_140127090 */
+        }
+        else {
+            if (ch != 'S') {
+                return rv & 0xffffffffULL;
+            }
+            scaled = *out * 512.0;                 /* _DAT_140127088 */
+        }
+        *out = scaled;
+        *pcursor = (longlong)(uintptr_t)(q + 1);
+        rv &= 0xffffffffULL;
+    }
+    return rv;
+}
+
+/* ========== FUN_140077f90 @0x140077f90 (浮点词包装, 成功后跳空白, 直移) ========== */
+uint64_t FUN_140077f90(longlong *pcursor, double *out)
+{
+    uint64_t rv = FUN_140077e48(pcursor, out);
+    if ((int)rv != 0) {
+        FUN_14005B154((WCHAR **)pcursor);
+    }
+    return rv & 0xffffffffULL;
+}
+
+/* ========== FUN_140082448 @0x140082448 (浮点解析: 括号表达式优先, 直移) ========== */
+uint64_t FUN_140082448(longlong *pcursor, double *out)
+{
+    uint16_t *p;
+    uint16_t *close;
+    WCHAR *start;
+    int depth;
+    double val;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    p = (uint16_t *)(uintptr_t)*pcursor;
+    close = NULL;
+    if (*p == '(') {
+        start = (WCHAR *)(p + 1);
+        depth = 1;
+        p++;
+        for (;;) {
+            if (*p == 0) {
+                *pcursor = (longlong)(uintptr_t)p;
+                break;
+            }
+            if (*p == '(') {
+                depth++;
+            }
+            else if (*p == ')') {
+                depth--;
+                if (depth <= 0) {
+                    close = p;
+                    *pcursor = (longlong)(uintptr_t)(close + 1);
+                    *close = 0;
+                    break;
+                }
+            }
+            p++;
+        }
+        val = *out;
+        FUN_1400bf358((void *)g_Script, start, &val);
+        *out = val;
+        if (close != NULL) {
+            *close = ')';
+        }
+        FUN_14005B154((WCHAR **)pcursor);
+        return 1;
+    }
+    return FUN_140077f90(pcursor, out);
+}
+
+/* ========== FUN_140067d54 @0x140067d54 (浮点解析: 括号表达式优先, 直移) ========== */
+uint64_t FUN_140067d54(longlong *pcursor, double *out)
+{
+    uint16_t *p;
+    uint16_t *close;
+    WCHAR *start;
+    int depth;
+    double val;
+
+    FUN_14005B154((WCHAR **)pcursor);
+    p = (uint16_t *)(uintptr_t)*pcursor;
+    close = NULL;
+    if (*p == '(') {
+        start = (WCHAR *)(p + 1);
+        depth = 1;
+        p++;
+        for (;;) {
+            if (*p == 0) {
+                *pcursor = (longlong)(uintptr_t)p;
+                break;
+            }
+            if (*p == '(') {
+                depth++;
+            }
+            else if (*p == ')') {
+                depth--;
+                if (depth <= 0) {
+                    close = p;
+                    *pcursor = (longlong)(uintptr_t)(close + 1);
+                    *close = 0;
+                    break;
+                }
+            }
+            p++;
+        }
+        val = 0.0;
+        FUN_1400bf358((void *)g_Script, start, &val);
+        *out = val;
+        if (close != NULL) {
+            *close = ')';
+        }
+        FUN_14005B154((WCHAR **)pcursor);
+        return 1;
+    }
+    return FUN_140067b54((uint16_t *)pcursor, out) & 0xffffffffULL;
+}
+
+/* ========== FUN_14007de4c @0x14007de4c (浮点解析并跳过尾字符, 直移) ========== */
+void FUN_14007de4c(longlong *pcursor, double *out)
+{
+    FUN_140067d54(pcursor, out);
+    if (*(uint16_t *)(uintptr_t)*pcursor != 0) {
+        *pcursor += 2;
+    }
+}
+
+/* ========== FUN_140067e2c @0x140067e2c (带初值浮点解析→int, 四舍五入, 直移) ========== */
+uint64_t FUN_140067e2c(longlong *pcursor, int *out)
+{
+    uint64_t rv;
+    double val;
+
+    val = (double)*out;
+    rv = FUN_140067d54(pcursor, &val);
+    if ((int)rv < 1) {
+        return 0;
+    }
+    if (val < g_dbl20b28) {
+        val -= g_dbl25230;
+    }
+    else {
+        val += g_dbl25230;
+    }
+    *out = (int)val;
+    return 1;
+}
+
+/* ========== FUN_140066850 @0x140066850 (颜色词: '@'前缀走 GetSysColor, 直移) ========== */
+int FUN_140066850(longlong *pcursor, uint64_t *out)
+{
+    int is_sys;
+    int ok;
+
+    is_sys = (*(uint16_t *)(uintptr_t)*pcursor == '@');
+    if (is_sys != 0) {
+        *pcursor += 2;
+    }
+    ok = FUN_1400C1194((int64_t *)pcursor, out) ? 1 : 0;
+    if (is_sys != 0) {
+        *out = (uint64_t)GetSysColor((int)*out);
+    }
+    return ok;
+}
+
+/* ========== FUN_1400628b4 @0x1400628b4 (DPI 换算取整, 直移) ========== */
+int FUN_1400628b4(double v)
+{
+    double s;
+
+    if ((int)g_dpi < 1) {
+        return (int)v;
+    }
+    s = ((double)(int)g_dpi * v) / g_dpiBase;
+    if (s < 0.0) {
+        s = g_fontMinus0 - s;
+    }
+    return (int)(s + g_fontRound);
+}
+
+/* ========== FUN_1400e5890 @0x1400e5890 (WM_GETFONT 取字体, 失败回缺省, 直移) ========== */
+LRESULT FUN_1400e5890(longlong host)
+{
+    LRESULT f = SendMessageW(*(HWND *)((char *)host + 0x20), 0x31, 0, 0);
+    if ((f == -1) || (f == 0)) {
+        f = (LRESULT)g_pFontBase;
+    }
+    return f;
+}
+
+/* ========== FUN_1400703e4 @0x1400703e4 (串槽整体赋值, 直移) ========== */
+void FUN_1400703e4(void *slot, LPCWSTR src)
+{
+    FUN_140063888(slot, src, -1);
+}
+
+/* ========== FUN_14005b0b8 @0x14005b0b8 (定长缓冲清零 [容量在 [-8]), 直移) ========== */
+void FUN_14005b0b8(unsigned char *p)
+{
+    if (p != NULL) {
+        memset(p, 0, *(longlong *)(p - 8));
+    }
+}
+
+/* ========== FUN_1400a8664 @0x1400a8664 ("面名**BIUS#宽,高…" → LOGFONT, 忠实直移) ========== */
+void FUN_1400a8664(longlong lf, LPWSTR spec, uint32_t *pflags)
+{
+    WCHAR *tail;
+    WCHAR c;
+    LPCWSTR unq;
+    int iv;
+    double dv;
+
+    if ((spec != NULL) && (*spec != L'\0')) {
+        c = *spec;
+        tail = spec;
+        while (c != L'\0') {
+            if ((c == L'*') && (tail[1] == L'*')) {
+                *tail = L'\0';
+                tail += 2;
+                break;
+            }
+            tail++;
+            c = *tail;
+        }
+        unq = PECMD_UnquoteString((short *)spec);
+        if (unq != spec) {
+            lstrcpyW(spec, unq);
+        }
+        if (*tail != L'\0') {
+            b7c_skip_to((WCHAR **)&tail, L'#');
+            if (*tail != L'\0') {
+                *tail = L'\0';
+                tail++;
+            }
+            /* B/b/I/i/U/u/S/s 开关族 (StrChrW 全串检索) */
+            if (StrChrW(tail, L'B') != NULL) *(uint32_t *)((char *)lf + 0x10) = 700;
+            if (StrChrW(tail, L'b') != NULL) *(uint32_t *)((char *)lf + 0x10) = 400;
+            if (StrChrW(tail, L'I') != NULL) *(uint8_t *)((char *)lf + 0x14) = 1;
+            if (StrChrW(tail, L'i') != NULL) *(uint8_t *)((char *)lf + 0x14) = 0;
+            if (StrChrW(tail, L'U') != NULL) *(uint8_t *)((char *)lf + 0x15) = 1;
+            if (StrChrW(tail, L'u') != NULL) *(uint8_t *)((char *)lf + 0x15) = 0;
+            if (StrChrW(tail, L'S') != NULL) *(uint8_t *)((char *)lf + 0x16) = 1;
+            if (StrChrW(tail, L's') != NULL) *(uint8_t *)((char *)lf + 0x16) = 0;
+            iv = 0;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (iv != 0) {
+                *(uint32_t *)((char *)lf + 0x10) = (uint32_t)iv;
+                if (pflags != NULL) {
+                    *pflags |= 0x80000000u;
+                }
+            }
+            dv = 0.0;
+            FUN_14007de4c((longlong *)&tail, &dv);
+            if (dv != 0.0) {
+                double s = dv;
+                if ((int)g_dpi != 0) {
+                    if (dv < 0.0) {
+                        s = g_fontMinus0 - dv;
+                    }
+                    s = ((double)(int)g_dpi * s) / g_dpiBase;
+                }
+                *(int32_t *)((char *)lf + 4) = -(int)(s + g_fontRound);
+            }
+            iv = -1;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) {
+                *(char *)((char *)lf + 0x17) = (char)iv;
+                if (pflags != NULL) {
+                    *pflags |= 0x8000000u;
+                }
+            }
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(char *)((char *)lf + 0x1a) = (char)iv;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(int32_t *)((char *)lf + 0xc) = iv;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(int32_t *)((char *)lf + 8) = iv;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(char *)((char *)lf + 0x18) = (char)iv;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(char *)((char *)lf + 0x19) = (char)iv;
+            PECMD_ParseNumSkipChar_0224((int64_t *)&tail, &iv);
+            if (-1 < iv) *(char *)((char *)lf + 0x1b) = (char)iv;
+        }
+    }
+}
+
+/* ========== FUN_1400b1f34 @0x1400b1f34 (LOGFONT + "[~|^]高[:面名]" → HFONT, 忠实直移) ========== */
+HFONT FUN_1400b1f34(int *lf, double *ph, LPCWSTR face)
+{
+    double rnd;
+    double h;
+    int dpi;
+    int ih;
+    int iw;
+    int bold;
+    int imin;
+    int prec;
+    int flag9;
+    LPCWSTR psz;
+    WCHAR *slot;
+    WCHAR *cur;
+    HFONT hf;
+    uint64_t rv;
+
+    dpi = (int)g_dpi;
+    rnd = g_fontRound;
+    h = *ph;
+    if (h < 0.0) {
+        h -= rnd;
+    }
+    else {
+        h += rnd;
+    }
+    ih = *lf;
+    iw = (int)h;
+    flag9 = 0;
+    if (ih < 0) {
+        ih = -ih;
+    }
+    PECMD_StrAssign(&slot, face);
+    h = g_fontMinus0;                            /* dVar11 复用为负零 */
+    bold = 0;
+    imin = (int)0x80000000;
+    cur = slot;
+    if ((iw < 1) || (*lf == (int)0x80000000)) {
+        if (iw == (int)0x80000000) {
+            double seed = 0.0;
+            rv = FUN_140082448((longlong *)&cur, &seed);
+            if ((int)rv != 0) {
+                double t = seed;
+                if (seed < 0.0) {
+                    t = g_fontMinus0 - seed;
+                }
+                *ph = t;
+                iw = (int)(t + rnd);
+            }
+            flag9 = 1;
+            goto LAB_2047;
+        }
+        if (iw == -1) {
+            iw = (int)0x80000000;
+        }
+        goto LAB_211a;
+    }
+    else {
+        double t;
+        flag9 = 0;
+        (void)t;
+LAB_2047:
+        bold = 0;
+        imin = (int)0x80000000;
+        prec = dpi;
+        if (*cur == L'~') {
+            cur++;
+            if (dpi != 0) {
+                prec = 0x60;
+            }
+            goto LAB_209a;
+        }
+        else if (*cur == L'^') {
+            cur++;
+            flag9 = 4;
+            if (dpi == 0) {
+                goto LAB_209a;
+            }
+            prec = 0x48;
+        }
+        if ((flag9 != 0) || (*cur == L':')) {
+LAB_209a:
+            imin = (int)0x80000000;
+            bold = 0;
+            FUN_14005B154((WCHAR **)&cur);
+            slot = cur;
+            if (*cur != (WCHAR)bold) {
+                slot = cur + 1;
+            }
+        }
+        psz = slot;
+        t = 0.0;
+        (void)t;
+        if (iw != imin) {
+            if (dpi != bold) {
+                if (*ph <= 0.0 && *ph != 0.0) {
+                    *ph = h - *ph;
+                }
+                h = ((double)prec * *ph) / g_dpiBase;
+                *ph = h;
+                ih = (int)(h + rnd);
+                *lf = -ih;
+                if (lf[1] != bold) {
+                    lf[1] = -ih / 2;
+                }
+                goto LAB_2151;
+            }
+            goto LAB_211a;
+        }
+        goto LAB_2152;
+    }
+LAB_211a:
+    psz = slot;
+    if (iw != imin) {
+        *lf = iw;
+        ih = iw;
+    }
+LAB_2152:
+    if ((ih != imin) && (lf[1] != bold)) {
+        int t2 = -ih;
+        if (bold <= ih) {
+            t2 = ih;
+        }
+        lf[1] = -(t2 / 2);
+    }
+    if ((ih < bold) && (ih != imin)) {
+        ih = -ih;
+    }
+LAB_2151:
+    FUN_1400a8664((longlong)lf, (LPWSTR)psz, (uint32_t *)NULL);
+    if ((psz == NULL) || (*psz == L'\0')) {
+        psz = (LPCWSTR)(lf + 7);
+    }
+    hf = CreateFontW(-ih, lf[1], lf[2], lf[3], lf[4],
+                     (DWORD)*(uint8_t *)((char *)lf + 20),
+                     (DWORD)*(uint8_t *)((char *)lf + 21),
+                     (DWORD)*(uint8_t *)((char *)lf + 22),
+                     (DWORD)*(uint8_t *)((char *)lf + 23),
+                     (DWORD)*(uint8_t *)((char *)lf + 24),
+                     (DWORD)*(uint8_t *)((char *)lf + 25),
+                     (DWORD)*(uint8_t *)((char *)lf + 26),
+                     (DWORD)*(uint8_t *)((char *)lf + 27),
+                     psz);
+    PECMD_FreeStrBuf((WCHAR **)&slot);
+    return hf;
+}
+
+/* ========== FUN_1400b89dc @0x1400b89dc (克隆现有字体再调参创建, 直移) ========== */
+HFONT FUN_1400b89dc(HANDLE font, double *ph, LPCWSTR face)
+{
+    unsigned char *buf;
+    HFONT hf;
+
+    PECMD_AllocStringSlot2((void **)&buf, 0x5c);
+    FUN_14005b0b8(buf);
+    *(uint32_t *)(buf + 16) = 400;
+    GetObjectW(font, 0x5c, buf);
+    *(uint32_t *)(buf + 4) = 0;
+    *(uint8_t *)(buf + 0x17) = 1;
+    hf = FUN_1400b1f34((int *)buf, ph, face);
+    PECMD_FreeStrBuf((WCHAR **)&buf);
+    return hf;
+}
+
+/* ========== FUN_1400f2b44 @0x1400f2b44 (存表头高度并刷新, 直移) ========== */
+bool FUN_1400f2b44(longlong *sub, longlong val)
+{
+    sub[4] = val;
+    FUN_14006b8fc(sub);
+    return sub[4] != 0;
+}
+
+/* ========== FUN_1400f345c @0x1400f345c (创建 SysListView32 子窗口, 直移) ========== */
+bool FUN_1400f345c(longlong *self, uint32_t style, int *rect, HWND parent, uint32_t id)
+{
+    int l = rect[0];
+    int t = rect[1];
+    int r = rect[2];
+    int b = rect[3];
+    LONG inst;
+    HWND wnd;
+
+    self[0x42] = (longlong)(uintptr_t)self;
+    inst = GetWindowLongW(parent, -6);            /* GWL_HINSTANCE */
+    wnd = CreateWindowExW(0, (LPCWSTR)(const uint16_t *)L"SysListView32", (LPCWSTR)0,
+                          style | 0x400u, l, t, r - l, b - t, parent,
+                          (HMENU)(uintptr_t)id, (HINSTANCE)(uintptr_t)(uintptr_t)inst, NULL);
+    self[4] = (longlong)(uintptr_t)wnd;
+    FUN_14006b8fc(self);
+    UpdateWindow((HWND)(uintptr_t)self[4]);
+    return self[4] != 0;
+}
+
+/* ========== FUN_1400f353c @0x1400f353c (LVM_SETEXTENDEDLISTVIEWSTYLE, 直移) ========== */
+void FUN_1400f353c(longlong self, uint32_t style)
+{
+    SendMessageW(*(HWND *)((char *)self + 0x20), 0x1036, 0, style);
+}
+
+/* ========== FUN_1400f3554 @0x1400f3554 (LVM_INSERTITEMW + LVM_SETITEMSTATE, 直移) ========== */
+uint64_t FUN_1400f3554(longlong self, LPARAM lvitem)
+{
+    uint64_t idx = SendMessageW(*(HWND *)((char *)self + 0x20), 0x104d, 0, lvitem);
+    uint8_t st[0x14];
+    memset(st, 0, sizeof(st));
+    *(uint32_t *)(st + 0xc) = 0x1000u;            /* state = LVIS_STATEIMAGEMASK(1) */
+    *(uint32_t *)(st + 0x10) = 0xf000u;           /* stateMask */
+    SendMessageW(*(HWND *)((char *)self + 0x20), 0x102b, (longlong)(int)idx, (LPARAM)st);
+    return idx & 0xffffffffULL;
+}
+
+/* ========== FUN_1400f3674 @0x1400f3674 (向窗口发 0x47 尺寸同步消息, 直移) ========== */
+void FUN_1400f3674(HWND wnd)
+{
+    RECT rc;
+    unsigned char blob[0x28];
+    int w;
+    int h;
+
+    rc.left = rc.top = rc.right = rc.bottom = 0;
+    GetWindowRect(wnd, &rc);
+    memset(blob, 0, sizeof(blob));
+    w = rc.right - rc.left;
+    h = rc.bottom - rc.top;
+    *(HWND *)(blob + 0) = wnd;                    /* local_38 */
+    *(int *)(blob + 0x18) = w;                    /* local_20 */
+    *(int *)(blob + 0x1c) = h;                    /* local_1c */
+    *(uint32_t *)(blob + 0x20) = 0x216;           /* local_18 */
+    SendMessageW(wnd, 0x47, 0, (LPARAM)blob);
+}
+
+/* ========== FUN_1400f400c @0x1400f400c (记录文本色 RGBA, 直移) ========== */
+void FUN_1400f400c(longlong self, int r, int g, int b, uint32_t a)
+{
+    if (-1 < r) *(int32_t *)((char *)self + 0x1f0) = r;
+    if (-1 < g) *(int32_t *)((char *)self + 500) = g;
+    if (-1 < b) *(int32_t *)((char *)self + 0x1f8) = b;
+    *(uint32_t *)((char *)self + 0x1fc) = a;
+}
+
+/* ========== FUN_1400f4040 @0x1400f4040 (行高系数, 直移) ========== */
+void FUN_1400f4040(longlong self, float factor)
+{
+    if (factor < 0.0f) {
+        factor = (float)(int)factor;
+    }
+    *(double *)((char *)self + 0x200) = (double)factor;
+}
+
+/* ========== FUN_1400f4064 @0x1400f4064 (选中项 + 可选失效刷新, 直移) ========== */
+void FUN_1400f4064(longlong self, int item, int mode)
+{
+    if (-2 < item) {
+        *(int32_t *)((char *)self + 0x218) = item;
+    }
+    if (mode != 1) {
+        HWND wnd = *(HWND *)((char *)self + 0x20);
+        BOOL erase;
+        if (mode == 2) {
+            erase = 0;
+        }
+        else {
+            FUN_1400f3674(wnd);
+            if (-2 < item) {
+                return;
+            }
+            wnd = *(HWND *)((char *)self + 0x20);
+            erase = 1;
+        }
+        InvalidateRect(wnd, NULL, erase);
+    }
+}
+
+/* ========== FUN_1400f40bc @0x1400f40bc (记录文本底色索引, 直移) ========== */
+uint64_t FUN_1400f40bc(longlong self, uint32_t color)
+{
+    *(uint32_t *)((char *)self + 0x3b4) = color;
+    return 1;
+}
+
+/* ========== FUN_1400f5608 @0x1400f5608 (列宽表中查列, 直移) ========== */
+longlong FUN_1400f5608(longlong self, int col, int *pwidth)
+{
+    int n = *(int32_t *)((char *)self + 0x288);
+    int i;
+    for (i = 0; i < n; i++) {
+        int *node = *(int **)(uintptr_t)FUN_140063b00(i, (longlong *)((char *)self + 0x278),
+                                                       (longlong *)((char *)self + 0x280), 8);
+        if ((node != NULL) && (*node == col)) {
+            *pwidth = node[2];
+            return i;
+        }
+    }
+    return -1;
+}
+
+/* ========== FUN_1400f59c0 @0x1400f59c0 (子项宽表中查列, 直移) ========== */
+longlong FUN_1400f59c0(longlong self, int col, int *pwidth)
+{
+    int n = *(int32_t *)((char *)self + 0x2d0);
+    int i;
+    for (i = 0; i < n; i++) {
+        int *node = *(int **)(uintptr_t)FUN_140063b00(i, (longlong *)((char *)self + 0x2c0),
+                                                       (longlong *)((char *)self + 0x2c8), 8);
+        if ((node != NULL) && (*node == col)) {
+            *pwidth = node[2];
+            return i;
+        }
+    }
+    return -1;
+}
+
+/* ========== FUN_1400f578c / FUN_1400f58d4 @0x1400f578c/@0x1400f58d4 (列/子项宽表追加, 直移) ========== */
+static void FUN_1400f578c(longlong self, uint32_t col, uint32_t width)
+{
+    void *node = operator_new(0x18);
+    *(uint32_t *)node = col;
+    *(uint64_t *)((char *)node + 8) = width & 0xffffffffULL;
+    FUN_1400639f0((longlong *)((char *)self + 0x278), (longlong *)((char *)self + 0x280),
+                  (longlong *)((char *)self + 0x288), (unsigned char *)&node, 8, 1);
+}
+
+static void FUN_1400f58d4(longlong self, uint32_t col, uint32_t width)
+{
+    void *node = operator_new(0x18);
+    *(uint32_t *)node = col;
+    *(uint64_t *)((char *)node + 8) = width & 0xffffffffULL;
+    FUN_1400639f0((longlong *)((char *)self + 0x2c0), (longlong *)((char *)self + 0x2c8),
+                  (longlong *)((char *)self + 0x2d0), (unsigned char *)&node, 8, 1);
+}
+
+/* ========== FUN_1400f2b84 @0x1400f2b84 (宽度节点更新, 直移) ========== */
+uint64_t FUN_1400f2b84(longlong *vec, longlong found, int width, uint32_t col, int extra)
+{
+    void **slot;
+    void *node;
+
+    if (found >= 0) {
+        slot = (void **)(uintptr_t)FUN_140063b00(found, vec, vec + 1, 8);
+        node = *slot;
+        if (node != NULL) {
+            if (width < 0) {
+                *slot = 0;
+                free(node);
+                return 0;
+            }
+            *(longlong *)((char *)node + 8) = width;
+            *(uint32_t *)node = col;
+            if (-2 < extra) {
+                *(int32_t *)((char *)node + 16) = extra;
+            }
+            node = *slot;
+        }
+        return (uint64_t)(uintptr_t)node & 0xffffffffffffff00ULL;
+    }
+    hit_out:
+    return (uint64_t)(uintptr_t)0;
+}
+
+/* ========== FUN_1400f8f00 @0x1400f8f00 (设列宽/子项宽: 记录+广播, 直移) ========== */
+void FUN_1400f8f00(longlong self, int col, uint32_t wmain, uint32_t wsub)
+{
+    char hit;
+    longlong found;
+    int scratch;
+
+    if (-2 < (int)wsub) {
+        scratch = 0;
+        found = FUN_1400f5608(self, col, &scratch);
+        if (found < 0) {
+            hit = (char)(-1 < (int)wsub);
+        }
+        else {
+            hit = (char)(FUN_1400f2b84((longlong *)((char *)self + 0x278),
+                                       found, (int)wsub, (uint32_t)col, -3) & 0xff);
+        }
+        if (hit != '\0') {
+            FUN_1400f578c(self, (uint32_t)col, wsub);
+        }
+    }
+    if (-2 < (int)wmain) {
+        scratch = 0;
+        found = FUN_1400f59c0(self, col, &scratch);
+        if (found < 0) {
+            hit = (char)(-1 < (int)wmain);
+        }
+        else {
+            hit = (char)(FUN_1400f2b84((longlong *)((char *)self + 0x2c0),
+                                       found, (int)wmain, (uint32_t)col, -3) & 0xff);
+        }
+        if (hit != '\0') {
+            FUN_1400f58d4(self, (uint32_t)col, wmain);
+        }
+    }
+}
+
+/* ========== FUN_1400f53c8 @0x1400f53c8 (插列: LVM_INSERTCOLUMNW + 记录列标题, 忠实直移) ========== */
+void FUN_1400f53c8(longlong self, int idx, LPCWSTR text, uint32_t fmt, int cx,
+                   int subitem, int maskextra)
+{
+    WPARAM wp = (WPARAM)idx;
+    void **arr;
+    void *old;
+    void *node;
+    int len;
+    WCHAR one[2];
+    unsigned char lvc[0x30];
+    uint32_t mask = 5;
+
+    arr = (void **)(uintptr_t)FUN_140063b00(wp, (longlong *)((char *)self + 0x1a8),
+                                            (longlong *)((char *)self + 0x1b0), 8);
+    old = *arr;
+    if (fmt == 0) {
+        fmt = 0x30;
+    }
+    node = operator_new(8);
+    if (node == NULL) {
+        node = NULL;
+    }
+    else {
+        PECMD_StrAssign((WCHAR **)node, text);
+    }
+    *arr = node;
+    if (old != NULL) {
+        PECMD_FreeStrBuf((WCHAR **)old);
+        free(old);
+    }
+    len = lstrlenW(*(LPCWSTR *)((char *)self + 0x1d8));
+    one[0] = (WCHAR)fmt;
+    one[1] = 0;
+    if (idx < len) {
+        *(WCHAR *)(*(longlong *)((char *)self + 0x1d8) + (longlong)len * 2) = one[0];
+    }
+    else {
+        PECMD_AppendWideStr((WCHAR **)((char *)self + 0x1d8), one);
+    }
+    *(longlong *)(uintptr_t)FUN_140063b00(wp, (longlong *)((char *)self + 0x1c0),
+                                          (longlong *)((char *)self + 0x1c8), 8) = maskextra;
+    memset(lvc, 0, 0x30);
+    if (fmt >> 8) {
+        fmt >>= 8;
+    }
+    *(uint32_t *)(lvc + 4) = fmt & 0xf;
+    if (cx != -1) {
+        mask |= 2;
+        *(int32_t *)(lvc + 8) = cx;
+    }
+    if (subitem != -1) {
+        mask |= 8;
+        *(int32_t *)(lvc + 0x1c) = subitem;
+    }
+    *(uint32_t *)(lvc + 0) = mask;
+    *(LPCWSTR *)(lvc + 0x10) = text;
+    SendMessageW(*(HWND *)((char *)self + 0x20), 0x1061 /*LVM_INSERTCOLUMNW*/, wp, (LPARAM)lvc);
+}
+
+/* ========== FUN_1400f5558 @0x1400f5558 (由列描述块插列, 直移) ========== */
+void FUN_1400f5558(longlong self, int idx, longlong coldsc, uint64_t fmtword, int align)
+{
+    FUN_1400f53c8(self, idx, *(LPCWSTR *)(coldsc + 0x10), *(uint32_t *)(coldsc + 4),
+                  *(int32_t *)(coldsc + 8), -1, align);
+    (void)fmtword;
+}
+
+/* ========== FUN_1400f2c44 @0x1400f2c44 (行数超出可视高度时刷新滚动条, 直移) ========== */
+void FUN_1400f2c44(longlong self)
+{
+    LRESULT n;
+    uint8_t st[0x18];
+    RECT cli;
+    RECT hdr;
+
+    if ((*(uint8_t *)((char *)self + 0x3f8) & 0xc) == 4) {
+        n = SendMessageW(*(HWND *)((char *)self + 0x20), 0x1004 /*GETITEMCOUNT*/, 0, 0);
+        if (0 < (int)n) {
+            SendMessageW(*(HWND *)((char *)self + 0x20), 0x1022, 0, (LPARAM)st);
+            GetClientRect(*(HWND *)((char *)self + 0x20), &cli);
+            GetWindowRect(*(HWND *)((char *)self + 0xf8), &hdr);
+            if (cli.bottom < (hdr.bottom - hdr.top) + *(int32_t *)(st + 8)) {
+                ShowScrollBar(*(HWND *)((char *)self + 0x20), 1, 0);
+                ShowScrollBar(*(HWND *)(char *)(self + 0x20 / 8), 1, 1);
+            }
+        }
+    }
+}
+
+/* ========== FUN_1400c99b4 @0x1400c99b4 (列规格 "w[/s][align]标题" 解析, 忠实直移) ========== */
+int FUN_1400c99b4(longlong coldsc, longlong *pcursor, longlong *outtitle,
+                  int *pwidth, char *pfmt, uint32_t *palign, short delim)
+{
+    char hadfmt;
+    int w;
+    uint32_t *fmtdw;
+    uint32_t *align0;
+    uint32_t scratch;
+    uint64_t rv;
+    LPCWSTR start;
+
+    fmtdw = (uint32_t *)(void *)pfmt;
+    hadfmt = *pfmt;
+    *pfmt = '\0';
+    *pwidth = (int)0x80000000;
+    *(uint32_t *)((char *)coldsc + 4) = 0;
+    w = (int)0x80000000;
+    *fmtdw = 0x32;
+    if (*(uint16_t *)(uintptr_t)*pcursor == '#') {
+        *pcursor += 2;
+        PECMD_ParseHexOrDecBool((WCHAR **)pcursor, &w);
+        if (*(uint16_t *)(uintptr_t)*pcursor == '#') {
+            *pcursor += 2;
+            PECMD_ParseHexOrDecBool((WCHAR **)pcursor, pwidth);
+        }
+        if (*(uint16_t *)(uintptr_t)*pcursor == ':') {
+            *pcursor += 2;
+        }
+    }
+    for (;;) {
+        uint16_t ch = *(uint16_t *)(uintptr_t)*pcursor;
+        if (ch == '=') {
+            *fmtdw = (*fmtdw << 8) | 0x32;
+            *(uint32_t *)((char *)coldsc + 8) = *fmtdw;
+        }
+        else if (ch == '+') {
+            *fmtdw = (*fmtdw << 8) | 0x31;
+            *(uint32_t *)((char *)coldsc + 8) = *fmtdw;
+        }
+        else if (ch != '*') {
+            if (*(int32_t *)((char *)coldsc + 4) == 0) {
+                *(uint32_t *)((char *)coldsc + 4) = 0x30;
+            }
+            PECMD_ParseUIntValue((WCHAR **)pcursor, (int *)fmtdw);
+            *palign = 0xffffffffu;
+            align0 = palign;
+            while (*(uint16_t *)(uintptr_t)*pcursor == '/') {
+                *pcursor += 2;
+                scratch = 0;
+                rv = FUN_1400c11f4(pcursor, (uint64_t *)&scratch);
+                if (0 < (int)rv) {
+                    *align0 = (*align0 << 0x10) | (uint32_t)(uint16_t)scratch;
+                }
+            }
+            if ((short)*align0 < 0) {
+                *(uint16_t *)align0 = 2;
+            }
+            if (*(uint16_t *)(uintptr_t)*pcursor == ':') {
+                *pcursor += 2;
+            }
+            *(int32_t *)((char *)coldsc + 8) = (int32_t)*fmtdw;
+            if (hadfmt == '\0') {
+                start = (LPCWSTR)(uintptr_t)*pcursor;
+                b7c_skip_to((WCHAR **)pcursor, (WCHAR)delim);
+                FUN_140063888(outtitle, start, (*pcursor - (longlong)(uintptr_t)start) >> 1);
+                if (*(uint16_t *)(uintptr_t)*pcursor != 0) {
+                    *pcursor += 2;
+                }
+            }
+            else {
+                FUN_1400703e4(outtitle, (LPCWSTR)(uintptr_t)*pcursor);
+            }
+            *(longlong *)((char *)coldsc + 0x10) = *outtitle;
+            return w;
+        }
+        else {
+            *(uint32_t *)((char *)coldsc + 4) =
+                (*(uint32_t *)((char *)coldsc + 4) << 8) | 0x30;
+            *pfmt = '\x10';
+        }
+        *pcursor += 2;
+    }
+}
+
+/* 虚表 0x108 槽方法占位: 应用字体到列表控件 (语义保守 no-op)。TODO(verify) */
+static void b7c_listctrl_applyfont(void *self, HFONT font, int flag)
+{
+    (void)self; (void)font; (void)flag;
+}
+
 /* ========== PECMD_TablCreateListCtrl @0x1400c9b9c ==========
- * [简化桩] 创建列表控件。返回 a1。
- * TODO(verify): 需完整还原列表创建。
+ * 'TABL' 列表控件创建 (decompiled.c @124641 size=4603 忠实直移)。
+ * 流程: 宿主基类构造(FUN_140053dc8) → 挂虚表 PTR_FUN_140126888 → 加锁 DAT_14013e190 →
+ *   标志位集展开窗口样式 → operator_new(0x400)+FUN_1400f9134 构造列表对象 →
+ *   "X,Y,W" 坐标串(FUN_14007de4c×3, '-'/''*' 前缀取负) → 分隔符指针参数 →
+ *   FUN_1400f345c 创建 SysListView32 → 表头子对象(FUN_1400f2b44,
+ *   其构造经 FUN_1400f5c74 安装虚表 14012c550) → "=名称[:]" 列名段复制 →
+ *   字体链解析(主/表头双字体 FUN_1400b1f34/FUN_1400b89dc) → 底色/文本色/
+ *   扩展样式(LVM 0x1001/0x1037/0x1036/0x1026) → '#'/GetSysColor 底色回退 →
+ *   列规格循环(FUN_1400c99b4 + FUN_1400f8f00 设宽 + FUN_1400f5558 插列) →
+ *   行文本循环: \r\n 或自定义分隔符分行、列分隔符分字段, 首列 LVM_INSERTITEMW
+ *   (FUN_1400f3554)、后续列 LVM_SETITEMTEXTW(0x1074), 超出标题列数自动补空列 →
+ *   收尾: LVM_SCROLL(0x100f)、可见性环境变量(FUN_140053cec)、滚动条修正(FUN_1400f2c44)。
+ * 返回: param_1。
+ * TODO(verify): 叶子数字解析器 FUN_140067b54/FUN_1400bf358 目前经 link_stubs 桩
+ *   (返回失败/NULL), 含括号或小数的坐标/字体字段运行期退化为缺省值;
+ *   虚表 0x108 方法为保守 no-op; operator_new 为 link_stubs NULL 桩。
  */
 uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3,
                                  uint32_t a4, uint64_t *a5, uint32_t a6,
@@ -1934,24 +3378,740 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3,
                                  int64_t a13, int16_t *a14, LPCWSTR a15,
                                  uint64_t *a16, uint64_t a17, uint64_t a18)
 {
-    (void)a2;
-    (void)a3;
-    (void)a4;
-    (void)a5;
-    (void)a6;
-    (void)a7;
-    (void)a8;
-    (void)a9;
-    (void)a10;
-    (void)a11;
-    (void)a12;
-    (void)a13;
-    (void)a14;
-    (void)a15;
-    (void)a16;
-    (void)a17;
-    (void)a18;
-    return a1;
+    /* ---- 形参语义还原 ---- */
+    ulonglong F = (ulonglong)a14;                 /* param_14: 标志位集 (指针位型复用) */
+    short *pd = (short *)(uintptr_t)a17;          /* param_17: [0]=行分隔符 [1..3]=列分隔符等 */
+    short *spec = (short *)(uintptr_t)a18;        /* param_18: "X,Y,W[,…]" 坐标规格串 */
+
+    /* ---- 工作变量 (沿用 decompiled 命名) ---- */
+    int iVar9;
+    longlong *plVar21;
+    WCHAR WVar20;
+    WCHAR WVar36;
+    short local_248;
+    short col_delim;
+    longlong *plVar13;
+    uint32_t uVar22;
+    uint32_t uVar24;
+    uint32_t uVar8;
+    uint32_t uVar25;
+    uint32_t uVar27;
+    uint32_t uVar4flag;
+    int iVar26;
+    ulonglong uVar32;
+    longlong local_228;
+    uint64_t uStack_220;
+    uint32_t local_1f8;
+    ulonglong local_200;
+    double dVar5;
+    uint64_t *puVar12;
+    bool bVar3;
+    bool bVar38;
+    char cVar37;
+    WCHAR *pWVar30;
+    LPCWSTR pWVar28;
+    LPCWSTR local_258;
+    longlong lVar31;
+    HFONT pHVar15;
+    HFONT pHVar16;
+    HDC hdc;
+    HWND hWnd;
+    COLORREF CVar10;
+    LRESULT LVar14;
+    uint32_t uVar39;
+    uint32_t uVar40;
+    uint32_t uVar41;
+    uint32_t uVar42;
+    DWORD DVar11;
+    int param_18_int;
+    double param_16;
+    double local_1d0;
+    uint64_t local_208;
+    uint64_t local_218;
+    uint64_t local_1d8;
+    uint64_t local_210;
+    uint64_t seed238;
+    longlong cursor12;
+    longlong cursor258;
+    int local_128;
+    int local_124;
+    int local_c8;
+    int local_c4[35];
+    int local_120;
+    WCHAR *local_110;
+    uint8_t lvi_ins[0x54];                        /* LVITEM #1 (插入): 基址 = 原 &local_188 */
+    uint8_t lvi_set[0x20];                        /* LVITEM #2 (更新): 基址 = 原 &local_128 */
+    uint16_t *local_240;
+    uint16_t *local_170;
+    uint16_t *puVar17;
+    uint16_t *puVar18;
+    uint16_t *puVar33;
+    uint16_t *local_250;
+    uint16_t uVar1;
+    uint16_t uVar2;
+    uint64_t uVar19;
+    longlong lVar31b;
+    longlong *plVar34;
+    longlong *plVar35;
+    longlong *plVar29;
+    int local_1c0;
+    int local_1ec_i;
+    int local_1e8_i;
+    DWORD local_1e4;
+    uint32_t local_1f0;
+    int colcnt;
+    int hdr_colbase;
+    void *titleslot;
+    char hdr_done;
+    int64_t colname_slot;
+    struct {
+        uint32_t f00;                             /* local_1c8 初值 7 */
+        uint32_t mask;                            /* local_1c4 = 0x30 */
+        int32_t fmt;                              /* local_1c0 位型 */
+        uint32_t pad;
+        LPCWSTR title;                            /* +0x10 local_1b8 */
+    } colctx;
+    int rect4[4];
+    int32_t trio[4];
+
+    plVar21 = NULL;
+    WVar20 = L'\0';
+    WVar36 = L'\0';
+    local_248 = 0;
+    col_delim = 9;
+    uVar27 = 0;
+    param_18_int = -1;
+
+    FUN_140053dc8(a1, 0x10, a2, (LPCWSTR)*a5, (LPCWSTR)g_szEmpty,
+                  (LPCWSTR)g_szEmpty, a6, a7, a8, a9);
+    *a1 = (uint64_t)(uintptr_t)&b7c_vt_PTR_140126888;
+    EnterCriticalSection((CRITICAL_SECTION *)g_csInit);       /* DAT_14013e190 */
+
+    iVar9 = *(int32_t *)((char *)a3 + 0xd0);
+    if (pd != NULL) {
+        local_248 = *pd;
+        col_delim = pd[1];
+    }
+    local_228 = (longlong)a1[8];
+    uVar22 = (uint32_t)F;
+    uStack_220 = ((uint64_t)(uint32_t)(
+                      *(int32_t *)((char *)a1 + 0x44) + *(int32_t *)((char *)a1 + 0x4c))
+                      << 32)
+               | (uint32_t)((int32_t)a1[8] + *(int32_t *)((char *)a1 + 0x48));
+    local_1f8 = uVar22 & 0x800;
+    local_200 = F >> 32;
+    *(uint32_t *)((char *)a1 + 0x74) = uVar22 & 0xfffff7ffu;
+    uVar4flag = (uint32_t)(F & 0x10);             /* uVar4 */
+    uVar24 = 0x10000000u;
+    if (((F >> 15) & 1) != 0) {
+        uVar24 = 0x18000000u;
+    }
+    if ((F & 0x40) != 0) {
+        uVar24 |= 0x800000u;
+    }
+    uVar8 = 0;
+    if ((F & 0xffffffff80000000ULL) != 0) {
+        uVar8 = 0x800;
+    }
+    if (((F >> 19) & 1) == 0) {
+        uVar24 |= 8;
+    }
+    uVar25 = uVar24 | 1;
+    if (((F >> 13) & 1) != 0) {
+        uVar25 = uVar24 | 0x4001;
+    }
+    if (((F >> 12) & 1) != 0) {
+        uVar25 |= 0x200;
+    }
+    if ((F & 0x2090000ULL) != 0) {
+        uVar25 |= 4;
+    }
+    if (uVar8 != 0) {
+        uVar25 |= uVar8;
+    }
+
+    puVar12 = (uint64_t *)operator_new(0x400);
+    plVar13 = plVar21;
+    if (puVar12 != NULL) {
+        plVar13 = FUN_1400f9134(puVar12, (uint64_t)(uintptr_t)(a1 + 0xb),
+                                (uint64_t)(uintptr_t)a1);
+    }
+    dVar5 = g_fontMinus0;                         /* DAT_140125238 = -0.0 */
+    a1[7] = (uint64_t)(uintptr_t)plVar13;
+    *a16 = (uint64_t)(uintptr_t)a1;
+    bVar38 = false;
+    if (spec != NULL) {
+        if ((*spec == 0x2a) || (*spec == 0x2d)) {
+            spec++;
+            bVar3 = true;
+        }
+        else {
+            bVar3 = false;
+        }
+        cursor12 = (longlong)(uintptr_t)spec;
+        FUN_14007de4c(&cursor12, (double *)&plVar13[0x44]);
+        spec = (short *)(uintptr_t)cursor12;
+        if (bVar3) {
+            plVar13[0x44] = (uint64_t)(dVar5 - (double)plVar13[0x44]);
+        }
+        if ((*spec == 0x2a) || (*spec == 0x2d)) {
+            spec++;
+            bVar3 = true;
+        }
+        else {
+            bVar3 = false;
+        }
+        cursor12 = (longlong)(uintptr_t)spec;
+        FUN_14007de4c(&cursor12, (double *)&plVar13[0x45]);
+        spec = (short *)(uintptr_t)cursor12;
+        if (bVar3) {
+            plVar13[0x45] = (uint64_t)(dVar5 - (double)plVar13[0x45]);
+        }
+        if ((*spec == 0x2a) || (*spec == 0x2d)) {
+            spec++;
+            bVar38 = true;
+        }
+        cursor12 = (longlong)(uintptr_t)spec;
+        FUN_14007de4c(&cursor12, (double *)&plVar13[0x46]);
+        spec = (short *)(uintptr_t)cursor12;
+        if (bVar38) {
+            plVar13[0x46] = (uint64_t)(dVar5 - (double)plVar13[0x46]);
+        }
+    }
+
+    if (pd != NULL) {
+        if (pd[2] != 0) {
+            *(uint16_t *)((char *)plVar13 + 0x23a) = (uint16_t)*pd;
+        }
+        if (pd[3] != 0) {
+            *(uint16_t *)((char *)plVar13 + 0x47 * 8) = (uint16_t)pd[1];
+        }
+    }
+
+    rect4[0] = (int32_t)local_228;                /* X = (int)a1[8] */
+    rect4[1] = (int32_t)((uint64_t)local_228 >> 32);
+    rect4[2] = (int32_t)uStack_220;
+    rect4[3] = (int32_t)(uStack_220 >> 32);
+    FUN_1400f345c((longlong *)plVar13,
+                  uVar25 | (uint32_t)(~((ulonglong)iVar9 << 2) & 0x10000ULL) | 0x40000000u,
+                  rect4, *(HWND *)((char *)a3 + 0x20), a4);
+    LVar14 = SendMessageW((HWND)(uintptr_t)plVar13[4], 0x101f, 0, 0);
+    FUN_1400f2b44((longlong *)(plVar13 + 0x1b), LVar14);
+    if ((uVar22 & 0x4800) == 0x4000) {
+        EnableWindow((HWND)(uintptr_t)plVar13[0x1f], 0);
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x100;
+    }
+    if (((F >> 14) & 1) != 0) {
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 1;
+    }
+
+    /* ---- 列名段 "=名称[:]" ---- */
+    PECMD_AllocStrSlot((WCHAR **)&colname_slot);  /* FUN_140063620(&local_228) */
+    cursor12 = (longlong)(uintptr_t)a12;          /* param_12 游标初值 */
+    pWVar28 = a12;
+    if (*a12 == L'=') {
+        pWVar30 = (WCHAR *)a12 + 1;
+        cursor12 = (longlong)(uintptr_t)pWVar30;
+        b7c_skip_to((WCHAR **)&cursor12, L':');   /* thunk_FUN_1400f429c */
+        pWVar28 = (LPCWSTR)(uintptr_t)cursor12;
+        FUN_140063888(&colname_slot, pWVar30,
+                      (cursor12 - (longlong)(uintptr_t)pWVar30) >> 1);
+        if (*pWVar28 != L'\0') {
+            pWVar28++;
+            cursor12 = (longlong)(uintptr_t)pWVar28;
+        }
+    }
+
+    /* ---- 字体链解析 ---- */
+    pHVar15 = (HFONT)(uintptr_t)FUN_1400e5890((longlong)a3);
+    puVar12 = &g_u6435a0;
+    WVar36 = *pWVar28;
+    uVar41 = (uint32_t)g_u6435a0;
+    uVar42 = (uint32_t)(g_u6435a0 >> 32);
+    seed238 = g_u6435a0;                          /* local_238[0]: 主字体高度位型 */
+    if ((WVar36 != L'\0') && (pWVar28[1] == L':')) {
+        WVar36 = WVar20;                          /* WVar20 此时为 0: 清「有面名」旗标 */
+    }
+    if (*pWVar28 == L'*') {
+        *(WCHAR *)pWVar28 = L'\0';
+    }
+    FUN_140067d54(&cursor12, (double *)&seed238);
+    pWVar28 = (LPCWSTR)(uintptr_t)cursor12;
+    lVar31 = 2;
+    if (*pWVar28 == L':') {
+        pWVar28++;
+        cursor12 = (longlong)(uintptr_t)pWVar28;
+    }
+    local_258 = pWVar28;
+    cursor258 = (longlong)(uintptr_t)local_258;
+    b7c_skip_to((WCHAR **)&cursor258, L':');
+    local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    if (*local_258 != L'\0') {
+        *(WCHAR *)local_258 = L'\0';
+        cursor258 += lVar31;
+        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    }
+    local_208 = (uint64_t)(uintptr_t)puVar12;
+    local_218 = (uint64_t)(uintptr_t)puVar12;
+    cursor12 = (cursor12 & 0xffffffff00000000ULL) | 0x80000000ULL;
+    param_16 = 0.0;
+    local_1d0 = 0.0;
+    local_1d8 = (uint64_t)(uintptr_t)puVar12;
+    local_210 = (uint64_t)(uintptr_t)puVar12;
+    if ((*local_258 == L'-') || (*local_258 == L'*')) {
+        WVar20 = *local_258;
+        cursor258 += lVar31;
+        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    }
+    FUN_140067d54(&cursor258, &param_16);
+    if (WVar20 == L'-') {
+        puVar12 = (uint64_t *)(uint64_t)(dVar5 - param_16);
+    }
+    else if (WVar20 == L'*') {
+        puVar12 = (uint64_t *)(uint64_t)(param_16 + g_scrollLimit);
+    }
+    else {
+        puVar12 = (uint64_t *)(uintptr_t)param_16;
+    }
+    if (*local_258 != L'\0') {
+        cursor258 += lVar31;
+        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+        cursor12 = 0xffffffff80000000ULL |
+                   (cursor12 & 0xffffffff00000000ULL);
+        iVar9 = FUN_140066850(&cursor258, (uint64_t *)&cursor12);
+        uVar39 = 0x80000000u;
+        if (iVar9 != 0) {
+            uVar39 = (uint32_t)cursor12;
+        }
+        cursor12 = (cursor12 & 0xffffffff00000000ULL) | uVar39;
+        if (*local_258 != L'\0') {
+            cursor258 += lVar31;
+            local_258 = (LPCWSTR)(uintptr_t)cursor258;
+            FUN_140067d54(&cursor258, &local_1d0);
+            if (*local_258 != L'\0') {
+                cursor258 += lVar31;
+                local_258 = (LPCWSTR)(uintptr_t)cursor258;
+                FUN_140067d54(&cursor258, (double *)&local_208);
+                if (*local_258 != L'\0') {
+                    cursor258 += lVar31;
+                    local_258 = (LPCWSTR)(uintptr_t)cursor258;
+                    FUN_140067d54(&cursor258, (double *)&local_218);
+                    if (*local_258 != L'\0') {
+                        cursor258 += lVar31;
+                        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+                        FUN_140067d54(&cursor258, (double *)&local_1d8);
+                        if (*local_258 != L'\0') {
+                            cursor258 += lVar31;
+                            local_258 = (LPCWSTR)(uintptr_t)cursor258;
+                            FUN_140067d54(&cursor258, (double *)&local_210);
+                            if (*local_258 != L'\0') {
+                                cursor258 += lVar31;
+                                local_258 = (LPCWSTR)(uintptr_t)cursor258;
+                                FUN_140067e2c(&cursor258, &param_18_int);
+                            }
+                            uVar41 = (uint32_t)local_210;
+                            uVar42 = (uint32_t)(local_210 >> 32);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* ---- 底色采样 + 主字体重建 ---- */
+    hWnd = *(HWND *)((char *)a3 + 0x20);
+    hdc = GetDC(hWnd);
+    CVar10 = GetBkColor(hdc);
+    SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1001 /*SETBKCOLOR*/, 0, CVar10);
+    if (hdc != NULL) {
+        ReleaseDC(hWnd, hdc);
+    }
+    plVar13[0x48] = (uint64_t)(uintptr_t)pHVar15;
+    if ((0.0 < *(double *)&seed238) || (*pWVar28 != L'\0') || (WVar36 != L'\0')) {
+        param_16 = *(double *)&seed238;
+        local_128 = 0;
+        memset(&local_124, 0, 0x58);
+        GetObjectW(pHVar15, 0x5c, &local_128);
+        if (0.0 < *(double *)&local_1d8) {
+            local_128 = FUN_1400628b4(*(double *)&local_1d8);
+        }
+        {
+            double dseed = *(double *)(((uint64_t)uVar42 << 32) | uVar41);
+            if ((0.0 <= dseed) && (dseed != 0.0)) {
+                local_124 = FUN_1400628b4(dseed);
+            }
+        }
+        pHVar16 = FUN_1400b1f34(&local_128, &param_16, pWVar28);
+        plVar13[0xd] = (uint64_t)(uintptr_t)pHVar16;
+        if (pHVar16 != NULL) {
+            pHVar15 = pHVar16;
+        }
+        plVar13[0x48] = (uint64_t)(uintptr_t)pHVar15;
+        pHVar16 = FUN_1400b89dc(pHVar15, (double *)&seed238, pWVar28);
+        plVar13[0x49] = (uint64_t)(uintptr_t)pHVar16;
+        plVar13[0x48] = (uint64_t)(uintptr_t)pHVar16;
+        uVar39 = (uint32_t)seed238;
+        uVar40 = (uint32_t)(seed238 >> 32);
+    }
+    else {
+        uVar39 = (uint32_t)seed238;
+        uVar40 = (uint32_t)(seed238 >> 32);
+    }
+    {
+        double d7b = *(double *)(((uint64_t)uVar40 << 32) | uVar39);
+        if ((0.0 <= d7b) && (d7b != 0.0)) {
+            plVar13[0x7b] = ((uint64_t)uVar40 << 32) | uVar39;
+        }
+        dVar5 = *(double *)(((uint64_t)uVar42 << 32) | uVar41);
+        if ((0.0 <= dVar5) && (dVar5 != 0.0)) {
+            plVar13[0x7c] = ((uint64_t)uVar42 << 32) | uVar41;
+        }
+    }
+
+    DragAcceptFiles((HWND)(uintptr_t)plVar13[4], 1);
+    if (*(double *)&puVar12 != 0.0) {
+        FUN_1400f4040((longlong)plVar13, (float)*(double *)&puVar12);
+    }
+    if (plVar13[0xd] != 0) {
+        ((b7c_vt_fn_t)(uintptr_t)((const void **)*(const void **)plVar13)[0x108 / 8])
+            (plVar13, pHVar15, 1);                /* 虚方法 0x108: 应用字体 */
+    }
+
+    /* ---- 文本色 RGBA ---- */
+    {
+        uint32_t color = (uint32_t)cursor12;
+        uint32_t rr = 0xffffffffu;
+        uint32_t gg = 0xffffffffu;
+        uint32_t bb = 0xffffffffu;
+        if (-1 < (int)color) {
+            bb = (color >> 16) & 0xff;
+            gg = (color >> 8) & 0xff;
+            rr = color & 0xff;
+        }
+        FUN_1400f400c((longlong)plVar13, (int)rr, (int)gg, (int)bb,
+                      (uint32_t)*(double *)&local_1d0);
+    }
+
+    /* ---- 表头字体 ---- */
+    {
+        double seed = (double)g_fontSizeDef;      /* DAT_1401293c0 */
+        local_c8 = 0;
+        memset(local_c4, 0, 0x58);
+        GetObjectW(pHVar15, 0x5c, &local_c8);
+        if (0.0 < *(double *)&local_208) {
+            local_c8 = FUN_1400628b4(*(double *)&local_208);
+        }
+        if (0.0 < *(double *)&local_218) {
+            local_c4[0] = FUN_1400628b4(*(double *)&local_218);
+        }
+        plVar13[0x3c] = (uint64_t)(uintptr_t)pHVar15;
+        if ((0.0 < *(double *)&local_208) || (0.0 < *(double *)&local_218) ||
+            (*a15 != L'\0')) {
+            pHVar15 = FUN_1400b1f34(&local_c8, &seed, a15);
+            plVar13[0x3d] = (uint64_t)(uintptr_t)pHVar15;
+            plVar13[0x3c] = (uint64_t)(uintptr_t)pHVar15;
+        }
+    }
+
+    /* ---- 扩展样式合成 ---- */
+    if ((F & 0x80) != 0) {
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 4;
+    }
+    if (((ulonglong)(F & 0xfffffffffffff7ffULL) >> 8 & 1) != 0) {
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 8;
+    }
+    bVar38 = ((F & 0x3800200ULL) == 0);
+    uVar24 = (uint32_t)(bVar38 ? 1 : 0);
+    if (((ulonglong)(F & 0xfffffffffffff7ffULL) >> 10 & 1) != 0) {
+        uVar24 = (uint32_t)(bVar38 ? 1 : 0) | 4;
+    }
+    if (((F >> 14) & 1) != 0) {
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 1;
+    }
+    if (local_1f8 != 0) {
+        uVar24 |= 0x10;
+    }
+    if (((F >> 17) & 1) != 0) {
+        uVar24 |= 0x8000;
+    }
+    LVar14 = SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1037 /*GETEXSTYLE*/, 0, 0);
+    uVar24 |= (uint32_t)LVar14;
+    if ((F & 0x600000ULL) != 0) {
+        uVar24 |= 4;
+    }
+    FUN_1400f353c((longlong)plVar13, uVar24);
+    if (((F >> 16) & 1) != 0) {
+        /* psVar23 ← F & ~0x80000_0x800 (原体二次掩码) */
+    }
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 18 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 2;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 19 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x20;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 20 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x40;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 21 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x400;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 22 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0xc00;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 23 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x1800;
+    if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 24 & 1) != 0)
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x2800;
+    uVar32 = local_200 & 1;
+    local_200 &= 0xffffffffffffff01ULL;
+    if (uVar32 != 0) {
+        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x200;
+    }
+
+    /* ---- 底色四连 "-1,bk,tbk,bk2" + '#sys' 回退 ---- */
+    {
+        longlong ccur = (longlong)(uintptr_t)(LPCWSTR)(uintptr_t)a13;
+        local_1f0 = 0xffffffffu;
+        local_1ec_i = -1;
+        local_1e8_i = -1;
+        local_1e4 = 0x80000000u;
+        trio[0] = -1; trio[1] = -1; trio[2] = -1; trio[3] = (int32_t)0x80000000;
+        FUN_1400677b0(&ccur, (longlong)(uintptr_t)trio);
+        local_1f0 = (uint32_t)trio[0];
+        local_1ec_i = trio[1];
+        local_1e8_i = trio[2];
+        DVar11 = local_1e4;
+        if (trio[3] != (int32_t)0x80000000) {
+            local_1e4 = (uint32_t)trio[3];
+            DVar11 = local_1e4;
+        }
+        else {
+            DVar11 = local_1e4;
+        }
+        if (-1 < (int)local_1f0) {
+            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1001, 0, local_1f0);
+        }
+        if (-1 < local_1ec_i) {
+            *(uint32_t *)((char *)plVar13 + 0x3c4) = (uint32_t)local_1ec_i;
+            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1026 /*SETTEXTBKCOLOR*/, 0,
+                         (uint64_t)(uint32_t)local_1ec_i);
+        }
+        if (-1 < local_1e8_i) {
+            *(int32_t *)((char *)plVar13 + 0x78 * 8) = local_1e8_i;
+            FUN_1400f40bc((longlong)plVar13, (uint32_t)local_1e8_i);
+        }
+        iVar9 = 0xd;
+        DVar11 = local_1e4;
+        if (local_1e4 == 0x80000000u) {
+            if ((F & 0x50000ULL) == 0) {          /* psVar23 掩码后低 32 位同值 */
+                WVar20 = L'#';
+                b7c_skip_to((WCHAR **)&ccur, L'#');
+                if (WVar20 != *(WCHAR *)(uintptr_t)ccur) goto LAB_1400ca7fa;
+                ccur += 2;
+                b7c_skip_to((WCHAR **)&ccur, L'#');
+                if (WVar20 != *(WCHAR *)(uintptr_t)ccur) goto LAB_1400ca7fa;
+                ccur += 2;
+                b7c_skip_to((WCHAR **)&ccur, L'#');
+                if ((WVar20 != *(WCHAR *)(uintptr_t)ccur) ||
+                    ((WCHAR)(WVar20 + L'\a') != ((WCHAR *)(uintptr_t)ccur)[1])) {
+                    goto LAB_1400ca7fa;
+                }
+            }
+            DVar11 = GetSysColor(iVar9);
+            if (DVar11 == 0x80000000u) {
+                goto LAB_1400ca7fa;
+            }
+        }
+        *(uint32_t *)((char *)plVar13 + 0x79 * 8) = DVar11;
+LAB_1400ca7fa:
+        if (((int32_t)plVar13[0x79] >= 0) &&
+            (((F & 0xfffffffffff7f7ffULL) >> 16 & 1) != 0)) {
+            *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x10;
+        }
+        if ((((int32_t)plVar13[0x79] >= 0) &&
+             ((*(uint8_t *)((char *)plVar13 + 0x7f * 8) & 0x10) != 0)) ||
+            ((*(uint8_t *)((char *)plVar13 + 0x7f * 8) & 0x20) != 0)) {
+            *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x80;
+        }
+    }
+
+    /* ---- 列标题解析循环 ---- */
+    memset(&colctx, 0, sizeof(colctx));           /* FUN_140102a90(&local_1c4,0,0x34) */
+    colctx.f00 = 7;                               /* local_1c8 */
+    titleslot = NULL;
+    local_250 = (uint16_t *)(uintptr_t)*a10;
+    hdr_colbase = *(int32_t *)((char *)a3 + 0x17c);
+    local_1c0 = 0;
+    uVar1 = *local_250;
+    uVar2 = *local_250;
+    cVar37 = (char)(uVar1 == 0);
+    hdr_done = cVar37;
+    plVar34 = plVar21;
+    plVar35 = plVar21;
+    plVar29 = plVar21;
+    while (uVar2 != 0) {
+        uint32_t col_w;
+        uint32_t col_align;
+        int32_t col_wsub;
+        char fmtbyte;
+        col_wsub = (int)0x80000000;
+        col_align = 2;
+        titleslot = NULL;
+        fmtbyte = 0;
+        colctx.mask = 0x30;
+        uVar24 = (uint32_t)FUN_1400c99b4((longlong)&colctx, (longlong *)&local_250,
+                                         (longlong *)&titleslot, &col_wsub, &fmtbyte,
+                                         &col_align, col_delim);
+        col_w = (uint32_t)col_wsub;
+        iVar26 = (int)(uintptr_t)plVar29;
+        if (((int)uVar24 >= 0) || (col_wsub >= 0)) {
+            FUN_1400f8f00((longlong)plVar13, iVar26, col_w, (uint32_t)col_wsub);
+        }
+        plVar34 = (longlong *)((longlong)plVar34 + local_1c0);
+        if (0 < hdr_colbase) {
+            local_1c0 = (int)((ulonglong)((longlong)hdr_colbase * (longlong)plVar34) / 0x60) -
+                        (int)(uintptr_t)plVar35;
+        }
+        FUN_1400f5558((longlong)plVar13, iVar26, (longlong)&colctx, 0, col_align);
+        plVar35 = (longlong *)((longlong)plVar35 + local_1c0);
+        colctx.f00 = 7;
+        PECMD_FreeStrBuf((WCHAR **)&titleslot);
+        uVar27 = (uint32_t)iVar26 + 1;
+        plVar29 = (longlong *)(uintptr_t)(uint64_t)uVar27;
+        uVar2 = *local_250;
+    }
+    *(uint32_t *)((char *)a1 + 0x70) = uVar27;    /* (a1+0xe) 列数 */
+    if (0 < param_18_int) {
+        FUN_1400f4064((longlong)plVar13, param_18_int, 0);
+    }
+
+    /* ---- 行文本装入 (LVITEM 双结构: 插入块 lvi_ins / 更新块 lvi_set) ---- */
+    memset(lvi_ins, 0, 0x54);
+    *(uint32_t *)(lvi_ins + 0) = 1;               /* local_188 = LVIF_TEXT */
+    *(int32_t *)(lvi_ins + 4) = (int32_t)0x7fffffff;  /* local_184 = iItem */
+    *(int32_t *)(lvi_ins + 8) = 0;                /* local_180 = iSubItem */
+    local_240 = a11;
+    local_170 = (uint16_t *)g_szEmpty;
+    *(WCHAR **)(lvi_ins + 0x18) = (WCHAR *)local_170;  /* local_170 = pszText */
+    if (a11 == (uint16_t *)1) {
+        local_240 = (uint16_t *)DAT_14011d308;
+        FUN_1400f3554((longlong)plVar13, (LPARAM)lvi_ins);
+        SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1008, 0, 0);
+    }
+    uVar32 = local_200;
+    uVar1 = *local_240;
+    puVar33 = local_240;
+    for (;;) {
+        if (uVar1 == 0) {
+            /* ---- 收尾 ---- */
+            FUN_140053e78();
+            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x100f, 1, 0x320032);
+            bVar38 = (uVar4flag == 0);
+            if (!bVar38) {
+                ShowWindow((HWND)(uintptr_t)plVar13[4], 0);
+            }
+            FUN_140053cec((longlong)a1, (int)(bVar38 ? 1 : 0));
+            FUN_1400f2c44((longlong)plVar13);
+            PECMD_FreeStrBuf((WCHAR **)&colname_slot);
+            LeaveCriticalSection((CRITICAL_SECTION *)g_csInit);
+            return a1;
+        }
+        local_250 = puVar33;
+        if (local_248 == 0) {
+            uVar1 = *puVar33;
+            puVar17 = puVar33;
+            while ((uVar1 != 0) && (uVar1 != 0xd) && (uVar1 != 0xa)) {
+                puVar17++;
+                local_240 = puVar17;
+                uVar1 = *puVar17;
+            }
+            puVar18 = puVar17;
+            if (*puVar17 == 0xd) {
+                puVar18 = puVar17 + 1;
+                local_240 = puVar18;
+            }
+            uVar1 = *puVar18;
+        }
+        else {
+            b7c_skip_to((WCHAR **)&local_240, (WCHAR)local_248);
+            uVar1 = *local_240;
+            puVar17 = local_240;
+            puVar18 = local_240;
+        }
+        if (uVar1 != 0) {
+            puVar18 = puVar18 + 1;
+            local_240 = puVar18;
+        }
+        if (*puVar17 != 0) {
+            *puVar17 = 0;
+            puVar18 = local_240;
+            puVar33 = local_250;
+        }
+        uVar1 = *puVar33;
+        plVar34 = plVar21;
+        plVar35 = plVar21;
+        puVar17 = puVar33;
+        while ((puVar33 = puVar18, uVar1 != 0)) {
+            lVar31b = 2;
+            iVar9 = (int)(uintptr_t)plVar34;
+            if ((hdr_done == '\0') &&
+                (puVar33 = local_240,
+                 *(uint32_t *)((char *)a1 + 0x70) <= (uint32_t)iVar9)) {
+                break;
+            }
+            puVar33 = puVar17;
+            if ((char)uVar32 == '\0') {
+                b7c_skip_to((WCHAR **)&local_250, (WCHAR)col_delim);
+                puVar33 = local_250;
+            LAB_1400cabb9:
+                if (*puVar33 != 0) {
+                    *puVar33 = 0;
+                    puVar33 = (uint16_t *)((longlong)local_250 + lVar31b);
+                    local_250 = puVar33;
+                }
+            }
+            else {
+                while (uVar1 != 0) {
+                    if (((8 < uVar1) && (uVar1 < 0xe)) || (uVar1 == 0x20)) {
+                        goto LAB_1400cabb9;
+                    }
+                    local_250 = puVar33 + 1;
+                    puVar33 = local_250;
+                    uVar1 = *local_250;
+                }
+            }
+            if (((char)uVar32 != '\0') && (puVar33 != NULL)) {
+                while ((*puVar33 == 9) || (*puVar33 == 0xb) || (*puVar33 == 0xc) ||
+                       (*puVar33 == 0x20)) {
+                    puVar33 = (uint16_t *)((longlong)puVar33 + lVar31b);
+                    local_250 = puVar33;
+                }
+            }
+            colcnt = *(int32_t *)((char *)a1 + 0x70);
+            *(int32_t *)(lvi_ins + 8) = iVar9;    /* LVITEM.iSubItem */
+            if (colcnt <= iVar9) {
+                *(int32_t *)((char *)a1 + 0x70) = colcnt + 1;
+                FUN_1400f5558((longlong)plVar13, iVar9, (longlong)&colctx, 0,
+                              (int)lVar31b);
+                puVar33 = local_250;
+            }
+            local_170 = puVar17;
+            *(WCHAR **)(lvi_ins + 0x18) = (WCHAR *)puVar17;
+            if (iVar9 == 0) {
+                uVar19 = FUN_1400f3554((longlong)plVar13, (LPARAM)lvi_ins);
+                plVar35 = (longlong *)(uintptr_t)(uVar19 & 0xffffffffULL);
+                puVar33 = local_250;
+            }
+            else if (*puVar17 != 0) {
+                memset(lvi_set, 0, sizeof(lvi_set));
+                *(int32_t *)(lvi_set + 8) = iVar9;     /* local_120 = iSubItem */
+                *(WCHAR **)(lvi_set + 0x18) = (WCHAR *)puVar17;  /* local_110 = pszText */
+                SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1074 /*SETITEMTEXTW*/,
+                             (WPARAM)(int)(uintptr_t)plVar35, (LPARAM)lvi_set);
+                puVar33 = local_250;
+            }
+            plVar34 = (longlong *)(uintptr_t)(uint64_t)(uint32_t)(iVar9 + 1);
+            puVar18 = local_240;
+            puVar17 = puVar33;
+            uVar1 = *puVar33;
+        }
+        uVar1 = *puVar33;
+    }
 }
 
 /* ---- 本文件私有小依赖 (decompiled 直移, static 化避免与 link_stubs no-op 冲突) ---- */
@@ -4374,15 +6534,1033 @@ LARGE_INTEGER FUN_1400D2E90(int64_t *a1, LARGE_INTEGER a2)
     return r;
 }
 
+/* ---- FUN_1400d5b48 (控件图片装载/透明区域) 新增依赖 ---- */
+extern int64_t (*DAT_14013ce08)();        /* GdipGetImageWidth  (link_stubs.c) */
+extern int64_t (*DAT_14013ce10)();        /* GdipGetImageHeight (link_stubs.c) */
+extern int64_t (*DAT_14013ce28)();        /* GdipCreateFromHDC  (link_stubs.c) */
+extern int64_t (*DAT_14013ce30)();        /* GdipDeleteGraphics (link_stubs.c) */
+extern void (*DAT_14013cd90)();               /* GdipDisposeImage   (link_stubs.c) */
+extern void *g_pGdipDrawImageRectRectI;       /* DAT_14013ce20 (core_globals.c) */
+extern void (*g_pGdipCreateHBITMAPFromBitmap)(); /* DAT_14013cdf0 (pecmd_defs.h) */
+extern void (*g_pGdipCreateBitmapFromScan0)();   /* DAT_14013ce90 */
+extern void (*g_pGdipGetImageGraphicsContext)(); /* DAT_14013cea8 */
+extern CRITICAL_SECTION g_csCom;              /* DAT_14013e168 */
+extern int (*g_pOleInit)(int);                /* DAT_14013d800 */
+extern void (*g_pOleUninit)(void);            /* DAT_14013d808 */
+extern HINSTANCE g_hInst;                     /* DAT_14013cf70 */
+extern int FUN_14005ceec(const uint16_t *a, const char *b);  /* @0x14005ceec 词前缀匹配 (link_stubs.c) */
+extern HBITMAP LoadBitmapW(HMODULE, LPCWSTR); /* win32_stub 缺原型 (定义在 link_stubs.c) */
+
+/* OLE32 惰性导入槽 (DAT_14013d810 族, 本 TU 随需补齐; 均未被其他文件引用) */
+static longlong b7c_ole_coinitex, b7c_ole_coinisec, b7c_ole_coinit, b7c_ole_couninit;
+static longlong b7c_ole_crstream, b7c_ole_cocreate, b7c_ole_coload, b7c_ole_cofree;
+static longlong b7c_ole_cofreeex, b7c_ole_stringguid;
+static longlong b7c_ole_ole32mod;             /* DAT_14013cfe0 OLE32 模块槽 */
+
+/* win32_stub 缺口补齐: CreateRectRgn/CombineRgn 无既有定义, no-op 占位。
+ * TODO(verify): 区域句柄恒 NULL, SetWindowRgn 运行期不生效。 */
+static HRGN b7c_CreateRectRgn(int a, int b, int c, int d)
+{
+    (void)a; (void)b; (void)c; (void)d;
+    return (HRGN)0;
+}
+
+static int b7c_CombineRgn(HRGN d, HRGN s1, HRGN s2, int mode)
+{
+    (void)d; (void)s1; (void)s2; (void)mode;
+    return 0;
+}
+
+/* ========== FUN_1400649f4 @0x1400649f4 (ANSI 十六进制串取值, 直移) ========== */
+longlong FUN_1400649f4(unsigned char *p)
+{
+    longlong v = 0;
+    uint ch;
+    while (((('/' < (char)*p) && ((char)*p < ':')) ||
+            (('`' < (char)(*p | 0x20)) && ((char)(*p | 0x20) < 'g')))) {
+        ch = (uint)(char)*p;
+        p++;
+        if ((int)ch < 0x3a) {
+            v = v * 0x10 + (longlong)(int32_t)(ch - '0');
+        }
+        else {
+            v = v * 0x10 + (longlong)(int32_t)((ch | 0x20) - 0x57);
+        }
+    }
+    return v;
+}
+
+/* ========== FUN_14005b028 @0x14005b028 (DC 选入对象并记录旧对象, 直移) ========== */
+void FUN_14005b028(uint64_t *slot, HDC hdc, HGDIOBJ obj)
+{
+    slot[2] = (uint64_t)(uintptr_t)hdc;
+    slot[0] = (uint64_t)(uintptr_t)obj;
+    slot[1] = (uint64_t)(uintptr_t)SelectObject(hdc, obj);
+}
+
+/* ========== FUN_14005b07c @0x14005b07c (恢复 DC 并删除新对象, 直移) ========== */
+void FUN_14005b07c(uint64_t *slot)
+{
+    if (slot[1] != 0) {
+        SelectObject((HDC)(uintptr_t)slot[2], (HGDIOBJ)(uintptr_t)slot[1]);
+        slot[1] = 0;
+    }
+    if (slot[0] != 0) {
+        DeleteObject((HGDIOBJ)(uintptr_t)slot[0]);
+        slot[0] = 0;
+    }
+}
+
+/* ========== FUN_14005c828 @0x14005c828 (GetProcAddress 包装, 直移) ========== */
+void FUN_14005c828(LPCSTR proc, LPCSTR lib, longlong *pslot, longlong *phmod)
+{
+    HMODULE hModule;
+    longlong scratch = 0;
+    longlong *pl;
+
+    if (*pslot != 0) {
+        return;
+    }
+    pl = &scratch;
+    if (phmod != NULL) {
+        pl = phmod;
+    }
+    hModule = (HMODULE)(uintptr_t)*pl;
+    if (hModule == NULL) {
+        hModule = LoadLibraryA(lib);
+        *pl = (longlong)(uintptr_t)hModule;
+        if (hModule == NULL) {
+            return;
+        }
+    }
+    *pslot = (longlong)(uintptr_t)GetProcAddress(hModule, proc);
+}
+
+/* ========== FUN_140061c44 @0x140061c44 (OLE32 导入表惰性加载, 直移) ========== */
+longlong FUN_140061c44(void)
+{
+    if (b7c_ole_stringguid == 0) {                /* DAT_14013d840 判空 */
+        FUN_14005c828("CoInitializeEx", "OLE32", &b7c_ole_coinitex, &b7c_ole_ole32mod);
+        FUN_14005c828("CoInitializeSecurity", "OLE32", &b7c_ole_coinisec, &b7c_ole_ole32mod);
+        FUN_14005c828("CoInitialize", "OLE32", &b7c_ole_coinit, &b7c_ole_ole32mod);
+        FUN_14005c828("CoUninitialize", "OLE32", &b7c_ole_couninit, &b7c_ole_ole32mod);
+        FUN_14005c828("CreateStreamOnHGlobal", "OLE32", &b7c_ole_crstream, &b7c_ole_ole32mod);
+        FUN_14005c828("OleInitialize", "OLE32", (longlong *)&g_pOleInit, &b7c_ole_ole32mod);
+        FUN_14005c828("OleUninitialize", "OLE32", (longlong *)&g_pOleUninit, &b7c_ole_ole32mod);
+        FUN_14005c828("CoCreateInstance", "OLE32", &b7c_ole_cocreate, &b7c_ole_ole32mod);
+        FUN_14005c828("CoLoadLibrary", "OLE32", &b7c_ole_coload, &b7c_ole_ole32mod);
+        FUN_14005c828("CoFreeLibrary", "OLE32", &b7c_ole_cofree, &b7c_ole_ole32mod);
+        FUN_14005c828("CoFreeUnusedLibrariesEx", "OLE32", &b7c_ole_cofreeex, &b7c_ole_ole32mod);
+        FUN_14005c828("StringFromGUID2", "OLE32", &b7c_ole_stringguid, &b7c_ole_ole32mod);
+    }
+    return b7c_ole_stringguid;
+}
+
+/* ========== FUN_140079f50 @0x140079f50 ("路径"#资源名 拆分, 忠实直移) ========== */
+LPCWSTR FUN_140079f50(WCHAR **pcursor, uint mode)
+{
+    LPCWSTR base;
+    WCHAR quote;
+    WCHAR *q;
+    LPWSTR hash;
+    LPCWSTR ret;
+    WCHAR *scan;
+    WCHAR *tail;
+
+    base = *pcursor;
+    quote = L'"';
+    if ((mode & 2) == 0) {
+        if (*base != L'"') {
+            q = (WCHAR *)StrRChrW(base, NULL, L'\\');
+            if (q == NULL) {
+                q = base;
+            }
+            hash = StrRChrW(q, NULL, L'#');
+            if (hash == NULL) {
+                return NULL;
+            }
+            if (*hash != L'#') {
+                return NULL;
+            }
+            /* +0xff50: '#' 后须为数字或(带 mode&1)'.'数字 */
+            if (9 < (uint16_t)(hash[1] + 0xff50)) {
+                if ((mode & 1) == 0) {
+                    return NULL;
+                }
+                if (hash[1] != L'.') {
+                    return NULL;
+                }
+                if (9 < (uint16_t)(hash[2] + 0xff50)) {
+                    return NULL;
+                }
+                return hash;
+            }
+            return hash;
+        }
+        base++;
+    }
+    scan = base;
+    b7c_skip_to(&scan, L'"');                     /* thunk_FUN_1400f429c */
+    q = scan;
+    if (*scan != L'\0') {
+        scan++;
+    }
+    if (quote == *scan) {
+        scan++;
+    }
+    if (*scan != L'#') {
+        return NULL;
+    }
+    if (*q != L'\0') {
+        *q = L'\0';
+    }
+    *pcursor = base;
+    ret = scan;
+    tail = scan;
+    b7c_skip_to(&tail, quote);
+    if (*tail != L'\0') {
+        *tail = L'\0';
+        return ret;
+    }
+    return ret;
+}
+
+/* ========== FUN_14005d83c / 5d7e8 / 5d87c @0x14005d83c 族 (资源类型词判定, 直移) ========== */
+static int b7c_restype_icon(const uint16_t *s)
+{
+    if (FUN_14005ceec(s, "ICON") != 0) return 1;
+    if (FUN_14005ceec(s, "#3") != 0) return 1;
+    return 0;
+}
+
+static int b7c_restype_icongroup(const uint16_t *s)
+{
+    if (FUN_14005ceec(s, "icon Group") != 0) return 1;
+    if (FUN_14005ceec(s, "iconGroup") != 0) return 1;
+    if (FUN_14005ceec(s, "#14") != 0) return 1;
+    return 0;
+}
+
+static int b7c_restype_bitmap(const uint16_t *s)
+{
+    if (FUN_14005ceec(s, "BITMAP") != 0) return 1;
+    if (FUN_14005ceec(s, "#2") != 0) return 1;
+    return 0;
+}
+
+/* ========== FUN_1400d0b2c @0x1400d0b2c ("#id|类型" 资源描述解析, 忠实直移) ========== */
+uint16_t *FUN_1400d0b2c(longlong *pcursor, longlong *pname, uint16_t *deflt)
+{
+    short ch;
+    bool ok;
+    uint16_t u;
+    short *p;
+    ushort *res;
+    uint16_t *start;
+    uint64_t num;
+    WCHAR *ws;
+
+    *pname = *pcursor - 2;
+    *(uint16_t *)(*pcursor - 2) = 0x23;
+    if (9 < (uint16_t)((ushort)*(short *)(*pcursor) - '0')) {
+        *pname = *pcursor;
+    }
+    p = (short *)(*pcursor);
+    while ((*p != 0) && (*p != 0x7c) && (*p != 0x3a)) {
+        p++;
+        *pcursor = (longlong)(uintptr_t)p;
+    }
+    ch = *(short *)(*pcursor);
+    *(short *)(*pcursor) = 0;
+    if (ch != 0) {
+        *pcursor += 2;
+        ws = (WCHAR *)(*pcursor);
+        start = ws;
+        u = *start;
+        res = start;
+        while ((u != 0) && ((u < 9) || (0xd < u)) && (u != 0x20)) {
+            res++;
+            u = *res;
+        }
+        *res = 0;
+        if (*ws == 0x7c) {
+            return ws + 1;
+        }
+        if (*(short *)(*pcursor) == 0x23) {
+            num = 0;
+            *pcursor += 2;
+            ok = FUN_1400C1194((int64_t *)pcursor, &num);
+            if (ok ? 1 : 0) {
+                return (uint16_t *)(uintptr_t)num;
+            }
+        }
+    }
+    if ((uintptr_t)deflt > 0xffff) {
+        if (b7c_restype_icon(deflt)) {
+            return (uint16_t *)(uintptr_t)3;
+        }
+        if (b7c_restype_icongroup(deflt)) {
+            return (uint16_t *)(uintptr_t)0xe;
+        }
+        if (b7c_restype_bitmap(deflt)) {
+            return (uint16_t *)(uintptr_t)2;
+        }
+    }
+    return deflt;
+}
+
+/* ---- 未移植叶子 (保守失败桩, 与 link_stubs no-op 同风格)。TODO(verify):
+ *   FUN_14007f764 frm< 框架样式 / FUN_14007c730 自定义图像解码 /
+ *   FUN_14001f1d4 图标提取 / FUN_14001ea18 资源装载 / FUN_14006eaac 流→位图。
+ *   返回失败后主流程按原体走 LoadImageW/LoadBitmapW 回退路径。 ---------- */
+static longlong *FUN_14007f764_stub(longlong *slot, short *spec, HWND wnd, uint64_t flag)
+{
+    (void)slot; (void)spec; (void)wnd; (void)flag;
+    return (longlong *)0;
+}
+
+static HANDLE FUN_14007c730_stub(LPCWSTR path, unsigned char *flagout)
+{
+    (void)path;
+    if (flagout != NULL) {
+        *flagout = 0;
+    }
+    return (HANDLE)0;
+}
+
+static HICON FUN_14001f1d4_stub(LPCWSTR path, uint64_t *extra)
+{
+    (void)path; (void)extra;
+    return (HICON)0;
+}
+
+static unsigned char *FUN_14001ea18_stub(HMODULE mod, LPCWSTR name, LPCWSTR type,
+                                         longlong *out, uint32_t *flags)
+{
+    (void)mod; (void)name; (void)type; (void)out; (void)flags;
+    return NULL;
+}
+
+static HANDLE FUN_14006eaac_stub(void *info, HICON *iconout)
+{
+    (void)info;
+    if (iconout != NULL) {
+        *iconout = (HICON)0;
+    }
+    return (HANDLE)0;
+}
+
 /* ========== PECMD_CtlLoadPictureRgn @0x1400d5b48 ==========
- * [简化桩] 判断点是否在控件内。返回 0。
- * TODO(verify): 需完整还原命中判断。
- */
+ * 控件图片装载 + 色键透明区域生成 (decompiled.c @131228 size=5185 忠实直移;
+ * 原名 FUN_1400d5b48, 保持本文件可读名以兼容 core_b7a/b7b 调用方)。
+ * 流程: 取当前位图(obj+600 元素)/标志字节(obj+0x250) → 空名清区清图失效分支 →
+ *   GetWindowRect 尺寸 → "frm<" 框架样式(FUN_14007f764) → "%索引%|%hex%"
+ *   序号/色键参数(hex 经 FUN_1400649f4, 至多 8 位) → '*' 星标模式
+ *   (local_198=0x42|~|4, 输出直写 obj 位图槽) → "<w,h,x,y,sx,sy>" 几何覆盖
+ *   (PECMD_ParseNumSkipChar_0224×6) → 载入分派: '#id' LoadBitmapW /
+ *   文件 FUN_14007c730→图标回退链(g_pGdipCreateHBITMAPFromBitmap→OLE CS 内
+ *   WIC 对象 FUN_14006e3a4)→LoadImageW / "路径#资源" DLL 链(LoadLibraryExW+
+ *   FUN_1400d0b2c+FUN_14001ea18+FUN_14006eaac) → 星标+图标时 GDI+ ARGB
+ *   缩放支路(GdipCreateBitmapFromScan0 0x26200a) → 否则常规支路:
+ *   GetObject/GetDIBits(32bpp) 逐列色键扫描(XOR 合并竖条区域) → 目标尺寸
+ *   重采样(StretchBlt 或 GDI+ DrawImageRectRectI) → SetWindowRgn 应用并
+ *   释放旧区(obj+0xf0) → 写回标志字节 → 失效重绘。
+ * 返回: 0 (原体 unaff_BL 未定值路径)。
+ * TODO(verify): ①原体第 3/4 栈参(size/name)本签名不可见, 恒取 0 与 obj+0x260
+ *   缺省路径; ②五个未移植叶子见桩注记; ③「非星标且有旧图且 size<1」分支按
+ *   local_120==&local_a0 等价判定; ④色键像素地址按 (src_x+srow)*2 复刻,
+ *   Ghidra 的 &pHVar13->unused 偏移未能核验。 */
 char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
 {
-    (void)a1;
-    (void)a2;
-    return 0;
+    longlong obj = (longlong)a1;
+    HDC hdcSrc = a2;
+    uint64_t *bmpslot = (uint64_t *)(obj + 600 * 8);           /* param_1+600 元素 */
+    uint64_t old_bmp = *bmpslot;                               /* local_130 初值 */
+    unsigned char flagbyte = *(uint8_t *)((char *)obj + 0x250);
+    int stack_size = 0;                                        /* in_stack_00000030 */
+    LPCWSTR name_arg = NULL;                                   /* in_stack_00000038 */
+    char unaff_BL = 0;
+    WCHAR *local_190;
+    bool bVar4;
+    bool bVar5;
+    unsigned char local_198;
+    RECT rc;
+    ulonglong local_100;
+    ulonglong local_f8;
+    uint64_t *local_120;
+    uint64_t local_a0;
+    HBITMAP local_180;
+    HICON local_138;
+    HICON local_108;
+    longlong *local_d0;
+    ulonglong local_118;
+    int local_168;
+    uint32_t local_160v;
+    uint64_t local_158;
+    uint64_t local_148;
+    uint64_t local_128v;
+    uint64_t local_140;
+    longlong lVar25;
+    longlong lVar16;
+    longlong lVar24;
+    uint32_t iVar27;
+    uint32_t iVar6;
+    uint32_t iVar7;
+    uint32_t iVar8;
+    int flag170;
+    WCHAR WVar22;
+    WCHAR WVar2;
+    char cVar26;
+    LPCWSTR pWVar18;
+    LPCWSTR local_150;
+    uint16_t *res_type;
+    HRGN local_f0;
+    int local_e8;
+    uint64_t uVar19;
+    uint64_t uVar20;
+    uint32_t y1;
+    uint32_t y2;
+    uint32_t uVar23;
+    longlong key_color;
+    BITMAP bm;
+    HDC hdcMem;
+    HGDIOBJ old_sel;
+    uint64_t selrec[3];
+    int dib_w;
+    unsigned char *pixbuf;
+    LPCWSTR lpvBits;
+    longlong row_last;
+    longlong dst_w;
+    longlong dst_h;
+    longlong scaled_w;
+    longlong scaled_h;
+    struct { uint64_t data; uint64_t cap; uint64_t count; } resinfo;
+
+    bVar4 = false;
+    bVar5 = false;
+    local_198 = 2;
+    local_e8 = stack_size;
+    local_f0 = (HRGN)0;
+    iVar27 = 1;
+    local_190 = name_arg;
+    if (name_arg == NULL) {
+        local_190 = *(LPCWSTR *)((char *)obj + 0x260);
+    }
+    else if (*name_arg == L'\0') {
+        if ((flagbyte & 0x40) == 0) {
+            SetWindowRgn(*(HWND *)((char *)obj + 0x20), (HRGN)0, 1);
+            if (*(uint64_t *)((char *)obj + 0xf0) != 0) {
+                DeleteObject((HGDIOBJ)(uintptr_t)*(uint64_t *)((char *)obj + 0xf0));
+            }
+            *(uint64_t *)((char *)obj + 0xf0) = 0;
+        }
+        if (*bmpslot != 0) {
+            if ((*(uint8_t *)((char *)obj + 0x250) & 0x20) == 0) {
+                DeleteObject((HGDIOBJ)(uintptr_t)*bmpslot);
+            }
+            else {
+                DAT_14013cd90();
+            }
+            *bmpslot = 0;
+        }
+        *(uint8_t *)((char *)obj + 0x250) = 0;
+        InvalidateRect(*(HWND *)((char *)obj + 0x20), NULL, 1);
+        return unaff_BL;
+    }
+
+    if ((HBITMAP)(uintptr_t)old_bmp == 0) {
+        *(uint8_t *)((char *)obj + 0x250) = 0;
+    }
+    rc.left = rc.top = rc.right = rc.bottom = 0;
+    GetWindowRect(*(HWND *)((char *)obj + 0x20), &rc);
+    local_100 = (ulonglong)(uint32_t)(rc.right - rc.left);
+    local_a0 = 0;
+    local_f8 = (ulonglong)(uint32_t)(rc.bottom - rc.top);
+    local_120 = &local_a0;
+    local_180 = (HBITMAP)0;
+    local_138 = (HICON)0;
+    local_108 = (HICON)0;
+    local_d0 = NULL;
+    local_118 = 0;
+    pWVar18 = local_190;
+
+    /* ---- "frm<" 框架样式前缀 ---- */
+    if (FUN_14005c788((char *)"frm<", (uint16_t *)local_190, 4) != 0) {
+        pWVar18 += 4;
+        local_190 = pWVar18;
+        b7c_skip_to((WCHAR **)&local_190, L'>');
+        WVar22 = *local_190;
+        if (WVar22 != L'\0') {
+            *local_190 = L'\0';
+        }
+        FUN_14007f764_stub((longlong *)(obj + 0xc0 * 8), (short *)pWVar18,
+                           *(HWND *)((char *)obj + 0x20), 1);
+        pWVar18 = local_190;
+        if (WVar22 != L'\0') {
+            *local_190 = WVar22;
+        }
+    }
+
+    /* ---- "%索引%" / "%hex%" 参数 ---- */
+    WVar22 = L'(';
+    if (*pWVar18 == L'%') {
+        local_190 = pWVar18 + 1;
+        FUN_14005B154((WCHAR **)&local_190);
+        WVar2 = *local_190;
+        local_118 = 0;
+        if (WVar22 == WVar2) {
+            int iv = 0;
+            PECMD_ParseUIntValue((WCHAR **)&local_190, &iv);
+            local_118 = (uint32_t)iv;
+        }
+        else {
+            if ((((uint16_t)WVar2 > 0x2f) && ((uint16_t)WVar2 < 0x3a)) ||
+                (((uint16_t)(WVar2 | 0x20) > 0x60) && ((uint16_t)(WVar2 | 0x20) < 0x67))) {
+                {
+                    int64_t ansi = 0;
+                    FUN_14006355c(&ansi, local_190, -1, ~(uint64_t)0);
+                    local_118 = (uint64_t)FUN_1400649f4((unsigned char *)(uintptr_t)ansi);
+                    PECMD_FreeStrBuf((WCHAR **)&ansi);
+                }
+                cVar26 = '\0';
+                do {
+                    WVar22 = *local_190;
+                    if ((((uint16_t)WVar22 < 0x30) || (0x39 < (uint16_t)WVar22)) &&
+                        (((uint16_t)(WVar22 | 0x20) < 0x61) ||
+                         (0x66 < (uint16_t)(WVar22 | 0x20)))) {
+                        break;
+                    }
+                    local_190++;
+                    cVar26++;
+                } while (cVar26 < '\b');
+            }
+            FUN_14005B154((WCHAR **)&local_190);
+        }
+        if (*local_190 == L'%') {
+            local_190++;
+        }
+        FUN_14005B154((WCHAR **)&local_190);
+        pWVar18 = local_190;
+    }
+
+    /* ---- '*' 星标模式 ---- */
+    if (*pWVar18 == L'*') {
+        local_190 = pWVar18 + 1;
+        WVar22 = *local_190;
+        if (WVar22 != L'*') {
+            local_198 = 2;
+        }
+        else {
+            local_190 = pWVar18 + 2;
+            local_198 = 0x42;
+        }
+        bVar5 = (WVar22 == L'*');
+        if (*local_190 == L'~') {
+            local_190++;
+            local_198 |= 0x10;
+        }
+        local_198 |= 4;
+        local_120 = bmpslot;
+    }
+    FUN_14005B154((WCHAR **)&local_190);
+
+    /* ---- "<w,h,x,y,sx,sy>" 几何覆盖 ---- */
+    local_128v = 0;
+    local_148 = 0;
+    local_168 = 0;
+    local_140 = 0;
+    local_160v = 0;
+    local_158 = 0;
+    key_color = 0;
+    if (*local_190 == L'<') {
+        int v1 = (int32_t)local_100;
+        int v2 = (int32_t)local_f8;
+        int v3 = 0;
+        int v4 = 0;
+        int v5 = 0;
+        int v6 = 0;
+        LPCWSTR closep;
+        WCHAR savech;
+        local_190++;
+        closep = local_190;
+        b7c_skip_to((WCHAR **)&local_190, L'>');
+        pWVar18 = local_190;
+        WVar22 = *local_190;
+        if (*local_190 != L'\0') {
+            *local_190 = L'\0';
+            local_190++;
+        }
+        savech = WVar22;
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v1);
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v2);
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v3);
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v4);
+        local_168 = v1;
+        v5 = v1;
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v5);
+        PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v6);
+        if (savech != L'\0') {
+            *(WCHAR *)pWVar18 = L'>';
+        }
+        local_160v = (uint32_t)v3;
+        local_140 = (uint32_t)v4;
+        local_158 = (uint32_t)v5;
+        key_color = v6;
+    }
+
+    /* ---- 载入分派 ---- */
+    if ((local_120 != &local_a0) || ((HBITMAP)(uintptr_t)old_bmp == 0) || (stack_size >= 1)) {
+        WCHAR *cur = (WCHAR *)local_190;
+        LPCWSTR resref = FUN_140079f50(&cur, 1);
+        local_190 = (LPCWSTR)cur;
+        if (*local_190 == L'#') {
+            int resid = 0;
+            LPCWSTR pk = local_190;
+            PECMD_ParseUIntValue((WCHAR **)&pk, &resid);
+            if (0 < resid) {
+                local_180 = LoadBitmapW(g_hInst, (LPCWSTR)(uintptr_t)(int64_t)resid);
+            }
+            goto LAB_1400d6484;
+        }
+        else if (resref == NULL) {
+            unsigned char fflag = 0;
+            local_180 = (HBITMAP)(uintptr_t)FUN_14007c730_stub(local_190, &fflag);
+            if (((HBITMAP)(uintptr_t)local_180 == 0) && (fflag != 0)) {
+                return unaff_BL;
+            }
+            if (!bVar5) {
+                goto LAB_1400d6395;
+            }
+            while ((HBITMAP)(uintptr_t)local_180 == 0) {
+                if (bVar4) {
+LAB_1400d63dd:
+                    EnterCriticalSection(&g_csCom);
+                    FUN_140061c44();
+                    iVar27 = (uint32_t)-3;
+                    if (g_pOleInit != NULL) {
+                        iVar27 = (uint32_t)g_pOleInit(0);
+                        if (iVar27 != 0) {
+                            if (iVar27 == 1) {
+                                g_pOleUninit();
+                            }
+                        }
+                    }
+                    local_d0 = (longlong *)(uintptr_t)FUN_14006e3a4(local_190);
+                    if (local_d0 != NULL) {
+                        (*(void (**)(void *))((uintptr_t)*local_d0 + 0x18))(local_d0);
+                        if (local_180 == 0) {
+                            (*(void (**)(void *))((uintptr_t)*local_d0 + 0x10))(local_d0);
+                            local_d0 = NULL;
+                        }
+                    }
+                    if ((g_pOleUninit != NULL) && (iVar27 == 0)) {
+                        g_pOleUninit();
+                    }
+                    LeaveCriticalSection(&g_csCom);
+                    goto LAB_1400d6484;
+                }
+                {
+                    HICON ic = FUN_14001f1d4_stub(local_190, NULL);
+                    local_138 = ic;
+                    if (ic != 0) {
+                        if (bVar5) {
+                            goto LAB_1400d6553;
+                        }
+                        g_pGdipCreateHBITMAPFromBitmap(ic, &local_180, 0);
+                        if (local_180 != 0) {
+                            break;
+                        }
+                        DAT_14013cd90();
+                        local_138 = 0;
+                    }
+                }
+                if ((!bVar5) || ((bVar4 = true), local_138 != 0)) {
+                    if (local_180 == 0) {
+                        goto LAB_1400d63dd;
+                    }
+                    break;
+                }
+LAB_1400d6395:
+                if (local_180 != 0) {
+                    break;
+                }
+                local_180 = LoadImageW((HINSTANCE)0, local_190, 0, 0, 0, 0x10);
+            }
+        }
+        else {
+            longlong nm = 0;
+            HMODULE hmod;
+            {
+                longlong cur2 = (longlong)(uintptr_t)resref;
+                res_type = FUN_1400d0b2c(&cur2, &nm, (uint16_t *)(uintptr_t)2);
+                local_150 = (LPCWSTR)(uintptr_t)nm;
+            }
+            pWVar18 = local_150;
+            if (local_150 != 0) {
+                hmod = LoadLibraryExW(local_190, (HANDLE)0, 2);
+                *(uint64_t *)(obj + 0x1e0) = (uint64_t)(uintptr_t)hmod;
+            }
+            if (!bVar5) {
+                goto LAB_1400d6258;
+            }
+            while (*(uint64_t *)(obj + 0x1e0) != 0) {
+                if (local_180 != 0) {
+                    goto LAB_1400d64eb;
+                }
+                if (bVar4) {
+                    goto LAB_1400d62b5;
+                }
+                memset(&resinfo, 0, sizeof(resinfo));
+                FUN_14001ea18_stub((HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0),
+                                   (LPCWSTR)pWVar18, (LPCWSTR)res_type,
+                                   (longlong *)&resinfo, NULL);
+                local_180 = (HBITMAP)(uintptr_t)FUN_14006eaac_stub(&resinfo, &local_108);
+                local_138 = local_108;
+                if (bVar5 && local_108 != 0) {
+                    goto LAB_1400d6553;
+                }
+                if ((!bVar5) || (local_108 != 0)) {
+                    break;
+                }
+                bVar4 = true;
+LAB_1400d6258:
+                if (*(uint64_t *)(obj + 0x1e0) != 0) {
+                    local_180 = LoadBitmapW(
+                        (HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0),
+                        (LPCWSTR)pWVar18);
+                }
+            }
+            if (local_180 == 0) {
+LAB_1400d62b5:
+                if (*(uint64_t *)(obj + 0x1e0) == 0) {
+                    goto LAB_1400d6495;
+                }
+                FreeLibrary((HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0));
+                *(uint64_t *)(obj + 0x1e0) = 0;
+                goto LAB_1400d6484;
+            }
+        }
+LAB_1400d6484:
+        if ((HBITMAP)(uintptr_t)local_180 == 0) {
+            goto LAB_1400d6495;
+        }
+LAB_1400d64eb:
+        *local_120 = local_180;
+        if (name_arg != NULL) {
+            PECMD_AssignString((int64_t *)((char *)obj + 0x260), name_arg);
+        }
+        if (((0 < stack_size) || (name_arg != NULL)) &&
+            ((HBITMAP)(uintptr_t)old_bmp != 0)) {
+            if ((flagbyte & 0x20) == 0) {
+                DeleteObject((HGDIOBJ)(uintptr_t)old_bmp);
+            }
+            else {
+                DAT_14013cd90();
+            }
+        }
+LAB_1400d6553:
+        if (stack_size < 1) {
+            stack_size = *(int32_t *)((char *)obj + 0x17c);
+        }
+    }
+
+    iVar6 = (uint32_t)stack_size;                 /* local_184 */
+    local_108 = (HICON)(uintptr_t)0x60;
+    if ((stack_size < 1) || (stack_size == 0x60)) {
+        iVar7 = 0;
+    }
+    else {
+        iVar7 = iVar27;
+    }
+    iVar8 = 0x60;
+    if (iVar7 != 0) {
+        iVar8 = (uint32_t)stack_size;
+    }
+    flag170 = (int)iVar7;
+    local_150 = (LPCWSTR)(uintptr_t)iVar8;
+    if (bVar5 && (local_138 != 0) && (local_120 == bmpslot)) {
+        /* ---- GDI+ ARGB 缩放支路 (星标 + 图标) ---- */
+        HICON scaled = local_138;
+        if ((0 < local_168) || (0 < (int)iVar6)) {
+            longlong w_ic = 0;
+            longlong h_ic = 0;
+            HBITMAP argbbmp = 0;
+            void *g2 = NULL;
+            DAT_14013ce08(local_138, &w_ic);
+            DAT_14013ce10(local_138, &h_ic);
+            lVar25 = (longlong)local_168;
+            lVar16 = lVar25 * (longlong)iVar8;
+            lVar16 = lVar16 / 6 + (lVar16 >> 63);
+            uVar19 = (lVar16 >> 4) - (lVar16 >> 63);
+            iVar27 = (uint32_t)(int)uVar19;
+            lVar16 = (longlong)(int32_t)iVar6 * (longlong)(int32_t)(intptr_t)local_150;
+            lVar16 = lVar16 / 6 + (lVar16 >> 63);
+            uVar20 = (lVar16 >> 4) - (lVar16 >> 63);
+            g_pGdipCreateBitmapFromScan0(uVar19 & 0xffffffffULL,
+                                         uVar20 & 0xffffffffULL,
+                                         (uint32_t)iVar27 << 2, 0x26200a, NULL, &argbbmp);
+            g_pGdipGetImageGraphicsContext(argbbmp, &g2);
+            g_pGdipSetInterpolationMode(g2, 7);
+            if (0 < (int32_t)local_158) {
+                if (0 < (int32_t)key_color) {
+                    ((int (*)(void *, void *, int, int, int, int, int, int, int, int,
+                              int, int, int, int))g_pGdipDrawImageRectRectI)(
+                        g2, (void *)(uintptr_t)local_138, 0, 0, (int)iVar27, (int)uVar20,
+                        (int)(((uint32_t)local_160v * w_ic) / (int32_t)local_158),
+                        (int)(((int32_t)local_140 * h_ic) / (int32_t)key_color),
+                        (int)((lVar25 * w_ic) / (int32_t)local_158),
+                        (int)((iVar6 * h_ic) / (int32_t)key_color), 2, 0, 0, 0);
+                }
+            }
+            DAT_14013ce30();
+            DAT_14013cd90();
+            scaled = (HICON)argbbmp;
+        }
+        if (local_180 != 0) {
+            DeleteObject((HGDIOBJ)(uintptr_t)local_180);
+            local_180 = 0;
+        }
+        *bmpslot = (uint64_t)(uintptr_t)scaled;
+        local_198 |= 0x20;
+    }
+    else {
+        /* ---- 常规支路: 位图扫描色键生成区域 ---- */
+        uint8_t bmi[0x30];
+        HDC hdcMem;
+        HGDIOBJ old_sel;
+        uint64_t selrec[3];
+        int dib_w;
+        int dib_h;
+        int got_dib;
+        unsigned char *pixbuf;
+        LPCWSTR lpvBits;
+        longlong row_last;
+        ulonglong stride;
+        ulonglong ratio_y;
+        uint32_t keyrgb;
+        longlong bmwidth;
+        longlong scalew;
+        longlong x;
+        memset(bmi, 0, sizeof(bmi));
+        GetObjectW((HGDIOBJ)(uintptr_t)*local_120, 0x20, &bm);
+        local_148 = (uint64_t)(uint32_t)bm.bmHeight;
+        local_128v = (uint64_t)(uint32_t)bm.bmWidth;
+        flagbyte = (unsigned char)!bVar5;
+        dst_w = (longlong)(((int32_t)local_100 -
+                            *(int32_t *)((char *)obj + 0x24c)) +
+                           *(int32_t *)((char *)obj + 0x238) * -2 -
+                           *(int32_t *)((char *)obj + 0x248));
+        dst_h = (longlong)(((int32_t)local_f8 -
+                            *(int32_t *)((char *)obj + 0x244)) -
+                           *(int32_t *)((char *)obj + 0x238) -
+                           (*(int32_t *)((char *)obj + 0x240) +
+                            *(int32_t *)((char *)obj + 0x23c)));
+        hdcMem = CreateCompatibleDC(hdcSrc);
+        old_bmp = *bmpslot;
+        old_sel = SelectObject(hdcMem, (HGDIOBJ)(uintptr_t)old_bmp);
+        scaled_h = (longlong)(int32_t)(intptr_t)local_150;
+        scaled_w = (longlong)local_168;
+        lVar16 = 0x60;
+        if (0 < local_168) {
+            scaled_w = (longlong)local_168 * (longlong)(int32_t)(intptr_t)local_150;
+            local_108 = (HICON)(uintptr_t)(local_128v * 0x60);
+        }
+        if (0 < (int)local_148) {
+            lVar16 = (longlong)local_148 * 0x60;
+            scaled_h = (longlong)(int)local_148 * (longlong)(int32_t)(intptr_t)local_150;
+        }
+        lVar25 = (longlong)local_148;
+        *(uint32_t *)(bmi + 0) = 0x28;            /* biSize */
+        got_dib = GetDIBits(hdcSrc, (HBITMAP)(uintptr_t)old_bmp, 0, (uint32_t)lVar25,
+                            NULL, (BITMAPINFO *)bmi, 0);
+        if (got_dib == 0x57) {
+            got_dib = 0;
+        }
+        dib_w = *(int32_t *)(bmi + 4);            /* biWidth */
+        dib_h = *(int32_t *)(bmi + 8);            /* biHeight */
+        *(uint16_t *)(bmi + 0x12) = 0x20;         /* planes/bpp 字 (local_52) */
+        {
+            int64_t buf = 0;
+            PECMD_AllocStringSlot2((void *)&buf,
+                                   (longlong)(bm.bmHeight + 1) * dib_w * 4);
+            pixbuf = (unsigned char *)(uintptr_t)buf;
+            lpvBits = (LPCWSTR)(uintptr_t)buf;
+        }
+        FUN_14005b0b8(pixbuf);
+        row_last = (longlong)dib_h - 1;
+        iVar7 = 0;
+        if (got_dib != 0) {
+            iVar7 = GetDIBits(hdcSrc, (HBITMAP)(uintptr_t)old_bmp, 0,
+                              (uint32_t)local_148, (void *)lpvBits,
+                              (BITMAPINFO *)bmi, 0);
+        }
+        if (!bVar5) {
+            local_f0 = b7c_CreateRectRgn(0, 0, (int)local_100, (int)local_f8);
+        }
+        if ((flagbyte != 0) && (iVar7 != 0) && (*(uint16_t *)(bmi + 0x12) == 0x20)) {
+            stride = ((ulonglong)(uint32_t)dib_w * 4) >> 2;
+            ratio_y = ((ulonglong)(lVar16 << 0x20)) / (ulonglong)scaled_h;
+            keyrgb = ((local_118 >> 0x10) & 0xff) | ((local_118 & 0xff) << 0x10) |
+                     (local_118 & 0xff00);
+            bmwidth = (longlong)local_108;
+            scalew = scaled_w;
+            x = (longlong)(int32_t)local_140;
+            while (x < dst_w) {
+                longlong src_x = (x * bmwidth) / scalew;
+                ulonglong y = 0;                   /* local_b0 恒 0 起点 */
+                if ((longlong)y < dst_h) {
+                    do {
+                        /* 第一段: 逐行测试, 非键色前进 (y1 跟随当前行),
+                         * 键色命中或出界时停 —— 对应原体逗号条件式 */
+                        y2 = (uint32_t)y;
+                        y1 = 0xffffffffu;
+                        for (;;) {
+                            longlong srow;
+                            int cont;
+                            if ((longlong)y >= dst_h) {
+                                break;
+                            }
+                            srow = (row_last -
+                                    (longlong)((y * ratio_y + 0x80000000ULL) >> 0x20)) *
+                                   (longlong)stride;
+                            if (srow < 0) {
+                                cont = 1;
+                            }
+                            else {
+                                y1 = y2;
+                                cont = (keyrgb !=
+                                        (*(uint32_t *)(lpvBits + (src_x + srow) * 2) &
+                                         0xffffff));
+                            }
+                            if (!cont) {
+                                break;
+                            }
+                            y++;
+                            y2 = (uint32_t)y;
+                        }
+                        /* 第二段: 连续键色像素延伸 y2 */
+                        while ((longlong)(int32_t)y2 < dst_h) {
+                            longlong srow2 =
+                                (row_last -
+                                 (longlong)(((ulonglong)(int32_t)y2 * ratio_y +
+                                             0x80000000ULL) >> 0x20)) * (longlong)stride;
+                            if ((srow2 < 0) ||
+                                (keyrgb !=
+                                 (*(uint32_t *)(lpvBits + (src_x + srow2) * 2) &
+                                  0xffffff))) {
+                                break;
+                            }
+                            y2++;
+                        }
+                        if ((int32_t)y1 >= 0) {
+                            HRGN rtmp = b7c_CreateRectRgn((int)x, (int)y1, (int)x + 1,
+                                                          (int)y2);
+                            b7c_CombineRgn(local_f0, local_f0, rtmp, 3);
+                            DeleteObject((HGDIOBJ)rtmp);
+                        }
+                        y2 = y2 + 1;
+                        y = (ulonglong)y2;
+                    } while ((longlong)y < dst_h);
+                }
+                x++;
+            }
+        }
+        /* ---- 目标尺寸重采样 ---- */
+        lVar16 = (longlong)local_128v;
+        lVar25 = (longlong)local_148;
+        if ((flag170 != 0) || (local_168 != 0) || ((int)local_140 != 0)) {
+            int cw = local_168;
+            int chh = (int)local_140;
+            longlong tgt = (longlong)(int32_t)(intptr_t)local_150;
+            if (cw < 1) {
+                local_128v = 1;
+                cw = (int)iVar27;
+            }
+            if (chh < 1) {
+                local_148 = 1;
+                chh = (int)iVar27;
+            }
+            {
+                longlong newh = ((longlong)chh * tgt * (longlong)local_148) /
+                                (local_128v * 0x60);
+                HDC hdcDest = CreateCompatibleDC(hdcSrc);
+                int neww = (int)((cw * tgt * lVar16) / (local_128v * 0x60));
+                HBITMAP nbmp = CreateCompatibleBitmap(hdcSrc, neww, (int)newh);
+                HGDIOBJ prev;
+                memset(selrec, 0, sizeof(selrec));
+                FUN_14005b028(selrec, hdcDest, (HGDIOBJ)nbmp);
+                prev = (HGDIOBJ)(uintptr_t)*local_120;
+                *local_120 = (uint64_t)(uintptr_t)nbmp;
+                selrec[0] = (uint64_t)(uintptr_t)prev;
+                local_150 = 0;
+                {
+                    int sh = (int)lVar25;
+                    int sw = (int)lVar16;
+                    void *lg = NULL;
+                    uint32_t gr;
+                    if ((local_138 == 0) ||
+                        ((gr = (uint32_t)DAT_14013ce28(hdcDest, &lg), gr != 0))) {
+                        StretchBlt(hdcDest, 0, 0, neww, (int)newh, hdcMem, 0, 0, sw, sh,
+                                   0xcc0020);
+                    }
+                    else {
+                        ((int (*)(void *, void *, int, int, int, int, int, int, int, int,
+                                  int, int, int, int))g_pGdipDrawImageRectRectI)(
+                            lg, (void *)(uintptr_t)local_138, 0, 0, neww, (int)newh,
+                            0, 0, sw, sh, 2, 0, 0, 0);
+                    }
+                    if (lg != NULL) {
+                        DAT_14013ce30();
+                    }
+                }
+                FUN_14005b07c(selrec);
+                if (hdcDest != 0) {
+                    DeleteDC(hdcDest);
+                }
+            }
+        }
+        if (old_sel != 0) {
+            SelectObject(hdcMem, old_sel);
+        }
+        PECMD_FreeStrBuf((WCHAR **)(void *)&pixbuf);
+        if (hdcMem != 0) {
+            DeleteDC(hdcMem);
+        }
+        lVar24 = 0;
+        (void)lVar24;
+    }
+
+    /* ---- 区域应用/释放 + 收尾 (两支路汇合点) ---- */
+    {
+        HRGN newrgn = local_f0;
+        HRGN delrgn;
+        if (!bVar5) {
+            delrgn = *(HRGN *)((char *)obj + 0xf0);
+            SetWindowRgn(*(HWND *)((char *)obj + 0x20), local_f0, 1);
+            *(HRGN *)((char *)obj + 0xf0) = newrgn;
+        }
+        else {
+            delrgn = local_f0;
+        }
+        if (delrgn != 0) {
+            DeleteObject((HGDIOBJ)delrgn);
+        }
+    }
+    *(uint8_t *)((char *)obj + 0x250) = local_198;
+    if ((0 < local_e8) || (name_arg != NULL)) {
+        InvalidateRect(*(HWND *)((char *)obj + 0x20), NULL, 1);
+    }
+LAB_1400d6495:
+    if (local_a0 != 0) {
+        DeleteObject((HGDIOBJ)(uintptr_t)local_a0);
+    }
+    if (local_d0 != NULL) {
+        (*(void (**)(void *))((uintptr_t)*local_d0 + 0x10))(local_d0);
+    }
+    if (local_138 != 0) {
+        DAT_14013cd90();
+    }
+    return unaff_BL;
 }
 
 /* ========== PECMD_DiskFindLoadHives @0x1400d7038 ==========
