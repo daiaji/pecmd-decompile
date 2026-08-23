@@ -1,0 +1,304 @@
+{
+  "batch": "c8c",
+  "proposals": [
+    {
+      "addr": "1400ec698",
+      "old": "FUN_1400ec698",
+      "spelling_variants": [
+        "FUN_1400EC698",
+        "FUN_1400ec698"
+      ],
+      "name": "PECMD_CtlSwapAuxObject",
+      "confidence": "low",
+      "evidence": "交换对象 +0xF0 成员指针并返回旧值；唯一调用者 PECMD_CreateDialogControl 以它把新建辅助窗口对象(虚表 PTR_FUN_140126080)挂入对话框控件。类身份未定，按存取行为命名。"
+    },
+    {
+      "addr": "1400ef078",
+      "old": "FUN_1400ef078",
+      "spelling_variants": [
+        "FUN_1400EF078",
+        "FUN_1400ef078"
+      ],
+      "name": "PECMD_SetCtlHolderImage",
+      "confidence": "high",
+      "evidence": "向控件 +0x110 处的 ImageHolder 子对象写图像句柄到其 +0xD0 槽；ConstructControl 中三个调用点分别传入 HICON/HBITMAP 并随后设 holder+0xDC 归属标志，另一分支走 STM_SETIMAGE(0x172)。"
+    },
+    {
+      "addr": "1400f06fc",
+      "old": "FUN_1400f06fc",
+      "spelling_variants": [
+        "FUN_1400F06FC",
+        "FUN_1400f06fc"
+      ],
+      "name": "PECMD_DtorCtlCoreObj",
+      "confidence": "medium",
+      "evidence": "窗口控件核心类(虚表 PTR_FUN_14012bfb0)析构：DeleteObject(+0x48 GDI 对象)后调用 PECMD_DestroyWindowObj 收尾；被 PECMD_DtorMemDcCanvas 析构链与删除析构 FUN_1400f0f78 调用。"
+    },
+    {
+      "addr": "1400f11f8",
+      "old": "FUN_1400f11f8",
+      "spelling_variants": [
+        "FUN_1400F11F8",
+        "FUN_1400f11f8"
+      ],
+      "name": "PECMD_CtorSbarSubObj",
+      "confidence": "high",
+      "evidence": "子对象构造：InitWinObjBase 后存参数于 +0xD0、置虚表 PTR_FUN_14012c0e0；由 PECMD_CreateScrollbarCtl 工厂 new(0xd8) 后存入 item[7]。"
+    },
+    {
+      "addr": "1400f1f18",
+      "old": "FUN_1400f1f18",
+      "spelling_variants": [
+        "FUN_1400F1F18",
+        "FUN_1400f1f18"
+      ],
+      "name": "PECMD_DtorSubObjC2e0",
+      "confidence": "low",
+      "evidence": "完整析构：置派生虚表 PTR_FUN_14012c2e0 后调 PECMD_DestroyWindowObj；仅被删除析构 FUN_1400f22ac 调用，该类构造函数未出现在反编译文本，身份未定故以虚表地址命名。"
+    },
+    {
+      "addr": "1400f28e8",
+      "old": "FUN_1400f28e8",
+      "spelling_variants": [
+        "FUN_1400F28E8",
+        "FUN_1400f28e8"
+      ],
+      "name": "PECMD_CtorIpadSubObj",
+      "confidence": "high",
+      "evidence": "IP 地址项子对象构造：InitWinObjBase+存参+虚表 PTR_FUN_14012c410；工厂随后调 PECMD_CreateIpAddressCtl 创建窗口，对象存 item[7] 并由 PECMD_DtorIpadItem 经 vtbl+0x18(1) 释放。"
+    },
+    {
+      "addr": "1400f2924",
+      "old": "FUN_1400f2924",
+      "spelling_variants": [
+        "FUN_1400F2924",
+        "FUN_1400f2924"
+      ],
+      "name": "PECMD_DtorIpadSubObj",
+      "confidence": "high",
+      "evidence": "IP 地址项子对象完整析构：置虚表 PTR_FUN_14012c410 后调 PECMD_DestroyWindowObj，与构造 FUN_1400f28e8 同类配对。"
+    },
+    {
+      "addr": "1400f2b44",
+      "old": "FUN_1400f2b44",
+      "spelling_variants": [
+        "FUN_1400F2B44",
+        "FUN_1400f2b44"
+      ],
+      "name": "PECMD_AttachChildWindow",
+      "confidence": "medium",
+      "evidence": "通用子窗口挂接：obj[4]=hwnd 后 PECMD_ContainerAppend 并返回非空判定；ParseListItemSpec 流程用它把 LVM_GETHEADER(0x101F) 取得的列表头句柄挂入宿主 +0xF8。"
+    },
+    {
+      "addr": "1400f2b6c",
+      "old": "FUN_1400f2b6c",
+      "spelling_variants": [
+        "FUN_1400F2B6C",
+        "FUN_1400f2b6c"
+      ],
+      "name": "PECMD_DeleteEntryGdiHandle",
+      "confidence": "medium",
+      "evidence": "若 *(HGDIOBJ*)(p+8) 非空则 DeleteObject 的条目清理助手；被 SetListItemCellData/SetListItemParamPtr/ClearPropArrayItems 清理单元格与属性表项时调用。"
+    },
+    {
+      "addr": "1400f353c",
+      "old": "FUN_1400f353c",
+      "spelling_variants": [
+        "FUN_1400F353C",
+        "FUN_1400f353c"
+      ],
+      "name": "PECMD_ListSetExtStyle",
+      "confidence": "high",
+      "evidence": "SendMessageW(hwnd,0x1036=LVM_SETEXTENDEDLISTVIEWSTYLE,0,style)，整体替换列表视图扩展样式。"
+    },
+    {
+      "addr": "1400f36ec",
+      "old": "FUN_1400f36ec",
+      "spelling_variants": [
+        "FUN_1400F36EC",
+        "FUN_1400f36ec"
+      ],
+      "name": "PECMD_ListMoveItemBlock",
+      "confidence": "medium",
+      "evidence": "维护宿主 +0x368/+0x380/+0x398 组偏移与 id 映射数组，把条目块搬移到目标位并用 LVM_SETITEMSTATE 打 overlay 标记，末尾自发 WM_WINDOWPOSCHANGING、InvalidateRect 并 RefreshListScrollbar；ListHostMsgDispatch 以 (索引,目标位) 调用。"
+    },
+    {
+      "addr": "1400f4040",
+      "old": "FUN_1400f4040",
+      "spelling_variants": [
+        "FUN_1400F4040",
+        "FUN_1400f4040"
+      ],
+      "name": "PECMD_SetListRowHeight",
+      "confidence": "low",
+      "evidence": "负值先截断取整后把 double 存入列表宿主 +0x200（布局行高类参数，转储中文本只写不读；相邻 +0x218 为整型条目高）。"
+    },
+    {
+      "addr": "1400f40bc",
+      "old": "FUN_1400f40bc",
+      "spelling_variants": [
+        "FUN_1400F40BC",
+        "FUN_1400f40bc"
+      ],
+      "name": "PECMD_SetListLayoutParam",
+      "confidence": "low",
+      "evidence": "恒返 1 的写入器：参数存入列表宿主 +0x3B4（列数 +0x3B0 旁的布局字段，转储中只写不读）。"
+    },
+    {
+      "addr": "1400f5558",
+      "old": "FUN_1400f5558",
+      "spelling_variants": [
+        "FUN_1400F5558",
+        "FUN_1400f5558"
+      ],
+      "name": "PECMD_ListAddItemFromSpec",
+      "confidence": "medium",
+      "evidence": "从规格结构体 {img@+4,lParam@+8,文本@+0x10} 取字段转发 PECMD_ListAddItemEntry(-1 作位置)；ParseListItemSpec 族与 ListHostMsgDispatch 均调用。"
+    },
+    {
+      "addr": "1400fba3c",
+      "old": "FUN_1400fba3c",
+      "spelling_variants": [
+        "FUN_1400FBA3C",
+        "FUN_1400fba3c"
+      ],
+      "name": "PECMD_DtorListViewObj",
+      "confidence": "high",
+      "evidence": "列表对象类(虚表 PTR_FUN_14012c7b0，同 PECMD_InitListViewObject)完整析构：DestroyWindow(obj[4]) 后调 PECMD_DestroyWindowObj。"
+    },
+    {
+      "addr": "1400fc034",
+      "old": "FUN_1400fc034",
+      "spelling_variants": [
+        "FUN_1400FC034",
+        "FUN_1400fc034"
+      ],
+      "name": "PECMD_DtorStrBufSubObj",
+      "confidence": "low",
+      "evidence": "类 PTR_FUN_14012ca50 完整析构：对 +0xD8 StrBuf 执行 PECMD_FreeStrBuf 再调基类销毁；该类构造未见于文本，按成员特征命名。"
+    },
+    {
+      "addr": "1400fc33c",
+      "old": "FUN_1400fc33c",
+      "spelling_variants": [
+        "FUN_1400FC33C",
+        "FUN_1400fc33c"
+      ],
+      "name": "PECMD_DtorBrushSubObj",
+      "confidence": "low",
+      "evidence": "类 PTR_FUN_14012cb90 完整析构：DeleteObject(+0xD0 画刷) 置空后调基类销毁；构造未见于文本，按成员特征命名。"
+    },
+    {
+      "addr": "1400fecfc",
+      "old": "FUN_1400fecfc",
+      "spelling_variants": [
+        "FUN_1400FECFC",
+        "FUN_1400fecfc"
+      ],
+      "name": "PECMD_DtorTreeSubObj",
+      "confidence": "high",
+      "evidence": "树控件子对象类(PTR_FUN_14012cf00，构造 fec9c 存活于 PECMD_InitControl 且随后创建 PECMD_CreateTreeViewControl)析构：经动态解析的 ImageList_Destroy 销毁 +0xD8 图像列表再调基类。"
+    },
+    {
+      "addr": "1400f21a8",
+      "old": "FUN_1400f21a8",
+      "spelling_variants": [
+        "FUN_1400F21A8",
+        "FUN_1400f21a8"
+      ],
+      "name": "PECMD_RichEditWordBreakProc",
+      "confidence": "medium",
+      "evidence": "PECMD_CreateRichEditCtrl 在样式 bit14 置位时以 SendMessageW(hwnd,0xD0=EM_SETWORDBREAKPROC,0,本址) 注册的分词回调；decompiled.c 未渲染函数体（仅 link_stubs 占位），命名基于注册点语义。"
+    }
+  ],
+  "skips": [
+    {
+      "addr": "1400ebfb4",
+      "reason": "零引用：decompiled.c 全文（符号名/裸地址任一形式）除定义外无任何引用，refactored core 文件亦无调用。删除析构（调 PECMD_DestroyControlObj，flags&1 时 free），应经 Ghidra 未渲染的类虚表槽到达；建议名 PECMD_DtorControlFree。"
+    },
+    {
+      "addr": "1400ec9c0",
+      "reason": "零引用（同上标准）。向控件虚表槽+8 转发 WM_LBUTTONDOWN(0x201,打包xy) 后调 PECMD_OnTabSelChange，疑为 Tab 类虚方法；建议名 PECMD_TabPressSelChange。"
+    },
+    {
+      "addr": "1400ef620",
+      "reason": "零引用。绘制路由：标志字节 +0xE8 判定走 PECMD_PaintLabelText 自绘否则经虚表槽+8 发 WM_PAINT，应为控件类虚方法；建议名 PECMD_CtlPaintRoute。"
+    },
+    {
+      "addr": "1400ef8ec",
+      "reason": "零引用。MemDcCanvas 类（基类析构 PECMD_DtorMemDcCanvas 存活）的删除析构，vtable 槽可达；建议名 PECMD_DtorMemDcCanvasFree。"
+    },
+    {
+      "addr": "1400f00c4",
+      "reason": "零引用。ImageHolder 类删除析构（同类 PECMD_InitImageHolder/PECMD_DtorImageHolder 均已命名且存活），经虚表 -1 槽派发；建议名 PECMD_DtorImageHolderFree。"
+    },
+    {
+      "addr": "1400f0f78",
+      "reason": "零引用。窗口控件核心类 PTR_FUN_14012bfb0 的删除析构（完整析构 FUN_1400f06fc 与构造 FUN_1400f0648 均有文本引用），vtable 槽可达；建议名 PECMD_DtorCtlCoreObjFree。"
+    },
+    {
+      "addr": "1400f22ac",
+      "reason": "零引用。删除析构，配对完整析构为已提名 PECMD_DtorSubObjC2e0（虚表 PTR_FUN_14012c2e0）；类构造缺失，仅能经虚表派发；建议名 PECMD_DtorSubObjC2e0Free。"
+    },
+    {
+      "addr": "1400f22dc",
+      "reason": "零引用。经控件虚表槽+8 转发 WM_LBUTTONUP(0x202,打包坐标)，与已命名 PECMD_PostCtlPressNotify 同族发送器；建议名 PECMD_CtlSendLButtonUp。"
+    },
+    {
+      "addr": "1400f2a4c",
+      "reason": "零文本引用但运行时必达：IPad 工厂将该类对象存 item[7]，PECMD_DtorIpadItem(140054ab4) 文本可见地调用 sub->vtbl+0x18(sub,1) 即本函数。删除析构（配对 PECMD_DtorIpadSubObj）；建议名 PECMD_DtorIpadSubObjFree。"
+    },
+    {
+      "addr": "1400f2b1c",
+      "reason": "零引用。迷你窗口过程：msg==0x1205(HDM_LAYOUT 数值段) 时做缩放换算（虚表槽+8 回发 0x1205 并按双精度比例改两处 int），否则转 PECMD_ControlWindowProc；应为某类虚表槽过程；建议名 PECMD_CtlWndProcMsg1205。"
+    },
+    {
+      "addr": "1400f51a8",
+      "reason": "零引用。经控件虚表槽+8 转发 WM_RBUTTONDOWN(0x204,打包坐标)，同族发送器；建议名 PECMD_CtlSendRButtonDown。"
+    },
+    {
+      "addr": "1400f6db0",
+      "reason": "零引用（8526 字节）。列表宿主内容自绘：HDM_GETITEMCOUNT/GETORDERARRAY 取表头布局，LVM_GETSUBITEMRECT/GETCOLUMNW/GETITEMSTATE/MAPINDEXTOID 定位条目，LineTo 画网格、DrawTextW 按 'L/C/R/H' 对齐标记绘单元格；应为 ListHost 类虚绘制方法；建议名 PECMD_ListHostDrawContent。"
+    },
+    {
+      "addr": "1400f9104",
+      "reason": "零引用。列表宿主内嵌数据对象（类 PTR_FUN_14012c550，构造 f5c74、析构 f5d50 被 PECMD_DestroyCtlResources 调用）的删除析构；建议名 PECMD_DtorListDataObjFree。"
+    },
+    {
+      "addr": "1400fb558",
+      "reason": "零引用。ListHost 类（PTR_FUN_14012c670，构造 PECMD_CtorListHostObject、完整析构 PECMD_DestroyCtlResources 均已命名存活）的删除析构；建议名 PECMD_DtorListHostFree。"
+    },
+    {
+      "addr": "1400fbdb0",
+      "reason": "零引用。ListView 对象类（PTR_FUN_14012c7b0，构造 PECMD_InitListViewObject、完整析构已提名 PECMD_DtorListViewObj）的删除析构；建议名 PECMD_DtorListViewObjFree。"
+    },
+    {
+      "addr": "1400fc770",
+      "reason": "零引用。StrBuf 子对象类 PTR_FUN_14012ca50 删除析构（完整析构已提名 PECMD_DtorStrBufSubObj）；类构造缺失，仅虚表可达；建议名 PECMD_DtorStrBufSubObjFree。"
+    },
+    {
+      "addr": "1400fc8bc",
+      "reason": "零引用。画刷持有子对象类 PTR_FUN_14012cb90 删除析构（完整析构已提名 PECMD_DtorBrushSubObj）；类构造缺失，仅虚表可达；建议名 PECMD_DtorBrushSubObjFree。"
+    },
+    {
+      "addr": "1400fdedc",
+      "reason": "零引用。按压/悬停鼠标消息处理：WM_MOUSEMOVE/LBUTTONDOWN 经 PtInRect 判定后 SetTimer(0x2713,10ms)、置 +0xAD 按压态并重绘，LBUTTONUP 清态并以 SendMessageW(parent,0x441,id|0x2020000,0x202) 通知父窗，最后经 PECMD_DispatchMessageMap 续传；疑为按钮类虚方法；建议名 PECMD_BtnPressHoldMouseMsg。"
+    },
+    {
+      "addr": "1400fe5bc",
+      "reason": "零引用。先 PECMD_SetCtlBgBrush 设背景刷/色再 PECMD_InvalidateParentRect 重绘，应为 Static 控件类（基类析构 PECMD_DestroyStaticControl 已命名）的颜色设置虚方法；建议名 PECMD_SetCtlBgBrushRedraw。"
+    },
+    {
+      "addr": "1400fe5e0",
+      "reason": "零引用。Static 控件类（PTR_FUN_14012ccc0，完整析构 PECMD_DestroyStaticControl 已命名存活）的删除析构；建议名 PECMD_DtorStaticControlFree。"
+    },
+    {
+      "addr": "1400fec58",
+      "reason": "零引用。BeginPaint→PECMD_ControlPaint→EndPaint 的 WM_PAINT 封装（与已命名 PECMD_CtlOnPaint 的 DrawItemContent 路径平行）；应为控件类虚方法；建议名 PECMD_ControlOnPaint。"
+    },
+    {
+      "addr": "1400ff5a0",
+      "reason": "零引用。树控件子对象类（PTR_FUN_14012cf00）删除析构，配对完整析构已提名 PECMD_DtorTreeSubObj，运行时经 Item[7]->vtbl+0x18(sub,1) 派发；建议名 PECMD_DtorTreeSubObjFree。"
+    }
+  ]
+}
