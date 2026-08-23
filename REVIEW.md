@@ -3575,3 +3575,9 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - G2 附带: 63694 实为已命名 PECMD_AllocWStringBuffer(core_var), ls 内 FUN_ 拼写全库归并;
   StrBldCopyWide 按调用点证据补 return(槽指针)。
 - 累计: rename_map 1157→**1270**; 未命名唯一 FUN_ 630→**517**(biz 370/crt147)。
+
+## 126. G4 批(c5前段24名) + 管线脚本化
+- g_pipeline.py 固化六步管线; 本批踩坑与修正: ①多行签名正则吞并相邻原型块→收紧为单行匹配+跨度保护;
+  ②大体积孪生体(ItemBaseInit等3个R1直移体)需放开删除跨度上限(200k); ③LARGE_INTEGER 实参用 .QuadPart;
+  ④大小写变体清扫须在改名后全库再跑一遍(re.I)。
+- rename_map 1270→**1294**; 未命名 517→**493**(biz 346)。c5 余 47 / c6 78 / c7 77 待后续批。
