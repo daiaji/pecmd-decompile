@@ -69,16 +69,16 @@ extern void   *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* 
 extern WCHAR  *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b);
 extern int64_t PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                              int64_t len, uint64_t *extra);
-extern void    PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);              /* 分配 */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);              /* 分配 */
 extern WCHAR  *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len);   /* 定长拷贝 */
-extern WCHAR  *FUN_1400702d4(WCHAR **out, const WCHAR *src, int64_t len);
+extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
 extern void    PECMD_AllocStrSlot(WCHAR **out);                           /* 串容器初始化 */
 extern WCHAR  *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);               /* 字符串追加 */
 extern void    PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
 extern char    PECMD_ReadFileLine(void *a, int64_t *b, DWORD c, uint8_t d,
                              uint32_t *e);                            /* 读一行字符 */
 extern LPCWSTR PECMD_ConvertStringEncoding(void *a, DWORD b);                      /* 取串槽内容 */
-extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len);  /* 取串槽 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);  /* 取串槽 */
 extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
 extern void    PECMD_SwapBytePairs(uint8_t *param_1, int param_2);         /* 大小写转换 */
 extern int64_t PECMD_WideToAnsiConvert(void *a);                               /* UTF8 长度 */
@@ -90,7 +90,7 @@ extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWO
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos, DWORD method); /* SetFilePointer */
 extern uint32_t PECMD_GetFileSize(HANDLE hFile);                         /* GetFileSize */
 extern void    PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
-extern WCHAR  *FUN_1400703e4(int64_t *out, LPCWSTR src);             /* StrCpyW2 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);             /* StrCpyW2 */
 extern int64_t PECMD_FindVarValue(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
                              int param_4);                            /* 变量插值 */
 extern void    PECMD_GetEnvVarToStr(LPCWSTR a, void *b);                     /* 输出/插值 */
@@ -1409,7 +1409,7 @@ LAB_14009e4a3:
               }
               lVar9 = (int64_t)_Var27 - (int64_t)_Var15;
             }
-            FUN_1400702d4((WCHAR **)&local_res20, (const WCHAR *)(uintptr_t)_Var15,
+            PECMD_StrBldCopyWideN((WCHAR **)&local_res20, (const WCHAR *)(uintptr_t)_Var15,
                           lVar9 >> 1);
           }
         }
@@ -1725,7 +1725,7 @@ LAB_14009efbe:
           if (local_68 != (char *)0) {
             pCVar21 = local_68;
           }
-          FUN_1400702f0((int64_t *)&local_a0, pCVar21, 0xffffffffffffffffULL);
+          PECMD_StrBldCopyAnsi((int64_t *)&local_a0, pCVar21, 0xffffffffffffffffULL);
           PECMD_AllocStrSlot((WCHAR **)&local_e0);
           while (1) {
             bVar5 = PECMD_ReadFileLine((void *)(uintptr_t)_Var27, (int64_t *)&local_e0,
@@ -2024,7 +2024,7 @@ LAB_14009f5ef:
                 EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
                 puVar18 = (uint64_t *)PECMD_FindVarValue(plVar14, pWVar20, (int64_t *)0, -1);
                 if (puVar18 != (uint64_t *)0) {
-                    FUN_1400703e4(&local_b8.QuadPart, (LPCWSTR)*puVar18);
+                    PECMD_StrBldCopyWide(&local_b8.QuadPart, (LPCWSTR)*puVar18);
                 }
                 LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
             } else {
@@ -2095,7 +2095,7 @@ LAB_14009fa02:
                         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
                         puVar18 = (uint64_t *)PECMD_FindVarValue(local_res8, pWVar20, (int64_t *)0, -1);
                         if (puVar18 != (uint64_t *)0) {
-                            FUN_1400703e4((int64_t *)&local_res20, (LPCWSTR)*puVar18);
+                            PECMD_StrBldCopyWide((int64_t *)&local_res20, (LPCWSTR)*puVar18);
                         }
                         LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
                     } else {

@@ -14,7 +14,7 @@
 /* helpers */
 extern void PECMD_AllocStringSlot2(void **ps, int64_t len);          /* @0x1400633a8 alloc */
 extern void PECMD_FreeStrBuf(void *ps);                         /* @0x14005b104 free */
-extern void FUN_14005b0b8(void *p);                          /* @0x14005b0b8 object init */
+extern void PECMD_ZeroLenBuf(void *p);                          /* @0x14005b0b8 object init */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 realloc/alloc */
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method); /* @0x14005c674 */
 extern void PECMD_TlsLogWrite(uint64_t ctx, const WCHAR *fmt, uint64_t a, uint64_t b); /* @0x140018d8c debug */
@@ -427,7 +427,7 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
     PECMD_AllocStringSlot2((void **)&local_60, (int64_t)iVar3 * 2 + 0x42 + lVar1);
     lpParameter = local_60;
     local_48 = local_60;
-    FUN_14005b0b8(local_60);
+    PECMD_ZeroLenBuf(local_60);
     local_50 = CreateThread(0, 0x20000, (void *)PECMD_TaskShowMessage, lpParameter, 0x10004,
                             (DWORD *)&g_lastThreadId);
     if (local_50 == (HANDLE)0) {

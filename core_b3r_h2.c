@@ -83,7 +83,7 @@ extern DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);  /* WlanConnect
 /* ---- 本文件引用的辅助函数 (仅 extern) ---- */
 extern void PECMD_FreeStrBuf(void *ps);                           /* @0x14005b104 释放串槽     */
 extern void      PECMD_FreeContainer(void *ps);                           /* @0x14005b134 释放串资源   */
-extern void      FUN_14005b0b8(void *ps);                           /* @0x14005b0b8 对象初始化   */
+extern void PECMD_ZeroLenBuf(void *p);                           /* @0x14005b0b8 对象初始化   */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                         /* @0x14005b154 跳过空白     */
 extern undefined8 PECMD_MatchPrefixN(ushort *a, undefined8 *b, int c);   /* @0x14005b1a8              */
 extern undefined8 PECMD_OnDeleteCommand(void *a, LPCWSTR b, HWND c);        /* @0x14005b2c0              */
@@ -116,7 +116,7 @@ extern short    *PECMD_LastPathSeparator(short *s);                           /*
 extern undefined8 FUN_140063060(undefined8 a);                      /* @0x140063060             */
 extern undefined8 *PECMD_AllocSmallObject(undefined8 *a);                    /* @0x140063344 小对象分配  */
 extern void      PECMD_AllocStrSlot(void *out);                          /* @0x140063620 串容器初始化 */
-extern void      PECMD_AllocWStringBuffer(WCHAR **ps, longlong count);         /* @0x140063694 串分配      */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);         /* @0x140063694 串分配      */
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, longlong count);         /* @0x140063720 串扩容      */
 extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);            /* @0x14006375c 串追加      */
 extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, longlong len); /* @0x140063888       */
@@ -131,10 +131,10 @@ extern void      PECMD_RegReadWrap(void *a, LPCWSTR b, LPCWSTR c, longlong *d,
 extern undefined8 PECMD_StripDevicePrefix(longlong a);                       /* @0x14006acb8             */
 extern void      PECMD_HexStringToBytes(byte *a, byte *b);                   /* @0x14006ad9c             */
 extern undefined8 PECMD_Base64Decode(byte *a, undefined8 *b);            /* @0x14006ae00             */
-extern longlong *FUN_1400702f0(longlong *a, LPCSTR b, ulonglong c); /* @0x1400702f0 取串槽      */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 取串槽      */
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);       /* @0x1400702b0 串赋值      */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);       /* @0x14007034c             */
-extern WCHAR    *FUN_1400703e4(WCHAR **out, const WCHAR *src);      /* @0x1400703e4             */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);      /* @0x1400703e4             */
 extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);              /* @0x140074838 数值解析    */
 extern void      PECMD_SetVariableWithPrefix(longlong *a, LPCWSTR b, LPCWSTR c);  /* @0x14007d0ac             */
 extern undefined8 PECMD_ListDrives(undefined8 *a, WCHAR b, int c, int d,
@@ -181,7 +181,7 @@ longlong PECMD_ParseExtPathArg(longlong *param_1, short *param_2)
 
     local_res10 = (WCHAR *)param_2;
     PECMD_SkipLeadingControlChars(&local_res10);
-    PECMD_AllocWStringBuffer(&local_res20, 5);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res20, 5);
     PECMD_AllocWStringBuffer(local_28, 0x14);
     cVar1 = PECMD_MatchTokenAdvance("-ext", &local_res10, 4);
     PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_res20, 0x3d);
@@ -340,8 +340,8 @@ longlong PECMD_LinkFile(longlong *param_1, LPCWSTR param_2)
     (void)local_78;
     PECMD_SkipLeadingControlChars(&local_res10);
     DVar6 = 0;
-    PECMD_AllocWStringBuffer(&local_90, 5);
-    PECMD_AllocWStringBuffer(&local_98, 0x14);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_90, 5);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_98, 0x14);
     DVar5 = 0;
     local_res20 = (uint64_t)((uint64_t)(uint32_t)(local_res20 >> 32) << 32);
     cVar2 = PECMD_MatchTokenAdvance("-j", &local_res10, 2);
@@ -431,7 +431,7 @@ LAB_140096b4b:
                                 if (WVar1 != L'\0') {
                                     *(WCHAR *)(uintptr_t)local_res20 = L'\0';
                                 }
-                                PECMD_AllocWStringBuffer(&local_res10, 100);
+                                PECMD_AllocWStringBuffer((WCHAR **)&local_res10, 100);
                                 *((LPWSTR)local_res10) = L'\0';
                                 PECMD_EnumerateVolume((longlong *)&local_res10, -5, 0x48fffb,
                                               lpString);
@@ -544,7 +544,7 @@ LARGE_INTEGER * PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, 
     local_res18 = param_3;
     local_eb8 = (WCHAR *)0x0;
     PECMD_AllocStrSlot(&local_ee8);
-    FUN_1400702f0((longlong *)&local_eb8, ".tmp", 0xffffffffffffffff);
+    PECMD_StrBldCopyAnsi((longlong *)&local_eb8, ".tmp", 0xffffffffffffffff);
     PECMD_SkipLeadingControlChars((WCHAR **)&local_res10.QuadPart);
     bVar2 = false;
     LVar7 = local_res10;
@@ -589,7 +589,7 @@ LARGE_INTEGER * PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, 
                     pWVar8 = StrChrW((LPCWSTR)local_ee8, L'*');
                     if (pWVar8 != (LPWSTR)0x0) {
                         *pWVar8 = L'\0';
-                        FUN_1400703e4(&local_eb8, pWVar8 + 1);
+                        PECMD_StrBldCopyWide(&local_eb8, pWVar8 + 1);
                     }
                 }
             }
@@ -848,8 +848,8 @@ ulonglong PECMD_ScreenAreaCommand(longlong *param_1, LPCWSTR param_2)
 
     local_res10[0] = (WCHAR *)param_2;
     PECMD_SkipLeadingControlChars(local_res10);
-    PECMD_AllocWStringBuffer(&local_90, 5);
-    PECMD_AllocWStringBuffer(&local_c8, 0x14);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_90, 5);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_c8, 0x14);
     cVar18 = '\0';
     local_88 = WSTR("DISPLAY");
     local_bf = '\0';
@@ -1259,8 +1259,8 @@ longlong PECMD_VolumeDeviceCommand(longlong *param_1, LPCWSTR param_2)
 
     local_res10 = (WCHAR *)param_2;
     PECMD_SkipLeadingControlChars(&local_res10);
-    PECMD_AllocWStringBuffer(&local_1120, 5);
-    PECMD_AllocWStringBuffer(&local_10d8, 0x14);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_1120, 5);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_10d8, 0x14);
     PECMD_AllocStrSlot(&local_10f8);
     pWVar21 = (LPCWSTR)0x0;
     local_10c0[0] = 2;
@@ -1480,7 +1480,7 @@ LAB_140095579:
             pWVar10 = PECMD_UnquoteString(local_10d8);
             if ((uint32_t)local_10e0 == 0) {
                 pWVar12 = (WCHAR *)PECMD_StripDevicePrefix((longlong)(uintptr_t)pWVar10);
-                PECMD_AllocWStringBuffer(&local_1100, 0x517);
+                PECMD_AllocWStringBuffer((WCHAR **)&local_1100, 0x517);
                 pWVar1 = local_1100 + 0x209;
                 if (local_1124 == 0) {
                     if ((local_1128 & 1) == 0) {
@@ -2185,17 +2185,17 @@ LAB_14009a3f5:
                              lVar13 != 0)) {
                             PECMD_AllocStrSlot(&local_be0);
                             PECMD_AllocStrSlot(&local_b88);
-                            FUN_1400702f0((longlong *)&local_ba8, (LPCSTR)(uintptr_t)local_res20,
+                            PECMD_StrBldCopyAnsi((longlong *)&local_ba8, (LPCSTR)(uintptr_t)local_res20,
                                           0xffffffffffffffff);
-                            FUN_1400702f0((longlong *)&local_bc8, (LPCSTR)(uintptr_t)local_res10,
+                            PECMD_StrBldCopyAnsi((longlong *)&local_bc8, (LPCSTR)(uintptr_t)local_res10,
                                           0xffffffffffffffff);
                             WVar1 = *pWVar30;
                             do {
                                 uVar25 = uVar25 - 1;
                                 if ((int)uVar25 < 0) {
 LAB_14009ba25:
-                                    FUN_14005b0b8((ulonglong *)local_res20);
-                                    FUN_14005b0b8((ulonglong *)local_res10);
+                                    PECMD_ZeroLenBuf((ulonglong *)local_res20);
+                                    PECMD_ZeroLenBuf((ulonglong *)local_res10);
                                     PECMD_FreeStrBuf(&local_bc8);
                                     PECMD_FreeStrBuf(&local_ba8);
                                     PECMD_FreeStrBuf(&local_b88);

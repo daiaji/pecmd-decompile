@@ -4,7 +4,7 @@
  * 来源: PECMD原始.EXE (x64)
  *   PECMD_GrowByteBuffer  @0x140063424   (字节缓冲扩容)
  *   FUN_1400633A8       @0x1400633a8   (分配 len+9 字节)
- *   FUN_14005B0B8      @0x14005b0b8   (按头长度清零)
+ *   PECMD_ZeroLenBuf      @0x14005b0b8   (按头长度清零)
  *   PECMD_ReleaseRefCount       @0x140017110   (引用计数减/释放)
  *   FUN_1400660AC  @0x1400660ac   (前缀词比较 + 推进)
  *   FUN_14001FD60 @0x14001fd60  (SendMessage 子线程)
@@ -59,7 +59,7 @@ void FUN_1400633A8(void **ps, int64_t len)
 
 /* ========== 按头长度清零 @0x14005b0b8 ========== */
 /* p[-1] = size (FUN_1400633A8 的头) */
-void FUN_14005B0B8(void *p)
+void PECMD_ZeroLenBuf(void *p)
 {
     if (p != NULL) {
         memset(p, 0, ((size_t *)p)[-1]);
@@ -158,7 +158,7 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
     {
         uintptr_t *arr = (uintptr_t *)c[1];  /* +0x08 句柄数组 */
         FUN_1400633A8(&task, 0x60);
-        FUN_14005B0B8(task);
+        PECMD_ZeroLenBuf(task);
         {
             uint8_t *t = (uint8_t *)task;
             *(uint32_t *)(t + 0x18) = *(uint32_t *)((uint8_t *)c + 0x20);
@@ -343,7 +343,7 @@ uint64_t FUN_140027EAC(void *script, void **pref, uint32_t a3, uint64_t a4,
 
     GetCurrentProcess();
     FUN_1400633A8(&task, 0x70);
-    FUN_14005B0B8(task);
+    PECMD_ZeroLenBuf(task);
     t = (uint8_t *)task;
     if (task != NULL) {
         *(uint32_t *)t = 1;              /* 引用计数 */

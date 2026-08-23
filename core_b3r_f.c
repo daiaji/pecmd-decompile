@@ -38,7 +38,7 @@ extern void PECMD_SetCheckVariable(int64_t param_1, int param_2);   /* @0x14007d
 extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);   /* @0x140053c5c */
 extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);        /* @0x140053cec */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x140063694 */
-extern void FUN_14005b0b8(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
+extern void PECMD_ZeroLenBuf(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
 extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);            /* @0x1400b568c 线程过程 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
 extern void PECMD_FreeStrBuf(void *ps);                    /* @0x14005b104 */
@@ -278,7 +278,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         param_7 = 0;
         PECMD_AllocWStringBuffer((WCHAR **)&param_14, (int64_t)iVar3 + 0x201);
         lpParameter = param_14;
-        FUN_14005b0b8((void *)param_14);
+        PECMD_ZeroLenBuf((void *)param_14);
         *(DWORD *)((char *)lpParameter + 0x2f4) = DVar2;
         *(uint32_t *)((char *)lpParameter + 0x31c) = param_5;
         lstrcpyW((LPWSTR)(lpParameter + 0x80), param_3);

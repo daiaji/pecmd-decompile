@@ -47,7 +47,7 @@
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
                           int64_t *out);
-extern void FUN_14005B0B8(uint64_t *p);
+extern void PECMD_ZeroLenBuf(void *p);
 extern WCHAR **FUN_14005B154(WCHAR **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
 extern void PECMD_TruncateObjectArray(int64_t *arr, int *count, int value);
@@ -142,7 +142,7 @@ void PECMD_SetThreeSlots(uint64_t *slot, uint64_t a, uint64_t b,
  */
 static void PECMD_FreeContainer(int64_t *container)
 {
-    FUN_14005B0B8((uint64_t *)*container);
+    PECMD_ZeroLenBuf((uint64_t *)*container);
     PECMD_FreeStrBuf((WCHAR **)container);
 }
 

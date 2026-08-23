@@ -50,8 +50,8 @@ extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD 
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                            HANDLE tmpl);                     /* @0x140003864 */
 extern void FUN_1400633A8(void **ps, int64_t len);            /* @0x1400633a8 */
-extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
-extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len);
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
+extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
 extern WCHAR *FUN_1400679DC(uint64_t *a1, int *a2, int16_t a3);
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
@@ -222,7 +222,7 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
     char cVar1 = 0;
     int iVar2;
 
-    PECMD_AllocWStringBuffer(&local_80, 0x209);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_80, 0x209);
     memcpy(local_60, WSTR("%SystemRoot%\\INF\\"), 0x24);
     FUN_14007A224((void *)g_Script, local_60, &local_80, 0, 1);
     iVar2 = lstrlenW(local_80);
@@ -375,7 +375,7 @@ label_shell_name:
         return;
     }
 
-    PECMD_AllocWStringBuffer(&local_48, 0x34d3);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_48, 0x34d3);
     pWVar1 = local_48 + 0x20a;
     pwVar6 = PTR_u_Shell_14011ddb8_2_14013a290;
     if ((g_runFlag & 0x20) != 0) {
@@ -394,7 +394,7 @@ label_shell_name:
         (PECMD_ReadPelogonReg(WSTR("UShell"), local_48, 0x104), *local_48 != 0)) {
         *pWVar1 = L'\0';
     }
-    FUN_1400703E4(&g_pwszD250, pWVar1);
+    PECMD_StrBldCopyWide(&g_pwszD250, pWVar1);
     if ((mode == -1) && (*pWVar1 == L'\0')) {
         goto label_done;
     }
@@ -543,13 +543,13 @@ uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags,
                 }
                 continue;
             }
-            FUN_1400702D4(&local_40, pWVar9, (*pp - pWVar9) >> 1);
+            PECMD_StrBldCopyWideN(&local_40, pWVar9, (*pp - pWVar9) >> 1);
             pWVar11 = *pp + 2;
             *pp = pWVar11;
             PECMD_SkipLeadingControls(pp);
             pWVar9 = *pp;
             local_58 = pWVar11;
-            PECMD_AllocWStringBuffer(&local_50, 1);
+            PECMD_AllocWStringBuffer((WCHAR **)&local_50, 1);
             WVar8 = *pWVar9;
             while (WVar8 != L'\0') {
                 pWVar5 = PECMD_RemoveDuplicateChar(pWVar9, WVar12);
@@ -835,7 +835,7 @@ label_0287f3:
 label_0288a6:
         if (msg == 0x44d) {
             iVar6 = GetWindowTextLengthW(hwnd);
-            PECMD_AllocWStringBuffer(&local_38, (int64_t)iVar6 + 0x4b);
+            PECMD_AllocWStringBuffer((WCHAR **)&local_38, (int64_t)iVar6 + 0x4b);
             pWVar4 = local_38;
             *local_38 = L'\0';
             iVar6 = GetWindowTextW(hwnd, local_38, iVar6 + 0xb);
@@ -851,7 +851,7 @@ label_0288a6:
             memset((uint64_t *)(pWVar1 + 3), 0, 0x20);
             uVar9 = PECMD_ExecLoadCommand(NULL, local_38);
             if ((int)uVar9 != 0) {
-                PECMD_AllocWStringBuffer(&local_28, 0x105);
+                PECMD_AllocWStringBuffer((WCHAR **)&local_28, 0x105);
                 GetCurrentDirectoryW(0x104, local_28);
                 uVar2 = g_charTableF;
                 g_charTableF = 1;
@@ -938,7 +938,7 @@ uint64_t PECMD_ApplyTextWindowLayout(uint64_t value, LPCWSTR text)
         *local_res10 = L'\0';
         local_res10 = local_res10 + 1;
     }
-    FUN_1400703E4(&g_pwszD258, local_res10);
+    PECMD_StrBldCopyWide(&g_pwszD258, local_res10);
     pWVar9 = WSTR("宋体");
     if (*pWVar7 != L'\0') {
         pWVar9 = pWVar7;
@@ -1344,7 +1344,7 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
         if (msg == 0x312) {
             local_28.QuadPart = 0;
             DVar4 = 0x80070057;
-            PECMD_AllocWStringBuffer(&local_20, 0x303a);
+            PECMD_AllocWStringBuffer((WCHAR **)&local_20, 0x303a);
             LVar3.QuadPart = (int64_t)(uintptr_t)(local_20 + 0x32);
             local_38 = 1;
             local_res18[0] = 0x3000;
@@ -1559,7 +1559,7 @@ label_038b2f:
     }
     hWnd = pHVar1;
     if (uVar6 != uVar4) {
-        FUN_1400703E4(&g_pwszD220, local_260);
+        PECMD_StrBldCopyWide(&g_pwszD220, local_260);
     }
 label_038c65:
     if (hWnd == (HWND)0) {
@@ -1647,7 +1647,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
         goto label_03afca;
     }
     iVar10 = lstrlenW(pWVar13 + 1);
-    PECMD_AllocWStringBuffer(&local_res10, (int64_t)iVar10 + 0x105);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res10, (int64_t)iVar10 + 0x105);
     pWVar15 = pWVar13 + 1;
     pWVar14 = (WCHAR *)(uintptr_t)(uint16_t)WVar4;
     wsprintfW(local_res10, WSTR("Local\\pecmd2012.lock.%c%s"), (WCHAR)WVar4, pWVar15);
@@ -1659,7 +1659,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
             if ((char)plVar5[0x32] == '@') {
                 iVar11 = lstrlenW((WCHAR *)plVar5[0x1f]);
                 memcpy((uint8_t *)pWVar6, (uint8_t *)WSTR("!!!PECMD_SUB_OK"), 0x20);
-                PECMD_AllocWStringBuffer(&local_res20, (int64_t)local_78 + 0x113);
+                PECMD_AllocWStringBuffer((WCHAR **)&local_res20, (int64_t)local_78 + 0x113);
                 local_78 = (uint64_t)(uintptr_t)(pWVar7 + iVar11);
                 wsprintfW(local_res20, WSTR("Local\\pecmd2012.lock.%s"), pWVar7);
                 local_res20[0x104] = L'\0';
@@ -1673,7 +1673,7 @@ uint64_t FUN_14003AAD0(uint64_t *task)
                         PECMD_FreeStrBuf(&local_res20);
                         goto label_03afb0;
                     }
-                    PECMD_AllocWStringBuffer(&local_88, 0x1000);
+                    PECMD_AllocWStringBuffer((WCHAR **)&local_88, 0x1000);
                     wsprintfW(local_88, WSTR("x  %s %s ..."));
                     FUN_140025f10((int64_t)(plVar5 + 1), local_88, 0,
                                   (void *)(uintptr_t)0x11, NULL, NULL);
@@ -1911,7 +1911,7 @@ label_03b225:
             }
         }
         pbVar12 = local_res8;
-        FUN_1400702F0((int64_t *)&local_res10, (LPCSTR)pbVar10, (uint64_t)-1);
+        PECMD_StrBldCopyAnsi((int64_t *)&local_res10, (LPCSTR)pbVar10, (uint64_t)-1);
         iVar2 = lstrlenW(local_res10);
         if (0x20c < iVar2) {
             PECMD_FreeStrBuf(&local_res10);
@@ -1954,7 +1954,7 @@ label_03b225:
                     }
                 }
                 lVar3 = (int64_t)(int32_t)DVar8;
-                FUN_1400703E4((WCHAR **)&local_c8[lVar3 * 6 + 3], local_res18);
+                PECMD_StrBldCopyWide((WCHAR **)&local_c8[lVar3 * 6 + 3], local_res18);
                 iVar2 = lstrlenW(lpString);
                 PECMD_AllocString(&local_d8[lVar3 * 6 + 1], iVar2 + 4);
                 memcpy((uint8_t *)local_d8[lVar3 * 6 + 1],
@@ -2159,7 +2159,7 @@ int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR remote)
     memset(&local_b8.lpDesktop, 0, 0x58);
     GetStartupInfoW(&local_b8);
     iVar4 = lstrlenW(remote);
-    PECMD_AllocWStringBuffer(&local_c8[0], (int64_t)iVar4 + 0xf0);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_c8[0], (int64_t)iVar4 + 0xf0);
     wsprintfW(local_c8[0], WSTR("\"%s\" Down=0x%X Reboot=0x%X sa.wShowWindow=0x%X"),
               remote, flags, bRebootAfterShutdown, local_b8.wShowWindow);
     PECMD_RunShutdownScript(local_c8[0], flags);

@@ -577,7 +577,7 @@ int64_t FUN_1400F4114(int64_t obj, int id, uint64_t *outValue,
             }
             str = *(LPCWSTR *)(item + 0x10);
             if (outString != NULL && str != NULL && *str != L'\0') {
-                FUN_1400703E4(outString, str);
+                PECMD_StrBldCopyWide(outString, str);
             }
             return i;
         }

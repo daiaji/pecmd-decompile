@@ -29,7 +29,7 @@ void FUN_140062A2C(void *s, LPCWSTR k, LPCWSTR v);   /* @0x140062a2c 设置变�
 void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置数值变量 */
 extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt); /* @0x1400668ec */
 uint64_t PECMD_GetParentProcessId(DWORD pid);   /* @0x140006988 父进程 PID */
-void PECMD_AllocWStringBuffer(WCHAR **ps, size_t n);  /* @0x140063694 分配 */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 分配 */
 void PECMD_ImportSystemEnvVars(void);            /* @0x14001c1d4 */
 void PECMD_InitShellFolderEnvVars(void);            /* @0x14001c01c */
 void FUN_14005B9A0(void);            /* @0x14005b9a0 */
@@ -39,7 +39,7 @@ void FUN_14006E8F4(void *s);         /* @0x14006e8f4 清理结构 */
 void PECMD_CheckDebugMsg(void);            /* @0x140005344 */
 void PECMD_AllocString(WCHAR **ps, int64_t count);   /* @0x140063620 = PECMD_AllocStrSlot 别名 */
 void FUN_14007A224(void *s, LPCWSTR a, LPCWSTR *b, int c, int d); /* @0x14007a224 */
-void FUN_1400703E4(WCHAR **ps, LPCWSTR src);  /* @0x1400703e4 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);  /* @0x1400703e4 */
 WCHAR *FUN_14000531C(WCHAR *p);      /* @0x14000531c 跳空白(返回指针) */
 int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词比较 */
 void FUN_140008B2C(WCHAR *p);        /* @0x140008b2c RemoveService */
@@ -114,7 +114,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     pid = GetTickCount();
     /* thunk_PECMD_UpdateLcg(pid + 0x3a17) 计时忽略 */
     PECMD_VarSetUInt(&g_Script, g_SysCodePage, WSTR("&SYSCODEPAGE"));
-    PECMD_AllocWStringBuffer(&pBuf, 0x20a);
+    PECMD_AllocWStringBuffer((WCHAR **)&pBuf, 0x20a);
     GetCurrentDirectoryW(0x208, pBuf);
     FUN_140062A2C(&g_Script, WSTR("&&CurDir"), pBuf);
     FUN_140062A2C(&g_Script, WSTR("&&_CD"), pBuf);

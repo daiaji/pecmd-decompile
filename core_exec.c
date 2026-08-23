@@ -48,7 +48,7 @@ extern double g_dpiBase;         /* DAT_140126078 = 72.0 */
 extern int64_t PECMD_LoadLanguageFile(void);   /* PECMD_LoadLanguageFile */
 extern WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen, int64_t codepage); /* FUN_1400637DC core_init.c */
 extern void FUN_1400633A8(void **ps, int64_t len);  /* FUN_1400633A8 core_thread.c */
-extern void FUN_14005B0B8(void *p);                /* FUN_14005B0B8 core_thread.c */
+extern void PECMD_ZeroLenBuf(void *p);                /* PECMD_ZeroLenBuf core_thread.c */
 
 /* 待实现 (B7 后续/声明) */
 extern uint64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmd);   /* FUN_14004EB34 */
@@ -504,7 +504,7 @@ HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name)
     HFONT f;
 
     FUN_1400633A8(&buf, 0x5c);
-    FUN_14005B0B8(buf);
+    PECMD_ZeroLenBuf(buf);
     *(uint32_t *)((uint8_t *)buf + 8) = 400;    /* lfWeight 默认 */
     GetObjectW(obj, 0x5c, buf);
     *(uint32_t *)buf = 0;                       /* lfHeight */

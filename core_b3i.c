@@ -657,12 +657,12 @@ int64_t FUN_140078BE8(LPCWSTR name, int64_t *out)
     LPWSTR local_res10 = NULL;
     LPWSTR local_res18 = NULL;
 
-    PECMD_AllocWStringBuffer(&local_res10, 0x2411);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res10, 0x2411);
     FUN_14006459C(name, 0x2410, local_res10, &local_res18);
     if (local_res18 != NULL) {
         local_res18[-1] = L'\0';
     }
-    FUN_1400703E4((WCHAR **)out, local_res10);
+    PECMD_StrBldCopyWide((WCHAR **)out, local_res10);
     int64_t lVar1 = *out;
     PECMD_FreeStrBuf((WCHAR **)&local_res10);
     return lVar1;

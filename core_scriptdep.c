@@ -137,7 +137,7 @@ WCHAR *PECMD_PrependEnviHeader(uint32_t key, WCHAR **pbuf, LPCWSTR line,
         FUN_14006375C(pbuf, WSTR("\n"));
     }
     if ((flags & 0x10) != 0) {
-        /* 原 FUN_1400702F0 复制常量串到临时容器再拼接, 等价直接拼接 */
+        /* 原 PECMD_StrBldCopyAnsi 复制常量串到临时容器再拼接, 等价直接拼接 */
         FUN_14006375C(&tmp, WSTR("@ENVI^ ForceLocal=1\n"));
     }
     if ((flags & 0x20) != 0) {
@@ -216,7 +216,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
 
     FUN_1400702B0(&nls, WSTR("\n"));
     pos = FUN_14001B4F8(*(const WCHAR **)script, (WCHAR)key);
-    PECMD_AllocWStringBuffer(&cwd, 0x20a);
+    PECMD_AllocWStringBuffer((WCHAR **)&cwd, 0x20a);
     GetCurrentDirectoryW(0x208, cwd);
     FUN_140017CDC(sub, tmpl);
     FUN_1400186BC(sub, (int64_t)(intptr_t)tmpl);

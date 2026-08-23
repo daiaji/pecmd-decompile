@@ -54,7 +54,7 @@ extern void FUN_1400633A8(void **ps, int64_t len);            /* @0x1400633a8 */
 extern WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen, int64_t codepage); /* @0x1400637dc */
 extern void *FUN_14007026C(void **out, const char *src);    /* @0x14007026c */
 extern int64_t *FUN_14006345C(int64_t *a1, LPCSTR a2); /* @0x14006345c */
-extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v);            /* @0x1400e6d74 */
 extern int FUN_14005F96C(HANDLE a1, int a2); /* @0x14005f96c */
 extern uint64_t *FUN_14005FEAC(HANDLE a1, uint64_t *a2, uint32_t *a3); /* @0x14005feac */
@@ -763,9 +763,9 @@ void PECMD_ReadConnectionRegistryValue(LPCSTR name, int64_t *out, LPCSTR value)
     int64_t lVar1 = *out;
     int64_t local_28[2] = {0, 0};
     int64_t local_30 = 0;
-    int64_t *plVar3 = FUN_1400702F0(local_28, value, (uint64_t)-1);
+    int64_t *plVar3 = PECMD_StrBldCopyAnsi(local_28, value, (uint64_t)-1);
     int64_t lVar2 = *plVar3;
-    plVar3 = FUN_1400702F0(&local_30, local_38, (uint64_t)-1);
+    plVar3 = PECMD_StrBldCopyAnsi(&local_30, local_38, (uint64_t)-1);
     ((void (*)(int64_t, int64_t, int64_t, void *, int64_t, void *))g_pSHGetValueW)
         ((int64_t)(intptr_t)0xffffffff80000002, *plVar3, lVar2,
          local_res20, lVar1, local_res10);
@@ -1063,7 +1063,7 @@ void FUN_14007D0AC(int64_t *script, LPCWSTR name, LPCWSTR value)
     }
 
     if (!direct) {
-        FUN_1400703E4((WCHAR **)&local_res10, pWVar3);
+        PECMD_StrBldCopyWide((WCHAR **)&local_res10, pWVar3);
         FUN_14006375C((WCHAR **)&local_res10, name);
         name = local_res10;
     }
@@ -1406,14 +1406,14 @@ void FUN_1400BEF64(LPCWSTR cmd)
     int iVar1 = lstrlenW(cmd);
     if (iVar1 < 0x1e) {
         int64_t local_res10[3] = {0, 0, 0};
-        int64_t *plVar2 = FUN_1400702F0(local_res10,
+        int64_t *plVar2 = PECMD_StrBldCopyAnsi(local_res10,
                             (LPCSTR)(local_28 + (0x1e - iVar1)), (uint64_t)-1);
         FUN_14006375C((WCHAR **)&local_res8, (LPCWSTR)*plVar2);
         PECMD_FreeStrBuf((WCHAR **)local_res10);
     }
 
     int64_t local_res10[3] = {0, 0, 0};
-    int64_t *plVar2 = FUN_1400702F0(local_res10, (LPCSTR)g_b297d0, (uint64_t)-1);
+    int64_t *plVar2 = PECMD_StrBldCopyAnsi(local_res10, (LPCSTR)g_b297d0, (uint64_t)-1);
     FUN_14006375C((WCHAR **)&local_res8, (LPCWSTR)*plVar2);
     PECMD_FreeStrBuf((WCHAR **)local_res10);
 

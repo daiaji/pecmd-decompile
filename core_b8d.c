@@ -146,7 +146,7 @@ void FUN_1400E6CBC(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
 {
     WCHAR buf[104];
     PECMD_SafeVFormatW(buf, 99, fmt, arg);
-    FUN_1400703E4(ps, buf);
+    PECMD_StrBldCopyWide(ps, buf);
 }
 
 /* ========== FUN_1400E6CF8 @0x1400e6cf8 ==========

@@ -76,7 +76,7 @@ extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD 
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
                            HANDLE tmpl);
 extern int32_t PECMD_LoadOle32Apis(void);
-extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len);
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
 extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
 extern uint64_t PECMD_CreateSymbolicLink(uint64_t a1, uint64_t a2,
@@ -896,7 +896,7 @@ uint64_t *FUN_1400A4460(LPCWSTR name, char wait, uint32_t *out)
         if (WVar1 == L'#') {
             pcVar3 = "Global\\pecmd2012.lock.";
         }
-        FUN_1400702F0((int64_t *)&local_res8, pcVar3, (uint64_t)-1);
+        PECMD_StrBldCopyAnsi((int64_t *)&local_res8, pcVar3, (uint64_t)-1);
         FUN_14006375C((WCHAR **)&local_res8, pWVar4);
         puVar2 = PECMD_CreateGlobalMutex(local_res8, wait, out);
         PECMD_FreeStrBuf((WCHAR **)&local_res8);

@@ -35,7 +35,7 @@
 extern void FUN_14005C828(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400633A8(void **ps, int64_t len);               /* @0x1400633a8 */
-extern int64_t FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);       /* @0x1400e75cc */
 extern void PECMD_SetHotTrackWindow(HWND hwnd);              /* @0x1400f1448 */
 extern void *FUN_1400E57C0(void *obj);                   /* @0x1400e57c0 */
@@ -131,7 +131,7 @@ void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
     *(HMENU *)(item + 0x20) = menu;
     (*pId)++;
 
-    PECMD_AllocWStringBuffer(&tmp, 100);
+    PECMD_AllocWStringBuffer((WCHAR **)&tmp, 100);
     wsprintfW(tmp, WSTR("&%s.id"), WSTR(""));            /* TODO(verify) 缺实参 */
     if (varTable != NULL)
         PECMD_AppendLongDecimal(varTable, *(uint16_t *)(item + 2), tmp);
@@ -478,7 +478,7 @@ uint64_t *FUN_1400F5C74(uint64_t *obj)
     *(uint32_t *)((uint8_t *)obj + 0x11c) = 199;
     *(uint32_t *)((uint8_t *)obj + 0x120) = 0xeb;
     *(uint8_t *)((uint8_t *)obj + 0x130) = 1;
-    FUN_1400702F0((int64_t *)&local_res8, (const char *)g_DefEnv, 0xffffffffffffffff);
+    PECMD_StrBldCopyAnsi((int64_t *)&local_res8, (const char *)g_DefEnv, 0xffffffffffffffff);
     PECMD_ReplaceStringSlot((int64_t *)(obj + 0x20), &local_res8);
     PECMD_FreeStrBuf((WCHAR **)&local_res8);
     *(uint32_t *)((uint8_t *)obj + 0x134) = 0;

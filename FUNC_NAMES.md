@@ -4,6 +4,10 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x14005b0b8 | FUN_14005b0b8 | PECMD_ZeroLenBuf |
+| 0x1400702f0 | FUN_1400702f0 | PECMD_StrBldCopyAnsi |
+| 0x1400702d4 | FUN_1400702d4 | PECMD_StrBldCopyWideN |
+| 0x1400703e4 | FUN_1400703e4 | PECMD_StrBldCopyWide |
 | 0x140061c44 | FUN_140061c44 | PECMD_LoadOle32Apis |
 | 0x14005e7dc | FUN_14005e7dc | PECMD_InitNullDaclSD |
 | 0x1400e6d74 | FUN_1400e6d74 | PECMD_FormatU64Dec |

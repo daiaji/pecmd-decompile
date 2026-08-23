@@ -281,7 +281,7 @@ void FUN_14002487C(void *script, WCHAR *buf, bool stopMain)
     int64_t cap = 0xfff;
     WCHAR *tmp = NULL;
 
-    PECMD_AllocWStringBuffer(&tmp, 0x1000);
+    PECMD_AllocWStringBuffer((WCHAR **)&tmp, 0x1000);
     if (*buf == sep) return;
     do {
         /* 跳过前导分隔符 */

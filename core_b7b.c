@@ -253,7 +253,7 @@ int FUN_1400C99B4(int64_t item, int64_t *pp, int64_t *out, int *id,
                     *pp = (int64_t)((WCHAR *)*pp + 1);
                 }
             } else {
-                FUN_1400703E4((WCHAR **)out, (LPCWSTR)*pp);
+                PECMD_StrBldCopyWide((WCHAR **)out, (LPCWSTR)*pp);
             }
             *(int64_t *)(item + 0x10) = *out;
             return result;

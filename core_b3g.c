@@ -619,7 +619,7 @@ uint64_t FUN_1400738D0(uint64_t a, uint64_t b, LPCWSTR text,
             if (text < (LPCWSTR)0x10000) {
                 ctrl[2] = (uint64_t)text;
             } else {
-                FUN_1400703E4(plVar1, text);
+                PECMD_StrBldCopyWide(plVar1, text);
                 ctrl[2] = (uint64_t)*plVar1;
             }
         }

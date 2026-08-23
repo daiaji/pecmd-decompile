@@ -28,7 +28,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 /* ---- 待重构函数原型 (后续批次) ---- */
 void PECMD_CheckDebugMsg(void);            /* @0x140005344 */
 void FUN_14007A224(void *s, LPCWSTR a, WCHAR **b, int c, int d); /* @0x14007a224 */
-WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);  /* @0x1400703e4 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);  /* @0x1400703e4 */
 WCHAR *FUN_14000531C(WCHAR *p);      /* @0x14000531c 跳空白(返回指针) */
 int FUN_1400660AC(const char *s, WCHAR **pp, int n);  /* @0x1400660ac 前缀词比较 */
 void FUN_140008B2C(WCHAR *p);        /* @0x140008b2c RemoveService */
@@ -150,7 +150,7 @@ int FUN_1400084D0(WCHAR *msg)
     FUN_1400702B0(&pCopy, p);
     PECMD_AllocStrSlot(&pOut);
     FUN_14007A224(&g_Script, pCopy, &pOut, 0, 1);   /* 解析命令文本 */
-    FUN_1400703E4(&pParsed, pOut);
+    PECMD_StrBldCopyWide(&pParsed, pOut);
     p = pParsed;
     PECMD_FreeStrBuf(&pOut);
     PECMD_FreeStrBuf(&pCopy);

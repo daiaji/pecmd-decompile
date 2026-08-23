@@ -27,9 +27,9 @@
 
 /* 已有实现（core_exec2.c / core_string.c / core_thread.c / core_var3.c） */
 extern void *PECMD_ReallocBuffer(void *old, int64_t size);                    /* @0x140063224 */
-extern void FUN_14005B0B8(void *p);                                     /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);                                     /* @0x14005b0b8 */
 extern bool FUN_1400C11C0(LPCWSTR *ps, int *out);                      /* @0x1400c11c0 */
-extern int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch);             /* @0x14001b4f8 */
 
 /* 同批（core_scriptdep.c）：core_var3.c 已实现，此处仅声明供衔接核对 */
@@ -75,7 +75,7 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
     if (len < 1) return 0;
     data = (uint8_t *)(intptr_t)ps[0];
     pCur = data;
-    PECMD_AllocWStringBuffer(&pHead, 0x28);
+    PECMD_AllocWStringBuffer((WCHAR **)&pHead, 0x28);
     work = len / 2;
     /* 前 3 个 WCHAR 按密钥试探解码 */
     pHead[0] = ((uint16_t *)data)[0] ^ key16;
@@ -139,7 +139,7 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
         pb[1] = keyLo ^ 0x2d;
         mark = 1;
         /* 复制数字串（pHead+6 字节）为 WCHAR，解析 N 与可选 "#!tN" */
-        FUN_1400702F0((int64_t *)&work, (const char *)pHead + 6, (uint64_t)-1);
+        PECMD_StrBldCopyAnsi((int64_t *)&work, (const char *)pHead + 6, (uint64_t)-1);
         pNum = (LPCWSTR)(intptr_t)work;
         FUN_1400C11C0(&pNum, (int *)&f4);
         if ((int32_t)f4 >= 0) spec = f4;
@@ -287,9 +287,9 @@ postproc:
     ps[1] = (int64_t)iVar3 * 2;
     ps[2] = (int64_t)iVar3 * 2;
     if (fKeep != 0) {
-        FUN_14005B0B8(pHead);
-        FUN_14005B0B8(pNew);
-        FUN_14005B0B8(pOld);
+        PECMD_ZeroLenBuf(pHead);
+        PECMD_ZeroLenBuf(pNew);
+        PECMD_ZeroLenBuf(pOld);
     }
     PECMD_FreeStrBuf((WCHAR **)&pOld);
     PECMD_FreeStrBuf((WCHAR **)&pNew);

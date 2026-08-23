@@ -38,7 +38,7 @@ extern void *g_pVtblA;           /* DAT_14013d670 */
 
 /* 已实现 (core_exec.c / core_var.c / core_string.c) */
 extern void FUN_1400633A8(void **ps, int64_t len);
-extern void FUN_14005B0B8(void *p);
+extern void PECMD_ZeroLenBuf(void *p);
 extern LPCWSTR FUN_1400169BC(int id, WCHAR **ppEnd);
 extern void FUN_1400E648C(void **pfont, UINT id);
 extern void PECMD_GetDpiCached(HWND hwnd);

@@ -665,7 +665,7 @@ int64_t FUN_1400B0380(int64_t *ctx, uint64_t unused, uint64_t *args)
         if ((char)uVar2 == '\0') {
             lVar3 = FUN_1400E5AAC(ctx, args);
         } else {
-            FUN_1400703E4((int64_t *)(args[6] + 0x28), pWVar4);
+            PECMD_StrBldCopyWide((int64_t *)(args[6] + 0x28), pWVar4);
             lVar3 = 0;
         }
     }

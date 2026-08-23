@@ -43,14 +43,14 @@ extern DWORD   GetLongPathNameW(LPCWSTR, LPWSTR, DWORD);
 
 /* ---- 字符串容器辅助 ---- */
 extern void      PECMD_AllocStrSlot(void *out);                       /* @0x140063620 串容器初始化 */
-extern WCHAR    *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @0x140063694 分配串槽 */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @0x140063694 分配串槽 */
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);       /* @0x140063720 PECMD_StrAlloc */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern void PECMD_FreeStrBuf(void *ps);                         /* @0x14005b104 释放串槽 */
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);                       /* @0x14005b154 跳过空白 */
 extern void      PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);     /* @0x1400702b0 赋值串 */
 extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);     /* @0x14007034c 追加串 */
-extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);   /* @0x1400703e4 拷贝串 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);   /* @0x1400703e4 拷贝串 */
 extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);          /* 定位分隔符 (thunk) */
 extern void      PECMD_ResetScriptChain(int64_t *, int64_t *);             /* 默认参数获取 */
 extern void      PECMD_ParseNumSkipWs(int64_t *, uint64_t *);            /* 数字写串 */
@@ -945,7 +945,7 @@ LAB_140085eeb:
             pWVar14 = pWVar14 + 1;
             uVar6 = uVar6 | 4;
         }
-        FUN_1400703e4((int64_t *)&local_178, pWVar14);
+        PECMD_StrBldCopyWide((int64_t *)&local_178, pWVar14);
         pWVar20 = local_178;
         local_1a8 = (WCHAR *)pWVar13;
         if (lVar17 < 1) {
@@ -1046,7 +1046,7 @@ LAB_1400861bf:
             local_188 = local_150;
         }
         iVar7 = lstrlenW(local_180);
-        PECMD_AllocWStringBuffer(&local_128, (int64_t)(iVar7 + 0x11));
+        PECMD_AllocWStringBuffer((WCHAR **)&local_128, (int64_t)(iVar7 + 0x11));
         pWVar13 = local_128;
         memcpy((void *)local_128, (const void *)local_180, (iVar7 + 1) * 2);
         memset((uint64_t *)(pWVar13 + (iVar7 + 1)), 0, 0x20);

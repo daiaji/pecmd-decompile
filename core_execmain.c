@@ -172,15 +172,15 @@ int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurF
         EnterCriticalSection(&g_csInit);
         node = FUN_14001E69C(pScript, WSTR("&CurDir"), NULL, -1);
         if (node != NULL) {
-            FUN_1400703E4(&savedCurDir, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurDir, (LPCWSTR)*(WCHAR **)node);
         }
         node = FUN_14001E69C(pScript, WSTR("&CurDrv"), NULL, -1);
         if (node != NULL) {
-            FUN_1400703E4(&savedCurDrv, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurDrv, (LPCWSTR)*(WCHAR **)node);
         }
         node = FUN_14001E69C(pScript, WSTR("&CurFile"), NULL, -1);
         if (node != NULL) {
-            FUN_1400703E4(&savedCurFile, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurFile, (LPCWSTR)*(WCHAR **)node);
         }
         LeaveCriticalSection(&g_csInit);
     }

@@ -27,7 +27,7 @@ extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b
 extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 (本批构造函数调用用小写) */
 extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
 extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x140063620 初始化串容器 */
-extern int64_t *FUN_1400702f0(int64_t *out, char *src, uint64_t len); /* @0x1400702f0 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
 extern void FUN_1400F0FA8(int64_t *obj, uint64_t wParam, uint64_t lParam); /* @0x1400f0fa8 */
@@ -60,7 +60,7 @@ extern uint64_t g_u64_12d058;
 extern uint64_t g_u64_12d060;
 
 /* ---- 本批还原所需: 额外 helper extern int (*g_pGdipDisposeImage)();                                    (GdipDisposeImage 函数指针) */
-extern WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);          /* @0x1400703e4 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);          /* @0x1400703e4 */
 extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 */
 extern BOOL PathFileExistsW(LPCWSTR);                          /* Win32 API (link_stubs.c) */
 extern HBITMAP PECMD_LoadImageBitmap(LPCWSTR param_1, int64_t *param_2, int64_t param_3,
@@ -233,7 +233,7 @@ uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)
             if (BVar2 == 0) goto LAB_140102142;
         }
         else {
-            FUN_1400703E4((WCHAR **)&local_res8, param_1);
+            PECMD_StrBldCopyWide((WCHAR **)&local_res8, param_1);
             PECMD_AllocString(&local_res8, lVar3 + 8);
             param_1 = local_res8;
             local_res8[lVar3] = L'\\';
@@ -291,7 +291,7 @@ uint64_t *PECMD_ConstructObject(uint64_t *param_1, uint64_t param_2)
     *((uint8_t *)param_1 + 0xfa) = 0xff;
     *((uint8_t *)param_1 + 0xfb) = 0;
     *((uint8_t *)param_1 + 0xfc) = 0;
-    FUN_1400702f0((int64_t *)&local_res8, (char *)&g_DefEnv, 0xffffffffffffffffULL);
+    PECMD_StrBldCopyAnsi((int64_t *)&local_res8, (char *)&g_DefEnv, 0xffffffffffffffffULL);
     PECMD_ReplaceStringSlot((int64_t *)(param_1 + 0x1e), (uint64_t *)&local_res8);
     PECMD_FreeStrBuf((WCHAR **)&local_res8);
     *((uint32_t *)((uint8_t *)param_1 + 0x11c)) = 0;

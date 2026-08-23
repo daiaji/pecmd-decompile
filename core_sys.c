@@ -14,7 +14,7 @@
  *   FUN_14005C4E0       @0x14005c4e0  (注册表查询带权限重试)
  *   FUN_14005C394        @0x14005c394  (RegCreateKeyExW 封装)
  *   FUN_14001C2CC @0x14001c2cc (令牌权限启用)
- *   FUN_1400703E4       @0x1400703e4  (= PECMD_StrCopyW 别名)
+ *   PECMD_StrBldCopyWide       @0x1400703e4  (= PECMD_StrCopyW 别名)
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
+static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src);   /* 前置(首用先于定义) */
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
@@ -31,7 +32,6 @@ int64_t FUN_140064A88(const WCHAR *p);
 DWORD FUN_14005C4E0(HKEY root, LPCWSTR subkey, LPCWSTR name, DWORD *type, BYTE *data, DWORD *size);
 DWORD FUN_14005C394(HKEY root, LPCWSTR subkey, HKEY *out, REGSAM access, uint32_t opt);
 int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag);
-WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src);
 
 
 /* ---- 待重构函数原型 (后续批次) ---- */
@@ -63,7 +63,7 @@ void PECMD_DetectCodePage(void)
     if (buf[0] != L'\0') {
         cp = buf;
     }
-    FUN_1400703E4(&g_pLocale, cp);
+    PECMD_StrBldCopyWide(&g_pLocale, cp);
     if (FUN_140064A88(g_pLocale) > 1) {
         g_SysCodePage = (uint32_t)FUN_140064A88(g_pLocale);
     }
@@ -109,7 +109,7 @@ void PECMD_InitShellFolderEnvVars(void)
     LPWSTR p;
 
     g_flag13f = 1;
-    PECMD_AllocWStringBuffer(&pBuf, 0x411);
+    PECMD_AllocWStringBuffer((WCHAR **)&pBuf, 0x411);
     memset(pBuf, 0, 0x822);
     lpFilename = pBuf + 0x82;
     GetModuleFileNameW((HMODULE)0, lpFilename, 0x104);
@@ -183,7 +183,7 @@ void FUN_14001BF20(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
     DWORD size;
     DWORD r;
 
-    PECMD_AllocWStringBuffer(&pBuf, 0xc11);
+    PECMD_AllocWStringBuffer((WCHAR **)&pBuf, 0xc11);
     memset(pBuf, 0, 0x822);
     buf = pBuf + 0x208;
     *buf = L'\0';
@@ -319,7 +319,7 @@ int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag)
 }
 
 /* ========== StrCpyW 自动长度 @0x1400703e4 ========== */
-WCHAR *FUN_1400703E4(WCHAR **ps, LPCWSTR src)
+static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src)
 {
     return PECMD_StrCopyW(ps, src, -1);
 }

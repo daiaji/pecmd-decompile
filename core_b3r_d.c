@@ -75,7 +75,7 @@ extern int64_t   PECMD_ExpandVarsRecursive(void *script, WCHAR *line, WCHAR **ou
 extern int64_t   PECMD_ExpandCommandLine(void *script, WCHAR *line, WCHAR **out,
                                int mode, uint8_t opt);
 /* PECMD_ShowBrowseFolder string/var helpers */
-extern void      PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
 extern void      PECMD_AllocStrSlot(WCHAR **out);
 extern char      PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);
 extern int64_t  *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -95,13 +95,13 @@ extern void      PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern void PECMD_FreeStrBuf(void *ps);
 extern HWND      PECMD_QueryState_f414(int64_t a);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
-extern void      FUN_1400702f0(void *out, const char *src, uint64_t len);
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
 extern void      PECMD_SyncWorkingDirectory(void);
 extern void      FUN_14005C904(void);                    /* @0x14005c904 (core_b3f.c) */
 extern int64_t  *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
 extern short    *PECMD_LastPathSeparator(short *s);
-extern WCHAR    *FUN_1400702d4(WCHAR **out, const WCHAR *src, int64_t len);
-extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);
+extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
 extern void      FUN_14005c828(const char *func, const char *dll,
                                void **out, uintptr_t *hmod);
 extern intptr_t  PECMD_ControlMessage(HWND, UINT, LPARAM, LPARAM);
@@ -481,7 +481,7 @@ uint64_t PECMD_ShowBrowseFolder(longlong *param_1, ushort *param_2, longlong par
     WCHAR       local_248[264];
 
     local_res10 = (WCHAR *)param_2;
-    PECMD_AllocWStringBuffer(&local_568, 0x20a);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_568, 0x20a);
     GetCurrentDirectoryW(0x208, local_568);
     local_5a8 = (WCHAR *)0x0;
     local_588 = (WCHAR *)0x0;
@@ -646,7 +646,7 @@ LAB_140087be8:
 LAB_14008822a:
         if (pBVar20 == (BFFCALLBACK)0x0) goto LAB_14008822f;
     } else {
-        FUN_1400702f0((void *)&local_5a0, "*.", 0xffffffffffffffffull);
+        PECMD_StrBldCopyAnsi((void *)&local_5a0, "*.", 0xffffffffffffffffull);
         WVar24 = *local_570;
         pWVar11 = (WCHAR *)0x0;
         if (WVar24 != L'\0') {
@@ -748,7 +748,7 @@ LAB_140088096:
                     WVar2 = *(WCHAR *)local_5a8;
                 }
                 iVar6 = (int)(local_5a8 - (WCHAR *)local_508);
-                FUN_1400702d4(&local_588, (const WCHAR *)local_508, (int64_t)(iVar6 + 1));
+                PECMD_StrBldCopyWideN(&local_588, (const WCHAR *)local_508, (int64_t)(iVar6 + 1));
                 pBVar21 = local_588;
                 if ((iVar6 < 1) || (uVar22 = 0x5c,
                     *(short *)(pBVar17 + (longlong)iVar6 + -1) == 0x5c)) {
@@ -773,7 +773,7 @@ LAB_140088096:
                             pBVar4 = local_5a8;
                             WVar2 = *(WCHAR *)local_5a8;
                         }
-                        FUN_1400702d4(&local_540, (const WCHAR *)pBVar17,
+                        PECMD_StrBldCopyWideN(&local_540, (const WCHAR *)pBVar17,
                                       (int64_t)(pBVar4 - pBVar17));
                         PECMD_AppendWideStr(&local_5b0, (const WCHAR *)local_540);
                         PECMD_SkipLeadingControlChars(&local_5a8);
@@ -814,7 +814,7 @@ LAB_14008822f:
             PECMD_SetVariable(param_1, local_590, (LPCWSTR)local_588);
             PECMD_FreeStrBuf((void *)&local_588);
         } else {
-            FUN_1400703e4(param_4, local_5b0);
+            PECMD_StrBldCopyWide(param_4, local_5b0);
         }
     }
     SetCurrentDirectoryW(local_568);

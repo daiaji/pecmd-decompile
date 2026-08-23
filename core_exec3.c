@@ -23,7 +23,7 @@
 #include "pecmd_defs.h"
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
-extern void FUN_14005B0B8(void *p, size_t len);         /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);         /* @0x14005b0b8 */
 extern DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf, LPWSTR *last); /* @0x14006459c */
 extern void FUN_14004E2CC(int64_t table, int64_t *task);  /* @0x14004e2cc */
 extern void FUN_14006E8F4(int64_t table);               /* @0x14006e8f4 */
@@ -55,7 +55,7 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
 
     if (((flag >> 0x10 & 1) != 0) || ((flag & 0x40) == 0)) bSet = true;
 
-    PECMD_AllocWStringBuffer(&cur, 0x41c);
+    PECMD_AllocWStringBuffer((WCHAR **)&cur, 0x41c);
     *cur = L'\0';
     GetCurrentDirectoryW(0x208, cur);
     FUN_1400629B8(script, WSTR("&&__OldDir"), cur);
@@ -308,7 +308,7 @@ void FUN_14004E2CC(int64_t table, int64_t *task)
             }
         } else {
             /* 拼接 "prefix &cmd 回调" 并执行 */
-            PECMD_AllocWStringBuffer(&buf, (int64_t)i2 + i3 + i4 + 4);
+            PECMD_AllocWStringBuffer((WCHAR **)&buf, (int64_t)i2 + i3 + i4 + 4);
             lstrcpyW(buf, lpString);
             buf[i2] = L' ';
             buf[i2+1] = L'&';
@@ -319,12 +319,12 @@ void FUN_14004E2CC(int64_t table, int64_t *task)
             PECMD_FreeStrBuf(&buf);
         }
         if ((*(uint8_t *)(table + 0x11) & 1) != 0) {
-            FUN_14005B0B8(old, 0);
+            PECMD_ZeroLenBuf(old);
         }
         PECMD_FreeStrBuf((WCHAR **)&old);
     }
     if ((*(uint8_t *)(table + 0x11) & 1) != 0) {
-        FUN_14005B0B8((void *)*task, 0);
+        PECMD_ZeroLenBuf((void *)*task);
     }
     free(task);
 }

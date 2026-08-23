@@ -33,10 +33,10 @@ extern uint32_t FUN_14001b4f8(int16_t *s, int16_t ch);              /* @0x14001b
 extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
 extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount,
                           void *tmp, int size, int grow);           /* @0x1400639f0 表追加行 */
-extern WCHAR *FUN_140063694(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
+extern WCHAR *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
 extern uint64_t FUN_14005dff4(void);                                /* @0x14005dff4 PRNG */
 extern void *FUN_140063224(void *ps, int64_t len);                  /* @0x140063224 输出串扩容 */
-extern void FUN_14005b0b8(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
+extern void PECMD_ZeroLenBuf(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
 
 /* @0x14005b374 size=44 — 从 *pp 起跳过字符, 直到撞上 '\0'/ch1/ch2 (行切分定界) */
 void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2)
@@ -337,7 +337,7 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
         } while (puVar13 < puVar10);
         uVar17 = ((uint64_t)(puVar13 - (uint8_t *)param_1)) >> 1;
     }
-    FUN_140063694(&local_98, (int64_t)((int)uVar14 + 0x1a + (int)uVar7));
+    PECMD_AllocWStringBuffer((WCHAR **)&local_98, (int64_t)((int)uVar14 + 0x1a + (int)uVar7));
     uVar17 = 0;
     iVar21 = 0;
     uVar7 = (uint64_t)local_80[0];
@@ -424,7 +424,7 @@ LAB_140075f08:
         } while (uVar7 != 0);
     }
     *(uint16_t *)puVar10 = uVar19;
-    FUN_14005b0b8((void *)local_98);
+    PECMD_ZeroLenBuf((void *)local_98);
     uVar4 = (uint64_t)(uintptr_t)*param_2;
     PECMD_FreeStrBuf((void *)&local_98);
     PECMD_FreeStrBuf((void *)&local_90);

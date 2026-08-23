@@ -93,7 +93,7 @@ typedef struct _SP_DEVINFO_DATA {
 
 /* ---- 已实现公共工具 (其他 core_*.c / core_globals.c) ---- */
 extern void FUN_1400633A8(void **ps, int64_t len);       /* @0x1400633a8 */
-extern void FUN_14005B0B8(void *p);                     /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);                     /* @0x14005b0b8 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
@@ -656,7 +656,7 @@ uint32_t FUN_14002C634(int64_t ctx, LPCWSTR inf, LPCWSTR hwid,
     uint16_t local_res8[4];
 
     if (*(char *)(ctx + 0x157) == '\0') {
-        PECMD_AllocWStringBuffer(&local_30, 0);
+        PECMD_AllocWStringBuffer((WCHAR **)&local_30, 0);
         FUN_1400637DC((int64_t *)&local_30, "--wd:*\"", 0xffffffffffffffffULL,
                       0xffffffffffffffffULL);
         FUN_14006375C(&local_30, inf);
@@ -1108,7 +1108,7 @@ void FUN_140035B40(uint32_t key, int mode, int repeat)
 
     lVar2 = (int64_t)mode;
     FUN_1400633A8((void **)&local_res20, 0x24);
-    FUN_14005B0B8(local_res20);
+    PECMD_ZeroLenBuf(local_res20);
     if (local_res20 != (uint64_t *)0) {
         *local_res20 = 1;
         puVar1 = local_res20 + 1;

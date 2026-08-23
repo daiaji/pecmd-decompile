@@ -562,7 +562,7 @@ LPCWSTR PECMD_TrimTrailingSeparator(int64_t *list, LPCWSTR s, WCHAR sep)
             pWVar4 = pWVar1 - 1;
             pWVar3 = s;
             if (pWVar4 < s) {
-                FUN_1400703E4(list, pWVar3);
+                PECMD_StrBldCopyWide(list, pWVar3);
                 if (pWVar3 == s) {
                     *(WCHAR *)s = L'\0';
                 }
@@ -573,7 +573,7 @@ LPCWSTR PECMD_TrimTrailingSeparator(int64_t *list, LPCWSTR s, WCHAR sep)
         if ((pWVar4 <= s) || (sep != pWVar1[-2])) {
             *(WCHAR *)pWVar4 = L'\0';
             pWVar3 = pWVar1;
-            FUN_1400703E4(list, pWVar3);
+            PECMD_StrBldCopyWide(list, pWVar3);
             if (pWVar3 == s) {
                 *(WCHAR *)s = L'\0';
             }
@@ -1100,7 +1100,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
     WIN32_FIND_DATAW local_268;
     WCHAR *pWVar3;
 
-    PECMD_AllocWStringBuffer(&local_res20, 0x208);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res20, 0x208);
     iVar4 = 1;
     local_res18 = 0;
     PECMD_FindFirstFileW(&local_res18, (LPCWSTR)dir, &local_268);
@@ -1159,7 +1159,7 @@ uint64_t PECMD_RunRamdriv(int64_t *ctx, LPCWSTR cmd)
             uVar3 = FUN_1400E9724(cmd, ctx);
             uVar3 = (uint64_t)(int)uVar3;
         } else {
-            PECMD_AllocWStringBuffer(&local_res18, 0x50);
+            PECMD_AllocWStringBuffer((WCHAR **)&local_res18, 0x50);
             FUN_1400702B0(local_28, WSTR("%ramdrv%"));
             FUN_14007BF44(ctx, local_28[0], &local_res18, 0, 1);
             iVar1 = StrCmpNIW(cmd, WSTR("Ramdriv"), 7);
@@ -1199,7 +1199,7 @@ void PECMD_RunShutdownScript(LPCWSTR args, uint32_t flags)
     WCHAR *local_res8 = NULL;
     WCHAR *local_res18 = NULL;
 
-    PECMD_AllocWStringBuffer(&local_res8, 0x20a);
+    PECMD_AllocWStringBuffer((WCHAR **)&local_res8, 0x20a);
     local_res8[0] = L' ';
     local_res8[1] = L'\0';
     GetEnvironmentVariableW(WSTR("SystemRoot"), local_res8 + 2, 0x208);

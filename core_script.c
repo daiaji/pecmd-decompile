@@ -23,7 +23,7 @@
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac */
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
-extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
 extern void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
 extern char FUN_14006CCD4(LPCWSTR *ps);                /* @0x14006ccd4 */
@@ -66,7 +66,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
     /* 跳过前导分隔符 */
     while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] || *p == script[0x48]) p++;
 
-    PECMD_AllocWStringBuffer(&tmp, 0x804);
+    PECMD_AllocWStringBuffer((WCHAR **)&tmp, 0x804);
     if (p < end) {
         do {
             WCHAR *t = p;
@@ -157,7 +157,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
         ctrl[1] = l17;
         ctrl[2] = l17;
     }
-    FUN_14005B0B8(tmp, 0);
+    PECMD_ZeroLenBuf(tmp);
     PECMD_FreeStrBuf(&tmp);
     return ret;
 }

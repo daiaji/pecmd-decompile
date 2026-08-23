@@ -1240,5 +1240,9 @@
   "FUN_1400e6d68": "PECMD_FormatI64Dec",
   "FUN_1400669c4": "PECMD_AppendLongDecimal",
   "FUN_1400668ec": "PECMD_AppendFmtValue",
-  "FUN_14005b104": "PECMD_FreeStrBuf"
+  "FUN_14005b104": "PECMD_FreeStrBuf",
+  "FUN_14005b0b8": "PECMD_ZeroLenBuf",
+  "FUN_1400702f0": "PECMD_StrBldCopyAnsi",
+  "FUN_1400702d4": "PECMD_StrBldCopyWideN",
+  "FUN_1400703e4": "PECMD_StrBldCopyWide"
 }

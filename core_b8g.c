@@ -215,7 +215,7 @@ uint64_t PECMD_SearchMenuTreeById(int64_t root, uint64_t searchKey,
                 }
                 wsprintfW((LPWSTR)(*ps + len), fmt, (uint32_t)key);
             }
-            FUN_1400703E4((WCHAR **)outText, (LPCWSTR)(node + 0x10));
+            PECMD_StrBldCopyWide((WCHAR **)outText, (LPCWSTR)(node + 0x10));
             return 1;
         }
     }

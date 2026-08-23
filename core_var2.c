@@ -4,7 +4,7 @@
  * 来源: PECMD原始.EXE (x64)
  *   PECMD_StrCopyW   @0x140063888   (宽串复制到分配缓冲)
  *   PECMD_StrCopyBytes   @0x1400638f8   (字节复制, WCHAR 对齐)
- *   FUN_1400702D4   @0x1400702d4   (节点名字写入)
+ *   PECMD_StrBldCopyWideN   @0x1400702d4   (节点名字写入)
  *   PECMD_VarWriteNodeValue  @0x140070330   (节点值写入)
  *   PECMD_VarWriteValueCap    @0x140066224   (值+容量写入)
  *   PECMD_NewVarNode    @0x1400188ec   (创建节点)
@@ -65,7 +65,7 @@ WCHAR *PECMD_StrCopyBytes(WCHAR **ps, const void *src, int64_t len)
 }
 
 /* ========== 节点名字写入 @0x1400702d4 ========== */
-void FUN_1400702D4(WCHAR **pname, LPCWSTR src, int64_t len)
+void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len)
 {
     *pname = NULL;
     PECMD_StrCopyW(pname, src, len);
@@ -95,7 +95,7 @@ void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap, const void *src, int64
 /* node: +0 name, +1 value, +2 rsv, +3 cap */
 void *PECMD_NewVarNode(void *node, LPCWSTR name, LPCWSTR value, int namelen, int64_t caplen)
 {
-    FUN_1400702D4((WCHAR **)node, name, namelen);
+    PECMD_StrBldCopyWideN((WCHAR **)node, name, namelen);
     if (caplen < 0) {
         caplen = (int64_t)lstrlenW(value) * 2;
     }

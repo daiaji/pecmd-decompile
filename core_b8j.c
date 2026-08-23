@@ -164,7 +164,7 @@ int64_t FUN_1400E7840(int64_t *out, int flag)
     first = (LPCWSTR)g_szEmpty;
     if (count != 0)
         first = (LPCWSTR)(uintptr_t)(blk + 1);
-    FUN_1400703E4((WCHAR **)out, first);
+    PECMD_StrBldCopyWide((WCHAR **)out, first);
     total = lstrlenW((LPCWSTR)*out);
 
     if (flag != 0 && 1 < count) {
@@ -620,7 +620,7 @@ void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
             }
         }
         else {
-            FUN_1400703E4((WCHAR **)slot, text);
+            PECMD_StrBldCopyWide((WCHAR **)slot, text);
         }
         slot[1] = key1;
         slot[2] = key2;
@@ -683,7 +683,7 @@ void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
             }
         }
         else {
-            FUN_1400703E4((WCHAR **)slot, text);
+            PECMD_StrBldCopyWide((WCHAR **)slot, text);
         }
         slot[1] = value;
         *(int *)(slot + 3) = mode;
@@ -716,7 +716,7 @@ void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
             node[0] = id;
             *(int64_t *)((uint8_t *)node + 8) = value;
             if (text != NULL)
-                FUN_1400703E4((WCHAR **)(node + 4), text);
+                PECMD_StrBldCopyWide((WCHAR **)(node + 4), text);
             FUN_1400639F0((int64_t *)((uint8_t *)obj + 0x2f0),
                                      (int64_t *)((uint8_t *)obj + 0x2f8),
                                      (int64_t *)((uint8_t *)obj + 0x300),
@@ -740,7 +740,7 @@ void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
                 if (text == NULL)
                     FUN_14005B0D4((int64_t *)(*slot + 0x10));
                 else
-                    FUN_1400703E4((WCHAR **)(*slot + 0x10), text);
+                    PECMD_StrBldCopyWide((WCHAR **)(*slot + 0x10), text);
             }
         }
     }

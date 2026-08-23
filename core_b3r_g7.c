@@ -63,7 +63,7 @@ extern void     PECMD_AllocStrSlot(WCHAR **out);                   /* @0x1400636
 extern WCHAR   *PECMD_AllocString(WCHAR **ps, int64_t count);     /* @0x140063720 串分配(计数) */
 extern WCHAR   *PECMD_StrDupA(WCHAR **ps, LPCWSTR src,
                               int64_t a, int64_t b);          /* @0x1400637dc 串复制分配 */
-extern void     PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配(count) */
 extern void     PECMD_LoadSetupApiFunctions(void);                          /* @0x140017b8c 初始化 */
 extern bool     PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);          /* @0x1400c11c0 */
 extern bool     PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);    /* @0x1400c1194 */
@@ -75,7 +75,7 @@ extern short   *FUN_1400547bc(int64_t *ctx, WCHAR **pp, WCHAR **out,
 extern DWORD    PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
                               BYTE *data, DWORD size);        /* @0x14005c5a0 注册表查询 */
 extern int      PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c788 串前缀比较 */
-extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len); /* @0x1400702f0 取串槽 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 取串槽 */
 extern uint64_t FUN_14000e26c(uint64_t script, uint64_t cmd, uint64_t s3,
                               uint64_t s4, uint32_t flag, void *p6,
                               uint64_t s7, void *p8);         /* @0x14000e26c 脚本执行 */
@@ -319,7 +319,7 @@ int64_t PECMD_QueryRecycleBinVolume(int64_t *param_1, short *param_2)
         iVar4 = lstrlenW(local_58);
         PECMD_AllocString((WCHAR **)&local_58, (int64_t)iVar4 + 2);
         local_50 = (LPWSTR)0;
-        PECMD_AllocWStringBuffer(&local_40, 0x433);
+        PECMD_AllocWStringBuffer((WCHAR **)&local_40, 0x433);
         lpBuffer = local_40 + 0x107;
         memset(local_40, 0, 0x42f * 2);
         lpRootPathName = local_58;
@@ -404,7 +404,7 @@ uint64_t PECMD_RunExeIndata(LPCWSTR param_1)
         pWVar2 = local_res8 + 1;
         sVar3 = 5;
     }
-    FUN_1400702f0((int64_t *)&local_res10, "--exe:#2|INDATA !=pecmd ", 0xffffffffffffffffLL);
+    PECMD_StrBldCopyAnsi((int64_t *)&local_res10, "--exe:#2|INDATA !=pecmd ", 0xffffffffffffffffLL);
     if (sVar3 == 5) {
         *(uint16_t *)((char *)&local_res10 + 0x20) = 0x20;
     }

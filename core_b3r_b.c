@@ -57,7 +57,7 @@ extern uint64_t PECMD_GetPackedSystemVersion(void);
 extern uint32_t PECMD_DetectMinintBoot(void);
 
 /* string assign (StrCpyW2) — treated as void here per task. */
-extern void    FUN_1400703e4(int64_t *param_1, LPCWSTR param_2);
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
 
 /* ---- global data ---- */
 extern void *g_pConfigStr;          /* config string pointer */
@@ -370,7 +370,7 @@ LAB_140074e7e:
         return;
     }
 LAB_140074ec7:
-    FUN_1400703e4((int64_t *)&g_pConfigStr, (LPCWSTR)param_1);
+    PECMD_StrBldCopyWide((int64_t *)&g_pConfigStr, (LPCWSTR)param_1);
     g_i32D6F4 = 1;
     return;
 }

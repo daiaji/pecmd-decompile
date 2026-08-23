@@ -146,7 +146,7 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
     p6 = NULL;
 
     EnterCriticalSection(&g_csInit);
-    PECMD_AllocWStringBuffer(&envBuf, 0x50);
+    PECMD_AllocWStringBuffer((WCHAR **)&envBuf, 0x50);
     lpBuffer = envBuf;
     PECMD_StrBldInitWide(xb, out, &count, &cur, &end, &base, &limit);
     inP = line;
@@ -521,7 +521,7 @@ env_expand:  /* 环境变量展开 */
             vlen = (uint64_t)rlen;
             if (vlen != 0 && *lpBuffer == L'\0') {
                 envCap = (size_t)rlen + 100;
-                PECMD_AllocWStringBuffer(&envBuf, (int64_t)envCap);
+                PECMD_AllocWStringBuffer((WCHAR **)&envBuf, (int64_t)envCap);
                 lpBuffer = envBuf;
                 rlen = GetEnvironmentVariableW(nameEnv, lpBuffer, (DWORD)envCap);
                 vlen = (uint64_t)rlen;
@@ -615,7 +615,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
     p6 = NULL;
     nameStart = NULL;
 
-    PECMD_AllocWStringBuffer(&envBuf, 0x50);
+    PECMD_AllocWStringBuffer((WCHAR **)&envBuf, 0x50);
     lpBuffer = envBuf;
     PECMD_StrBldInitWide(xb, out, &count, &cur, &end, &base, &limit);
     inP = line;
@@ -981,7 +981,7 @@ env_b55d:  /* 环境变量展开 */
                 rlen = GetEnvironmentVariableW(p11, lpBuffer, (DWORD)envCap);
                 if ((int)rlen > 0 && *lpBuffer == L'\0') {
                     envCap = (size_t)rlen + 100;
-                    PECMD_AllocWStringBuffer(&envBuf, (int64_t)envCap);
+                    PECMD_AllocWStringBuffer((WCHAR **)&envBuf, (int64_t)envCap);
                     SetLastError(0);
                     lpBuffer = envBuf;
                     rlen = GetEnvironmentVariableW(p11, lpBuffer, (DWORD)envCap);

@@ -43,7 +43,7 @@ extern WCHAR  *FUN_14001BE14(WCHAR *s);                       /* @0x14001be14 */
 extern void   *PECMD_AllocSmallObject(void **ps);                          /* @0x140063344 小对象 */
 extern void    FUN_140060A74(uint8_t *buf, int len);           /* @0x140060a74 */
 extern int32_t FUN_14005B184(const char *a, const char *b, int n);/* @0x14005b184 0=相等 */
-extern void    FUN_14005B0B8(void *p, size_t len);               /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);               /* @0x14005b0b8 */
 
 /* ---- 未实现 (extern + TODO(verify)) ---- */
 extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
@@ -130,14 +130,14 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
     uint8_t pFlags = 0;      /* local_res10 低字节 */
     (void)pFlags;
 
-    PECMD_AllocWStringBuffer(&bufScr, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&bufScr, 0);
     err = 0;
     FUN_14005B154(&args);
     pTok = args;                 /* FUN_14005B154 */
-    PECMD_AllocWStringBuffer(&sTok, 0);
-    PECMD_AllocWStringBuffer(&sArg2, 0);
-    PECMD_AllocWStringBuffer(&sArg3, 0);
-    PECMD_AllocWStringBuffer(&sArg4, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&sTok, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&sArg2, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&sArg3, 0);
+    PECMD_AllocWStringBuffer((WCHAR **)&sArg4, 0);
     pTok = args;
     plVar9 = PECMD_SplitTokenAssignVar(&bufScr, &pTok, 0x2c, 1);   /* 切首 token */
     PECMD_SplitTokenTrimWs(plVar9, &sTok, 0);
@@ -425,7 +425,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             if (specEmpty == 0) {
                 datalen = PECMD_WcharToByteDigits(&data, sArg2);   /* WCHAR→字节 */
             } else {
-                FUN_1400703E4((WCHAR **)&data, sArg2);
+                PECMD_StrBldCopyWide((WCHAR **)&data, sArg2);
                 datalen = (int64_t)lstrlenW(sArg2) * 2;
                 PECMD_GrowByteBuffer((void **)&data, datalen + 1);
             }
@@ -451,7 +451,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                             goto L_data_ok;
                         }
                         PECMD_GrowByteBuffer((void **)&data, datalen + 1);
-                        FUN_14005B0B8(data + datalen, 8);
+                        memset(data + datalen, 0, 8);
                         memcpy(data, *(void **)((uint8_t *)node + 8), (size_t)datalen);
                         dataMode = 1;
                     }
@@ -466,7 +466,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                 if (!PECMD_ParseNumSkipWs(&q, &n) || *q != 0) goto L_var_path;
                 datalen = n;
                 if (skipCount == 3) {
-                    FUN_1400703E4((WCHAR **)&data, sArg2);
+                    PECMD_StrBldCopyWide((WCHAR **)&data, sArg2);
                     datalen = (int64_t)lstrlenW(sArg2) * 2;
                     PECMD_GrowByteBuffer((void **)&data, datalen + 1);
                     dataMode = 2;
@@ -510,7 +510,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
             }
             srcCp = srcCp2;
             pSplit = (WCHAR *)data;
-            PECMD_AllocWStringBuffer(&sStr, 0);
+            PECMD_AllocWStringBuffer((WCHAR **)&sStr, 0);
             if (dstCp == srcCp && dstType == srcType) {
                 /* ---- 无转换: 原样输出 ---- */
                 if (dstStar == 0) {
@@ -644,7 +644,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
                     }
                     if (dstFlag2 == 0) {
                         WCHAR *sv = NULL;
-                        PECMD_AllocWStringBuffer(&sv, 0);
+                        PECMD_AllocWStringBuffer((WCHAR **)&sv, 0);
                         FUN_1400692d8(&sv, (LPCWSTR)data, nSmall);
                         FUN_1400629B8(script, sArg4, sv);
                         PECMD_FreeStrBuf(&sv);

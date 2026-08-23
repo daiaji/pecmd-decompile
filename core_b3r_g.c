@@ -78,7 +78,7 @@ extern void      PECMD_AllocMagicBlock(void **p, int64_t len);
 extern int       PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);
 extern WCHAR    *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern LPWSTR    PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
-extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **pp);
@@ -505,10 +505,10 @@ LAB_14007f55f:
             bi++;
         } while ((intptr_t)puVar11 < 6);
     }
-    FUN_1400703e4(local_res20,
+    PECMD_StrBldCopyWide(local_res20,
                   (LPCWSTR)(uintptr_t)*(uint64_t *)((char *)local_a8 + 16));
     if (param_8 != (int64_t *)0) {
-        FUN_1400703e4(param_8,
+        PECMD_StrBldCopyWide(param_8,
                       (LPCWSTR)(uintptr_t)*(uint64_t *)((char *)local_a8 + 24));
     }
     if (param_6 != (LPWSTR)0) {

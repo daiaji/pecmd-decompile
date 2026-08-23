@@ -4,7 +4,7 @@
  *   FUN_140017CDC  @0x140017cdc   脚本结构复制（0xe0 字节）
  *   FUN_1400186BC  @0x1400186bc   脚本结构初始化（父脚本引用）
  *   FUN_14005C7C4   @0x14005c7c4   字符串忽略大小写相等
- *   FUN_1400702F0    @0x1400702f0   多字节字符串复制（带长度）
+ *   PECMD_StrBldCopyAnsi    @0x1400702f0   多字节字符串复制（带长度）
  *   FUN_140073CCC    @0x140073ccc   参数表构建（脚本+0xe 起）
  *   FUN_1400C11C0    @0x1400c11c0   字符串转数字（hex/dec）
  */
@@ -176,10 +176,10 @@ int64_t *FUN_1400637DC(int64_t *out, const char *src, int64_t len)
     return out;
 }
 
-/* ========== FUN_1400702F0 @0x1400702f0 ==========
+/* ========== PECMD_StrBldCopyAnsi @0x1400702f0 ==========
  * 多字节字符串复制（*out = strndup 风格，len 上限）。
  */
-int64_t *FUN_1400702F0(int64_t *out, const char *src, uint64_t len)
+int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len)
 {
     *out = 0;
     FUN_1400637DC(out, src, (int64_t)len);
@@ -206,7 +206,7 @@ uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
 
     len = lstrlenW(cmdline);
     cap = (len + 8) >> 2;
-    PECMD_AllocWStringBuffer(&argv, 4);
+    PECMD_AllocWStringBuffer((WCHAR **)&argv, 4);
     PECMD_AllocString(&buf, len + 1);
     p = buf;
     memcpy(p, cmdline, (size_t)len * 2);

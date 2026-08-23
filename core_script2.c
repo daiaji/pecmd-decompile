@@ -22,7 +22,7 @@
 #include "pecmd_defs.h"
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
-extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
+extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
 extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
@@ -69,7 +69,7 @@ int64_t FUN_14004EB34(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
     g_scriptInitFlag = 0x41;
 
     /* SCRIPTINIT 资源 */
-    PECMD_AllocWStringBuffer(&initBuf, 0x10);
+    PECMD_AllocWStringBuffer((WCHAR **)&initBuf, 0x10);
     {
         uint32_t f = 0;
         FUN_14001EA18(g_hInstance, (LPCWSTR)0x64, WSTR("SCRIPTINIT"), (void **)&initBuf, &f);
@@ -157,7 +157,7 @@ run_script:
     /* 清理 */
     PECMD_FreeStrBuf(&scriptBuf);
     PECMD_FreeStrBuf(&cmd);
-    FUN_14005B0B8(initBuf, 0);
+    PECMD_ZeroLenBuf(initBuf);
     PECMD_FreeStrBuf(&initBuf);
     return r;
 }

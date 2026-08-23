@@ -47,14 +47,14 @@ extern WCHAR    *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);   /* delimiter s
 extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
-extern void      PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
 extern void      FUN_140063b64(void *out);                  /* @0x140063b64 array init */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 */
 extern void      PECMD_ExpandVarDispatch(int64_t *, LPCWSTR, int64_t *, int, int);
 extern int64_t   PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);
 extern int64_t   PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);
 extern void      FUN_14007033c(int64_t *param_1, LPCWSTR param_2);  /* @0x14007033c */
-extern WCHAR    *FUN_1400703e4(int64_t *out, const WCHAR *src);     /* StrCpyW2 */
+extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);     /* StrCpyW2 */
 extern int64_t  *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);  /* @0x14007034c */
 extern uint64_t  PECMD_ExpandDrivePathAlloc(LPCWSTR param_1, uint64_t *param_2); /* @0x14001c270 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);  /* SetVarD */
@@ -230,7 +230,7 @@ longlong PECMD_SubCommand(longlong *param_1, WCHAR *param_2, longlong *param_3)
             iVar5 = lstrlenW(lpString);
             pWVar10 = local_70;
             local_res8[0] = lstrlenW(local_80);
-            PECMD_AllocWStringBuffer(&local_70, (longlong)(iVar5 + iVar4 + 100 + iVar3));
+            PECMD_AllocWStringBuffer((WCHAR **)&local_70, (longlong)(iVar5 + iVar4 + 100 + iVar3));
             memcpy((void *)local_70, (const void *)WSTR("-sub@"), 0xc);
             memcpy((void *)(local_70 + 5), (const void *)local_68, (iVar3 + 1) * 2);
             pWVar10 = local_70 + (longlong)iVar3 + 5;

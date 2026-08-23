@@ -97,7 +97,7 @@ extern uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out
 extern void PECMD_CaptureParentBackground(int64_t obj);        /* @0x1400fd5e8 */
 extern void PECMD_SelectObjectSlot_b054(int64_t ctx, HDC hdc, HGDIOBJ obj); /* @0x14005b054 */
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);      /* @0x1400f429c */
-extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len); /* @0x1400702d4 */
+extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len); /* @0x1400702d4 */
 extern void PECMD_ParseNumSkipChar_01f8(int64_t *pp, int *out);      /* @0x1400701f8 */
 extern void FUN_14005B0D4(void *ps);
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
@@ -549,7 +549,7 @@ uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
             return ret;
         }
         ret = flags;
-        FUN_1400703E4(&cmdCopy, *(WCHAR **)(e + 0x10));
+        PECMD_StrBldCopyWide(&cmdCopy, *(WCHAR **)(e + 0x10));
         p = cmdCopy;
         PECMD_AllocStrSlot(&varName);
         PECMD_AllocStrSlot(&varVal);
@@ -3076,7 +3076,7 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
             }
         }
         FUN_1400F429C(&p, L':');
-        FUN_1400702D4(&name, text, (int64_t)(p - text) >> 1);
+        PECMD_StrBldCopyWideN(&name, text, (int64_t)(p - text) >> 1);
         PECMD_AllocStrSlot(&expanded);
         q = name;
         FUN_14007BF44(script, q, &expanded, 0, 1);
@@ -3196,7 +3196,7 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
         *(uint16_t *)(e + 0x18) = uFlags;
         *(int *)(e + 0x1c) = extraVal;
         *(int64_t *)(e + 0x20) = extra64;
-        FUN_1400703E4((WCHAR **)(e + 0x10), p);
+        PECMD_StrBldCopyWide((WCHAR **)(e + 0x10), p);
     }
     return 0;
 }
@@ -3620,8 +3620,8 @@ start:
             PECMD_FreeStrBuf(&allPath);
             return r;
         }
-        PECMD_AllocWStringBuffer(&nameBuf, (int64_t)(nameLen * 4 + 8));
-        PECMD_AllocWStringBuffer(&dataBuf, (int64_t)(dataLen * 4 + 8));
+        PECMD_AllocWStringBuffer((WCHAR **)&nameBuf, (int64_t)(nameLen * 4 + 8));
+        PECMD_AllocWStringBuffer((WCHAR **)&dataBuf, (int64_t)(dataLen * 4 + 8));
         for (i = 0; i < valueCount; i++) {
             DWORD nlen = nameLen << 2;
             DWORD dlen = dataLen << 2;

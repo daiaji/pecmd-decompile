@@ -46,7 +46,7 @@ extern int  PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);        /* @0
 extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);             /* @0x14006cc70 记录命中位置 */
 extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 释放字符串槽 */
 extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
-extern int64_t *FUN_1400702f0(int64_t *out, LPCSTR s, uint64_t len);   /* @0x1400702f0 取串槽 */
+extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);   /* @0x1400702f0 取串槽 */
 extern uint64_t *PECMD_AssignAnsiString(uint64_t *out, LPCSTR s);           /* @0x14007026c 串构造 */
 extern void PECMD_AppendAnsiStr(void **ps, LPCSTR s);                    /* @0x14006345c 缀接字符串 */
 extern int  PECMD_PadTrailingSpaces(char *s, int len);                       /* @0x14005cc04 校验/规范化 IP */
@@ -527,12 +527,12 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
     CVar13 = '\0';
     local_4a8 = param_4;
     if (g_u8CCB1 != '\0') {
-        plVar8 = FUN_1400702f0((int64_t *)&local_4b8, param_1, 0xffffffffffffffffULL);
+        plVar8 = PECMD_StrBldCopyAnsi((int64_t *)&local_4b8, param_1, 0xffffffffffffffffULL);
         lVar1 = *plVar8;
-        FUN_1400702f0(local_498, (LPCSTR)param_5, 0xffffffffffffffffULL);
-        FUN_1400702f0((int64_t *)local_4c0, (LPCSTR)local_4a8, 0xffffffffffffffffULL);
-        FUN_1400702f0((int64_t *)local_4a0, (LPCSTR)param_3, 0xffffffffffffffffULL);
-        plVar8 = FUN_1400702f0((int64_t *)local_4b0, param_2, 0xffffffffffffffffULL);
+        PECMD_StrBldCopyAnsi(local_498, (LPCSTR)param_5, 0xffffffffffffffffULL);
+        PECMD_StrBldCopyAnsi((int64_t *)local_4c0, (LPCSTR)local_4a8, 0xffffffffffffffffULL);
+        PECMD_StrBldCopyAnsi((int64_t *)local_4a0, (LPCSTR)param_3, 0xffffffffffffffffULL);
+        plVar8 = PECMD_StrBldCopyAnsi((int64_t *)local_4b0, param_2, 0xffffffffffffffffULL);
         PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                       WSTR("\r\nRegSetIP(%s,%s,%s,%s,%s)\r\n"),
                       (uint64_t)lVar1, (uint64_t)*plVar8);
