@@ -545,7 +545,7 @@ uint64_t PECMD_WndProcDispatch(HDC param_1, uint32_t param_2, HDC param_3, int64
     /* @0x140003184 size=350 WndProc 消息分发 */
     uint64_t uVar1;
     uint8_t *p = (uint8_t *)(uintptr_t)param_1;
-    int flagA24F = (int)g_flagA24F;   /* uint8_t→int 加宽; <0 恒为假, 与原始一致 */
+    int flagA24F = (int)g_flagA24F;   /* A24F 已按根因定为 int8_t(§129); 此为符号扩展, dc 原体有 0xff(-1) 赋值, <0 分支可达 */
 
     if ((flagA24F < 0) && ((char)p[0xfa] != 'Z')) {
         p[0xfa] = 0x5a;
@@ -4304,7 +4304,12 @@ void PECMD_TerminateAndCancelShutdown(void *param_1, char param_2, void *param_3
 
 DWORD PECMD_RunServiceCommand(LPCWSTR param_1, int param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14000a584 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @0x14000a584 — 桩登记(符号性审计移交线索5, 暂不移植)
+     * dc 原体 size=6520(dc:5710, 服务命令处理主体, 内含 SetProcessWorkingSetSize/
+     * WaitForSingleObject/GetLastInputInfo 等调用), 尚未还原;
+     * 本桩恒返回 0。调用方 PECMD_ServiceMainLoop(b1:4336 ↔ dc@6570) 可达。
+     * 另见 tools/signedness_audit.json side_finding: 该 dc 函数的负值写入点
+     * (0xff/-1)在我方树无对应实现, 属完整性线索已移交主代理。 */
 /* @0x14000a584 size=6520 */
     (void)param_1;
     (void)param_2;
@@ -4343,7 +4348,7 @@ uint64_t PECMD_ServiceMainLoop(uint16_t *param_1)
             } while (-1 < iVar3);
         }
         {
-            int flagA24F = (int)g_flagA24F;   /* uint8_t→int; <0 恒为假, 与原始一致 */
+            int flagA24F = (int)g_flagA24F;   /* A24F 已按根因定为 int8_t(§129); 此为符号扩展, <0 负值分支真实可达(下方 0xfe 响应即其证据) */
             if (flagA24F < 0) {
                 g_flagA24F = 0xfe;
                 PECMD_UnmapFileView();

@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   发送控件命令串        PECMD_SendPostMessageSpec    @0x1400f1504
  *   调整控件项度量         PECMD_ListGetItemTextData        @0x1400f2f58
- *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8
+ *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8 (定义在 core_b7c.c, 本文件副本已去重)
  *   初始化列表视窗对象     PECMD_CtorListHostObject            @0x1400f9134
  *   销毁列表视窗对象       PECMD_DestroyCtlResources         @0x1400f9324
  *   控件消息分发(临界区)   PECMD_ProgressHostDispatch       @0x1400fc148
@@ -211,65 +211,10 @@ uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam)
     return count & 0xffffffff;
 }
 
-/* ========== PECMD_ListAddItemEntry @0x1400f53c8 ==========
- * 把字符串/值写入对象的项数组并向控件发送 0x1061 消息。
- * TODO(verify): 0x1061 消息结构字段含义。
+/* PECMD_ListAddItemEntry @0x1400f53c8 已由 core_b7c.c 统一定义(忠实直移体,
+ * iSubItem 写 LVCOLUMN+0x1c 与 dc 一致); 本文件原副本的 param6 误写 +0x18
+ * (x64 LVCOLUMN 该偏移为 cchTextMax), 已按符号审计线索2删除冗余份。
  */
-void PECMD_ListAddItemEntry(int64_t obj, int index, LPCWSTR text, uint32_t data,
-                          int param5, int param6, int64_t param7)
-{
-    WCHAR **slot;
-    WCHAR **old;
-    WCHAR **item;
-    int64_t *valueSlot;
-    int len;
-    WCHAR ch[2];
-    uint8_t info[0x40] = {0};
-    uint32_t d = data;
-
-    slot = (WCHAR **)(uintptr_t)FUN_140063B00(index, (int64_t *)(obj + 0x1a8),
-                                                (int64_t *)(obj + 0x1b0), 8);
-    old = (WCHAR **)*slot;
-    if (d == 0)
-        d = 0x30;
-    item = (WCHAR **)operator_new(8);
-    if (item != NULL)
-        FUN_1400702B0(item, text);
-    *slot = (WCHAR *)item;
-    if (old != NULL) {
-        PECMD_FreeStrBuf(old);
-        free(old);
-    }
-
-    len = lstrlenW(*(LPCWSTR *)(obj + 0x1d8));
-    ch[0] = (WCHAR)d;
-    ch[1] = 0;
-    if (index < len) {
-        *(WCHAR *)(*(int64_t *)(obj + 0x1d8) + (int64_t)len * 2) = ch[0];
-    } else {
-        FUN_14006375C((WCHAR **)(obj + 0x1d8), ch);
-    }
-
-    valueSlot = (int64_t *)(uintptr_t)FUN_140063B00(index, (int64_t *)(obj + 0x1c0),
-                                                      (int64_t *)(obj + 0x1c8), 8);
-    *valueSlot = param7;
-
-    *(uint32_t *)(info + 0x00) = 5;
-    if (d >> 8 != 0)
-        d >>= 8;
-    *(uint32_t *)(info + 0x04) = d & 0xf;
-    if (param5 != -1) {
-        *(uint32_t *)(info + 0x00) |= 2;
-        *(uint32_t *)(info + 0x08) = (uint32_t)param5;
-    }
-    if (param6 != -1) {
-        *(uint32_t *)(info + 0x00) |= 8;
-        *(int *)(info + 0x18) = param6;
-    }
-    *(LPCWSTR *)(info + 0x10) = text;
-    SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1061, (WPARAM)(int64_t)index, (LPARAM)info);
-}
-
 /* ========== PECMD_CtorListHostObject @0x1400f9134 ==========
  * 初始化列表视窗内部对象（虚表 PTR_FUN_14012c670）。
  * TODO(verify): 各字段含义与默认值。

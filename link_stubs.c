@@ -107,7 +107,7 @@ DWORD   GetCurrentThreadId(void);
 DWORD   GetWindowThreadProcessId(HWND w, DWORD *pid);
 void   *LoadLibraryA(const char *m);
 FARPROC GetProcAddress(void *hm, const char *name);
-unsigned long GetTickCount(void);
+DWORD   GetTickCount(void);   /* 统一签名 (原 unsigned long 与 DWORD 定义冲突, LP64 下 64位) */
 uint64_t GetProcessHeap(void);
 int64_t *PECMD_AssignString(int64_t *, const uint16_t *);
 void *TlsGetValue(unsigned long idx);

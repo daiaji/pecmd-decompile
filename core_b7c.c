@@ -4968,9 +4968,11 @@ void FUN_1400f8f00(longlong self, int col, uint32_t wmain, uint32_t wsub)
     }
 }
 
-/* ========== FUN_1400f53c8 @0x1400f53c8 (插列: LVM_INSERTCOLUMNW + 记录列标题, 忠实直移) ========== */
-void FUN_1400f53c8(longlong self, int idx, LPCWSTR text, uint32_t fmt, int cx,
-                   int subitem, int maskextra)
+/* ========== PECMD_ListAddItemEntry @0x1400f53c8 (插列: LVM_INSERTCOLUMNW + 记录列标题, 忠实直移) ==========
+ * 本函数为本地址唯一保留定义; core_b8l.c 重复副本(iSubItem 误写 +0x18)已按符号审计线索2删除。
+ */
+void PECMD_ListAddItemEntry(longlong self, int idx, LPCWSTR text, uint32_t fmt, int cx,
+                            int subitem, int maskextra)
 {
     WPARAM wp = (WPARAM)idx;
     void **arr;
@@ -5031,8 +5033,8 @@ void FUN_1400f53c8(longlong self, int idx, LPCWSTR text, uint32_t fmt, int cx,
 /* ========== FUN_1400f5558 @0x1400f5558 (由列描述块插列, 直移) ========== */
 void FUN_1400f5558(longlong self, int idx, longlong coldsc, uint64_t fmtword, int align)
 {
-    FUN_1400f53c8(self, idx, *(LPCWSTR *)(coldsc + 0x10), *(uint32_t *)(coldsc + 4),
-                  *(int32_t *)(coldsc + 8), -1, align);
+    PECMD_ListAddItemEntry(self, idx, *(LPCWSTR *)(coldsc + 0x10), *(uint32_t *)(coldsc + 4),
+                           *(int32_t *)(coldsc + 8), -1, align);
     (void)fmtword;
 }
 

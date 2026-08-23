@@ -416,7 +416,8 @@ void PECMD_ReadFileToWide(LPCWSTR path, int64_t *out)
     PECMD_OpenFileHandle(&hFile, path, 0x80000000, 7, NULL, 3, 0x80, (HANDLE)0);
 
     int64_t lVar2 = 0;
-    if ((hFile != (HANDLE)0) && (hFile != INVALID_HANDLE_VALUE)) {
+    /* dc 原体此处仅判 !=0; OpenFileHandle 已把 -1 归零 NULL, 原 INVALID 副条件恒真已删(审计线索3) */
+    if (hFile != (HANDLE)0) {
         lVar2 = FUN_1400E693C(hFile);
         if (lVar2 < 0) {
             lVar2 = 0;
