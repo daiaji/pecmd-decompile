@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "date": "2026-03-14",
+    "method": "逐个读取 core 侧现行体全文(core_b7c.c) 与 ../decompiled.c 对应真体(按 '========== FUN_<addr>' 定位)，比对控制流覆盖度与子函数委托结构",
+    "conclusion": "4 个候选全部不是『调度壳』，而是自标注 [简化桩] 的未完移植：现行体零逻辑、零子函数调用，与真体语义完全不符，需重移植",
+    "discrepancy": "任务给出的 core 侧行数(44/264/44/61)与实测不符: 实际每个桩仅 ~10 行(含头注释, 函数体 3-6 行)。全仓(refactored+split+big_funcs)检索确认这 4 个符号在别处无第二定义、无部分实现副本，行数差异不影响判定"
+  },
+  "reviews": [
+    {
+      "addr": "1400cd3a8",
+      "name": "PECMD_PartShowHideDrive",
+      "core_file": "core_b7c.c",
+      "verdict": "COMPLETE_MISMATCH",
+      "coverage": "0%。core 现体(L290-299)为 `(void)a1;(void)a2;return 0;` 纯占位。decompiled 真体 1680 行: 解析 '*' 前缀与 #1/#2/#3/#4/#22 盘类型过滤位、-cdrom/-BD/-force/-check/-exist/=1 开关、-from:/-SKIP=/-skiptp:/-skippt: 跳过参数；解析盘符/分区号/序号多字段列表；进临界区 DAT_14013e0e8 后遍历 26 项×0x220 分区表；对命中分区 DefineDosDeviceW 挂载 / DeleteVolumeMountPointW 卸载盘符，FindFirstFileW 探测卷，含 3 处递归自调用。现体一条分支都未实现。",
+      "missing": [
+        "'SHOW' 命令入口(FourCC 0x574f4853, link_stubs.c:7804 派发)的全部行为",
+        "#1/#2/#3/#4/#22 硬盘类型过滤位解析",
+        "-cdrom/-BD/-force/-check/-exist/=1 开关",
+        "-from:/-SKIP=/-skiptp:/-skippt: 参数",
+        "分区表(26×0x220)枚举与匹配",
+        "DefineDosDeviceW 挂载 / DeleteVolumeMountPointW 卸载 / FindFirstFileW 卷探测",
+        "递归子分区处理(3 处自调用)"
+      ],
+      "child_chain": [],
+      "note": "非壳: 无任何 FUN_/PECMD_ 子调用。真体自身即完整实现(内联分区枚举+挂载)。被 ExecCmd 派发器以 'SHOW' 调用且返回值被采集(link_stubs.c:7804)，现为静默 no-op，SHOW/HIDE 分区功能整体缺失。"
+    },
+    {
+      "addr": "1400c13f8",
+      "name": "PECMD_RegiEditRegistry",
+      "core_file": "core_b7c.c",
+      "verdict": "COMPLETE_MISMATCH",
+      "coverage": "0%。core 现体(L191-196)为 `(void)a2;(void)a3;return a1;` —— 把脚本对象指针当 HKEY 返回，语义错误而非仅缺失。decompiled 真体 1267 行(REGI 引擎): '---initram' 双遍循环；选项 -(删值)/*(默认值)/t:类型/16/r10/byte/a|av|ak/name/v|v-/k|qk/init/su；键名前缀修饰 n,u,b,^,+,#,@,$,*,~,.,?;根键 HKCR/HKLM/HKU/HKCU lstrcmpiW 链 + FUN_140067cf4；UNC '\\\\' 处理；写值 FUN_1400690c0、RegCreateKeyExW(0x2001b)、删键树 FUN_14005f750、删值 FUN_1400717f0/140071ae8；k/qk 键枚举 RegOpenKeyExW+RegQueryInfoKeyW；类型名输出 REG_QWORD/REG_DWORD/REG_DWORD_BIG_ENDIAN/REG_MULTI_SZ/REG_EXPAND_SZ；结果写回变量 FUN_1400629b8；E_INVALIDARG(0x80070057) 返回路径。",
+      "missing": [
+        "'REGI' 命令入口(FourCC 0x49474552, link_stubs.c:7218 派发)的全部行为",
+        "---initram 双遍注册表写入循环",
+        "选项字 -/*/t:/16/r10/byte/a/av/ak/name/v/v-/k/qk/init/su 全部解析",
+        "根键别名(HKCR/HKLM/HKU/HKCU 及缩写)解析",
+        "键创建 RegCreateKeyExW / 删值 FUN_1400717f0/FUN_140071ae8 / 删键树 FUN_14005f750",
+        "写值 FUN_1400690c0 与 REG_* 类型转换(#十进制/@?/*展开/~multi-sz)",
+        "k/qk 子键枚举输出 (RegOpenKeyExW+RegQueryInfoKeyW)",
+        "结果回写变量 FUN_1400629b8 与错误码返回"
+      ],
+      "child_chain": [],
+      "note": "任务给的 core_file=core_b1_remaining.c 有误: 该处仅有 extern 声明(L113), 定义在 core_b7c.c。非壳。真实调用方至少 3 处依赖其实际副作用: link_stubs.c:6279/7218(REGI 命令)、core_b7b.c:159/168/177(TEAM 主页/DisableRegistryTools 策略写)、core_b1_remaining.c:7368 —— 现全部静默失效, 且 return a1 会污染派发器采集的命令返回值。REGI 是 PECMD 最高频命令之一, 优先级最高。"
+    },
+    {
+      "addr": "1400d7038",
+      "name": "PECMD_DiskFindLoadHives",
+      "core_file": "core_b7c.c",
+      "verdict": "COMPLETE_MISMATCH",
+      "coverage": "0%。core 现体(L342-347)为 `(void)a1;(void)a2;return 0;` 纯占位。decompiled 真体 401 行('DISK' 命令): 同族选项 -force/-from:/-skiptp:/-skippt:/-check/-cdrom;FUN_1400547bc 拆 5 个逗号参数(hd,pt[,X][,Y][,路径])；无实参时合成 '#1/#2/#3/#4 … * F:0,,0,…' 串委托 FUN_1400cd3a8；有 hd/pt 时在 26×0x220 驱动器表中查盘符并经 FUN_1400629b8 写回变量, 或以 ' *- '/'* * '/' * ' 前缀合成串委托 FUN_1400cd3a8；'\\\\路径' 分支逐盘探测 <X>:\\System32\\config\\SYSTEM(FUN_140101e70), 命中后依次加载 SYSTEM/.DEFAULT/SOFTWARE/SAM/SECURITY/USERDIFF 六蜂巢(FUN_1400a5d7c=PECMD_BuildQuickCommand→PECMD_LoadUnloadRegistryHive)；兜底 FUN_14008ac48+FUN_1400669c4。",
+      "missing": [
+        "'DISK' 命令入口(FourCC 0x4b534944, link_stubs.c:7312 派发)的全部行为",
+        "-force/-from:/-skiptp:/-skippt:/-check/-cdrom 选项解析",
+        "hd,pt 参数→驱动器表(26×0x220)索引查盘符并写回变量",
+        "无参/缺参时合成命令串委托 PECMD_PartShowHideDrive(1400cd3a8)",
+        "\\\\路径 分支: 探测 <X>:\\System32\\config\\SYSTEM 并加载 SYSTEM/.DEFAULT/SOFTWARE/SAM/SECURITY/USERDIFF 六蜂巢"
+      ],
+      "child_chain": [],
+      "note": "非壳: 现体无任何调用。真体的下游 worker 其实已存在——PECMD_BuildQuickCommand(@0x1400a5d7c, core_b3_remaining.c)与 PECMD_LoadUnloadRegistryHive 均已移植, 但它委托的 PECMD_PartShowHideDrive(1400cd3a8) 本身也是桩 → 需连同 SHOW 一起补。蜂巢路径构建('\\System32\\config\\SYSTEM')在全仓无任何副本。"
+    },
+    {
+      "addr": "1400caf78",
+      "name": "PECMD_TablCreateControl",
+      "core_file": "core_b7c.c",
+      "verdict": "COMPLETE_MISMATCH",
+      "coverage": "0%。core 现体(L266-272)为 `(void)a1;(void)a2;(void)a3;return NULL;` 纯占位(恰与真体常态返回 NULL 巧合一致, 但全部副作用缺失)。decompiled 真体 278 行('TABL' 命令项解析): 项文本 '*' 前缀与首尾空白裁剪；选项 -sps/-font:/-hfont:/-color:/-sl:[*]/-sc:[*]/-cksz:/-left(引号包裹值与坐标对 FUN_1400c1000)；逗号字段流: 项规格→坐标 FUN_1400744d4→文本→默认选中项→标志位 FUN_140074c10；最终以 16 参委托 FUN_1400cadec 在控件列表尾部添加控件对象。",
+      "missing": [
+        "'TABL' 命令入口(FourCC 0x4c424154, link_stubs.c:7321 派发)的全部行为",
+        "-sps/-font:/-hfont:/-color:/-sl:[*]/-sc:[*] 选项解析",
+        "-cksz:/-left 及坐标对(FUN_1400c1000)解析",
+        "逗号字段流: 项规格/坐标 FUN_1400744d4/文本/默认项/标志 FUN_140074c10",
+        "委托 FUN_1400cadec 添加控件对象的调用"
+      ],
+      "child_chain": [],
+      "note": "非壳: 现体无任何调用(真体才是解析壳→FUN_1400cadec 的结构)。下游链半通: FUN_1400CADEC 已移植于 core_b7b.c:268, 但其内部依赖 FUN_1400C9B9C(@0x1400c9b9c) 也是 core_b7c.c 桩(直接 return a1) → 补 TABL 需连带补 FUN_1400C9B9C(4603B 列表控件创建)。LIST/TABL 界面项功能整体缺失。"
+    }
+  ],
+  "summary_table": [
+    "1400cd3a8 PECMD_PartShowHideDrive | core_b7c.c L290-299 (~10行) | COMPLETE_MISMATCH | 0% | 'SHOW' 命令, 无子链, 需重移植",
+    "1400c13f8 PECMD_RegiEditRegistry | core_b7c.c L187-196 (~10行) | COMPLETE_MISMATCH | 0% | 'REGI' 命令, 无子链, 最高优先级(调用方最多)",
+    "1400d7038 PECMD_DiskFindLoadHives | core_b7c.c L338-347 (~10行) | COMPLETE_MISMATCH | 0% | 'DISK' 命令, 下游 worker 已移植可复用",
+    "1400caf78 PECMD_TablCreateControl | core_b7c.c L262-272 (~11行) | COMPLETE_MISMATCH | 0% | 'TABL' 命令, 下游 FUN_1400CADEC 已移植但其依赖 FUN_1400C9B9C 仍是桩"
+  ]
+}
