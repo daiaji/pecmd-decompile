@@ -1,0 +1,13 @@
+{
+ "_comment": "B2/B3/B4 提名重叠地址的择名决策（主代理裁决 @goal 重建前）。原则：①同名取同；②分派表锚定(B4)优先于属性描述(B2)——命令名是 PECMD 语义的第一现场；③置信 high>medium>low；④084a5c 双低/中不一致 → 维持暂缓（登记巨型，需运行时对照）。",
+ "decisions": [
+  {"addr": "140021a4c", "final": "PECMD_LinkCreateShortcut", "src": "B2==B4 同名", "note": "LINK 命令, IShellLink 创建 .LNK"},
+  {"addr": "14002f454", "final": "PECMD_FontCommand", "src": "B4(分派表锚定FONT)", "note": "弃 B2 FontLoadMemResource——该函数是 FONT 命令总入口, AddFontMemResourceEx 只是其中一支"},
+  {"addr": "140038d30", "final": "PECMD_DispCommand", "src": "B4(分派表锚定DISP)", "note": "弃 B2 DispSetMode——函数覆盖 DISP 全部子功能而非仅分辨率"},
+  {"addr": "1400d0468", "final": "PECMD_SiteSetFileAttrTime", "src": "B4(分派表锚定SITE)+语义更全", "note": "SITE 命令: 属性+时间戳双职责"},
+  {"addr": "1400d0c6c", "final": "PECMD_GetfReadData", "src": "B2==B4 同名", "note": "GETF 命令读数据"},
+  {"addr": "1400e1228", "final": "PECMD_SockCreateIpcObj", "src": "B4(证据更具体)", "note": "SOCK 命令创建 IPC 对象(event/mutex/sem/pipe/shm), 比 SyncObjects 更贴体"},
+  {"addr": "140084a5c", "final": null, "src": "维持暂缓", "note": "B2 medium(ApplyVarWriteModifiers) vs B4 low(ParseBinDataSpec) 分歧大; 登记巨型4之一, 需 Windows 运行时对照后再命名"}
+ ],
+ "applied_note": "以上 final 名在 ls-dirty 批(--sync-ls)应用时生效; 084a5c 保持 FUN_ 原名。"
+}
