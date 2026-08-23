@@ -3601,3 +3601,17 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - **已还原未改名（2）**: e3804=LoadEnvi(既有名)/25f10(R1已还原,AppendLogMessage 名被占待别名) → 后续小批处理
 - **其它零散（~8）**: ec9c0/ef620/ef8ec/f00c4/f0f78/f22ac/f22dc/f2a4c/f2b1c/f51a8/fb558/fbdb0/fc770/fc8bc/fdedc/fe5bc/fe5e0/fec58/ff5a0/e4e6c 中零引用者 SKIP、有引用者回 G 批
 结论: **命名战线收敛达成**——无无主项。
+
+## 129. S5 收口：警告终账 + 机械清零（git 1013f69）
+- **机械四类清零**：unused-parameter72/discarded-qualifiers27/unused-but-set15/pointer-sign12/unused-var19
+  全部归零(265→120,-145)；模拟连续结构体字段的 set-but-used 变量保留赋值+(void)沉底；高危点(BOM/A249/A24F/b7c大改区)零触碰。
+- **行为相关终账登记(120条, 不清零)**：cast-function-type58(Win32回调约定)/int-to-pointer-cast22(Ghidra整数句柄直译,
+  有截断风险)/sign-compare14(符号性丢失,其中BOM与A249两案已升级为语义修复)/incompatible-call16/nonnull4(atexit占位)/
+  type-limits1(余量)/其它4。明细见 tools/warning_census.json(修前快照)+本次实测。
+- **专项语义修复入账**：BOM探测uint8_t(ccf397a)/g_flagA249 int8_t(96d2544)/A24F族int8_t根因(a189151)/
+  家族B七全局PE初值(aa79220)/混合提升×4等(1be4dc7)——type-limits/sign-compare 原始28条信号中已定性修复19处转写错误。
+- **遗留三处保守未动**(非授权类别)：builtin-decl-mismatch(b3r_g1隐式memset,64位截断风险,建议开票)/
+  parentheses(b3r:21204)/unused-label(b7c:4930)。
+- **审计移交线索(待清理批)**：GetTickCount双声明/f53c8疑似重复移植/b3l:419死条件/b1:548·4346过时注释/
+  FUN_14000a584未实现桩登记。
+- gen_tasks 刷新与 tag p4-close 于线索清理批验收后执行。
