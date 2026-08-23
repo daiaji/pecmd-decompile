@@ -356,7 +356,7 @@ extern void     *g_pImageBuf;      /* DAT_14013e0e0 位图数据指针 */
 extern uint32_t g_helpWord;        /* DAT_14013a228 帮助模式字 */
 extern uint32_t g_helpHi32;        /* DAT_14013a230 帮助资源高 32 位 */
 extern uint8_t  g_charTableF;      /* DAT_14013a248 字符表开关 */
-extern uint8_t  g_flagA249;        /* DAT_14013a249 */
+extern int8_t   g_flagA249;        /* DAT_14013a249 .data初值0xFF, 有符号语义 */
 extern int32_t  g_helpVerFlag;     /* DAT_14013a34c 帮助版本标志 */
 extern uint8_t  g_flagCF86;       /* DAT_14013cf86 提示串显示/前导'*'计数 */
 extern uint8_t  g_flagCCCE;       /* DAT_14013ccce */

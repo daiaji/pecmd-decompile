@@ -671,8 +671,8 @@ uint32_t g_helpHi32;
 /* g_charTableF @0x14013a248 */
 uint8_t g_charTableF;
 
-/* g_flagA249 @0x14013a249 */
-uint8_t g_flagA249;
+/* g_flagA249 @0x14013a249 (.data 初值 0xFF, pe_data_extract 实测; 有符号语义 dc@25382 "-1 < x") */
+int8_t g_flagA249;
 
 /* g_helpVerFlag @0x14013a34c */
 int32_t g_helpVerFlag;

@@ -961,7 +961,7 @@ uint64_t PECMD_ApplyTextWindowLayout(uint64_t value, LPCWSTR text)
         }
         memset(&local_lf, 0, sizeof(local_lf));
         local_lf.lfHeight = -0x80000000;
-        if (0 <= g_flagA249) {
+        if (-1 < g_flagA249) {
             local_lf.lfItalic = 3;
         }
         local_lf.lfWeight = 400;
