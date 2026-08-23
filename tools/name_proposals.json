@@ -1,0 +1,234 @@
+{
+  "proposals": [
+    {
+      "addr": "14000e26c",
+      "old": "FUN_14000e26c",
+      "name": "PECMD_ExecCmdDispatch",
+      "confidence": "medium",
+      "evidence": "巨型函数(约3948行)内含全部PECMD命令4字符标签分发(LINK/DISK/TABL/MESS/MOUN/DISP/SHUT等), 并用CreateProcessAsUserW/CreateJobObject/命名管道派生\"pecmd TEAM WAIT -InitSys*\"子进程执行TEAM。46处调用, 为命令行解释执行总入口。"
+    },
+    {
+      "addr": "1400c13f8",
+      "old": "FUN_1400c13f8",
+      "name": "PECMD_RegiEditRegistry",
+      "confidence": "high",
+      "evidence": "分发表中REGI(0x49474552)分支指向本函数。RegOpenKeyExW/RegCreateKeyExW/RegEnumValueW与HKLM/HKU/HKEY_CLASSES_ROOT、REG_BINARY/REG_EXPAND_SZ常量证实为注册表读写枚举实现。"
+    },
+    {
+      "addr": "1400cd3a8",
+      "old": "FUN_1400cd3a8",
+      "name": "PECMD_PartShowHideDrive",
+      "confidence": "high",
+      "evidence": "调试串\"Show pt: %d:%d %c\"/\"Unshow pt:\"及\\\\Device\\\\Harddisk%d\\\\Partition%d、\\\\\\\\.\\\\CDROM%d, 调DefineDosDeviceW/DeleteVolumeMountPointW, 为分区显示/隐藏(-cdrom/-check/-force)实现; 被DISK函数调用。"
+    },
+    {
+      "addr": "1400d0c6c",
+      "old": "FUN_1400d0c6c",
+      "name": "PECMD_GetfReadData",
+      "confidence": "medium",
+      "evidence": "分发表GETF(0x46544547)分支指向本函数。选项-find/-bin/-fd/-free/-g/-nolen/-err:, 支持lstrcmpiW(\\\\Device\\\\PhysicalMemory)、LoadLibraryExW+EXEDATA资源读取及#offset#len定位后回写变量; 具体命令文档未知, 按行为命名。"
+    },
+    {
+      "addr": "1400e1228",
+      "old": "FUN_1400e1228",
+      "name": "PECMD_SockSyncObjects",
+      "confidence": "high",
+      "evidence": "分发表SOCK(0x4b434f53)分支指向本函数。按--event/--mutex/--sem/--pipe/--mailslot/--shm创建Event/Mutex/Semaphore/NamedPipe/Mailslot/FileMapping(含Global\\\\前缀与pecmd2012.*名字), 另有--gethostbyname网络查询, 用于跨实例同步。"
+    },
+    {
+      "addr": "140038d30",
+      "old": "FUN_140038d30",
+      "name": "PECMD_DispSetMode",
+      "confidence": "high",
+      "evidence": "分发表DISP(0x50534944)分支指向本函数。EnumDisplayDevicesW/EnumDisplaySettingsW/ChangeDisplaySettingsExW设置分辨率, Get/SetDeviceGammaRamp与bright:/-confirm-等字符串处理亮度伽马; 递归自调用。"
+    },
+    {
+      "addr": "140025f10",
+      "old": "FUN_140025f10",
+      "name": "PECMD_AppendLogMessage",
+      "confidence": "medium",
+      "evidence": "临界区+TLS保护的日志缓冲写入: 可选[tid/QPC时间]前缀、FormatMessageW格式化错误码文本、写入\\r\\n并在缓冲超0x10000字符时触发flush(FUN_1400185c8); 72处调用。与既有PECMD_TlsLogWrite(0x140018d8c)的分工需复核。"
+    },
+    {
+      "addr": "1400dfb14",
+      "old": "FUN_1400dfb14",
+      "name": "PECMD_MounMountWimImage",
+      "confidence": "high",
+      "evidence": "分发表MOUN(0x4e554f4d)分支指向本函数。字符串\"FOUND WIM [%s], mount to [%s]\"、#22:INDATA mount_wimsvr、-svr/-vhd/-udm与\"WIM DLL ERR\", 加载WIM DLL完成镜像挂载。"
+    },
+    {
+      "addr": "1400bb718",
+      "old": "FUN_1400bb718",
+      "name": "PECMD_MessShowMsgBox",
+      "confidence": "high",
+      "evidence": "分发表MESS(0x5353454d)分支指向本函数。动态解析MessageBoxTimeoutW, 按钮码OK/YNC/YESNO/OKC/ABORT/RETRY与icon/font/id/cmd:选项字符串, 弹消息框并回写&&YESNO等变量。"
+    },
+    {
+      "addr": "1400b2ca8",
+      "old": "FUN_1400b2ca8",
+      "name": "PECMD_RenderTextBitmapIcon",
+      "confidence": "high",
+      "evidence": "返回HBITMAP并可经CreateIconIndirect转HICON; 解析fill:/size:/font:/color:/bkcolor:属性用DrawTextW/CreateDIBits渲染文本位图(core_b3_remaining.c头注释亦标注为位图/图标文本渲染器)。"
+    },
+    {
+      "addr": "1400a2390",
+      "old": "FUN_1400a2390",
+      "name": "PECMD_MstrStringOps",
+      "confidence": "high",
+      "evidence": "分发表MSTR(0x5254534d)分支指向本函数。选项-delims:/-left/-right/-trim/-rq/-xq/-term/-term2对源串做定界切分、去引号修剪后写目标变量, 为字符串操作命令实现。"
+    },
+    {
+      "addr": "140084a5c",
+      "old": "FUN_140084a5c",
+      "name": "PECMD_ApplyVarWriteModifiers",
+      "confidence": "medium",
+      "evidence": "在name=value拆分并被展开后被调用(link_stubs.c 0x14002d167附近), 扫描变量名token中的$/%/=/#/.与~.修饰符并据此改写待写入值; link_stubs注释称其语义族同%...%值改写。"
+    },
+    {
+      "addr": "1400d7038",
+      "old": "FUN_1400d7038",
+      "name": "PECMD_DiskFindLoadHives",
+      "confidence": "high",
+      "evidence": "分发表DISK(0x4b534944)分支指向本函数。遍历分区(-skippt:/-skiptp:/-from:/-check/-force)查找\\System32\\config\\SYSTEM, 再依次加载SYSTEM/.DEFAULT/SOFTWARE/SAM/SECURITY/USERDIFF蜂巢(FUN_1400a5d7c), 并调用分区显示助手。"
+    },
+    {
+      "addr": "140021a4c",
+      "old": "FUN_140021a4c",
+      "name": "PECMD_LinkCreateShortcut",
+      "confidence": "high",
+      "evidence": "分发表LINK(0x4b4e494c)分支指向本函数。经惰性OLE32加载器CoCreateInstance(IShellLink)+QueryInterface(IPersistFile), vtable调用SetPath/SetArguments/SetWorkingDirectory/SetIconLocation/SetShowCmd后Save, 自动追加.LNK。"
+    },
+    {
+      "addr": "14003db00",
+      "old": "FUN_14003db00",
+      "name": "PECMD_ShutPowerAction",
+      "confidence": "high",
+      "evidence": "分发表SHUT(0x54554853)分支指向本函数。ExitWindowsEx/InitiateSystemShutdownW/LockWorkStation/SetSystemPowerState/SetSuspendState(powrprof.DLL)及\"Set cdAudio door open/close\", 实现关机重启锁定等电源动作。"
+    },
+    {
+      "addr": "14002f454",
+      "old": "FUN_14002f454",
+      "name": "PECMD_FontLoadMemResource",
+      "confidence": "high",
+      "evidence": "分发表FONT(0x544e4f46)分支指向本函数。AddFontMemResourceEx/RemoveFontMemResourceEx配合LoadLibraryExW与FONT资源、GetLogicalDriveStringsW(-p路径前缀)从内存/文件安装字体。"
+    },
+    {
+      "addr": "1400caf78",
+      "old": "FUN_1400caf78",
+      "name": "PECMD_TablCreateControl",
+      "confidence": "high",
+      "evidence": "分发表TABL(0x4c424154)分支指向本函数。按逗号切出类名/位置四元组(FUN_1400744d4)/标题/字号/样式位, 处理-sps/-font:/-hfont:/-color:/-sl:/-sc:/-cksz:/-left选项后调用加控件函数FUN_1400cadec。"
+    },
+    {
+      "addr": "1400d0468",
+      "old": "FUN_1400d0468",
+      "name": "PECMD_SiteFileAttrTime",
+      "confidence": "high",
+      "evidence": "分发表SITE(0x45544953)分支指向本函数。SetFileAttributesW处理+A/-H/+R/+S组合, *touch/*utc:/*local:配合SetFileTime/SystemTimeToFileTime/LocalFileTimeToFileTime设置文件时间戳。"
+    },
+    {
+      "addr": "140061c44",
+      "old": "FUN_140061c44",
+      "name": "PECMD_LoadOle32Apis",
+      "confidence": "high",
+      "evidence": "惰性加载器: LoadLibraryA(\"OLE32\")后GetProcAddress缓存CoInitialize/CoCreateInstance/StringFromGUID2等到DAT_14013d800系列槽, 失败递归重试; 与既有PECMD_LoadNtdllApis同风格。"
+    },
+    {
+      "addr": "1400547bc",
+      "old": "FUN_1400547bc",
+      "name": "PECMD_SplitNextToken",
+      "confidence": "medium",
+      "evidence": "先经FUN_14006764c截取至分隔符(param_4/param_5)并去尾空白, 若结果首字符恰为分隔符(引号)则指针越过之, 再复制剩余子串; 返回token首字符指针, 为典型下一token切分助手。"
+    },
+    {
+      "addr": "14005c828",
+      "old": "FUN_14005c828",
+      "name": "PECMD_GetApiProcCached",
+      "confidence": "medium",
+      "evidence": "若proc缓存槽(*param_3)为空则LoadLibraryA(dll)(可复用param_4中的HMODULE缓存)+GetProcAddress(proc)写回槽位; 与既有PECMD_LazyLoadProc(0x14005c898)同族的API惰性解析器。"
+    },
+    {
+      "addr": "14005c72c",
+      "old": "FUN_14005c72c",
+      "name": "PECMD_TokPrefixICmp",
+      "confidence": "medium",
+      "evidence": "将ANSI令牌(如\"-sps\"/\"**u\")与宽串逐字符大小写不敏感比较n个字符, 且仅当其后为空白/控制符/NUL词边界才算命中(见调用点FUN_14005c72c(\"**u\",str,3)); 全项目105处调用的选项匹配器。"
+    },
+    {
+      "addr": "1400669c4",
+      "old": "FUN_1400669c4",
+      "name": "PECMD_AppendLongDecimal",
+      "confidence": "high",
+      "evidence": "wsprintfW(local_78,L\"%ld\")把长整数转十进制后经FUN_1400629b8追加到串构造器; 47处调用的数值转串助手。"
+    },
+    {
+      "addr": "1400668ec",
+      "old": "FUN_1400668ec",
+      "name": "PECMD_AppendFmtValue",
+      "confidence": "medium",
+      "evidence": "以调用方传入的格式串(param_4, 如L\"%I64d…\")经FUN_1400e6d38把单个数值格式化到栈缓冲再追加到串构造器; 与AppendLongDecimal同族但格式可定制。"
+    },
+    {
+      "addr": "14005b104",
+      "old": "FUN_14005b104",
+      "name": "PECMD_FreeStrBuf",
+      "confidence": "high",
+      "evidence": "*param_1非空时HeapFree(DAT_14013d328,0,*param_1-8)释放带头(长度字段在-8)的串缓冲并将槽清零; 全项目874处调用的标准释放口。"
+    },
+    {
+      "addr": "1400702f0",
+      "old": "FUN_1400702f0",
+      "name": "PECMD_StrBldCopyAnsi",
+      "confidence": "medium",
+      "evidence": "先清零槽(*param_1=0)再将ANSI串按限长param_3经FUN_1400637dc(尾部传-1全量)转换拷入串构造器。"
+    },
+    {
+      "addr": "1400702d4",
+      "old": "FUN_1400702d4",
+      "name": "PECMD_StrBldCopyWideN",
+      "confidence": "medium",
+      "evidence": "先清零槽再将宽串按给定字符数param_3经FUN_140063888拷入串构造器, 为定长版本赋值助手。"
+    },
+    {
+      "addr": "1400703e4",
+      "old": "FUN_1400703e4",
+      "name": "PECMD_StrBldCopyWide",
+      "confidence": "medium",
+      "evidence": "清槽后将整条宽串(长度传-1表示至NUL)经FUN_140063888拷入串构造器; 59处调用的整串赋值助手。"
+    },
+    {
+      "addr": "1400e6d68",
+      "old": "FUN_1400e6d68",
+      "name": "PECMD_FormatI64Dec",
+      "confidence": "medium",
+      "evidence": "经FUN_1400e6d38(buf,val,L\"%I64d\")将有符号64位数按十进制格式化进调用方提供的缓冲。"
+    },
+    {
+      "addr": "1400e6d74",
+      "old": "FUN_1400e6d74",
+      "name": "PECMD_FormatU64Dec",
+      "confidence": "medium",
+      "evidence": "经FUN_1400e6d38(buf,val,L\"%I64u\")将无符号64位数按十进制格式化进调用方缓冲, 与FormatI64Dec成对。"
+    }
+  ],
+  "skips": [
+    {
+      "addr": "140063060",
+      "reason": "纯恒等桩: 函数体仅 return param_1;, 无业务语义可命名。"
+    },
+    {
+      "addr": "14007033c",
+      "reason": "decompiled.c 中无对应定义块(grep零命中), 无法提取函数体推断语义。"
+    },
+    {
+      "addr": "1400f21a8",
+      "reason": "decompiled.c 中无对应定义块(grep零命中), 且地址位于CRT区之外边界处无法阅读函数体。"
+    }
+  ],
+  "notes": [
+    "候选来源: core_*.c + link_stubs.c 中 \\bFUN_[0-9a-f]{9}\\b 唯一地址共422个, 剔除 tools/rename_map.json 已映射161个后剩261个。",
+    "本轮按『体量大和/或被调用多』优先挑出30个(全部地址 < 0x140100000 非CRT区)逐一阅读 decompiled.c 反编译体并交叉核对 link_stubs.c 中 FUN_14000e26c 分发表的4字符命令标签(REGI/SOCK/DISP/MOUN/MESS/LINK/DISK/SHUT/FONT/TABL/SITE/GETF等)。",
+    "其余未列出的 ~228 个剩余地址本轮未评估(多为小工具函数/桩), 后续批次可继续。",
+    "冲突检查: 30个建议名均已 grep -w 核对 core_*.c / include/*.h / link_stubs.c 零命中, 且不与 rename_map.json 现有值重复。"
+  ]
+}

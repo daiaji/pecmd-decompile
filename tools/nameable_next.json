@@ -1,0 +1,3398 @@
+{
+ "generated": "2026-08-23T04:24:14Z",
+ "total_unnamed": 630,
+ "candidates": [
+  {
+   "addr": "14005c828",
+   "callsites": 172,
+   "body_lines": 24,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 LoadLibraryA,GetProcAddress"
+  },
+  {
+   "addr": "14005c72c",
+   "callsites": 108,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT22"
+  },
+  {
+   "addr": "140025f10",
+   "callsites": 68,
+   "body_lines": 131,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,TlsGetValue,QueryPerformanceCounter,GetCurrentThreadId"
+  },
+  {
+   "addr": "14000e26c",
+   "callsites": 38,
+   "body_lines": 3937,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT31,CONCAT71,thunk_FUN_140067b78,CONCAT22；串 PECMD EXEC |-shel"
+  },
+  {
+   "addr": "140063b64",
+   "callsites": 32,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 HeapAlloc"
+  },
+  {
+   "addr": "140061c44",
+   "callsites": 31,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 CoInitializeEx|OLE32"
+  },
+  {
+   "addr": "140101e70",
+   "callsites": 31,
+   "body_lines": 10,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 CloseHandle"
+  },
+  {
+   "addr": "140102a90",
+   "callsites": 29,
+   "body_lines": 64,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 LOCK,UNLOCK"
+  },
+  {
+   "addr": "1400f1490",
+   "callsites": 26,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400547bc",
+   "callsites": 23,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140067d20",
+   "callsites": 22,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71"
+  },
+  {
+   "addr": "140027eac",
+   "callsites": 16,
+   "body_lines": 71,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentProcess,EnterCriticalSection,LeaveCriticalSection,CreateThread"
+  },
+  {
+   "addr": "14006764c",
+   "callsites": 14,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400fd538",
+   "callsites": 13,
+   "body_lines": 24,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetParent,GetWindowRect,ClientToScreen,OffsetRect"
+  },
+  {
+   "addr": "14006d880",
+   "callsites": 12,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006159c",
+   "callsites": 11,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14001b510",
+   "callsites": 11,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetTickCount"
+  },
+  {
+   "addr": "1400c13f8",
+   "callsites": 10,
+   "body_lines": 1255,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,StrStrW,StrChrW,StrRChrW；串 ---initram|0"
+  },
+  {
+   "addr": "1400b638c",
+   "callsites": 9,
+   "body_lines": 354,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentDirectoryW,EnterCriticalSection,LeaveCriticalSection,operator_new；串 &CurDir|&CurDrv"
+  },
+  {
+   "addr": "14001bf20",
+   "callsites": 9,
+   "body_lines": 31,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetEnvironmentVariableW"
+  },
+  {
+   "addr": "1400cada0",
+   "callsites": 9,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14001a640",
+   "callsites": 9,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentDirectoryW,SetCurrentDirectoryW"
+  },
+  {
+   "addr": "1400f0fa8",
+   "callsites": 8,
+   "body_lines": 73,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 BeginPaint,GetClientRect,SelectObject,SetBkMode"
+  },
+  {
+   "addr": "1400e648c",
+   "callsites": 8,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrChrW,GetDesktopWindow"
+  },
+  {
+   "addr": "140053dc8",
+   "callsites": 8,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140077358",
+   "callsites": 8,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": true,
+   "note": "串 SOFTWARE\\\\PELOGON|FirstUsb"
+  },
+  {
+   "addr": "1400f425c",
+   "callsites": 8,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c11f4",
+   "callsites": 7,
+   "body_lines": 52,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400a4020",
+   "callsites": 7,
+   "body_lines": 32,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,operator_new,HeapFree,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400f2b84",
+   "callsites": 7,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14003db00",
+   "callsites": 6,
+   "body_lines": 187,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 ExitWindowsEx,SetSystemPowerState,LockWorkStation,InitiateSystemShutdownW；串 SetSuspendState|powrprof.DLL"
+  },
+  {
+   "addr": "1400e8574",
+   "callsites": 6,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDesktopWindow,operator_new"
+  },
+  {
+   "addr": "1400251ac",
+   "callsites": 6,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 SOFTWARE\\\\PELOGON\\\\RAMDA|SysStartuped.load"
+  },
+  {
+   "addr": "1400f072c",
+   "callsites": 6,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW；串 BUTTON"
+  },
+  {
+   "addr": "14007af60",
+   "callsites": 5,
+   "body_lines": 506,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrCmpNIW,SetLastError,GetEnvironmentVariableW,GetLastError；串 RANDOM%|__THIS%"
+  },
+  {
+   "addr": "1400c493c",
+   "callsites": 5,
+   "body_lines": 347,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleHandleW,FreeLibrary,LoadLibraryExW,LoadCursorW；串 InvalidateRect|Cursor"
+  },
+  {
+   "addr": "140022a70",
+   "callsites": 5,
+   "body_lines": 98,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 SOFTWARE\\\\PELOGON|SysShell"
+  },
+  {
+   "addr": "1400f0814",
+   "callsites": 5,
+   "body_lines": 69,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "1400e3d60",
+   "callsites": 5,
+   "body_lines": 35,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnumWindows,EnumChildWindows"
+  },
+  {
+   "addr": "1400f0df4",
+   "callsites": 5,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetBkColor,DrawEdge"
+  },
+  {
+   "addr": "14001ab84",
+   "callsites": 5,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrCmpNIW；串 TEAM|EXEC"
+  },
+  {
+   "addr": "1400efff8",
+   "callsites": 5,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW；串 STATIC"
+  },
+  {
+   "addr": "1400efec8",
+   "callsites": 5,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f1448",
+   "callsites": 5,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "1400dfb14",
+   "callsites": 4,
+   "body_lines": 826,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,thunk_FUN_1400f429c,EnterCriticalSection,LeaveCriticalSection；串 -svr|-vhd"
+  },
+  {
+   "addr": "1400bb718",
+   "callsites": 4,
+   "body_lines": 739,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,CONCAT71,EnterCriticalSection,LeaveCriticalSection；串  |OK"
+  },
+  {
+   "addr": "1400d5b48",
+   "callsites": 4,
+   "body_lines": 632,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowRgn,DeleteObject,InvalidateRect,GetWindowRect；串 frm<"
+  },
+  {
+   "addr": "14004eb34",
+   "callsites": 4,
+   "body_lines": 409,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT62,FindResourceW,CONCAT71,GetTickCount；串 &PeExe|SCRIPTINIT"
+  },
+  {
+   "addr": "1400307c8",
+   "callsites": 4,
+   "body_lines": 239,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrChrW,GetFileSizeEx,CloseHandle,SetFilePointerEx；串 \\n"
+  },
+  {
+   "addr": "1400e7994",
+   "callsites": 4,
+   "body_lines": 168,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SUB168,SUB164"
+  },
+  {
+   "addr": "14002a508",
+   "callsites": 4,
+   "body_lines": 125,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c,SetWindowPos,DeleteObject,InvalidateRect；串 宋体"
+  },
+  {
+   "addr": "1400279d8",
+   "callsites": 4,
+   "body_lines": 124,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateMutexW,_snwprintf,StrStrIW,CONCAT62；串 ImDiskFormat|\\\\Device\\\\ImDisk%u"
+  },
+  {
+   "addr": "14002452c",
+   "callsites": 4,
+   "body_lines": 117,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentDirectoryW,GetModuleFileNameW,StrRChrW；串 &&__OldDir|&&CurFile.real"
+  },
+  {
+   "addr": "14003d608",
+   "callsites": 4,
+   "body_lines": 82,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetStartupInfoW,InitiateSystemShutdownW；串 ASNT5SHUTDOWN|%S\\\") Main=0x%X %d op=[%"
+  },
+  {
+   "addr": "1400ec0f0",
+   "callsites": 4,
+   "body_lines": 72,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowRect,GetParent,ClientToScreen,GetSystemMetrics"
+  },
+  {
+   "addr": "140025b10",
+   "callsites": 4,
+   "body_lines": 67,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,GetModuleHandleW,SetWindowsHookExW,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400ff414",
+   "callsites": 4,
+   "body_lines": 58,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14006ccd4",
+   "callsites": 4,
+   "body_lines": 54,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrRChrW,StrChrW,StrCmpNIW；串 \\\\\\\\.\\\\PhysicalDrive|\\\\\\\\?\\\\"
+  },
+  {
+   "addr": "1400f3308",
+   "callsites": 4,
+   "body_lines": 52,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCursorPos,ScreenToClient,SendMessageW,PtInRect"
+  },
+  {
+   "addr": "1400c10c0",
+   "callsites": 4,
+   "body_lines": 45,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400ff2bc",
+   "callsites": 4,
+   "body_lines": 41,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW；串 %d."
+  },
+  {
+   "addr": "1400ec310",
+   "callsites": 4,
+   "body_lines": 36,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,ShowWindow,GetFocus,SetFocus；串 &&|.Select"
+  },
+  {
+   "addr": "14004f788",
+   "callsites": 4,
+   "body_lines": 30,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection,CloseHandle"
+  },
+  {
+   "addr": "1400e75cc",
+   "callsites": 4,
+   "body_lines": 28,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetTickCount,Sleep"
+  },
+  {
+   "addr": "1400f31cc",
+   "callsites": 4,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400f5584",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5608",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f568c",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f593c",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f59c0",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5a44",
+   "callsites": 4,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140078e90",
+   "callsites": 4,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 OpenClipboard,GetClipboardData,GlobalLock,GlobalUnlock"
+  },
+  {
+   "addr": "14006bf8c",
+   "callsites": 4,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5d50",
+   "callsites": 4,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DeleteObject"
+  },
+  {
+   "addr": "140103068",
+   "callsites": 4,
+   "body_lines": 11,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e6960",
+   "callsites": 4,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StringValidateDestW,StringVPrintfWorkerW"
+  },
+  {
+   "addr": "1400ef654",
+   "callsites": 4,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,ShowWindow"
+  },
+  {
+   "addr": "140028a00",
+   "callsites": 3,
+   "body_lines": 765,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 LoadIconW,SendMessageW,CreateSolidBrush,SetDlgItemTextW；串 201201.88.05.94 X64|."
+  },
+  {
+   "addr": "1400b2ca8",
+   "callsites": 3,
+   "body_lines": 612,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c,GetDC,GetDeviceCaps,DeleteDC；串 fill|size:"
+  },
+  {
+   "addr": "140037ba8",
+   "callsites": 3,
+   "body_lines": 411,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowLongPtrW,GetDesktopWindow,SetParent,EnterCriticalSection；串 SOFTWARE\\\\PELOGON|Text.Paramd"
+  },
+  {
+   "addr": "14006d9d0",
+   "callsites": 3,
+   "body_lines": 155,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 0x%I64X|char"
+  },
+  {
+   "addr": "1400f00f4",
+   "callsites": 3,
+   "body_lines": 145,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetClientRect,SetBkMode,FillRect,SelectObject"
+  },
+  {
+   "addr": "14002ee44",
+   "callsites": 3,
+   "body_lines": 132,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 KillTimer,SendMessageW,DefWindowProcW,SetTimer；串 PECMD2012|SOFTWARE\\\\PELOGON\\\\RAMDA"
+  },
+  {
+   "addr": "14002e3d4",
+   "callsites": 3,
+   "body_lines": 116,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,LoadEnvi；串 -dummy|-dummyx"
+  },
+  {
+   "addr": "140105bc0",
+   "callsites": 3,
+   "body_lines": 73,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 CONCAT44；串 log10"
+  },
+  {
+   "addr": "1400d0b2c",
+   "callsites": 3,
+   "body_lines": 58,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71"
+  },
+  {
+   "addr": "14006fd1c",
+   "callsites": 3,
+   "body_lines": 42,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140050f58",
+   "callsites": 3,
+   "body_lines": 41,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 AtlThrowImpl"
+  },
+  {
+   "addr": "1400f30c0",
+   "callsites": 3,
+   "body_lines": 41,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,InvalidateRect"
+  },
+  {
+   "addr": "1400e537c",
+   "callsites": 3,
+   "body_lines": 37,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 %d| %d"
+  },
+  {
+   "addr": "140030dcc",
+   "callsites": 3,
+   "body_lines": 30,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentDirectoryW,EnterCriticalSection,LeaveCriticalSection；串 \\n|&&CurDir"
+  },
+  {
+   "addr": "140004e34",
+   "callsites": 3,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetTickCount,PeekMessageW,TranslateMessage,DispatchMessageW"
+  },
+  {
+   "addr": "14001bbdc",
+   "callsites": 3,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateEventW,MsgWaitForMultipleObjects,PeekMessageW,TranslateMessage"
+  },
+  {
+   "addr": "14006d7e8",
+   "callsites": 3,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400050c8",
+   "callsites": 3,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateFiber,ConvertThreadToFiber,SwitchToFiber,DeleteFiber"
+  },
+  {
+   "addr": "14006d92c",
+   "callsites": 3,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14001b660",
+   "callsites": 3,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 CheckTmpMBROS|#22:INDATA  ClearTmpMBRO"
+  },
+  {
+   "addr": "1400ef08c",
+   "callsites": 3,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DrawTextW,OffsetRect"
+  },
+  {
+   "addr": "1400f3554",
+   "callsites": 3,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14001a56c",
+   "callsites": 3,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleHandleW,GetProcAddress；串 NTDLL|NtShutdownSystem"
+  },
+  {
+   "addr": "1400e706c",
+   "callsites": 3,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e70c0",
+   "callsites": 3,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e96ec",
+   "callsites": 3,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c6324",
+   "callsites": 2,
+   "body_lines": 1838,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71；串 %I64d|-std"
+  },
+  {
+   "addr": "1400cd3a8",
+   "callsites": 2,
+   "body_lines": 1670,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,CONCAT44,CONCAT22,thunk_FUN_1400c453c；串 #4|#1"
+  },
+  {
+   "addr": "1400dc9fc",
+   "callsites": 2,
+   "body_lines": 1451,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DeleteObject,thunk_FUN_14005b7e8,SHGetSpecialFolderPathW,SHChangeNotify；串 *1|@DeskTopFresh"
+  },
+  {
+   "addr": "1400e1228",
+   "callsites": 2,
+   "body_lines": 1152,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,CONCAT31,CONCAT22,CONCAT44；串 --gethostbyname|--file"
+  },
+  {
+   "addr": "1400d0c6c",
+   "callsites": 2,
+   "body_lines": 1103,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,CloseHandle,LoadLibraryExW,CONCAT71；串 -find|-g"
+  },
+  {
+   "addr": "1400e9724",
+   "callsites": 2,
+   "body_lines": 1047,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection,CONCAT71,SUB168；串 --free|DBG: IMD: 0x%X 0x%X 0x%X"
+  },
+  {
+   "addr": "140032dc4",
+   "callsites": 2,
+   "body_lines": 1010,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,CONCAT44,CONCAT31,GetLogicalDrives；串 !|MEM"
+  },
+  {
+   "addr": "1400cb820",
+   "callsites": 2,
+   "body_lines": 913,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetFileAttributesExW,CONCAT44,GetLastError,GetFileInformationByHandle；串 ispe|FVER"
+  },
+  {
+   "addr": "140038d30",
+   "callsites": 2,
+   "body_lines": 867,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT22,CONCAT44,CharUpperW,StrChrW；串 guis|#35:INDATA*DispSet "
+  },
+  {
+   "addr": "1400c9b9c",
+   "callsites": 2,
+   "body_lines": 625,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,CONCAT62,CONCAT44,operator_new"
+  },
+  {
+   "addr": "1400a2390",
+   "callsites": 2,
+   "body_lines": 618,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,HeapFree,StrChrW,CONCAT71；串 *|-delims:"
+  },
+  {
+   "addr": "140084a5c",
+   "callsites": 2,
+   "body_lines": 532,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,thunk_FUN_140067b78,CONCAT71"
+  },
+  {
+   "addr": "1400d7038",
+   "callsites": 2,
+   "body_lines": 391,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,CONCAT22,thunk_FUN_1400f429c,CONCAT71；串 -force|-from:"
+  },
+  {
+   "addr": "140021a4c",
+   "callsites": 2,
+   "body_lines": 379,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrChrW,CONCAT71,SearchPathW,EnterCriticalSection；串 ?|force"
+  },
+  {
+   "addr": "14002f454",
+   "callsites": 2,
+   "body_lines": 309,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c,StrRChrW,CharUpperW,GetLogicalDriveStringsW；串 -|-p"
+  },
+  {
+   "addr": "1400caf78",
+   "callsites": 2,
+   "body_lines": 268,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c；串 -sps|-font:"
+  },
+  {
+   "addr": "1400d0468",
+   "callsites": 2,
+   "body_lines": 261,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrCmpNIW,GetFileAttributesExW,SetFileAttributesW,GetLastError；串 *touch|+A"
+  },
+  {
+   "addr": "14002e790",
+   "callsites": 2,
+   "body_lines": 229,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 LoadMenuW,GetSubMenu,GetCursorPos,GetSystemMetrics；串 分辨率 %d×%d 颜色%d位 刷新率%d|#,DISP -confirm W%d H%d "
+  },
+  {
+   "addr": "1400fe610",
+   "callsites": 2,
+   "body_lines": 226,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,GetClientRect,CreateCompatibleDC,CreateCompatibleBitmap"
+  },
+  {
+   "addr": "1400c0ad8",
+   "callsites": 2,
+   "body_lines": 224,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,StrRChrW,EnterCriticalSection,LeaveCriticalSection；串 SHA1|SHA256"
+  },
+  {
+   "addr": "14002a910",
+   "callsites": 2,
+   "body_lines": 200,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 QueryDosDeviceW,StrCpyNW,GetModuleHandleW,GetProcAddress；串 *force|NTDLL"
+  },
+  {
+   "addr": "14003634c",
+   "callsites": 2,
+   "body_lines": 200,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT26,CONCAT24,CONCAT22,GetLastError；串 :\\\\"
+  },
+  {
+   "addr": "140105f10",
+   "callsites": 2,
+   "body_lines": 200,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,ROUND"
+  },
+  {
+   "addr": "140035cec",
+   "callsites": 2,
+   "body_lines": 192,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetLastError,Sleep,CONCAT71,WaitNamedPipeW；串 RtlCreateUnicodeString|NTDLL.DLL"
+  },
+  {
+   "addr": "14003e768",
+   "callsites": 2,
+   "body_lines": 183,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetCurrentProcessId,SleepEx,CONCAT44；串 MAIN_DBG:%d\\r\\n|MAIN_DBG:%d %u MyShell[%"
+  },
+  {
+   "addr": "1400c3cf8",
+   "callsites": 2,
+   "body_lines": 164,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,operator_new,CONCAT44,CreateSolidBrush"
+  },
+  {
+   "addr": "1400ede48",
+   "callsites": 2,
+   "body_lines": 161,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT44,ExtTextOutW,CreateCompatibleDC,CreateCompatibleBitmap"
+  },
+  {
+   "addr": "1400c56fc",
+   "callsites": 2,
+   "body_lines": 158,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c；串 -color:"
+  },
+  {
+   "addr": "1400e4480",
+   "callsites": 2,
+   "body_lines": 151,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 VirtualProtectEx,WriteProcessMemory,ResumeThread,CloseHandle"
+  },
+  {
+   "addr": "1400fe168",
+   "callsites": 2,
+   "body_lines": 138,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DrawTextW"
+  },
+  {
+   "addr": "1400c3820",
+   "callsites": 2,
+   "body_lines": 130,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,CONCAT44,thunk_FUN_1400f429c,operator_new；串 msctls_updown32"
+  },
+  {
+   "addr": "1400e7124",
+   "callsites": 2,
+   "body_lines": 127,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleHandleW,GetProcAddress,VirtualAlloc；串 kernel32.dll|Wow64GetThreadContext"
+  },
+  {
+   "addr": "14002d33c",
+   "callsites": 2,
+   "body_lines": 119,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 -mode"
+  },
+  {
+   "addr": "1400c5300",
+   "callsites": 2,
+   "body_lines": 117,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c"
+  },
+  {
+   "addr": "14003c9e8",
+   "callsites": 2,
+   "body_lines": 99,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 _wcsupr,keybd_event,mouse_event；串 -gui|-m"
+  },
+  {
+   "addr": "1400fd86c",
+   "callsites": 2,
+   "body_lines": 80,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCursorPos,GetWindowRect,PtInRect,KillTimer"
+  },
+  {
+   "addr": "140024a54",
+   "callsites": 2,
+   "body_lines": 75,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection；串 &CurDir|\\\\"
+  },
+  {
+   "addr": "1400c42ac",
+   "callsites": 2,
+   "body_lines": 73,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrRChrW,CONCAT44；串 1"
+  },
+  {
+   "addr": "1400ebd30",
+   "callsites": 2,
+   "body_lines": 73,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 ResetEvent,CreateEventW,WaitForMultipleObjects,Sleep；串 HelloASL|Error: %d - "
+  },
+  {
+   "addr": "14010511c",
+   "callsites": 2,
+   "body_lines": 72,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,CONCAT44,_controlfp_s；串 atan"
+  },
+  {
+   "addr": "1400f2f58",
+   "callsites": 2,
+   "body_lines": 69,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14003d92c",
+   "callsites": 2,
+   "body_lines": 65,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetTickCount；串 FORCESHUTDOWN|LOCKDOWN"
+  },
+  {
+   "addr": "1400f53c8",
+   "callsites": 2,
+   "body_lines": 60,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new,SendMessageW"
+  },
+  {
+   "addr": "14008569c",
+   "callsites": 2,
+   "body_lines": 55,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400fd35c",
+   "callsites": 2,
+   "body_lines": 53,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetBkMode,GetBkColor,DeleteObject,CreateSolidBrush"
+  },
+  {
+   "addr": "1400e4160",
+   "callsites": 2,
+   "body_lines": 50,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e3e38",
+   "callsites": 2,
+   "body_lines": 49,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 OpenFileMappingW,CloseHandle,CreateFileMappingW,GetLastError"
+  },
+  {
+   "addr": "140024f20",
+   "callsites": 2,
+   "body_lines": 45,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 LOGS |\\n"
+  },
+  {
+   "addr": "1400ff730",
+   "callsites": 2,
+   "body_lines": 44,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400fd5e8",
+   "callsites": 2,
+   "body_lines": 43,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetParent,DeleteObject,GetWindowRect,ClientToScreen"
+  },
+  {
+   "addr": "140030f1c",
+   "callsites": 2,
+   "body_lines": 40,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 @CALL ** "
+  },
+  {
+   "addr": "14006e588",
+   "callsites": 2,
+   "body_lines": 38,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400e4078",
+   "callsites": 2,
+   "body_lines": 37,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e4324",
+   "callsites": 2,
+   "body_lines": 37,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetLastError,ReadProcessMemory,VirtualQueryEx"
+  },
+  {
+   "addr": "1400f0ca0",
+   "callsites": 2,
+   "body_lines": 37,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetClientRect,GetDC,GetSysColor,CreateCompatibleDC"
+  },
+  {
+   "addr": "1400a3f08",
+   "callsites": 2,
+   "body_lines": 36,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 RANDOM"
+  },
+  {
+   "addr": "1400f0eb0",
+   "callsites": 2,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateSolidBrush,GetStockObject,DeleteObject,InvalidateRect"
+  },
+  {
+   "addr": "14004faa8",
+   "callsites": 2,
+   "body_lines": 33,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140067f90",
+   "callsites": 2,
+   "body_lines": 33,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f9324",
+   "callsites": 2,
+   "body_lines": 33,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DeleteObject"
+  },
+  {
+   "addr": "1400b1dec",
+   "callsites": 2,
+   "body_lines": 31,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection,operator_new"
+  },
+  {
+   "addr": "1400fd764",
+   "callsites": 2,
+   "body_lines": 31,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetTimer,InvalidateRect,SetCursor"
+  },
+  {
+   "addr": "14001c01c",
+   "callsites": 2,
+   "body_lines": 30,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleFileNameW,SetEnvironmentVariableW,StrRChrW；串 &PE_IDBASE|&WM_PE_BASE"
+  },
+  {
+   "addr": "14006e6c8",
+   "callsites": 2,
+   "body_lines": 28,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,CloseHandle,LeaveCriticalSection"
+  },
+  {
+   "addr": "14001c1d4",
+   "callsites": 2,
+   "body_lines": 27,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetEnvironmentVariableW"
+  },
+  {
+   "addr": "14005e8e8",
+   "callsites": 2,
+   "body_lines": 27,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400f0abc",
+   "callsites": 2,
+   "body_lines": 27,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateCompatibleDC,CreateCompatibleBitmap,CreateBitmap,SetBkColor"
+  },
+  {
+   "addr": "1400fbcb0",
+   "callsites": 2,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW,SendMessageW；串 RECHEDIT|RichEdit20W"
+  },
+  {
+   "addr": "1400613fc",
+   "callsites": 2,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetKeyboardState"
+  },
+  {
+   "addr": "1400eff58",
+   "callsites": 2,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DrawIconEx"
+  },
+  {
+   "addr": "1400f2a7c",
+   "callsites": 2,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f4114",
+   "callsites": 2,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400b0380",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 cmd"
+  },
+  {
+   "addr": "1400b2a4c",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400b2b64",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400bd620",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400ec428",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowPos,SendMessageW"
+  },
+  {
+   "addr": "1400f4064",
+   "callsites": 2,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 InvalidateRect"
+  },
+  {
+   "addr": "1400083c0",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 RegisterWindowMessageW,SHGetSpecialFolderPathA,GetModuleHandleA,LoadLibraryA；串 PECMD:MSGSVR:HWND|TaskbarButtonCreated"
+  },
+  {
+   "addr": "140017afc",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,StrRChrW,StrCmpNIW；串 .WC|.IN"
+  },
+  {
+   "addr": "140063ed4",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400aaa4c",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400b9204",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400b9340",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400e6f18",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 AllocateAndInitializeSid,CheckTokenMembership,FreeSid"
+  },
+  {
+   "addr": "1400f4ca0",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5104",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5c74",
+   "callsites": 2,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140063be8",
+   "callsites": 2,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400aa7e4",
+   "callsites": 2,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f51d8",
+   "callsites": 2,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e429c",
+   "callsites": 2,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleFileNameW,CONCAT71"
+  },
+  {
+   "addr": "1400ec7c0",
+   "callsites": 2,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowPos"
+  },
+  {
+   "addr": "1400f3674",
+   "callsites": 2,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowRect,SendMessageW"
+  },
+  {
+   "addr": "1400f40c8",
+   "callsites": 2,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f4c28",
+   "callsites": 2,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5c10",
+   "callsites": 2,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400634d4",
+   "callsites": 2,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 HeapFree"
+  },
+  {
+   "addr": "14006c648",
+   "callsites": 2,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400ecdd8",
+   "callsites": 2,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400eeea0",
+   "callsites": 2,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SelectObject,ReleaseDC"
+  },
+  {
+   "addr": "1400f4208",
+   "callsites": 2,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e4228",
+   "callsites": 2,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 LoadLibraryA,GetProcAddress,FreeLibrary；串 ntdll.dll|ZwUnmapViewOfSection"
+  },
+  {
+   "addr": "1400feda4",
+   "callsites": 2,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "140054b18",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006c430",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006fc4c",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006fcb4",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400aa094",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400aa2fc",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400b916c",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e412c",
+   "callsites": 2,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140054a50",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140054ab4",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006c3cc",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400aa484",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 UnregisterHotKey,GlobalDeleteAtom"
+  },
+  {
+   "addr": "1400eff10",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DestroyIcon,DeleteObject"
+  },
+  {
+   "addr": "1400fed38",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400fee24",
+   "callsites": 2,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400a9c40",
+   "callsites": 2,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 KillTimer"
+  },
+  {
+   "addr": "1400b2218",
+   "callsites": 2,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14005b9c8",
+   "callsites": 2,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateWindowExW,SendMessageW；串 Tooltips_Class32"
+  },
+  {
+   "addr": "1400f57f4",
+   "callsites": 2,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f5adc",
+   "callsites": 2,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400fc458",
+   "callsites": 2,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14001a220",
+   "callsites": 2,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,QueryPerformanceFrequency,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400f5724",
+   "callsites": 2,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f578c",
+   "callsites": 2,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f586c",
+   "callsites": 2,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f58d4",
+   "callsites": 2,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1401001c0",
+   "callsites": 1,
+   "body_lines": 272,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 SendMessageW,CONCAT62,CONCAT71"
+  },
+  {
+   "addr": "14003b010",
+   "callsites": 1,
+   "body_lines": 233,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 WaitForSingleObject,StrStrA,WaitForMultipleObjects,StrRChrW；串 <INFFILE>|7z x -y -aos "
+  },
+  {
+   "addr": "14003aad0",
+   "callsites": 1,
+   "body_lines": 173,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetEvent,CONCAT71,CloseHandle,CONCAT44；串 Local\\\\pecmd2012.lock.%c|!!!PECMD_SUB_OK"
+  },
+  {
+   "addr": "140023c48",
+   "callsites": 1,
+   "body_lines": 162,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT62"
+  },
+  {
+   "addr": "140106654",
+   "callsites": 1,
+   "body_lines": 102,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,_controlfp_s,CONCAT44"
+  },
+  {
+   "addr": "14003a810",
+   "callsites": 1,
+   "body_lines": 100,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,CloseHandle,CONCAT44,EnterCriticalSection；串 !!!PECMD_SUB_OK|7z x -y -aos "
+  },
+  {
+   "addr": "140106c5c",
+   "callsites": 1,
+   "body_lines": 91,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,_controlfp_s,CONCAT44"
+  },
+  {
+   "addr": "1400240c0",
+   "callsites": 1,
+   "body_lines": 88,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT62"
+  },
+  {
+   "addr": "14002487c",
+   "callsites": 1,
+   "body_lines": 80,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 _ENDFILE|_ENDFILE-IMPORT"
+  },
+  {
+   "addr": "1401055ec",
+   "callsites": 1,
+   "body_lines": 72,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,CONCAT44"
+  },
+  {
+   "addr": "140104b00",
+   "callsites": 1,
+   "body_lines": 69,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,SUB84,SQRT,_controlfp_s"
+  },
+  {
+   "addr": "1401058cc",
+   "callsites": 1,
+   "body_lines": 65,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,CONCAT44"
+  },
+  {
+   "addr": "140104e08",
+   "callsites": 1,
+   "body_lines": 63,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,SQRT,_controlfp_s,CONCAT44"
+  },
+  {
+   "addr": "140107468",
+   "callsites": 1,
+   "body_lines": 59,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,_controlfp_s,SQRT,CONCAT44；串 _hypot"
+  },
+  {
+   "addr": "14006ce38",
+   "callsites": 1,
+   "body_lines": 50,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrRChrW,StrChrW,StrCmpNIW；串 \\\\\\\\.\\\\PhysicalDrive|\\\\\\\\?\\\\"
+  },
+  {
+   "addr": "140079e34",
+   "callsites": 1,
+   "body_lines": 42,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 DeviceIoControl"
+  },
+  {
+   "addr": "1400ff5d0",
+   "callsites": 1,
+   "body_lines": 42,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14001b168",
+   "callsites": 1,
+   "body_lines": 36,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71"
+  },
+  {
+   "addr": "14006b6e8",
+   "callsites": 1,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "14005b494",
+   "callsites": 1,
+   "body_lines": 29,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetHandleInformation,GetLastError,GetCurrentProcess,DuplicateHandle"
+  },
+  {
+   "addr": "14010697c",
+   "callsites": 1,
+   "body_lines": 29,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 CONCAT44,ABS,SQRT"
+  },
+  {
+   "addr": "1400e5458",
+   "callsites": 1,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1401053a8",
+   "callsites": 1,
+   "body_lines": 25,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 ABS,CONCAT44"
+  },
+  {
+   "addr": "140016ae0",
+   "callsites": 1,
+   "body_lines": 24,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 RegisterServiceCtrlHandlerW,SetServiceStatus,GetCommandLineW,CreateThread"
+  },
+  {
+   "addr": "1400fee94",
+   "callsites": 1,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14001d5f4",
+   "callsites": 1,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14006d788",
+   "callsites": 1,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e4edc",
+   "callsites": 1,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetEvent"
+  },
+  {
+   "addr": "1400f94a0",
+   "callsites": 0,
+   "body_lines": 1232,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,StrStrW,CONCAT62,CONCAT22；串  %I64d| %ld"
+  },
+  {
+   "addr": "1400f6db0",
+   "callsites": 0,
+   "body_lines": 1103,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetWindowLongW,GetSysColor,CreatePen"
+  },
+  {
+   "addr": "1400d9818",
+   "callsites": 0,
+   "body_lines": 1088,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 Shell_NotifyIconW,SendMessageW,PostMessageW,GetScrollInfo；串 PECMD2012|0"
+  },
+  {
+   "addr": "140100ac4",
+   "callsites": 0,
+   "body_lines": 715,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c,SendMessageW,GetLastError,CONCAT31；串 VAL|CHECK"
+  },
+  {
+   "addr": "1400369d0",
+   "callsites": 0,
+   "body_lines": 714,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GlobalMemoryStatus,SUB168,ZEXT816,CONCAT71；串 --version|*%X.%02X  %X.%X %s"
+  },
+  {
+   "addr": "1400d85d0",
+   "callsites": 0,
+   "body_lines": 440,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowLongPtrW,EnterCriticalSection,SetWindowPos,GetModuleHandleA；串 user32.dll|RegisterTouchWindow"
+  },
+  {
+   "addr": "1400d7ce4",
+   "callsites": 0,
+   "body_lines": 321,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,LeaveCriticalSection,thunk_FUN_1400f429c,SendMessageW；串 Enable|Sel"
+  },
+  {
+   "addr": "1400f36ec",
+   "callsites": 0,
+   "body_lines": 310,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetWindowRect,InvalidateRect"
+  },
+  {
+   "addr": "1400ee3d0",
+   "callsites": 0,
+   "body_lines": 278,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetBkColor,CreateSolidBrush,FillRect,DeleteObject"
+  },
+  {
+   "addr": "1400c5ba8",
+   "callsites": 0,
+   "body_lines": 271,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrChrW,StrCmpNIW,CONCAT62；串 char|wchar"
+  },
+  {
+   "addr": "1400f42fc",
+   "callsites": 0,
+   "body_lines": 271,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 BeginPaint,CreateCompatibleDC,SendMessageW,CreateSolidBrush"
+  },
+  {
+   "addr": "1400f61dc",
+   "callsites": 0,
+   "body_lines": 270,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetParent,SendMessageW,thunk_FUN_1400f429c,thunk_FUN_1400f42c4"
+  },
+  {
+   "addr": "1400df464",
+   "callsites": 0,
+   "body_lines": 261,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection,GetLastError,StrStrW；串  * %s,\\\\\\\\.\\\\CDROM%s|\\\\\\\\.\\\\PHYSICALDRIVE"
+  },
+  {
+   "addr": "1400fc8ec",
+   "callsites": 0,
+   "body_lines": 209,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,PostMessageW,GetCursorPos,GetWindowRect"
+  },
+  {
+   "addr": "140111318",
+   "callsites": 0,
+   "body_lines": 197,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _GetEstablisherFrame,__GetUnwindTryBlock,__SetState,__SetUnwindTryBlock；串 bad exception"
+  },
+  {
+   "addr": "1400dc410",
+   "callsites": 0,
+   "body_lines": 177,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowTextW,thunk_FUN_1400f429c,GetDC,CONCAT71；串 Pos|@0x%p                 "
+  },
+  {
+   "addr": "14002c048",
+   "callsites": 0,
+   "body_lines": 170,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrRChrW,_wcsicmp,ExpandEnvironmentStringsW,DeleteFileW；串 %SystemRoot%\\\\INF\\\\|%SystemRoot%\\\\SYSTEM32\\\\"
+  },
+  {
+   "addr": "1400ffb64",
+   "callsites": 0,
+   "body_lines": 170,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetLastError；串 %I64d"
+  },
+  {
+   "addr": "1400ed278",
+   "callsites": 0,
+   "body_lines": 169,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDIBits,SetDIBits"
+  },
+  {
+   "addr": "1400f69b8",
+   "callsites": 0,
+   "body_lines": 152,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f3308,SendMessageW,GetCursorPos,ScreenToClient"
+  },
+  {
+   "addr": "1400c94f0",
+   "callsites": 0,
+   "body_lines": 151,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,LeaveCriticalSection,InvalidateRect,CONCAT44；串 Enable|update"
+  },
+  {
+   "addr": "1400ef14c",
+   "callsites": 0,
+   "body_lines": 140,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetSysColor,CreateCompatibleDC,CreateCompatibleBitmap,BitBlt"
+  },
+  {
+   "addr": "14010ded4",
+   "callsites": 0,
+   "body_lines": 133,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400eda04",
+   "callsites": 0,
+   "body_lines": 128,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDIBits,SetDIBits；串 DBGSCALEb %d:  [%d X %d]"
+  },
+  {
+   "addr": "1400eca00",
+   "callsites": 0,
+   "body_lines": 127,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,GetParent,SendMessageW,CONCAT44"
+  },
+  {
+   "addr": "1400e69ac",
+   "callsites": 0,
+   "body_lines": 125,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrChrW；串 %.*lf|%.*lG"
+  },
+  {
+   "addr": "1400389c4",
+   "callsites": 0,
+   "body_lines": 124,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,StrChrW,CONCAT71,StrCpyNW；串 SOFTWARE\\\\PELOGON|LogoFile"
+  },
+  {
+   "addr": "1400fb654",
+   "callsites": 0,
+   "body_lines": 115,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SystemParametersInfoW,SendMessageW,SetWindowTextW,PostMessageW"
+  },
+  {
+   "addr": "1400f4e5c",
+   "callsites": 0,
+   "body_lines": 104,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "14010dbc4",
+   "callsites": 0,
+   "body_lines": 98,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 CONCAT44"
+  },
+  {
+   "addr": "1400f1c8c",
+   "callsites": 0,
+   "body_lines": 94,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowTextW,SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "1400ecf90",
+   "callsites": 0,
+   "body_lines": 92,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetPixel,SetPixel"
+  },
+  {
+   "addr": "1400fc4a4",
+   "callsites": 0,
+   "body_lines": 90,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "1400f1504",
+   "callsites": 0,
+   "body_lines": 81,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71,LeaveCriticalSection,PostMessageW,GetLastError"
+  },
+  {
+   "addr": "1400c99b4",
+   "callsites": 0,
+   "body_lines": 80,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f429c"
+  },
+  {
+   "addr": "1400e8748",
+   "callsites": 0,
+   "body_lines": 76,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetProcessHeap,HeapAlloc,EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400e6de8",
+   "callsites": 0,
+   "body_lines": 74,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400ed7a0",
+   "callsites": 0,
+   "body_lines": 74,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetPixel,SetPixel"
+  },
+  {
+   "addr": "14002ca80",
+   "callsites": 0,
+   "body_lines": 70,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCurrentThreadId,EnterCriticalSection,CONCAT44,LeaveCriticalSection"
+  },
+  {
+   "addr": "1400eec28",
+   "callsites": 0,
+   "body_lines": 69,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 InvalidateRect,SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "1400ef694",
+   "callsites": 0,
+   "body_lines": 67,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetWindowLongW,KillTimer,PostMessageW"
+  },
+  {
+   "addr": "14006f73c",
+   "callsites": 0,
+   "body_lines": 58,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowRect,PtInRect,GetAsyncKeyState"
+  },
+  {
+   "addr": "1400f4d1c",
+   "callsites": 0,
+   "body_lines": 58,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f60a4",
+   "callsites": 0,
+   "body_lines": 57,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400ffa38",
+   "callsites": 0,
+   "body_lines": 56,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f9134",
+   "callsites": 0,
+   "body_lines": 54,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c36c8",
+   "callsites": 0,
+   "body_lines": 53,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 StrCmpNIW"
+  },
+  {
+   "addr": "1400f8fcc",
+   "callsites": 0,
+   "body_lines": 51,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400d95f0",
+   "callsites": 0,
+   "body_lines": 49,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 IsIconic,GetWindowDC,BeginPaint,GetClientRect；串 %.260s 0x%p %ld  %ld"
+  },
+  {
+   "addr": "140077fb8",
+   "callsites": 0,
+   "body_lines": 48,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 ReadFile,WriteFile"
+  },
+  {
+   "addr": "1400544bc",
+   "callsites": 0,
+   "body_lines": 47,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection"
+  },
+  {
+   "addr": "140066d18",
+   "callsites": 0,
+   "body_lines": 46,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400efd80",
+   "callsites": 0,
+   "body_lines": 46,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowTextW,InvalidateRect；串 color"
+  },
+  {
+   "addr": "1400fc148",
+   "callsites": 0,
+   "body_lines": 46,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,LeaveCriticalSection,SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "140106a88",
+   "callsites": 0,
+   "body_lines": 46,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400ff8a8",
+   "callsites": 0,
+   "body_lines": 45,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400e6574",
+   "callsites": 0,
+   "body_lines": 44,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDesktopWindow,CreateDialogParamW,CreateWindowExW,GetParent；串 #32770"
+  },
+  {
+   "addr": "14005f868",
+   "callsites": 0,
+   "body_lines": 43,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71"
+  },
+  {
+   "addr": "1400c12fc",
+   "callsites": 0,
+   "body_lines": 42,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c1000",
+   "callsites": 0,
+   "body_lines": 41,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400eef20",
+   "callsites": 0,
+   "body_lines": 41,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetParent,GetDlgCtrlID,SendMessageW,InvalidateRect"
+  },
+  {
+   "addr": "140110a24",
+   "callsites": 0,
+   "body_lines": 41,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _GetThrowImageBase,_GetImageBase,__TypeMatch"
+  },
+  {
+   "addr": "1400f1234",
+   "callsites": 0,
+   "body_lines": 38,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,PostMessageW"
+  },
+  {
+   "addr": "14005e51c",
+   "callsites": 0,
+   "body_lines": 37,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e4cc0",
+   "callsites": 0,
+   "body_lines": 36,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 %08X"
+  },
+  {
+   "addr": "1400fc7a0",
+   "callsites": 0,
+   "body_lines": 36,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDC,GetClientRect,SendMessageW,SelectObject"
+  },
+  {
+   "addr": "1400e7414",
+   "callsites": 0,
+   "body_lines": 35,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetModuleHandleA,GetProcAddress,VirtualFree；串 Kernel32.dll|VirtualAllocEx"
+  },
+  {
+   "addr": "1400f2cf0",
+   "callsites": 0,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetCursorPos,GetWindowRect,PtInRect,KillTimer"
+  },
+  {
+   "addr": "1400f5b54",
+   "callsites": 0,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400fe4a4",
+   "callsites": 0,
+   "body_lines": 34,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetWindowTextW；串 color|enable"
+  },
+  {
+   "addr": "14010da74",
+   "callsites": 0,
+   "body_lines": 34,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _ctrlfp,CONCAT44,_exception_enabled,CONCAT71"
+  },
+  {
+   "addr": "1400f20c0",
+   "callsites": 0,
+   "body_lines": 33,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,GetBkColor,DeleteObject,CreateSolidBrush"
+  },
+  {
+   "addr": "1400f5e2c",
+   "callsites": 0,
+   "body_lines": 32,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5f60",
+   "callsites": 0,
+   "body_lines": 32,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f8f00",
+   "callsites": 0,
+   "body_lines": 32,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e6fb8",
+   "callsites": 0,
+   "body_lines": 31,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetVersion,GetCurrentProcess,OpenProcessToken,GetTokenInformation"
+  },
+  {
+   "addr": "1400fbbb0",
+   "callsites": 0,
+   "body_lines": 31,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetCursor,GetBkColor,CreateSolidBrush,DeleteObject"
+  },
+  {
+   "addr": "14011a4b7",
+   "callsites": 0,
+   "body_lines": 31,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _getptd"
+  },
+  {
+   "addr": "14005f60c",
+   "callsites": 0,
+   "body_lines": 30,
+   "region": "biz",
+   "stub_only": false,
+   "note": "串 CreateVirtualDisk|VirtDisk.DLL"
+  },
+  {
+   "addr": "14006abb8",
+   "callsites": 0,
+   "body_lines": 30,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1401054bc",
+   "callsites": 0,
+   "body_lines": 30,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e59c0",
+   "callsites": 0,
+   "body_lines": 28,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f2dd4",
+   "callsites": 0,
+   "body_lines": 28,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetFocus"
+  },
+  {
+   "addr": "1400fef3c",
+   "callsites": 0,
+   "body_lines": 28,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetFocus"
+  },
+  {
+   "addr": "1400f527c",
+   "callsites": 0,
+   "body_lines": 27,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SelectObject,SetBkMode,SetTextColor,DrawTextW"
+  },
+  {
+   "addr": "1400fb934",
+   "callsites": 0,
+   "body_lines": 27,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetObjectW"
+  },
+  {
+   "addr": "1400f1f78",
+   "callsites": 0,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "1400f3264",
+   "callsites": 0,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetClientRect,SendMessageW,InvalidateRect"
+  },
+  {
+   "addr": "1400fbab8",
+   "callsites": 0,
+   "body_lines": 26,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "1400cadec",
+   "callsites": 0,
+   "body_lines": 25,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400746b0",
+   "callsites": 0,
+   "body_lines": 24,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400ec500",
+   "callsites": 0,
+   "body_lines": 24,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400f0a3c",
+   "callsites": 0,
+   "body_lines": 23,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SetBkMode,SetTextColor,GetSysColor,CreateSolidBrush"
+  },
+  {
+   "addr": "14006857c",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71"
+  },
+  {
+   "addr": "1400c45a4",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400c46cc",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 operator_new"
+  },
+  {
+   "addr": "1400f2bf0",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 Polyline"
+  },
+  {
+   "addr": "1400f6944",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 thunk_FUN_1400f3308"
+  },
+  {
+   "addr": "1400fce6c",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CONCAT71；串 cmd|<buddy>"
+  },
+  {
+   "addr": "1400ff154",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400ff20c",
+   "callsites": 0,
+   "body_lines": 22,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400fc378",
+   "callsites": 0,
+   "body_lines": 21,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW,ShowWindow；串 ScrollBar"
+  },
+  {
+   "addr": "14001fd60",
+   "callsites": 0,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,SendMessageTimeoutW"
+  },
+  {
+   "addr": "14006306c",
+   "callsites": 0,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CloseHandle"
+  },
+  {
+   "addr": "1400f345c",
+   "callsites": 0,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW,UpdateWindow；串 SysListView32"
+  },
+  {
+   "addr": "1400f35b8",
+   "callsites": 0,
+   "body_lines": 20,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetIconInfo,GetObjectW,DeleteObject"
+  },
+  {
+   "addr": "14005d8bc",
+   "callsites": 0,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CopyImage"
+  },
+  {
+   "addr": "1400e5a58",
+   "callsites": 0,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 CreateSolidBrush,DeleteObject,InvalidateRect"
+  },
+  {
+   "addr": "1400f2c44",
+   "callsites": 0,
+   "body_lines": 19,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW,GetClientRect,GetWindowRect,ShowScrollBar"
+  },
+  {
+   "addr": "1400d6f8c",
+   "callsites": 0,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,GetDC,ReleaseDC"
+  },
+  {
+   "addr": "1400e3f94",
+   "callsites": 0,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SHChangeNotify,FindWindowW,FindWindowExW,PostMessageW；串 Progman|Program Manager"
+  },
+  {
+   "addr": "1400f5338",
+   "callsites": 0,
+   "body_lines": 18,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,SetWindowLongW"
+  },
+  {
+   "addr": "14011a5b7",
+   "callsites": 0,
+   "body_lines": 18,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _FindAndUnlinkFrame,_IsExceptionObjectToBeDestroyed,__DestructExceptionObject,_getptd"
+  },
+  {
+   "addr": "14001bb30",
+   "callsites": 0,
+   "body_lines": 17,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 EnterCriticalSection,UnhookWindowsHookEx,GetProcessHeap,HeapFree"
+  },
+  {
+   "addr": "140069b68",
+   "callsites": 0,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14007efa4",
+   "callsites": 0,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14007f018",
+   "callsites": 0,
+   "body_lines": 16,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1401107dc",
+   "callsites": 0,
+   "body_lines": 16,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _getptd"
+  },
+  {
+   "addr": "1400857e4",
+   "callsites": 0,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400a4350",
+   "callsites": 0,
+   "body_lines": 15,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 ReleaseMutex"
+  },
+  {
+   "addr": "1400402ec",
+   "callsites": 0,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14005b3e4",
+   "callsites": 0,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14005f750",
+   "callsites": 0,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 RegCreateKeyExW,RegCloseKey"
+  },
+  {
+   "addr": "1400e86b4",
+   "callsites": 0,
+   "body_lines": 14,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400bcbe0",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f21c0",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW,SendMessageW；串 EDIT"
+  },
+  {
+   "addr": "1400f42c4",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5dc4",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f5ef8",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f6034",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140106500",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14010ae40",
+   "callsites": 0,
+   "body_lines": 13,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400229f8",
+   "callsites": 0,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 WriteProcessMemory,CONCAT44"
+  },
+  {
+   "addr": "1400f230c",
+   "callsites": 0,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "1400f2a00",
+   "callsites": 0,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400fbde0",
+   "callsites": 0,
+   "body_lines": 12,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "1400f400c",
+   "callsites": 0,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f4194",
+   "callsites": 0,
+   "body_lines": 11,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "140103e10",
+   "callsites": 0,
+   "body_lines": 11,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140111c60",
+   "callsites": 0,
+   "body_lines": 11,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140119f49",
+   "callsites": 0,
+   "body_lines": 11,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400684fc",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c453c",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e62e4",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400ebfe4",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW；串 tooltips_class32"
+  },
+  {
+   "addr": "1400ec5e4",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetWindowLongW,CreateWindowExW；串 SysTabControl32"
+  },
+  {
+   "addr": "1400fc114",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400fc2e0",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14010d950",
+   "callsites": 0,
+   "body_lines": 10,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _ctrlfp,_set_errno_from_matherr"
+  },
+  {
+   "addr": "1400ef8c8",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400f05f8",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 BeginPaint,EndPaint"
+  },
+  {
+   "addr": "1400f1f28",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "1400f3640",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 SendMessageW"
+  },
+  {
+   "addr": "1400fba68",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "biz",
+   "stub_only": false,
+   "note": "调用 GetDlgCtrlID,GetParent,PostMessageW"
+  },
+  {
+   "addr": "14011a6d7",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14011a706",
+   "callsites": 0,
+   "body_lines": 9,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400c3ca4",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400e6cf8",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1400eceb4",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "biz",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "1401065a4",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "140111ae4",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 DecodePointer"
+  },
+  {
+   "addr": "140112374",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "crt",
+   "stub_only": false,
+   "note": "无显著特征"
+  },
+  {
+   "addr": "14011a478",
+   "callsites": 0,
+   "body_lines": 8,
+   "region": "crt",
+   "stub_only": false,
+   "note": "调用 _getptd"
+  }
+ ]
+}

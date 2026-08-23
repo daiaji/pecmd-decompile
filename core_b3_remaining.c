@@ -24198,7 +24198,7 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     return param_1;
 }
 
-HBITMAP FUN_1400b2ca8(HBITMAP param_1, void *param_2, uint64_t *param_3, uint64_t param_4)
+HBITMAP PECMD_RenderTextBitmapIcon(HBITMAP param_1, void *param_2, uint64_t *param_3, uint64_t param_4)
 {
     /* @0x1400b2ca8 size=4193 — 位图/图标文本渲染器: 解析 fill:/size:/font:/color:/bkcolor: 属性并
      *   用 GDI+ 把文本画到新位图(可附加可选尺寸/字体/栏), 支持 CreateIconIndirect 返回图标, 供
@@ -24955,7 +24955,7 @@ LAB_1400b72be:
             ((*(int64_t *)(param_1 + 0x98) == 0 &&
               (uVar13 = FUN_14005C788("<bmp", (const WCHAR *)(uintptr_t)local_218, 4),
                (char)uVar13 != (char)pHVar30)))) {
-            pHVar14 = FUN_1400b2ca8(pHVar12, (void *)0x0, (uint64_t *)0x0,
+            pHVar14 = PECMD_RenderTextBitmapIcon(pHVar12, (void *)0x0, (uint64_t *)0x0,
                                     (uint64_t)*(int *)(param_1 + 0xa8));
             pHVar30 = (HMODULE)0x0;
             *(HBITMAP *)(param_1 + 0x98) = pHVar14;
@@ -24969,7 +24969,7 @@ LAB_1400b72be:
             if ((uVar37 == (uint32_t)pHVar30) && (*(HMODULE *)(param_1 + 0x98) == pHVar30)) {
                 uVar13 = FUN_14005C788("<ico", (const WCHAR *)(uintptr_t)pHVar12, 4);
                 if ((char)uVar13 != (char)pHVar30) {
-                    pHVar14 = FUN_1400b2ca8(pHVar12, (void *)0x0, (uint64_t *)0x0,
+                    pHVar14 = PECMD_RenderTextBitmapIcon(pHVar12, (void *)0x0, (uint64_t *)0x0,
                                             (uint64_t)*(int *)(param_1 + 0xa8));
                     pHVar30 = (HMODULE)0x0;
                     *(HBITMAP *)(param_1 + 0x98) = pHVar14;
@@ -25002,7 +25002,7 @@ LAB_1400b7613:
             (uVar13 = FUN_14005C788("<img", (const WCHAR *)(uintptr_t)pHVar12, 4),
              (char)uVar13 == (char)pHVar30))
             goto LAB_1400b765b;
-        local_238 = (HICON)FUN_1400b2ca8(pHVar12, (void *)0x0, (uint64_t *)0x0,
+        local_238 = (HICON)PECMD_RenderTextBitmapIcon(pHVar12, (void *)0x0, (uint64_t *)0x0,
                                          (uint64_t)*(int *)(param_1 + 0xa8));
         pHVar30 = (HMODULE)0x0;
         if (local_238 == (HICON)0x0) goto LAB_1400b765b;

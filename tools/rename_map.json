@@ -1155,5 +1155,6 @@
   "FUN_14002cc30": "PECMD_ExpandSpecialDirs",
   "FUN_1400b1724": "PECMD_DispatchExpressionBlock",
   "FUN_14002c634": "PECMD_DrvLoadInstall",
-  "FUN_1400d2e90": "PECMD_DdCopyCommand"
+  "FUN_1400d2e90": "PECMD_DdCopyCommand",
+  "FUN_1400b2ca8": "PECMD_RenderTextBitmapIcon"
 }

@@ -4,6 +4,7 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x1400b2ca8 | FUN_1400b2ca8 | PECMD_RenderTextBitmapIcon |
 | 0x1400d2e90 | FUN_1400d2e90 | PECMD_DdCopyCommand |
 | 0x14002c634 | FUN_14002c634 | PECMD_DrvLoadInstall |
 | 0x1400b1724 | FUN_1400b1724 | PECMD_DispatchExpressionBlock |
