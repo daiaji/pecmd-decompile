@@ -592,7 +592,8 @@ uint64_t CreateDirectoryW(const uint16_t *path, void *sa) { (void)path;(void)sa;
 HRGN CreateEllipticRgn(int a, int b, int c, int d) { (void)a;(void)b;(void)c;(void)d; return (HRGN)0; }
 void *CreateEventW(void *sa, int manual, int init, const unsigned short *name) { (void)sa;(void)manual;(void)init;(void)name; return (void*)0; }
 uint64_t CreateFileMappingA(void) { return 0; }
-uint64_t CreateFileMappingW(void) { return 0; }
+/* CreateFileMappingW: 签名升级 0->6 参 (FUN_1400e3e38 文件映射辅助直移需要; 体保持桩, 同 win32_stub.h) */
+HANDLE CreateFileMappingW(HANDLE h, LPSECURITY_ATTRIBUTES sa, DWORD prot, DWORD maxHi, DWORD maxLo, LPCWSTR name) { (void)h;(void)sa;(void)prot;(void)maxHi;(void)maxLo;(void)name; return (HANDLE)0; }
 uint64_t CreateFileW(void) { return 0; }
 uint64_t CreateFileA(void) { return 0; }
 uint64_t CreateFontW(void) { return 0; }
