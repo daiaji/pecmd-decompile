@@ -12,12 +12,12 @@
  *   扫描 INF 寻找驱动     FUN_14002B2EC    @0x14002b2ec
  *   复制 INF/SYS 到系统   FUN_14002B9EC      @0x14002b9ec
  *   解析日期时间表达式    FUN_14002D33C  @0x14002d33c
- *   显示分辨率弹出菜单    FUN_14002E790 @0x14002e790
+ *   显示分辨率弹出菜单    PECMD_DispConfirmPopupMenu @0x14002e790
  *   解析命令路径          FUN_14002FD88     @0x14002fd88
- *   ImDisk 控制请求       FUN_140035CEC        @0x140035cec
- *   ImDisk 移除/卸载      FUN_14003634C         @0x14003634c
+ *   ImDisk 控制请求       PECMD_MountImDiskRamDisk        @0x140035cec
+ *   ImDisk 移除/卸载      PECMD_DismountRamDiskDrive         @0x14003634c
  *   处理电源命令          FUN_14003DB00  @0x14003db00
- *   主 Shell 循环         FUN_14003E768        @0x14003e768
+ *   主 Shell 循环         PECMD_ShellLaunchThread        @0x14003e768
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -89,8 +89,8 @@ extern DWORD FUN_14006459C(LPCWSTR path, uint32_t mode, LPWSTR buf,
 extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern int64_t PECMD_WideStrLen(void *s);
 extern char PECMD_ParseEnvSwitches(LPCWSTR s, int64_t *ctx, int mode);
-extern POINT FUN_1400CB820(int64_t *ctx, uint64_t p, int64_t a, char c);
-extern LARGE_INTEGER FUN_1400DC9FC(LARGE_INTEGER a, LARGE_INTEGER b,
+extern POINT PECMD_EvalQueryValue(int64_t *ctx, uint64_t p, int64_t a, char c);
+extern LARGE_INTEGER PECMD_EvalAtCommand(LARGE_INTEGER a, LARGE_INTEGER b,
                                    uint16_t *c, int64_t d);
 extern void PECMD_EnumCDRomDrives(int64_t *ctx);
 extern void FUN_14007A224(void *ctx, WCHAR *text, WCHAR **out, int c,
@@ -1411,7 +1411,7 @@ LARGE_INTEGER FUN_14002D33C(LARGE_INTEGER script, LPCWSTR arg,
     }
 
     if (*p == L'?') {
-        POINT pt = FUN_1400CB820((int64_t *)script.QuadPart,
+        POINT pt = PECMD_EvalQueryValue((int64_t *)script.QuadPart,
                                  (uint64_t)(uintptr_t)(p + 1), param5, mode);
         result.LowPart = (DWORD)pt.x;
         result.HighPart = pt.y;
@@ -1428,7 +1428,7 @@ LARGE_INTEGER FUN_14002D33C(LARGE_INTEGER script, LPCWSTR arg,
     }
 
     if (*p2 == L'@') {
-        return FUN_1400DC9FC(script, (LARGE_INTEGER)(intptr_t)(p2 + 1),
+        return PECMD_EvalAtCommand(script, (LARGE_INTEGER)(intptr_t)(p2 + 1),
                              (uint16_t *)arg2, param5);
     }
 
@@ -1508,10 +1508,10 @@ done:
     return result;
 }
 
-/* ========== FUN_14002E790 @0x14002e790 ==========
+/* ========== PECMD_DispConfirmPopupMenu @0x14002e790 ==========
  * 在光标位置弹出显示器分辨率菜单，选择后执行对应的 DISP 命令。
  */
-void FUN_14002E790(HWND hwnd)
+void PECMD_DispConfirmPopupMenu(HWND hwnd)
 {
     HMENU menu;
     HMENU subMenu;
@@ -1889,11 +1889,11 @@ cleanup:
     return result;
 }
 
-/* ========== FUN_140035CEC @0x140035cec ==========
+/* ========== PECMD_MountImDiskRamDisk @0x140035cec ==========
  * 向 ImDisk 驱动发送 IOCTL 控制请求，可挂载/创建虚拟磁盘。
  * TODO(verify): 函数指针全局符号按 void* 存储，调用处用局部函数指针还原。
  */
-uint32_t FUN_140035CEC(uint32_t *unit, uint64_t *data1, uint64_t *data2,
+uint32_t PECMD_MountImDiskRamDisk(uint32_t *unit, uint64_t *data1, uint64_t *data2,
                              uint32_t flags, LPCWSTR path, int mode,
                              WCHAR *drive, LPCWSTR mountPoint, uint32_t opts)
 {
@@ -2103,11 +2103,11 @@ close_out:
     return ret;
 }
 
-/* ========== FUN_14003634C @0x14003634c ==========
+/* ========== PECMD_DismountRamDiskDrive @0x14003634c ==========
  * ImDisk 磁盘移除/卸载：先锁定/卸载设备，再删除 DOS 设备名。
  * TODO(verify): 设备路径模板与常量按语义简化为 \\.\X: 形式。
  */
-uint64_t FUN_14003634C(uint32_t unit, WCHAR *drive, int mode,
+uint64_t PECMD_DismountRamDiskDrive(uint32_t unit, WCHAR *drive, int mode,
                             int stop, int count, uint32_t opts)
 {
     uint8_t *buf = NULL;
@@ -2510,10 +2510,10 @@ shutdown_parse:
     return 0;
 }
 
-/* ========== FUN_14003E768 @0x14003e768 ==========
+/* ========== PECMD_ShellLaunchThread @0x14003e768 ==========
  * 主 Shell 循环: 等待/执行 Shell 命令，处理重试与退出条件。
  */
-void FUN_14003E768(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
+void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
                          uint64_t a4)
 {
     WCHAR *shellCmd = NULL;

@@ -14,7 +14,7 @@
  *   消息/关机任务    FUN_1400612CC @0x1400612cc
  *   解析颜色列表     FUN_1400677B0 @0x1400677b0
  *   复制路径段       FUN_14006E030 @0x14006e030
- *   调用 COM 对象    FUN_14006E588 @0x14006e588
+ *   调用 COM 对象    PECMD_DrawImageFileToDC @0x14006e588
  *   窗口区域命中测试 FUN_14006F73C @0x14006f73c
  *   弹出/载入介质    FUN_14006F908 @0x14006f908
  *   解析冒号列表     FUN_14006FD1C @0x14006fd1c
@@ -29,7 +29,7 @@
  *   设置文件名扩展   PECMD_SetFileNameExtension @0x140096748
  *   查找/创建命名锁  FUN_1400A41FC @0x1400a41fc
  *   添加控件 A       FUN_1400AA53C @0x1400aa53c
- *   添加控件 B       FUN_1400B1DEC @0x1400b1dec
+ *   添加控件 B       PECMD_AppendCheckboxChild @0x1400b1dec
  *   添加控件 C       FUN_1400B2B64 @0x1400b2b64
  *   添加控件 D       FUN_1400B9204 @0x1400b9204
  *   添加控件 E       FUN_1400B9340 @0x1400b9340
@@ -657,10 +657,10 @@ LAB_14006e097:
     return *out + (int64_t)(int)((limit - lVar4) >> 1) * 2;
 }
 
-/* ========== FUN_14006E588 @0x14006e588 ==========
+/* ========== PECMD_DrawImageFileToDC @0x14006e588 ==========
  * 在 COM 临界区中获取对象并调用其绘制/显示虚函数。
  */
-bool FUN_14006E588(int64_t ctx, LPCWSTR name, int width, int height,
+bool PECMD_DrawImageFileToDC(int64_t ctx, LPCWSTR name, int width, int height,
                            uint32_t flags1, uint32_t flags2)
 {
     int iVar1;
@@ -1478,10 +1478,10 @@ void FUN_1400AA53C(WPARAM mgr, int64_t v2, int64_t *p3, int x,
     }
 }
 
-/* ========== FUN_1400B1DEC @0x1400b1dec ==========
+/* ========== PECMD_AppendCheckboxChild @0x1400b1dec ==========
  * 添加控件 B（0x88 构造体，含全局数组槽位）。
  */
-void FUN_1400B1DEC(int64_t mgr, int64_t v2, int64_t *p3,
+void PECMD_AppendCheckboxChild(int64_t mgr, int64_t v2, int64_t *p3,
                        uint32_t flags1, uint32_t flags2, int mode)
 {
     uint32_t uVar1;

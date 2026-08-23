@@ -47,7 +47,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
-extern void FUN_14003E768(LARGE_INTEGER script, uint64_t a, uint64_t b,
+extern void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a, uint64_t b,
                           uint64_t c);
 extern void *FUN_1400E57C0(void *obj);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *s, char *key);
@@ -84,7 +84,7 @@ void PECMD_DebugOutput(uint64_t a, uint64_t b, uint64_t c,
         PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"),
                       0x261d, d);
     }
-    FUN_14003E768((LARGE_INTEGER)(int64_t)(uintptr_t)g_Script, a, c, d);
+    PECMD_ShellLaunchThread((LARGE_INTEGER)(int64_t)(uintptr_t)g_Script, a, c, d);
 }
 
 /* ========== PECMD_RestoreAndDeleteObject @0x14005b07c ==========

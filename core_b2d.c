@@ -118,7 +118,7 @@ extern uint32_t FUN_14002C634(int64_t a1, LPCWSTR a2, LPCWSTR a3,
                               int a4);
 extern uint64_t PECMD_ExpandSpecialDirs(int64_t *a1, LPCWSTR a2, int a3,
                               int a4, WCHAR *a5);
-extern void FUN_14002E790(HWND a1);
+extern void PECMD_DispConfirmPopupMenu(HWND a1);
 extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
 extern void PECMD_ScriptWndProc(HWND a1, uint32_t a2, HDC a3,
                           void *a4);
@@ -1393,7 +1393,7 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
                     (lParam != 0x205) && (lParam != 0x204)) {
                     return 0;
                 }
-                FUN_14002E790(hwnd);
+                PECMD_DispConfirmPopupMenu(hwnd);
                 return 0;
             }
             goto label_02effd;

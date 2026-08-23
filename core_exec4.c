@@ -12,7 +12,7 @@
  *   PECMD_RefCountRelease   @0x140028270   引用计数释放
  *   FUN_1400A4020   @0x1400a4020   引用计数字符串设置
  *   FUN_14007DE70   @0x14007de70   拼接两串（新分配）
- *   FUN_140024A54     @0x140024a54   相对路径→绝对路径
+ *   PECMD_AbsPathFromCurDir     @0x140024a54   相对路径→绝对路径
  *   PECMD_EncodeBuffer   @0x140068984   读文件到缓冲（编码识别）
  *   FUN_1400E7D58   @0x1400e7d58   资源解码（XOR 分隔符/编码）
  */
@@ -270,11 +270,11 @@ void *FUN_14007DE70(LPCWSTR *a, LPCWSTR *out, LPCWSTR src)
     return out;
 }
 
-/* ========== FUN_140024A54 @0x140024a54 ==========
+/* ========== PECMD_AbsPathFromCurDir @0x140024a54 ==========
  * 相对路径→绝对路径：解析行首/行尾空白和引号，非绝对路径
  * 前置 &CurDir\。
  */
-void FUN_140024A54(LPCWSTR in, WCHAR **out, void *script)
+void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
 {
     LPCWSTR p = in;
     WCHAR *start, *end;

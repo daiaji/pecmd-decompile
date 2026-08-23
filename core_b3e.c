@@ -56,7 +56,7 @@ extern void FUN_14006764C(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2)
 extern void PECMD_ReleaseGdiImage(int64_t obj);
 extern void FUN_1400FD1A8(void *obj);
 extern void FUN_14005B7E8(char *s);
-extern void FUN_1400FD86C(int64_t *obj, uint32_t msg); /* @0x1400fd86c */
+extern void PECMD_ControlHoverTimer(int64_t *obj, uint32_t msg); /* @0x1400fd86c */
 extern uint64_t FUN_140063060(uint32_t *buf);
 extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char *out,
                           uint64_t ctx, int mode);
@@ -390,7 +390,7 @@ void PECMD_TimerAndForward(int64_t *obj, int64_t timerId)
             PECMD_RestoreForegroundWindow();
         }
     }
-    FUN_1400FD86C(obj, (uint32_t)timerId);
+    PECMD_ControlHoverTimer(obj, (uint32_t)timerId);
 }
 
 /* ========== PECMD_DpiConvert @0x1400628b4 ==========

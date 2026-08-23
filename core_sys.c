@@ -4,7 +4,7 @@
  * 来源: PECMD原始.EXE (x64)
  *   PECMD_DetectCodePage   @0x14000500c  (LC_ALL/GetLocaleInfoW 代码页检测)
  *   PECMD_OpenSharedMapping      @0x140005738  (命名共享内存映射)
- *   FUN_14001C01C   @0x14001c01c  (&PE_IDBASE/&MyName/&Desktop 等)
+ *   PECMD_InitShellFolderEnvVars   @0x14001c01c  (&PE_IDBASE/&MyName/&Desktop 等)
  *   FUN_140053E78          @0x140053e78  (空函数)
  *   FUN_14005B9A0 @0x14005b9a0 (RegisterWindowMessageW TaskbarCreated)
  *   PECMD_SetRdataTablePtr     @0x14005d694  (设置 .rdata 表指针)
@@ -102,7 +102,7 @@ void PECMD_OpenSharedMapping(uint64_t tag, LPCSTR name)
 }
 
 /* ========== 路径变量初始化 @0x14001c01c ========== */
-void FUN_14001C01C(void)
+void PECMD_InitShellFolderEnvVars(void)
 {
     WCHAR *pBuf;
     WCHAR *lpFilename;

@@ -143,7 +143,7 @@ extern int64_t PECMD_CreatePopupMenu(int64_t *script, LPCWSTR a4, int64_t *a3,
                              WCHAR *a5, int flags);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
 extern uint64_t FUN_140063060(uint64_t a1);
-extern ULARGE_INTEGER FUN_140032DC4(int64_t *ctx, LPCWSTR path, int mode,
+extern ULARGE_INTEGER PECMD_EvalLoopCondition(int64_t *ctx, LPCWSTR path, int mode,
                                     LPCWSTR extra);
 extern uintptr_t PECMD_TokenizeExpression(int64_t ctx, uint64_t a3, int64_t *pp,
                                int mode, LPCWSTR empty);
@@ -1058,7 +1058,7 @@ int64_t PECMD_ExecPathList(int64_t *script, LPCWSTR paths, uint64_t flags,
         while (1) {
             iVar13 = (int)(uintptr_t)psVar9;
             FUN_1400702B0((WCHAR **)&local_50.QuadPart, pWVar11);
-            UVar8 = FUN_140032DC4(script, (LPCWSTR)local_50.QuadPart, 2, (LPCWSTR)0);
+            UVar8 = PECMD_EvalLoopCondition(script, (LPCWSTR)local_50.QuadPart, 2, (LPCWSTR)0);
             bVar3 = 0 < (int64_t)UVar8.QuadPart;
             FUN_14005B104((WCHAR **)&local_50.QuadPart);
             if (sVar2 == 0x21) {

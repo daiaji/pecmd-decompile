@@ -66,7 +66,7 @@ extern BOOL FUN_1400FD220(int64_t *map, DWORD msg, LPCWSTR text,
                           uint32_t flags, int *out, HWND hwnd,
                           uint32_t mode);
 extern uint64_t *FUN_1400FCF44(uint64_t *obj, uint64_t value);
-extern void FUN_1400FE610(int64_t obj, HDC hdc); /* @0x1400fe610 */
+extern void PECMD_ControlPaint(int64_t obj, HDC hdc); /* @0x1400fe610 */
 
 /* ---- 本批引用的虚表/数据符号 ---- */
 extern uint8_t PTR_FUN_14012bd70[];
@@ -492,13 +492,13 @@ uint64_t *FUN_1400FE130(uint64_t *obj, uint64_t param2)
 }
 
 /* ========== FUN_1400FEC58 @0x1400fec58 ==========
- * BeginPaint 后调用文本/控件绘图回调 FUN_1400FE610，再 EndPaint。
+ * BeginPaint 后调用文本/控件绘图回调 PECMD_ControlPaint，再 EndPaint。
  */
 void FUN_1400FEC58(int64_t obj)
 {
     HWND hwnd = *(HWND *)(obj + OBJ_HWND);
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hwnd, &ps);
-    FUN_1400FE610(obj, hdc);
+    PECMD_ControlPaint(obj, hdc);
     EndPaint(hwnd, &ps);
 }

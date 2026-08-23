@@ -31,9 +31,9 @@ extern int64_t *FUN_1400702f0(int64_t *out, char *src, uint64_t len); /* @0x1400
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
 extern void FUN_1400F0FA8(int64_t *obj, uint64_t wParam, uint64_t lParam); /* @0x1400f0fa8 */
-extern bool FUN_14006E588(int64_t ctx, LPCWSTR name, int width, int height,
+extern bool PECMD_DrawImageFileToDC(int64_t ctx, LPCWSTR name, int width, int height,
                           uint32_t flags1, uint32_t flags2);       /* @0x14006e588 */
-extern uint32_t FUN_1400EDE48(HDC hdc, HICON icon, uint64_t param3, int param4,
+extern uint32_t PECMD_DrawIconScaled(HDC hdc, HICON icon, uint64_t param3, int param4,
                               uint64_t srcW, uint64_t srcH, uint32_t param7,
                               uint32_t param8, uint64_t dstW, uint64_t dstH, COLORREF color); /* @0x1400ede48 */
 extern int64_t PECMD_ContainerAppend(uint64_t *obj);                       /* @0x14006b8fc */
@@ -387,7 +387,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
             if (hDC == (HDC)0) {
                 hDC = BeginPaint((HWND)param_1[4], &local_88);
             }
-            bVar2 = FUN_14006E588((int64_t)hDC, (LPCWSTR)param_1[0x1e],
+            bVar2 = PECMD_DrawImageFileToDC((int64_t)hDC, (LPCWSTR)param_1[0x1e],
                                   local_a0.right - local_a0.left,
                                   local_a0.bottom - local_a0.top, 0, 0);
             if (!bVar2) {
@@ -441,7 +441,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
             }
         }
         else {
-            FUN_1400EDE48(hDC, (HICON)param_1[0x20], (uint64_t)local_a0.left, local_a0.top,
+            PECMD_DrawIconScaled(hDC, (HICON)param_1[0x20], (uint64_t)local_a0.left, local_a0.top,
                           (uint64_t)uVar7, (uint64_t)uVar8, (uint32_t)param_1[0x22],
                           *(uint32_t *)((char *)param_1 + 0x114), local_res8[0], uVar5,
                           0x80000000);

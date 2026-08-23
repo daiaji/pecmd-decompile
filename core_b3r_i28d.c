@@ -52,7 +52,7 @@ extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符�
 extern uint32_t  PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *p, char c);   /* 清空串 */
-extern void      FUN_140067F90(int64_t *ps);              /* '&' -> '&&' 转义 */
+extern void      PECMD_EscapeLabelAmpersands(int64_t *ps);              /* '&' -> '&&' 转义 */
 extern void      PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
                                int a4, int a5);
 
@@ -64,7 +64,7 @@ extern void FUN_1400B2B64(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                           int y, int w, int h, int64_t *p8,
                           LPCWSTR text1, LPCWSTR text2, uint32_t flags,
                           char mode, int extra);
-extern void FUN_1400B1DEC(int64_t mgr, int64_t v2, int64_t *p3,
+extern void PECMD_AppendCheckboxChild(int64_t mgr, int64_t v2, int64_t *p3,
                           uint32_t flags1, uint32_t flags2, int mode);
 extern void FUN_1400B9204(WPARAM mgr, int64_t v2, int64_t *p3, int x,
                           int y, int w, int h, int64_t *p8,
@@ -408,7 +408,7 @@ LAB_1400b5137:
             if (bVar10 == false) {
                 param_1 = *(longlong **)(param_3 + 0x290);
             }
-            FUN_1400B1DEC(param_3, (int64_t)param_1, (int64_t *)&local_40, iVar5,
+            PECMD_AppendCheckboxChild(param_3, (int64_t)param_1, (int64_t *)&local_40, iVar5,
                           (uint32_t)local_48, (int)cVar6);
         }
         FUN_14005b104(&local_40);
@@ -739,7 +739,7 @@ uint64_t PECMD_AddTransControl(longlong *param_1, ushort *param_2, WPARAM param_
     if (bVar3) {
         uVar16 = uVar16 | 0x1000000;
     }
-    FUN_140067F90((int64_t *)&local_90);
+    PECMD_EscapeLabelAmpersands((int64_t *)&local_90);
     if (((-1 < iVar25) || (-1 < iVar12)) || ((-1 < iVar22) || (-1 < iVar15))) {
         local_a4 = iVar12;
         if (iVar12 == INT_MIN) {

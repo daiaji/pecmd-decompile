@@ -5,11 +5,11 @@
  *   随机种子         FUN_14001B510      @0x14001b510  (实现见 core_var3.c)
  *   XOR 加/解密      FUN_14001B5AC        @0x14001b5ac  (实现见 core_var3.c)
  *   去引号截断       FUN_14001D5F4       @0x14001d5f4
- *   脚本编码行插入   FUN_140024F20 @0x140024f20
+ *   脚本编码行插入   PECMD_PrependEnviHeader @0x140024f20
  *   sysinit 执行     PECMD_RunSysInit   @0x140025180
  *   sysinit 检查     FUN_1400251AC  @0x1400251ac
  *   脚本子执行       PECMD_InvokeSubRoutine @0x140030dcc
- *   脚本 @CALL 插入  FUN_140030F1C @0x140030f1c
+ *   脚本 @CALL 插入  PECMD_PrependCallSubLine @0x140030f1c
  *   脚本编码块执行   PECMD_ExecuteScriptBlock     @0x140031068
  *   token 推进       FUN_1400679DC      @0x1400679dc
  *   环境变量查询     FUN_14006F884        @0x14006f884
@@ -108,7 +108,7 @@ WCHAR *FUN_14001D5F4(WCHAR *p)
     return p;
 }
 
-/* ========== FUN_140024F20 @0x140024f20 ==========
+/* ========== PECMD_PrependEnviHeader @0x140024f20 ==========
  * 把一行 (LOGS 指令 + @ENVI 指令) XOR 编码后插入脚本编码流。
  *   key    : XOR 密钥 (编码流分隔字符)
  *   pbuf   : 编码流缓冲指针变量 (自动重分配增长)
@@ -117,7 +117,7 @@ WCHAR *FUN_14001D5F4(WCHAR *p)
  *   off    : 插入位置 (字符偏移, 编码流起点)
  * 返回新行起点 (字节地址/2 的字符偏移语义由调用方换算)。
  */
-WCHAR *FUN_140024F20(uint32_t key, WCHAR **pbuf, LPCWSTR line,
+WCHAR *PECMD_PrependEnviHeader(uint32_t key, WCHAR **pbuf, LPCWSTR line,
                            uint32_t flags, int off)
 {
     WCHAR *tmp = NULL;            /* 待编码行容器 */
@@ -235,7 +235,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
     return (r & 0xffff) | flags;
 }
 
-/* ========== FUN_140030F1C @0x140030f1c ==========
+/* ========== PECMD_PrependCallSubLine @0x140030f1c ==========
  * 在编码流 key 分隔位置 + 0x10 字符头处插入 "@CALL ** name token" 行。
  *   key : XOR 密钥
  *   buf : 编码流缓冲指针变量 (重分配增长)
@@ -243,7 +243,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
  *   a4  : 命令行剩余 (NextToken 取第一个 token 拼到行尾)
  * 返回新行起点。
  */
-WCHAR *FUN_140030F1C(uint32_t key, void **buf, LPCWSTR name, int64_t a4)
+WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name, int64_t a4)
 {
     WCHAR *line = NULL;
     WCHAR *cur = (WCHAR *)(intptr_t)a4;
@@ -281,7 +281,7 @@ WCHAR *FUN_140030F1C(uint32_t key, void **buf, LPCWSTR name, int64_t a4)
  *   cmd    : 脚本文件路径 (参与 &&CurDir 提取; flags&8 时执行后删除)
  *   a3     : 执行参数命令行 (传给 @CALL 插入行)
  *   flags  : bit3(8)=执行后删源文件, bit8(0x100)/bit9(0x200) 透传,
- *            bit5(0x20)=ForceLocal 行, bit6(0x40)=EnviMode 行 (见 FUN_140024F20)
+ *            bit5(0x20)=ForceLocal 行, bit6(0x40)=EnviMode 行 (见 PECMD_PrependEnviHeader)
  *   a5     : @CALL 名字
  *   a6     : LOGS 附加行
  * 返回 0 成功; 1 编码流为空; 其他 GetLastError。
@@ -351,7 +351,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
                 if ((int8_t)g_flagA248 < 0) {
                     g_flagA248 = 1;
                 }
-                p2 = FUN_140030F1C(key, (void **)&l198, a5,
+                p2 = PECMD_PrependCallSubLine(key, (void **)&l198, a5,
                                          (int64_t)(intptr_t)a3);
                 /* +0x48 处保存 8 字节 (执行前无条件读取) TODO(verify) */
                 v48 = ((int64_t *)script)[9];
@@ -365,7 +365,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
                     *(uint16_t *)((uint8_t *)script + 0x48) = key;
                 }
                 {
-                    WCHAR *p3 = FUN_140024F20(key, &l198, a6, l180,
+                    WCHAR *p3 = PECMD_PrependEnviHeader(key, &l198, a6, l180,
                                 (int)((size_t)((char *)p2 - (char *)l198) >> 1));
                     /* bVar13 != 0 与 bVar1&1 等价, 合并为 bVar13 ? script : NULL */
                     pv7 = bVar13 ? (void *)script : NULL;

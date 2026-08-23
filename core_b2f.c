@@ -9,7 +9,7 @@
  *   帮助对话框过程    PECMD_HelpDlgProc @0x140028a00
  *   枚举进程          FUN_14002D708 @0x14002d708
  *   安装字体          FUN_14002F454 @0x14002f454
- *   IF 条件求值       FUN_140032DC4 @0x140032dc4
+ *   IF 条件求值       PECMD_EvalLoopCondition @0x140032dc4
  *   虚拟盘菜单构建    PECMD_BuildImDiskMenu @0x140034788
  *   虚拟盘命令        FUN_1400369D0 @0x1400369d0
  *   LOGO 窗口过程     PECMD_LogoDlgProc @0x140037ba8
@@ -1848,7 +1848,7 @@ label_02a0e6:
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   FUN_14002D708       @0x14002d708
  *   FUN_14002F454         @0x14002f454
- *   FUN_140032DC4 @0x140032dc4
+ *   PECMD_EvalLoopCondition @0x140032dc4
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；原始地址保留在 @0x 注释。
@@ -1964,7 +1964,7 @@ extern void * g_pGdipGetFontCollectionFamilyList;
 extern void * g_pGdipGetFamilyName;
 extern void * g_pGdipDeletePrivateFontCollection;
 
-/* FUN_14002D708 is defined below and used by FUN_140032DC4. */
+/* FUN_14002D708 is defined below and used by PECMD_EvalLoopCondition. */
 DWORD FUN_14002D708(LPCWSTR filter, uint32_t mode, int64_t *out,
                           DWORD pid, DWORD parentPid);
 
@@ -2641,12 +2641,12 @@ LAB_14002fc1a:
     }
 }
 
-/* ========== FUN_140032DC4 @0x140032dc4 ==========
- * 原 FUN_140032DC4，大型 IF 条件求值器。
+/* ========== PECMD_EvalLoopCondition @0x140032dc4 ==========
+ * 原 PECMD_EvalLoopCondition，大型 IF 条件求值器。
  * 保留原分支/跳转结构；Ghidra 的 CONCATxx/位域宏已用整数运算替换，
  * 个别不确定处保留 TODO(verify)。
  */
-ULARGE_INTEGER FUN_140032DC4(int64_t *script, ULARGE_INTEGER value,
+ULARGE_INTEGER PECMD_EvalLoopCondition(int64_t *script, ULARGE_INTEGER value,
                                         uint32_t flags, LPCWSTR text)
 {
     uint8_t bVar1 = 0, bVar16 = 0, bVar20 = 0, bVar21 = 0, bVar33 = 0, bVar36 = 0;
@@ -3715,10 +3715,10 @@ extern int PECMD_EnumImDiskDrives(uint64_t a1, int64_t *a2, int64_t a3);
 extern int64_t *PECMD_ReplaceStringSlot(int64_t *a1, uint64_t *a2);
 extern int FUN_14010443c(uint32_t a1);
 extern void FUN_140035B40(uint32_t a1, uint32_t a2, int a3);
-extern uint32_t FUN_140035CEC(uint32_t *a1, uint64_t *a2, uint64_t *a3,
+extern uint32_t PECMD_MountImDiskRamDisk(uint32_t *a1, uint64_t *a2, uint64_t *a3,
                               uint32_t a4, LPCWSTR a5, int a6,
                               LPCWSTR a7, LPCWSTR a8, uint32_t a9);
-extern uint64_t FUN_14003634C(uint32_t a1, LPCWSTR a2, int a3,
+extern uint64_t PECMD_DismountRamDiskDrive(uint32_t a1, LPCWSTR a2, int a3,
                               uint32_t a4, int a5, uint32_t a6);
 extern uint32_t PECMD_QueryImDiskVolumeInfo(uint32_t a1, LPCWSTR a2, int64_t *a3,
                               uint64_t text);
@@ -4406,14 +4406,14 @@ after_parse:
             WVar7 = ((WCHAR (*)(void))g_pImDiskFindFreeLetter)();
             *_Str1 = WVar7;
         }
-        uVar10 = FUN_140035CEC(local_1d8, local_1d0, &local_1e0, uVar20, pWVar5, local_1b8,
+        uVar10 = PECMD_MountImDiskRamDisk(local_1d8, local_1d0, &local_1e0, uVar20, pWVar5, local_1b8,
                                _Str1, local_198, (uint32_t)local_1f0);
         uVar19 = (uint64_t)uVar10;
         LeaveCriticalSection(&g_csInit);
         uVar10 = local_1d8[0];
     } else if (iVar11 == 2) {
         if (((uint32_t)(local_1d8[0] == 0xffffffff) & ((_Str1 == NULL) | local_184)) == 0) {
-            uVar12 = FUN_14003634C(local_1d8[0], _Str1, local_1b0, local_184, local_1f8,
+            uVar12 = PECMD_DismountRamDiskDrive(local_1d8[0], _Str1, local_1b0, local_184, local_1f8,
                                    (uint32_t)local_1f0);
             return uVar12;
         }

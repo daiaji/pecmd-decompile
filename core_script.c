@@ -24,7 +24,7 @@ extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac */
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
 extern void FUN_14005B0B8(void *p, size_t len);           /* @0x14005b0b8 */
-extern void FUN_140024A54(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
+extern void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
 extern char FUN_14006CCD4(LPCWSTR *ps);                /* @0x14006ccd4 */
 extern int32_t FUN_140006A4C(LPCWSTR path);             /* @0x140006a4c */
@@ -112,7 +112,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                 PECMD_AllocStrSlot(&fnbuf);
                                 memcpy(fnbuf, q, (size_t)(qe - q) * 2);
                                 fnbuf[qe - q] = 0;
-                                FUN_140024A54(fnbuf, &fn, (void *)script);
+                                PECMD_AbsPathFromCurDir(fnbuf, &fn, (void *)script);
                                 /* 检查是否已 import */
                                 found = (uint64_t)(intptr_t)StrStrW((LPCWSTR)out[0], fn);
                                 FUN_14005B104(&fn);

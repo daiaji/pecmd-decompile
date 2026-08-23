@@ -48,9 +48,9 @@ extern WCHAR *g_sysinitName;                                   /* DAT_14013d060 
 /* 未实现（TODO(verify) 挂起） */
 extern uint32_t PECMD_InvokeSubRoutine(void *buf, void *script, uint32_t flags); /* @0x140030dcc */
 extern uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags);          /* @0x1400e7d58 */
-extern void *FUN_140024F20(uint32_t key, void **buf, LPCWSTR extra, uint32_t f,
+extern void *PECMD_PrependEnviHeader(uint32_t key, void **buf, LPCWSTR extra, uint32_t f,
                                      int off);                              /* @0x140024f20 */
-extern WCHAR *FUN_140030F1C(uint32_t key, void **buf, LPCWSTR name,
+extern WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name,
                                       int64_t a4);                        /* @0x140030f1c */
 extern WCHAR *FUN_14001D5F4(WCHAR *p);                                 /* @0x14001d5f4 */
 extern void FUN_1400679DC(WCHAR **pp, int64_t *out, WCHAR sep);       /* @0x1400679dc */

@@ -70,7 +70,7 @@ extern void AtlThrowImpl(long a1);
 extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern int FUN_14004FE34(int *a1, int a2);
-extern uint64_t FUN_14004FAA8(uint32_t *a1, int64_t *a2,
+extern uint64_t PECMD_RegexParseCharItem(uint32_t *a1, int64_t *a2,
                               uint16_t *a3, uint16_t *a4);
 extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3,
                               uint64_t *a4, int64_t a5, uint32_t a6,
@@ -171,7 +171,7 @@ int FUN_140050F58(int *arr, int64_t *pp, uint32_t mode)
     while ((*(int16_t *)*pp != 0) && (*(int16_t *)*pp != 0x5d)) {
         uint16_t local_res18[4] = {0, 0, 0, 0};
         uint16_t local_res20[4] = {0, 0, 0, 0};
-        uint64_t uVar4 = FUN_14004FAA8((uint32_t *)arr, pp,
+        uint64_t uVar4 = PECMD_RegexParseCharItem((uint32_t *)arr, pp,
                                        local_res18, local_res20);
         if ((int)uVar4 != 0) {
             return -1;

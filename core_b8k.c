@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   建进程并读远程内存     FUN_1400E4324 @0x1400e4324
+ *   建进程并读远程内存     PECMD_CreateProcReadImageBase @0x1400e4324
  *   追加菜单位图项          FUN_1400E4F14   @0x1400e4f14
  *   弹出上下文菜单          FUN_1400E54D4       @0x1400e54d4
  *   创建对话框窗口          FUN_1400E6574        @0x1400e6574
@@ -17,7 +17,7 @@
  *   创建静态子控件对象      FUN_1400EF91C      @0x1400ef91c
  *   创建按钮控件核心        FUN_1400EFB08   @0x1400efb08
  *   通用 GDI 消息分发       FUN_1400F0814  @0x1400f0814
- *   合成半透明位图          FUN_1400F0ABC     @0x1400f0abc
+ *   合成半透明位图          PECMD_BltTransparentBits     @0x1400f0abc
  *   绘制控件(带背景)       FUN_1400F0FA8      @0x1400f0fa8
  *
  * 约定:
@@ -71,16 +71,16 @@ extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
                                 int64_t script, int64_t cmdCtx, int64_t *varTable); /* @0x1400e5248 */
 extern void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
                                  int edge);                   /* @0x1400f0df4 */
-extern void FUN_1400F0CA0(HWND hwnd, COLORREF color); /* @0x1400f0ca0 */
+extern void PECMD_FillCtlBackground(HWND hwnd, COLORREF color); /* @0x1400f0ca0 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
                          uint32_t flags, LPVOID env, LPCWSTR cwd,
                          STARTUPINFOW *si, PROCESS_INFORMATION *pi);
-extern int FUN_1400E7124(void *p1, uint32_t p2, int64_t *p3, int64_t *p4,
+extern int PECMD_Wow64MapPeImage(void *p1, uint32_t p2, int64_t *p3, int64_t *p4,
                                 int64_t *p5, size_t *p6);   /* @0x1400e7124 */
-extern int FUN_1400E4480(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4,
+extern int PECMD_RunPeInjectStart(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4,
                                           uint32_t p5, BOOL p6, uint32_t p7, LPVOID p8,
                                           LPCWSTR p9, STARTUPINFOW *p10,
                                           PROCESS_INFORMATION *p11, LPCWSTR p12); /* @0x1400e4480 */
@@ -125,14 +125,14 @@ extern HGDIOBJ g_hStockWhiteBrush;                          /* DAT_14013a858 */
 extern uint8_t g_tooltipThreshold;                          /* DAT_14013a861 */
 extern uint8_t g_tooltipCount0;                             /* DAT_14013a860 */
 
-/* ========== FUN_1400E4324 @0x1400e4324 ==========
+/* ========== PECMD_CreateProcReadImageBase @0x1400e4324 ==========
  * 创建进程后读取远程线程上下文指向的内存区域尺寸。
  *   - 写 0x10000b 到远程 TEB 槽, 调 GetThreadContext
  *   - 按 g_objMode 取 PEB 数组, ReadProcessMemory 读指针
  *   - VirtualQueryEx 向后扫描直到释放区, 计算区域大小 -> *sizeOut
  * TODO(verify): 远程布局细节。
  */
-uint32_t FUN_1400E4324(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
+uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
                                        int64_t *outSize, BOOL inherit, uint32_t flags,
                                        LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
                                        PROCESS_INFORMATION *pi, LPCWSTR param11)
@@ -349,7 +349,7 @@ bool FUN_1400E6574(int64_t *obj, uint32_t id, int64_t parent)
 /* ========== FUN_1400E7414 @0x1400e7414 ==========
  * 通过远程内存注入方式创建进程: 加载 VirtualAllocEx/线程上下文 API,
  * 在目标进程分配内存写入代码, 然后创建远程线程执行。
- * TODO(verify): 注入细节 (FUN_1400E7124/1400e4480)。
+ * TODO(verify): 注入细节 (PECMD_Wow64MapPeImage/1400e4480)。
  */
 int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
                                 uint32_t p5, LPVOID p6, LPCWSTR p7,
@@ -372,7 +372,7 @@ int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
     g_pfnGetThreadCtx = (uint32_t (*)(HANDLE, int64_t))(uintptr_t)&GetThreadContext_exref;
     g_pfnSetThreadCtx = (uint32_t (*)(HANDLE, int64_t))(uintptr_t)&SetThreadContext_exref;
 
-    r = (uint64_t)FUN_1400E7124(p1, p2, &local_28, &local_10, (int64_t *)&local_20,
+    r = (uint64_t)PECMD_Wow64MapPeImage(p1, p2, &local_28, &local_10, (int64_t *)&local_20,
                                         (size_t *)&local_18);
     saved = local_28;
     if ((int)r != 0) {
@@ -380,7 +380,7 @@ int FUN_1400E7414(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
         if (p10 == NULL)
             p10 = FUN_1400E429C((uint64_t *)&local_28);
         dwSize = local_18;
-        rc = FUN_1400E4480(p3, saved, local_10, local_20, (uint32_t)local_18, p4,
+        rc = PECMD_RunPeInjectStart(p3, saved, local_10, local_20, (uint32_t)local_18, p4,
                            p5, p6, p7, p8, p9, p10);
         VirtualFree((LPVOID)local_20, dwSize, 0x4000);
         FUN_14005B104((WCHAR **)&local_28);
@@ -904,10 +904,10 @@ uint64_t FUN_1400F0814(int64_t obj, uint32_t msg, int64_t wParam,
     return res;
 }
 
-/* ========== FUN_1400F0ABC @0x1400f0abc ==========
+/* ========== PECMD_BltTransparentBits @0x1400f0abc ==========
  * 用 3 个兼容位图做多步 BitBlt ROP 合成 (近似半透明/柔光) 后写出。
  */
-void FUN_1400F0ABC(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc,
+void PECMD_BltTransparentBits(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc,
                               int sx, int sy, uint64_t p9, uint64_t p10, COLORREF color)
 {
     HDC hdcA, hdcB;
@@ -938,7 +938,7 @@ void FUN_1400F0ABC(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc,
 
 /* ========== FUN_1400F0FA8 @0x1400f0fa8 ==========
  * 绘制控件: alpha 阈值内 BeginPaint + DrawText (或百分比条), 否则
- * 走虚表消息 0x0f 后用 FUN_1400F0CA0 填背景。
+ * 走虚表消息 0x0f 后用 PECMD_FillCtlBackground 填背景。
  */
 void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
 {
@@ -1001,5 +1001,5 @@ void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
     ((uint64_t (*)(int64_t, int, uint64_t, uint64_t))((void **)*obj)[1])(
         obj[4], 0xf, p2, p3);
     if ((int)c >= 0)
-        FUN_1400F0CA0((HWND)obj[4], c);
+        PECMD_FillCtlBackground((HWND)obj[4], c);
 }

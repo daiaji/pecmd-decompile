@@ -11,7 +11,7 @@
  *   添加托盘图标     FUN_14005B900 @0x14005b900
  *   获取提示窗口     FUN_14005B9C8 @0x14005b9c8
  *   DPI 缩放         FUN_14005DAF8 @0x14005daf8
- *   释放缓存对象     FUN_14005E8E8 @0x14005e8e8
+ *   释放缓存对象     PECMD_ReleaseSlotRef @0x14005e8e8
  *   创建注册表键     FUN_14005F750 @0x14005f750
  *   查找空闲字母     FUN_14005F868 @0x14005f868
  *   链接或复制文件   FUN_1400607A4 @0x1400607a4
@@ -22,7 +22,7 @@
  *   判定 visible 串  FUN_1400641D4 @0x1400641d4
  *   判定设备类别     FUN_14006643C @0x14006643c
  *   复制到分隔符     FUN_14006764C @0x14006764c
- *   转义 & 字符      FUN_140067F90 @0x140067f90
+ *   转义 & 字符      PECMD_EscapeLabelAmpersands @0x140067f90
  *   字符串数组排序   PECMD_BubbleSortStringArray @0x140068c04
  *   获取下拉框文本   FUN_14006C4C8 @0x14006c4c8
  *   判定设备就绪     FUN_14006CAF0 @0x14006caf0
@@ -261,10 +261,10 @@ void FUN_14005DAF8(int64_t obj, int *x, int *y,
     }
 }
 
-/* ========== FUN_14005E8E8 @0x14005e8e8 ==========
+/* ========== PECMD_ReleaseSlotRef @0x14005e8e8 ==========
  * 从全局缓存表中释放对象（引用计数减到 0 时删除）。
  */
-void FUN_14005E8E8(int64_t *slot, int table)
+void PECMD_ReleaseSlotRef(int64_t *slot, int table)
 {
     int64_t lVar1;
     int64_t lVar2;
@@ -565,10 +565,10 @@ void FUN_14006764C(int64_t *pp, int64_t *out,
     *(uint16_t *)((uint8_t *)(uintptr_t)*out + (int64_t)iVar4 * 2) = 0;
 }
 
-/* ========== FUN_140067F90 @0x140067f90 ==========
+/* ========== PECMD_EscapeLabelAmpersands @0x140067f90 ==========
  * 将 & 转义为 &&（用于菜单/标题显示）。
  */
-void FUN_140067F90(int64_t *ps)
+void PECMD_EscapeLabelAmpersands(int64_t *ps)
 {
     int iVar1;
     int iVar2;

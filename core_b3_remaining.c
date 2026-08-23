@@ -90,7 +90,7 @@ extern int (*g_pGdipGetImageHeight)();                                 /* 图像
 extern int64_t PECMD_ContainerAppend(uint64_t *container);          /* @0x14006b8fc */
 extern void FUN_1400FD538(HWND child, int margin);          /* @0x1400fd538 */
 extern void FUN_1400F1490(int64_t arr);                    /* @0x1400f1490 */
-extern void FUN_14005E8E8(int64_t *slot, int table);       /* @0x14005e8e8 */
+extern void PECMD_ReleaseSlotRef(int64_t *slot, int table);       /* @0x14005e8e8 */
 extern void PECMD_ReleaseObject_4490(uint64_t *slot);                 /* @0x140054490 */
 extern uint8_t PTR_FUN_1401234f0[];                        /* 对象基类虚表 */
 extern uint8_t PTR_FUN_1401235a8[];                        /* 窗口/映射对象虚表 */
@@ -7151,7 +7151,7 @@ void PECMD_DestroyMappedObject(uint64_t *obj)
 
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401235a8;
     if (obj[0xe] != 0 && *(int *)(obj + 0x10) == -2) {
-        FUN_14005E8E8((int64_t *)(uintptr_t)obj[0xe],
+        PECMD_ReleaseSlotRef((int64_t *)(uintptr_t)obj[0xe],
                       (uint32_t)(*(int *)((uint8_t *)obj + 0x84) == -2));
         obj[0xe] = 0;
     }

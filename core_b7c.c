@@ -271,11 +271,11 @@ uint16_t *FUN_1400CAF78(int64_t *a1, LPCWSTR a2, WPARAM a3)
     return NULL;
 }
 
-/* ========== FUN_1400CB820 @0x1400cb820 ==========
+/* ========== PECMD_EvalQueryValue @0x1400cb820 ==========
  * [简化桩] 列表命中测试。返回 {0,0}。
  * TODO(verify): 需完整还原命中测试。
  */
-POINT FUN_1400CB820(int64_t *a1, POINT a2, uint64_t a3, char a4)
+POINT PECMD_EvalQueryValue(int64_t *a1, POINT a2, uint64_t a3, char a4)
 {
     POINT r;
     (void)a1;
@@ -403,11 +403,11 @@ uint64_t FUN_1400DB648(HWND a1, uint16_t *a2, uint64_t a3,
     return 0;
 }
 
-/* ========== FUN_1400DC9FC @0x1400dc9fc ==========
+/* ========== PECMD_EvalAtCommand @0x1400dc9fc ==========
  * [简化桩] 执行命令 C。返回 {0}。
  * TODO(verify): 需完整还原执行逻辑。
  */
-LARGE_INTEGER FUN_1400DC9FC(LARGE_INTEGER a1, LARGE_INTEGER a2,
+LARGE_INTEGER PECMD_EvalAtCommand(LARGE_INTEGER a1, LARGE_INTEGER a2,
                              uint16_t *a3, int64_t a4)
 {
     LARGE_INTEGER r;

@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   进程注入 API 就绪    FUN_1400E411C @0x1400e411c
  *   对象双标志查询         FUN_1400E412C      @0x1400e412c
- *   指针表偏移搬运         FUN_1400E4160  @0x1400e4160
+ *   指针表偏移搬运         PECMD_PeApplyRelocations  @0x1400e4160
  *   构建程序 exe 路径      FUN_1400E429C      @0x1400e429c
  *   初始化 CRC32 表        FUN_1400E4C38      @0x1400e4c38
  *   计算 CRC32             FUN_1400E4CC0         @0x1400e4cc0
@@ -26,7 +26,7 @@
  *   下发控件命令           FUN_1400E86B4  @0x1400e86b4
  *   销毁窗口对象(带GDI)    FUN_1400E9138 @0x1400e9138
  *   绘制百分比条           PECMD_DrawScaledBarFill    @0x1400f0df4
- *   设置对象画刷           FUN_1400F0EB0   @0x1400f0eb0
+ *   设置对象画刷           PECMD_SetCtlBgBrush   @0x1400f0eb0
  *   激活设备窗口           PECMD_SetHotTrackWindow @0x1400f1448
  *   初始化简单窗口对象     FUN_1400F1BE4 @0x1400f1be4
  *   计算滚动偏移           FUN_1400F2A7C  @0x1400f2a7c
@@ -125,13 +125,13 @@ bool FUN_1400E412C(int64_t obj)
     return v != 0;
 }
 
-/* ========== FUN_1400E4160 @0x1400e4160 ==========
+/* ========== PECMD_PeApplyRelocations @0x1400e4160 ==========
  * 对"段表/重定位表"的一批记录做偏移搬运:
  * 每条记录为 { 头偏移, 项数 }, 其中的项带类型高 4 位 (0x3000=32位, 其他=64位)
  * 与低 12 位偏移, 将 delta 与对象尺寸之差加到每个指针。
  * TODO(verify): 记录布局与算法细节。
  */
-uint64_t FUN_1400E4160(int64_t obj, int64_t base, int64_t delta)
+uint64_t PECMD_PeApplyRelocations(int64_t obj, int64_t base, int64_t delta)
 {
     uint64_t objSize;
     uint32_t head;
@@ -595,14 +595,14 @@ void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color, int
         DrawEdge(hdc, rc, 9, 0x200f);     /* EDGE_ETCHED */
 }
 
-/* ========== FUN_1400F0EB0 @0x1400f0eb0 ==========
+/* ========== PECMD_SetCtlBgBrush @0x1400f0eb0 ==========
  * 设置对象画刷/前景:
  *   - flags==0        -> 仅记前景色
  *   - 否则创建实心画刷 (0xffffffff 用库存白色画刷), 并写样式标志位
  *   - 最后使控件区失效重绘
  * TODO(verify): flags 位段 (0x7fff / bit16) 含义。
  */
-void FUN_1400F0EB0(int64_t obj, COLORREF color, uint64_t flags)
+void PECMD_SetCtlBgBrush(int64_t obj, COLORREF color, uint64_t flags)
 {
     HGDIOBJ old;
     HBRUSH br;

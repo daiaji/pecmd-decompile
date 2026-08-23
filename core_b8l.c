@@ -5,19 +5,19 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   发送控件命令串        FUN_1400F1504    @0x1400f1504
- *   调整控件项度量         FUN_1400F2F58        @0x1400f2f58
- *   设置控件项数据         FUN_1400F53C8             @0x1400f53c8
+ *   调整控件项度量         PECMD_ListGetItemTextData        @0x1400f2f58
+ *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8
  *   初始化列表视窗对象     FUN_1400F9134            @0x1400f9134
- *   销毁列表视窗对象       FUN_1400F9324         @0x1400f9324
+ *   销毁列表视窗对象       PECMD_DestroyCtlResources         @0x1400f9324
  *   控件消息分发(临界区)   FUN_1400FC148       @0x1400fc148
  *   设置控件颜色           FUN_1400FD014           @0x1400fd014
- *   取控件画刷             FUN_1400FD35C            @0x1400fd35c
- *   捕获父窗口背景         FUN_1400FD5E8    @0x1400fd5e8
- *   控件悬停定时器         FUN_1400FD86C   @0x1400fd86c
+ *   取控件画刷             PECMD_CtlCalcColorBrush            @0x1400fd35c
+ *   捕获父窗口背景         PECMD_CaptureParentBackground    @0x1400fd5e8
+ *   控件悬停定时器         PECMD_ControlHoverTimer   @0x1400fd86c
  *   控件鼠标消息           FUN_1400FDEDC     @0x1400fdedc
  *   树项路径查找           PECMD_FindTreeItemByPath          @0x1400ff414
  *   树路径串构建           FUN_1400FF5D0        @0x1400ff5d0
- *   树路径串构建(扩展)     FUN_1400FF730      @0x1400ff730
+ *   树路径串构建(扩展)     PECMD_TreeCollectItems      @0x1400ff730
  *   树路径串构建(扩展2)    FUN_1400FF8A8     @0x1400ff8a8
  *
  * 约定:
@@ -150,11 +150,11 @@ DWORD FUN_1400F1504(uint64_t unused, WCHAR *cmd, int64_t obj,
     return result;
 }
 
-/* ========== FUN_1400F2F58 @0x1400f2f58 ==========
+/* ========== PECMD_ListGetItemTextData @0x1400f2f58 ==========
  * 通过 0x1038/0x1200/0x1211 消息测量控件各条目的布局高度/宽度，
  * 返回项数（失败返回 -1）。TODO(verify): 消息与控制类型。
  */
-uint64_t FUN_1400F2F58(int64_t obj, int *rect, int msgParam)
+uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam)
 {
     LRESULT lr;
     uint64_t count;
@@ -212,11 +212,11 @@ uint64_t FUN_1400F2F58(int64_t obj, int *rect, int msgParam)
     return count & 0xffffffff;
 }
 
-/* ========== FUN_1400F53C8 @0x1400f53c8 ==========
+/* ========== PECMD_ListAddItemEntry @0x1400f53c8 ==========
  * 把字符串/值写入对象的项数组并向控件发送 0x1061 消息。
  * TODO(verify): 0x1061 消息结构字段含义。
  */
-void FUN_1400F53C8(int64_t obj, int index, LPCWSTR text, uint32_t data,
+void PECMD_ListAddItemEntry(int64_t obj, int index, LPCWSTR text, uint32_t data,
                           int param5, int param6, int64_t param7)
 {
     WCHAR **slot;
@@ -335,10 +335,10 @@ uint64_t *FUN_1400F9134(uint64_t *obj, uint64_t param2, uint64_t param3)
     return obj;
 }
 
-/* ========== FUN_1400F9324 @0x1400f9324 ==========
+/* ========== PECMD_DestroyCtlResources @0x1400f9324 ==========
  * 销毁列表视窗内部对象：释放 GDI 对象、各数组、复合对象并调基类析构。
  */
-void FUN_1400F9324(uint64_t *obj)
+void PECMD_DestroyCtlResources(uint64_t *obj)
 {
     uint8_t *b = (uint8_t *)obj;
 
@@ -483,10 +483,10 @@ void FUN_1400FD014(int64_t obj, int *colors)
     }
 }
 
-/* ========== FUN_1400FD35C @0x1400fd35c ==========
+/* ========== PECMD_CtlCalcColorBrush @0x1400fd35c ==========
  * 取当前索引对应的画刷；必要时按窗口状态合成前景色并补建画刷。
  */
-HBRUSH FUN_1400FD35C(int64_t obj, HDC hdc)
+HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc)
 {
     COLORREF c;
     HBRUSH brush;
@@ -534,10 +534,10 @@ HBRUSH FUN_1400FD35C(int64_t obj, HDC hdc)
     return *(HBRUSH *)(obj + 0x80 + (int64_t)idx * 8);
 }
 
-/* ========== FUN_1400FD5E8 @0x1400fd5e8 ==========
+/* ========== PECMD_CaptureParentBackground @0x1400fd5e8 ==========
  * 捕获父窗口中当前控件所在区域为位图，存入对象 +0xe8。
  */
-void FUN_1400FD5E8(int64_t obj)
+void PECMD_CaptureParentBackground(int64_t obj)
 {
     HWND child = *(HWND *)(obj + OBJ_HWND);
     HWND parent = GetParent(child);
@@ -578,11 +578,11 @@ void FUN_1400FD5E8(int64_t obj)
         ReleaseDC(parent, hdc);
 }
 
-/* ========== FUN_1400FD86C @0x1400fd86c ==========
+/* ========== PECMD_ControlHoverTimer @0x1400fd86c ==========
  * 控件悬停/按下定时器 (0x2713/0x2711)：根据光标是否在窗口内调整
  * 状态字节并触发失效/通知。
  */
-void FUN_1400FD86C(int64_t *obj, uint32_t timerId)
+void PECMD_ControlHoverTimer(int64_t *obj, uint32_t timerId)
 {
     HWND hwnd = (HWND)obj[4];
     POINT pt;
@@ -833,10 +833,10 @@ int64_t FUN_1400FF5D0(int64_t obj, int64_t *out, uint64_t hItem,
     return out[1];
 }
 
-/* ========== FUN_1400FF730 @0x1400ff730 ==========
+/* ========== PECMD_TreeCollectItems @0x1400ff730 ==========
  * 树路径串构建扩展：用 0x1127 判断项类型，支持 stop 标志。
  */
-int64_t FUN_1400FF730(int64_t obj, int64_t *out, WPARAM hItem,
+int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
                                     uint64_t flags)
 {
     int64_t startLen = out[1];
@@ -868,7 +868,7 @@ int64_t FUN_1400FF730(int64_t obj, int64_t *out, WPARAM hItem,
         {
             WPARAM next = SendMessageW(hwnd, 0x110a, 4, hItem);
             if (next != 0) {
-                int64_t r = FUN_1400FF730(obj, out, next, flags);
+                int64_t r = PECMD_TreeCollectItems(obj, out, next, flags);
                 if (stopFlag != 0 && r > 0)
                     break;
             }
@@ -914,7 +914,7 @@ int64_t FUN_1400FF8A8(int64_t obj, int64_t *out, uint64_t hItem,
         {
             WPARAM next = SendMessageW(hwnd, 0x110a, 4, hItem);
             if (next != 0) {
-                int64_t r = FUN_1400FF730(obj, out, next, flags);
+                int64_t r = PECMD_TreeCollectItems(obj, out, next, flags);
                 if (stopFlag != 0 && r > 0)
                     break;
             }

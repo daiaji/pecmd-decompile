@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   计算 PE 映像总大小     FUN_1400E4078 @0x1400e4078
+ *   计算 PE 映像总大小     PECMD_CalcPeImageSize @0x1400e4078
  *   树节点按名查找         FUN_1400E5458 @0x1400e5458
  *   控件通知消息分发       FUN_1400E59C0 @0x1400e59c0
  *   窗口枚举命中测试       FUN_1400E63C8 @0x1400e63c8
@@ -16,7 +16,7 @@
  *   初始化字符串对象       FUN_1400ECE2C @0x1400ece2c
  *   销毁 DC 对象           FUN_1400EEEA0 @0x1400eeea0
  *   居中绘制文本           PECMD_DrawVertCenteredText @0x1400ef08c
- *   矩形内绘制图标         FUN_1400EFF58 @0x1400eff58
+ *   矩形内绘制图标         PECMD_DrawIconInRect @0x1400eff58
  *   取/建对象画刷          FUN_1400F0A3C @0x1400f0a3c
  *   刷新滚动条可见性       FUN_1400F2C44 @0x1400f2c44
  *   滚动列表到指定项       FUN_1400F31CC @0x1400f31cc
@@ -94,7 +94,7 @@ extern void FUN_14005D558(void *obj, HWND hwnd);
 extern void PECMD_FreeContainer(int64_t *container);
 extern int64_t PECMD_ContainerAppend(uint64_t *container);
 extern void FUN_1400F06FC(uint64_t *obj);
-extern HBRUSH FUN_1400FD35C(int64_t obj, HDC hdc);   /* @0x1400fd35c */
+extern HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc);   /* @0x1400fd35c */
 extern void FUN_1400F30C0(int64_t obj, int mode, int value);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
@@ -103,11 +103,11 @@ extern uint8_t PTR_FUN_14012bad0[];
 extern uint8_t PTR_FUN_14012bd70[];
 extern uint8_t PTR_FUN_14012ccc0[];
 
-/* ========== FUN_1400E4078 @0x1400e4078 ==========
+/* ========== PECMD_CalcPeImageSize @0x1400e4078 ==========
  * 计算 PE 文件映像所需总尺寸：按节对齐累加各节大小，越界时返回 0。
  * TODO(verify): sectionTable 指向节表头，40 字节/项。
  */
-int64_t FUN_1400E4078(uint64_t file, uint32_t fileSize,
+int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
                               int64_t peHeader, int64_t sectionTable)
 {
     uint32_t align = *(uint32_t *)(peHeader + 0x38);
@@ -386,10 +386,10 @@ void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length,
     DrawTextW(hdc, text, length, rect, flags);
 }
 
-/* ========== FUN_1400EFF58 @0x1400eff58 ==========
+/* ========== PECMD_DrawIconInRect @0x1400eff58 ==========
  * 在给定 RECT 内按最小边等比绘制 +0xd0 处的图标。
  */
-void FUN_1400EFF58(int64_t obj, HDC hdc, RECT *rect, int centerX)
+void PECMD_DrawIconInRect(int64_t obj, HDC hdc, RECT *rect, int centerX)
 {
     HICON icon = *(HICON *)(obj + OBJ_LINK);
     int width;
@@ -417,12 +417,12 @@ void FUN_1400EFF58(int64_t obj, HDC hdc, RECT *rect, int centerX)
 }
 
 /* ========== FUN_1400F0A3C @0x1400f0a3c ==========
- * 取对象缓存画刷；无缓存时创建，特殊负值模式转交 FUN_1400FD35C。
+ * 取对象缓存画刷；无缓存时创建，特殊负值模式转交 PECMD_CtlCalcColorBrush。
  */
 uint64_t FUN_1400F0A3C(int64_t obj, HDC hdc)
 {
     if (*(int *)(obj + 0xa8) < -1 && *(int *)(obj + 0x44) < 0) {
-        return (uint64_t)FUN_1400FD35C(obj, hdc);
+        return (uint64_t)PECMD_CtlCalcColorBrush(obj, hdc);
     }
 
     SetBkMode(hdc, TRANSPARENT);

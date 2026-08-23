@@ -1,0 +1,619 @@
+{
+  "batch": "b4",
+  "proposals": [
+    {
+      "addr": "1400dc9fc",
+      "old": "FUN_1400dc9fc",
+      "spelling_variants": [
+        "FUN_1400DC9FC"
+      ],
+      "name": "PECMD_EvalAtCommand",
+      "confidence": "medium",
+      "evidence": "'@' 前缀动态值求值器：处理 @SENDMSG/@POSTMSG/@RMENU/@IsWindow/@Enable/@style/@font/@bkcolor/@Cursor/@setevent 等窗口与内核对象子命令（FindWindowW+PostMessage/SendMessageTimeout、pecmd2012.event.* 事件/互斥/信号量）。"
+    },
+    {
+      "addr": "1400e1228",
+      "old": "FUN_1400e1228",
+      "spelling_variants": [
+        "FUN_1400E1228",
+        "FUN_1400e1228"
+      ],
+      "name": "PECMD_SockCreateIpcObj",
+      "confidence": "high",
+      "evidence": "表达式函数 SOCK(...) 的实现：按 --shm/--event/--semaphore/--mutex/--mailslot/--pipe 选项创建或打开 pecmd2012.* 命名 IPC 对象，支持 --exist/--only/--reset/--BSTRVT 与 Global\\、Local\\ 前缀。"
+    },
+    {
+      "addr": "1400d0c6c",
+      "old": "FUN_1400d0c6c",
+      "spelling_variants": [
+        "FUN_1400D0C6C",
+        "FUN_1400d0c6c"
+      ],
+      "name": "PECMD_GetfReadData",
+      "confidence": "high",
+      "evidence": "表达式函数 GETF(...) 的实现：读取文件/内存映射/\\Device\\PhysicalMemory/EXEDATA 资源数据并以 %I64d 或十六进制转储写入变量，支持 -bin/-find/-g/-nolen/-free/-fd/-err: 选项。"
+    },
+    {
+      "addr": "140032dc4",
+      "old": "FUN_140032dc4",
+      "spelling_variants": [
+        "FUN_140032DC4"
+      ],
+      "name": "PECMD_EvalLoopCondition",
+      "confidence": "medium",
+      "evidence": "被 LOOP(...) 处理器 FUN_140035860 循环调用的条件求值器：支持 '!' 取反及 KEY(GetAsyncKeyState 并写 PressKey 变量)、MEM、盘符存在(GetLogicalDrives)等条件项。"
+    },
+    {
+      "addr": "1400cb820",
+      "old": "FUN_1400cb820",
+      "spelling_variants": [
+        "FUN_1400CB820"
+      ],
+      "name": "PECMD_EvalQueryValue",
+      "confidence": "high",
+      "evidence": "'?' 前缀查询求值器（由 14002d33c 在 0x3f 分支调用）：实现 FVER/FTIME/FATTR/DROPFILE/FPOS/PPID/ISADMIN/PWIN(WindowFromPoint)/PEBIT/WINVER 及 UEFI 固件环境变量等查询并返回数值结果。"
+    },
+    {
+      "addr": "140038d30",
+      "old": "FUN_140038d30",
+      "spelling_variants": [
+        "FUN_140038D30",
+        "FUN_140038d30"
+      ],
+      "name": "PECMD_DispCommand",
+      "confidence": "high",
+      "evidence": "DISP 命令处理器：EnumDisplayDevicesW/EnumDisplaySettingsW 枚举模式、ChangeDisplaySettingsExW 应用分辨率/色深/刷新率，带 -confirm- 流程（&&YesNo 对话框）与 GetDeviceGammaRamp 校正，调试标签 '#35:INDATA*DispSet'。"
+    },
+    {
+      "addr": "140084a5c",
+      "old": "FUN_140084a5c",
+      "spelling_variants": [
+        "FUN_140084a5c"
+      ],
+      "name": "PECMD_ParseBinDataSpec",
+      "confidence": "low",
+      "evidence": "解析带 $/%/=/./# 标记的数据规格串：扫描标记字符后将 0x 十六进制数字、括号内表达式(EvalParenStripped/ScanHexNumber)按重复次数展开写入增长缓冲区；具体语法语义未能完全确证，故标低。"
+    },
+    {
+      "addr": "140021a4c",
+      "old": "FUN_140021a4c",
+      "spelling_variants": [
+        "FUN_140021A4C",
+        "FUN_140021a4c"
+      ],
+      "name": "PECMD_LinkCreateShortcut",
+      "confidence": "high",
+      "evidence": "表达式函数 LINK(...) 的实现：创建 .LNK 快捷方式（SearchPathW 解析目标、'force' 覆盖选项），完成后用 SetVariable 回写结果。"
+    },
+    {
+      "addr": "14002f454",
+      "old": "FUN_14002f454",
+      "spelling_variants": [
+        "FUN_14002F454",
+        "FUN_14002f454"
+      ],
+      "name": "PECMD_FontCommand",
+      "confidence": "high",
+      "evidence": "FONT 命令处理器：扫描目录(\\*.*)与 -p/p: 指定字体文件，LoadLibraryExW(FONT_AS_DATA)+AddFontMemResourceEx 加载内存字体并在退出时 RemoveFontMemResourceEx，结果写入变量。"
+    },
+    {
+      "addr": "1400d0468",
+      "old": "FUN_1400d0468",
+      "spelling_variants": [
+        "FUN_1400D0468",
+        "FUN_1400d0468"
+      ],
+      "name": "PECMD_SiteSetFileAttrTime",
+      "confidence": "medium",
+      "evidence": "表达式函数 SITE(...) 的实现：对文件应用 +/-A/H/R/S 属性(SetFileAttributesW)与 *touch/*local:/*sys:/*utc: 时间戳(SetFileTime+LocalFileTimeToFileTime/SystemTimeToFileTime)。"
+    },
+    {
+      "addr": "14002e790",
+      "old": "FUN_14002e790",
+      "spelling_variants": [
+        "FUN_14002E790"
+      ],
+      "name": "PECMD_DispConfirmPopupMenu",
+      "confidence": "high",
+      "evidence": "DISP 确认弹窗菜单：LoadMenuW(0x2725)+ScanMenuRecursive 动态插入『分辨率 %d×%d 颜色%d位 刷新率%d』项，TrackPopupMenu 选择后以 EXEC -incmd PECMD DISP -confirm 执行。"
+    },
+    {
+      "addr": "1400fe610",
+      "old": "FUN_1400fe610",
+      "spelling_variants": [
+        "FUN_1400FE610"
+      ],
+      "name": "PECMD_ControlPaint",
+      "confidence": "high",
+      "evidence": "自绘控件主绘制例程：读 GWL_STYLE 判禁用态，按 +0xa4 标志走快照缓存(FUN_1400fd5e8)，随后 DrawEdge/DrawIconEx/DrawTextW/BitBlt 完成边框、图标与文本绘制。"
+    },
+    {
+      "addr": "14002a910",
+      "old": "FUN_14002a910",
+      "spelling_variants": [
+        "FUN_14002A910",
+        "FUN_14002a910"
+      ],
+      "name": "PECMD_CreatePageFile",
+      "confidence": "high",
+      "evidence": "PAGE 命令的实现：启用 SeCreatePagefilePrivilege 后懒加载 NTDLL!NtCreatePagingFile 创建页面文件，支持 *force，结合磁盘空间/物理内存选择大小并回写注册表。"
+    },
+    {
+      "addr": "14003634c",
+      "old": "FUN_14003634c",
+      "spelling_variants": [
+        "FUN_14003634C"
+      ],
+      "name": "PECMD_DismountRamDiskDrive",
+      "confidence": "medium",
+      "evidence": "RAM 盘命令的模式2子操作：打开卷句柄后 FlushFileBuffers+FSCTL_DISMOUNT_VOLUME(0x90018)/MARK_DIRTY(0x90020)，再 DefineDosDeviceW(DDD_REMOVE_DEFINITION) 删除盘符并删除挂载点。"
+    },
+    {
+      "addr": "140035cec",
+      "old": "FUN_140035cec",
+      "spelling_variants": [
+        "FUN_140035CEC"
+      ],
+      "name": "PECMD_MountImDiskRamDisk",
+      "confidence": "high",
+      "evidence": "RAM 盘创建核心：确保 ImDisk/AWEAlloc 驱动已加载(\\Device\\AWEAlloc、ImDskSvc 服务)后经 \\Device\\ImDisk%u 设备与 RtlDosPathNameToNtPathName_U 完成内存盘挂载。"
+    },
+    {
+      "addr": "14003e768",
+      "old": "FUN_14003e768",
+      "spelling_variants": [
+        "FUN_14003E768"
+      ],
+      "name": "PECMD_ShellLaunchThread",
+      "confidence": "high",
+      "evidence": "外壳启动线程体：MAIN_DBG 日志贯穿全程，循环等待 MyShell 变量非空，检查单实例/Explorer 路径后启动外壳进程并触发 BeforeStart 钩子与 LoadEnvi。"
+    },
+    {
+      "addr": "1400ede48",
+      "old": "FUN_1400ede48",
+      "spelling_variants": [
+        "FUN_1400EDE48"
+      ],
+      "name": "PECMD_DrawIconScaled",
+      "confidence": "medium",
+      "evidence": "把 HICON 经 DrawIconEx/StretchBlt 缩放绘制到目标 DC 的辅助例程（先画入兼容位图再 BitBlt 回目标），供列表/树控件绘制图标使用。"
+    },
+    {
+      "addr": "1400e4480",
+      "old": "FUN_1400e4480",
+      "spelling_variants": [
+        "FUN_1400E4480"
+      ],
+      "name": "PECMD_RunPeInjectStart",
+      "confidence": "medium",
+      "evidence": "RunPE 注入启动：创建挂起进程后 WriteProcessMemory 写入 PE 各节、VirtualProtectEx 重设保护并 ResumeThread 运行，失败时 TerminateProcess。"
+    },
+    {
+      "addr": "1400fe168",
+      "old": "FUN_1400fe168",
+      "spelling_variants": [
+        "FUN_1400FE168"
+      ],
+      "name": "PECMD_DrawWrappedText",
+      "confidence": "medium",
+      "evidence": "DrawTextW 封装：按 DT_WORDBREAK(0x400) 逐词二分测量在宽度内折行绘制长文本，参数3<0 时取 lstrlenW。"
+    },
+    {
+      "addr": "1400e7124",
+      "old": "FUN_1400e7124",
+      "spelling_variants": [
+        "FUN_1400E7124"
+      ],
+      "name": "PECMD_Wow64MapPeImage",
+      "confidence": "medium",
+      "evidence": "WOW64 兼容的 PE 映射准备：校验 MZ/PE 头、按指针尺寸(4/8)解析可选头，VirtualAlloc 到首选基址并复制节表，必要时解析 Wow64Get/SetThreadContext。"
+    },
+    {
+      "addr": "14002d33c",
+      "old": "FUN_14002d33c",
+      "spelling_variants": [
+        "FUN_14002D33C",
+        "FUN_14002d33c"
+      ],
+      "name": "PECMD_EvalSpecialToken",
+      "confidence": "medium",
+      "evidence": "SET(...) 动态取值分派器：识别 ^/-mode/-std/-addr/-env 开关与 ?/$/#/&&&/@/* 前缀，分别转入查询求值器(1400cb820)、'@'对象命令(1400dc9fc)、光驱枚举或 ExpandSpecialDirs/FUN_1400c6324。"
+    },
+    {
+      "addr": "14003c9e8",
+      "old": "FUN_14003c9e8",
+      "spelling_variants": [
+        "FUN_14003C9E8",
+        "FUN_14003c9e8"
+      ],
+      "name": "PECMD_SendInputEvents",
+      "confidence": "high",
+      "evidence": "SEND 表达式函数：默认解析 VK 键名列表用 keybd_event 按下抬起(^/_ 控制单向，ext/s 为扩展与开关标志)；-m 转 mouse_event(5 参数)；-gui 将剩余文本拼 '#30:INDATA ' 交 RunCommand 执行。"
+    },
+    {
+      "addr": "1400fd86c",
+      "old": "FUN_1400fd86c",
+      "spelling_variants": [
+        "FUN_1400FD86C",
+        "FUN_1400fd86c"
+      ],
+      "name": "PECMD_ControlHoverTimer",
+      "confidence": "high",
+      "evidence": "控件悬停定时器回调(TIMERPROC)：定时器 0x2713/0x2711 中用 GetCursorPos+PtInRect+GetAsyncKeyState(VK_LBUTTON) 维护悬停/按下状态并 InvalidateRect 触发重绘，超时自动 KillTimer。"
+    },
+    {
+      "addr": "140024a54",
+      "old": "FUN_140024a54",
+      "spelling_variants": [
+        "FUN_140024A54"
+      ],
+      "name": "PECMD_AbsPathFromCurDir",
+      "confidence": "medium",
+      "evidence": "解析单个路径实参：去注释(// ` ; #)与引号、ExpandVarDispatch 展开变量，若结果非 \\\\ 或 X: 开头则前缀 &CurDir 变量值拼接为绝对路径。"
+    },
+    {
+      "addr": "1400c42ac",
+      "old": "FUN_1400c42ac",
+      "spelling_variants": [
+        "FUN_1400C42AC",
+        "FUN_1400c42ac"
+      ],
+      "name": "PECMD_HomeSetStartPage",
+      "confidence": "medium",
+      "evidence": "HOME 表达式函数：展开参数后写注册表 '$HKCU\\Software\\Microsoft\\Internet Explorer\\Main\\Start Page=' 设 IE 主页并回写结果变量。"
+    },
+    {
+      "addr": "1400ebd30",
+      "old": "FUN_1400ebd30",
+      "spelling_variants": [
+        "FUN_1400EBD30",
+        "FUN_1400ebd30"
+      ],
+      "name": "PECMD_RasDialEntry",
+      "confidence": "high",
+      "evidence": "RAS 拨号封装：懒加载 RasDialW/RasGetErrorStringW，缺省入口名取自 EnumPhonebookEntries('HelloASL')，填充电话簿/用户/密码/域名结构后异步拨号并 WaitForMultipleObjects 等待结果。"
+    },
+    {
+      "addr": "1400f2f58",
+      "old": "FUN_1400f2f58",
+      "spelling_variants": [
+        "FUN_1400F2F58"
+      ],
+      "name": "PECMD_ListGetItemTextData",
+      "confidence": "medium",
+      "evidence": "列表控件取项例程：LB_GETTEXT(0x1038) 取指定项文本，再经自定义消息 0x1200/0x1211 从配套数据窗口枚举条目数据装入数组。"
+    },
+    {
+      "addr": "14003d92c",
+      "old": "FUN_14003d92c",
+      "spelling_variants": [
+        "FUN_14003D92C",
+        "FUN_14003d92c"
+      ],
+      "name": "PECMD_DownCheckShutdown",
+      "confidence": "medium",
+      "evidence": "DOWN 表达式函数：读取 HKLM\\SOFTWARE\\PELOGON 的 DOWNCFG 与 RAMDATA 的 LOCKDOWN/FORCESHUTDOWN 标志，据 MENU:0x%X:0x%X 决定弹出菜单还是走 MENU-SKIP 直接执行关机脚本。"
+    },
+    {
+      "addr": "1400f53c8",
+      "old": "FUN_1400f53c8",
+      "spelling_variants": [
+        "FUN_1400F53C8",
+        "FUN_1400f53c8"
+      ],
+      "name": "PECMD_ListAddItemEntry",
+      "confidence": "medium",
+      "evidence": "向列表控件的文本/数值双向量(+0x1a8/+0x1b0 与 +0x1c0/+0x1c8)追加一条目，同时把分隔符字符累加进 +0x1d8 内部串。"
+    },
+    {
+      "addr": "14008569c",
+      "old": "FUN_14008569c",
+      "spelling_variants": [
+        "FUN_14008569C",
+        "FUN_14008569c"
+      ],
+      "name": "PECMD_ExpandVarsLocked",
+      "confidence": "medium",
+      "evidence": "持全局临界区(DAT_14013e190)的变量展开包装：依次调用 ResolveVariable/ResolveIndexedVariable/ExpandVarsRecursive/ExpandCommandLine 完成安全展开。"
+    },
+    {
+      "addr": "1400fd35c",
+      "old": "FUN_1400fd35c",
+      "spelling_variants": [
+        "FUN_1400FD35C",
+        "FUN_1400fd35c"
+      ],
+      "name": "PECMD_CtlCalcColorBrush",
+      "confidence": "medium",
+      "evidence": "WM_CTLCOLOR* 处理逻辑：按控件状态选 SetBkMode，懒建背景刷，禁用时将文字色与 COLOR_GRAYTEXT(0x16) 平均混合后 SetTextColor/SetBkColor，返回 HBRUSH。"
+    },
+    {
+      "addr": "1400e4160",
+      "old": "FUN_1400e4160",
+      "spelling_variants": [
+        "FUN_1400E4160"
+      ],
+      "name": "PECMD_PeApplyRelocations",
+      "confidence": "high",
+      "evidence": "PE 重定位处理：遍历重定位目录块，HIGHLOW(0x3000)加 32 位增量、DIR64(0xA000)加 64 位增量，delta=新基址-ImageBase。"
+    },
+    {
+      "addr": "1400e3e38",
+      "old": "FUN_1400e3e38",
+      "spelling_variants": [
+        "FUN_1400E3E38",
+        "FUN_1400e3e38"
+      ],
+      "name": "PECMD_MapSharedSection",
+      "confidence": "high",
+      "evidence": "共享内存段建立：按标志先 OpenFileMappingW 探测存在性(可要求不存在/必须存在)，再 CreateFileMappingW+MapViewOfFile 返回视图，可选输出句柄；被 SOCK --shm 路径调用。"
+    },
+    {
+      "addr": "140024f20",
+      "old": "FUN_140024f20",
+      "spelling_variants": [
+        "FUN_140024F20"
+      ],
+      "name": "PECMD_PrependEnviHeader",
+      "confidence": "medium",
+      "evidence": "构造 XOR 编码的脚本前导：生成 \"LOGS <text>\" 与 '@ENVI^ ForceLocal=1'/'@ENVI^ EnviMode=1' 行，XorEncode 后按偏移插入脚本缓冲区；被脚本装载/RunCommand 路径调用。"
+    },
+    {
+      "addr": "1400ff730",
+      "old": "FUN_1400ff730",
+      "spelling_variants": [
+        "FUN_1400FF730"
+      ],
+      "name": "PECMD_TreeCollectItems",
+      "confidence": "medium",
+      "evidence": "递归遍历 TreeView(TVM_GETNEXTITEM TVGN_CHILD/NEXT)：收集勾选项文本或按标志拼 '@0x%p' 指针串，用于 '?' 查询树控件内容。"
+    },
+    {
+      "addr": "1400fd5e8",
+      "old": "FUN_1400fd5e8",
+      "spelling_variants": [
+        "FUN_1400FD5E8"
+      ],
+      "name": "PECMD_CaptureParentBackground",
+      "confidence": "high",
+      "evidence": "伪透明支持：把父窗口中控件区域背景 BitBlt(SRCCOPY) 抓入兼容位图缓存在 +0xe8，重绘时垫底。"
+    },
+    {
+      "addr": "140030f1c",
+      "old": "FUN_140030f1c",
+      "spelling_variants": [
+        "FUN_140030F1C"
+      ],
+      "name": "PECMD_PrependCallSubLine",
+      "confidence": "medium",
+      "evidence": "把 '@CALL ** <token>' 行 XorEncode 后插入脚本缓冲区指定偏移（FUN_14001b4f8 计算插入点），使临时脚本注册为可 CALL 的子块。"
+    },
+    {
+      "addr": "14006e588",
+      "old": "FUN_14006e588",
+      "spelling_variants": [
+        "FUN_14006E588",
+        "FUN_14006e588"
+      ],
+      "name": "PECMD_DrawImageFileToDC",
+      "confidence": "medium",
+      "evidence": "在 GDI+ 启动锁内经 LoadImageFromFile 建图像对象，取宽高后调虚表+0x40 的拉伸绘制到目标 DC，负宽高取图像原始尺寸。"
+    },
+    {
+      "addr": "1400e4078",
+      "old": "FUN_1400e4078",
+      "spelling_variants": [
+        "FUN_1400E4078"
+      ],
+      "name": "PECMD_CalcPeImageSize",
+      "confidence": "high",
+      "evidence": "按 SectionAlignment(+0x38)/FileAlignment(+0x54) 遍历 PE 节表计算映像总尺寸（含头部对齐），供本地映射与远程注入使用。"
+    },
+    {
+      "addr": "1400e4324",
+      "old": "FUN_1400e4324",
+      "spelling_variants": [
+        "FUN_1400E4324"
+      ],
+      "name": "PECMD_CreateProcReadImageBase",
+      "confidence": "medium",
+      "evidence": "以 CREATE_SUSPENDED(flag|4) 调 PECMD_CreateProcessW，GetThreadContext 后 ReadProcessMemory 读远端 PEB->ImageBase，并用 VirtualQueryEx 步进测出映像区大小。"
+    },
+    {
+      "addr": "1400f0ca0",
+      "old": "FUN_1400f0ca0",
+      "spelling_variants": [
+        "FUN_1400F0CA0"
+      ],
+      "name": "PECMD_FillCtlBackground",
+      "confidence": "medium",
+      "evidence": "以指定 COLORREF 填充兼容位图（经 FUN_1400f0abc 的掩码 Blt）后 BitBlt 到控件 DC，实现控件背景色重绘。"
+    },
+    {
+      "addr": "1400a3f08",
+      "old": "FUN_1400a3f08",
+      "spelling_variants": [
+        "FUN_1400A3F08",
+        "FUN_1400a3f08"
+      ],
+      "name": "PECMD_EvalRandFunction",
+      "confidence": "high",
+      "evidence": "RAND 表达式函数：解析范围参数后调 PECMD_GetRandom 产生随机数并用 SetVariable 写回变量，字面量 'RANDOM' 出现在实现中。"
+    },
+    {
+      "addr": "1400f0eb0",
+      "old": "FUN_1400f0eb0",
+      "spelling_variants": [
+        "FUN_1400F0EB0",
+        "FUN_1400f0eb0"
+      ],
+      "name": "PECMD_SetCtlBgBrush",
+      "confidence": "high",
+      "evidence": "设置控件背景刷：param_2 为 COLORREF 时 CreateSolidBrush，-1 时改用 GetStockObject(5) 缓存刷，释放旧刷并 InvalidateRect 重绘。"
+    },
+    {
+      "addr": "14004faa8",
+      "old": "FUN_14004faa8",
+      "spelling_variants": [
+        "FUN_14004FAA8",
+        "FUN_14004faa8"
+      ],
+      "name": "PECMD_RegexParseCharItem",
+      "confidence": "medium",
+      "evidence": "正则字符类元素解析（ATL regex 引擎）：处理 '\\t' 转义、'-' 区间（含结尾 '-' 特例），输出起止字符与类型标志，由 '['...']' 循环 FUN_140050f58 反复调用。"
+    },
+    {
+      "addr": "140067f90",
+      "old": "FUN_140067f90",
+      "spelling_variants": [
+        "FUN_140067F90",
+        "FUN_140067f90"
+      ],
+      "name": "PECMD_EscapeLabelAmpersands",
+      "confidence": "high",
+      "evidence": "把字符串中的每个 '&' 复制为 '&&'（就地扩容 MemMoveSafe），防止 LABEL 文本中的 & 被 Windows 当作加速符吞掉；仅被 LABEL 命令处理器 FUN_1400b9788 调用。"
+    },
+    {
+      "addr": "1400f9324",
+      "old": "FUN_1400f9324",
+      "spelling_variants": [
+        "FUN_1400F9324",
+        "FUN_1400f9324"
+      ],
+      "name": "PECMD_DestroyCtlResources",
+      "confidence": "medium",
+      "evidence": "控件对象资源清理：删除 GDI 刷、逐个释放 +0x4c..+0x73 的成员串/向量（FreeArray_ddf8/各析构助手），最后转 PECMD_DestroyWindowObj。"
+    },
+    {
+      "addr": "1400b1dec",
+      "old": "FUN_1400b1dec",
+      "spelling_variants": [
+        "FUN_1400B1DEC",
+        "FUN_1400b1dec"
+      ],
+      "name": "PECMD_AppendCheckboxChild",
+      "confidence": "medium",
+      "evidence": "为容器控件扩容子控件数组(HeapRealloc +0x1b8/+0x1c0)并以 id=计数+0x1000 调 PECMD_ConstructCheckbox 新建复选框存入槽位。"
+    },
+    {
+      "addr": "1400fd764",
+      "old": "FUN_1400fd764",
+      "spelling_variants": [
+        "FUN_1400FD764"
+      ],
+      "name": "PECMD_ControlOnMouseMove",
+      "confidence": "medium",
+      "evidence": "控件 WM_MOUSEMOVE 处理：首次进入时置悬停标志、SetTimer(0x2711,50ms)、设手型光标并将消息转发给控件虚表。"
+    },
+    {
+      "addr": "14001c01c",
+      "old": "FUN_14001c01c",
+      "spelling_variants": [
+        "FUN_14001C01C"
+      ],
+      "name": "PECMD_InitShellFolderEnvVars",
+      "confidence": "high",
+      "evidence": "初始化 shell 目录类 PECMD 变量：设置 &Desktop/&Favorites/&IECache/&Personal/&Programs/&QuickLaunch/&SendTo/&StartMenu/&MyName/&MyName0/&PE_IDBASE/&PE_MENU_IDBASE 等，初始化早期由主入口调用。"
+    },
+    {
+      "addr": "14006e6c8",
+      "old": "FUN_14006e6c8",
+      "spelling_variants": [
+        "FUN_14006E6C8",
+        "FUN_14006e6c8"
+      ],
+      "name": "PECMD_ReleaseKernelObject",
+      "confidence": "medium",
+      "evidence": "内核对象包装释放：临界区内递减引用计数，归零后从全局对象表移除、CloseHandle 并 free 对象。"
+    },
+    {
+      "addr": "14001c1d4",
+      "old": "FUN_14001c1d4",
+      "spelling_variants": [
+        "FUN_14001C1D4"
+      ],
+      "name": "PECMD_ImportSystemEnvVars",
+      "confidence": "high",
+      "evidence": "遍历静态表(SystemRoot/SystemDrive/windir/TEMP/TMP)逐个 GetEnvironmentVariableW，并以 '&名字' 注册为 PECMD 变量。"
+    },
+    {
+      "addr": "14005e8e8",
+      "old": "FUN_14005e8e8",
+      "spelling_variants": [
+        "FUN_14005E8E8",
+        "FUN_14005e8e8"
+      ],
+      "name": "PECMD_ReleaseSlotRef",
+      "confidence": "medium",
+      "evidence": "按 param_2 从两组全局槽位数组(DAT_14013dce8/DAT_14013dc80)之一递减对象引用计数，归零则清槽并释放。"
+    },
+    {
+      "addr": "1400f0abc",
+      "old": "FUN_1400f0abc",
+      "spelling_variants": [
+        "FUN_1400F0ABC",
+        "FUN_1400f0abc"
+      ],
+      "name": "PECMD_BltTransparentBits",
+      "confidence": "high",
+      "evidence": "经典透明贴图序列：CreateBitmap 单色掩码 + SRCAND(0x8800C6)/SRCPAINT(0xEE0086) 三次 BitBlt 实现按背景色抠图。"
+    },
+    {
+      "addr": "1400fbcb0",
+      "old": "FUN_1400fbcb0",
+      "spelling_variants": [
+        "FUN_1400FBCB0",
+        "FUN_1400fbcb0"
+      ],
+      "name": "PECMD_CreateRichEditCtrl",
+      "confidence": "high",
+      "evidence": "创建 RichEdit 编辑控件：按 DAT_14013d300 选自定义类 'RECHEDIT' 或 'RichEdit20W'，CreateWindowExW 后按标志发 EM_SETCHARFORMAT 类消息。"
+    },
+    {
+      "addr": "1400613fc",
+      "old": "FUN_1400613fc",
+      "spelling_variants": [
+        "FUN_1400613FC",
+        "FUN_1400613fc"
+      ],
+      "name": "PECMD_UpdateModifierKeys",
+      "confidence": "high",
+      "evidence": "GetKeyboardState 快照 Shift/Ctrl/Alt/LWin/RWin 高位并合成到全局修饰键状态字 DAT_14013d7fc 的位 0..8。"
+    },
+    {
+      "addr": "1400eff58",
+      "old": "FUN_1400eff58",
+      "spelling_variants": [
+        "FUN_1400EFF58"
+      ],
+      "name": "PECMD_DrawIconInRect",
+      "confidence": "high",
+      "evidence": "把 +0xd0 处的 HICON 以 min(w,h) 等比缩放居中后 DrawIconEx 绘制到给定矩形。"
+    },
+    {
+      "addr": "1400f2a7c",
+      "old": "FUN_1400f2a7c",
+      "spelling_variants": [
+        "FUN_1400F2A7C",
+        "FUN_1400f2a7c"
+      ],
+      "name": "PECMD_CtlMsgScaleMetric",
+      "confidence": "low",
+      "evidence": "WndProc 转发器 FUN_1400f2b1c 中 msg==0x1205 分支：按对象 +0x25 双精度缩放系数换算度量值写回应答结构；消息含义未确证，标低。"
+    }
+  ],
+  "skips": [
+    {
+      "addr": "1400e706c",
+      "reason": "与并发批次 tools/name_proposals_b3.json 重叠（该文件在本次批次开始时不存在、结束时已含该地址提案，按『排除已提案地址』规则移入 skips）；本批曾拟名 PECMD_SkipToLineEndXor（high）可作备选。"
+    },
+    {
+      "addr": "1400e70c0",
+      "reason": "与并发批次 tools/name_proposals_b3.json 重叠（该文件在本次批次开始时不存在、结束时已含该地址提案，按『排除已提案地址』规则移入 skips）；本批曾拟名 PECMD_SkipToLineEndXorW（high）可作备选。"
+    },
+    {
+      "addr": "1400e96ec",
+      "reason": "与并发批次 tools/name_proposals_b3.json 重叠（该文件在本次批次开始时不存在、结束时已含该地址提案，按『排除已提案地址』规则移入 skips）；本批曾拟名 PECMD_Int64ToString（high）可作备选。"
+    }
+  ]
+}

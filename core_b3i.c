@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   PATH 命令         PECMD_DispatchSpecialDirective @0x140040350
- *   解析范围说明       FUN_14004FAA8 @0x14004faa8
+ *   解析范围说明       PECMD_RegexParseCharItem @0x14004faa8
  *   解析字符类         FUN_1400513B8 @0x1400513b8
  *   设置 Enable 状态   FUN_140053C5C @0x140053c5c
  *   追加分隔 token     FUN_1400547BC @0x1400547bc
@@ -27,7 +27,7 @@
  *   转发自定义消息     PECMD_ForwardCustomMessage @0x140066e20
  *   分离虚拟磁盘       PECMD_DetachVirtualDisk @0x140069044
  *   释放控件对象       FUN_14006C648 @0x14006c648
- *   释放句柄串对象     FUN_14006E6C8 @0x14006e6c8
+ *   释放句柄串对象     PECMD_ReleaseKernelObject @0x14006e6c8
  *   获取完整路径       FUN_140078BE8 @0x140078be8
  *   设置 Check 状态    FUN_14007DF90 @0x14007df90
  *   解析单词 token     PECMD_ParseFirstWordToken @0x140085844
@@ -120,10 +120,10 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
     return 0;
 }
 
-/* ========== FUN_14004FAA8 @0x14004faa8 ==========
+/* ========== PECMD_RegexParseCharItem @0x14004faa8 ==========
  * 解析 [start-end] 范围说明；返回 0 成功，-1 失败并置错误码。
  */
-uint64_t FUN_14004FAA8(uint32_t *errCode, int64_t *pp, uint16_t *start,
+uint64_t PECMD_RegexParseCharItem(uint32_t *errCode, int64_t *pp, uint16_t *start,
                               uint16_t *end)
 {
     uint16_t uVar1 = *(uint16_t *)*pp;
@@ -620,10 +620,10 @@ void FUN_14006C648(uint64_t *obj)
     FUN_14005B104((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_14006E6C8 @0x14006e6c8 ==========
+/* ========== PECMD_ReleaseKernelObject @0x14006e6c8 ==========
  * 释放带句柄+串的对象；计数归零时从全局表移除。
  */
-void FUN_14006E6C8(uint64_t *obj)
+void PECMD_ReleaseKernelObject(uint64_t *obj)
 {
     EnterCriticalSection(&g_csInit);
     *(int *)(obj + 2) = *(int *)(obj + 2) - 1;

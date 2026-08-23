@@ -30,8 +30,8 @@ void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);  /* @0x140066978 设置�
 void FUN_1400668EC(void *s, uint64_t v, LPCWSTR k, LPCWSTR fmt); /* @0x1400668ec */
 uint64_t PECMD_GetParentProcessId(DWORD pid);   /* @0x140006988 父进程 PID */
 void PECMD_AllocWStringBuffer(WCHAR **ps, size_t n);  /* @0x140063694 分配 */
-void FUN_14001C1D4(void);            /* @0x14001c1d4 */
-void FUN_14001C01C(void);            /* @0x14001c01c */
+void PECMD_ImportSystemEnvVars(void);            /* @0x14001c1d4 */
+void PECMD_InitShellFolderEnvVars(void);            /* @0x14001c01c */
 void FUN_14005B9A0(void);            /* @0x14005b9a0 */
 void FUN_140027EAC(void *s, void *p, int a, int b, void *cb, int timeout, int c, int d, int e); /* @0x140027eac */
 void FUN_14004E2CC(void *s, void *item);  /* @0x14004e2cc 释放单项 */
@@ -95,7 +95,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     FUN_1400629B8(&g_Script, WSTR("&PECMDBUILD"), pVer);
     FUN_140062A2C(&g_Script, WSTR("&&ERROR"), WSTR("0"));
     /* thunk_PECMD_UpdateLcg(0x3a0c) 计时忽略 */
-    FUN_14001C01C();
+    PECMD_InitShellFolderEnvVars();
     /* thunk_PECMD_UpdateLcg(0x3a0e) 计时忽略 */
     if (!g_hInstance) {
         g_hInstance = hInstance;
@@ -123,7 +123,7 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     pBuf[0] = L'\0';
     GetModuleFileNameW((HMODULE)0, pBuf, 0x208);
     FUN_140062A2C(&g_Script, WSTR("&&CurFile"), pBuf);
-    FUN_14001C1D4();
+    PECMD_ImportSystemEnvVars();
     FUN_14005B104(&pBuf);
     FUN_14005B104(&pVer);
 }

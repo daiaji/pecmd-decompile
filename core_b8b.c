@@ -33,7 +33,7 @@ extern void FUN_1400FC034(uint64_t *obj); /* @0x1400fc034 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_1400F5D50(uint64_t *obj);
-extern void FUN_1400F9324(uint64_t *obj); /* @0x1400f9324 */
+extern void PECMD_DestroyCtlResources(uint64_t *obj); /* @0x1400f9324 */
 extern void FUN_1400FC33C(uint64_t *obj); /* @0x1400fc33c core_b8c.c */
 
 /* ========== FUN_1400F0F78 @0x1400f0f78 ==========
@@ -109,7 +109,7 @@ uint64_t *FUN_1400F9104(uint64_t *obj, uint32_t flags)
  */
 uint64_t *FUN_1400FB558(uint64_t *obj, uint32_t flags)
 {
-    FUN_1400F9324(obj);
+    PECMD_DestroyCtlResources(obj);
     if ((flags & 1) != 0) {
         free(obj);
     }

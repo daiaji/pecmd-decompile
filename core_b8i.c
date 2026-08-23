@@ -17,7 +17,7 @@
  *   应用字体到控件          FUN_1400FB934 @0x1400fb934
  *   设置绘制画刷            FUN_1400FBBB0     @0x1400fbbb0
  *   创建富文本控件          FUN_1400FBCB0 @0x1400fbcb0
- *   启动 Tooltip 定时器     FUN_1400FD764  @0x1400fd764
+ *   启动 Tooltip 定时器     PECMD_ControlOnMouseMove  @0x1400fd764
  *   解析格式标志            FUN_1400FFA38   @0x1400ffa38
  *
  * 约定:
@@ -595,11 +595,11 @@ bool FUN_1400FBCB0(int64_t *obj, uint32_t style, int *rc,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400FD764 @0x1400fd764 ==========
+/* ========== PECMD_ControlOnMouseMove @0x1400fd764 ==========
  * 启动 Tooltip 定时器 (0x2711, 50ms), 设置内部状态, 然后
  * 经虚表入口把消息 0x200 下发; 需要时切换设备窗口/设光标。
  */
-void FUN_1400FD764(int64_t *obj, uint32_t wParam, uint64_t lParam)
+void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
 {
     typedef uint64_t (*ObjMsgFn)(int64_t, int, uint32_t, int64_t);
     uint32_t lo;

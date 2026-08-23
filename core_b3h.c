@@ -69,7 +69,7 @@ extern uint64_t PECMD_ComboBoxControl(int64_t a1, uint64_t a2, LPCWSTR a3,
                               int16_t a4, LPCWSTR a5, int a6);
 extern uint64_t FUN_14005C7C4(char *a1, uint16_t *a2);
 extern int64_t FUN_1400E5AAC(int64_t *a1, uint64_t *a2);
-extern void FUN_14006E6C8(uint64_t *a1);
+extern void PECMD_ReleaseKernelObject(uint64_t *a1);
 extern void FUN_14005e7dc(uint64_t *a1);
 extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR a1, int64_t *a2, int64_t *a3,
                              int64_t *a4);
@@ -618,7 +618,7 @@ uint64_t *FUN_1400A4350(uint64_t *obj, uint64_t flags)
         ((void (*)(void *, int))(uintptr_t)*obj)(obj, 1);
     }
     if (obj[3] != 0) {
-        FUN_14006E6C8((uint64_t *)obj[3]);
+        PECMD_ReleaseKernelObject((uint64_t *)obj[3]);
         obj[3] = 0;
     }
     *obj = (uint64_t)(uintptr_t)PTR__purecall_140126050;

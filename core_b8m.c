@@ -61,7 +61,7 @@ extern int64_t PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3,
                              void *p5);
 extern int32_t g_msgLockCount;                                /* 消息锁计数 */
 extern void FUN_1400EC428(int64_t obj, int param2);
-extern void FUN_1400FD764(int64_t *obj, int param2, uint64_t param3);
+extern void PECMD_ControlOnMouseMove(int64_t *obj, int param2, uint64_t param3);
 extern void PECMD_OnTabSelChange(int64_t obj);
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 extern void PECMD_LayoutTabPageArea(int64_t obj, char track); /* @0x1400ec0f0 */
@@ -73,7 +73,7 @@ extern void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF col
                                  int edge);                   /* @0x1400f0df4 */
 extern void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length, RECT *rect,
                                    uint32_t flags);           /* @0x1400ef08c */
-extern void FUN_1400EFF58(int64_t obj, HDC hdc, RECT *rect, int centerX); /* @0x1400eff58 */
+extern void PECMD_DrawIconInRect(int64_t obj, HDC hdc, RECT *rect, int centerX); /* @0x1400eff58 */
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern float g_alphaThreshold;                                /* DAT_14012f6bc */
@@ -94,7 +94,7 @@ extern int PECMD_DpiConvert(double value);                     /* @0x1400628b4 *
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name); /* @0x1400b1f34 */
 extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
 extern uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out); /* @0x1400ff414 */
-extern void FUN_1400FD5E8(int64_t obj);        /* @0x1400fd5e8 */
+extern void PECMD_CaptureParentBackground(int64_t obj);        /* @0x1400fd5e8 */
 extern void PECMD_SelectObjectSlot_b054(int64_t ctx, HDC hdc, HGDIOBJ obj); /* @0x14005b054 */
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);      /* @0x1400f429c */
 extern WCHAR *FUN_1400702D4(WCHAR **out, LPCWSTR src, int64_t len); /* @0x1400702d4 */
@@ -103,7 +103,7 @@ extern void FUN_14005B0D4(void *ps);
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
 extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
 extern void FUN_1400F51D8(int64_t obj, int current); /* @0x1400f51d8 */
-extern uint64_t FUN_1400F2F58(int64_t obj, int *rect, int msgParam); /* @0x1400f2f58 */
+extern uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam); /* @0x1400f2f58 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern void PECMD_FormatOutput(int64_t obj);                     /* @0x14009c6dc */
 extern void PECMD_SetWindowTheme(uint64_t hwnd);           /* @0x140066054 */
@@ -128,19 +128,19 @@ extern void *PECMD_HeapRealloc(void *ptr, size_t size);      /* @0x140063118 */
 extern uint8_t DefWindowProcW_exref;
 extern uint64_t FUN_1400F3554(int64_t obj, LPARAM param2); /* @0x1400f3554 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);      /* @0x140063424 */
-extern int64_t FUN_1400E4078(uint64_t file, uint32_t fileSize,
+extern int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
                                      int64_t peHeader, int64_t sectionTable); /* @0x1400e4078 */
 extern BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, size_t dwSize,
                               DWORD flNewProtect, DWORD *lpflOldProtect);
 extern uint32_t (*g_pfnVirtualAllocEx)(void); /* DAT_14013e258 VirtualAllocEx */
-extern uint32_t FUN_1400E4324(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
+extern uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
                                               int64_t *outSize, BOOL inherit, uint32_t flags,
                                               LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
                                               PROCESS_INFORMATION *pi, LPCWSTR param11); /* @0x1400e4324 */
 extern BOOL FUN_1400E411C(void);     /* @0x1400e411c */
 extern BOOL FUN_1400E4228(HANDLE hProcess, LPCVOID base); /* @0x1400e4228 */
 extern BOOL FUN_1400E412C(int64_t obj);   /* @0x1400e412c */
-extern void FUN_1400E4160(int64_t obj, void *src, void *dst); /* @0x1400e4160 */
+extern void PECMD_PeApplyRelocations(int64_t obj, void *src, void *dst); /* @0x1400e4160 */
 extern uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e248 */
 extern uint32_t (*g_pfnSetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e250 */
 extern uint64_t g_remoteTebBase;                            /* DAT_14013e2f9 */
@@ -726,7 +726,7 @@ uint64_t FUN_1400ECA00(int64_t obj, uint32_t msg, int64_t wParam,
             if (msg == 0x200) {
                 packed = (uint64_t)((uint32_t)((uint64_t)lParam >> 16) |
                                     (uint32_t)(uint64_t)lParam) & 0xffff0000ffffULL;
-                FUN_1400FD764((int64_t *)(uintptr_t)obj, (int)wParam, packed);
+                PECMD_ControlOnMouseMove((int64_t *)(uintptr_t)obj, (int)wParam, packed);
             } else if (msg == 0x100) {
                 PECMD_OnTabSelChange(obj);
             } else if (msg == 0x47) {
@@ -1107,7 +1107,7 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
     x = rc.left;
     y = rc.top;
     if (*(int8_t *)(obj + 0xdc) == 1 && *(int64_t *)(obj + OBJ_LINK) != 0) {
-        FUN_1400EFF58(obj, hdc, &rc, style & 0x800);
+        PECMD_DrawIconInRect(obj, hdc, &rc, style & 0x800);
     }
     drawW = (uint64_t)(rc.right - rc.left);
     drawH = (uint64_t)(rc.bottom - rc.top);
@@ -1172,12 +1172,12 @@ void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
     FUN_14005B104((WCHAR **)&text);
 }
 
-/* ========== FUN_1400E7124 @0x1400e7124 ==========
+/* ========== PECMD_Wow64MapPeImage @0x1400e7124 ==========
  * 把 PE 文件映射到内存：校验 DOS/PE 头，按 32/64 位布局初始化
  * 上下文相关全局，分配映像内存并展开节区。
  * TODO(verify): 32 位 ImageBase 偏移/节区映射细节。
  */
-int FUN_1400E7124(void *filePtr, uint32_t fileSize, int64_t *outPeHeader,
+int PECMD_Wow64MapPeImage(void *filePtr, uint32_t fileSize, int64_t *outPeHeader,
                      int64_t *outSectionTable, int64_t *outBase, size_t *outSize)
 {
     uint8_t *file = (uint8_t *)filePtr;
@@ -1227,7 +1227,7 @@ int FUN_1400E7124(void *filePtr, uint32_t fileSize, int64_t *outPeHeader,
     }
 
     ctxSize = (int64_t)g_peCtxSize;
-    imageSize = (size_t)FUN_1400E4078((uint64_t)(uintptr_t)file, fileSize,
+    imageSize = (size_t)PECMD_CalcPeImageSize((uint64_t)(uintptr_t)file, fileSize,
                                               (int64_t)(uintptr_t)pe,
                                               ctxSize + (int64_t)(uintptr_t)pe);
     *outSize = imageSize;
@@ -1304,12 +1304,12 @@ int FUN_1400E7124(void *filePtr, uint32_t fileSize, int64_t *outPeHeader,
     return 1;
 }
 
-/* ========== FUN_1400E4480 @0x1400e4480 ==========
- * 远程注入变体：先由 FUN_1400E4324 建进程并读上下文，
+/* ========== PECMD_RunPeInjectStart @0x1400e4480 ==========
+ * 远程注入变体：先由 PECMD_CreateProcReadImageBase 建进程并读上下文，
  * 再根据情况写入原地址或 VirtualAllocEx 新地址后 SetThreadContext。
  * TODO(verify): 上下文布局偏移与失败路径。
  */
-int FUN_1400E4480(LPWSTR cmd, int64_t ctxBase, int64_t param3,
+int PECMD_RunPeInjectStart(LPWSTR cmd, int64_t ctxBase, int64_t param3,
                                   LPCVOID data, uint32_t dataSize, BOOL inherit,
                                   uint32_t flags, LPVOID env, LPCWSTR cwd,
                                   STARTUPINFOW *si, PROCESS_INFORMATION *outPi,
@@ -1361,7 +1361,7 @@ int FUN_1400E4480(LPWSTR cmd, int64_t ctxBase, int64_t param3,
     if (*param12 == L'>')
         pWVar6++;
 
-    iVar4 = (int)FUN_1400E4324(cmd, (int64_t)(uintptr_t)ctx,
+    iVar4 = (int)PECMD_CreateProcReadImageBase(cmd, (int64_t)(uintptr_t)ctx,
                                                (int64_t *)&local_res8, local_res10,
                                                inherit, flags, env, cwd, si, pi, pWVar6);
     if (g_objMode == 4)
@@ -1387,7 +1387,7 @@ int FUN_1400E4480(LPWSTR cmd, int64_t ctxBase, int64_t param3,
             remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
                 (void *)g_pfnVirtualAllocEx)(pi->hProcess, NULL, dataSize, 0x3000, 0x40);
             if (remoteBuf != NULL)
-                FUN_1400E4160(ctxBase, (void *)local_res20, remoteBuf);
+                PECMD_PeApplyRelocations(ctxBase, (void *)local_res20, remoteBuf);
         }
     }
 
@@ -2348,11 +2348,11 @@ exec_script:
     return result;
 }
 
-/* ========== FUN_1400FE168 @0x1400fe168 ==========
+/* ========== PECMD_DrawWrappedText @0x1400fe168 ==========
  * 自定义 DrawText 换行/垂直居中实现：可先测量行高数组再绘制。
  * TODO(verify): 行高/居中边界与原始行为。
  */
-int FUN_1400FE168(HDC hdc, LPCWSTR text, int64_t maxChars, RECT *rect, uint32_t flags)
+int PECMD_DrawWrappedText(HDC hdc, LPCWSTR text, int64_t maxChars, RECT *rect, uint32_t flags)
 {
     uint32_t fmt = flags & 0xffffffda;
     int64_t width = rect->right - rect->left;
@@ -2910,7 +2910,7 @@ after_hit2:
             rc.left = rc.top = rc.right = rc.bottom = 0;
             lr = SendMessageW((HWND)obj[4], 0x1038, (WPARAM)local_b4, (LPARAM)&rc);
             if (lr != 0) {
-                FUN_1400F2F58((int64_t)obj, &rc.left, local_b4);
+                PECMD_ListGetItemTextData((int64_t)obj, &rc.left, local_b4);
                 if (pt.x <= rc.right - 2 && rc.left + 2 <= pt.x)
                     iVar13 = local_b4;
             }
@@ -2981,11 +2981,11 @@ after_hit2:
     }
 }
 
-/* ========== FUN_1400EDE48 @0x1400ede48 ==========
+/* ========== PECMD_DrawIconScaled @0x1400ede48 ==========
  * 图标缩放绘制（简化版）：先缩放到临时 DC，再拷回目标 DC。
  * TODO(verify): 原实现含 GDI+ 路径与隐藏栈参数，此处按回退路径近似。
  */
-uint32_t FUN_1400EDE48(HDC hdc, HICON icon, uint64_t param3, int param4,
+uint32_t PECMD_DrawIconScaled(HDC hdc, HICON icon, uint64_t param3, int param4,
                               uint64_t srcW, uint64_t srcH, uint32_t param7,
                               uint32_t param8, uint64_t dstW, uint64_t dstH,
                               COLORREF color)
@@ -3201,11 +3201,11 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script,
     return 0;
 }
 
-/* ========== FUN_1400FE610 @0x1400fe610 ==========
+/* ========== PECMD_ControlPaint @0x1400fe610 ==========
  * 控件高级绘制：背景/百分比条/阴影/文本/图标/边框。
  * TODO(verify): 与原始绘制标志的边界差异。
  */
-void FUN_1400FE610(int64_t obj, HDC hdcIn)
+void PECMD_ControlPaint(int64_t obj, HDC hdcIn)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
     HDC hdc = hdcIn;
@@ -3239,7 +3239,7 @@ void FUN_1400FE610(int64_t obj, HDC hdcIn)
 
     if ((a4 & 0x10) == 0) {
         if ((a4 & 3) != 0 && (*(int64_t *)(b + 0xe8) == 0 || *(int8_t *)(b + 0xa5) == 0))
-            FUN_1400FD5E8(obj);
+            PECMD_CaptureParentBackground(obj);
         if (((a4 & 3) != 0 && *(int8_t *)(b + 0xa5) != 0) && *(int64_t *)(b + 0xe8) != 0)
             useMem = true;
         else
@@ -3338,7 +3338,7 @@ void FUN_1400FE610(int64_t obj, HDC hdcIn)
         if ((d1 & 0x20) == 0)
             DrawTextW(hdc, text, -1, &rc, drawFlags | 0x40);
         else
-            FUN_1400FE168(hdc, text, -1, &rc, drawFlags | 0x40);
+            PECMD_DrawWrappedText(hdc, text, -1, &rc, drawFlags | 0x40);
         OffsetRect(&rc, -1, -1);
     }
     if ((int64_t)uVar10 >= 0)
@@ -3346,7 +3346,7 @@ void FUN_1400FE610(int64_t obj, HDC hdcIn)
     if ((d1 & 0x20) == 0)
         DrawTextW(hdc, text, -1, &rc, drawFlags | 0x40);
     else
-        FUN_1400FE168(hdc, text, -1, &rc, drawFlags | 0x40);
+        PECMD_DrawWrappedText(hdc, text, -1, &rc, drawFlags | 0x40);
 
     icon = *(HICON *)(b + 0xe0);
     if (icon != 0) {

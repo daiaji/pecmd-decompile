@@ -4,12 +4,12 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   创建文件映射视图       FUN_1400E3E38 @0x1400e3e38
+ *   创建文件映射视图       PECMD_MapSharedSection @0x1400e3e38
  *   构建电话簿列表         FUN_1400E7840   @0x1400e7840
  *   更新子窗口顺序         FUN_1400EC880   @0x1400ec880
  *   编辑控件按键消息       FUN_1400EEF20    @0x1400eef20
  *   应用控件颜色           FUN_1400EFD80    @0x1400efd80
- *   填充客户区颜色         FUN_1400F0CA0  @0x1400f0ca0
+ *   填充客户区颜色         PECMD_FillCtlBackground  @0x1400f0ca0
  *   查询控件值分发         FUN_1400F1234   @0x1400f1234
  *   控件按键消息处理       FUN_1400F1F78  @0x1400f1f78
  *   控件消息处理 A         FUN_1400F2DD4    @0x1400f2dd4
@@ -59,7 +59,7 @@ extern uint64_t FUN_1400C493C(int64_t *obj, int64_t *ctx, LPCWSTR value,
 extern void FUN_1400EF91C(int64_t obj, uint32_t flags, uint64_t value);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
-extern void FUN_1400F0ABC(HDC hdcDst, int x0, int y0, int w, int h, HDC hdcSrc,
+extern void PECMD_BltTransparentBits(HDC hdcDst, int x0, int y0, int w, int h, HDC hdcSrc,
                           int sx, int sy, uint64_t p9, uint64_t p10, COLORREF color);
 extern void FUN_14005B0D4(int64_t *ps);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
@@ -81,7 +81,7 @@ static const uint8_t *g_dummy = NULL;
  *   - bit31 兼作 CREATE_ALWAYS 与 FILE_MAP_* 访问标志选择
  * TODO(verify): 标志位组合语义。
  */
-LPVOID FUN_1400E3E38(HANDLE file, int64_t size, uint32_t flags,
+LPVOID PECMD_MapSharedSection(HANDLE file, int64_t size, uint32_t flags,
                                              int64_t offset, LPCWSTR name)
 {
     LPCWSTR outHandle = NULL;
@@ -339,11 +339,11 @@ inv:
     return 0;
 }
 
-/* ========== FUN_1400F0CA0 @0x1400f0ca0 ==========
+/* ========== PECMD_FillCtlBackground @0x1400f0ca0 ==========
  * 用纯色填充客户区: 兼容 DC + 位图离屏绘制, 经柔化/混合后 BitBlt 上屏。
- * TODO(verify): FUN_1400F0ABC 的两个 CONCAT44 参数。
+ * TODO(verify): PECMD_BltTransparentBits 的两个 CONCAT44 参数。
  */
-void FUN_1400F0CA0(HWND hwnd, COLORREF color)
+void PECMD_FillCtlBackground(HWND hwnd, COLORREF color)
 {
     RECT rc;
     int cx, cy;
@@ -369,7 +369,7 @@ void FUN_1400F0CA0(HWND hwnd, COLORREF color)
     bmp = CreateCompatibleBitmap(hdc, cx, cy);
     PECMD_SelectObjectSlot_b028(sel, hdcSrc, bmp);
     FUN_1400E68E0(hdcSrc, &rc, color);
-    FUN_1400F0ABC(hdcSrc, 0, 0, cx, cy, hdc, 0, 0,
+    PECMD_BltTransparentBits(hdcSrc, 0, 0, cx, cy, hdc, 0, 0,
                   (uint64_t)(uint32_t)cx, (uint64_t)(uint32_t)cy, sysColor);
     BitBlt(hdc, 0, 0, cx, cy, hdcSrc, 0, 0, 0xcc0020);
     PECMD_RestoreAndDeleteObject(sel);

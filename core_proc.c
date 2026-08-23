@@ -10,7 +10,7 @@
  *   PECMD_ServiceEntry    @0x140017048   (服务分发器入口)
  *   PECMD_GetParentProcessId       @0x140006988   (NtQueryInformationProcess)
  *   PECMD_InitDynamicImports @0x140017908 (RegDeleteKeyExW/SH* 动态导入)
- *   FUN_14001C1D4     @0x14001c1d4   (环境变量 -> &变量)
+ *   PECMD_ImportSystemEnvVars     @0x14001c1d4   (环境变量 -> &变量)
  *   FUN_14001D628       @0x14001d628   (ntdll 动态导入)
  *   FUN_1400186BC      @0x1400186bc   (脚本结构初始化)
  *   FUN_14001A220         @0x14001a220   (QPC 频率带锁)
@@ -210,7 +210,7 @@ void PECMD_InitDynamicImports(void)
 
 /* ========== 环境变量 -> 内置变量 @0x14001c1d4 ========== */
 /* .rdata 表 @0x14013a260: SystemRoot/SystemDrive/windir/TEMP/TMP */
-void FUN_14001C1D4(void)
+void PECMD_ImportSystemEnvVars(void)
 {
     static const char *const names[] = {
         "SystemRoot", "SystemDrive", "windir", "TEMP", "TMP"
