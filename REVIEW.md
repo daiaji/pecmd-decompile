@@ -3536,3 +3536,22 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - 循环: 派发(1 agent 独占 link_stubs) → 回交 → 验证绿提交 → 命名(调点降) → 续派。
 - 复杂叶层剩余 7 个(4e2cc/ef91c/6e8f4/03e220/25f10/2b9ec/0f2384 ~900行) 已派 524d961f。
 - 最深10(00e26c 3948 等) 桩签名已由 4c0bc 代理修正(0→8 等), 后续按"1 agent 1 巨"逐项试派。
+
+## 123. 00e26c 全量落地 + 命名批 b2/b3/b4 + 分析基建（goal-722b2d3b 会话）
+- **EXEC 巨命令完整还原（任务A 终结）**: 00e26c 3948 行 decompiled → link_stubs.c 真体
+  （SEG1-10 十段全落地, +1783 行; 7 新桩 ShellExecuteExW/CreateNamedPipeA 等、15 个 (void) 桩修 arity、
+  ~45 前置 extern、local_4a8 扩为 uint16_t[206] 读缓冲）。真实返回按 FTU64 拼装;
+  nm 唯一强符号。提交 59c1736。TODO(verify)2: MsgWait 包装内联展开保数据流(ls:4445/4648)、
+  DAT_14013a24f 文件真值 0x01 vs 既有定义 0 差异留档。
+- **命名批（apply_rename2.py 新工具: 大小写变体探测+PECMD_占用检查+--sync-ls 可选）**:
+  - b2 首切片: 0b2ca8→PECMD_RenderTextBitmapIcon(4处) @907d634;
+  - b3-clean 38名/261处(低置信 f31cc/f5d50 暂留) @7c12233;
+  - b4-clean 39名/195处(命令分派表 RAND/SEND/PAGE/HOME/SITE/GETF/SOCK/LINK/FONT/DISP/DOWN/SET/LOOP 锚定) @790970e。
+  - rename_map 1157→**1235**(+78); 提案源 tools/name_proposals{,_b3,_b4}.json(135条, 覆盖 biz 前140名);
+    ls-dirty 24个(B3 8/B4 16)待 --sync-ls 批; B2 余量与 ls-dirty 重叠地址(e1228/d0c6c/38d30/21a4c/2f454/
+    d0468/2a910/ebd30/fbcb0/613fc/a3f08/3c9e8/c42ac/2d33c)以 b4 分派表锚定名为准。
+- **分析基建**: nameable_next.json(B1: 未命名630/有体候选424=biz385+crt39) +
+  nameable_located.json(real_core347/stub_only61/real_ls9; 注意嵌套括号噪声,执行以实测为准) +
+  stub_wave_triage.json(R1 队列头 5b104=870调用点) + r1_wave_brief.md。
+- 抽验裁决: FUN_14003db00 = SHUT 关机命令体(SetSuspendState/-force/SHUTDOWN 解析),
+  ls 内旧注「命令入队」系误标;「保持原名」注过期, 后续随命名批修正。
