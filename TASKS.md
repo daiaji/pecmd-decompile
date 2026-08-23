@@ -505,7 +505,10 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
   rename_map 1478→**1594**; biz 未命名 162→**46**(多为零引用 SKIP 候选)。全程最小管线零结构手术。
 - **⏸ 用户指令暂停点(2026-08-23)**: 在途代理全部回交并验证提交后,**停止派发新任务**,等待用户明确
   指令再开始。待命队列(按序):
-    S2. R3 回交验证(core_b7c 四命令 TABL/DISK/REGI/SHOW 真体)
+    S2. R3 重派(core_b7c 四命令 TABL/DISK/REGI/SHOW): 首次派发 27debcf1 于 TablCreateControl
+        中途失败, 半成品(+397行, 含 stdbool/typedef/调用约定多处损坏)已存档
+        tools/r3_partial_core_b7c.patch; 重派提示词需附加: b7c 头部补 stdbool+ushort/longlong/ulonglong
+        typedef、SplitTokenTrimWs/ExtractTokenByDelim 首参为 WCHAR**(传 &槽变量)、勿用未声明 param_N。
     S3. 大桩还原波「1 agent 1 巨」(~8个: c6324/e9724/d5b48/c9b9c/c0ad8/1001c0优先 等)
     S4. biz 残余 46 甄别(零引用 SKIP 登记为主)
     S5. P5 收口(零警告复核/TASKS·REVIEW 终账/里程碑 tag)
