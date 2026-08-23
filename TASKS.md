@@ -500,5 +500,15 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
   薄壳复核4个(cd3a8/c13f8/d7038/caf78)。回交后: G9应用批→中大桩「1 agent 1 巨」波→P5收口。
 - **死桩取证结论**: 9候选仅2真DEAD(c5ba8/df464); INDIR分派表目标5个不可SKIP;
   1001c0活调用但体为占位=优先补体。
+- **G9/G10 完成(git 533dcf6/071d32f)**: c8a/b/c 非低置信 79 名 + 低置信升级 37 名(虚表考古:
+  .rdata 槽位反查构造器钉死 RichEdit20W/Trackbar/Progress/UpDown/DTIM·IPAD 宿主)。
+  rename_map 1478→**1594**; biz 未命名 162→**46**(多为零引用 SKIP 候选)。全程最小管线零结构手术。
+- **⏸ 用户指令暂停点(2026-08-23)**: 在途代理全部回交并验证提交后,**停止派发新任务**,等待用户明确
+  指令再开始。待命队列(按序):
+    S2. R3 回交验证(core_b7c 四命令 TABL/DISK/REGI/SHOW 真体)
+    S3. 大桩还原波「1 agent 1 巨」(~8个: c6324/e9724/d5b48/c9b9c/c0ad8/1001c0优先 等)
+    S4. biz 残余 46 甄别(零引用 SKIP 登记为主)
+    S5. P5 收口(零警告复核/TASKS·REVIEW 终账/里程碑 tag)
+- 在途: R3=27debcf1(core_b7c 四命令); 已回交: lowconf_review.json(37升级/3维持/0SKIP)。
 - **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
   (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
