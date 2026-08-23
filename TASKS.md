@@ -503,16 +503,12 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - **G9/G10 完成(git 533dcf6/071d32f)**: c8a/b/c 非低置信 79 名 + 低置信升级 37 名(虚表考古:
   .rdata 槽位反查构造器钉死 RichEdit20W/Trackbar/Progress/UpDown/DTIM·IPAD 宿主)。
   rename_map 1478→**1594**; biz 未命名 162→**46**(多为零引用 SKIP 候选)。全程最小管线零结构手术。
-- **⏸ 用户指令暂停点(2026-08-23)**: 在途代理全部回交并验证提交后,**停止派发新任务**,等待用户明确
-  指令再开始。待命队列(按序):
-    S2. R3 重派(core_b7c 四命令 TABL/DISK/REGI/SHOW): 首次派发 27debcf1 于 TablCreateControl
-        中途失败, 半成品(+397行, 含 stdbool/typedef/调用约定多处损坏)已存档
-        tools/r3_partial_core_b7c.patch; 重派提示词需附加: b7c 头部补 stdbool+ushort/longlong/ulonglong
-        typedef、SplitTokenTrimWs/ExtractTokenByDelim 首参为 WCHAR**(传 &槽变量)、勿用未声明 param_N。
-    S3. 大桩还原波「1 agent 1 巨」(~8个: c6324/e9724/d5b48/c9b9c/c0ad8/1001c0优先 等)
-    S4. biz 残余 46 甄别(零引用 SKIP 登记为主)
-    S5. P5 收口(零警告复核/TASKS·REVIEW 终账/里程碑 tag)
-- 在途: R3=27debcf1(core_b7c 四命令); 已回交: lowconf_review.json(37升级/3维持/0SKIP)。
+- **⏸ 暂停点(2026-08-23 更正版)**: 主代理完成全部前置任务后即停——**B/C 方案(PRODUCTION_ROADMAP.md)由用户本人评估**,不派评估代理、不执行其任何批次(含 mingw 冒烟等 C 前置实验,已中止)。主代理职责:
+    ①在途回交验证提交: 三中桩(bcecd036,core_b7c)/INDIR三巨(b7f8dbc1,link_stubs)/符号性审计(952e08e3)
+    ②c6324 ENVI 引擎(1838行)待三中桩落地后派发——最后一个还原巨函数
+    ③S4 零引用甄别落账(c8b/c8c 已附语义推断)
+    ④S5 终账: 机械警告124清理+行为120登记+BOM/A249类语义修复入账+gen_tasks 刷新+tag p4-close
+    ⑤B/C 评估材料包(供用户): 附录B 指标快照/warning_census.json/signedness_audit.json/处置台账/PRODUCTION_ROADMAP.md 原文
 - **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
   (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
 
