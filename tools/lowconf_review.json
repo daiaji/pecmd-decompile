@@ -1,0 +1,334 @@
+{
+  "meta": {
+    "source": "/tmp/opencode/lowconf_review.json",
+    "method": "逐地址重读 decompiled.c 函数体 + 调用链回溯 + 从 PECMD原始.EXE .rdata 提取虚表成员并反查 lea rip 引用定位构造函数（vtable archaeology）",
+    "key_facts": [
+      "命令分派表(decompiled.c L44200-45500): 0x44415049=IPAD->FUN_14008430c, 0x4d495444=DTIM->FUN_140083f74, 0x4f4d454d=MEMO->FUN_140083274, 0x54494445=EDIT->FUN_140082a54, 0x46544547=GETF->FUN_1400d0c6c, 0x46545550=PUTF->FUN_1400d2e90",
+      "控件包装类虚表(slot0=消息分发器,slot5=WM_PAINT[经 FUN_1400e89fc 中 msg==0xF->vt+0x28 证实]): 0x14012c2e0[EDIT/MEMO普通支], 0x14012c7b0[RichEdit20W], 0x1401261e0/0x14012c900[msctls_trackbar32], 0x14012ca50[msctls_progress32], 0x14012cb90[msctls_updown32], 0x14012c0e0/0x14012c410[DTIM=SysDateTimePick32/IPAD=SysIPAddress32], 0x14012bbf0/0x14012bfb0[BUTTON族], 0x14012bd70+次表0x14012be50[按钮族带图], LIST类0x14012c670+次表0x14012c750, TREE类0x14012cf00+次表0x14012cfe0",
+      "所有新名已对 core_*.c/include/*.h/link_stubs.c 及 rename_map.json/FUNC_NAMES.md grep -wi 零冲突"
+    ],
+    "stats": { "UPGRADE": 37, "KEEP_LOW": 3, "SKIP_FOREVER": 0 }
+  },
+  "reviews": [
+    {
+      "addr": "1400f31cc",
+      "old_name": "PECMD_InvalidateGroupItems",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListRedrawGroupItems",
+      "confidence": "medium",
+      "evidence": "对象 hwnd(+0x20)=SysListView32 包装，按 +0x398/+0x368 组表对组内每个成员项 SendMessageW(hwnd,0x102A,item,0)，与 LVM_UPDATE(wParam=iItem,lParam=0,重绘该项) 的参数约定完全吻合；无组时仅发一次。"
+    },
+    {
+      "addr": "1400f5d50",
+      "old_name": "PECMD_DtorControlStyleObj",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListStyleObjDtor",
+      "confidence": "medium",
+      "evidence": "析构与构造 FUN_1400f5c74 成对（同一 vtable PTR_FUN_14012c550），而该子对象的唯一创建点在 LIST 类构造器 FUN_1400f9134(vt=0x14012c670) 内 obj+0xD8 处；DeleteObject 槽0x110 与字符串池释放逐一对应。"
+    },
+    {
+      "addr": "1400f2a7c",
+      "old_name": "PECMD_CtlMsgScaleMetric",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ScaleMetricByFactor",
+      "confidence": "medium",
+      "evidence": "转发自定义消息 0x1205 后以对象 [0x25] 双精度因子换算度量并 +DAT_140125230(实测=0.5) 四舍五入写回应答两处；阈值 DAT_140129ee8 实测=32768.0、负因子取 -0.0-x 绝对值分支，且该因子在构造器 FUN_1400f5c74 缺省 1.0(0x3ff0000000000000)。"
+    },
+    {
+      "addr": "14006764c",
+      "old_name": "PECMD_CopyLineTrimmed",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_CopyTokenTrimmed",
+      "confidence": "high",
+      "evidence": "行为完全确定：游标跳过前导空白(FUN_14005b154)后扫描至双分隔符之一，剔除尾部 0x09-0x0D/空格再拷入动态缓冲；是 PECMD_SplitNextToken(FUN_1400547bc) 的核心原语，全文件 15+ 处以 ';' ':' ',' 分隔符调用。"
+    },
+    {
+      "addr": "14001b510",
+      "old_name": "PECMD_GenRandomSeed16",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_GenRandomSeed16",
+      "confidence": "medium",
+      "evidence": "GetTickCount()+QPC 种子(FUN_14005e04c 已名 PECMD_NextRandomSeed)循环叠加直至满足 bit0=1、nibble0xF0/0xF00 非零、bit15=1 且 popcount 约束的 16 位种子；调用方为脚本加密串扰函数 FUN_14001b5ac 及 LOAD/EXE 装载路径。"
+    },
+    {
+      "addr": "1400a4020",
+      "old_name": "PECMD_AdoptRefCountedString",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_AdoptRefCountedString",
+      "confidence": "medium",
+      "evidence": "临界区内释放旧引用计数对象后新建{wchar指针,rc=1}直接接管外部缓冲，语义即“替换式收养”；主初始化(FUN_140045c90 写 PELOGON 注册表处)与控件字段存放(FUN_1400b6240 存 obj+0x78/0x80)均如此使用。"
+    },
+    {
+      "addr": "1400f0814",
+      "old_name": "PECMD_CtlDrawClickHandler",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_BtnCommonMsgHandler",
+      "confidence": "medium",
+      "evidence": "msg==0x465 时 BM_GETCHECK(0xF0)/BM_SETCHECK(0xF1) 取反切换，另有 WM_DRAWITEM(0x2B)、0x201/0x202 点击置位、0x45A 设文本路径——BM_* 常量证实其为 BUTTON 族公共处理；作为 eec28/ef694 两按钮类分发器的兜底被调用。"
+    },
+    {
+      "addr": "1400f30c0",
+      "old_name": "PECMD_TableSetCellPos",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListInvalidateCellRect",
+      "confidence": "medium",
+      "evidence": "先 LVM_GETSUBITEMRECT(0x1038)、param_3==0 时改用 LVM_GETITEMRECT(0x100E,left=LVIR_LABEL=2) 取矩形再 InvalidateRect——纯失效重绘而非设置位置，原名有误。"
+    },
+    {
+      "addr": "1400f3554",
+      "old_name": "PECMD_TableSetCellFormat",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListInsertItemSetState",
+      "confidence": "medium",
+      "evidence": "实为 LVM_INSERTITEMW(0x104D,wParam=0,lParam=&LVITEM) 插入一个条目，再 LVM_SETITEMSTATE(0x102B) 写 state=0x1000/stateMask=0xf000（状态图位）；LIST 行插入流程(f36ec/f4e5c/c9b9c)反复调用。"
+    },
+    {
+      "addr": "1400b0380",
+      "old_name": "PECMD_ParseTabItemAttr",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ApplyItemAttrToken",
+      "confidence": "medium",
+      "evidence": "由控件运行时分发器 FUN_1400b52b8 的 msg==0x459 分支调用（并非解析链）：token id<0x10000 走数值属性 FUN_14009d4b8，字面量 \"cmd\" 将文本存入记录 obj+0x28(FUN_1400703e4)，其余走通用 FUN_1400e5aac。"
+    },
+    {
+      "addr": "1400f4064",
+      "old_name": "PECMD_SetSelIdxInvalidate",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_SetSelIdxRefresh",
+      "confidence": "medium",
+      "evidence": "保存选中索引至 +0x218(param_2>-2)，按模式 1/2/其他分别免刷新、InvalidateRect(bErase=0)、或先 FUN_1400f3674(GetWindowRect 后以 SWP_NOMOVE|NOZORDER 组合重发 WM_WINDOWPOSCHANGED 同步布局)再失效。"
+    },
+    {
+      "addr": "1400f4ca0",
+      "old_name": "PECMD_MgrFindDualKeyEntry",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListFindCellRec",
+      "confidence": "medium",
+      "evidence": "LIST 包装对象内 +0x350 数组(count@0x360) 按 rec[+8]==item && rec[+0x10]==subitem 双键线性查找返回槽位指针；调用点均在 LIST 类大函数 FUN_1400f6db0/FUN_1400f94a0。"
+    },
+    {
+      "addr": "1400f4c28",
+      "old_name": "PECMD_MgrFindEntryByKey64",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListFindItemRec",
+      "confidence": "medium",
+      "evidence": "+0x338 数组(count@0x348) 按 qword 键 rec[+8] 单键查找，结构与 FUN_1400f4ca0 平行成对；同见 LIST 类函数 FUN_1400f6db0。"
+    },
+    {
+      "addr": "1400634d4",
+      "old_name": "PECMD_SetPooledAnsi",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_StrCopyA",
+      "confidence": "medium",
+      "evidence": "与已命名 PECMD_StrCopyW(FUN_140063888) 完全对称的 ANSI 版本：HeapRealloc(FUN_140063118)+memcpy+旧块按 -8 头释放+NUL 收尾；注意 decompiled.c 内无任何调用方（死代码），命名仅据函数体。"
+    },
+    {
+      "addr": "1400e412c",
+      "old_name": "PECMD_ContextHasToken",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_PeCtxHasImageBase",
+      "confidence": "medium",
+      "evidence": "注入加载器 PECMD_RunPeInjectStart(FUN_1400e4480) 在 VirtualAllocEx(NULL) 重定位分配前调用；按 DAT_14013a84d==4(位数开关，与写线程上下文同判) 校验 PE 上下文 +0xA0/+0xA4 或 +0xB0/+0xB4 基址指针对非零。"
+    },
+    {
+      "addr": "1400fee24",
+      "old_name": "PECMD_TreeGetItemInfoEx",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_TreeGetItemStateEx",
+      "confidence": "medium",
+      "evidence": "TVM_GETITEMW(0x113E) 于 0x50 字节 TVITEMEX 缓冲(mask=0x100)查询并从固定偏移取回 dword；两个调用方把返回值当 TVIS 位使用（FUN_1400ff8a8 测 bit2 决定已展开项拼接，另一处 ^2|2&~2 切换后经 PECMD_TreeSetItemInfo 写回）。"
+    },
+    {
+      "addr": "140023c48",
+      "old_name": "PECMD_ScanScriptLabelMatches",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_FindSubBlockNthScan",
+      "confidence": "medium",
+      "evidence": "_SUB/_END 字面量已在二进制证实(L45370/L45376 StrCmpNIW)：本函数先收集全部 _SUB 位置数组再做第二遍嵌套深度匹配返回目标位置；仅被标签解析包装 FUN_140024350(param_5!=NULL 支路) 经 FUN_14002fd88 由脚本执行器 '@' 引用路径(FUN_14004c0bc L44268) 调用。"
+    },
+    {
+      "addr": "1400240c0",
+      "old_name": "PECMD_FindScriptLabelNth",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_FindSubBlockNth",
+      "confidence": "medium",
+      "evidence": "同一 _SUB/_END 嵌套计数的单遍变体（包装器 param_5==NULL 时选用）；用于解析 CALL/MENU 引用的 name::序号 到第 N 个同名 _SUB 块位置。"
+    },
+    {
+      "addr": "14002487c",
+      "old_name": "PECMD_MaskScriptEndFileTail",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_MaskScriptEndFileTail",
+      "confidence": "medium",
+      "evidence": "硬证据充分：逐行 XOR 密钥(+0x48) 解码后比对 \"_ENDFILE\"/\"_ENDFILE-IMPORT\" 前缀，命中行覆写为 密钥^空格 并将哨兵之后整段抹除；调用方为脚本装载 FUN_1400307c8 与 FUN_14004eb34。"
+    },
+    {
+      "addr": "14006d788",
+      "old_name": "PECMD_AllocBufEmbedWide",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_AllocFileReqEmbedPath",
+      "confidence": "medium",
+      "evidence": "GETF(0x46544547)/PUTF(0x46545550) 两命令处理体开头都以它构造请求记录：分配 len+0x21 wchar，清零 dword@+0x3C，宽串内嵌于 +0x40 并经 *param_2 回传内嵌指针。"
+    },
+    {
+      "addr": "1400fb654",
+      "old_name": "PECMD_EditHostWheelDropDispatch",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_RichEditHostDispatch",
+      "confidence": "high",
+      "evidence": "其类 vtable 0x14012c7b0 的构造器 FUN_1400fb588 先经 FUN_140054110 加载 riched20.dll/RICHED32.DLL 并 CreateWindowExW(L\"RichEdit20W\")（EDIT/MEMO 处理体的 -rich/多行分支），slot0 即本函数；体内 0x20A 滚轮连发与 0x233 DragQueryFile 设窗文属实。"
+    },
+    {
+      "addr": "1400f4e5c",
+      "old_name": "PECMD_ListAdjustRowsOnInsert",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListInsertRowItems",
+      "confidence": "medium",
+      "evidence": "向 SysListView32 连续插入 +0x3B0 个条目（每项经 FUN_1400f3554=LVM_INSERTITEMW+SETITEMSTATE），同步在 +0x398/+0x380/+0x368 三平行数组插入新行组并填行标记 1,-1,-2…；属 LIST(SysListView32) 包装的行插入簿记。"
+    },
+    {
+      "addr": "1400f1c8c",
+      "old_name": "PECMD_TextCtlHostDispatch",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_EditHostMsgDispatch",
+      "confidence": "high",
+      "evidence": "EDIT(0x54494445)/MEMO(0x4F4D454D) 处理体共用的工厂 FUN_140063d7c→FUN_140054bb8 在普通分支创建 0xE8 对象（ctor FUN_1400f1be4 置 vt=0x14012c2e0，slot0=本函数）；特判 0x100/0x101 取设文本、0xBC19、0x44B 属实。"
+    },
+    {
+      "addr": "1400fc4a4",
+      "old_name": "PECMD_ProgHostMsgDispatch",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_TrackbarHostDispatch",
+      "confidence": "high",
+      "evidence": "其类 vtable 0x1401261e0 由 msctls_trackbar32 构造器 FUN_14009c720 设置（CreateWindowExW(L\"msctls_trackbar32\") 后覆盖基表 0x14012c900）；体内 0x462 经 vt+0x118/0x120/0x130/0x138/0x140 取设位置范围与构造器调用序列一一对应。"
+    },
+    {
+      "addr": "1400eec28",
+      "old_name": "PECMD_CtlGdiMsgDispatch",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ImgBtnMsgDispatch",
+      "confidence": "medium",
+      "evidence": "类 vt=0x14012bbf0 是 BUTTON 族基表 0x14012bfb0 的扩展（基构造 FUN_1400f0648 经 FUN_1400f072c 创建 L\"BUTTON\" 窗口），扩展构造器 FUN_1400ecf18 额外挂图像句柄/尺寸；体内 0x45A 设图元路径、0xF0/0xF1 检查态读写、0xBD11 特判。"
+    },
+    {
+      "addr": "1400ef694",
+      "old_name": "PECMD_CtlMsgDispatchExt",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_BtnHostMsgDispatch",
+      "confidence": "medium",
+      "evidence": "类 vt=0x14012bd70（构造 FUN_1400eee30，由带 LoadImage 位图的 type2 构造器 FUN_1400baef4 使用）slot26 为按钮图形绘制 ef14c；体内处理 0x30/0x3A(WM_SETFONT/GETFONT)、定时器 0x2715 清理、未处理回落通用 FUN_1400f0814。"
+    },
+    {
+      "addr": "14006f73c",
+      "old_name": "PECMD_CtlHitTestSubArea",
+      "verdict": "KEEP_LOW",
+      "final_name": null,
+      "confidence": "low",
+      "evidence": "行为已确证：由 +0x180 高度(可负=自底) 与 +0x184..+0x188 偏移构子矩形 PtInRect，命中返回 2/-1，未命中再看 GetAsyncKeyState(VK_MENU)；但该函数属于身份未明的顶层窗口类(vt=0x140126b20，含 LoadIconW/子控件表)，用途（拖拽热区/关闭钮等）仍无据，维持原名 low。"
+    },
+    {
+      "addr": "1400f4d1c",
+      "old_name": "PECMD_StoreCellInfoRec",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListSetCellInfo",
+      "confidence": "medium",
+      "evidence": "LIST 包装内 (item,sub) 双键定位(FUN_1400f4ca0)+懒建 0x30 记录+FUN_1400703e4 设文本+写 5 个 int 字段，param_4<-1 且文本空则删除记录；增删语义完整确定，仅各 int 字段含义仍推断。"
+    },
+    {
+      "addr": "1400f60a4",
+      "old_name": "PECMD_StoreItemInfoRec",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListSetItemInfo",
+      "confidence": "medium",
+      "evidence": "与 FUN_1400f4d1c 结构相同但为 +0x338 数组单键(item) 版本；两函数成对构成 LIST 条目/单元格属性存取层。"
+    },
+    {
+      "addr": "1400d95f0",
+      "old_name": "PECMD_FloatTextWindowPaint",
+      "verdict": "KEEP_LOW",
+      "final_name": null,
+      "confidence": "low",
+      "evidence": "WM_PAINT 角色已铁证（vt=0x140126b20 slot5，且主 WndProc msg==0xF 映射 vt+0x28）：IsIconic 居中 DrawIcon、标志位时 GetWindowDC 叠绘 FUN_1400d5b48、BeginPaint 填背景色并以 \"%.260s 0x%p %ld %ld\" 输出；但所属类（FUN_1400731d8 构造、线程 FUN_140080cfc 内建、带图标与子控件的顶层窗口，疑似日志/TIPS 浮窗）未能定名，“浮动文本窗”仍是猜测，维持 low。"
+    },
+    {
+      "addr": "1400fc148",
+      "old_name": "PECMD_CtlMsgDispatchSync",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ProgressHostDispatch",
+      "confidence": "high",
+      "evidence": "类 vt=0x14012ca50 由进度条构造器 FUN_1400aa144→FUN_1400fbfe0 使用，其窗口创建助手 FUN_1400fc060 调 CreateWindowExW(L\"msctls_progress32\")；slot0=本函数，体内仅 0x462 转发 vt 方法与其余骨架。"
+    },
+    {
+      "addr": "1400eef20",
+      "old_name": "PECMD_ButtonKeyMouseNotify",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ButtonKeyMouseNotify",
+      "confidence": "medium",
+      "evidence": "按钮族类(vt=0x14012bd70, slot26=DrawButtonGlyph ef14c)次级接口表 0x14012be50 的 slot0；VK_TAB/VK_RETURN 向父窗发导航消息 0x45C(lParam=6/8)、鼠标 0x201/0x202 通知+失效、随后 0x233 经映射链探测拖放——全部与原提案一致，升级保留。"
+    },
+    {
+      "addr": "1400f1234",
+      "old_name": "PECMD_CtlMsgDispatchPlain",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_DtpIpHostDispatch",
+      "confidence": "high",
+      "evidence": "同时是 DTIM 类(vt=0x14012c0e0，窗口方法 FUN_1400f1378 建 L\"SysDateTimePick32\"，命令码 0x4d495444=\"DTIM\") 与 IPAD 类(vt=0x14012c410，FUN_1400f2934 建 L\"SysIPAddress32\"，命令码 0x44415049=\"IPAD\") 的 slot0 分发器；本体确为无特判骨架（tooltip 锁 0x450/0x5AA555AA+映射转发）。"
+    },
+    {
+      "addr": "1400f2dd4",
+      "old_name": "PECMD_CtlFilterKeyMouseA",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_ListKeyMouseFilter",
+      "confidence": "medium",
+      "evidence": "LIST 类 vt=0x14012c670 内嵌次接口表 0x14012c750 的 slot0：先以 0x233 探测映射链(+0x3E8)，未处理时对键鼠消息集(WM_KEYDOWN/CHAR、0x200-0x208、0x1000、HOVER/LEAVE)在焦点匹配时加 0x80 标志转发；键鼠过滤行为与原提案一致，归属类为新证。"
+    },
+    {
+      "addr": "1400fef3c",
+      "old_name": "PECMD_CtlFilterKeyMouseB",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_TreeKeyMouseFilter",
+      "confidence": "medium",
+      "evidence": "与 FUN_1400f2dd4 仅消息链偏移不同(+0x108)；其宿主 vt=0x14012cf00 含 ff5a0 等 TREE 族成员且邻接 TreeInsertItem/TreeSetItemInfo/TreeGetItemStateEx，故 B 变体为 TREE 包装的次级键鼠过滤器。"
+    },
+    {
+      "addr": "1400cadec",
+      "old_name": "PECMD_AddDialogControl",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_AddDialogControl",
+      "confidence": "medium",
+      "evidence": "唯一调用方即 FUNC_NAMES 已命名的 PECMD_TablCreateControl(0x1400caf78)；工厂模式与其他控件建造器一致（FUN_140060834 找 id 槽+FUN_14005daf8 缩放坐标+new(0x78)+大构造 FUN_1400c9b9c），维持原名升级。"
+    },
+    {
+      "addr": "1400d6f8c",
+      "old_name": "PECMD_RedrawCtlBackground",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_RecomputeWndBackground",
+      "confidence": "medium",
+      "evidence": "清 +0x238..+0x250 六个度量字段、读 GWL_STYLE、置 byte+0x250=2 后 GetDC→FUN_1400d5b48(5KB 背景/区域计算器，与 d95f0 绘制共用)→ReleaseDC；属重建背景而非简单重绘，改名以正语义。"
+    },
+    {
+      "addr": "14005b3e4",
+      "old_name": "PECMD_ThemeDrawDispatch",
+      "verdict": "KEEP_LOW",
+      "final_name": null,
+      "confidence": "low",
+      "evidence": "行为已确证为“消息映射分发(mode1)→未处理回落 PECMD_ControlWindowProc 再 mode2 收尾”的包装，但原提案“主题绘制”无任何依据；其类 vt=0x1401250d0 的对象带 COM 接口(+0x1A，析构经 CoUninitialize 保护释放)与 HWND，构造方 FUN_14005b3a0 仅见于 HBITMAP 相关路径(FUN_1400b6e24)，类身份未定，维持 low。"
+    },
+    {
+      "addr": "1400e86b4",
+      "old_name": "PECMD_CtlSendChildCmd",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_CtlSendChildCmd",
+      "confidence": "medium",
+      "evidence": "id-0x1000 索引子控件表(+0x34 数组/count@+0x35)取子对象 hwnd 发自定义 0xBC2B，再经 vt+8 转发 WM_MEASUREITEM(0x2C)，受 DAT_14013a24f 开关控制；行为证据充分，维持原名升级。"
+    },
+    {
+      "addr": "1400fc2e0",
+      "old_name": "PECMD_InitGdiWidgetObj",
+      "verdict": "UPGRADE",
+      "final_name": "PECMD_InitUpDownObj",
+      "confidence": "high",
+      "evidence": "唯一调用方 FUN_1400c3820 正是 msctls_updown32 建造者（L121108 CreateWindowExW(L\"msctls_updown32\")）；所置 vtable PTR_FUN_14012cb90 的 slot0=已命名滚动处理 PECMD_ScrollMsgHandlerFc8ec、slot30=fce6c ParseBuddyPrefix， buddy 编辑框语义吻合。"
+    }
+  ]
+}
