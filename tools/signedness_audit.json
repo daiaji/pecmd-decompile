@@ -1,0 +1,529 @@
+{
+ "audit": [
+  {
+   "file": "core_globals.c",
+   "line": 31,
+   "pattern": "B",
+   "ours": "uint8_t g_flagA24F;  /* DAT_14013a24f 运行标志 */",
+   "dc_line": 2522,
+   "dc": "DAT_14013a24f = 0xff;   /* 另见 =-1 @81992/133466/133746, =0xfe @6580, =1 @5558/5665 */",
+   "verdict": "REAL_BUG",
+   "fix": "根因项: 改为 int8_t g_flagA24F (core_globals.c + include/pecmd_defs.h:112 同步)。dc 为有符号 char: 写入 0xff/-1/-2 均为负哨兵, 读侧 '< 0'/'< 1'/'\\0 < x' 全部按有符号判定。现 uint8_t 使全部序比较在哨兵值下反向(如 0xff>0 真 vs dc -1>0 假), 波及全库 ~45 处使用点(b2b/b2c/b2f/thread/b3r_c/b3r_g1/b3r_h4/b3_remaining/b8h/link_stubs); 改类型即整体修复, 方法同 git 96d2544(g_flagA249)。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 550,
+   "pattern": "B",
+   "ours": "int flagA24F = (int)g_flagA24F;  /* uint8_t→int 加宽; <0 恒为假, 与原始一致 */\n    if ((flagA24F < 0) && ((char)p[0xfa] != 'Z')) { p[0xfa]=0x5a; PostMessageW(...,0x10,0,0); }",
+   "dc_line": 920,
+   "dc": "if ((DAT_14013a24f < '\\0') && ((char)param_1[0xfa].unused != 'Z')) { ... }   /* FUN_140003184 */",
+   "verdict": "REAL_BUG",
+   "fix": "注释断言『与原始一致』有误: dc@2522 写 0xff(=-1) 后该分支可达(WM_CLOSE 强关窗口路径)。随根因项改 int8_t 后删除本地加宽, 直接写 if ((char)g_flagA24F < 0) 或保留 int8_t 全局后用 g_flagA24F < 0。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 4349,
+   "pattern": "B",
+   "ours": "int flagA24F = (int)g_flagA24F;   /* uint8_t→int; <0 恒为假, 与原始一致 */\n            if (flagA24F < 0) { g_flagA24F = 0xfe; PECMD_UnmapFileView(); return 0; }",
+   "dc_line": 6579,
+   "dc": "if (DAT_14013a24f < '\\0') {\n      DAT_14013a24f = 0xfe;\n      FUN_14000568c();\n      return 0;\n    }   /* FUN_14000befc service 主循环 */",
+   "verdict": "REAL_BUG",
+   "fix": "同上: 服务主循环的退出分支(dc 置 -1 哨兵后触发 0xfe 清理退出)恒不可达。随根因项修复; 4347 行赋值建议同步改写为 g_flagA24F = -1 以对齐 dc 字面形式。"
+  },
+  {
+   "file": "link_stubs.c",
+   "line": 18236,
+   "pattern": "B",
+   "ours": "if ((g_flagA24F < '\\0') && (*(uint32_t *)(o1 + 0x74*4) != 0x43c)) { ... SendMessageW(pHVar14,0x43c,0,0); }",
+   "dc_line": 133234,
+   "dc": "if ((DAT_14013a24f < '\\0') && (param_1[0x74].unused != 0x43c)) { ... }   /* FUN_1400d9818, 函数头 @133142 */",
+   "verdict": "REAL_BUG",
+   "fix": "uint8_t 上 '< \\'0\\'' 恒假 → 0x43c 重入保护分支不可达。随根因项(int8_t)自动修复。注意: link_stubs.c 正被其它代理并发修改, 行号以当前快照为准可能漂移(函数定位 FUN_1400d9818 不受漂移影响)。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 7129,
+   "pattern": "B",
+   "ours": "PECMD_SetObjectEnable((int64_t)(uintptr_t)param_1, (uint32_t)(-1 < *(uint16_t *)((char *)param_1 + 0x70)));",
+   "dc_line": 50210,
+   "dc": "FUN_140053c5c((longlong)param_1,(uint)(-1 < *(short *)(param_1 + 0xe)));   /* FUN_140054bb8, +0xe*8=字节0x70 */",
+   "verdict": "REAL_BUG",
+   "fix": "dc 读 short(有符号16位): 字段≥0x8000 时 -1<x 为假 → 控件禁用位不置位; 我们读 uint16_t 使 '-1 < x' 恒真(gcc type-limits 在警), 分支永真。fix: 改读有符号: (uint32_t)(-1 < *(int16_t *)((char *)param_1 + 0x70))。census 遗留的唯一现存 type-limits 警告点。"
+  },
+  {
+   "file": "core_thread.c",
+   "line": 382,
+   "pattern": "D",
+   "ours": "if ((int64_t)a7 != -1) {\n        a7 = a7 + 5 + a7 / 10;\n    }",
+   "dc_line": 24069,
+   "dc": "if ((int)param_7 != -1) {\n    param_7 = param_7 + 5 + param_7 / 10;\n  }   /* FUN_140027eac 任务线程创建; 下游调用同传 param_7 & 0xffffffff */",
+   "verdict": "REAL_BUG",
+   "fix": "宽度转写错误: dc 按 32 位有符号截断判 -1(INFINITE 哨兵 0xFFFFFFFF); 我们用 int64_t 判, 0xFFFFFFFF≠-1 → 对 INFINITE 超时错误执行 +5+1/10 调整并把垃圾值传给 FUN_1400195F0。fix: (int64_t)→(int): if ((int)a7 != -1)。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 5471,
+   "pattern": "C",
+   "ours": "local_8f8 = (uint)*(ushort *)((uintptr_t)ent + 24 + (uintptr_t)local_8b8);\n...\nif ((local_904 == *(short *)((byte *)puVar20 - 2)) &&\n    (local_8f8 == (int)(short)*(ushort *)puVar20)) break;",
+   "dc_line": 127424,
+   "dc": "local_8f8 = (uint)*(short *)((longlong)(local_8a0 + 0xc) + (longlong)local_8b8);\nif ((local_904 == *(short *)((longlong)puVar20 + -2)) &&\n   (local_8f8 == (int)(short)*puVar20)) break;   /* FUN_1400cd3a8 SEG6 物理盘枚举 */",
+   "verdict": "REAL_BUG",
+   "fix": "符号扩展不对称: dc 两侧均为 signed short 读(uint 存储亦经符号扩展), 值≥0x8000 时两侧同为 0xFFFFFFxx 可相等; 我们左侧 ushort 读零扩展(0x0000FFxx) vs 右侧符号扩展(0xFFFFFFxx) → 高位字对的配对扫描永不命中。fix: 左侧存储改 (uint)*(int16_t *)(...) (与 dc 同形), 右侧保持; 即可恢复等价。注: core_b7c.c 并发修改中, 当前快照行号 5466/5471(census 旧值 3311 已漂移), 定位锚 LAB_1400ce5a6 主循环内配对扫描。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 8401,
+   "pattern": "A",
+   "ours": "if ((param_2 == (LPCWSTR)0) || ((int)param_1 != -1)) {",
+   "dc_line": 17069,
+   "dc": "if ((param_2 == (LPCWSTR)0x0) || ((int)param_1 != -1)) {   /* FUN_14001cff4 LOCK/UNLOCK */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 与 dc 逐字同形。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1929,
+   "pattern": "A",
+   "ours": "if ((char)uVar19 != -1) { local_181f = (char)uVar19 + 1; }",
+   "dc_line": 41554,
+   "dc": "if ((char)uVar19 != -1) {\n    local_181f = (char)uVar19 + 1;   /* FUN_1400474a8 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 6839,
+   "pattern": "A",
+   "ours": "(uVar1 = ((uint64_t (*)(void))g_pinet_addr)(), (int)uVar1 == -1)",
+   "dc_line": 49781,
+   "dc": "(uVar1 = (*DAT_14013d580)(), (int)uVar1 == -1)   /* FUN_14005488c gethostbyname/inet_addr */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; INADDR_NONE=(int)-1 语义正确。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21807,
+   "pattern": "B",
+   "ours": "(local_88 = FUN_14001b7f4(WSTR(\"PINT.FLAGS\")), (int64_t)local_88 > -1)",
+   "dc_line": 96214,
+   "dc": "(local_88 = FUN_14001b7f4(L\"PINT.FLAGS\"), -1 < (longlong)local_88)   /* FUN_1400987ec */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 与 dc 同构(> -1 ≡ -1 <)。"
+  },
+  {
+   "file": "core_b3r_h3.c",
+   "line": 1512,
+   "pattern": "A",
+   "ours": "if ((char)local_d0 == -1) { ... if ((uint8_t)(local_d0 >> 8) == (uint8_t)-2) {",
+   "dc_line": 99229,
+   "dc": "if ((char)local_d0 == -1) {\n            if (local_d0._1_1_ == -2) {   /* FUN_14009da54 第二处 BOM 探测(ReadFile 3 字节) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 等号比较下 (uint8_t)==(uint8_t)-2 与 dc 有符号 _1_1_==-2 谓词相同(无加宽通路)。"
+  },
+  {
+   "file": "core_b3r_h3.c",
+   "line": 1520,
+   "pattern": "A",
+   "ours": "else if ((char)local_d0 == -2) { ... (uint8_t)(local_d0 >> 8) == (uint8_t)-1",
+   "dc_line": 99237,
+   "dc": "else if ((char)local_d0 == -2) {\n            if (local_d0._1_1_ == -1) {",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 同上, 等号比较符号无关。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 280,
+   "pattern": "A",
+   "ours": "if ((byte)cVar12 >= 0x80) { res_src = list_alloc; }   /* 大文件分块分支 */",
+   "dc_line": 119360,
+   "dc": "if (cVar12 < '\\0') { local_130 = local_128; }   /* FUN_1400c0ad8 HASH list 模式切换 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; (byte)c>=0x80 ≡ (char)c<0, 谓词等价(已有 cmovl 注释)。可选统一为 dc 字面形式以降噪声。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 326,
+   "pattern": "A",
+   "ours": "if ((byte)cVar12 >= 0x80) { res_src = list_alloc; }   /* 公共尾 */",
+   "dc_line": 119360,
+   "dc": "if (cVar12 < '\\0') { ... }   /* 同上单一 dc 位点 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 同上。"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 964,
+   "pattern": "B",
+   "ours": "if (-1 < g_flagA249) { local_lf.lfItalic = 3; }",
+   "dc_line": 25382,
+   "dc": "if (-1 < DAT_14013a249) { ... }   /* ApplyTextWindowLayout; g_flagA249 已改 int8_t(git 96d2544) */",
+   "verdict": "FAITHFUL",
+   "fix": "已修复(96d2544); census 该条为修前快照。"
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 4590,
+   "pattern": "B",
+   "ours": "if ((g_flagA249 < 0) && ((g_bitFlags & 2) == 0)) {",
+   "dc_line": 32836,
+   "dc": "if ((DAT_14013a249 < '\\0') && ((DAT_14013cb58 & 2) == 0)) {   /* FUN_140037ba8 LogoDlgProc */",
+   "verdict": "FAITHFUL",
+   "fix": "g_flagA249=int8_t 后 '< 0' 与 dc '< \\'0\\'' 等价; census 条目已消。"
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 4724,
+   "pattern": "B",
+   "ours": "if (-1 < g_flagA249) { uVar1 = 3; }\n        if (-1 < g_transState) { bAlpha = 0xff - (char)g_transState; }",
+   "dc_line": 32972,
+   "dc": "if (-1 < DAT_14013a249) { ... }\n    if (-1 < DAT_14013a24c) {\n      bAlpha = 0xff - (char)DAT_14013a24c;   /* g_transState=int16_t 与 dc short 一致 */",
+   "verdict": "FAITHFUL",
+   "fix": "已修复/同形; census 条目已消。"
+  },
+  {
+   "file": "core_b3r_h3.c",
+   "line": 1217,
+   "pattern": "B",
+   "ours": "iVar13 = (int)*(uint8_t *)(uintptr_t)local_res10; if ((iVar13 == 0xff) && ...)   /* ccf397a 修复后 */",
+   "dc_line": 98941,
+   "dc": "iVar13 = (int)*(char *)local_res10;\n      if ((iVar13 == 0xff) && (*(char *)(...) == 0xfe)) { ... }   /* FUN_14009da54 第一处 BOM 探测 */",
+   "verdict": "FAITHFUL",
+   "fix": "已由 ccf397a 修复(char→uint8_t 恢复可达性); census 4 条 type-limits(h3:1217/1221/1228/1230)均为此块修前快照。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1241,
+   "pattern": "C",
+   "ours": "if (((int)local_res18[0] == (uint32_t)*local_res8) &&",
+   "dc_line": 40909,
+   "dc": "if (((int)local_res18[0] == (uint)*local_res8) &&   /* FUN_140046840 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(int vs uint 混排), 登记不修。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1242,
+   "pattern": "C",
+   "ours": "(g_flagA249 = 0xff, (int)local_res18[0] == (uint32_t)local_res8[1])) {",
+   "dc_line": 40910,
+   "dc": "(DAT_14013a249 = 0xff, (int)local_res18[0] == (uint)*local_res8[1])) {",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1322,
+   "pattern": "C",
+   "ours": "if (g_intA244 == -0x80000000) {",
+   "dc_line": 40999,
+   "dc": "if (DAT_14013a244 == -0x80000000) {   /* FUN_140046ac4 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此; -0x80000000 在 C 中为 unsigned 字面量但等值比较按位安全, 行为一致。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9429,
+   "pattern": "C",
+   "ours": "if (X != -0x80000000) { ... }",
+   "dc_line": 56079,
+   "dc": "if (X != -0x80000000) {   /* FUN_14005db98 窗口比例换算 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(X 为 int), 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9434,
+   "pattern": "C",
+   "ours": "if (X != -0x80000000) { ... }",
+   "dc_line": 56086,
+   "dc": "if (X != -0x80000000) {   /* FUN_14005db98 窗口比例换算 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(X 为 int), 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9455,
+   "pattern": "C",
+   "ours": "if (X != -0x80000000) { ... }",
+   "dc_line": 56107,
+   "dc": "if (X != -0x80000000) {   /* FUN_14005db98 窗口比例换算 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(X 为 int), 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9458,
+   "pattern": "C",
+   "ours": "if (X != -0x80000000) { ... }",
+   "dc_line": 56110,
+   "dc": "if (X != -0x80000000) {   /* FUN_14005db98 窗口比例换算 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(X 为 int), 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 13269,
+   "pattern": "C",
+   "ours": "(((int)cVar28 == (uint32_t)bVar1) || (pbVar23[(int64_t)cVar28 + 1] == 0))",
+   "dc_line": 66001,
+   "dc": "(((int)cVar28 == (uint)bVar1 || (pbVar23[(longlong)cVar28 + 1] == 0)))   /* FUN_140069d18 PRIVHEAD */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此, 登记。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 24245,
+   "pattern": "C",
+   "ours": "if (param_3 == -0x8000000000000000LL) { type |= 0x40; iw = 0; }",
+   "dc_line": 111754,
+   "dc": "if (param_3 == -0x8000000000000000) {   /* FUN_1400b3d0c 图像装载 */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此, 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b3r_g.c",
+   "line": 183,
+   "pattern": "C",
+   "ours": "if (((int64_t)iVar2 != (uint64_t)local_res8[0]) ||",
+   "dc_line": 80074,
+   "dc": "if (((longlong)iVar2 != (ulonglong)local_res8[0]) ||   /* FUN_14007d8d4 save image/icon */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此, 登记。"
+  },
+  {
+   "file": "core_b3r_g.c",
+   "line": 184,
+   "pattern": "C",
+   "ours": "((int64_t)iVar3 != (uint64_t)local_48[0]))",
+   "dc_line": 80075,
+   "dc": "((longlong)iVar3 != (ulonglong)local_48[0]))",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此, 登记。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 1423,
+   "pattern": "C",
+   "ours": "if ((*valname == L'\\0') && (rd_stat == 2) && ((int)uVar22 == 0xfffffffe)) {",
+   "dc_line": 120537,
+   "dc": "if (((*local_80 == L'\\0') && ((uint)local_res10 == 2)) && (uVar22 == 0xfffffffe)) {   /* FUN_1400c13f8 REGI */",
+   "verdict": "FAITHFUL",
+   "fix": "行为一致((int)x==大常量 经转换回同位型); 建议 cosmetic 去掉 (int) 强转与 dc 同形并消警。注: census 旧行 1420 已漂移至 1423(并发修改)。"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 5446,
+   "pattern": "C",
+   "ours": "while ((int)(short)*puVar20 != local_970) {   /* 0x12 步进扫描 */",
+   "dc_line": 127401,
+   "dc": "while ((int)(short)*puVar20 != local_970) {   /* FUN_1400cd3a8, dc 文本完全相同(local_970=uint) */",
+   "verdict": "FAITHFUL",
+   "fix": "dc 本身如此(int vs uint 混排), 等值比较按位安全, 登记。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 557,
+   "pattern": "D",
+   "ours": "param_3 = (HDC)(uint64_t)(uint32_t)(int)(int8_t)p[0xc2];",
+   "dc_line": 906,
+   "dc": "param_3 = (HDC)(ulonglong)(uint)(int)(char)param_1[0xc2].unused;   /* FUN_140003184 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 逐字同形。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 2522,
+   "pattern": "D",
+   "ours": "cVar3 = (int8_t)g_u8CA49; ... cVar3 = (int8_t)(cVar3 + '\\x01');",
+   "dc_line": 3260,
+   "dc": "cVar3 = DAT_14013ca49; ... cVar3 = cVar3 + '\\x01';   /* FUN_1400066e4 CPU 计数, char 语义保留 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; int8_t 正确保真。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 9442,
+   "pattern": "A",
+   "ours": "if ((char)(uintptr_t)lpString == -1 && (char)(uintptr_t)lpString[1] == -2) { lpString += 2; }",
+   "dc_line": 18645,
+   "dc": "if (((char)lpString == -1) && ((char)lpString[1] == -2)) {\n      lpString = lpString + 2;   /* FUN_14001f0f4 跳过 UTF16LE BOM */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 有符号等号比较逐字同形(BOM 家族第三处, 无 BOM 型 bug)。"
+  },
+  {
+   "file": "core_b2c.c",
+   "line": 862,
+   "pattern": "D",
+   "ours": "if ((int8_t)g_popmenuFlag < 0) { pWVar5 = pWVar8; }",
+   "dc_line": 28754,
+   "dc": "if ((char)DAT_14013a348 < '\\0') { ... }   /* FUN_140030144 ExecSubCommand(body@35) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 显式 (int8_t) 恢复有符号语义, 与 dc 一致。"
+  },
+  {
+   "file": "core_b3h.c",
+   "line": 661,
+   "pattern": "D",
+   "ours": "(int16_t)(char)(uintptr_t)puVar1   /* 作实参 */",
+   "dc_line": 109479,
+   "dc": "(short)(char)puVar1   /* FUN_1400b0380 ApplyItemAttrToken(body@15), puVar1 为指针低位 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 截断链与 dc 相同。"
+  },
+  {
+   "file": "core_b3j.c",
+   "line": 353,
+   "pattern": "D",
+   "ours": "sVar1 = (int16_t)(int8_t)in_RAX - 0x41;",
+   "dc_line": 57533,
+   "dc": "sVar1 = (char)in_RAX + -0x41;   /* FUN_14005f868 PickFreeDriveLetter(body@38) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 符号扩展链等价。"
+  },
+  {
+   "file": "core_b3n.c",
+   "line": 50,
+   "pattern": "D",
+   "ours": "step = (char)((uint32_t)mode >> 8) * step;",
+   "dc_line": 58612,
+   "dc": "cVar2 = (char)((uint)param_3 >> 8) * cVar2;   /* FUN_140060b5c(body@37) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 逐字同形。"
+  },
+  {
+   "file": "core_b3r_a.c",
+   "line": 723,
+   "pattern": "D",
+   "ours": "*param_7 = (short)(char)((local_4c0[0] != 0) + '0');",
+   "dc_line": 72273,
+   "dc": "*param_7 = (short)(char)((local_4c0[0] != 0) + '0');   /* FUN_140071e90(body@233) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 逐字同形。"
+  },
+  {
+   "file": "core_b3r_c.c",
+   "line": 708,
+   "pattern": "D",
+   "ours": "pHVar7 = (HPALETTE)(uint64_t)(uint32_t)((1 << (int8_t)iVar4) << 2);",
+   "dc_line": 79937,
+   "dc": "pHVar7 = (HPALETTE)(ulonglong)(uint)((1 << (sbyte)iVar4) << 2);   /* FUN_14007d450 SaveBitmap(body@121) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 与 dc 同形(潜在负移位 UB 亦与 dc 共有, 如需稳健可后续单独登记)。"
+  },
+  {
+   "file": "core_b3m.c",
+   "line": 1295,
+   "pattern": "D",
+   "ours": "(int)(char)(-((bVar1 & 1) != 0) & bVar5)",
+   "dc_line": 85027,
+   "dc": "(int)(char)(-((bVar1 & 1) != 0) & bVar5)   /* FUN_14008569c ExpandVarsLocked(body@25) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 逐字同形。"
+  },
+  {
+   "file": "core_b8f.c",
+   "line": 153,
+   "pattern": "D",
+   "ours": "if (*(int8_t *)item == -0x80) {",
+   "dc_line": 140081,
+   "dc": "if (*pcVar3 == -0x80) {   /* FUN_1400e5458 SearchMenuTreeByCaption(body@17) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; 等号比较位型相同。"
+  },
+  {
+   "file": "core_b8k.c",
+   "line": 992,
+   "pattern": "B",
+   "ours": "if (*(int16_t *)((uint8_t *)obj + 0xa2) >= 0 &&\n        *(int8_t *)((uint8_t *)obj + 0xac) == -0x10) {",
+   "dc_line": 147564,
+   "dc": "if (((*(short *)((longlong)param_1 + 0xa2) < 0) || (*(char *)((longlong)param_1 + 0xac) != -0x10)) ... else 取色   /* FUN_1400f0fa8 PaintLabelText(body@70) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; De Morgan 否定完全等价(a>=0 && b==-0x10)。"
+  },
+  {
+   "file": "core_script.c",
+   "line": 254,
+   "pattern": "D",
+   "ours": "if (*(uint16_t *)buf == 0xfeff || *(uint16_t *)buf == 0xfffe) { u13 = u17; }",
+   "dc_line": 29167,
+   "dc": "if (((ushort)*local_78 == 0xfeff) || ((ushort)*local_78 == 0xfffe)) {   /* FUN_1400307c8 XOR 脚本解码(任务书对照样例位点) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; ushort 等号比较为任务书认可的正确写法。"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 243,
+   "pattern": "D",
+   "ours": "if (*(uint16_t *)local_68 == 0xfeff) {",
+   "dc_line": 19879,
+   "dc": "if (*local_68 == 0xfeff) {   /* FUN_140021144 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; ushort 读+等号比较, 符号无关。"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 247,
+   "pattern": "D",
+   "ours": "cVar1 = (*(uint16_t *)local_68 == 0xfeff);",
+   "dc_line": 19883,
+   "dc": "cVar1 = *local_68 == 0xfeff;",
+   "verdict": "FAITHFUL",
+   "fix": "无需。"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21845,
+   "pattern": "D",
+   "ours": "if (*local_130 == 0xfeff) { local_130 = local_130 + 1; }",
+   "dc_line": 96254,
+   "dc": "if (*local_130 == L'\\xfeff') {\n          local_130 = local_130 + 1;   /* FUN_1400987ec(body@409) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; WCHAR 等号比较。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 651,
+   "pattern": "D",
+   "ours": "if (*(char *)(param_1 + 0x120) == 1) {",
+   "dc_line": 1018,
+   "dc": "if (*(char *)(param_1 + 0x120) == '\\x01') {   /* FUN_1400032e4 TimerProc(body@53) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需。"
+  },
+  {
+   "file": "core_b3m.c",
+   "line": 762,
+   "pattern": "D",
+   "ours": "(*(char *)(obj + 0x298) < 2)",
+   "dc_line": 69874,
+   "dc": "*(char *)(param_1 + 0x298) < '\\x02'   /* FUN_14006f73c(body@56) */",
+   "verdict": "FAITHFUL",
+   "fix": "无需。"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 5337,
+   "pattern": "D",
+   "ours": "g_u8A24A = (uint8_t)((int32_t)(uint32_t)num / 10); if (0xff < ...) g_u8A24A = 0xff;",
+   "dc_line": 7611,
+   "dc": "DAT_14013a24a = (undefined1)((int)local_res8.dwLowDateTime / 10);\n        if (0xff < (int)local_res8.dwLowDateTime / 10) {\n          DAT_14013a24a = 0xff;   /* 钳位写法同形 */",
+   "verdict": "FAITHFUL",
+   "fix": "无需; A24A 读侧均为无符号 ((uint)DAT*10), uint8_t 存储正确。"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 238,
+   "pattern": "B",
+   "ours": "uint8_t g_wallpaperMode;   /* DAT_14013cad0, dc@1922 写 -1 */",
+   "dc_line": 1922,
+   "dc": "DAT_14013cad0 = -1; ... uVar7 = (ulonglong)DAT_14013cad0; if (DAT_14013cad0 != '\\0')   /* 仅零扩展与非零测试 */",
+   "verdict": "FAITHFUL",
+   "fix": "登记: dc 虽写 -1 但读侧仅 !=0/零扩展, uint8_t 行为等价, 不修。(对照 A24F: 读侧存在有序比较故必须改 int8_t)"
+  }
+ ],
+ "summary": {
+  "real_bugs": 7,
+  "faithful": 45,
+  "unsure": 0
+ }
+}
