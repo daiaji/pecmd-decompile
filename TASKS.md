@@ -468,7 +468,24 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - 剩余: ~15 复杂叶层(安全描述符/递归菜单/正则类)、最深10(两巨00e26c/0d2e90 等, agent墙 已实证)、CRT 142(多无调用)、登记巨型4。
 - P5: 剩余登记 + 文档同步 + 里程碑tag（进行中）。
 
-## 10. 子代理自主纪律（教训固化, 2026-08-22）
+## 10. 子代理自主纪律（教训固化, 2026-08-23 会话续）
 - 问题: 子代理常提问/等待确认/卡住 → 提示词必须内置"自主处理条款"。
 - 标准条款: tools/subagent_autonomy_clause.md（禁止提问/自主决策/止损SKIP/必交付报告）。
 - 规则: 今后所有子代理提示词末尾必附该条款。主代理自直移不受此影响(独立可推进)。
+
+## 11. 2026-08-23 会话快照（goal-722b2d3b, git 907d634, build/link 全绿）
+- **任务A 进行中**: 00e26c SEG6 已落地(link_stubs.c @3.25k行, SEG6 完结标记), SEG7-10 由子代理
+  529033c2 继续独占 link_stubs.c 移植中; 配方 tools/fun_14000e26c_HANDOFF.md 不变。
+- **命名批基建就绪**:
+  - tools/nameable_next.json — B1 扫描: 未命名630(biz483/crt147), 有体候选424(biz385/crt39);
+  - tools/nameable_located.json — 主代理定位: real_core 347(已还原未命名, biz调用点1002) /
+    stub_only 61(先还原, biz122) / real_ls 9(含e26c, biz116); 注意分类器有嵌套括号噪声, 执行时以实测为准;
+  - tools/name_proposals.json — B2 提名30(high17/med13), 关键发现: e26c 内含 PECMD 命令4字符分发表
+    (REGI/SOCK/DISP/MOUN/MESS/LINK/DISK/SHUT/FONT/TABL/SITE/GETF)锚定大批函数语义;
+    抽验通过(03db00 确证 SHUT 命令体, ls 内「命令入队」注释系早期误标);
+  - tools/apply_rename2.py — 增强改名器: 大小写变体(FUN_140027EAC类)/PECMD_占用检查/--sync-ls 可选;
+  - tools/stub_wave_triage.json + tools/r1_wave_brief.md — R1 还原批(13 小函数, 头名5b104 870调用点)
+    简报含 140101e70 签名修正特例(uint64_t(void)→bool(LPCWSTR))。
+- **已落地**: 0b2ca8→PECMD_RenderTextBitmapIcon(4处) 首切片绿+提交 907d634(选择性提交, 避开A的ls中间态)。
+- **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
+  (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
