@@ -519,6 +519,13 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
     ③S4 零引用甄别落账(c8b/c8c 已附语义推断)
     ④S5 终账: 机械警告124清理+行为120登记+BOM/A249类语义修复入账+gen_tasks 刷新+tag p4-close
     ⑤B/C 评估材料包(供用户): 附录B 指标快照/warning_census.json/signedness_audit.json/处置台账/PRODUCTION_ROADMAP.md 原文
+    ⑥p4-close 后派发【B/C 方案审计与更新子代理】, 其职责含:
+      - 审计现有实现与方案书基线的偏差(命名/还原已大幅超前于其 §2 基线)
+      - 结合「部分工作将切换到 WIN 端 DSH」的事实重排批次
+      - **评估并裁定 WIN 端 DSH 的接管点**(从哪个阶段开始切): 权衡因素=各阶段对 gcc 工具链/
+        bash 管线/Wine 的依赖度、WIN 端能力边界(WSL?原生?)、用户真机测试的衔接方式、
+        凭据与仓库迁移方式(HANDOVER_WIN.md 已备)
+      - 产出更新版 PRODUCTION_ROADMAP(或修订附录), 经用户确认后由对应端执行
 - **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
   (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
 
