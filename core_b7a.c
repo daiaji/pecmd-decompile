@@ -18,7 +18,7 @@
  *   控件 Enable 命令      FUN_1400C47F4 @0x1400c47f4
  *   解析 Int64 并跳格(带返回值) PECMD_ParseNumberToken @0x1400cada0
  *   解析资源规格          PECMD_ParseItemImageSpec @0x1400d0b2c
- *   重绘控件背景          FUN_1400D6F8C @0x1400d6f8c
+ *   重绘控件背景          PECMD_RecomputeWndBackground @0x1400d6f8c
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -57,7 +57,7 @@ extern uint64_t *PECMD_CreateScrollBarObj(uint64_t *obj, int64_t a2, uint32_t a3
                                uint32_t a7, uint32_t a8, uint16_t *a9,
                                uint64_t *a10, uint32_t a11, LPCWSTR a12);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern void FUN_14006764C(int64_t *obj, int64_t *a2, int16_t a3,
+extern void PECMD_CopyTokenTrimmed(int64_t *obj, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC a2);
@@ -372,7 +372,7 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
     if (*spec == L'?') {
         PECMD_AllocStrSlot((WCHAR **)&s);
         LPCWSTR key = spec + 1;
-        FUN_14006764C((int64_t *)&key, (int64_t *)&s, 0x3b, 0x3a);
+        PECMD_CopyTokenTrimmed((int64_t *)&key, (int64_t *)&s, 0x3b, 0x3a);
         uint32_t enabled = (uint32_t)IsWindowEnabled(target);
         PECMD_VarSetUInt(ctx, (uint64_t)enabled, s);
         PECMD_FreeStrBuf((WCHAR **)&s);
@@ -475,10 +475,10 @@ uint16_t *PECMD_ParseItemImageSpec(int64_t *pp, int64_t *out, uint16_t *token)
     return token;
 }
 
-/* ========== FUN_1400D6F8C @0x1400d6f8c ==========
+/* ========== PECMD_RecomputeWndBackground @0x1400d6f8c ==========
  * 清零背景/布局状态并调用背景绘制。
  */
-uint64_t FUN_1400D6F8C(int64_t pp)
+uint64_t PECMD_RecomputeWndBackground(int64_t pp)
 {
     *(uint32_t *)(pp + 0x244) = 0;
     *(uint32_t *)(pp + 0x24c) = 0;

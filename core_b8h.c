@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   进程注入 API 就绪    PECMD_HasVirtualAllocEx @0x1400e411c
- *   对象双标志查询         FUN_1400E412C      @0x1400e412c
+ *   对象双标志查询         PECMD_PeCtxHasImageBase      @0x1400e412c
  *   指针表偏移搬运         PECMD_PeApplyRelocations  @0x1400e4160
  *   构建程序 exe 路径      PECMD_GetModulePathAlt      @0x1400e429c
  *   初始化 CRC32 表        PECMD_InitCrc32Table      @0x1400e4c38
@@ -23,13 +23,13 @@
  *   跳过前导 CR/LF W       PECMD_SkipCrLfEncWchar     @0x1400e70f4
  *   等待 RAS 拨号连接      PECMD_HangUpRasConnection @0x1400e75cc
  *   缓存窗口 ID            FUN_1400E8644    @0x1400e8644
- *   下发控件命令           FUN_1400E86B4  @0x1400e86b4
+ *   下发控件命令           PECMD_CtlSendChildCmd  @0x1400e86b4
  *   销毁窗口对象(带GDI)    FUN_1400E9138 @0x1400e9138
  *   绘制百分比条           PECMD_DrawScaledBarFill    @0x1400f0df4
  *   设置对象画刷           PECMD_SetCtlBgBrush   @0x1400f0eb0
  *   激活设备窗口           PECMD_SetHotTrackWindow @0x1400f1448
  *   初始化简单窗口对象     FUN_1400F1BE4 @0x1400f1be4
- *   计算滚动偏移           FUN_1400F2A7C  @0x1400f2a7c
+ *   计算滚动偏移           PECMD_ScaleMetricByFactor  @0x1400f2a7c
  *   宽字符游标扫描         FUN_1400F429C @0x1400f429c
  *   初始化列表视窗对象     FUN_1400FB588 @0x1400fb588
  *   初始化编辑对象核心     FUN_1400FCF44   @0x1400fcf44
@@ -103,11 +103,11 @@ bool PECMD_HasVirtualAllocEx(void)
     return g_pfnVirtualAllocEx != NULL;
 }
 
-/* ========== FUN_1400E412C @0x1400e412c ==========
+/* ========== PECMD_PeCtxHasImageBase @0x1400e412c ==========
  * 检查对象两个相邻字段是否同时非零 (对象布局随 g_objMode 切换)。
  * TODO(verify): 具体语义 (可能是某容器"待处理数据"标志)。
  */
-bool FUN_1400E412C(int64_t obj)
+bool PECMD_PeCtxHasImageBase(int64_t obj)
 {
     int32_t v;
 
@@ -510,11 +510,11 @@ int64_t FUN_1400E8644(int64_t *obj)
     return v;
 }
 
-/* ========== FUN_1400E86B4 @0x1400e86b4 ==========
+/* ========== PECMD_CtlSendChildCmd @0x1400e86b4 ==========
  * 向 (id-0x1000) 索引的控件转发消息 WM_0xBC2B, 并调用对象虚表消息入口。
  * TODO(verify): 0xbc2b/0x2c 与控件表布局。
  */
-void FUN_1400E86B4(int64_t *obj, uint64_t wParam, LPARAM lParam)
+void PECMD_CtlSendChildCmd(int64_t *obj, uint64_t wParam, LPARAM lParam)
 {
     typedef uint64_t (*ObjMsgFn)(int64_t self, int msg, uint64_t w, int64_t l);
     int64_t child;
@@ -667,12 +667,12 @@ uint64_t *FUN_1400F1BE4(uint64_t *obj, uint64_t data1, uint64_t data2)
     return obj;
 }
 
-/* ========== FUN_1400F2A7C @0x1400f2a7c ==========
+/* ========== PECMD_ScaleMetricByFactor @0x1400f2a7c ==========
  * 计算滚动目标值: 基点 + (比例 * 量) 的圆整值。
  * 量化到 scroll[1]+0x1c 与 *scroll+4 同步写入。
  * TODO(verify): 滚动参数含义。
  */
-uint64_t FUN_1400F2A7C(uint64_t *obj, uint64_t wParam, uint64_t *scroll)
+uint64_t PECMD_ScaleMetricByFactor(uint64_t *obj, uint64_t wParam, uint64_t *scroll)
 {
     typedef uint64_t (*ObjMsgFn)(int64_t self, int msg, uint64_t w, int64_t l);
     int64_t base;

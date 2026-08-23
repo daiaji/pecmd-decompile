@@ -61,7 +61,7 @@ extern bool FUN_140101E70(LPCWSTR path);                  /* @0x140101e70 */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl); /* @0x140003864 */
 extern int32_t FUN_14005B1A8(const WCHAR *s, const WCHAR **pw, int n); /* @0x14005b1a8 */
-extern void FUN_1400A4020(WCHAR **ps, LPCWSTR src);       /* @0x1400a4020 core_exec4.c */
+extern void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src);       /* @0x1400a4020 core_exec4.c */
 extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0x140073ccc core_exec5.c */
 extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed);   /* @0x14006159c core_exec2.c */
 
@@ -264,7 +264,7 @@ after_init:
         pS[0xf] = (int64_t)(uintptr_t)&g_pMainArgStr;
         PECMD_InitObfuscatedKeywords(script, 0x10000);
         PECMD_AllocStrSlot(&pTmp);
-        FUN_1400A4020(&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
+        PECMD_AdoptRefCountedString(&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
         pTmp = 0;
         pS[0x10] = (int64_t)(uintptr_t)*(WCHAR **)g_pMainArgStr;
         FUN_140073CCC(script, cmdline, 1);

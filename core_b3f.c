@@ -28,7 +28,7 @@
  *   写加密字节       PECMD_WriteEncByte @0x1400684fc
  *   写 XOR 字节      PECMD_WriteXorByte @0x140068880
  *   转换串编码       FUN_14006CA94 @0x14006ca94
- *   打包串记录       FUN_14006D788 @0x14006d788
+ *   打包串记录       PECMD_AllocFileReqEmbedPath @0x14006d788
  *   初始化解析上下文 FUN_1400706B4 @0x1400706b4
  *   重置解析上下文   FUN_14007E34C @0x14007e34c
  *   解析路径记录     PECMD_ParsePathRecord @0x14007f018
@@ -476,10 +476,10 @@ int64_t FUN_14006CA94(int64_t *ps, uint32_t codepage)
     return *ps;
 }
 
-/* ========== FUN_14006D788 @0x14006d788 ==========
+/* ========== PECMD_AllocFileReqEmbedPath @0x14006d788 ==========
  * 打包字符串记录。
  */
-void FUN_14006D788(int64_t *out, uint64_t *src)
+void PECMD_AllocFileReqEmbedPath(int64_t *out, uint64_t *src)
 {
     int iVar3 = lstrlenW((LPCWSTR)*src);
     PECMD_AllocString((WCHAR **)out, (int64_t)(iVar3 + 0x21));

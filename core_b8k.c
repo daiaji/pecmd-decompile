@@ -12,11 +12,11 @@
  *   构建钩子键列表          PECMD_LoadHotkeyCodeTable       @0x1400e8748
  *   布局子窗口              PECMD_LayoutTabPageArea     @0x1400ec0f0
  *   像素缩放                PECMD_BoxAverageScalePixels       @0x1400ed7a0
- *   GDI 消息分发            FUN_1400EEC28         @0x1400eec28
- *   控件消息分发(扩展)      FUN_1400EF694   @0x1400ef694
+ *   GDI 消息分发            PECMD_ImgBtnMsgDispatch         @0x1400eec28
+ *   控件消息分发(扩展)      PECMD_BtnHostMsgDispatch   @0x1400ef694
  *   创建静态子控件对象      FUN_1400EF91C      @0x1400ef91c
  *   创建按钮控件核心        FUN_1400EFB08   @0x1400efb08
- *   通用 GDI 消息分发       FUN_1400F0814  @0x1400f0814
+ *   通用 GDI 消息分发       PECMD_BtnCommonMsgHandler  @0x1400f0814
  *   合成半透明位图          PECMD_BltTransparentBits     @0x1400f0abc
  *   绘制控件(带背景)       PECMD_PaintLabelText      @0x1400f0fa8
  *
@@ -52,7 +52,7 @@ extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj); /* @0x1400e429c */
 extern void *GetThreadContext_exref;
 extern void *SetThreadContext_exref;
-extern uint64_t FUN_1400F0814(int64_t obj, uint32_t msg, int64_t wParam,
+extern uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
                                             LPCWSTR lParam, int flag);
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
@@ -578,11 +578,11 @@ void PECMD_BoxAverageScalePixels(HDC hdcDst, int x0, uint32_t wFor, int x1, int 
     }
 }
 
-/* ========== FUN_1400EEC28 @0x1400eec28 ==========
+/* ========== PECMD_ImgBtnMsgDispatch @0x1400eec28 ==========
  * GDI/控件消息分发: 0x45a 走专用; 0xf0/0xf1 切换状态; 0xbd11 特殊; 其余
- * 0x233 查映射, 未中走通用 FUN_1400F0814。
+ * 0x233 查映射, 未中走通用 PECMD_BtnCommonMsgHandler。
  */
-uint64_t FUN_1400EEC28(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam)
+uint64_t PECMD_ImgBtnMsgDispatch(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam)
 {
     int count;
     uint16_t r;
@@ -633,7 +633,7 @@ uint64_t FUN_1400EEC28(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
         }
     }
     if (generic)
-        res = FUN_1400F0814(obj, msg, wParam, lParam, 0);
+        res = PECMD_BtnCommonMsgHandler(obj, msg, wParam, lParam, 0);
     if (0 < count)
         FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
                       (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 2, NULL);
@@ -642,11 +642,11 @@ uint64_t FUN_1400EEC28(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam
     return res;
 }
 
-/* ========== FUN_1400EF694 @0x1400ef694 ==========
+/* ========== PECMD_BtnHostMsgDispatch @0x1400ef694 ==========
  * 控件消息分发(扩展): 处理 0x202/0x30/0x45a/0x113/0x0a 特殊逻辑后
- * 走 0x233 映射表 + 通用 FUN_1400F0814。
+ * 走 0x233 映射表 + 通用 PECMD_BtnCommonMsgHandler。
  */
-uint64_t FUN_1400EF694(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam)
+uint64_t PECMD_BtnHostMsgDispatch(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam)
 {
     int count;
     uint16_t r;
@@ -701,7 +701,7 @@ dispatch:
                 return out;
             }
         }
-        uint64_t res = FUN_1400F0814(obj, msg, wParam, lParam, 0);
+        uint64_t res = PECMD_BtnCommonMsgHandler(obj, msg, wParam, lParam, 0);
         if (0 < count)
             FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
                           (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 2, NULL);
@@ -839,11 +839,11 @@ bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400F0814 @0x1400f0814 ==========
+/* ========== PECMD_BtnCommonMsgHandler @0x1400f0814 ==========
  * 通用 GDI/控件消息: 0x45a 专用, 0x2b 走虚表, 0x465 查询切换,
  * 其余 0x233 查映射 + FUN_1400E5B0C 兜底。
  */
-uint64_t FUN_1400F0814(int64_t obj, uint32_t msg, int64_t wParam,
+uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
                                      LPCWSTR lParam, int flag)
 {
     int count;

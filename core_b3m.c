@@ -69,7 +69,7 @@ extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2,
                                    DWORD a3);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
-extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
+extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
@@ -1260,7 +1260,7 @@ uint64_t FUN_140080B0C(int64_t *script, HWND hwnd, HWND target,
     } else {
         PECMD_AllocStrSlot(&local_res20);
         local_48 = (int64_t)(intptr_t)pWVar1;
-        FUN_14006764C((int64_t *)&local_48, (int64_t *)&local_res20, 0x3b, 0x3a);
+        PECMD_CopyTokenTrimmed((int64_t *)&local_48, (int64_t *)&local_res20, 0x3b, 0x3a);
         uVar3 = IsWindowVisible(target);
         PECMD_VarSetUInt(script, (uint64_t)uVar3, local_res20);
         PECMD_FreeStrBuf((WCHAR **)&local_res20);

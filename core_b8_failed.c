@@ -53,7 +53,7 @@ BOOL CryptGetProvParam(HCRYPTPROV hProv, DWORD dwParam, BYTE *pbData,
 }
 
 /* ---- 内部函数 (其它 core_*.c 已实现/桩) ---- */
-extern int64_t *FUN_1400634D4(int64_t *ps, LPCSTR src, int64_t len);   /* @0x1400634d4 ANSI 串写入容器 */
+extern int64_t *PECMD_StrCopyA(int64_t *ps, LPCSTR src, int64_t len);   /* @0x1400634d4 ANSI 串写入容器 */
 extern void     FUN_1400633A8(void **ps, int64_t len);                 /* @0x1400633a8 分配 */
 extern int64_t *FUN_14006345C(int64_t *ps, LPCSTR src);                /* @0x14006345c ANSI 串追加 */
 extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 释放 */
@@ -104,7 +104,7 @@ DWORD PECMD_CryptoHashCompute(BYTE *data, DWORD len, ALG_ID alg, uint64_t extra)
 
     if ((DWORD)alg == 0xffffcfc7u) {
         /* ===== 路径 A：枚举算法 / 哈希类型打印 ===== */
-        FUN_1400634D4((int64_t *)out, "\x20" /* @0x14012b12c ""空格"" */, -1);
+        PECMD_StrCopyA((int64_t *)out, "\x20" /* @0x14012b12c ""空格"" */, -1);
         FUN_1400633A8((void **)&pC, 0x1c00);
 
         pD = pC + 0x1800;

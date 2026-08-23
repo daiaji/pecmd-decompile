@@ -9,7 +9,7 @@
  *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8
  *   初始化列表视窗对象     PECMD_CtorListHostObject            @0x1400f9134
  *   销毁列表视窗对象       PECMD_DestroyCtlResources         @0x1400f9324
- *   控件消息分发(临界区)   FUN_1400FC148       @0x1400fc148
+ *   控件消息分发(临界区)   PECMD_ProgressHostDispatch       @0x1400fc148
  *   设置控件颜色           FUN_1400FD014           @0x1400fd014
  *   取控件画刷             PECMD_CtlCalcColorBrush            @0x1400fd35c
  *   捕获父窗口背景         PECMD_CaptureParentBackground    @0x1400fd5e8
@@ -49,12 +49,12 @@ extern void FUN_1400E8940(void *obj);               /* @0x1400e8940 */
 extern void PECMD_ClearPtrArrayItems(uint64_t *arr);               /* @0x1400f425c */
 extern void PECMD_ClearPropArrayItems(uint64_t *arr);            /* @0x1400f4208 */
 extern void PECMD_ClearNamedPropArray(int64_t *array);         /* @0x1400f5c10 */
-extern void FUN_1400F5D50(uint64_t *obj);   /* @0x1400f5d50 */
+extern void PECMD_ListStyleObjDtor(uint64_t *obj);   /* @0x1400f5d50 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
 extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
 extern void PECMD_SetHotTrackWindow(HWND hwnd);           /* @0x1400f1448 */
 extern int PECMD_TreeGetItemState(int64_t obj, uint64_t param2, uint64_t *out, uint32_t param4); /* @0x1400feda4 */
-extern int FUN_1400FEE24(int64_t obj, uint64_t param2,
+extern int PECMD_TreeGetItemStateEx(int64_t obj, uint64_t param2,
                                      uint64_t *out);         /* @0x1400fee24 */
 extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
 
@@ -371,16 +371,16 @@ void PECMD_DestroyCtlResources(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x4f));
     PECMD_ClearPtrArrayItems(obj + 0x4c);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x4c));
-    FUN_1400F5D50(obj + 0x1b);
+    PECMD_ListStyleObjDtor(obj + 0x1b);
     FUN_1400E8940(obj);
     (void)b;
 }
 
-/* ========== FUN_1400FC148 @0x1400fc148 ==========
+/* ========== PECMD_ProgressHostDispatch @0x1400fc148 ==========
  * 控件消息分发变体：0x462 特殊路径进入临界区调用虚表回调，
  * 其余走 0x233 映射 + FUN_1400E5B0C 兜底。
  */
-int64_t FUN_1400FC148(int64_t obj, uint32_t msg, uint64_t wParam,
+int64_t PECMD_ProgressHostDispatch(int64_t obj, uint32_t msg, uint64_t wParam,
                                    uint64_t *lParam)
 {
     int count;
@@ -877,7 +877,7 @@ int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
 }
 
 /* ========== PECMD_TreeScanCheckedSiblings @0x1400ff8a8 ==========
- * 树路径串构建扩展 2：用 FUN_1400FEE24 判断项并递归到 Ex。
+ * 树路径串构建扩展 2：用 PECMD_TreeGetItemStateEx 判断项并递归到 Ex。
  */
 int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem,
                                      uint64_t flags)
@@ -892,7 +892,7 @@ int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem,
 
     for (; hItem != 0; hItem = SendMessageW(hwnd, 0x110a, 1, hItem)) {
         value = 0;
-        ok = FUN_1400FEE24(obj, hItem, &value);
+        ok = PECMD_TreeGetItemStateEx(obj, hItem, &value);
         if (ok != 0 && (value & 2) != 0) {
             if ((flags & 0x10) == 0) {
                 PECMD_BuildTreeIndexPathStr(obj, hItem, out);

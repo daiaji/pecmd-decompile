@@ -237,7 +237,7 @@ extern int64_t PECMD_ControlWindowProc(HDC param_1, uint64_t param_2, HDC param_
 extern void PECMD_EnumDropFiles(void *param_1, int64_t *param_2, int64_t *param_3); /* @0x140006554 */
 extern uint64_t PECMD_ComboBoxControl(int64_t param_1, uint64_t param_2, LPCWSTR param_3,
                               short param_4, LPCWSTR param_5, int param_6); /* @0x14009d4b8 */
-extern int64_t FUN_1400b0380(int64_t *param_1, uint64_t param_2, uint64_t *param_3); /* @0x1400b0380 */
+extern int64_t PECMD_ApplyItemAttrToken(int64_t *param_1, uint64_t param_2, uint64_t *param_3); /* @0x1400b0380 */
 extern uint PECMD_DrawTrayIcon(uint8_t *param_1, uint64_t param_2, LPCWSTR param_3,
                           HICON param_4, LPCWSTR param_5, uint param_6,
                           uint32_t param_7);                  /* @0x14007e15c */
@@ -24354,7 +24354,7 @@ POINT PECMD_ListViewDropHandler(HDC param_1, uint param_2, HDROP param_3, HWND p
     if (param_2 == 0x459) {
         EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
         if (param_3 == (HDROP)param_1) {
-            PVar8 = b3_po_from_u64((uint64_t)FUN_1400b0380((int64_t *)param_1,
+            PVar8 = b3_po_from_u64((uint64_t)PECMD_ApplyItemAttrToken((int64_t *)param_1,
                                                            (uint64_t)param_3,
                                                            (uint64_t *)param_4));
             goto LAB_1400b545f;

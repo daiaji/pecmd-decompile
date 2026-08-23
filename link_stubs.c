@@ -8260,21 +8260,7 @@ static uint64_t PECMD_AppendFmtValue(void *a, uint64_t b, const void *c, const v
   FUN_1400629b8(param_1,(const uint16_t *)c,local_88);
   return 0;
 }
-void FUN_14006764c(longlong *param_1, longlong *param_2, short param_3, short param_4){
-    WCHAR WVar1; const WCHAR *pWVar2; short *psVar3; int iVar4; const WCHAR *pWVar5;
-    PECMD_SkipLeadingControlChars((long long*)param_1);
-    pWVar2=(const WCHAR*)(uintptr_t)*param_1;
-    WVar1=*pWVar2;
-    while ((WVar1!=L'\0') && (psVar3=(short*)(uintptr_t)*param_1, *psVar3!=param_3) && (*psVar3!=param_4)) {
-        *param_1=(longlong)(psVar3+1);
-        WVar1=(WCHAR)psVar3[1];
-    }
-    pWVar5=(const WCHAR*)(uintptr_t)*param_1;
-    do { pWVar5=pWVar5-1; if (pWVar5<pWVar2) break; } while (((8<(ushort)*pWVar5)&&((ushort)*pWVar5<0xe))||(*pWVar5==L' '));
-    iVar4=(int)(((longlong)pWVar5+(2-(longlong)pWVar2))>>1);
-    FUN_140063888(param_2,pWVar2,(longlong)(iVar4+1));
-    *(undefined2*)(uintptr_t)(*param_2+(longlong)iVar4*2)=0;
-}
+
 
 /* @0x1400679b0 size=43 — short 解析并写回(直移) */
 void PECMD_ParseShortStore(uint64_t *param_1, int *param_2, short param_3)
@@ -8818,7 +8804,7 @@ bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
  */
 /* ---------- PECMD_DdCopyCommand 新增桩 (decompiled.c 调用面; rename_map 目标已在 core_* 真实定义,
  *   仅余 6 个无既有定义者在此补 leaf 桩) ---------- */
-void FUN_14006d788(longlong *param_1, LARGE_INTEGER *param_2) { (void)param_1;(void)param_2; }  /* 参数表初始化 (leaf stub) */
+  /* 参数表初始化 (leaf stub) */
 static HANDLE PECMD_HandleDuplicateValid(HANDLE h, LARGE_INTEGER *out) { (void)h;(void)out; return (HANDLE)0; }  /* 目标句柄克隆 (leaf stub) */
   /* 资源名定位 (leaf stub) */
   /* 设备/文件类型探测 (leaf stub) */
@@ -8957,7 +8943,7 @@ uint64_t PECMD_DdCopyCommand(uint64_t a, uint64_t b)
   LVar23.QuadPart = 0;
   local_50[0] = 0;
   local_res10 = param_2;
-  FUN_14006d788(local_50,&local_res10);
+  PECMD_AllocFileReqEmbedPath(local_50,&local_res10);
   PECMD_EnableTokenPrivilege((const uint16_t *)L"SeBackupPrivilege",2,1);
   PECMD_EnableTokenPrivilege((const uint16_t *)L"SeRestorePrivilege",2,0x10);
   bVar8 = false;
@@ -11403,25 +11389,7 @@ void PECMD_DestroyStaticControl(uint64_t *param_1) { (void)param_1; }
 void PECMD_ReleaseSlotObject(int64_t *param_1) { (void)param_1; }
 int64_t PECMD_ControlWindowProc(uint64_t param_1, uint64_t param_2, uint64_t param_3, int64_t *param_4)
 { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
-longlong FUN_1400b0380(longlong *param_1, undefined8 param_2, undefined8 *param_3){
-    uint16_t *puVar1; undefined8 uVar2; longlong lVar3; const WCHAR *pWVar4;
-    (void)param_2;
-    puVar1=(uint16_t*)(uintptr_t)param_3[2];
-    pWVar4=(const WCHAR*)(uintptr_t)param_3[1];
-    if ((uintptr_t)puVar1 < 0x10000) {
-        uVar2=FUN_14009d4b8(param_3[3],*param_3,pWVar4,(short)(char)(uintptr_t)puVar1,(const WCHAR*)0,0);
-        lVar3=(longlong)(int)uVar2;
-    } else {
-        uVar2=FUN_14005c7c4((const char*)"cmd",puVar1);
-        if ((char)(uVar2&0xff)==0) {
-            lVar3=PECMD_CtlForwardSetBlock(param_1,param_3);
-        } else {
-            PECMD_StrBldCopyWide((long long*)(uintptr_t)(param_3[6]+0x28),pWVar4);
-            lVar3=0;
-        }
-    }
-    return lVar3;
-}
+
 
 
 /* ---- B3 业务还原 (core_b3_remaining.c) 引用的未定义数据符号桩 ---- */
@@ -13523,7 +13491,7 @@ L_after_init:
         pS[0xf] = (int64_t)(uintptr_t)&g_pMainArgStr;
         PECMD_InitObfuscatedKeywords((void *)(uintptr_t)a, 0x10000);
         PECMD_AllocStrSlot(&pTmp);
-        FUN_1400A4020((WCHAR **)&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
+        PECMD_AdoptRefCountedString((WCHAR **)&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
         pTmp = 0;
         pS[0x10] = (int64_t)(uintptr_t)*(WCHAR **)g_pMainArgStr;
         FUN_140073CCC((void *)(uintptr_t)a, (LPCWSTR)(uintptr_t)b, 1);
@@ -16133,7 +16101,7 @@ LAB_14005472d:
     FUN_140063888(param_3,pWVar7,lVar8);
   }
   else if ((param_5 & 0x1000) == 0) {
-    FUN_14006764c(param_2,param_3,param_4,0);
+    PECMD_CopyTokenTrimmed(param_2,param_3,param_4,0);
   }
   else {
     if (*pWVar7 != L'\0') {

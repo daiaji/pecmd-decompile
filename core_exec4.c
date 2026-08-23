@@ -10,7 +10,7 @@
  *   PECMD_NormalizeVolumeDevPath  @0x14006ccd4   设备路径修正（盘符→\\\\.\X:）
  *   PECMD_NormalizeDiskDevicePath @0x14006ce38   设备路径修正（同上，返回类型）
  *   PECMD_RefCountRelease   @0x140028270   引用计数释放
- *   FUN_1400A4020   @0x1400a4020   引用计数字符串设置
+ *   PECMD_AdoptRefCountedString   @0x1400a4020   引用计数字符串设置
  *   FUN_14007DE70   @0x14007de70   拼接两串（新分配）
  *   PECMD_AbsPathFromCurDir     @0x140024a54   相对路径→绝对路径
  *   PECMD_EncodeBuffer   @0x140068984   读文件到缓冲（编码识别）
@@ -208,10 +208,10 @@ void PECMD_RefCountRelease(WCHAR **ps)
     }
 }
 
-/* ========== FUN_1400A4020 @0x1400a4020 ==========
+/* ========== PECMD_AdoptRefCountedString @0x1400a4020 ==========
  * 引用计数字符串设置：释放旧值，赋新值（计数=1）。
  */
-void FUN_1400A4020(WCHAR **ps, LPCWSTR src)
+void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src)
 {
     WCHAR *s;
     EnterCriticalSection(&g_csInit);

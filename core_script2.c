@@ -23,10 +23,10 @@
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
 extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
-extern void FUN_14002487C(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
+extern void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
-extern uint16_t FUN_14001B510(void);                     /* @0x14001b510 */
+extern uint16_t PECMD_GenRandomSeed16(void);                     /* @0x14001b510 */
 extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32_t *flags); /* @0x14001ea18 */
@@ -64,7 +64,7 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
     FUN_1400702B0(&cmd, cmdline);
     /* TODO(verify): 原实现 FUN_140024C48 跳过 & 前缀; hinst/flag 用于资源加载 */
 
-    seed = FUN_14001B510();
+    seed = PECMD_GenRandomSeed16();
     (void)seed;   /* TODO(verify): 用于脚本 XOR 密钥 */
     g_scriptInitFlag = 0x41;
 
@@ -74,7 +74,7 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
         uint32_t f = 0;
         FUN_14001EA18(g_hInstance, (LPCWSTR)0x64, WSTR("SCRIPTINIT"), (void **)&initBuf, &f);
         if (f >= 5) {
-            /* TODO(verify): 原实现 FUN_14002487C 行分割后执行 init */
+            /* TODO(verify): 原实现 PECMD_MaskScriptEndFileTail 行分割后执行 init */
         }
         if (initBuf != NULL && initBuf[0] != L'\0') {
             PECMD_AppendLongDecimal((int64_t *)&g_Script, 0, WSTR("&PeExe"));

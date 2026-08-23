@@ -5032,7 +5032,7 @@ extern int64_t PECMD_TlsLogWrite();
 extern int64_t FUN_1400195F0();
 extern int64_t PECMD_SetCurrentDirIfChanged();
 extern int64_t PECMD_RegisterCallbackWnd();
-extern int64_t FUN_14001B510();
+extern int64_t PECMD_GenRandomSeed16();
 extern int64_t FUN_14001B5AC();
 extern int64_t PECMD_GetParentProcessIdLevel();
 extern int64_t PECMD_MsgWaitForObjects();
@@ -5249,7 +5249,7 @@ LAB_140038e01:
         iVar15 = lstrlenW(local_a40);
         local_9a8 = (LPCWSTR)((int64_t)iVar15 * 2);
         local_9a0 = local_9a8;
-        uVar11 = FUN_14001B510();
+        uVar11 = PECMD_GenRandomSeed16();
         FUN_14001B5AC(local_9b0,(uint32_t)uVar11,(int64_t)(iVar14 + 2));
         pWVar7 = local_9b0;
         local_9b0 = pWVar5;

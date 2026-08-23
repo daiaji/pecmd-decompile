@@ -18,7 +18,7 @@
  *   FUN_14007026C    @0x14007026c   多字节字符串分配
  *   PECMD_AllocAnsiString     @0x140070044   ANSI 字符串复制
  *   PECMD_InitObfuscatedKeywords   @0x14006159c   脚本分隔符初始化（XOR 编码表）
- *   FUN_14002487C     @0x14002487c   行分割（_ENDFILE 处理）
+ *   PECMD_MaskScriptEndFileTail     @0x14002487c   行分割（_ENDFILE 处理）
  *   PECMD_ExitProcessCall    @0x14005b21c   退出进程
  *   PECMD_ReallocBuffer     @0x140063224   带 0xaa55 头分配
  */
@@ -270,11 +270,11 @@ void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed)
     }
 }
 
-/* ========== FUN_14002487C @0x14002487c ==========
+/* ========== PECMD_MaskScriptEndFileTail @0x14002487c ==========
  * 行分割：以脚本分隔符切分（遇 _ENDFILE 终止），空格填充处理。
  * stopMain 非 0 且行首 "FIND $1 = %&&__MAIN__%," 时终止。
  */
-void FUN_14002487C(void *script, WCHAR *buf, bool stopMain)
+void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain)
 {
     WCHAR sep = *(WCHAR *)((char *)script + 0x88);
     WCHAR *p = buf;

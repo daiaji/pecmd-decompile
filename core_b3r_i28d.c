@@ -48,7 +48,7 @@ extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);   /* 扫描整数 
 /* ---- 脚本/执行 helpers ---- */
 extern void      PECMD_ResetScriptChain(void *script, void *a2);   /* 默认参数/上下文 */
 extern void      PECMD_DispatchExpressionBlock(void *script, LPCWSTR p);  /* 脚本执行循环 */
-extern void      FUN_1400A4020(WCHAR **ps, LPCWSTR src);  /* 引用计数字符串设置 */
+extern void      PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src);  /* 引用计数字符串设置 */
 extern uint32_t  PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void      PECMD_RefCountRelease(WCHAR **ps);               /* 引用计数释放 */
 extern void      PECMD_ExpandBackslashNewline(const WCHAR *p, char c);   /* 清空串 */
@@ -428,7 +428,7 @@ int64_t PECMD_SetControlCommandTrigger(LARGE_INTEGER param_1, short *param_2, LP
 
     lVar5 = 0;
     local_res10 = NULL;
-    FUN_1400A4020(&local_res10, (LPCWSTR)param_2);
+    PECMD_AdoptRefCountedString(&local_res10, (LPCWSTR)param_2);
     if (*param_2 != 0) {
         base = (int64_t *)(uintptr_t)param_1.QuadPart;
         uVar1 = *(uint64_t *)((char *)base + 0x78);

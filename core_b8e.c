@@ -15,25 +15,25 @@
  *   清空对象数组            PECMD_ClearStringItemList @0x1400f1490
  *   发送控件按下通知        PECMD_PostCtlPressNotify @0x1400f230c
  *   更新数组项值            PECMD_ItemPropUpsertEntry @0x1400f2b84
- *   查询组合框度量          FUN_1400F3554 @0x1400f3554
- *   设置控件高度并失效      FUN_1400F4064 @0x1400f4064
+ *   查询组合框度量          PECMD_ListInsertItemSetState @0x1400f3554
+ *   设置控件高度并失效      PECMD_SetSelIdxRefresh @0x1400f4064
  *   转发取文本长度(带链接)  PECMD_CtlOnSetFontLinked @0x1400f4194
- *   查找数组项槽            FUN_1400F4C28 @0x1400f4c28
+ *   查找数组项槽            PECMD_ListFindItemRec @0x1400f4c28
  *   添加映射项 A            PECMD_TrackItemChangeList1 @0x1400f5724
  *   添加映射项 B            PECMD_TrackItemChangeList2 @0x1400f578c
  *   添加映射项 C            PECMD_TrackItemChangeList3 @0x1400f586c
  *   添加映射项 D            PECMD_TrackItemChangeList4 @0x1400f58d4
  *   释放 GDI 对象数组       PECMD_ClearNamedPropArray @0x1400f5c10
- *   销毁 GDI 复合对象       FUN_1400F5D50 @0x1400f5d50
+ *   销毁 GDI 复合对象       PECMD_ListStyleObjDtor @0x1400f5d50
  *   取映射双值 A            PECMD_ItemPropGetPair24 @0x1400f5dc4
  *   取映射双值 B            PECMD_ItemPropGetPair13 @0x1400f5ef8
  *   取映射双值 C            PECMD_ItemPropGetPairSub @0x1400f6034
  *   刷新控件当前选择        PECMD_ListSelectFromHit @0x1400f6944
  *   发送控件按下通知 B      PECMD_PostCtlPressNotify2 @0x1400fbde0
- *   初始化 GDI 对象 C       FUN_1400FC2E0 @0x1400fc2e0
+ *   初始化 GDI 对象 C       PECMD_InitUpDownObj @0x1400fc2e0
  *   初始化 GDI 对象 D       FUN_1400FEC9C @0x1400fec9c
  *   查询控件值              PECMD_TreeGetItemParam @0x1400fed38
- *   查询控件值(扩展)       FUN_1400FEE24 @0x1400fee24
+ *   查询控件值(扩展)       PECMD_TreeGetItemStateEx @0x1400fee24
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -284,10 +284,10 @@ uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value,
     return (uint64_t)(uintptr_t)slot & 0xffffffffffffff00ULL;
 }
 
-/* ========== FUN_1400F3554 @0x1400f3554 ==========
+/* ========== PECMD_ListInsertItemSetState @0x1400f3554 ==========
  * 查询并设置组合框/下拉框度量值。TODO(verify): 消息 0x104d/0x102b 字段语义。
  */
-uint64_t FUN_1400F3554(int64_t obj, LPARAM param2)
+uint64_t PECMD_ListInsertItemSetState(int64_t obj, LPARAM param2)
 {
     uint8_t buf[20];
     uint64_t value;
@@ -300,11 +300,11 @@ uint64_t FUN_1400F3554(int64_t obj, LPARAM param2)
     return value & 0xffffffff;
 }
 
-/* ========== FUN_1400F4064 @0x1400f4064 ==========
+/* ========== PECMD_SetSelIdxRefresh @0x1400f4064 ==========
  * 设置控件高度字段；按 mode 决定是否/如何使控件失效重绘。
  * TODO(verify): +0x218 字段语义为高度/尺寸。
  */
-void FUN_1400F4064(int64_t obj, int height, int mode)
+void PECMD_SetSelIdxRefresh(int64_t obj, int height, int mode)
 {
     HWND hwnd;
     BOOL erase;
@@ -346,10 +346,10 @@ LRESULT PECMD_CtlOnSetFontLinked(int64_t obj, WPARAM wParam, LPARAM lParam)
     return result;
 }
 
-/* ========== FUN_1400F4C28 @0x1400f4c28 ==========
+/* ========== PECMD_ListFindItemRec @0x1400f4c28 ==========
  * 在 +0x338/+0x340 数组里按 +8 处值查找项，返回项槽指针；未找到返回 NULL。
  */
-int64_t *FUN_1400F4C28(int64_t obj, int64_t value)
+int64_t *PECMD_ListFindItemRec(int64_t obj, int64_t value)
 {
     int count = *(int *)(obj + 0x348);
     int i;
@@ -433,10 +433,10 @@ void PECMD_ClearNamedPropArray(int64_t *array)
     }
 }
 
-/* ========== FUN_1400F5D50 @0x1400f5d50 ==========
+/* ========== PECMD_ListStyleObjDtor @0x1400f5d50 ==========
  * 销毁 GDI 复合对象：删除 GDI 对象、释放多个字符串/数组后调用基类析构。
  */
-void FUN_1400F5D50(uint64_t *obj)
+void PECMD_ListStyleObjDtor(uint64_t *obj)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012c550;
     if ((HGDIOBJ)obj[0x22] != (HGDIOBJ)0) {
@@ -553,10 +553,10 @@ void PECMD_PostCtlPressNotify2(uint64_t *obj, uint32_t wParam, uint64_t packedXY
     }
 }
 
-/* ========== FUN_1400FC2E0 @0x1400fc2e0 ==========
+/* ========== PECMD_InitUpDownObj @0x1400fc2e0 ==========
  * 初始化 GDI 对象 C：调用基类构造后设置字符串/句柄字段和虚表。
  */
-uint64_t *FUN_1400FC2E0(uint64_t *obj, uint64_t param2)
+uint64_t *PECMD_InitUpDownObj(uint64_t *obj, uint64_t param2)
 {
     FUN_1400E57C0(obj);
     obj[0x1b] = param2;
@@ -603,10 +603,10 @@ void PECMD_TreeGetItemParam(int64_t obj, uint64_t param2, uint64_t *out)
     }
 }
 
-/* ========== FUN_1400FEE24 @0x1400fee24 ==========
+/* ========== PECMD_TreeGetItemStateEx @0x1400fee24 ==========
  * 发送 0x113e 查询结构；成功时把 +0x3c 处的 32 位结果写入 *out。
  */
-int FUN_1400FEE24(int64_t obj, uint64_t param2, uint64_t *out)
+int PECMD_TreeGetItemStateEx(int64_t obj, uint64_t param2, uint64_t *out)
 {
     uint8_t buf[0x50];
     LRESULT result;

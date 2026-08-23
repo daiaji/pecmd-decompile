@@ -56,8 +56,8 @@ extern void PECMD_DtorMemDcCanvas(uint64_t *obj);
 extern void PECMD_DtorImageHolder(uint64_t *obj);
 extern void FUN_1400E8940(void *obj);
 extern int64_t PECMD_ContainerAppend(uint64_t *obj);
-extern uint64_t FUN_1400F0814(HDC, uint32_t, HDC, LPCWSTR, int32_t);
-extern uint64_t FUN_1400F2A7C(uint64_t *obj, HDC hdc,
+extern uint64_t PECMD_BtnCommonMsgHandler(HDC, uint32_t, HDC, LPCWSTR, int32_t);
+extern uint64_t PECMD_ScaleMetricByFactor(uint64_t *obj, HDC hdc,
                               uint64_t *args);
 extern int64_t FUN_1400E5B0C(HDC, uint64_t, HDC, uint64_t *);
 extern void PECMD_ListAddItemEntry(int64_t, int32_t, LPCWSTR, uint32_t, int32_t,
@@ -268,7 +268,7 @@ void PECMD_DtorCtlCoreObj(uint64_t *obj)
  */
 void PECMD_CtlDispatchBuddyMsg(HDC obj, uint32_t msg, HDC param3, LPCWSTR param4)
 {
-    FUN_1400F0814(obj, msg, param3, param4, 0x10);
+    PECMD_BtnCommonMsgHandler(obj, msg, param3, param4, 0x10);
 }
 
 /* ========== FUN_1400F1F18 @0x1400f1f18 ==========
@@ -295,7 +295,7 @@ void PECMD_DtorIpadSubObj(uint64_t *obj)
 void FUN_1400F2B1C(HDC obj, uint64_t msg, HDC param3, uint64_t *param4)
 {
     if ((int32_t)msg == 0x1205) {
-        FUN_1400F2A7C((uint64_t *)(uintptr_t)obj, param3, param4);
+        PECMD_ScaleMetricByFactor((uint64_t *)(uintptr_t)obj, param3, param4);
     } else {
         FUN_1400E5B0C(obj, msg, param3, param4);
     }

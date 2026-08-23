@@ -47,7 +47,7 @@
 #include "win32_stub.h"
 
 /* ---- 已实现辅助（core_string.c / core_var*.c / core_exec*.c）---- */
-extern void FUN_1400A4020(WCHAR **ps, LPCWSTR src);          /* @0x1400a4020 core_exec4.c */
+extern void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src);          /* @0x1400a4020 core_exec4.c */
 extern void PECMD_RefCountRelease(WCHAR **ps);                       /* @0x140028270 core_exec4.c */
 extern void FUN_140017CDC(void *dst, void *src);            /* @0x140017cdc */
 extern void FUN_1400186BC(void *s, void *parent);           /* @0x1400186bc */
@@ -163,7 +163,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         pWinRef = pWinOld;
     }
     nameTmp = pName;
-    FUN_1400A4020(&bufRef, pText);
+    PECMD_AdoptRefCountedString(&bufRef, pText);
     if (pCurFile != NULL) {
         PECMD_AllocString(&savedCwd, 0x20a);
         GetCurrentDirectoryW(0x208, savedCwd);

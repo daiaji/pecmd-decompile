@@ -30,7 +30,7 @@ extern void FUN_14007BF44(void *script, WCHAR *line, WCHAR **out, int mode, uint
 /* 核心辅助 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);        /* @0x140063424 */
 extern void *PECMD_HeapRealloc(void *ptr, size_t size);        /* @0x140063118 */
-extern uint16_t FUN_14001B510(void);                          /* @0x14001b510 */
+extern uint16_t PECMD_GenRandomSeed16(void);                          /* @0x14001b510 */
 extern int64_t FUN_14001B5AC(void *buf, uint32_t key, int64_t len); /* @0x14001b5ac */
 extern uint8_t *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
                               int64_t len, void **out);        /* @0x140018978 */
@@ -232,7 +232,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
 
             hmod = LoadLibraryExW(resName, 0, 2);
             if (hmod != 0) {
-                uVar42 = FUN_14001B510();
+                uVar42 = PECMD_GenRandomSeed16();
                 PECMD_AllocWStringBuffer((WCHAR **)&local_1e8, 0);
                 {
                     WCHAR *rname = NULL;
@@ -289,7 +289,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             if (local_210 != NULL) {
                 FUN_1400E7D58((int64_t *)&local_210, 1);
                 {
-                    uint16_t seed = FUN_14001B510();
+                    uint16_t seed = PECMD_GenRandomSeed16();
                     FUN_14001B5AC(local_210, 0, 0);
                     PECMD_InvokeSubRoutine(&local_210, script, 0);
                     {

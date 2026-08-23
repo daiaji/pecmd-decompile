@@ -5,8 +5,8 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   处理热键命令行        PECMD_HotkeyControl      @0x140023640
- *   匹配命令字(带尾界)    FUN_140023C48  @0x140023c48
- *   匹配命令字            FUN_1400240C0    @0x1400240c0
+ *   匹配命令字(带尾界)    PECMD_FindSubBlockNthScan  @0x140023c48
+ *   匹配命令字            PECMD_FindSubBlockNth    @0x1400240c0
  *   取下一个命令参数      PECMD_GetNextCommandArg     @0x140024350
  *   配置页面文件          PECMD_CreatePageFile    @0x14002a910
  *   扫描 INF 寻找驱动     FUN_14002B2EC    @0x14002b2ec
@@ -397,11 +397,11 @@ done:
     return result;
 }
 
-/* ========== FUN_140023C48 @0x140023c48 ==========
+/* ========== PECMD_FindSubBlockNthScan @0x140023c48 ==========
  * 在命令文本中匹配一个命令字，支持嵌套/回溯；返回命中的命令字指针。
  * TODO(verify): 结构偏移 0x48/0x88..0x94 为脚本命令分隔符配置。
  */
-uint16_t *FUN_140023C48(int64_t ctx, uint16_t *key, uint16_t *text,
+uint16_t *PECMD_FindSubBlockNthScan(int64_t ctx, uint16_t *key, uint16_t *text,
                                     int *outIdx, uint16_t *end)
 {
     uint16_t uVar1;
@@ -588,10 +588,10 @@ else_branch:
     return puVar6;
 }
 
-/* ========== FUN_1400240C0 @0x1400240c0 ==========
+/* ========== PECMD_FindSubBlockNth @0x1400240c0 ==========
  * 匹配命令字的简化版（无 end 参数）。
  */
-uint16_t *FUN_1400240C0(int64_t ctx, uint16_t *key, uint16_t *text,
+uint16_t *PECMD_FindSubBlockNth(int64_t ctx, uint16_t *key, uint16_t *text,
                                   int *outIdx)
 {
     uint16_t uVar1;
@@ -722,9 +722,9 @@ uint16_t *PECMD_GetNextCommandArg(int64_t ctx, uint16_t *key, uint16_t *text,
     }
 
     if (end == NULL) {
-        puVar2 = FUN_1400240C0(ctx, key, text, (int *)flags);
+        puVar2 = PECMD_FindSubBlockNth(ctx, key, text, (int *)flags);
     } else {
-        puVar2 = FUN_140023C48(ctx, key, text, (int *)flags, end);
+        puVar2 = PECMD_FindSubBlockNthScan(ctx, key, text, (int *)flags, end);
     }
     if (puVar2 != NULL) {
         uVar1 = *(uint16_t *)((uint8_t *)ctx + 0x92);

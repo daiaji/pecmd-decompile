@@ -7,17 +7,17 @@
  *   创建文件映射视图       PECMD_MapSharedSection @0x1400e3e38
  *   构建电话簿列表         FUN_1400E7840   @0x1400e7840
  *   更新子窗口顺序         FUN_1400EC880   @0x1400ec880
- *   编辑控件按键消息       FUN_1400EEF20    @0x1400eef20
+ *   编辑控件按键消息       PECMD_ButtonKeyMouseNotify    @0x1400eef20
  *   应用控件颜色           PECMD_ApplyTextPropToCtl    @0x1400efd80
  *   填充客户区颜色         PECMD_FillCtlBackground  @0x1400f0ca0
- *   查询控件值分发         FUN_1400F1234   @0x1400f1234
+ *   查询控件值分发         PECMD_DtpIpHostDispatch   @0x1400f1234
  *   控件按键消息处理       PECMD_CtlKeyEnterNotify  @0x1400f1f78
- *   控件消息处理 A         FUN_1400F2DD4    @0x1400f2dd4
+ *   控件消息处理 A         PECMD_ListKeyMouseFilter    @0x1400f2dd4
  *   命中测试控件           PECMD_ListSubItemHitTest       @0x1400f3308
- *   设置映射对条目         FUN_1400F4D1C      @0x1400f4d1c
- *   设置数组项条目         FUN_1400F60A4    @0x1400f60a4
+ *   设置映射对条目         PECMD_ListSetCellInfo      @0x1400f4d1c
+ *   设置数组项条目         PECMD_ListSetItemInfo    @0x1400f60a4
  *   按值设置项             PECMD_SetListItemCellData     @0x1400f8fcc
- *   控件消息处理 B         FUN_1400FEF3C    @0x1400fef3c
+ *   控件消息处理 B         PECMD_TreeKeyMouseFilter    @0x1400fef3c
  *   格式化控件范围串       PECMD_BuildTreeIndexPathStr  @0x1400ff2bc
  *
  * 约定:
@@ -37,8 +37,8 @@ extern void FUN_14007D0AC(int64_t **ctx, LPCWSTR key, LPCWSTR value); /* @0x1400
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);          /* @0x140067d20 */
 extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize); /* @0x140063b00 */
-extern int64_t *FUN_1400F4CA0(int64_t obj, int64_t key1, int64_t key2);  /* @0x1400f4ca0 */
-extern int64_t *FUN_1400F4C28(int64_t obj, int64_t value);             /* @0x1400f4c28 */
+extern int64_t *PECMD_ListFindCellRec(int64_t obj, int64_t key1, int64_t key2);  /* @0x1400f4ca0 */
+extern int64_t *PECMD_ListFindItemRec(int64_t obj, int64_t value);             /* @0x1400f4c28 */
 extern int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue, WCHAR **outString);                  /* @0x1400f4114 */
 extern void PECMD_TreeGetItemParam(int64_t obj, uint64_t param2, uint64_t *out); /* @0x1400fed38 */
 extern void PECMD_ShowFirstTabPage(int64_t obj, char mode);        /* @0x1400ec7c0 */
@@ -232,13 +232,13 @@ void FUN_1400EC880(int64_t obj, char mode)
     }
 }
 
-/* ========== FUN_1400EEF20 @0x1400eef20 ==========
+/* ========== PECMD_ButtonKeyMouseNotify @0x1400eef20 ==========
  * 编辑/输入控件的按键消息处理:
  *   - WM_KEYDOWN Tab/Enter 或 WM_LBUTTONDOWN 向上层发 WM_0x45C 导航
  *   - 无 IM 模式下 Enter 后失效重绘
  *   - 最终经 0x233 查映射表, 命中返回映射值
  */
-uint32_t FUN_1400EEF20(int64_t obj, int64_t pmsg)
+uint32_t PECMD_ButtonKeyMouseNotify(int64_t obj, int64_t pmsg)
 {
     uint16_t r;
     uint64_t local_res8;
@@ -378,11 +378,11 @@ void PECMD_FillCtlBackground(HWND hwnd, COLORREF color)
         ReleaseDC(hwnd, hdc);
 }
 
-/* ========== FUN_1400F1234 @0x1400f1234 ==========
+/* ========== PECMD_DtpIpHostDispatch @0x1400f1234 ==========
  * 控件查询分发: 0x233 优先查映射表, 未命中走通用查询并通知上层
  * (WM_0x450/0x451 往返消息)。
  */
-int64_t FUN_1400F1234(int64_t obj, uint32_t msg, int64_t wParam,
+int64_t PECMD_DtpIpHostDispatch(int64_t obj, uint32_t msg, int64_t wParam,
                                  uint64_t *lParam)
 {
     uint16_t r;
@@ -498,18 +498,18 @@ static uint64_t PECMD_HandleControlMsgImpl(int64_t obj, int64_t pmsg, int64_t ma
     return local_res8;
 }
 
-/* ========== FUN_1400F2DD4 @0x1400f2dd4 ==========
+/* ========== PECMD_ListKeyMouseFilter @0x1400f2dd4 ==========
  * 控件消息处理 A: 映射表位于对象 +1000 字节处。
  */
-uint64_t FUN_1400F2DD4(int64_t obj, int64_t pmsg)
+uint64_t PECMD_ListKeyMouseFilter(int64_t obj, int64_t pmsg)
 {
     return PECMD_HandleControlMsgImpl(obj, pmsg, 1000);
 }
 
-/* ========== FUN_1400FEF3C @0x1400fef3c ==========
+/* ========== PECMD_TreeKeyMouseFilter @0x1400fef3c ==========
  * 控件消息处理 B: 映射表位于对象 +0x108 字节处。
  */
-uint64_t FUN_1400FEF3C(int64_t obj, int64_t pmsg)
+uint64_t PECMD_TreeKeyMouseFilter(int64_t obj, int64_t pmsg)
 {
     return PECMD_HandleControlMsgImpl(obj, pmsg, 0x108);
 }
@@ -568,11 +568,11 @@ void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag)
     }
 }
 
-/* ========== FUN_1400F4D1C @0x1400f4d1c ==========
+/* ========== PECMD_ListSetCellInfo @0x1400f4d1c ==========
  * 写入"映射对"条目 (key1/key2): 不存在则建槽并初始化节点,
  * 设置文本与各参数字段; mode < -1 且无文本时删除条目。
  */
-void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
+void PECMD_ListSetCellInfo(int64_t obj, int64_t key1, int64_t key2, int mode,
                            uint32_t v5, uint32_t v6, uint32_t v7,
                            uint32_t v8, LPCWSTR text)
 {
@@ -580,7 +580,7 @@ void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
     int64_t count;
     uint64_t *node;
 
-    slot = FUN_1400F4CA0(obj, key1, key2);
+    slot = PECMD_ListFindCellRec(obj, key1, key2);
     if (mode < -1 && text == NULL) {
         if (slot != NULL) {
             node = (uint64_t *)*slot;
@@ -631,11 +631,11 @@ void FUN_1400F4D1C(int64_t obj, int64_t key1, int64_t key2, int mode,
     }
 }
 
-/* ========== FUN_1400F60A4 @0x1400f60a4 ==========
- * 写入"数组项"条目 (按 value 定位槽): 逻辑同 FUN_1400F4D1C,
+/* ========== PECMD_ListSetItemInfo @0x1400f60a4 ==========
+ * 写入"数组项"条目 (按 value 定位槽): 逻辑同 PECMD_ListSetCellInfo,
  * 但数组位于 +0x338/+0x340/+0x348。
  */
-void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
+void PECMD_ListSetItemInfo(int64_t obj, int64_t value, int mode,
                              uint32_t v4, uint32_t v5, uint32_t v6,
                              uint32_t v7, LPCWSTR text)
 {
@@ -643,7 +643,7 @@ void FUN_1400F60A4(int64_t obj, int64_t value, int mode,
     int64_t count;
     uint64_t *node;
 
-    slot = FUN_1400F4C28(obj, value);
+    slot = PECMD_ListFindItemRec(obj, value);
     if (mode < -1 && text == NULL) {
         if (slot != NULL) {
             node = (uint64_t *)*slot;

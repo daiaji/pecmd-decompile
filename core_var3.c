@@ -5,7 +5,7 @@
  *   变量查找包装     FUN_14001E69C     @0x14001e69c
  *   变量写入         FUN_14001E6BC     @0x14001e6bc
  *   环境变量写入     FUN_14005D534       @0x14005d534
- *   随机种子         FUN_14001B510     @0x14001b510
+ *   随机种子         PECMD_GenRandomSeed16     @0x14001b510
  *   随机数发生器     PECMD_RandSeedAdvance      @0x14005dff4
  *   随机数种子源     FUN_14005E04C   @0x14005e04c
  *   XOR 编码         FUN_14001B5AC       @0x14001b5ac
@@ -71,10 +71,10 @@ int64_t FUN_14005E04C(void)
     return l2;
 }
 
-/* ========== FUN_14001B510 @0x14001b510 ==========
+/* ========== PECMD_GenRandomSeed16 @0x14001b510 ==========
  * 生成 16 位随机种子：要求偶数、低 8 位非 0、bit15=1、汉明权重在 5..11。
  */
-uint16_t FUN_14001B510(void)
+uint16_t PECMD_GenRandomSeed16(void)
 {
     uint16_t v = 0;
     int hw = 0;
@@ -100,7 +100,7 @@ int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n)
 {
     uint16_t k;
     if ((int32_t)key < 0) {
-        k = FUN_14001B510();
+        k = PECMD_GenRandomSeed16();
         key = k;
     }
     if (n < 1) {

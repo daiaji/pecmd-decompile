@@ -21,7 +21,7 @@
  *   分配缓冲重试     FUN_140063A6C @0x140063a6c
  *   判定 visible 串  FUN_1400641D4 @0x1400641d4
  *   判定设备类别     FUN_14006643C @0x14006643c
- *   复制到分隔符     FUN_14006764C @0x14006764c
+ *   复制到分隔符     PECMD_CopyTokenTrimmed @0x14006764c
  *   转义 & 字符      PECMD_EscapeLabelAmpersands @0x140067f90
  *   字符串数组排序   PECMD_BubbleSortStringArray @0x140068c04
  *   获取下拉框文本   FUN_14006C4C8 @0x14006c4c8
@@ -530,10 +530,10 @@ uint32_t FUN_14006643C(const GUID *guid, LPCSTR className)
     return 0;
 }
 
-/* ========== FUN_14006764C @0x14006764c ==========
+/* ========== PECMD_CopyTokenTrimmed @0x14006764c ==========
  * 复制到指定分隔符/空白为止的 token。
  */
-void FUN_14006764C(int64_t *pp, int64_t *out,
+void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out,
                                int16_t sep1, int16_t sep2)
 {
     WCHAR WVar1;

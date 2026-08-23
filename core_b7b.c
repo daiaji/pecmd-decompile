@@ -7,7 +7,7 @@
  *   查找控件对象       PECMD_RegiResolveKeyPath @0x1400c36c8
  *   HOME 命令          PECMD_HomeSetStartPage @0x1400c42ac
  *   解析列表项         PECMD_ParseListItemSpec @0x1400c99b4
- *   添加控件           FUN_1400CADEC @0x1400cadec
+ *   添加控件           PECMD_AddDialogControl @0x1400cadec
  *   绘制控件           FUN_1400D95F0 @0x1400d95f0
  *
  * 约定:
@@ -265,10 +265,10 @@ int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
     }
 }
 
-/* ========== FUN_1400CADEC @0x1400cadec ==========
+/* ========== PECMD_AddDialogControl @0x1400cadec ==========
  * 在控件列表尾部添加一个通用控件对象。
  */
-uint64_t FUN_1400CADEC(WPARAM mgr, uint64_t a2, uint64_t a3,
+uint64_t PECMD_AddDialogControl(WPARAM mgr, uint64_t a2, uint64_t a3,
                           uint64_t *a4, int a5, int a6, int a7,
                           int a8, uint64_t *a9, uint16_t *a10,
                           LPCWSTR a11, int64_t a12, int16_t *a13,

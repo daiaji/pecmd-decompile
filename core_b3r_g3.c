@@ -56,7 +56,7 @@ extern void    PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);  
 extern int  PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2, HWND param_3); /* 列表接受检查 */
 extern int  PECMD_DispatchControlCommand(WPARAM a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e,
                           uint64_t f, int64_t *g, HWND h, int64_t i);
-extern void FUN_14006764c(int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* 按分隔符切分 */
+extern void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out, int16_t c1, int16_t c2); /* 按分隔符切分 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);        /* @0x140066978 SetVarD */
 extern uint64_t PECMD_IsVisibleKeyword(uint16_t *param_1);                            /* 前缀字符检查 */
 
@@ -289,7 +289,7 @@ uint64_t PECMD_DispatchListboxCommand(uint64_t *param_1, int64_t *param_2, int64
         uVar3 = *(uint16_t *)(uintptr_t)param_3;
         PECMD_AllocStrSlot((WCHAR **)&local_res8);
         local_68 = (int64_t)param_3 + 2;
-        FUN_14006764c(&local_68, (int64_t *)&local_res8, 0x3b, 0x3a);
+        PECMD_CopyTokenTrimmed(&local_68, (int64_t *)&local_res8, 0x3b, 0x3a);
         PECMD_VarSetUInt(param_2, (uint64_t)uVar3, (LPCWSTR)local_res8);
         PECMD_FreeStrBuf((WCHAR **)&local_res8);
         return 0;

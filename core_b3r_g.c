@@ -87,7 +87,7 @@ extern WCHAR    *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
 extern void      PECMD_AllocStrSlot(void *out);
 extern int       PECMD_ParseUIntValue(LPCWSTR *, int *);
 extern void      PECMD_ShowWindowMode(HWND, uint32_t *, int);
-extern void      FUN_14006764c(int64_t *, int64_t *, short, short);
+extern void      PECMD_CopyTokenTrimmed(int64_t *, int64_t *, short, short);
 extern void      PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);
 extern HBITMAP   PECMD_CaptureScreenRegion(RECT *, HDC *, LPCWSTR);
 extern DWORD     PECMD_SaveBitmap(HBITMAP, LPCWSTR, int, LPCWSTR);
@@ -574,7 +574,7 @@ uint32_t PECMD_QueryWindowState(int64_t *param_1, HWND param_2, LPCWSTR param_3,
     else {
         PECMD_AllocStrSlot(&local_res18);
         local_28[0] = pWVar1;
-        FUN_14006764c((int64_t *)local_28, (int64_t *)&local_res18, 0x3b, 0x3a);
+        PECMD_CopyTokenTrimmed((int64_t *)local_28, (int64_t *)&local_res18, 0x3b, 0x3a);
         uVar3 = IsWindowVisible(param_2);
         PECMD_VarSetUInt(param_1, (uint64_t)uVar3, local_res18);
         PECMD_FreeStrBuf((WCHAR **)&local_res18);

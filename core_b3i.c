@@ -21,7 +21,7 @@
  *   去除引号           PECMD_TrimOuterQuotes @0x140060d7c
  *   计算条目行数       FUN_140060EE0 @0x140060ee0
  *   释放对象数组       PECMD_TruncateObjectArray @0x140061704
- *   设置 ANSI 串       FUN_1400634D4 @0x1400634d4
+ *   设置 ANSI 串       PECMD_StrCopyA @0x1400634d4
  *   数组追加元素       FUN_1400639F0 @0x1400639f0
  *   初始化数组         PECMD_InitPtrTable @0x140063b64
  *   转发自定义消息     PECMD_ForwardCustomMessage @0x140066e20
@@ -55,7 +55,7 @@ extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
 extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2,
                               void *p3, void *p4, void *p5);
 extern int PECMD_ParseCharClassRanges(int *a1, int64_t *a2, uint32_t a3);
-extern void FUN_14006764C(int64_t *a1, int64_t *a2, int16_t a3,
+extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3,
                           int16_t a4);
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
@@ -217,7 +217,7 @@ void FUN_140053C5C(int64_t obj, int mode)
 int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out,
                                     int16_t sep1, int16_t sep2)
 {
-    FUN_14006764C(pp, out, sep1, sep2);
+    PECMD_CopyTokenTrimmed(pp, out, sep1, sep2);
     int16_t *psVar1 = (int16_t *)*pp;
     if ((*psVar1 != 0) && ((*psVar1 == sep1 || (*psVar1 == sep2)))) {
         *pp = (int64_t)(psVar1 + 1);
@@ -479,10 +479,10 @@ void PECMD_TruncateObjectArray(int64_t *arr, int *count, int start)
     LeaveCriticalSection(&g_csInit);
 }
 
-/* ========== FUN_1400634D4 @0x1400634d4 ==========
+/* ========== PECMD_StrCopyA @0x1400634d4 ==========
  * 将 ANSI 串存入带堆头的串容器。
  */
-int64_t *FUN_1400634D4(int64_t *ps, LPCSTR src, int64_t len)
+int64_t *PECMD_StrCopyA(int64_t *ps, LPCSTR src, int64_t len)
 {
     int iVar2;
     int64_t *plVar3;

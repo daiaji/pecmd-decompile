@@ -2,7 +2,7 @@
  * core_scriptdep.c — 脚本执行依赖工具族
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   随机种子         FUN_14001B510      @0x14001b510  (实现见 core_var3.c)
+ *   随机种子         PECMD_GenRandomSeed16      @0x14001b510  (实现见 core_var3.c)
  *   XOR 加/解密      FUN_14001B5AC        @0x14001b5ac  (实现见 core_var3.c)
  *   去引号截断       PECMD_UnquoteTokenInPlace       @0x14001d5f4
  *   脚本编码行插入   PECMD_PrependEnviHeader @0x140024f20
@@ -37,7 +37,7 @@ WCHAR *g_sysinitName = NULL;     /* DAT_14013d060 sysinit 名称 */
 int8_t g_flagA248 = 0;           /* g_charTableF 运行标志 TODO(verify) */
 
 /* ---- 已有实现引用 ---- */
-extern uint16_t FUN_14001B510(void);        /* @0x14001b510 core_var3.c */
+extern uint16_t PECMD_GenRandomSeed16(void);        /* @0x14001b510 core_var3.c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac core_var3.c */
 extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch);         /* @0x14001b4f8 core_var3.c */
 extern void *FUN_140017CDC(void *dst, void *src);                /* @0x140017cdc core_exec5.c */
@@ -67,11 +67,11 @@ WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);  /* @0x14007034c 本文件 */
 typedef LONG (*PECMD_SHGetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *);
 typedef LONG (*PECMD_SHSetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD);
 
-/* ========== FUN_14001B510 @0x14001b510 ==========
+/* ========== PECMD_GenRandomSeed16 @0x14001b510 ==========
  * 生成 16 位随机种子: 要求偶数、低 8 位非 0、bit15=1、汉明权重在 5..11。
  * 已实现于 core_var3.c (同地址), 本文件仅引用。
  */
-extern uint16_t FUN_14001B510(void);
+extern uint16_t PECMD_GenRandomSeed16(void);
 
 /* ========== FUN_14001B5AC @0x14001b5ac ==========
  * 用 key 对 buf 前 n 个字异或 (n<1 用 strlen+1); key<0 时先取随机种子。
@@ -315,7 +315,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
     bVar1 = (flags & 0x200) ? -1 : 0;
     bVar13 = bVar1 & 9;
     FUN_1400702B0(&l1a0, WSTR("\n"));
-    key = FUN_14001B510();
+    key = PECMD_GenRandomSeed16();
     FUN_140017CDC(sub, script);
     FUN_1400186BC(sub, (int64_t)(intptr_t)script);
     FUN_1400186BC(sub, (int64_t)(intptr_t)script);   /* 反编译二次调用(冗余) */

@@ -52,7 +52,7 @@ extern int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
                              LPCWSTR extra, uint32_t flags);
 extern int64_t PECMD_ExecuteCommand(int64_t *script, LPCWSTR cmd, uint64_t ctx,
                              LPCWSTR extra, uint32_t flags, int64_t a, int b);
-extern void FUN_14006764C(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2);
+extern void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2);
 extern void PECMD_ReleaseGdiImage(int64_t obj);
 extern void FUN_1400FD1A8(void *obj);
 extern void FUN_14005B7E8(char *s);
@@ -104,7 +104,7 @@ void PECMD_DispatchCommand(int64_t *script, LPCWSTR cmd, int64_t *out)
  */
 void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2)
 {
-    FUN_14006764C(pp, out, sep1, sep2);
+    PECMD_CopyTokenTrimmed(pp, out, sep1, sep2);
     int16_t *psVar1 = (int16_t *)*pp;
     if ((*psVar1 != 0) && ((*psVar1 == sep1 || (*psVar1 == sep2)))) {
         *pp = (int64_t)(psVar1 + 1);

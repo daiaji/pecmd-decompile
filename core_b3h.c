@@ -33,7 +33,7 @@
  *   解析路径记录2    PECMD_ParsePathRecord2 @0x14007efa4
  *   释放互斥体对象   PECMD_FreeMutexGuardObj @0x1400a4350
  *   释放对象 L       PECMD_DtorTimerItem @0x1400a9c40
- *   运行命令或函数   FUN_1400B0380 @0x1400b0380
+ *   运行命令或函数   PECMD_ApplyItemAttrToken @0x1400b0380
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -647,10 +647,10 @@ void PECMD_DtorTimerItem(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 2));
 }
 
-/* ========== FUN_1400B0380 @0x1400b0380 ==========
+/* ========== PECMD_ApplyItemAttrToken @0x1400b0380 ==========
  * 运行命令或函数。
  */
-int64_t FUN_1400B0380(int64_t *ctx, uint64_t unused, uint64_t *args)
+int64_t PECMD_ApplyItemAttrToken(int64_t *ctx, uint64_t unused, uint64_t *args)
 {
     (void)unused;
     uint16_t *puVar1 = (uint16_t *)args[2];

@@ -20,7 +20,7 @@
  *   创建日期时间控件        FUN_1400F1378 @0x1400f1378
  *   创建编辑控件            PECMD_CreateEditCtrl @0x1400f21c0
  *   创建 IP 地址控件        FUN_1400F2934 @0x1400f2934
- *   列表项矩形失效          FUN_1400F30C0 @0x1400f30c0
+ *   列表项矩形失效          PECMD_ListInvalidateCellRect @0x1400f30c0
  *   创建列表视图控件        PECMD_CreateListViewCtrl @0x1400f345c
  *   绘制对象文本            PECMD_DrawAlignedText @0x1400f527c
  *   按 ID 设置表项          PECMD_SetListItemParamPtr @0x1400f5b54
@@ -591,10 +591,10 @@ bool FUN_1400F2934(int64_t *obj, DWORD style, int *rect,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400F30C0 @0x1400f30c0 ==========
+/* ========== PECMD_ListInvalidateCellRect @0x1400f30c0 ==========
  * 使列表控件指定行/子项所在区域失效。TODO(verify): 消息 0x1038/0x100e 语义。
  */
-void FUN_1400F30C0(int64_t obj, int row, int top)
+void PECMD_ListInvalidateCellRect(int64_t obj, int row, int top)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     RECT rc;

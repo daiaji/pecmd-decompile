@@ -89,7 +89,7 @@ extern void PECMD_ParseNumSkipChar_de4c(int64_t *pp, double *out);  /* @0x14007d
 extern uint32_t PECMD_ParseIntOrColor(uint64_t *pp, uint64_t *out); /* @0x140066850 */
 extern void PECMD_ParseNumSkipChar_0224(int64_t *pp, int *out);    /* @0x140070224 */
 extern void FUN_1400F4040(int64_t obj, float value);   /* @0x1400f4040 */
-extern void FUN_1400F4064(int64_t obj, int height, int mode); /* @0x1400f4064 */
+extern void PECMD_SetSelIdxRefresh(int64_t obj, int height, int mode); /* @0x1400f4064 */
 extern int PECMD_DpiConvert(double value);                     /* @0x1400628b4 */
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name); /* @0x1400b1f34 */
 extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
@@ -126,7 +126,7 @@ extern void PECMD_AdjustEditScrollRect(int64_t obj);
 extern BOOL SystemParametersInfoW(UINT uiAction, UINT uiParam, void *pvParam, UINT fWinIni);
 extern void *PECMD_HeapRealloc(void *ptr, size_t size);      /* @0x140063118 */
 extern uint8_t DefWindowProcW_exref;
-extern uint64_t FUN_1400F3554(int64_t obj, LPARAM param2); /* @0x1400f3554 */
+extern uint64_t PECMD_ListInsertItemSetState(int64_t obj, LPARAM param2); /* @0x1400f3554 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);      /* @0x140063424 */
 extern int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
                                      int64_t peHeader, int64_t sectionTable); /* @0x1400e4078 */
@@ -139,7 +139,7 @@ extern uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_
                                               PROCESS_INFORMATION *pi, LPCWSTR param11); /* @0x1400e4324 */
 extern BOOL PECMD_HasVirtualAllocEx(void);     /* @0x1400e411c */
 extern bool PECMD_ZwUnmapViewOfSection(HANDLE process, void *baseAddress); /* @0x1400e4228 */
-extern BOOL FUN_1400E412C(int64_t obj);   /* @0x1400e412c */
+extern BOOL PECMD_PeCtxHasImageBase(int64_t obj);   /* @0x1400e412c */
 extern void PECMD_PeApplyRelocations(int64_t obj, void *src, void *dst); /* @0x1400e4160 */
 extern uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e248 */
 extern uint32_t (*g_pfnSetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e250 */
@@ -1383,7 +1383,7 @@ int PECMD_RunPeInjectStart(LPWSTR cmd, int64_t ctxBase, int64_t param3,
     } else if (PECMD_HasVirtualAllocEx() && PECMD_ZwUnmapViewOfSection(pi->hProcess, pWVar6)) {
         remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
             (void *)g_pfnVirtualAllocEx)(pi->hProcess, pWVar6, dataSize, 0x3000, 0x40);
-        if (remoteBuf == NULL && FUN_1400E412C(ctxBase)) {
+        if (remoteBuf == NULL && PECMD_PeCtxHasImageBase(ctxBase)) {
             remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
                 (void *)g_pfnVirtualAllocEx)(pi->hProcess, NULL, dataSize, 0x3000, 0x40);
             if (remoteBuf != NULL)
@@ -1442,13 +1442,13 @@ fail:
     return iVar4;
 }
 
-/* ========== FUN_1400F4E5C @0x1400f4e5c ==========
+/* ========== PECMD_ListInsertRowItems @0x1400f4e5c ==========
  * 向列表/表头对象插入一列：维护三个平行数组（列序/宽度/文本偏移）。
  * TODO(verify): 0x380/0x388/0x368/0x370 数组语义。
  */
-WPARAM FUN_1400F4E5C(int64_t obj, LPARAM param2)
+WPARAM PECMD_ListInsertRowItems(int64_t obj, LPARAM param2)
 {
-    uint64_t metric = FUN_1400F3554(obj, param2);
+    uint64_t metric = PECMD_ListInsertItemSetState(obj, param2);
     WPARAM wParam = (WPARAM)(int)metric;
     int32_t info[3] = {0x1000, 0xf000, 0};
     int iVar1 = (int)metric;
@@ -1533,7 +1533,7 @@ WPARAM FUN_1400F4E5C(int64_t obj, LPARAM param2)
         uVar2 = (uint64_t)*(uint16_t *)(obj + 0x3b0);
         *(int64_t *)(obj + 0x370) += (int64_t)uVar2;
         while ((uVar2 = uVar2 - 1) > 0) {
-            uint64_t uVar4 = FUN_1400F3554(obj, param2);
+            uint64_t uVar4 = PECMD_ListInsertItemSetState(obj, param2);
             wParam = (WPARAM)(int)uVar4;
             info[0] = 0x1000;
             info[1] = 0xf000;
@@ -1867,11 +1867,11 @@ void PECMD_RescaleDcPixelsWeighted(HDC hdcDst, int xDst, int yDst, int64_t dstW,
     }
 }
 
-/* ========== FUN_1400F1C8C @0x1400f1c8c ==========
+/* ========== PECMD_EditHostMsgDispatch @0x1400f1c8c ==========
  * 控件消息分发包装：处理 0x233 拖放/0x44b 等专用路径后走映射 + GDI 兜底。
  * TODO(verify): 原反编译 unaff_R15 返回分支按 0 处理。
  */
-uint64_t FUN_1400F1C8C(int64_t obj, uint64_t msg, int64_t wParam,
+uint64_t PECMD_EditHostMsgDispatch(int64_t obj, uint64_t msg, int64_t wParam,
                                        uint64_t *lParam)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
@@ -1951,11 +1951,11 @@ after:
     return result;
 }
 
-/* ========== FUN_1400FB654 @0x1400fb654 ==========
+/* ========== PECMD_RichEditHostDispatch @0x1400fb654 ==========
  * 控件消息分发包装（滚轮/拖放/0x459 专用路径 + 映射 + GDI 兜底）。
  * TODO(verify): 原反编译复杂指针返回类型按 uint64_t 处理。
  */
-uint64_t FUN_1400FB654(int64_t obj, uint64_t msg, int64_t wParam,
+uint64_t PECMD_RichEditHostDispatch(int64_t obj, uint64_t msg, int64_t wParam,
                                        uint64_t *lParam)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
@@ -2258,12 +2258,12 @@ uint64_t PECMD_DownscaleDibBlockAvg(HDC hdc, HBITMAP srcBmp, uint64_t param3, UI
     return 0;
 }
 
-/* ========== FUN_1400FC4A4 @0x1400fc4a4 ==========
+/* ========== PECMD_TrackbarHostDispatch @0x1400fc4a4 ==========
  * 控件消息分发包装：0x462 查询/设置对象状态，0x44a 执行脚本，
  * 其余走映射 + GDI 兜底。
  * TODO(verify): 0x462 参数数组语义。
  */
-uint64_t FUN_1400FC4A4(int64_t obj, uint32_t msg, int64_t wParam,
+uint64_t PECMD_TrackbarHostDispatch(int64_t obj, uint32_t msg, int64_t wParam,
                                        uint64_t *lParam)
 {
     uint8_t *b = (uint8_t *)(uintptr_t)obj;
@@ -3494,7 +3494,7 @@ uint64_t PECMD_ParseCtlLayoutFontSpec(int64_t obj, uint64_t param2, WCHAR *spec)
         height = PECMD_DpiConvert(sizeArg);
     }
     if (caret != 0 || sizeArg != 0.0 || margin1 != 0.0) {
-        FUN_1400F4064(obj, height, (int)caret);
+        PECMD_SetSelIdxRefresh(obj, height, (int)caret);
     }
 
     font = FUN_1400B1F34(lf, &sizeArg, NULL);

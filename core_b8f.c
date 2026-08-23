@@ -19,12 +19,12 @@
  *   矩形内绘制图标         PECMD_DrawIconInRect @0x1400eff58
  *   取/建对象画刷          PECMD_GetOrCreateCtlBrush @0x1400f0a3c
  *   刷新滚动条可见性       PECMD_RefreshListScrollbar @0x1400f2c44
- *   滚动列表到指定项       FUN_1400F31CC @0x1400f31cc
+ *   滚动列表到指定项       PECMD_ListRedrawGroupItems @0x1400f31cc
  *   滚动列表项到可见区     PECMD_ListScrollIntoView @0x1400f3264
  *   取图标尺寸             PECMD_GetIconSize @0x1400f35b8
  *   发送窗口几何通知       PECMD_ForcePosChanged @0x1400f3674
  *   按 ID 查找项(带串)    PECMD_ItemPropFindIdxNamed @0x1400f4114
- *   查找映射对槽           FUN_1400F4CA0 @0x1400f4ca0
+ *   查找映射对槽           PECMD_ListFindCellRec @0x1400f4ca0
  *   设置列表选择           PECMD_TableSetCurSel @0x1400f5104
  *   设置列表选择(单值)    PECMD_TableSetHoverIdx @0x1400f51d8
  *   发送控件 0x83 消息     PECMD_CtlSendNcCalcSize @0x1400f5338
@@ -95,7 +95,7 @@ extern void PECMD_FreeContainer(int64_t *container);
 extern int64_t PECMD_ContainerAppend(uint64_t *container);
 extern void PECMD_DtorCtlCoreObj(uint64_t *obj);
 extern HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc);   /* @0x1400fd35c */
-extern void FUN_1400F30C0(int64_t obj, int mode, int value);
+extern void PECMD_ListInvalidateCellRect(int64_t obj, int mode, int value);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
 extern uint8_t PTR_FUN_14012b240[];
@@ -464,10 +464,10 @@ void PECMD_RefreshListScrollbar(int64_t obj)
     }
 }
 
-/* ========== FUN_1400F31CC @0x1400f31cc ==========
+/* ========== PECMD_ListRedrawGroupItems @0x1400f31cc ==========
  * 使列表/树控件显示指定项；有映射表时展开为多个连续项。
  */
-void FUN_1400F31CC(int64_t obj, int index)
+void PECMD_ListRedrawGroupItems(int64_t obj, int index)
 {
     int64_t table = 0;
     int64_t i = 0;
@@ -585,10 +585,10 @@ int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue,
     return -1;
 }
 
-/* ========== FUN_1400F4CA0 @0x1400f4ca0 ==========
+/* ========== PECMD_ListFindCellRec @0x1400f4ca0 ==========
  * 在 +0x350 数组中查找 +8/+0x10 双键匹配项，返回槽指针。
  */
-int64_t *FUN_1400F4CA0(int64_t obj, int64_t key1, int64_t key2)
+int64_t *PECMD_ListFindCellRec(int64_t obj, int64_t key1, int64_t key2)
 {
     int count = *(int *)(obj + 0x360);
     int i;
@@ -621,14 +621,14 @@ void PECMD_TableSetCurSel(int64_t obj, int current, int scroll)
     *(int *)(obj + 0x3cc) = scroll;
 
     if (oldCurrent >= 0) {
-        FUN_1400F31CC(obj, oldCurrent);
+        PECMD_ListRedrawGroupItems(obj, oldCurrent);
     }
     if (oldSel >= 0 && oldScroll >= 0 && oldCurrent != oldSel &&
         (scroll != oldScroll || current != oldSel)) {
-        FUN_1400F30C0(obj, oldSel, oldScroll);
+        PECMD_ListInvalidateCellRect(obj, oldSel, oldScroll);
     }
     if (oldCurrent != current && current >= 0) {
-        FUN_1400F31CC(obj, current);
+        PECMD_ListRedrawGroupItems(obj, current);
     }
 }
 
@@ -646,14 +646,14 @@ void PECMD_TableSetHoverIdx(int64_t obj, int current)
     *(uint32_t *)(obj + 0x3d0) = 0xfffffffeu;
 
     if (oldCurrent >= 0 && oldCurrent != current) {
-        FUN_1400F31CC(obj, oldCurrent);
+        PECMD_ListRedrawGroupItems(obj, oldCurrent);
     }
     if (oldSel >= 0 && oldScroll >= 0 && oldSel != oldCurrent &&
         oldSel != current) {
-        FUN_1400F30C0(obj, oldSel, oldScroll);
+        PECMD_ListInvalidateCellRect(obj, oldSel, oldScroll);
     }
     if (current != oldCurrent && current >= 0) {
-        FUN_1400F31CC(obj, current);
+        PECMD_ListRedrawGroupItems(obj, current);
     }
 }
 
