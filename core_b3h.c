@@ -76,7 +76,7 @@ extern int64_t PECMD_EnumNtSymbolicLink(LPWSTR a1, int64_t *a2, int64_t *a3,
 extern void PECMD_FillSpaces(int64_t *a1, int a2);
 extern uint64_t FUN_14004FDD0(int64_t *a1, uint64_t a2, int a3);
 extern void AtlThrowImpl(long a1);
-extern void FUN_1400F1490(int64_t a1);
+extern void PECMD_ClearStringItemList(int64_t arr);
 extern int FUN_1400630D0(int a1);
 extern void FUN_14007E34C(uint32_t *a1, uint8_t a2);
 extern uint64_t PECMD_ParseExpression(int *a1, LPWSTR a2);
@@ -178,7 +178,7 @@ void FUN_140054B18(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -640,7 +640,7 @@ void FUN_1400A9C40(uint64_t *obj)
     *(uint32_t *)((uint8_t *)obj + 0x10 * 8) = 0;
     *(uint32_t *)((uint8_t *)obj + 0x84) = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));

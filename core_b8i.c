@@ -39,8 +39,8 @@ extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t le
 extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);       /* @0x1400e75cc */
 extern void PECMD_SetHotTrackWindow(HWND hwnd);              /* @0x1400f1448 */
 extern void *FUN_1400E57C0(void *obj);                   /* @0x1400e57c0 */
-extern int64_t *FUN_140063B64(int64_t *arr);                  /* @0x140063b64 */
-extern void FUN_1400FD538(HWND hwnd, int mode); /* @0x1400fd538 */
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);                  /* @0x140063b64 */
+extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
 extern void PECMD_InitControlFlags(int64_t obj, uint32_t *buf, int a3,
                                    LPCWSTR text, int a5, int a6,
                                    int a7, uint32_t flags); /* @0x140054380 */
@@ -470,8 +470,8 @@ uint64_t *FUN_1400F5C74(uint64_t *obj)
 
     FUN_1400E57C0(obj);
     obj[0] = (uint64_t)&PTR_FUN_14012c550;
-    FUN_140063B64((int64_t *)(obj + 0x1a));        /* 0xd0 */
-    FUN_140063B64((int64_t *)(obj + 0x1d));        /* 0xe8 */
+    PECMD_InitPtrTable((int64_t *)(obj + 0x1a));        /* 0xd0 */
+    PECMD_InitPtrTable((int64_t *)(obj + 0x1d));        /* 0xe8 */
     PECMD_AllocStrSlot((WCHAR **)(obj + 0x20));     /* 0x100 引用串容器 */
     *(uint32_t *)((uint8_t *)obj + 0x124) = 0;
     *(uint32_t *)((uint8_t *)obj + 0x118) = 0xab;
@@ -619,7 +619,7 @@ void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
         if ((int8_t)g_tooltipThreshold < 1)
             PECMD_SetHotTrackWindow((HWND)obj[4]);
         if ((uint64_t)obj[0x11] == (uint64_t)g_hStockWhiteBrush)
-            FUN_1400FD538((HWND)obj[4], 1);
+            PECMD_InvalidateParentRect((HWND)obj[4], 1);
     }
     hi = (uint32_t)(lParam >> 0x20);
     lo = (uint32_t)lParam;

@@ -1044,11 +1044,11 @@ done:
     return result;
 }
 
-/* ========== FUN_1400F00F4 @0x1400f00f4 ==========
+/* ========== PECMD_DrawItemContent @0x1400f00f4 ==========
  * 绘制对象内容：背景/百分比条/图标/文本，按对象状态选色。
  * TODO(verify): '@' 图像分支的隐藏栈参数语义。
  */
-void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
+void PECMD_DrawItemContent(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj)
 {
     RECT rc;
     LPCWSTR text = NULL;
@@ -2831,7 +2831,7 @@ void FUN_1400EF14C(int64_t obj, int64_t paintInfo)
         if (*(int64_t *)(b + 0x110) == 0)
             goto done;
     }
-    FUN_1400F00F4(*(int64_t *)(b + 0x110), memDC, obj, *(int64_t *)(b + 0x110));
+    PECMD_DrawItemContent(*(int64_t *)(b + 0x110), memDC, obj, *(int64_t *)(b + 0x110));
 done:
     if ((*(uint8_t *)(b + 0xe8) & 4) != 0 && (flags & 0x10) != 0)
         DrawFocusRect(memDC, &draw);

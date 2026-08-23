@@ -52,10 +52,7 @@ extern LRESULT FUN_1400E5890(int64_t a1);
 extern void FUN_140053C5C(int64_t a1, uint32_t a2);
 extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
-extern void FUN_140053DC8(uint64_t *a1, uint32_t a2, uint64_t a3,
-                          LPCWSTR a4, LPCWSTR a5, LPCWSTR a6,
-                          uint32_t a7, uint32_t a8, uint32_t a9,
-                          uint32_t a10);
+extern uint64_t * PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data, LPCWSTR name1, LPCWSTR name2, LPCWSTR name3, uint32_t flags1, uint32_t flags2, uint32_t flags3, uint32_t flags4);
 extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3,
                               uint64_t *a4, int64_t a5, uint32_t a6,
                               int64_t *a7);
@@ -160,7 +157,7 @@ uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
                                       uint32_t flags1, uint32_t flags2,
                                       uint64_t data9)
 {
-    FUN_140053DC8(obj, 0x14, data1, (LPCWSTR)*p4,
+    PECMD_ItemBaseInit(obj, 0x14, data1, (LPCWSTR)*p4,
                   g_szEmpty, g_szEmpty, 0, 0, 0, 0);
     obj[0xe] = data5;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401235a8;

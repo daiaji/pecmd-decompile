@@ -127,7 +127,7 @@ extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
                           int64_t esize, int32_t mode);
 extern void FUN_140063BE8(int64_t *arr, int32_t mode);
-extern void FUN_140063B64(int64_t *arr);
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void FUN_1400195F0(void *script, int a, int b, void *c);
 extern void FUN_14002CA30(void);
 extern void PECMD_ResetScriptChain(void *script, void *a2);
@@ -150,9 +150,7 @@ extern uintptr_t PECMD_TokenizeExpression(int64_t ctx, uint64_t a3, int64_t *pp,
 extern LARGE_INTEGER PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3,
                                    void *p4, void *p5);
 extern void PECMD_AdvanceTokenPointer(int64_t ctx, int64_t *a4, int mode, int64_t *p);
-extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
-                              uint64_t e, uint32_t f, uint64_t g, int64_t h,
-                              int i);
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_ReleaseRefCount(int64_t *p);
 extern BOOL FUN_140101E70(LPCWSTR s);
 extern uint32_t PECMD_RunProcessCommand(int64_t a1, LPCWSTR a2, uint64_t a3,
@@ -763,7 +761,7 @@ uint64_t FUN_14002CA80(void)
     DVar3 = GetCurrentThreadId();
     if ((g_threadTableInitFlag & 1) == 0) {
         g_threadTableInitFlag = g_threadTableInitFlag | 1;
-        FUN_140063B64((int64_t *)g_d278);
+        PECMD_InitPtrTable((int64_t *)g_d278);
         atexit((void (*)(void))(uintptr_t)0x14011ab84);
     }
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -1122,19 +1120,19 @@ init_done:
     *(int *)((char *)puVar1 + 0xc) = 1 << ((uint8_t)uVar3 & 0x1f);
     if (uVar3 < 0x1a) {
         uVar4 = (uint64_t)(uint32_t)(repeat * 5);
-        FUN_140027EAC((uint64_t)(uintptr_t)g_Script, (int64_t *)local_res20, 0x219,
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, (void **)local_res20, 0x219,
                       (uint64_t)*(uint16_t *)(g_b21728 + lVar2 * 6),
                       (uint64_t)(uintptr_t)puVar1, 3, uVar4, 1, 0);
         if (mode != 0) {
             *(uint16_t *)(puVar1 + 2) = 1;
         }
         if (*(uint16_t *)(g_b21728 + lVar2 * 6 + 4) != 0) {
-            FUN_140027EAC((uint64_t)(uintptr_t)g_Script, (int64_t *)local_res20, 0x219,
+            PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, (void **)local_res20, 0x219,
                           (uint64_t)*(uint16_t *)(g_b21728 + lVar2 * 6 + 4),
                           (uint64_t)(uintptr_t)puVar1, 3, uVar4, 1, 0);
         }
         if (*(uint16_t *)(g_b21728 + lVar2 * 6 + 4) != 0) {
-            FUN_140027EAC((uint64_t)(uintptr_t)g_Script, (int64_t *)0, 0x219,
+            PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, (void **)0, 0x219,
                           (uint64_t)*(uint16_t *)(g_b21728 + lVar2 * 6 + 4),
                           0, 3, uVar4, 1, 0);
         }

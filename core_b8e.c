@@ -12,9 +12,9 @@
  *   发送对象查找消息 0x432   FUN_1400EC6A8 @0x1400ec6a8
  *   销毁对象(带释放) F      FUN_1400ECEB4 @0x1400eceb4
  *   初始化窗口对象 F        FUN_1400ECF18 @0x1400ecf18
- *   清空对象数组            FUN_1400F1490 @0x1400f1490
+ *   清空对象数组            PECMD_ClearStringItemList @0x1400f1490
  *   发送控件按下通知        FUN_1400F230C @0x1400f230c
- *   更新数组项值            FUN_1400F2B84 @0x1400f2b84
+ *   更新数组项值            PECMD_ItemPropUpsertEntry @0x1400f2b84
  *   查询组合框度量          FUN_1400F3554 @0x1400f3554
  *   设置控件高度并失效      FUN_1400F4064 @0x1400f4064
  *   转发取文本长度(带链接)  FUN_1400F4194 @0x1400f4194
@@ -218,10 +218,10 @@ uint64_t *FUN_1400ECF18(uint64_t *obj, uint64_t param2)
     return obj;
 }
 
-/* ========== FUN_1400F1490 @0x1400f1490 ==========
+/* ========== PECMD_ClearStringItemList @0x1400f1490 ==========
  * 清空数组：逐个释放元素内的子对象，再释放数组缓冲。
  */
-void FUN_1400F1490(int64_t arr)
+void PECMD_ClearStringItemList(int64_t arr)
 {
     uint8_t *base = (uint8_t *)arr;
     int64_t data = *(int64_t *)(base + 8);
@@ -254,11 +254,11 @@ void FUN_1400F230C(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
     }
 }
 
-/* ========== FUN_1400F2B84 @0x1400f2b84 ==========
+/* ========== PECMD_ItemPropUpsertEntry @0x1400f2b84 ==========
  * 更新数组中已存在项：value<0 时释放并清空；否则更新 key/value/扩展字段。
  * TODO(verify): 返回值保留 Ghidra 的指针低字节清零形式，调用方仅关心 AL。
  */
-uint64_t FUN_1400F2B84(int64_t *array, int64_t index, int32_t value,
+uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value,
                                uint32_t field1, int32_t field2)
 {
     void **slot;

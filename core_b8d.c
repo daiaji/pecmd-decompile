@@ -15,7 +15,7 @@
  *   释放串指针数组      FUN_1400ECDD8 @0x1400ecdd8
  *   初始化 DC 对象      FUN_1400EEE30 @0x1400eee30
  *   刷新可见窗口        PECMD_RefreshControlVisibility @0x1400ef654
- *   初始化图标对象      FUN_1400EFEC8 @0x1400efec8
+ *   初始化图标对象      PECMD_InitImageHolder @0x1400efec8
  *   销毁图标对象主体    FUN_1400EFF10 @0x1400eff10
  *   绘制对象            FUN_1400F05F8 @0x1400f05f8
  *   初始化控件对象 A    FUN_1400F11F8 @0x1400f11f8
@@ -25,7 +25,7 @@
  *   矩形折线绘制        FUN_1400F2BF0 @0x1400f2bf0
  *   按 ID 查找表项      FUN_1400F40C8 @0x1400f40c8
  *   释放 GDI 表项数组   FUN_1400F4208 @0x1400f4208
- *   释放普通表项数组    FUN_1400F425C @0x1400f425c
+ *   释放普通表项数组    PECMD_ClearPtrArrayItems @0x1400f425c
  *   跳到目标字符之后    FUN_1400F42C4 @0x1400f42c4
  *   父窗口命令通知(值)  FUN_1400FBA68 @0x1400fba68
  *   初始化控件对象 C    FUN_1400FBE58 @0x1400fbe58
@@ -56,8 +56,7 @@ extern void *FUN_1400E57C0(uint64_t *obj);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void PECMD_OnTabSelChange(int64_t obj);
 extern void *FUN_1400F0648(uint64_t *obj, uint64_t value);
-extern void FUN_1400F00F4(int64_t obj, HDC hdc, int64_t target,
-                          int64_t overrideObj);
+extern void PECMD_DrawItemContent(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj);
 extern uint16_t FUN_1400F172C(int64_t *map, uint32_t msg,
                               uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint32_t mode,
@@ -225,10 +224,10 @@ void PECMD_RefreshControlVisibility(int64_t obj)
     }
 }
 
-/* ========== FUN_1400EFEC8 @0x1400efec8 ==========
+/* ========== PECMD_InitImageHolder @0x1400efec8 ==========
  * 初始化图标对象并设置虚表 PTR_FUN_14012be90。
  */
-uint64_t *FUN_1400EFEC8(uint64_t *obj)
+uint64_t *PECMD_InitImageHolder(uint64_t *obj)
 {
     FUN_1400E57C0(obj);
     obj[0x1a] = 0;
@@ -260,14 +259,14 @@ void FUN_1400EFF10(uint64_t *obj)
 }
 
 /* ========== FUN_1400F05F8 @0x1400f05f8 ==========
- * BeginPaint 后调用绘图回调 FUN_1400F00F4，再 EndPaint。
+ * BeginPaint 后调用绘图回调 PECMD_DrawItemContent，再 EndPaint。
  */
 void FUN_1400F05F8(int64_t obj)
 {
     HWND hwnd = *(HWND *)(obj + OBJ_HWND);
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hwnd, &ps);
-    FUN_1400F00F4(obj, hdc, obj, 0);
+    PECMD_DrawItemContent(obj, hdc, obj, 0);
     EndPaint(hwnd, &ps);
 }
 
@@ -376,10 +375,10 @@ void FUN_1400F4208(uint64_t *arr)
     }
 }
 
-/* ========== FUN_1400F425C @0x1400f425c ==========
+/* ========== PECMD_ClearPtrArrayItems @0x1400f425c ==========
  * 释放数组中的普通表项（仅 free，无额外清理）。
  */
-void FUN_1400F425C(uint64_t *arr)
+void PECMD_ClearPtrArrayItems(uint64_t *arr)
 {
     int64_t count = (int64_t)arr[2];
     uint64_t *base = (uint64_t *)arr[0];

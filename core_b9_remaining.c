@@ -30,7 +30,7 @@ extern void PECMD_AllocStrSlot(WCHAR **ps);                             /* @0x14
 extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                 /* 虚表指针槽 */
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);  /* @0x1400e68e0 */
-extern void FUN_1400F0FA8(int64_t *obj, uint64_t wParam, uint64_t lParam); /* @0x1400f0fa8 */
+extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3); /* @0x1400f0fa8 */
 extern bool PECMD_DrawImageFileToDC(int64_t ctx, LPCWSTR name, int width, int height,
                           uint32_t flags1, uint32_t flags2);       /* @0x14006e588 */
 extern uint32_t PECMD_DrawIconScaled(HDC hdc, HICON icon, uint64_t param3, int param4,
@@ -42,7 +42,7 @@ extern HWND FUN_1400E5788(HWND hwnd);                              /* @0x1400e57
 extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4); /* @0x1400e5b0c */
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out); /* @0x1400f172c */
-extern void FUN_1400FD538(HWND hwnd, int mode);                    /* @0x1400fd538 */
+extern void PECMD_InvalidateParentRect(HWND child, int margin);                    /* @0x1400fd538 */
 extern void PECMD_HandleControlMessage(void *param_1, int param_2, long long param_3, uint64_t param_4); /* @0x1400fdad8 */
 
 /* ---- GDI+ 延迟绑定函数指针槽 (core_b1_remaining.c 初始化) ---- */
@@ -373,7 +373,7 @@ void PECMD_PaintControl(int64_t *param_1, uint64_t param_2, uint64_t param_3)
     if (param_1[0x20] == 0) {
         if ((*((short *)param_1[0x1e]) == 0) || (*((char *)param_1 + 0x1f7) != 0)) {
             if (!bVar2) {
-                FUN_1400F0FA8(param_1, param_2, param_3);
+                PECMD_PaintLabelText(param_1, param_2, param_3);
                 return;
             }
         }
@@ -535,7 +535,7 @@ void PECMD_ControlHoverWndProc(int64_t *param_1, int param_2, long long param_3,
             BVar1 = PtInRect(&local_20, pt);
             if (BVar1 == 0) {
                 *((char *)param_1 + 0xfa) = 0;
-                FUN_1400FD538((HWND)param_1[4], 1);
+                PECMD_InvalidateParentRect((HWND)param_1[4], 1);
             }
         }
     }

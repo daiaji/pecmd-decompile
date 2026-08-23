@@ -19,7 +19,7 @@
  *   FUN_14006A7F4    @0x140067b78   (数字解析: 0x/0o/0b 前缀)
  *   FUN_1400E5900  @0x1400e5900   (窗口样式位操作)
  *   PECMD_AllocSmallObject       @0x140063344   (小对象分配 2 字节头)
- *   FUN_1400E648C     @0x1400e648c   (按 lang 创建字体)
+ *   PECMD_GetUiFontById     @0x1400e648c   (按 lang 创建字体)
  *   FUN_1400B89DC  @0x1400b89dc   (从字体对象克隆新字体)
  *   FUN_1400B1F34  @0x1400b1f34   (字体规格创建字体)
  * ==================================================================== */
@@ -515,7 +515,7 @@ HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name)
 }
 
 /* ========== 按 lang 创建字体 @0x1400e648c ========== */
-void FUN_1400E648C(void **pfont, UINT id)
+void PECMD_GetUiFontById(void **pfont, UINT id)
 {
     LPWSTR tmp;
     LPCWSTR face;

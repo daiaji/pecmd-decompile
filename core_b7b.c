@@ -35,7 +35,7 @@ extern bool FUN_1400C11C0(int64_t *pp, int *out);
 extern int64_t FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
 extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern HKEY FUN_1400C13F8(HKEY script, HKEY args, char mode);
-extern uint64_t FUN_1400C11F4(int64_t *pp, uint64_t *out);
+extern uint64_t PECMD_EvalParenExprRounded(int64_t *pp, uint64_t *out);
 extern bool PECMD_ParseUIntValue(int64_t *pp, int *out);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
@@ -50,7 +50,7 @@ extern char FUN_1400D5B48(int64_t obj, HDC hdc);
 extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color);
 extern int64_t PECMD_ExecuteCommand(int64_t *ctx, LPCWSTR text, uint64_t a3,
                              LPCWSTR a4, uint32_t a5, int64_t a6, int a7);
-extern void FUN_1400F0FA8(int64_t *obj, uint64_t wParam, uint64_t lParam);
+extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 
 /* ---- 本批引用的全局数据 ---- */
 extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
@@ -231,7 +231,7 @@ int FUN_1400C99B4(int64_t item, int64_t *pp, int64_t *out, int *id,
             while (*(WCHAR *)*pp == L'/') {
                 *pp = (int64_t)((WCHAR *)*pp + 1);
                 uint64_t chunk = 0;
-                uint64_t r = FUN_1400C11F4(pp, &chunk);
+                uint64_t r = PECMD_EvalParenExprRounded(pp, &chunk);
                 if (0 < (int)r) {
                     *puVar4 = (*puVar4 << 0x10) | (uint32_t)(uint16_t)chunk;
                 }
@@ -331,7 +331,7 @@ void FUN_1400D95F0(int64_t *self, uint64_t wParam, uint64_t lParam)
             }
             EndPaint((HWND)self[4], &ps);
         }
-        FUN_1400F0FA8(self, wParam, lParam);
+        PECMD_PaintLabelText(self, wParam, lParam);
         return;
     }
 

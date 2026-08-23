@@ -6,7 +6,7 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   解析双精度(括号)      FUN_1400C1000 @0x1400c1000
  *   解析 UInt64(括号)     PECMD_EvalParenthesizedExpr @0x1400c10c0
- *   解析 Int64(括号)      FUN_1400C11F4 @0x1400c11f4
+ *   解析 Int64(括号)      PECMD_EvalParenExprRounded @0x1400c11f4
  *   字符串转字节数组       FUN_1400C12FC @0x1400c12fc
  *   释放 UpDown 控件      FUN_1400C3CA4 @0x1400c3ca4
  *   解析 UInt64 并跳格    FUN_1400C44F4 @0x1400c44f4
@@ -16,7 +16,7 @@
  *   添加 UpDown 控件      FUN_1400C45A4 @0x1400c45a4
  *   添加滚动条控件        FUN_1400C46CC @0x1400c46cc
  *   控件 Enable 命令      FUN_1400C47F4 @0x1400c47f4
- *   解析 Int64 并跳格(带返回值) FUN_1400CADA0 @0x1400cada0
+ *   解析 Int64 并跳格(带返回值) PECMD_ParseNumberToken @0x1400cada0
  *   解析资源规格          PECMD_ParseItemImageSpec @0x1400d0b2c
  *   重绘控件背景          FUN_1400D6F8C @0x1400d6f8c
  *
@@ -153,10 +153,10 @@ uint64_t PECMD_EvalParenthesizedExpr(int64_t *pp, uint64_t *out)
     return FUN_14006A7F4(pp, out);
 }
 
-/* ========== FUN_1400C11F4 @0x1400c11f4 ==========
+/* ========== PECMD_EvalParenExprRounded @0x1400c11f4 ==========
  * 解析 Int64；括号表达式求值后做四舍五入。
  */
-uint64_t FUN_1400C11F4(int64_t *pp, uint64_t *out)
+uint64_t PECMD_EvalParenExprRounded(int64_t *pp, uint64_t *out)
 {
     FUN_14005B154((WCHAR **)pp);
     WCHAR *p = (WCHAR *)*pp;
@@ -274,7 +274,7 @@ void FUN_1400C44F4(int64_t *a, uint64_t *b)
  */
 void FUN_1400C4518(int64_t *a, uint64_t *b)
 {
-    FUN_1400C11F4(a, b);
+    PECMD_EvalParenExprRounded(a, b);
     if (*(WCHAR *)*a != L'\0') {
         *a = (int64_t)((WCHAR *)*a + 1);
     }
@@ -405,13 +405,13 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
     return 0;
 }
 
-/* ========== FUN_1400CADA0 @0x1400cada0 ==========
+/* ========== PECMD_ParseNumberToken @0x1400cada0 ==========
  * 解析 Int64，成功后写回 int，再前进一步。
  */
-void FUN_1400CADA0(int64_t *pp, int *out)
+void PECMD_ParseNumberToken(int64_t *pp, int *out)
 {
     uint64_t local = (uint64_t)*out;
-    uint64_t r = FUN_1400C11F4(pp, &local);
+    uint64_t r = PECMD_EvalParenExprRounded(pp, &local);
     if ((int)r != 0) {
         *out = (int)local;
     }

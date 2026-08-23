@@ -32,8 +32,7 @@ extern uint8_t PTR_FUN_14012cb90[];
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL FUN_1400E63C8(HWND hWnd, LONG_PTR lParam);
 extern int64_t *PECMD_AllocMagicString(WCHAR *s);
-extern void FUN_1400F0FA8(uint64_t *obj, uint64_t wParam,
-                          uint64_t lParam);
+extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400FD1A8(uint64_t *obj);
 extern void FUN_1400FECFC(uint64_t *obj);
@@ -85,7 +84,7 @@ void FUN_1400EF620(uint64_t *obj, uint64_t wParam, uint64_t lParam)
     uint8_t flags = *(uint8_t *)((uint8_t *)obj + OBJ_FLAGS);
 
     if (((flags & 1) == 0) && ((flags & 6) == 0)) {
-        FUN_1400F0FA8(obj, wParam, lParam);
+        PECMD_PaintLabelText(obj, wParam, lParam);
     } else {
         (**(void (**)(uint64_t, uint32_t, uint64_t, uint64_t))(*obj + 8))
             (obj[4], 0xf, wParam, lParam);

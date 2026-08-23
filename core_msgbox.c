@@ -40,7 +40,7 @@ extern void *g_pVtblA;           /* DAT_14013d670 */
 extern void FUN_1400633A8(void **ps, int64_t len);
 extern void PECMD_ZeroLenBuf(void *p);
 extern LPCWSTR FUN_1400169BC(int id, WCHAR **ppEnd);
-extern void FUN_1400E648C(void **pfont, UINT id);
+extern void PECMD_GetUiFontById(void **pfont, UINT id);
 extern void PECMD_GetDpiCached(HWND hwnd);
 extern void PECMD_MoveBtnTextToID9(void *mbox, int btnId);
 extern void FUN_14005D9A8(void *mbox, int mode);
@@ -85,7 +85,7 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
     PECMD_GetDpiCached(wnd);
     g_flag16a = 0;
     if (g_pVtblA == NULL) {          /* DAT_14013e2c0: 字体/样式对象懒初始化 */
-        FUN_1400E648C(&g_pVtblA, 0x3ec);
+        PECMD_GetUiFontById(&g_pVtblA, 0x3ec);
     }
     if (titleStr != NULL && titleStr != (LPCWSTR)-1) {
         PECMD_SetChildFont(wnd, (int64_t)titleStr);

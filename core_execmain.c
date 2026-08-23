@@ -1,7 +1,7 @@
 /* ====================================================================
  * core_execmain.c — 脚本执行主入口（ExecMain 族）
  *
- *   FUN_1400B638C @0x1400b638c   脚本执行主入口（7 参数）
+ *   PECMD_RunScriptText @0x1400b638c   脚本执行主入口（7 参数）
  *
  * 语义：执行一段脚本文本。
  *   pScript  : 父脚本对象（flags/变量/__MAIN__ 状态来源）
@@ -83,10 +83,10 @@ extern void FUN_14001a640(WCHAR *buf);                    /* @0x14001a640 恢复
 extern void PECMD_SyncWorkingDirectory(void);                          /* @0x14001e2cc */
 extern void FUN_14009BB28(void *script, int flag);        /* @0x14009bb28 脚本清理 */
 
-/* ========== FUN_1400B638C @0x1400b638c ==========
+/* ========== PECMD_RunScriptText @0x1400b638c ==========
  * 脚本执行主入口。详见文件头注释。
  */
-int64_t FUN_1400B638C(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
+int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
                        uint32_t flags, LPCWSTR pFile, void *pPersist)
 {
     uint8_t cInitFlag;          /* 初始 g_flag16a */

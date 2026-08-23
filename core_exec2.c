@@ -17,7 +17,7 @@
  *   FUN_140101E70   @0x140101e70   文件存在
  *   FUN_14007026C    @0x14007026c   多字节字符串分配
  *   PECMD_AllocAnsiString     @0x140070044   ANSI 字符串复制
- *   FUN_14006159C   @0x14006159c   脚本分隔符初始化（XOR 编码表）
+ *   PECMD_InitObfuscatedKeywords   @0x14006159c   脚本分隔符初始化（XOR 编码表）
  *   FUN_14002487C     @0x14002487c   行分割（_ENDFILE 处理）
  *   FUN_14005B21C    @0x14005b21c   退出进程
  *   PECMD_ReallocBuffer     @0x140063224   带 0xaa55 头分配
@@ -232,12 +232,12 @@ int32_t PECMD_CopyCommandLine(LPCWSTR src, WCHAR **out)
     return n;
 }
 
-/* ========== FUN_14006159C @0x14006159c ==========
+/* ========== PECMD_InitObfuscatedKeywords @0x14006159c ==========
  * 脚本分隔符初始化：按 seed 生成 XOR 分隔符表。
  *   +0x88: 主分隔符; +0x92/+0x94: 副; +0x8a/+0x90: 行分隔
  *   hi 非 0 时额外生成 {} 等配对符表。
  */
-void FUN_14006159C(void *script, uint64_t seed)
+void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed)
 {
     uint16_t s = (uint16_t)seed;
     *(uint16_t *)((char *)script + 0x88) = s;

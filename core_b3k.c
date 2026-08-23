@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   初始化对话框对象 FUN_140053DC8 @0x140053dc8
+ *   初始化对话框对象 PECMD_ItemBaseInit @0x140053dc8
  *   处理删除命令     FUN_14005B2C0 @0x14005b2c0
  *   安全复制句柄     FUN_14005B494 @0x14005b494
  *   抖动光标         FUN_14005E9AC @0x14005e9ac
@@ -38,10 +38,10 @@ extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
 extern uint8_t PTR_FUN_1401234f0[];
 extern uint8_t g_flagD321;
 
-/* ========== FUN_140053DC8 @0x140053dc8 ==========
+/* ========== PECMD_ItemBaseInit @0x140053dc8 ==========
  * 初始化对话框对象。
  */
-uint64_t *FUN_140053DC8(uint64_t *obj, uint32_t id, uint64_t data,
+uint64_t *PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data,
                                  LPCWSTR name1, LPCWSTR name2, LPCWSTR name3,
                                  uint32_t flags1, uint32_t flags2, uint32_t flags3,
                                  uint32_t flags4)

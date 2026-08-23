@@ -5046,7 +5046,7 @@ extern int64_t PECMD_IsSysStartuped();
 extern int64_t PECMD_RunSysInit();
 extern int64_t PECMD_WaitKeyPressHooked();
 extern int64_t FUN_140025f10();
-extern int64_t FUN_140027EAC();
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern int64_t PECMD_StartOnlyApp();
 extern int64_t PECMD_RunCommand();
 extern int64_t FUN_14003AAD0();
@@ -5057,7 +5057,7 @@ extern void PECMD_ZeroLenBuf(void *p);
 extern int64_t FUN_14005B1A8();
 extern void *PECMD_LastPathSeparator();
 extern void *FUN_140063B00();
-extern int64_t FUN_140063B64();
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern int64_t PECMD_MatchPrefixAdvance();
 extern int64_t PECMD_MatchAssignToken();
 extern int64_t PECMD_ParseAndSkipSpace_7b54();
@@ -5067,7 +5067,7 @@ extern int64_t PECMD_CopyStrToSlot();
 extern int64_t PECMD_ParseUIntValue();
 extern int64_t PECMD_FreeArray_ddf8();
 extern int64_t FUN_14009BB28();
-extern int64_t FUN_1400B638C();
+extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);
 extern LARGE_INTEGER FUN_1400D2E90();
 extern void *FUN_1400E3F80();
 extern int64_t FUN_1400E693C();
@@ -5254,7 +5254,7 @@ LAB_140038e01:
         pWVar7 = local_9b0;
         local_9b0 = pWVar5;
         plVar21 = PECMD_StrBldCopyAnsi((int64_t *)local_res20,"**mem",0xffffffffffffffff);
-        uVar19 = FUN_1400B638C(script,pWVar7,(LPCWSTR)(uint64_t)(local_res18)
+        uVar19 = PECMD_RunScriptText(script,pWVar7,(LPCWSTR)(uint64_t)(local_res18)
                                ,(LPCWSTR)*plVar21,(uint32_t)uVar11 << 0x10 | 0x40,(LPCWSTR)0x0,
                                (int64_t *)0x0);
         PECMD_FreeStrBuf((WCHAR **)&local_res20);
@@ -5938,7 +5938,7 @@ LAB_14003a704:
           cVar9 = '\x02';
         }
         if ('\0' < cVar9) {
-          FUN_140027EAC(script,(int64_t *)0x0,0x1a,0,0,0x22,5000,1,9000);
+          PECMD_StartWorkerThread(script,(void **)0x0,0x1a,0,0,0x22,5000,1,9000);
         }
         PECMD_FreeStrBuf(&local_9f0);
         PECMD_FreeStrBuf(&local_9d8);
@@ -7567,7 +7567,7 @@ LAB_14003fa47:
   GetEnvironmentVariableW(WSTR("SystemRoot"),local_4278,0x208);
   lstrlenW(local_4250);
   PECMD_SkipLeadingControls(&local_res10);
-  FUN_140063B64(&local_4240);
+  PECMD_InitPtrTable(&local_4240);
   local_41f8.QuadPart = 0;
   WVar35 = *local_res10;
 joined_r0x00014003fb14:

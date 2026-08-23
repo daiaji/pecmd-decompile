@@ -23,7 +23,7 @@
  *   滚动列表项到可见区     FUN_1400F3264 @0x1400f3264
  *   取图标尺寸             FUN_1400F35B8 @0x1400f35b8
  *   发送窗口几何通知       FUN_1400F3674 @0x1400f3674
- *   按 ID 查找项(带串)    FUN_1400F4114 @0x1400f4114
+ *   按 ID 查找项(带串)    PECMD_ItemPropFindIdxNamed @0x1400f4114
  *   查找映射对槽           FUN_1400F4CA0 @0x1400f4ca0
  *   设置列表选择           FUN_1400F5104 @0x1400f5104
  *   设置列表选择(单值)    FUN_1400F51D8 @0x1400f51d8
@@ -85,7 +85,7 @@ extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
 extern int64_t FUN_1400E4064(int64_t value, uint32_t align);
 extern void *FUN_1400E57C0(void *obj);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern void FUN_140063B64(int64_t *arr);
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                            uint32_t esize);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
@@ -334,7 +334,7 @@ uint64_t *FUN_1400ECE2C(uint64_t *obj, uint64_t param2)
     *obj = (uint64_t)(uintptr_t)PTR_FUN_14012bad0;
     PECMD_AllocStrSlot((WCHAR **)(obj + 0x1b));
     obj[0x1d] = param2;
-    FUN_140063B64((int64_t *)(obj + 0x21));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x21));
     *(uint32_t *)((char *)obj + 0xfc) = 0xffffffffu;
     *(uint32_t *)((char *)obj + 0x100) = 0xffffffffu;
     *(uint32_t *)((char *)obj + 0xf8) = 0xffffffffu;
@@ -557,10 +557,10 @@ void FUN_1400F3674(HWND hwnd)
     SendMessageW(hwnd, 0x47, 0, (LPARAM)buf);
 }
 
-/* ========== FUN_1400F4114 @0x1400f4114 ==========
+/* ========== PECMD_ItemPropFindIdxNamed @0x1400f4114 ==========
  * 在 +0x2f0 数组中按 ID 查找项，写出值，并可选复制关联字符串。
  */
-int64_t FUN_1400F4114(int64_t obj, int id, uint64_t *outValue,
+int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue,
                                      WCHAR **outString)
 {
     int count = *(int *)(obj + 0x300);

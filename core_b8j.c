@@ -39,8 +39,7 @@ extern COLORREF FUN_1400E68E0(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize); /* @0x140063b00 */
 extern int64_t *FUN_1400F4CA0(int64_t obj, int64_t key1, int64_t key2);  /* @0x1400f4ca0 */
 extern int64_t *FUN_1400F4C28(int64_t obj, int64_t value);             /* @0x1400f4c28 */
-extern int64_t FUN_1400F4114(int64_t obj, int id, uint64_t *outValue,
-                                            WCHAR **outString);                  /* @0x1400f4114 */
+extern int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue, WCHAR **outString);                  /* @0x1400f4114 */
 extern void FUN_1400FED38(int64_t obj, uint64_t hItem, uint64_t *out); /* @0x1400fed38 */
 extern void FUN_1400EC7C0(int64_t obj, char mode);        /* @0x1400ec7c0 */
 extern void FUN_1400F2B6C(int64_t obj);                                   /* @0x1400f2b6c */
@@ -705,7 +704,7 @@ void FUN_1400F8FCC(int64_t obj, int id, int64_t value, LPCWSTR text)
     int64_t *slot;
     void *m;
 
-    idx = FUN_1400F4114(obj, id, NULL, NULL);
+    idx = PECMD_ItemPropFindIdxNamed(obj, id, NULL, NULL);
     if (idx < 0) {
         if (value != 0) {
             int64_t *node = (int64_t *)operator_new(0x18);

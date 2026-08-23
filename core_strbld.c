@@ -2,7 +2,7 @@
  * core_strbld.c — 字符串构建器 / 数字格式化 / 变量格式化（B8b）
  *
  *   PECMD_StrBldInitWide    @0x14006d7e8  6 槽字符串构建器初始化
- *   FUN_14006D880    @0x14006d880  按需扩展（need + 0xe）
+ *   PECMD_TextBufReserve    @0x14006d880  按需扩展（need + 0xe）
  *   PECMD_StrBldGrowWide @0x14006d92c 批量扩展（+0x400）
  *   FUN_1400E6D38      @0x1400e6d38  %I64X 格式化
  *   PECMD_FormatU64Dec       @0x1400e6d74  %I64u 格式化
@@ -10,7 +10,7 @@
  *   FUN_1400E6DB4        @0x1400e6db4  长浮点格式化
  *   PECMD_FormatTypedMemValue       @0x14006d9d0  变量格式化
  *
- * 6 槽字符串构建器布局（调用方 FUN_14007AF60 传递变量地址）:
+ * 6 槽字符串构建器布局（调用方 PECMD_ExpandEnvVars 传递变量地址）:
  *   s[0]=out 变量地址(WCHAR**), s[1]=count 变量地址(int*),
  *   s[2]=cur 写指针变量, s[3]=end 尾指针变量, s[4]=base 基指针变量,
  *   s[5]=limit 警戒指针变量 (limit = end - 0x7e4)
@@ -53,11 +53,11 @@ void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur,
     *cur = *base;
 }
 
-/* ========== FUN_14006D880 @0x14006d880 ==========
+/* ========== PECMD_TextBufReserve @0x14006d880 ==========
  * 按需扩展: ((need*2 - end) + cur) >> 1 >= 0 时 count += need + 0xe,
  * 重新分配并平移 cur (偏移量 (cur-oldBase)>>1 个 WCHAR).
  */
-void FUN_14006D880(void *s[6], int need)
+void PECMD_TextBufReserve(void *s[6], int need)
 {
     WCHAR **pOut = (WCHAR **)s[0];
     int *count = (int *)s[1];
@@ -82,7 +82,7 @@ void FUN_14006D880(void *s[6], int need)
 }
 
 /* ========== PECMD_StrBldGrowWide @0x14006d92c ==========
- * 批量扩展: (cur - limit) >> 1 >= 0 时 count += 0x400, 其余同 FUN_14006D880.
+ * 批量扩展: (cur - limit) >> 1 >= 0 时 count += 0x400, 其余同 PECMD_TextBufReserve.
  */
 void PECMD_StrBldGrowWide(void *s[6])
 {

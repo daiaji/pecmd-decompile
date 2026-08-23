@@ -9,7 +9,7 @@
  *   FUN_14005B9A0 @0x14005b9a0 (RegisterWindowMessageW TaskbarCreated)
  *   PECMD_SetRdataTablePtr     @0x14005d694  (设置 .rdata 表指针)
  *   FUN_140064A88           @0x140064a88  (宽字符十进制解析)
- *   FUN_14001BF20  @0x14001bf20  (特殊目录 -> &变量)
+ *   PECMD_LookupShellFolderVar  @0x14001bf20  (特殊目录 -> &变量)
  *   PECMD_RegValueToVar  @0x14001bea8  (注册表值 -> 环境变量/&变量)
  *   FUN_14005C4E0       @0x14005c4e0  (注册表查询带权限重试)
  *   FUN_14005C394        @0x14005c394  (RegCreateKeyExW 封装)
@@ -46,7 +46,7 @@ extern void *g_pVtblB;           /* DAT_14013d5e0 */
 extern int32_t g_val668;         /* DAT_14013d668 = 0xffffff9c */
 extern int32_t g_val5d8;         /* DAT_14013d5d8 = 0xffffff9c */
 
-/* 特殊目录变量表 (.rdata @0x140121020 附近, TODO(verify): 见 FUN_140027EAC) */
+/* 特殊目录变量表 (.rdata @0x140121020 附近, TODO(verify): 见 PECMD_StartWorkerThread) */
 
 /* ========== 代码页检测 @0x14000500c ========== */
 void PECMD_DetectCodePage(void)
@@ -123,15 +123,15 @@ void PECMD_InitShellFolderEnvVars(void)
         SetEnvironmentVariableW(WSTR("MyName0"), p + 1);
         FUN_1400629B8(&g_Script, WSTR("&MyName0"), p + 1);
     }
-    FUN_14001BF20(WSTR("&Desktop"), NULL, NULL);
-    FUN_14001BF20(WSTR("&Favorites"), NULL, NULL);
-    FUN_14001BF20(WSTR("&Programs"), NULL, NULL);
-    FUN_14001BF20(WSTR("&SendTo"), NULL, NULL);
-    FUN_14001BF20(WSTR("&Personal"), NULL, NULL);
-    FUN_14001BF20(WSTR("&StartMenu"), WSTR("Start Menu"), NULL);
-    FUN_14001BF20(WSTR("&IECache"), WSTR("Cache"), NULL);
-    FUN_14001BF20(WSTR("&Startup"), NULL, NULL);
-    FUN_14001BF20(WSTR("&QuickLaunch"), WSTR("AppData"),
+    PECMD_LookupShellFolderVar(WSTR("&Desktop"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&Favorites"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&Programs"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&SendTo"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&Personal"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&StartMenu"), WSTR("Start Menu"), NULL);
+    PECMD_LookupShellFolderVar(WSTR("&IECache"), WSTR("Cache"), NULL);
+    PECMD_LookupShellFolderVar(WSTR("&Startup"), NULL, NULL);
+    PECMD_LookupShellFolderVar(WSTR("&QuickLaunch"), WSTR("AppData"),
                         WSTR("\\Microsoft\\Internet Explorer\\Quick Launch"));
     PECMD_FreeStrBuf(&pBuf);
 }
@@ -174,7 +174,7 @@ int64_t FUN_140064A88(const WCHAR *p)
 /* ========== 特殊目录变量 @0x14001bf20 ========== */
 /* var: &变量名; env: 环境变量名 (NULL=变量名去 &);
  * 环境变量 -> &变量; 无环境变量 -> 注册表 User Shell Folders -> 展开 */
-void FUN_14001BF20(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
+void PECMD_LookupShellFolderVar(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
 {
     WCHAR *pBuf;
     LPWSTR buf;

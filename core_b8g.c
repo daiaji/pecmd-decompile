@@ -4,7 +4,7 @@
  * 本批新实现函数全部使用人类可读 PECMD_ 名称，原始地址保留在 @0x 注释。
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
- *   枚举窗口查找            FUN_1400E3D60 @0x1400e3d60
+ *   枚举窗口查找            PECMD_FindTargetWindow @0x1400e3d60
  *   刷新桌面                FUN_1400E3F94 @0x1400e3f94
  *   树查找并格式化路径      PECMD_SearchMenuTreeById @0x1400e537c
  *   初始化基类对象          FUN_1400E57C0 @0x1400e57c0
@@ -14,9 +14,9 @@
  *   设置标签选择            FUN_1400EC428 @0x1400ec428
  *   创建标签控件            FUN_1400EC5E4 @0x1400ec5e4
  *   更新控件显示顺序        FUN_1400EC7C0 @0x1400ec7c0
- *   创建静态控件 B          FUN_1400EFFF8 @0x1400efff8
+ *   创建静态控件 B          PECMD_CreateStaticWindow @0x1400efff8
  *   初始化窗口基类对象      FUN_1400F0648 @0x1400f0648
- *   创建按钮控件            FUN_1400F072C @0x1400f072c
+ *   创建按钮控件            PECMD_CreateButtonWindow @0x1400f072c
  *   创建日期时间控件        FUN_1400F1378 @0x1400f1378
  *   创建编辑控件            FUN_1400F21C0 @0x1400f21c0
  *   创建 IP 地址控件        FUN_1400F2934 @0x1400f2934
@@ -34,7 +34,7 @@
  *   绘制控件文本            FUN_1400FC7A0 @0x1400fc7a0
  *   解析 buddy 前缀         FUN_1400FCE6C @0x1400fce6c
  *   创建静态控件核心        FUN_1400FD220 @0x1400fd220
- *   父窗口环绕失效          FUN_1400FD538 @0x1400fd538
+ *   父窗口环绕失效          PECMD_InvalidateParentRect @0x1400fd538
  *   应用控件属性            FUN_1400FE4A4 @0x1400fe4a4
  *   创建树视图控件          FUN_1400FF080 @0x1400ff080
  *   发送控件设置信息消息    FUN_1400FF154 @0x1400ff154
@@ -54,9 +54,7 @@
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
 extern int64_t FUN_1400F40C8(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
 extern void FUN_1400F2B6C(int64_t obj);                            /* @0x1400f2b6c */
-extern uint64_t FUN_1400F2B84(int64_t *array, int64_t index,
-                                      int32_t value, uint32_t field1,
-                                      int32_t field2);                     /* @0x1400f2b84 */
+extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1, int32_t field2);                     /* @0x1400f2b84 */
 extern void FUN_1400F5724(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
 extern void FUN_1400F578C(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f578c */
 extern void FUN_1400F586C(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f586c */
@@ -95,8 +93,7 @@ extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2,
                               uint64_t a3, uint64_t *a4,
                               int64_t a5, uint32_t a6,
                               int64_t *a7);
-extern void FUN_1400F0FA8(uint64_t *a1, uint64_t a2,
-                          uint64_t a3);
+extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 extern bool PECMD_ParseNumSkipWs(WCHAR **pp, int64_t *out);
 extern uint64_t FUN_1400C493C(int64_t *a1, int64_t *a2,
                               LPCWSTR a3, uint16_t *a4,
@@ -109,11 +106,11 @@ extern uint8_t PTR_FUN_14012b240[];
 extern uint8_t PTR_FUN_14012b430[];
 extern uint8_t PTR_FUN_14012bfb0[];
 
-/* ========== FUN_1400E3D60 @0x1400e3d60 ==========
+/* ========== PECMD_FindTargetWindow @0x1400e3d60 ==========
  * 构造窗口查找参数并枚举顶层窗口或指定父窗口的子窗口。
  * TODO(verify): 回调 PECMD_EnumWindowCallback 写入 local_50 的具体含义。
  */
-uint64_t FUN_1400E3D60(LPCWSTR text, char matchCase, char matchWord,
+uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord,
                                   HWND parent, uint32_t flags1,
                                   uint32_t flags2, uint64_t value1,
                                   uint64_t value2)
@@ -454,10 +451,10 @@ void FUN_1400EC7C0(int64_t obj, char mode)
     SetWindowPos(*(HWND *)(*(int64_t *)items[0] + OBJ_HWND), (HWND)0, 0, 0, 0, 0, 0x43);
 }
 
-/* ========== FUN_1400EFFF8 @0x1400efff8 ==========
+/* ========== PECMD_CreateStaticWindow @0x1400efff8 ==========
  * 创建 STATIC 子控件并挂到对象容器。
  */
-bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style,
+bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style,
                                 int *rect, HWND parent, uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
@@ -506,10 +503,10 @@ uint64_t *FUN_1400F0648(uint64_t *obj, uint64_t data)
     return obj;
 }
 
-/* ========== FUN_1400F072C @0x1400f072c ==========
+/* ========== PECMD_CreateButtonWindow @0x1400f072c ==========
  * 创建 BUTTON 子控件并挂到对象容器。
  */
-bool FUN_1400F072C(int64_t *obj, LPCWSTR text, DWORD style,
+bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style,
                                int *rect, HWND parent, uint32_t id,
                                DWORD exStyle)
 {
@@ -755,7 +752,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x260),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x260),
                                                idx, (int32_t)val2,
                                                (uint32_t)key, -3);
             changed = (char)r != 0;
@@ -770,7 +767,7 @@ void FUN_1400F5E2C(int64_t obj, int key, uint32_t val1,
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x2a8),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2a8),
                                                idx, (int32_t)val1,
                                                (uint32_t)key, -3);
             changed = (char)r != 0;
@@ -796,7 +793,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x290),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x290),
                                                idx, (int32_t)val2,
                                                (uint32_t)key1, key2);
             changed = (char)r != 0;
@@ -811,7 +808,7 @@ void FUN_1400F5F60(int64_t obj, int key1, int key2,
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x2d8),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2d8),
                                                idx, (int32_t)val1,
                                                (uint32_t)key1, key2);
             changed = (char)r != 0;
@@ -837,7 +834,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
         if (idx < 0) {
             changed = -1 < (int)val2;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x278),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x278),
                                                idx, (int32_t)val2,
                                                (uint32_t)key, -3);
             changed = (char)r != 0;
@@ -852,7 +849,7 @@ void FUN_1400F8F00(int64_t obj, int key, uint32_t val1,
         if (idx < 0) {
             changed = -1 < (int)val1;
         } else {
-            uint64_t r = FUN_1400F2B84((int64_t *)(self + 0x2c0),
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2c0),
                                                idx, (int32_t)val1,
                                                (uint32_t)key, -3);
             changed = (char)r != 0;
@@ -974,7 +971,7 @@ void FUN_1400FC7A0(int64_t *obj, uint64_t wParam, uint64_t lParam)
     HGDIOBJ old_font = (HGDIOBJ)0;
     RECT rc;
 
-    FUN_1400F0FA8((uint64_t *)obj, wParam, lParam);
+    PECMD_PaintLabelText((uint64_t *)obj, wParam, lParam);
     if (*(short *)obj[0x1b] == 0) {
         return;
     }
@@ -1053,10 +1050,10 @@ bool FUN_1400FD220(int64_t *obj, DWORD exStyle,
     return obj[4] != 0;
 }
 
-/* ========== FUN_1400FD538 @0x1400fd538 ==========
+/* ========== PECMD_InvalidateParentRect @0x1400fd538 ==========
  * 使父窗口内围绕子窗口（可带外边距）的矩形区域失效。
  */
-void FUN_1400FD538(HWND child, int margin)
+void PECMD_InvalidateParentRect(HWND child, int margin)
 {
     HWND parent;
     RECT rc;
@@ -1115,7 +1112,7 @@ uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx,
             *param = L'\0';
             PECMD_ParseUIntValue(&s, value);
         }
-        FUN_1400FD538((HWND)obj[4], 1);
+        PECMD_InvalidateParentRect((HWND)obj[4], 1);
     }
     return 0;
 }

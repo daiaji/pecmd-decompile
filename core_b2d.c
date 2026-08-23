@@ -5,7 +5,7 @@
  *
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   补丁 INF 复制/删除指令 PECMD_PatchInfDirectives @0x140021144
- *   设置 PELOGON Shell    FUN_140022A70 @0x140022a70
+ *   设置 PELOGON Shell    PECMD_LoadPelogonShellCfg @0x140022a70
  *   解析命令块/变量段    PECMD_ParseCommandBlock @0x140025474
  *   格式化 ImDisk 虚拟盘 PECMD_FormatImDiskDrive @0x1400279d8
  *   编辑框子类窗口过程   PECMD_EditSubclassWndProc @0x140028708
@@ -102,9 +102,7 @@ extern void FUN_140025CE0(int64_t *a1, char *a2, uint8_t *a3,
                           char *a4, char *a5, void *a6);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
-extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
-                              uint64_t e, uint32_t f, uint64_t g, int64_t h,
-                              int i);
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_StartOnlyApp(LPCWSTR a1);
 extern uint32_t PECMD_RunProcessCommand(int64_t a1, LPCWSTR a2, uint64_t a3,
                               uint64_t a4, uint64_t a5);
@@ -148,10 +146,9 @@ extern int64_t FUN_14007A224(void *script, WCHAR *text, WCHAR **out, int c,
 extern uint64_t PECMD_TokenizeExpression(int64_t a1, int64_t a2, WCHAR **a3,
                               uint32_t a4, WCHAR *a5);
 extern HFONT FUN_1400B1F34(int *a1, double *a2, LPCWSTR a3);
-extern int64_t FUN_1400B638C(void *script, LPCWSTR buf, LPCWSTR a3, LPCWSTR a4,
-                             uint32_t flags, LPCWSTR a6, int64_t *a7);
+extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);
 extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos);
-extern void FUN_1400E648C(uint64_t *a1, UINT a2);
+extern void PECMD_GetUiFontById(void **pfont, UINT id);
 extern DWORD FUN_1400E693C(HANDLE a1);
 extern void *FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern bool FUN_140101E70(LPCWSTR a1);
@@ -334,10 +331,10 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
     PECMD_FreeStrBuf(&local_80);
 }
 
-/* ========== FUN_140022A70 @0x140022a70 ==========
+/* ========== PECMD_LoadPelogonShellCfg @0x140022a70 ==========
  * 保存/读取 PELOGON Shell 与 FirstUsb、Hide、HOOKKBD、TOPICON、AUTOUSB 设置。
  */
-void FUN_140022A70(uint64_t shell, int mode)
+void PECMD_LoadPelogonShellCfg(uint64_t shell, int mode)
 {
     WCHAR *pWVar1;
     WCHAR *puVar2;
@@ -856,7 +853,7 @@ label_0288a6:
                 uVar2 = g_charTableF;
                 g_charTableF = 1;
                 local_38 = NULL;
-                FUN_1400B638C((void *)g_Script, pWVar4, g_szEmpty, NULL, 0, NULL, NULL);
+                PECMD_RunScriptText((void *)g_Script, pWVar4, g_szEmpty, NULL, 0, NULL, NULL);
                 g_charTableF = uVar2;
                 SetCurrentDirectoryW(local_28);
                 PECMD_FreeStrBuf(&local_28);
@@ -1374,7 +1371,7 @@ int64_t PECMD_MainMsgWndProc(LARGE_INTEGER script, HWND hwnd, uint32_t msg,
             return (int64_t)(int32_t)DVar4;
         }
         if (msg == 0x446) {
-            FUN_140022A70((uint64_t)script.QuadPart, 0);
+            PECMD_LoadPelogonShellCfg((uint64_t)script.QuadPart, 0);
         } else if (msg != 0x44a) {
             if (msg == 1099) {
                 if (g_hwndTray != 0) {
@@ -2172,11 +2169,11 @@ int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR remote)
         PECMD_AppendDebugLog("---next ");
     }
     if (bVar2) {
-        FUN_140027EAC((uint64_t)(uintptr_t)g_Script, NULL, 0x16, 1, 0, 2, 10, 1, 0);
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x16, 1, 0, 2, 10, 1, 0);
     }
     if (bVar10) {
-        FUN_140027EAC((uint64_t)(uintptr_t)g_Script, NULL, 0x10, 0, 0, 2, 10, 1, 0);
-        FUN_140027EAC((uint64_t)(uintptr_t)g_Script, NULL, 2, 0, 0, 2, 10, 1, 0);
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x10, 0, 0, 2, 10, 1, 0);
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 2, 0, 0, 2, 10, 1, 0);
     }
     if (!bVar9) {
         FUN_14001a56c((int)bVar3);
@@ -2211,7 +2208,7 @@ uint64_t FUN_14003E220(HWND hwnd, int msg, int16_t wParam)
         iVar2 = GetSystemMetrics(0x3d);
         iVar3 = GetSystemMetrics(0x3e);
         if (g_hFontE2B0 == 0) {
-            FUN_1400E648C((uint64_t *)&g_hFontE2B0, 0x3ea);
+            PECMD_GetUiFontById((void **)&g_hFontE2B0, 0x3ea);
         }
         puVar1[2] = (uint64_t)(uintptr_t)g_hFontE2B0;
         GetWindowRect(hwnd, &local_918.r);

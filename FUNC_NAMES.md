@@ -4,6 +4,30 @@
 
 | 地址 | 旧名 | 新名 |
 |---|---|---|
+| 0x140063b64 | FUN_140063b64 | PECMD_InitPtrTable |
+| 0x1400f1490 | FUN_1400f1490 | PECMD_ClearStringItemList |
+| 0x140027eac | FUN_140027eac | PECMD_StartWorkerThread |
+| 0x1400fd538 | FUN_1400fd538 | PECMD_InvalidateParentRect |
+| 0x14006d880 | FUN_14006d880 | PECMD_TextBufReserve |
+| 0x14006159c | FUN_14006159c | PECMD_InitObfuscatedKeywords |
+| 0x1400b638c | FUN_1400b638c | PECMD_RunScriptText |
+| 0x14001bf20 | FUN_14001bf20 | PECMD_LookupShellFolderVar |
+| 0x1400cada0 | FUN_1400cada0 | PECMD_ParseNumberToken |
+| 0x1400f0fa8 | FUN_1400f0fa8 | PECMD_PaintLabelText |
+| 0x1400e648c | FUN_1400e648c | PECMD_GetUiFontById |
+| 0x140053dc8 | FUN_140053dc8 | PECMD_ItemBaseInit |
+| 0x1400f425c | FUN_1400f425c | PECMD_ClearPtrArrayItems |
+| 0x1400c11f4 | FUN_1400c11f4 | PECMD_EvalParenExprRounded |
+| 0x1400f2b84 | FUN_1400f2b84 | PECMD_ItemPropUpsertEntry |
+| 0x1400251ac | FUN_1400251ac | PECMD_CheckFirstStartupFlag |
+| 0x1400f072c | FUN_1400f072c | PECMD_CreateButtonWindow |
+| 0x14007af60 | FUN_14007af60 | PECMD_ExpandEnvVars |
+| 0x140022a70 | FUN_140022a70 | PECMD_LoadPelogonShellCfg |
+| 0x1400e3d60 | FUN_1400e3d60 | PECMD_FindTargetWindow |
+| 0x1400efff8 | FUN_1400efff8 | PECMD_CreateStaticWindow |
+| 0x1400efec8 | FUN_1400efec8 | PECMD_InitImageHolder |
+| 0x1400f00f4 | FUN_1400f00f4 | PECMD_DrawItemContent |
+| 0x1400f4114 | FUN_1400f4114 | PECMD_ItemPropFindIdxNamed |
 | 0x14000e26c | FUN_14000e26c | PECMD_ExecCmdDispatch |
 | 0x140021a4c | FUN_140021a4c | PECMD_LinkCreateShortcut |
 | 0x14002a910 | FUN_14002a910 | PECMD_CreatePageFile |

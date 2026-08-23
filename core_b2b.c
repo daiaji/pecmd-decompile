@@ -63,9 +63,7 @@ extern void FUN_1400DFB14(void *script, WCHAR *cmd, uintptr_t flag);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
                           void *p5, int64_t *p6);
 extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
-extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
-                              uint64_t e, uint32_t f, uint64_t g, int64_t h,
-                              int i);
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_CrtShim(WCHAR *out, size_t size, void *ctx, void *name);
 extern uint64_t FUN_1400E9724(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
@@ -1125,7 +1123,7 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
             FindClose(local_res18);
         }
         local_res18 = 0;
-        FUN_140027EAC((uint64_t)(uintptr_t)g_Script, NULL, 0x1d, 0, 0, 0xffffffff,
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x1d, 0, 0, 0xffffffff,
                       5000, 1, 0);
     }
     if ((local_res18 != 0) && (local_res18 != INVALID_HANDLE_VALUE)) {

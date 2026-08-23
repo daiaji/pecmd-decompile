@@ -25,7 +25,7 @@ extern uint64_t PECMD_LoadImageStream(uint8_t *p, size_t n, uint64_t *p3); /* @0
 extern int64_t PECMD_VectorSlotPtr(int64_t a, int64_t *b, int64_t *c, uint32_t d); /* @0x140063b00 */
 extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr, uint32_t flag); /* @0x14001c2cc EnablePrivilege */
 extern uint64_t PECMD_TaskShowMessage(uint64_t *param_1);           /* @0x1400612cc thread proc */
-extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d, DWORD e, DWORD f, DWORD g); /* @0x1400e3d60 */
+extern uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord, HWND parent, uint32_t flags1, uint32_t flags2, uint64_t value1, uint64_t value2); /* @0x1400e3d60 */
 extern DWORD PECMD_EncodeImageToStream(int64_t param_1, LPCWSTR param_2, LPCWSTR param_3, int param_4); /* @0x14007d340 */
 
 /* Win32 API not present in headers */
@@ -499,7 +499,7 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3,
                 Sleep(1);
             } while (hWnd == (HWND)0);
             if (hWnd == (HWND)0) {
-                hWnd = (HWND)FUN_1400e3d60(lpWindowName_00, 0, 0, (HWND)0, 0, 0, 0, 0);
+                hWnd = (HWND)PECMD_FindTargetWindow(lpWindowName_00, 0, 0, (HWND)0, 0, 0, 0, 0);
             }
         }
 L14007c326:

@@ -4,7 +4,7 @@
  *   FUN_14007BF44   @0x14007bf44   分发器：按 script 标志选展开路径
  *   FUN_14007BDA8  @0x14007bda8   递归变量展开（循环直至稳定）
  *   FUN_14007A224  @0x14007a224   完整展开（变量/参数/环境变量）
- *   FUN_14007AF60    @0x14007af60   变量展开核心（带回调标志）
+ *   PECMD_ExpandEnvVars    @0x14007af60   变量展开核心（带回调标志）
  *
  * 语义：%name% 展开为变量/环境变量值；%数字、%*、%@、%# 命令行参数；
  *   %name:~s,l% 截取；%&name% 根表；%^name% 强制；%% 转义；%name?spec% 格式化。
@@ -21,7 +21,7 @@
 /* core_strbld.c 构建器/格式化 */
 extern void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur,
                             WCHAR **end, WCHAR **base, WCHAR **limit);   /* @0x14006d7e8 */
-extern void FUN_14006D880(void *s[6], int need);                       /* @0x14006d880 */
+extern void PECMD_TextBufReserve(void *s[6], int need);                       /* @0x14006d880 */
 extern void PECMD_StrBldGrowWide(void *s[6]);                             /* @0x14006d92c */
 extern WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec,
                            WCHAR *dst, WCHAR *width);                    /* @0x14006d9d0 */
@@ -37,8 +37,7 @@ extern int64_t FUN_14005E04C(void);                                   /* @0x1400
 /* 前向声明（本文件内互相调用） */
 int64_t FUN_14007BDA8(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt);
 int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt);
-int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt,
-                       char *flagout);
+extern int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt, char *flagout);
 
 /* 数字判断：c 是 '0'-'9'（Ghidra 写法 (ushort)(c+0xFFD0)<10） */
 static inline int XDigit(WCHAR c) { return (uint16_t)(c + 0xFFD0) < 10; }
@@ -73,14 +72,14 @@ int64_t FUN_14007BDA8(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
     b5 = opt & 0xfe;
     flag = '\0';
     chain = NULL;
-    r = FUN_14007AF60(script, line, out, mode, b5, &flag);
+    r = PECMD_ExpandEnvVars(script, line, out, mode, b5, &flag);
     cnt = 4;
     in = NULL;
     do {
         if (flag != '\0' || lstrcmpW(*out, line) == 0) break;
         in = *out;
         *out = chain;
-        r = FUN_14007AF60(script, in, out, mode, b5, &flag);
+        r = PECMD_ExpandEnvVars(script, in, out, mode, b5, &flag);
         cnt--;
         chain = in;
     } while (cnt >= 0);
@@ -88,14 +87,14 @@ int64_t FUN_14007BDA8(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
         WCHAR *s = *out;
         *out = chain;
         chain = s;
-        r = FUN_14007AF60(script, s, out, mode, b5 | opt, &flag);
+        r = PECMD_ExpandEnvVars(script, s, out, mode, b5 | opt, &flag);
         i = 1;
         do {
             in = s;
             if (flag != '\0' || lstrcmpW(*out, s) == 0) break;
             in = *out;
             *out = s;
-            r = FUN_14007AF60(script, in, out, mode, b5, &flag);
+            r = PECMD_ExpandEnvVars(script, in, out, mode, b5, &flag);
             i--;
             s = in;
         } while (i >= 0);
@@ -296,7 +295,7 @@ var_expand:  /* 变量/环境变量展开 */
                         goto var_lookup;
                     }
                     /* 未闭合 %：原样复制 %... 段 */
-                    FUN_14006D880(xb, (int)uVar5 + 2);
+                    PECMD_TextBufReserve(xb, (int)uVar5 + 2);
                     while (uVar5 > 0) {
                         WCHAR w = *inP;
                         inP++;
@@ -324,7 +323,7 @@ var_expand:  /* 变量/环境变量展开 */
         }
 
 copy_common:  /* 复制 lVar12 个字符（p6 指向源） */
-        FUN_14006D880(xb, (int)lVar12 + 2);
+        PECMD_TextBufReserve(xb, (int)lVar12 + 2);
         iVar3 = lastArg;
         if (iVar10 >= 0) {
             lVar11 = iVar10;
@@ -471,7 +470,7 @@ joined_r:  /* 截取边界钳制 */
         goto joined_r;
 
 fmt_copy:  /* 复制 uVar5 个字符（p6 指向源） */
-        FUN_14006D880(xb, (int)uVar5 + 2);
+        PECMD_TextBufReserve(xb, (int)uVar5 + 2);
         while (uVar5-- > 0) {
             WCHAR w = *p6;
             p6++;
@@ -555,7 +554,7 @@ env_expand:  /* 环境变量展开 */
                 }
                 p6 = lpBuffer + estart;
             }
-            FUN_14006D880(xb, (int)uVar5 + 2);
+            PECMD_TextBufReserve(xb, (int)uVar5 + 2);
             while (uVar5-- > 0) {
                 WCHAR w = *p6;
                 p6++;
@@ -567,7 +566,7 @@ env_expand:  /* 环境变量展开 */
     }
 }
 
-/* ========== FUN_14007AF60 @0x14007af60 ==========
+/* ========== PECMD_ExpandEnvVars @0x14007af60 ==========
  * 变量展开核心：与 ExecLine2B 结构相同，差异：
  *   - flagout 回调：环境变量值含 % 或结果含 % 时置位
  *   - 环境变量用 SetLastError(0)+GetLastError()==0xcb 判断未找到，
@@ -575,7 +574,7 @@ env_expand:  /* 环境变量展开 */
  *   - (char)opt<0 清引号标志（而非 opt&0x40）
  *   - 无 lastArg 状态（%@ 直接取下一参数）
  */
-int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt,
+int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt,
                        char *flagout)
 {
     bool neg, bVar2;
@@ -679,7 +678,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             if (sp[0xd] != 0) {
                 LPCWSTR arg = *(LPCWSTR *)(sp[0xd] + (int)sp[0xc] * 8);
                 iVar10 = (int64_t)lstrlenW(arg);
-                FUN_14006D880(xb, (int)iVar10 + 2);
+                PECMD_TextBufReserve(xb, (int)iVar10 + 2);
                 while (iVar10-- > 0) {
                     *cur = *arg;
                     arg++;
@@ -693,7 +692,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             if (sp[0xd] != 0) {
                 LPCWSTR arg = *(LPCWSTR *)(sp[0xd] + 8 + (int)sp[0xc] * 8);
                 iVar10 = (int64_t)lstrlenW(arg);
-                FUN_14006D880(xb, (int)iVar10 + 2);
+                PECMD_TextBufReserve(xb, (int)iVar10 + 2);
                 while (iVar10-- > 0) {
                     *cur = *arg;
                     arg++;
@@ -725,7 +724,7 @@ int64_t FUN_14007AF60(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
                     uVar14--;
                     arg++;
                 }
-                FUN_14006D880(xb, (int)uVar14 + 2);
+                PECMD_TextBufReserve(xb, (int)uVar14 + 2);
                 while (uVar14-- > 0) {
                     *cur = *arg;
                     arg++;
@@ -785,7 +784,7 @@ var_b38c:  /* 变量/环境变量展开 */
                 iVar10 = (int64_t)lstrlenW(a8);
                 uVar14 = (uint64_t)iVar10;
                 if (iVar10 < 1) uVar14 = 0;
-                FUN_14006D880(xb, (int)uVar14 + 2);
+                PECMD_TextBufReserve(xb, (int)uVar14 + 2);
                 {
                     WCHAR *src = a8;
                     while (uVar14-- > 0) {
@@ -869,7 +868,7 @@ var_b6ee:  /* %name% 变量查找 */
         }
 
 ba34:  /* 复制 uVar14 个字符（p6 指向源） */
-        FUN_14006D880(xb, (int)uVar14 + 2);
+        PECMD_TextBufReserve(xb, (int)uVar14 + 2);
         while (uVar14-- > 0) {
             WCHAR w = *p6;
             p6++;
@@ -1021,7 +1020,7 @@ env_b55d:  /* 环境变量展开 */
                 }
                 p6 = lpBuffer + estart;
             }
-            FUN_14006D880(xb, (int)iVar3 + 2);
+            PECMD_TextBufReserve(xb, (int)iVar3 + 2);
             while (iVar3-- > 0) {
                 WCHAR w = *p6;
                 p6++;
@@ -1036,7 +1035,7 @@ bab5:  /* 未找到：原样复制原始段 */
             WCHAR *src = inP - 1;
             WCHAR *dst = pctPos;
 copy_raw:
-            FUN_14006D880(xb, (int)iVar10 + 3);
+            PECMD_TextBufReserve(xb, (int)iVar10 + 3);
             if (*src == L'%') {
                 WCHAR t = src[1];
                 if (t == L'%' || t == L'*' || t == L'@' || t == L'#' || t == L'~' ||

@@ -11,7 +11,7 @@
  *   PECMD_EnumWindowsCallback  @0x14001fde4   (EnumWindows 回调: 每窗口建线程)
  *   PECMD_ThreadMainLoop   @0x14001ff24   (线程主函数: 等句柄数组)
  *   FUN_1400195F0     @0x1400195f0   (消息等待循环)
- *   FUN_140027EAC    @0x140027eac   (任务线程创建)
+ *   PECMD_StartWorkerThread    @0x140027eac   (任务线程创建)
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
@@ -334,7 +334,7 @@ done:
 /* ========== 任务线程创建 @0x140027eac ========== */
 /* 创建线程执行 PECMD_ThreadMainLoop; 任务结构记录参数/回调/句柄
  * a5 = 回调表, a6 超时, a7 计数, a8 等待 */
-uint64_t FUN_140027EAC(void *script, void **pref, uint32_t a3, uint64_t a4,
+uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4,
                          uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9)
 {
     void *task;

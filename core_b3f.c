@@ -50,7 +50,7 @@
 extern int64_t *PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
                               int64_t *extra);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t mode);
-extern void FUN_1400F1490(int64_t obj);
+extern void PECMD_ClearStringItemList(int64_t arr);
 extern void FUN_14005C828(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *s, char *key);
 extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);
@@ -139,7 +139,7 @@ char PECMD_LoadRichEdit(void)
 uint64_t *PECMD_MultiSlotDtor(uint64_t *obj, uint32_t flags)
 {
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));

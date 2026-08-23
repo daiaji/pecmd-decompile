@@ -104,7 +104,7 @@ extern UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *sel, LPCWSTR 
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                            uint32_t esize);
-extern void FUN_140063B64(int64_t *arr);
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
 extern void PECMD_ProcessScriptBlock(uint64_t script, uint64_t cmd, void *p3, void *p4,
                           void *p5);
@@ -120,9 +120,7 @@ extern BOOL PECMD_DosDeviceMount(LPCWSTR a, LPCWSTR b, WCHAR *c, uint32_t d,
 extern void PECMD_FormatImDiskDrive(uint32_t dev, LPCWSTR a, LPCWSTR b);
 extern void FUN_140035B40(uint32_t a, int b, int c);
 extern void PECMD_DeleteDriveMountPoint(uint16_t ch);
-extern uint64_t FUN_140027EAC(uint64_t a, int64_t *b, uint32_t c, uint64_t d,
-                              uint64_t e, uint32_t f, uint64_t g, int64_t h,
-                              int i);
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_EnsureMciLoaded(void);
 extern int64_t PECMD_PerformSystemShutdown(int mode, uint32_t flags, LPCWSTR name);
 extern void PECMD_RunShutdownScript(LPCWSTR name, uint32_t mode);
@@ -139,7 +137,7 @@ extern WCHAR *PECMD_SkipSwitches(WCHAR *s);
 extern WCHAR *PECMD_TruncateAtCommaSkipSpace(WCHAR *s);
 extern LPWSTR PECMD_GetFileName(LPWSTR s);
 extern int32_t PECMD_IsSingleInstance(void);
-extern void FUN_140022A70(LARGE_INTEGER script, int mode);
+extern void PECMD_LoadPelogonShellCfg(uint64_t shell, int mode);
 extern int64_t *FUN_14007034C(int64_t *ps, LPCWSTR src);
 extern uint16_t *PECMD_IsExplorerPath(int16_t *s);
 extern DWORD FUN_14002D708(LPCWSTR s, uint32_t a, int64_t *b, DWORD c,
@@ -1540,7 +1538,7 @@ void PECMD_DispConfirmPopupMenu(HWND hwnd)
     menu = (HMENU)GetSubMenu(menu, 0);
     subMenu = menu;
     currentMenu = menu;
-    FUN_140063B64(&modes);
+    PECMD_InitPtrTable(&modes);
     PECMD_AllocWStringBuffer((WCHAR **)&titleBuf, 0x200);
     title = titleBuf;
     selCount[0] = 0;
@@ -2277,7 +2275,7 @@ cleanup_dos:
             DefineDosDeviceW(2, &driveLetter, NULL);
             PECMD_DeleteDriveMountPoint(*drive);
             if ((opts & 0x11) == 0) {
-                FUN_140027EAC((uint64_t)(uintptr_t)g_Script, NULL, 0x219, 7, 0, 3,
+                PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x219, 7, 0, 3,
                               (uint64_t)(uint32_t)(count * 5), 1, 0);
             }
         } else {
@@ -2550,7 +2548,7 @@ void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
         PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x26c4, 0);
     }
     while ((g_pwszD250 == NULL) || (*g_pwszD250 == L'\0')) {
-        FUN_140022A70(script, 0);
+        PECMD_LoadPelogonShellCfg((uint64_t)script.QuadPart, 0);
         if (g_u8CCB1 != 0) {
             PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
                           WSTR("MAIN_DBG:%d %u MyShell[%s]\r\n"), 0x26c8,
@@ -2592,7 +2590,7 @@ void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
             }
 loop_retry:
             FUN_1400195F0(script.QuadPart, 500, 0, NULL);
-            FUN_140022A70(script, -1);
+            PECMD_LoadPelogonShellCfg((uint64_t)script.QuadPart, -1);
             FUN_14007034C((int64_t *)&shellCmd, g_pwszD250);
         }
         if (g_u8CCB1 != 0) {
@@ -2665,7 +2663,7 @@ loop_retry:
         while (1) {
             FUN_1400195F0(script.QuadPart, delay, 0, NULL);
 after_wait:
-            FUN_140022A70(script, 0);
+            PECMD_LoadPelogonShellCfg((uint64_t)script.QuadPart, 0);
             if ((g_pwszD250 == NULL) || (*g_pwszD250 == L'\0')) {
                 goto free_copy;
             }

@@ -6,7 +6,7 @@
  * 段1（前缀指令解析）在 core_srparse.c（PECMD_SrParsePrefix），
  * 本文件实现主展开路径（LAB_140031887 起）：
  *   *map: 前缀 / 引号 / 命令 token → 资源脚本执行 或 变量执行，
- *   最后 sysinit 收尾。深度依赖（脚本执行主入口 FUN_1400B638C、
+ *   最后 sysinit 收尾。深度依赖（脚本执行主入口 PECMD_RunScriptText、
  *   PECMD_InvokeSubRoutine / FUN_1400E7D58 ResDecode 等）extern 挂起。
  * ==================================================================== */
 #include <stdbool.h>
@@ -40,7 +40,7 @@ extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type,
                               void **out, uint32_t *flags_out); /* @0x14001ea18 */
 extern void FUN_140017CDC(void *dst, void *src);            /* @0x140017cdc */
 extern void FUN_1400186BC(void *s, void *parent);           /* @0x1400186bc */
-extern void FUN_14006159C(void *script, uint64_t seed);      /* @0x14006159c */
+extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed);      /* @0x14006159c */
 extern void FUN_14004EAA8(void *script, int flag);           /* @0x14004eaa8 */
 extern int32_t g_sysinitState;                                 /* DAT_14013d058 */
 extern WCHAR *g_sysinitName;                                   /* DAT_14013d060 */
@@ -55,13 +55,12 @@ extern WCHAR *PECMD_PrependCallSubLine(uint32_t key, void **buf, LPCWSTR name,
 extern WCHAR *FUN_14001D5F4(WCHAR *p);                                 /* @0x14001d5f4 */
 extern void FUN_1400679DC(WCHAR **pp, int64_t *out, WCHAR sep);       /* @0x1400679dc */
 extern bool PECMD_ParseUIntValue(WCHAR **pp, int64_t *out);               /* @0x140074838 */
-extern int64_t FUN_1400B638C(void *script, void *buf, void *a3, void *a4,
-                              uint64_t flags, void *a6, void *a7);     /* @0x1400b638c core_execmain.c */
+extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);     /* @0x1400b638c core_execmain.c */
 extern DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR a2, LPCWSTR a3, uint32_t flags,
                                  LPCWSTR a5, LPCWSTR a6);             /* @0x140031068 */
 extern void FUN_14006F884(LPCWSTR name, WCHAR **out);                    /* @0x14006f884 */
 extern void *FUN_14007034C(void **ps, LPCWSTR src);                  /* @0x14007034c */
-extern void FUN_1400251AC(void *script);                           /* @0x1400251ac */
+extern void PECMD_CheckFirstStartupFlag(void *script);                           /* @0x1400251ac */
 extern void PECMD_RunSysInit(void *script, LPCWSTR name);             /* @0x140025180 */
 extern void FUN_14009BB28(void *script, int flag);                  /* @0x14009bb28 */
 
@@ -250,10 +249,10 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_14001B5AC(local_1e8, (uint32_t)((uint16_t)uVar42 ^ (uint16_t)uVar42), len);
                     FUN_140017CDC(local_138, script);
                     FUN_1400186BC(local_138, script);
-                    FUN_14006159C(local_138, (uint64_t)uVar42);
+                    PECMD_InitObfuscatedKeywords(local_138, (uint64_t)uVar42);
                     if (PECMD_InvokeSubRoutine(&local_1e8, local_138, kf) == 0) {
                         /* TODO(verify): 反编译 707-721 的详细 flags 组合 */
-                        DVar13 = FUN_1400B638C(script, local_1e8, local_278, local_1f8,
+                        DVar13 = PECMD_RunScriptText(script, local_1e8, local_278, local_1f8,
                                                ((uint64_t)uVar42 << 16) | kf | 0x40,
                                                local_240, NULL);
                     }
@@ -298,7 +297,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                         FUN_14001B5AC(local_210, (uint32_t)seed, pos + 2);
                     }
                     FUN_1400702B0(&local_150, WSTR("**mem"));
-                    DVar13 = FUN_1400B638C(script, local_210, local_278, local_150,
+                    DVar13 = PECMD_RunScriptText(script, local_210, local_278, local_150,
                                            ((uint64_t)seed << 16) | 0x40, NULL, NULL);
                     PECMD_FreeStrBuf(&local_150);
                 }
@@ -309,7 +308,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
 
         /* ---- 收尾（反编译 853-871）---- */
         if (g_sysinitState == 3) {
-            FUN_1400251AC(script);
+            PECMD_CheckFirstStartupFlag(script);
         }
         if (b_sysinit) {
             g_sysinitState |= 1;

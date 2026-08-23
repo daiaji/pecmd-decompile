@@ -208,8 +208,7 @@ extern bool PECMD_InitTlsBuffer(uint64_t *param_1);        /* @0x140018534 */
 extern DWORD g_dwC96C;                                    /* 线程 ID 输出 */
 extern int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
                             DWORD, DWORD *, BOOL);             /* WTSSendMessageW 槽 */
-extern HWND FUN_1400e3d60(LPCWSTR text, DWORD a, DWORD b, HWND c, DWORD d,
-                          DWORD e, DWORD f, DWORD g);          /* @0x1400e3d60 消息框 */
+extern uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord, HWND parent, uint32_t flags1, uint32_t flags2, uint64_t value1, uint64_t value2);          /* @0x1400e3d60 消息框 */
 extern uint64_t PECMD_EnumProcessInfo(WCHAR *s, int a, int64_t *p, int b, DWORD d); /* @0x14002d708 */
 extern HANDLE FUN_14005b228(int64_t (*cb)(void *), LPVOID arg, uint64_t stack,
                             uint64_t flags, DWORD *tid, LPSECURITY_ATTRIBUTES sa); /* @0x14005b228 线程创建 */
@@ -426,7 +425,7 @@ extern void (*g_pDestroyEnvironmentBlock)(void);                                
 /* PECMD_GetDpiCachedFont 还原所需: DPI/字体 helper 与字体缓存槽 (DAT_14013e2b8) */
 extern void PECMD_GetDpiCached(HWND hwnd);                        /* @0x140062950 core_exec.c */
 extern void PECMD_SetChildFont(HWND hwnd, int64_t font);          /* @0x140062994 core_exec.c */
-extern void FUN_1400E648C(void **pfont, UINT id);                 /* @0x1400e648c 按 lang 创建字体 */
+extern void PECMD_GetUiFontById(void **pfont, UINT id);                 /* @0x1400e648c 按 lang 创建字体 */
 extern uintptr_t g_hFontE2B8;                                     /* DAT_14013e2b8 缓存字体槽 (link_stubs.c b1-tier deps) */
 
 /* 全局(槽/数据) extern */
@@ -853,7 +852,7 @@ uint64_t PECMD_WaitForCallbackWindow(DWORD param_1, int64_t param_2)
         lVar4 = lVar1;
         if (-1 < lVar1) {
             while (true) {
-                if (FUN_1400e3d60(g_szEmpty, 0x10, 0x01, (HWND)0, param_1, 0, 0, 0) != (HWND)0) {
+                if (PECMD_FindTargetWindow(g_szEmpty, 0x10, 0x01, (HWND)0, param_1, 0, 0, 0) != (HWND)0) {
                     break;
                 }
                 PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 10, 0, (uint64_t *)0);
@@ -2490,7 +2489,7 @@ uint64_t PECMD_GetDpiCachedFont(HWND param_1)
      * 创建失败返回 0; 成功后把字体下发给本窗口子控件 (PECMD_SetChildFont) 并返回字体句柄。*/
     PECMD_GetDpiCached(param_1);
     if (g_hFontE2B8 == 0) {
-        FUN_1400E648C((void **)&g_hFontE2B8, 0x3eb);
+        PECMD_GetUiFontById((void **)&g_hFontE2B8, 0x3eb);
         if (g_hFontE2B8 == 0) {
             return 0;
         }

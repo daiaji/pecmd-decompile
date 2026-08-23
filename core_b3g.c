@@ -50,7 +50,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint64_t PECMD_ReserveVec8(int64_t *a1, uint64_t a2);
 extern uint64_t PECMD_ReserveObjectArray(int64_t *a1, uint64_t a2);
-extern void FUN_1400F1490(int64_t a1);
+extern void PECMD_ClearStringItemList(int64_t arr);
 extern void FUN_14005C828(LPCSTR a1, LPCSTR a2, int64_t *a3,
                           int64_t *a4);
 extern uint64_t PECMD_ServiceControl(int64_t *a1, LPCWSTR a2);
@@ -193,7 +193,7 @@ void FUN_140054A50(uint64_t *obj)
         (**fn)(plVar1, 1);
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -212,7 +212,7 @@ void FUN_140054AB4(uint64_t *obj)
         (**fn)(plVar1, 1);
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -478,7 +478,7 @@ void PECMD_DtorTrackbarControl(uint64_t *obj)
         (**fn)(plVar1, 1);
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -497,7 +497,7 @@ void FUN_14006C3CC(uint64_t *obj)
         (**fn)(plVar1, 1);
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -517,7 +517,7 @@ void FUN_14006C430(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -551,7 +551,7 @@ void FUN_14006FC4C(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -571,7 +571,7 @@ void FUN_14006FCB4(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -642,7 +642,7 @@ void FUN_1400AA094(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -662,7 +662,7 @@ void FUN_1400AA2FC(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -682,7 +682,7 @@ void FUN_1400B916C(uint64_t *obj)
     }
     obj[7] = 0;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));

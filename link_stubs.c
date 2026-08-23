@@ -224,7 +224,7 @@ void PECMD_InitContainerFields(uint32_t *param_1)
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
 /* ---- PECMD_Dialog2727Proc 恢复体所需前置声明 (定义在文件后部/其它 core_*.c; 命名按 tools/rename_map.json) ---- */
 extern void *g_hFontE2B0;                          /* DAT_14013e2b0 (core_globals.c: HFONT, 已有定义) */
-extern void FUN_1400E648C(void **pfont, UINT id);  /* @0x1400e648c 按 lang 创建字体 (core_exec.c) */
+extern void PECMD_GetUiFontById(void **pfont, UINT id);  /* @0x1400e648c 按 lang 创建字体 (core_exec.c) */
 extern void PECMD_TrimWorkingSet(char force);      /* @0x14005d4e4 (core_b3e.c) */
 int      GetSystemMetrics(int idx);
 HWND     GetDlgItem(void *hWnd, int nIDDlgItem);
@@ -275,7 +275,7 @@ long long PECMD_Dialog2727Proc(void *a, unsigned int b, uint64_t c, uint64_t d)
         iVar2 = GetSystemMetrics(0x3d);
         iVar3 = GetSystemMetrics(0x3e);
         if (g_hFontE2B0 == 0) {
-            FUN_1400E648C((void **)&g_hFontE2B0, 0x3ea);
+            PECMD_GetUiFontById((void **)&g_hFontE2B0, 0x3ea);
         }
         puVar1[2] = (uint64_t)(uintptr_t)g_hFontE2B0;
         GetWindowRect(hwnd, &local_918.r);
@@ -7917,23 +7917,7 @@ void PECMD_ClearTaskTable(undefined8 param_1, int param_2){
 
 uint64_t PECMD_ArrayPrepend(void) { return 0; }
 void PECMD_SetObjectEnable(int64_t a, unsigned int b) { (void)a; (void)b; }
-undefined8 *FUN_140053dc8(undefined8 *param_1, undefined4 param_2, undefined8 param_3, LPCWSTR param_4, LPCWSTR param_5, LPCWSTR param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9, undefined4 param_10){
-    *(undefined4*)(param_1+1)=(undefined4)param_2;
-    *param_1=(undefined8)&PTR_FUN_1401234f0;
-    FUN_1400702b0((uint16_t**)(param_1+2),param_4);
-    param_1[3]=0;
-    FUN_14006355c(param_1+3,param_4,-1,0xffffffffffffffffULL);
-    FUN_1400702b0((uint16_t**)(param_1+4),param_6);
-    FUN_1400702b0((uint16_t**)(param_1+5),param_5);
-    param_1[6]=0; param_1[7]=0; param_1[10]=param_3;
-    *(undefined4*)(param_1+8)=param_7;
-    *(undefined4*)((longlong)param_1+0x44)=param_8;
-    *(undefined4*)(param_1+9)=param_9;
-    *(undefined4*)((longlong)param_1+0x4c)=param_10;
-    param_1[0xb]=param_3; param_1[0xc]=0;
-    *(undefined4*)(param_1+0xd)=0;
-    return param_1;
-}
+
 
 longlong FUN_140003a20(longlong *param_1, undefined8 *param_2, byte param_3);
 void FUN_140053e78(void) { }
@@ -8272,15 +8256,7 @@ int64_t PECMD_VectorSlotPtr(int64_t param_1, int64_t *param_2, int64_t *param_3,
     PECMD_ArrayGrowRaw(param_2,param_3,param_4,(unsigned int)(param_1 - *param_3) + 2);
   return (uint64_t)param_4 * (uint64_t)param_1 + *param_2;
 }
-longlong *FUN_140063b64(longlong *param_1){
-    longlong lVar1,lVar4; int iVar2; undefined8 *puVar3;
-    param_1[2]=0; *param_1=0; param_1[1]=1;
-    do { puVar3=(undefined8*)HeapAlloc(DAT_14013d328,0,0x10); if (puVar3!=0) break; iVar2=FUN_1400630d0(2); } while (iVar2==4);
-    *(undefined4*)((longlong)puVar3+4)=0xaa55; *(undefined8*)puVar3=8;
-    lVar1=param_1[1]; lVar4=0; *param_1=(longlong)(puVar3+1);
-    if (0<lVar1) { do { *(undefined8*)(uintptr_t)(*param_1+lVar4*8)=0; lVar4++; } while (lVar4<lVar1); }
-    return param_1;
-}
+
 
 uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 /* @0x1400660ac size=— 匹配 token 并前进(直移) */
@@ -8608,9 +8584,9 @@ int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;
  * 内部调用按 rename_map: FUN_14006156c→PECMD_MatchPattern, FUN_1400a53e4→
  * PECMD_TokenizeExpression, FUN_14001b23c→PECMD_ExtractTableSegment, FUN_14006e030→
  * PECMD_CopyPathToken(桩 arity 0→4 修正), FUN_14004c0bc→PECMD_ProcessScriptBlock;
- * FUN_14006159c/FUN_1400251ac/FUN_140063060/PECMD_StrBldCopyWideN/PECMD_FreeStrBuf 保持原名.
+ * PECMD_InitObfuscatedKeywords/PECMD_CheckFirstStartupFlag/FUN_140063060/PECMD_StrBldCopyWideN/PECMD_FreeStrBuf 保持原名.
  * DAT_14013d080→g_msgLockCount, DAT_14013d058→g_sysinitState, DAT_14011c638 用符号.
- * 取舍: FUN_1400251ac(undefined8) 调用传 param_1.QuadPart (Ghidra 将 LARGE_INTEGER
+ * 取舍: PECMD_CheckFirstStartupFlag(undefined8) 调用传 param_1.QuadPart (Ghidra 将 LARGE_INTEGER
  * 按单寄存器传参); (LPCWSTR)lpStr1 结构体强转指针非法 → (LPCWSTR)(uintptr_t)lpStr1.QuadPart.
  * 注意: 本函数自身不执行, 由 PECMD_ProcessScriptBlock 内部 / core 调用方经
  * uint64_t 签名进入; 返回 0 (decompiled 亦 return 0). */
@@ -8620,8 +8596,8 @@ extern LPCWSTR  PECMD_ExtractTableSegment(int64_t, uint64_t *, uint16_t *, int64
 extern int64_t  PECMD_TokenizeExpression(LARGE_INTEGER, int64_t, int64_t *, uint32_t, WCHAR *); /* @0x1400a53e4 core_b3_remaining.c */
 extern uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d);   /* @0x14006e030 (定义见后部桩) */
 extern uint64_t FUN_140063060(uint64_t value);                                /* @0x140063060 core_b3_remaining.c */
-extern void     FUN_14006159c(longlong param_1, ulonglong param_2);           /* @0x14006159c 新增桩 (本文件) */
-extern void     FUN_1400251ac(undefined8 param_1);                            /* @0x1400251ac 新增桩 (本文件) */
+extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed);   /* @0x14006159c 真体 core_exec2.c */
+extern void     PECMD_CheckFirstStartupFlag(undefined8 param_1);                            /* @0x1400251ac 新增桩 (本文件) */
 extern int32_t  g_sysinitState;                                               /* DAT_14013d058 core_scriptdep.c */
 uint64_t PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b)
 {
@@ -8652,7 +8628,7 @@ uint64_t PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b)
   pWVar11 = (WCHAR *)(param_2 & 0xfffffffffffffffe);
   local_res18 = (ulonglong *)0x0;
   if ((param_2 & 1) == 0) {
-    FUN_14006159c(param_1.QuadPart,(ulonglong)(*(ushort *)(param_1.QuadPart + 0x48) | 0x10000));
+    PECMD_InitObfuscatedKeywords((void *)param_1.QuadPart,(uint64_t)(*(ushort *)(param_1.QuadPart + 0x48) | 0x10000));
     *(undefined2 *)(param_1.QuadPart + 200) = 0;
     for (; (((WVar8 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
              (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
@@ -8808,7 +8784,7 @@ LAB_1400b17e7:
                ((iVar3 = StrCmpNIW((const uint16_t *)L"SET",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,3), iVar3 != 0 ||
                 (((uVar2 = *(ushort *)(lpStr1.QuadPart + 6), uVar2 < 9 || (0xd < uVar2)) &&
                  ((uVar2 != 0x20 && (uVar2 != 0)))))))) {
-              FUN_1400251ac(param_1.QuadPart);
+              PECMD_CheckFirstStartupFlag(param_1.QuadPart);
             }
             PECMD_ProcessScriptBlock(param_1,lpStr1,(longlong *)0x0,(longlong *)&local_res10,
                                      (pthreadmbcinfo)*ppWVar13);
@@ -8829,11 +8805,10 @@ LAB_1400b17e7:
   return 0;
 }
 /* @0x14006159c size=357 — 脚本上下文命令入口标记 (XOR 键/结束标记) 新增桩:
-   原体未移植 (decompiled.c @59192); 签名 void FUN_14006159c(longlong, ulonglong). */
-void FUN_14006159c(longlong param_1, ulonglong param_2) { (void)param_1; (void)param_2; }
+   原体未移植 (decompiled.c @59192); 签名 void PECMD_InitObfuscatedKeywords(longlong, ulonglong). */
 /* @0x1400251ac size=198 — 重置/清理 (decompiled.c @22328) 新增桩:
-   签名 void FUN_1400251ac(undefined8 param_1); 调用约定经 QuadPart 传值. */
-void FUN_1400251ac(undefined8 param_1) { (void)param_1; }
+   签名 void PECMD_CheckFirstStartupFlag(undefined8 param_1); 调用约定经 QuadPart 传值. */
+
 uint64_t PECMD_CreateFont(void *a, void *b, void *c) { (void)a;(void)b;(void)c; return (uint64_t)(uintptr_t)1; }
 int PECMD_ParseHexOrDec(long long *a, uint64_t *b) { (void)a; (void)b; return 1; }
 /* @0x1400c11c0 size=52 — 十六进制/十进制解析 bool 封装(直移) */
@@ -11171,7 +11146,7 @@ uint64_t *PECMD_InitObjectSlotC(uint64_t *param_1, uint64_t param_2)
   *param_1 = (uint64_t)&PTR_FUN_14012bad0;
   PECMD_AllocStrSlot((uint16_t **)(param_1 + 0x1b));
   param_1[0x1d] = param_2;
-  FUN_140063b64((uint64_t *)(param_1 + 0x21));
+  PECMD_InitPtrTable((uint64_t *)(param_1 + 0x21));
   *(uint32_t *)((long long)param_1 + 0xfc) = 0xffffffff;
   *(uint32_t *)(param_1 + 0x20) = 0xffffffff;
   *(uint32_t *)(param_1 + 0x1f) = 0xffffffff;
@@ -11233,16 +11208,7 @@ uint64_t *PECMD_InitWebViewObj(uint64_t *param_1, uint64_t param_2)
   *(uint8_t *)((long long)param_1 + 0xa1) = 1;
   return param_1;
 }
-bool FUN_1400f072c(longlong *param_1, const WCHAR *param_2, DWORD param_3, int *param_4, HWND param_5, uint param_6, DWORD param_7){
-    int iVar1,iVar2,iVar3,iVar4; LONG LVar5; HWND pHVar6;
-    iVar1=param_4[3]; iVar2=param_4[2]; iVar3=param_4[1]; iVar4=*param_4;
-    LVar5=GetWindowLongW(param_5,-6);
-    if (param_7==0) param_7=0;
-    pHVar6=CreateWindowExW(param_7,(const WCHAR*)L"BUTTON",(LPCWSTR)param_2?0:((const WCHAR*)0),param_3,iVar4,iVar3,iVar2-iVar4,iVar1-iVar3,param_5,(void*)(ulonglong)param_6,(void*)(longlong)LVar5,(LPVOID)0);
-    param_1[4]=(longlong)pHVar6;
-    FUN_14006b8fc((long long*)param_1);
-    return param_1[4]!=0;
-}
+
 
 uint64_t FUN_1400f11f8(void) { return 0; }
 uint64_t PECMD_CreateDateTimePickCtl(void) { return 0; }
@@ -11593,15 +11559,15 @@ uint64_t PECMD_ControlEnableCommand(int64_t *a, uintptr_t b, uintptr_t c, const 
  *    → 省略; 其中 SendMessageW(local_d8,0x466,5,lParam=param_1 八字节拷贝) 的效果保留
  *    (lParam 即 hwnd 值); 原 FUN_140102a90(&local_c8,0,0x34) memset 亦死 → 省略。
  *  - 原 GetWindowInfo(PWINDOWINFO local_d0) 结果未被再读 → 传哑缓冲。
- *  - FUN_1400c11f4/FUN_1400cada0 (数字解析, decompiled.c 有体但本 tree 未移植) 新增桩,
+ *  - PECMD_EvalParenExprRounded/PECMD_ParseNumberToken (数字解析, decompiled.c 有体但本 tree 未移植) 新增桩,
  *    按 PECMD_ParseHexOrDec 桩惯例返回 1 视为"已解析" (不修改 *param_2)。
  */
 typedef struct tagWINDOWINFO { DWORD cbSize; RECT rcWindow; RECT rcClient; DWORD dwStyle;
   DWORD dwExStyle; DWORD dwWindowStatus; UINT cxWindowBorders; UINT cyWindowBorders;
   WORD atomWindowType; WORD wCreatorVersion; } WINDOWINFO, *PWINDOWINFO;
 int GetWindowInfo(void *hWnd, void *pwi) { (void)hWnd;(void)pwi; return 0; }   /* PECMD_SetControlGeom 恢复体新增桩 */
-uint64_t FUN_1400c11f4(int64_t *param_1, uint64_t *param_2){ (void)param_1;(void)param_2; return 1; }   /* 数字解析缺桩: 视为已解析 */
-int      FUN_1400cada0(int64_t *param_1, int *param_2){ (void)param_1;(void)param_2; return 1; }       /* 数字解析缺桩: 视为已解析 */
+
+
 
 uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *p4, uintptr_t p5, uint32_t color, int64_t p7)
 {
@@ -11784,10 +11750,10 @@ uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *
     local_178 = local_178 + 1;
     local_130 = 8;
   }
-  iVar7 = FUN_1400cada0((int64_t *)&local_178, (int *)&local_128);
+  iVar7 = PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_128);
   uVar6 = (uint32_t)(0 < iVar7);
   local_res10 = (uint64_t)(int64_t)(int32_t)uVar18;
-  uVar12 = FUN_1400c11f4((int64_t *)&local_178, &local_res10);
+  uVar12 = PECMD_EvalParenExprRounded((int64_t *)&local_178, &local_res10);
   if ((int32_t)uVar12 != 0) uVar18 = (uint32_t)local_res10;
   local_res10 = (uint64_t)uVar18;               /* CONCAT44 高位残留不读 → 低32位近似 */
   if ((int32_t)uVar12 > 0) uVar6 = (uint32_t)((0 < iVar7) | 2);
@@ -11816,12 +11782,12 @@ uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *
   if (((iVar8 == 0) && (*local_178 != 0)) && ((*local_178 < 0x30) || (0x39 < *local_178))) {
     local_178 = local_178 + 1;
   }
-  iVar8 = FUN_1400cada0((int64_t *)&local_178, (int *)&local_res8);
+  iVar8 = PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_res8);
   if (0 < iVar8) uVar6 = uVar6 | 4;
-  iVar8 = FUN_1400cada0((int64_t *)&local_178, (int *)&local_138);
+  iVar8 = PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_138);
   if (0 < iVar8) uVar6 = uVar6 | 8;
   local_140 = 0xfffffffff8000009ULL;
-  uVar12 = FUN_1400c11f4((int64_t *)&local_178, &local_140);
+  uVar12 = PECMD_EvalParenExprRounded((int64_t *)&local_178, &local_140);
   iVar8 = -0x7fffff7;
   if ((int32_t)uVar12 != 0) iVar8 = (int32_t)local_140;
   for (;;) {                                    /* LAB_1400dbe4d / LAB_1400dbe52: 跳到 '$' 或数字/结束 */
@@ -11834,7 +11800,7 @@ uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *
     local_178 = local_178 + 1;
   }
   local_140 = 0xffffffffffffff9cULL;
-  uVar12 = FUN_1400c11f4((int64_t *)&local_178, &local_140);
+  uVar12 = PECMD_EvalParenExprRounded((int64_t *)&local_178, &local_140);
   uVar14 = 0;
   uVar13 = 0xffffff9cULL;
   if ((int32_t)uVar12 != 0) uVar13 = local_140 & 0xffffffff;
@@ -11848,12 +11814,12 @@ uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *
     local_178 = local_178 + 1;
   }
   PECMD_ParseNumSkipChar_01f8((int64_t *)&local_178, (int *)&local_118);
-  FUN_1400cada0((int64_t *)&local_178, (int *)&local_100);
-  FUN_1400cada0((int64_t *)&local_178, (int *)&local_120);
-  FUN_1400cada0((int64_t *)&local_178, (int *)local_148);
-  iVar9 = FUN_1400cada0((int64_t *)&local_178, (int *)&local_f8);
+  PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_100);
+  PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_120);
+  PECMD_ParseNumberToken((int64_t *)&local_178, (int *)local_148);
+  iVar9 = PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_f8);
   if (0 < iVar9) uVar6 = uVar6 | 0x10;
-  iVar9 = FUN_1400cada0((int64_t *)&local_178, (int *)&local_110);
+  iVar9 = PECMD_ParseNumberToken((int64_t *)&local_178, (int *)&local_110);
   if (0 < iVar9) uVar6 = uVar6 | 0x20;
   uVar15 = (uint32_t)local_138;
   if ((((uVar6 & 0xc) != 0) && (iVar10 == 0)) && ((hWnd == NULL) || (p5 == (uintptr_t)hwnd))) {
@@ -12577,47 +12543,6 @@ longlong *PECMD_AppendAnsiStr(longlong *param_1,LPCSTR param_2)
 uint64_t PECMD_FindPartitionInfo(void){ return 0; }
 uint64_t PECMD_EncodeImageToStream(void){ return 0; }
 undefined8 FUN_1400748a0(HWND param_1, undefined8 *param_2);   /* 窗口枚举回调 (leaf stub, 定义见文件尾) */
-/* @0x1400e3d60 遍历(子)窗口执行回调 (decompiled.c 直移) */
-undefined8
-FUN_1400e3d60(LPCWSTR param_1,char param_2,char param_3,HWND param_4,undefined4 param_5,
-             undefined4 param_6,undefined8 param_7,undefined8 param_8)
-{
-  LPCWSTR local_58;
-  undefined8 local_50;
-  HWND local_48;
-  int local_40;
-  int local_3c;
-  int local_38;
-  undefined4 local_34;
-  undefined4 local_30;
-  undefined8 local_28;
-  undefined4 local_20;
-  undefined8 local_18;
-
-  if (param_1 == (LPCWSTR)0x0) {
-    local_50 = 0;
-  }
-  else {
-    local_3c = lstrlenW(param_1);
-    local_20 = 0;
-    local_40 = (int)param_2;
-    local_38 = (int)param_3;
-    local_50 = 0;
-    local_34 = param_5;
-    local_30 = param_6;
-    local_28 = param_7;
-    local_18 = param_8;
-    local_58 = param_1;
-    local_48 = param_4;
-    if (param_4 == (HWND)0x0) {
-      EnumWindows((WNDENUMPROC)FUN_1400748a0,(LPARAM)&local_58);
-    }
-    else {
-      EnumChildWindows(param_4,(WNDENUMPROC)FUN_1400748a0,(LPARAM)&local_58);
-    }
-  }
-  return local_50;
-}
 uint64_t PECMD_UpdateWindowExStyle(void){ return 0; }
 
 /* PECMD_* 人类可读别名 (对应 FUN_<addr> 槽位; 委托到真实业务体) */
@@ -12655,10 +12580,10 @@ uint64_t StrCmpIW(void){ return 0; }
    依赖: FUN_14006b8fc (控件尺寸计算), PECMD_InitButtonState (按钮状态初始化, 内绕坐标/标志). */
 long long FUN_14006b8fc(long long *param_1) { (void)param_1; return 1; } /* 控件尺寸计算 (no-op) */
 /* --- PECMD_InitButtonState 直移还原 (decompiled.c @1400ef91c size=489, 按钮状态初始化/内绕坐标/标志) ---
- * 依赖: FUN_1400EFEC8 (core_b8d.c) / FUN_1400EFFF8 (core_b8g.c) / PECMD_* 串工具;
+ * 依赖: PECMD_InitImageHolder (core_b8d.c) / PECMD_CreateStaticWindow (core_b8g.c) / PECMD_* 串工具;
  * CONCAT44 双局部已按 rcPack[4] 数组展开 (同 core_b8k.c FUN_1400EF91C 既定模式). */
-uint64_t *FUN_1400EFEC8(uint64_t *param_1);   /* @0x1400efec8 图标对象初始化 (core_b8d.c) */
-bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
+uint64_t *PECMD_InitImageHolder(uint64_t *param_1);   /* @0x1400efec8 图标对象初始化 (core_b8d.c) */
+bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
                    uint32_t id);              /* @0x1400efff8 创建 STATIC 子控件 (core_b8g.c) */
 void PECMD_InitButtonState(long long param_1, uint param_2, uint64_t param_3)
 {
@@ -12689,7 +12614,7 @@ void PECMD_InitButtonState(long long param_1, uint param_2, uint64_t param_3)
             plVar3 = (longlong *)0x0;
         }
         else {
-            plVar3 = (longlong *)FUN_1400EFEC8(puVar2);
+            plVar3 = (longlong *)PECMD_InitImageHolder(puVar2);
         }
         *(longlong **)(param_1 + 0x110) = plVar3;
         InvalidateRect(*(HWND *)(param_1 + 0x20), (RECT *)0x0, 1);
@@ -12719,7 +12644,7 @@ void PECMD_InitButtonState(long long param_1, uint param_2, uint64_t param_3)
         rcPack[1] = local_38.top;
         rcPack[2] = local_38.right;
         rcPack[3] = local_38.bottom;
-        FUN_1400EFFF8((int64_t *)plVar3, local_res8, uVar5 | 0x40000020, rcPack,
+        PECMD_CreateStaticWindow((int64_t *)plVar3, local_res8, uVar5 | 0x40000020, rcPack,
                       *(HWND *)(param_1 + 0x20), 0x7d2);
         if ((param_3 & 2) != 0) {
             PECMD_MemMoveForward((uint8_t *)((char *)plVar3 + 0x90), (uint8_t *)(param_1 + 0x90), 0x10);
@@ -13621,7 +13546,7 @@ L_after_init:
             atexit(&CleanupMainArg_045c90);   /* 原注册 LAB_14011ab90 */
         }
         pS[0xf] = (int64_t)(uintptr_t)&g_pMainArgStr;
-        FUN_14006159C((void *)(uintptr_t)a, 0x10000);
+        PECMD_InitObfuscatedKeywords((void *)(uintptr_t)a, 0x10000);
         PECMD_AllocStrSlot(&pTmp);
         FUN_1400A4020((WCHAR **)&g_pMainArgStr, (LPCWSTR)(uintptr_t)pTmp);
         pTmp = 0;
@@ -17364,7 +17289,7 @@ LAB_140082878:
         return lVar3;
       }
     }
-    hWnd = (HWND)FUN_1400e3d60(local_48,'\0','\0',(HWND)0x0,0,0,0,0);
+    hWnd = (HWND)PECMD_FindTargetWindow(local_48,'\0','\0',(HWND)0x0,0,0,0,0);
   }
   SetWindowPos(hWnd,(HWND)0x0,0,0,0,0,0x97);
   Msg = 0x10;

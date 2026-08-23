@@ -33,7 +33,7 @@ extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x14006369
 void PECMD_ImportSystemEnvVars(void);            /* @0x14001c1d4 */
 void PECMD_InitShellFolderEnvVars(void);            /* @0x14001c01c */
 void FUN_14005B9A0(void);            /* @0x14005b9a0 */
-void FUN_140027EAC(void *s, void *p, int a, int b, void *cb, int timeout, int c, int d, int e); /* @0x140027eac */
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9); /* @0x140027eac */
 void FUN_14004E2CC(void *s, void *item);  /* @0x14004e2cc 释放单项 */
 void FUN_14006E8F4(void *s);         /* @0x14006e8f4 清理结构 */
 void PECMD_CheckDebugMsg(void);            /* @0x140005344 */
@@ -133,8 +133,8 @@ void FUN_14002CA30(void)
 {
     extern uint32_t g_afterMain;   /* DAT_14013ccc8 */
     g_afterMain = 0;
-    FUN_140027EAC(&g_Script, NULL, 0x1a, 0,
-                  (void *)0x140121020, 5000, 1, 1, 0);  /* .rdata 回调表 */
+    PECMD_StartWorkerThread(&g_Script, NULL, 0x1a, 0,
+                  (uint64_t)0x140121020, 5000, 1, 1, 0);  /* .rdata 回调表 */
 }
 
 /* ========== 脚本项数组清理 @0x14004eaa8 ========== */

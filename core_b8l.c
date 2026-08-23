@@ -41,17 +41,17 @@ extern int FUN_140067B78(WCHAR **pp, uint64_t *out);    /* @0x140067b78 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
                                uint32_t esize);               /* @0x140063b00 */
-extern int64_t *FUN_140063B64(int64_t *arr);                /* @0x140063b64 */
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);                /* @0x140063b64 */
 extern void FUN_1400633A8(void **ps, int64_t len);             /* @0x1400633a8 */
 extern void *FUN_1400E57C0(void *obj);                 /* @0x1400e57c0 */
 extern uint64_t *FUN_1400F5C74(uint64_t *obj);        /* @0x1400f5c74 */
 extern void FUN_1400E8940(void *obj);               /* @0x1400e8940 */
-extern void FUN_1400F425C(uint64_t *arr);               /* @0x1400f425c */
+extern void PECMD_ClearPtrArrayItems(uint64_t *arr);               /* @0x1400f425c */
 extern void FUN_1400F4208(uint64_t *arr);            /* @0x1400f4208 */
 extern void FUN_1400F5C10(int64_t *array);         /* @0x1400f5c10 */
 extern void FUN_1400F5D50(uint64_t *obj);   /* @0x1400f5d50 */
 extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
-extern void FUN_1400FD538(HWND hwnd, int mode); /* @0x1400fd538 */
+extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
 extern void PECMD_SetHotTrackWindow(HWND hwnd);           /* @0x1400f1448 */
 extern int FUN_1400FEDA4(int64_t obj, uint64_t param2,
                                            uint64_t *out, uint32_t param4); /* @0x1400feda4 */
@@ -284,17 +284,17 @@ uint64_t *FUN_1400F9134(uint64_t *obj, uint64_t param2, uint64_t param3)
     obj[0x1a] = param3;
     FUN_1400F5C74(obj + 0x1b);
     *(uint32_t *)(b + 0x218) = 0;
-    FUN_140063B64((int64_t *)(obj + 0x4c));
-    FUN_140063B64((int64_t *)(obj + 0x4f));
-    FUN_140063B64((int64_t *)(obj + 0x52));
-    FUN_140063B64((int64_t *)(obj + 0x55));
-    FUN_140063B64((int64_t *)(obj + 0x58));
-    FUN_140063B64((int64_t *)(obj + 0x5b));
-    FUN_140063B64((int64_t *)(obj + 0x5e));
-    FUN_140063B64((int64_t *)(obj + 0x61));
-    FUN_140063B64((int64_t *)(obj + 0x64));
-    FUN_140063B64((int64_t *)(obj + 0x67));
-    FUN_140063B64((int64_t *)(obj + 0x6a));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x4c));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x4f));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x52));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x55));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x58));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x5b));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x5e));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x61));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x64));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x67));
+    PECMD_InitPtrTable((int64_t *)(obj + 0x6a));
     obj[0x6d] = 0;
     obj[0x6e] = 0;
     obj[0x6f] = 0;
@@ -354,23 +354,23 @@ void PECMD_DestroyCtlResources(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x6a));
     PECMD_FreeArray_ddf8((int64_t *)(obj + 0x67));
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x67));
-    FUN_1400F425C(obj + 0x64);
+    PECMD_ClearPtrArrayItems(obj + 0x64);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x64));
     FUN_1400F4208(obj + 0x61);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x61));
     FUN_1400F5C10((int64_t *)(obj + 0x5e));
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x5e));
-    FUN_1400F425C(obj + 0x5b);
+    PECMD_ClearPtrArrayItems(obj + 0x5b);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x5b));
-    FUN_1400F425C(obj + 0x58);
+    PECMD_ClearPtrArrayItems(obj + 0x58);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x58));
-    FUN_1400F425C(obj + 0x55);
+    PECMD_ClearPtrArrayItems(obj + 0x55);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x55));
-    FUN_1400F425C(obj + 0x52);
+    PECMD_ClearPtrArrayItems(obj + 0x52);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x52));
-    FUN_1400F425C(obj + 0x4f);
+    PECMD_ClearPtrArrayItems(obj + 0x4f);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x4f));
-    FUN_1400F425C(obj + 0x4c);
+    PECMD_ClearPtrArrayItems(obj + 0x4c);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x4c));
     FUN_1400F5D50(obj + 0x1b);
     FUN_1400E8940(obj);
@@ -633,7 +633,7 @@ void PECMD_ControlHoverTimer(int64_t *obj, uint32_t timerId)
             g_hActiveDevWnd = 0;
             PostMessageW(hwnd, 0x2a3, 0, 0);
             if ((uint64_t)obj[0x10] == (uint64_t)g_hStockWhiteBrush)
-                FUN_1400FD538(hwnd, 1);
+                PECMD_InvalidateParentRect(hwnd, 1);
         } else {
             if (g_tooltipThreshold == (int8_t)obj[0x14])
                 PECMD_SetHotTrackWindow(hwnd);

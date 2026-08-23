@@ -111,7 +111,7 @@ extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
 extern uint64_t PECMD_IsNumericString(const WCHAR *p);
 extern void  PECMD_QuoteTokenString(WCHAR **pp, WCHAR **out, int len);
-extern void  FUN_140063b64(void *out);
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);
 extern void  PECMD_AllocStringSlot2(void **ps, int64_t len);
 extern void *PECMD_GrowByteBuffer(void *ps, int64_t len);
 extern void  PECMD_TrimWs(WCHAR **pp, uint64_t flags, uint16_t ch);
@@ -1332,7 +1332,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
 
   local_res18 = param_3;
   PECMD_AllocStrSlot(&local_e0);
-  FUN_140063b64(&local_d0);
+  PECMD_InitPtrTable(&local_d0);
   PECMD_StrDupAssign(&local_b8, param_2);
   PECMD_RunCommandLine(param_1, &local_b8, 0);
   local_res10 = local_b8;
@@ -1385,7 +1385,7 @@ ulonglong PECMD_LoadTasksWait(longlong *param_1, LPCWSTR param_2, longlong param
   PECMD_SkipLeadingControlChars(&local_a0);
   pWVar6 = local_a0;
   if (*local_a0 != L'\0') {
-    FUN_140063b64(&local_98);
+    PECMD_InitPtrTable(&local_98);
     lVar17 = local_c0;
     if (*pWVar6 != L'\0') {
       iVar16 = (int)uVar10;

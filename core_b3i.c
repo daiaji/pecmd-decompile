@@ -23,7 +23,7 @@
  *   释放对象数组       PECMD_TruncateObjectArray @0x140061704
  *   设置 ANSI 串       FUN_1400634D4 @0x1400634d4
  *   数组追加元素       FUN_1400639F0 @0x1400639f0
- *   初始化数组         FUN_140063B64 @0x140063b64
+ *   初始化数组         PECMD_InitPtrTable @0x140063b64
  *   转发自定义消息     PECMD_ForwardCustomMessage @0x140066e20
  *   分离虚拟磁盘       PECMD_DetachVirtualDisk @0x140069044
  *   释放控件对象       FUN_14006C648 @0x14006c648
@@ -66,7 +66,7 @@ extern DWORD FUN_14006459C(LPCWSTR a1, uint32_t a2, LPWSTR a3,
 extern uint64_t PECMD_QueryFileAttributes(LPCWSTR a1, uint32_t *a2, int *a3);
 extern void FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
 extern uint64_t *FUN_14007DE70(uint64_t *a1, int64_t *a2, LPCWSTR a3);
-extern void FUN_1400F1490(int64_t a1);
+extern void PECMD_ClearStringItemList(int64_t arr);
 extern DWORD PECMD_CreateDirectory(uint64_t a1, WCHAR *a2);
 extern void *PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
 extern int64_t *PECMD_CopyStrToSlot(uint64_t *a1, uint64_t *a2);
@@ -525,10 +525,10 @@ int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
     return lVar2 + lVar1;
 }
 
-/* ========== FUN_140063B64 @0x140063b64 ==========
+/* ========== PECMD_InitPtrTable @0x140063b64 ==========
  * 初始化动态数组容器，容量初始为 1。
  */
-int64_t *FUN_140063B64(int64_t *arr)
+int64_t *PECMD_InitPtrTable(int64_t *arr)
 {
     int iVar2;
     uint64_t *puVar3;
@@ -613,7 +613,7 @@ void FUN_14006C648(uint64_t *obj)
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x10));
     PECMD_FreeStrBuf((WCHAR **)(obj + 0xe));
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -727,7 +727,7 @@ void FUN_1400AA484(uint64_t *obj)
         *(uint16_t *)((uint8_t *)obj + 0x7e) = 0;
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -753,7 +753,7 @@ uint64_t *FUN_1400BCBE0(uint64_t *obj, uint32_t flags)
     PECMD_ReleaseImageHandle((int64_t)obj);
     PECMD_FreeStrBuf((WCHAR **)(obj + 0x11));
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));

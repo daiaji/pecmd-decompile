@@ -235,7 +235,7 @@ extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam,
                               uint64_t *lParam, int64_t hwnd, uint32_t mode,
                               int64_t *out);                 /* @0x1400f172c */
 extern void FUN_140067d20(void **pp, int *out);              /* @0x140067d20 (link_stubs) */
-extern void FUN_1400FD538(HWND child, int margin);           /* @0x1400fd538 */
+extern void PECMD_InvalidateParentRect(HWND child, int margin);           /* @0x1400fd538 */
 extern void PECMD_RestoreForegroundWindow(void);             /* @0x14005e204 */
 extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4); /* @0x1400a895c */
 extern HWND    FUN_1400E5788(HWND hwnd);                     /* @0x1400e5788 取顶层父窗口 */
@@ -359,7 +359,7 @@ void PECMD_HandleControlMessage(void *param_1, int param_2, int64_t param_3, uin
             }
             ebx = 1;
             if ((int32_t)sub888 > 0) {
-                FUN_1400FD538(hwnd, ebx);
+                PECMD_InvalidateParentRect(hwnd, ebx);
             } else {
                 InvalidateRect(hwnd, NULL, 1);
             }

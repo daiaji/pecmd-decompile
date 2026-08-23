@@ -63,7 +63,7 @@ extern int64_t FUN_1400E5B0C(HDC, uint64_t, HDC, uint64_t *);
 extern void PECMD_ListAddItemEntry(int64_t, int32_t, LPCWSTR, uint32_t, int32_t,
                                         int32_t, int64_t); /* @0x1400f53c8 */
 extern void PECMD_SetCtlBgBrush(int64_t, COLORREF, uint64_t);
-extern void FUN_1400FD538(HWND, int32_t);
+extern void PECMD_InvalidateParentRect(HWND child, int margin);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
 extern uint8_t PTR_FUN_14012bfb0[];
@@ -392,5 +392,5 @@ void FUN_1400FC034(uint64_t *obj)
 void FUN_1400FE5BC(int64_t obj, COLORREF color, uint64_t mode)
 {
     PECMD_SetCtlBgBrush(obj, color, mode);
-    FUN_1400FD538(*(HWND *)(obj + OBJ_HWND), 1);
+    PECMD_InvalidateParentRect(*(HWND *)(obj + OBJ_HWND), 1);
 }

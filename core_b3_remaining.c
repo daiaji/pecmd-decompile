@@ -88,8 +88,8 @@ extern void PECMD_InitNullDaclSD(uint64_t *param_1);                     /* @0x1
 extern int (*g_pGdipGetImageWidth)();                                 /* 图像宽/尺寸回调 */
 extern int (*g_pGdipGetImageHeight)();                                 /* 图像释放/尺寸回调 */
 extern int64_t PECMD_ContainerAppend(uint64_t *container);          /* @0x14006b8fc */
-extern void FUN_1400FD538(HWND child, int margin);          /* @0x1400fd538 */
-extern void FUN_1400F1490(int64_t arr);                    /* @0x1400f1490 */
+extern void PECMD_InvalidateParentRect(HWND child, int margin);          /* @0x1400fd538 */
+extern void PECMD_ClearStringItemList(int64_t arr);                    /* @0x1400f1490 */
 extern void PECMD_ReleaseSlotRef(int64_t *slot, int table);       /* @0x14005e8e8 */
 extern void PECMD_ReleaseObject_4490(uint64_t *slot);                 /* @0x140054490 */
 extern uint8_t PTR_FUN_1401234f0[];                        /* 对象基类虚表 */
@@ -437,9 +437,7 @@ extern uint8_t PTR_FUN_1401294f0[];                          /* 控件对象虚�
 extern uint8_t PTR_FUN_1401296e8[];                          /* 控件对象虚表 */
 extern double g_dbl94e8;                                 /* 字体大小常量 */
 extern double g_dbl20b28;                                /* 默认字体大小 */
-extern uint64_t *FUN_140053DC8(uint64_t *param_1, uint32_t param_2, uint64_t param_3,
-                               LPCWSTR param_4, LPCWSTR param_5, LPCWSTR param_6,
-                               uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10); /* @0x140053dc8 对象基类构造 */
+extern uint64_t * PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data, LPCWSTR name1, LPCWSTR name2, LPCWSTR name3, uint32_t flags1, uint32_t flags2, uint32_t flags3, uint32_t flags4); /* @0x140053dc8 对象基类构造 */
 extern LRESULT PECMD_GetControlFont(int64_t param_1);               /* @0x1400e5890 取对象字体 */
 extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);     /* @0x140053c5c */
 extern void PECMD_SetWindowTheme(uint64_t hwnd);                    /* @0x140066054 设置窗口主题 */
@@ -447,7 +445,7 @@ extern void FUN_1400A9650(int64_t obj, HWND hwnd, int id, LPCWSTR text, uint8_t 
 extern uint64_t *PECMD_InitWinObjBase(uint64_t *param_1);           /* @0x1400e57c0 构造返回指针 */
 extern uint64_t *PECMD_InitObjectSlotC(uint64_t *param_1, uint64_t param_2); /* @0x1400ece2c */
 extern int64_t  *PECMD_ReplaceStringSlot(int64_t *ps, uint64_t *src);  /* @0x140070398 */
-extern int64_t  *FUN_140063B64(int64_t *arr);                /* @0x140063b64 数组初始化/清空 */
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);                /* @0x140063b64 数组初始化/清空 */
 extern uint64_t FUN_1400ec698(int64_t param_1, uint64_t param_2);  /* @0x1400ec698 */
 extern void PECMD_LayoutChildWindows(int64_t param_1, uint8_t param_2); /* @0x1400ec880 */
 extern bool PECMD_UpdateWindowStyleBits(HWND param_1, uint32_t param_2, uint64_t param_3); /* @0x1400e5900 */
@@ -463,8 +461,7 @@ extern bool PECMD_InitStaticControl(int64_t *param_1, DWORD param_2, LPCWSTR par
 extern void PECMD_CreateStaticControlFromRect(int64_t *param_1, LPCWSTR param_2, uint32_t param_3,
                           uint64_t *param_4, HWND param_5, uint32_t param_6); /* @0x1400fd318 */
 extern void PECMD_SetControlColors(int64_t param_1, int *param_2);    /* @0x1400fd014 */
-extern void FUN_1400f072c(int64_t *param_1, LPCWSTR param_2, DWORD param_3, int *param_4,
-                          HWND param_5, uint32_t param_6, DWORD param_7); /* @0x1400f072c */
+extern bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent, uint32_t id, DWORD exStyle); /* @0x1400f072c */
 extern int64_t PECMD_QueryFontInfo(HANDLE param_1, int *param_2, LPCWSTR param_3); /* @0x1400b8960 */
 extern HFONT PECMD_BuildFontFromObject(HANDLE param_1, void *param_2, LPCWSTR param_3); /* @0x1400b89dc */
 
@@ -7173,7 +7170,7 @@ void PECMD_DestroyMappedObject(uint64_t *obj)
         obj[0xe] = 0;
     }
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -7273,7 +7270,7 @@ uint64_t PECMD_GenerateTimeText(LPCWSTR param_1, int64_t *param_2, uint64_t para
     if (param_5 != 0) {
         local_b0 = *(uint64_t *)param_5;
     }
-    FUN_140063B64((int64_t *)&local_c8);
+    PECMD_InitPtrTable((int64_t *)&local_c8);
     local_e0 = (uint64_t)((param_4 & 0xffffffff80000000ULL) != 0);
     if ((param_4 & 0x60000) != 0) {
         uVar14 = 0;
@@ -13918,7 +13915,7 @@ void PECMD_ReleaseDeviceObj(uint64_t *obj)
     obj[0x11] = 0;
     PECMD_FreeStrBuf((WCHAR **)(obj + 0xf));
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(obj + 0xb));
+    PECMD_ClearStringItemList((int64_t)(obj + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(obj + 5));
     PECMD_FreeStrBuf((WCHAR **)(obj + 4));
     PECMD_FreeStrBuf((WCHAR **)(obj + 3));
@@ -14722,7 +14719,7 @@ void PECMD_ReleaseCtrlObject(uint64_t *param_1)
     }
     param_1[0xe] = 0;
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(param_1 + 0xb));
+    PECMD_ClearStringItemList((int64_t)(param_1 + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 5));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 4));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 3));
@@ -17780,7 +17777,7 @@ void PECMD_DestroyWindowObject(uint64_t *param_1)
     PECMD_FreeArray_2e84(param_1 + 0xe);
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0xe));
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
-    FUN_1400F1490((int64_t)(param_1 + 0xb));
+    PECMD_ClearStringItemList((int64_t)(param_1 + 0xb));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 5));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 4));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 3));
@@ -18299,7 +18296,7 @@ void PECMD_ReleaseControlObject(uint64_t *param_1)
     param_1[0x51] = 0;
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0x4c));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0x44));
-    FUN_1400F1490((int64_t)(param_1 + 0x3d));
+    PECMD_ClearStringItemList((int64_t)(param_1 + 0x3d));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0x2e));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0x2d));
     PECMD_FreeStrBuf((WCHAR **)(param_1 + 0x2c));
@@ -22395,7 +22392,7 @@ uint64_t *PECMD_CreateEditControl(uint64_t *param_1, int64_t param_2, uint param
     }
     plVar3 = (int64_t *)param_1[7];
     *(uint8_t *)(plVar3 + 0x1b) = 3;
-    FUN_1400f072c(plVar3, g_szEmpty, uVar11 | (~(iVar1 << 2) & 0x10000U) | 0x40000003,
+    PECMD_CreateButtonWindow(plVar3, g_szEmpty, uVar11 | (~(iVar1 << 2) & 0x10000U) | 0x40000003,
                   (int *)&local_48, *(HWND *)(lVar2 + 0x20), param_3, 0);
     puVar8 = PECMD_CopyStrToSlot(&param_9, param_1 + 4);
     SetWindowTextW((HWND)plVar3[4], (LPCWSTR)*puVar8);
@@ -23489,7 +23486,7 @@ void PECMD_SetControlText(HWND hwnd, int64_t obj, LPCWSTR text, int repaint)
     }
     LeaveCriticalSection(&g_csInit);
     if (repaint != 0) {
-        FUN_1400FD538(hwnd, 1);
+        PECMD_InvalidateParentRect(hwnd, 1);
     }
 }
 
@@ -23527,7 +23524,7 @@ uint64_t *PECMD_ConstructTreeView(uint64_t *param_1, int64_t param_2, uint param
     uint uVar5, uVar6;
     uint64_t local_28;
 
-    FUN_140053dc8(param_1, 8, param_2, (LPCWSTR)*param_4, g_szEmpty, g_szEmpty,
+    PECMD_ItemBaseInit(param_1, 8, param_2, (LPCWSTR)*param_4, g_szEmpty, g_szEmpty,
                   param_5, param_6, param_7, param_8);
     *(uint32_t *)(param_1 + 0xe) = param_9;
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_140129080;
@@ -24017,11 +24014,11 @@ uint64_t *PECMD_CreateDialogControl(uint64_t *param_1, LPCWSTR param_2, uint32_t
     uint64_t uVar15;
 
     local_res10 = param_2;
-    FUN_140053DC8(param_1, 0xe, (uint64_t)(uintptr_t)param_2, (LPCWSTR)*param_4,
+    PECMD_ItemBaseInit(param_1, 0xe, (uint64_t)(uintptr_t)param_2, (LPCWSTR)*param_4,
                   (LPCWSTR)g_szEmpty, (LPCWSTR)g_szEmpty,
                   param_5, param_6, param_7, param_8);
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_1401272a8;
-    FUN_140063B64((int64_t *)(param_1 + 0xe));
+    PECMD_InitPtrTable((int64_t *)(param_1 + 0xe));
     *(uint32_t *)(param_1 + 0x11) = 0xffffffff;
     local_90 = (LPCRITICAL_SECTION)&g_csInit;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -25865,7 +25862,7 @@ uint64_t *PECMD_AddControlObject(uint64_t *param_1, int64_t param_2, uint32_t pa
     uint32_t uVar7;
     uint64_t local_28;
 
-    FUN_140053DC8(param_1, 7, (uint64_t)param_2, (LPCWSTR)*param_4, (LPCWSTR)g_szEmpty,
+    PECMD_ItemBaseInit(param_1, 7, (uint64_t)param_2, (LPCWSTR)*param_4, (LPCWSTR)g_szEmpty,
                   (LPCWSTR)*param_9, param_5, param_6, param_7, param_8);
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_1401294f0;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);
@@ -25892,7 +25889,7 @@ uint64_t *PECMD_AddControlObject(uint64_t *param_1, int64_t param_2, uint32_t pa
     else {
         uVar7 = uVar7 | 0x300;
     }
-    FUN_1400f072c((int64_t *)param_1[0xe], (LPCWSTR)g_szEmpty, uVar7 | 0x40000007,
+    PECMD_CreateButtonWindow((int64_t *)param_1[0xe], (LPCWSTR)g_szEmpty, uVar7 | 0x40000007,
                   (int *)&local_28, *(HWND *)(lVar1 + 0x20), param_3, 0);
     pWVar2 = param_12;
     lVar6 = PECMD_GetControlFont(lVar1);
@@ -26299,7 +26296,7 @@ uint64_t *PECMD_CreateControlBody(uint64_t *param_1, uint64_t param_2, uint32_t 
     uint32_t uVar5;
     uint32_t uVar6;
 
-    FUN_140053DC8(param_1, 0xd, param_2, (LPCWSTR)*param_4, (LPCWSTR)*param_10,
+    PECMD_ItemBaseInit(param_1, 0xd, param_2, (LPCWSTR)*param_4, (LPCWSTR)*param_10,
                   (LPCWSTR)g_szEmpty, param_5, param_6, param_7, param_8);
     *(uint32_t *)(param_1 + 0xf) = param_3;
     *(uint32_t *)((intptr_t)param_1 + 0x84) = param_12;
@@ -26377,7 +26374,7 @@ uint64_t *PECMD_InitControl(uint64_t *param_1, uint64_t param_2, int64_t param_3
     union { double d; uint64_t u; } uu;
 
     local_res20 = param_4;
-    FUN_140053DC8(param_1, 0x17, param_2, *(LPCWSTR *)param_5, (LPCWSTR)g_szEmpty,
+    PECMD_ItemBaseInit(param_1, 0x17, param_2, *(LPCWSTR *)param_5, (LPCWSTR)g_szEmpty,
                   (LPCWSTR)g_szEmpty, param_6, param_7, param_8, param_9);
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_1401268a8;
     EnterCriticalSection((LPCRITICAL_SECTION)&g_csInit);

@@ -18,7 +18,7 @@
  *   创建按钮控件核心        FUN_1400EFB08   @0x1400efb08
  *   通用 GDI 消息分发       FUN_1400F0814  @0x1400f0814
  *   合成半透明位图          PECMD_BltTransparentBits     @0x1400f0abc
- *   绘制控件(带背景)       FUN_1400F0FA8      @0x1400f0fa8
+ *   绘制控件(带背景)       PECMD_PaintLabelText      @0x1400f0fa8
  *
  * 约定:
  *   - 新实现函数使用 PECMD_ 可读名；未实现依赖仍 extern FUN_ + TODO(verify)
@@ -64,8 +64,7 @@ extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);  /* @0x1400629b8 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
-extern bool FUN_1400EFFF8(int64_t *obj, LPCWSTR text, DWORD style,
-                                       int *rect, HWND parent, uint32_t param6); /* @0x1400efff8 */
+extern bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent, uint32_t id); /* @0x1400efff8 */
 extern LRESULT FUN_1400E5890(int64_t obj);             /* @0x1400e5890 */
 extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
                                 int64_t script, int64_t cmdCtx, int64_t *varTable); /* @0x1400e5248 */
@@ -97,7 +96,7 @@ extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
 extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4);
 extern void PECMD_RefreshControlVisibility(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
-extern uint64_t *FUN_1400EFEC8(uint64_t *mem);
+extern uint64_t * PECMD_InitImageHolder(uint64_t *obj);
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
 extern void PECMD_AllocStrSlot(uint64_t *ps);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
@@ -737,7 +736,7 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
         rc.left += 4;
         rc.right -= 4;
     }
-    child = FUN_1400EFEC8((uint64_t *)operator_new(0xe8));
+    child = PECMD_InitImageHolder((uint64_t *)operator_new(0xe8));
     if (child == NULL)
         return;
     *(int64_t **)((uint8_t *)obj + 0x110) = (int64_t *)child;
@@ -765,7 +764,7 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
         SetWindowTextW(*(HWND *)((uint8_t *)obj + OBJ_HWND), str);
 
     int rcPack[4] = { rc.left, rc.top, rc.right, rc.bottom };
-    FUN_1400EFFF8((int64_t *)child, (LPCWSTR)local_res8, uVar5 | 0x40000020,
+    PECMD_CreateStaticWindow((int64_t *)child, (LPCWSTR)local_res8, uVar5 | 0x40000020,
                                rcPack, *(HWND *)((uint8_t *)obj + OBJ_HWND), 0x7d2);
     if ((flags & 2) != 0)
         memcpy((uint8_t *)(child + 0x12), (uint8_t *)((uint8_t *)obj + 0x90), 0x10);
@@ -936,11 +935,11 @@ void PECMD_BltTransparentBits(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc
         DeleteDC(hdcA);
 }
 
-/* ========== FUN_1400F0FA8 @0x1400f0fa8 ==========
+/* ========== PECMD_PaintLabelText @0x1400f0fa8 ==========
  * 绘制控件: alpha 阈值内 BeginPaint + DrawText (或百分比条), 否则
  * 走虚表消息 0x0f 后用 PECMD_FillCtlBackground 填背景。
  */
-void FUN_1400F0FA8(int64_t *obj, uint64_t p2, uint64_t p3)
+void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3)
 {
     PAINTSTRUCT ps;
     RECT rc, rc2;

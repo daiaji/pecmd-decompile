@@ -48,7 +48,7 @@ extern int64_t   FUN_14005c72c(const char *a, const WCHAR *w, int n);
 extern int64_t   PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
 extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 alloc */
-extern void      FUN_140063b64(void *out);                  /* @0x140063b64 array init */
+extern int64_t * PECMD_InitPtrTable(int64_t *arr);                  /* @0x140063b64 array init */
 extern WCHAR    *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 */
 extern void      PECMD_ExpandVarDispatch(int64_t *, LPCWSTR, int64_t *, int, int);
 extern int64_t   PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);
@@ -460,7 +460,7 @@ ULONGLONG PECMD_ForCommand(longlong *param_1, WCHAR *param_2, longlong *param_3,
         local_res10 = local_res10 + 1;
         WVar31 = *local_res10;
     }
-    FUN_140063b64(&local_3b0);
+    PECMD_InitPtrTable(&local_3b0);
     PECMD_SkipLeadingControlChars(&local_res10);
     local_45c = 0;
     local_420 = 0;

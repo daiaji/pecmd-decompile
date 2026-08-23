@@ -30,8 +30,7 @@ extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *pa
                           int param_4, int64_t param_5);
 extern uint64_t *PECMD_InitWebViewObj(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
 extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
-extern void FUN_1400f072c(int64_t *param_1, LPCWSTR param_2, DWORD param_3,
-                          int *param_4, HWND param_5, uint32_t param_6, DWORD param_7);
+extern bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent, uint32_t id, DWORD exStyle);
 extern LRESULT PECMD_GetControlFont(int64_t param_1);       /* @0x1400e5890 取对象字体 */
 extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
 extern void PECMD_SetCheckVariable(int64_t param_1, int param_2);   /* @0x14007df90 */
@@ -179,7 +178,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         param_1[7] = (uint64_t)plVar5;
         *(uint8_t *)((char *)plVar5 + 0xd8) = 4;
         uVar9 = uVar9 | 4;
-        FUN_1400f072c(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9, (int *)&local_38,
+        PECMD_CreateButtonWindow(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9, (int *)&local_38,
                       *(HWND *)(lVar1 + 0x20), param_3, 0);
     } else {
         bVar10 = 0x80;
@@ -197,7 +196,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         *(int16_t *)((char *)plVar5 + 0xea) = (int16_t)local_40;
         *(uint16_t *)((char *)plVar5 + 0xfc) = (uint16_t)local_48;
         *(uint16_t *)((char *)plVar5 + 0xfe) = (uint16_t)local_44;
-        FUN_1400f072c(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9 | 9, (int *)&local_38,
+        PECMD_CreateButtonWindow(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9 | 9, (int *)&local_38,
                       *(HWND *)(lVar1 + 0x20), param_3, 0);
         uVar9 = uVar9 | 0xb;
         SetWindowLongW((HWND)plVar5[4], -0x10, (LONG)uVar9);

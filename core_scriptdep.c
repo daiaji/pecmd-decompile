@@ -7,7 +7,7 @@
  *   去引号截断       FUN_14001D5F4       @0x14001d5f4
  *   脚本编码行插入   PECMD_PrependEnviHeader @0x140024f20
  *   sysinit 执行     PECMD_RunSysInit   @0x140025180
- *   sysinit 检查     FUN_1400251AC  @0x1400251ac
+ *   sysinit 检查     PECMD_CheckFirstStartupFlag  @0x1400251ac
  *   脚本子执行       PECMD_InvokeSubRoutine @0x140030dcc
  *   脚本 @CALL 插入  PECMD_PrependCallSubLine @0x140030f1c
  *   脚本编码块执行   PECMD_ExecuteScriptBlock     @0x140031068
@@ -42,7 +42,7 @@ extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001
 extern uint64_t FUN_14001B4F8(const WCHAR *buf, WCHAR ch);         /* @0x14001b4f8 core_var3.c */
 extern void *FUN_140017CDC(void *dst, void *src);                /* @0x140017cdc core_exec5.c */
 extern void FUN_1400186BC(void *s, int64_t parent);              /* @0x1400186bc core_exec5.c */
-extern void FUN_14006159C(void *script, uint64_t seed);           /* @0x14006159c core_exec2.c */
+extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed);           /* @0x14006159c core_exec2.c */
 extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 core_token.c */
 
 /* ---- 未实现依赖 (extern + TODO(verify), 不编造) ---- */
@@ -58,8 +58,7 @@ extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos); /* @
 extern void FUN_14004EAA8(void *script, int mode);   /* @0x14004eaa8 脚本结构清理 */
 extern uint32_t PECMD_ParseScriptSegments(void *script, int a, int b, WCHAR **pc, void *sub, uint32_t flags); /* @0x140030420 */
 extern uint32_t PECMD_LoadScriptFileSegment(WCHAR **buf, int a, LPCWSTR b, WCHAR **c, void *sub, uint32_t flags); /* @0x1400307c8 */
-extern int64_t FUN_1400B638C(void *script, void *buf, void *a3, void *a4, uint64_t flags,
-                             void *a6, void *a7);   /* @0x1400b638c 脚本执行主入口 */
+extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile, uint32_t flags, LPCWSTR pFile, void *pPersist);   /* @0x1400b638c 脚本执行主入口 */
 
 /* 本文件内前置声明 (PECMD_ExecuteScriptBlock 先于定义调用) */
 WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);  /* @0x14007034c 本文件 */
@@ -169,11 +168,11 @@ void PECMD_RunSysInit(void *script, LPCWSTR name)
     PECMD_AutoMountStartup(script, name);  /* TODO(verify) @0x1400250f0 */
 }
 
-/* ========== FUN_1400251AC @0x1400251ac ==========
+/* ========== PECMD_CheckFirstStartupFlag @0x1400251ac ==========
  * sysinit 一次性检查: 读注册表 "SysStartuped.load" 标记,
  * 未标记 (读失败或值为 0) 则写入标记并执行 sysinit。
  */
-void FUN_1400251AC(void *script)
+void PECMD_CheckFirstStartupFlag(void *script)
 {
     LPCWSTR name = g_sysinitName;       /* DAT_14013d060 */
     DWORD type = 0;                     /* 反编译 local_18 (类型输出) */
@@ -223,7 +222,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
     /* 反编译 local_e8 = *(undefined4*)(tmpl+4) 未见消费, 省略 */
     FUN_1400629B8(sub, WSTR("&&CurDir"), cwd);
     /* 反编译 local_c0 = key 未见消费, 省略 */
-    FUN_14006159C(sub, (uint64_t)(flags >> 16 & 0xffff));
+    PECMD_InitObfuscatedKeywords(sub, (uint64_t)(flags >> 16 & 0xffff));
     r = PECMD_ParseScriptSegments(script, 0, (int)pos, &nls, sub, flags);   /* TODO(verify) @0x140030420 */
     EnterCriticalSection(&g_csInit);
     v98 = NULL;                         /* 反编译 local_98[1]=0 (死写) TODO(verify) */
@@ -329,7 +328,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
         }
     }
     FUN_1400629B8(sub, WSTR("&&CurDir"), l1a8);
-    FUN_14006159C(sub, (uint64_t)key);
+    PECMD_InitObfuscatedKeywords(sub, (uint64_t)key);
     *l198 ^= key;                       /* 编码流首字符 = key */
     r = PECMD_LoadScriptFileSegment(&l198, 0, l178, &l1a0, sub, (uint32_t)key << 16); /* TODO(verify) */
     if (r == 0xffffffffu) {
@@ -369,7 +368,7 @@ DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t f
                                 (int)((size_t)((char *)p2 - (char *)l198) >> 1));
                     /* bVar13 != 0 与 bVar1&1 等价, 合并为 bVar13 ? script : NULL */
                     pv7 = bVar13 ? (void *)script : NULL;
-                    FUN_1400B638C(script, l198, (void *)a3, l178,
+                    PECMD_RunScriptText(script, l198, (void *)a3, l178,
                                   (uint64_t)((r & 2) | ((uint32_t)key << 16) | l180),
                                   p3, pv7);
                 }
