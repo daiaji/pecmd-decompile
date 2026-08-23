@@ -219,7 +219,7 @@ extern GUID g_guid2d178;           /* 壁纸 IID */
 extern uint8_t g_wallpaperMode;            /* 壁纸模式标志 */
 extern uint32_t g_u32A22C;
 extern uint8_t g_flagCCC9;
-extern uint8_t g_popmenuFlag;
+extern int8_t g_popmenuFlag;
 extern uint8_t g_flagCB08;
 extern uint8_t g_flagCCB3;
 extern uint64_t g_u64c9d0[4];

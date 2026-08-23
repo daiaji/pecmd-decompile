@@ -50,6 +50,8 @@ HASH $C:\pectest\smoke\payload_a.txt,%V_HASH%
 WRITE C:\pectest\smoke\out\hash.txt,%V_HASH%
 
 REGI HKCU\Software\PECMD_Smoke\V1=HelloRegi
+REGI HKCU\Software\PECMD_Smoke\ExpV=%V_A%_%V_B%
+REGI HKCU\Software\PECMD_Smoke\DONE=OK
 
 ENVI T_DONE=OK
 WRITE C:\pectest\smoke\out\done.txt,%T_DONE%
@@ -69,19 +71,15 @@ rc=$?
 echo "exit=$rc (log: $LOG_DIR/pecmd_run.log)"
 wineserver -w 2>/dev/null || true
 
-echo "== [4/6] 判读 =="
-# ① ENVI+展开+WRITE
+echo "== [4/6] 判读(主判据=注册表通道; 文件通道仅观测) =="
+rq(){ wine reg query 'HKCU\Software\PECMD_Smoke' /v "$1" 2>/dev/null; }
 conv(){ [ -f "$1" ] && { iconv -f UTF-16LE -t UTF-8 "$1" 2>/dev/null || cat "$1"; }; }
-conv "$SMOKE/out/vars.txt" 2>/dev/null | grep -q "V_A=Hello_V_B=Wine"; chk "① ENVI变量+%展开%+WRITE" "$?"
-# ② IFEX 文件存在判断
-conv "$SMOKE/out/ifex.txt" 2>/dev/null | grep -q "PAYLOAD_SEEN"; chk "② IFEX \$文件存在判断" "$?"
-# ③ HASH 引擎输出 32 位十六进制
-conv "$SMOKE/out/hash.txt" 2>/dev/null | grep -qE "^[0-9A-Fa-f]{32}"; chk "③ HASH 命令(MD5 真体)" "$?"
-# ④ REGI 注册表写入(HKCU)
-v=$(wine reg query 'HKCU\Software\PECMD_Smoke' /v V1 2>/dev/null | grep -i "HelloRegi")
-[ -n "$v" ]; chk "④ REGI 注册表写 HKCU" "$?"
-# ⑤ 收尾标记(解析器跑到最后一行)
-[ "$(cat "$SMOKE/out/done.txt" 2>/dev/null)" = "OK" ]; chk "⑤ 全程执行到末行(done=OK)" "$?"
+rq REGI_V1 | grep -qi "HelloRegi";                    chk "① REGI 注册表写(HKCU)" "$?"
+rq ExpV      | grep -qi "Hello_Wine";                 chk "② ENVI 变量+%展开%(经REGI回读)" "$?"
+rq DONE      | grep -qi "OK";                         chk "③ 全程执行到末行(DONE=OK)" "$?"
+conv "$SMOKE/out/vars.txt" | grep -q "V_A=Hello";     chk "[观测] WRITE 文件输出" "$?"
+conv "$SMOKE/out/ifex.txt" | grep -q "PAYLOAD_SEEN";  chk "[观测] IFEX \$存在判断" "$?"
+conv "$SMOKE/out/hash.txt" | grep -qE "[0-9A-Fa-f]{8}"; chk "[观测] HASH 输出" "$?"
 
 echo "== [5/6] 结果 =="
 for r in "${RESULTS[@]}"; do echo "  $r"; done

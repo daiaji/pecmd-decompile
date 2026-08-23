@@ -176,7 +176,7 @@ BOOL SetupDiSetDeviceRegistryPropertyW(HDEVINFO dev_info_set, void *dev_info_dat
 /* ---- 本批引用的全局数据 ---- */
 extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
 extern int16_t g_transState;        /* 透明值/状态 */
-extern uint8_t g_popmenuFlag;        /* popmenu 标志 */
+extern int8_t g_popmenuFlag;        /* popmenu 标志 */
 extern uint32_t g_hookBusyFlag;       /* 钩子忙标志 */
 extern uint32_t g_hookReentry;       /* 钩子重入计数 */
 extern DWORD g_d278[];        /* 线程 ID 表 */
@@ -863,7 +863,7 @@ int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
         pWVar5 = pWVar8;
     }
     local_38 = L'\0';
-    g_popmenuFlag = (uint8_t)(uintptr_t)pWVar5;
+    g_popmenuFlag = (int8_t)(uintptr_t)pWVar5;
     pWVar10 = (WCHAR *)0;
     pWVar5 = pWVar8;
     if ((*cmd == L'-') && (cmd[1] == L'-')) {

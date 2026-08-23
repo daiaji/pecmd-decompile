@@ -268,7 +268,7 @@ extern HFONT g_hFontFast;        /* DAT_14013cfa8 */
 extern int g_readBufSize;          /* DAT_14013a210 */
 extern int g_ramdrivFlag;          /* DAT_14013a220 */
 extern int16_t g_transState;       /* DAT_14013a24c */
-extern uint8_t g_popmenuFlag;      /* DAT_14013a348 */
+extern int8_t g_popmenuFlag;      /* DAT_14013a348 */
 extern uint32_t g_msgRetCode;      /* DAT_14013c91c */
 extern uint8_t g_flagCCC9;         /* DAT_14013ccc9 */
 extern uint8_t g_topiconFlag;      /* DAT_14013cccb */

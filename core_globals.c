@@ -186,8 +186,8 @@ void *g_pImDiskCreateMountPoint = NULL;  /* DAT_14013d0e0 ImDiskCreateMountPoint
 uint64_t g_rasState;            /* DAT_14013e2a0 RAS 等待状态 */
 uint64_t *g_pRasEntryBuf = NULL;/* DAT_14013e300 RAS 条目缓冲指针 */
 uint8_t g_richEditMode;         /* DAT_14013d300 富文本类选择 (2=RichEdit20W) */
-uint8_t g_tooltipThreshold;     /* DAT_14013a861 Tooltip 触发阈值 (TODO(verify)) */
-uint8_t g_tooltipCount0;        /* DAT_14013a860 Tooltip 计数 0 (TODO(verify)) */
+uint8_t g_tooltipThreshold = 1; /* DAT_14013a861 Tooltip 触发阈值 (PE .data 初值 0x01, 审计#B6) */
+uint8_t g_tooltipCount0 = 10;   /* DAT_14013a860 Tooltip 计数 (PE .data 初值 0x0A, 审计#B7) */
 
 /* DAT_14013a058 @0x14013a058 */
 int g_cmdTable3Count;
@@ -303,7 +303,7 @@ uint8_t g_lowVerFlag;
 uint32_t g_sysColor8;
 
 /* DAT_14013a258 @0x14013a258 */
-int g_tooltipTimeout;
+int g_tooltipTimeout = 3000;    /* DAT_14013a258 (PE .data 初值 3000, 审计#B9) */
 
 /* DAT_14013caf9 @0x14013caf9 */
 uint8_t g_runMode;
@@ -369,7 +369,7 @@ uint8_t g_fgWndLock;
 int g_dblClickFlag;
 
 /* DAT_14013a320 @0x14013a320 */
-char g_scrollOff;
+char g_scrollOff = -8;          /* DAT_14013a320 (PE .data 初值 0xF8=-8, 惰性加载哨兵, 审计#B5) */
 
 /* DAT_14013d2f8 @0x14013d2f8 */
 HMODULE g_hRichEdit;
@@ -416,7 +416,7 @@ int g_ramdrivFlag;
 int16_t g_transState;
 
 /* DAT_14013a348 @0x14013a348 */
-uint8_t g_popmenuFlag;
+int8_t g_popmenuFlag = -1;      /* DAT_14013a348 (PE .data 初值 0xFF=-1, 非零守卫, 审计#B8) */
 
 /* DAT_14013c91c @0x14013c91c */
 uint32_t g_msgRetCode;
@@ -511,10 +511,10 @@ int g_intA238;
 int g_intA23C;
 
 /* DAT_14013a240 @0x14013a240 */
-int g_intA240;
+int g_intA240 = (-0x80000000);  /* DAT_14013a240 (PE .data 初值 INT_MIN 哨兵, 审计#B10) */
 
 /* DAT_14013a244 @0x14013a244 */
-int g_intA244;
+int g_intA244 = (-0x80000000);  /* DAT_14013a244 (同上, 审计#B10) */
 
 /* DAT_14013a24a @0x14013a24a */
 uint8_t g_u8A24A;

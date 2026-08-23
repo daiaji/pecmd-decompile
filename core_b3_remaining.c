@@ -7126,7 +7126,7 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
     }
     DragAcceptFiles(hWnd, 1);
     *(uint8_t *)((char *)plVar2_bb8 + 0xac) = *(uint8_t *)((char *)plVar2_bb8 + 0xac) | bVar11;
-    PECMD_SetObjectEnable((int64_t)(uintptr_t)param_1, (uint32_t)(-1 < *(uint16_t *)((char *)param_1 + 0x70)));
+    PECMD_SetObjectEnable((int64_t)(uintptr_t)param_1, (uint32_t)(-1 < *(int16_t *)((char *)param_1 + 0x70)));
     PECMD_SetObjectVisibleVar((int64_t)(uintptr_t)param_1, uVar10 & 0x10000000);
     if ((*(uint8_t *)((char *)param_1 + 0x70) & 0x40) != 0) {
         PostMessageW(hWnd, 0x115, 7, 0);

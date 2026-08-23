@@ -8,7 +8,11 @@
    "dc_line": 2522,
    "dc": "DAT_14013a24f = 0xff;   /* 另见 =-1 @81992/133466/133746, =0xfe @6580, =1 @5558/5665 */",
    "verdict": "REAL_BUG",
-   "fix": "根因项: 改为 int8_t g_flagA24F (core_globals.c + include/pecmd_defs.h:112 同步)。dc 为有符号 char: 写入 0xff/-1/-2 均为负哨兵, 读侧 '< 0'/'< 1'/'\\0 < x' 全部按有符号判定。现 uint8_t 使全部序比较在哨兵值下反向(如 0xff>0 真 vs dc -1>0 假), 波及全库 ~45 处使用点(b2b/b2c/b2f/thread/b3r_c/b3r_g1/b3r_h4/b3_remaining/b8h/link_stubs); 改类型即整体修复, 方法同 git 96d2544(g_flagA249)。"
+   "fix": "根因项: 改为 int8_t g_flagA24F (core_globals.c + include/pecmd_defs.h:112 同步)。dc 为有符号 char: 写入 0xff/-1/-2 均为负哨兵, 读侧 '< 0'/'< 1'/'\\0 < x' 全部按有符号判定。现 uint8_t 使全部序比较在哨兵值下反向(如 0xff>0 真 vs dc -1>0 假), 波及全库 ~45 处使用点(b2b/b2c/b2f/thread/b3r_c/b3r_g1/b3r_h4/b3_remaining/b8h/link_stubs); 改类型即整体修复, 方法同 git 96d2544(g_flagA249)。",
+   "round2_verification": {
+    "status": "FIXED@a189151",
+    "note": "int8_t 已落地(core_globals.c+pecmd_defs.h)。复核代理独立确认 dc 哨兵证据。"
+   }
   },
   {
    "file": "core_b1_remaining.c",
@@ -18,7 +22,11 @@
    "dc_line": 920,
    "dc": "if ((DAT_14013a24f < '\\0') && ((char)param_1[0xfa].unused != 'Z')) { ... }   /* FUN_140003184 */",
    "verdict": "REAL_BUG",
-   "fix": "注释断言『与原始一致』有误: dc@2522 写 0xff(=-1) 后该分支可达(WM_CLOSE 强关窗口路径)。随根因项改 int8_t 后删除本地加宽, 直接写 if ((char)g_flagA24F < 0) 或保留 int8_t 全局后用 g_flagA24F < 0。"
+   "fix": "注释断言『与原始一致』有误: dc@2522 写 0xff(=-1) 后该分支可达(WM_CLOSE 强关窗口路径)。随根因项改 int8_t 后删除本地加宽, 直接写 if ((char)g_flagA24F < 0) 或保留 int8_t 全局后用 g_flagA24F < 0。",
+   "round2_verification": {
+    "status": "AUTO-CURED@a189151",
+    "note": "全局改 int8_t 后 (int)g_flagA24F 可为负, <0 分支恢复可达; 但 :548 行注释『uint8_t→int 加宽; <0 恒为假, 与原始一致』描述的是修复前状态且断言错误, 应更正以免误导后续维护者。"
+   }
   },
   {
    "file": "core_b1_remaining.c",
@@ -28,7 +36,11 @@
    "dc_line": 6579,
    "dc": "if (DAT_14013a24f < '\\0') {\n      DAT_14013a24f = 0xfe;\n      FUN_14000568c();\n      return 0;\n    }   /* FUN_14000befc service 主循环 */",
    "verdict": "REAL_BUG",
-   "fix": "同上: 服务主循环的退出分支(dc 置 -1 哨兵后触发 0xfe 清理退出)恒不可达。随根因项修复; 4347 行赋值建议同步改写为 g_flagA24F = -1 以对齐 dc 字面形式。"
+   "fix": "同上: 服务主循环的退出分支(dc 置 -1 哨兵后触发 0xfe 清理退出)恒不可达。随根因项修复; 4347 行赋值建议同步改写为 g_flagA24F = -1 以对齐 dc 字面形式。",
+   "round2_verification": {
+    "status": "AUTO-CURED@a189151",
+    "note": "同上恢复可达; :4346 同样残留过时注释应更正。"
+   }
   },
   {
    "file": "link_stubs.c",
@@ -38,7 +50,11 @@
    "dc_line": 133234,
    "dc": "if ((DAT_14013a24f < '\\0') && (param_1[0x74].unused != 0x43c)) { ... }   /* FUN_1400d9818, 函数头 @133142 */",
    "verdict": "REAL_BUG",
-   "fix": "uint8_t 上 '< \\'0\\'' 恒假 → 0x43c 重入保护分支不可达。随根因项(int8_t)自动修复。注意: link_stubs.c 正被其它代理并发修改, 行号以当前快照为准可能漂移(函数定位 FUN_1400d9818 不受漂移影响)。"
+   "fix": "uint8_t 上 '< \\'0\\'' 恒假 → 0x43c 重入保护分支不可达。随根因项(int8_t)自动修复。注意: link_stubs.c 正被其它代理并发修改, 行号以当前快照为准可能漂移(函数定位 FUN_1400d9818 不受漂移影响)。",
+   "round2_verification": {
+    "status": "STILL_ALIVE",
+    "note": "复核+亲证(当前快照行号漂移至 18234): 真根因是 link_stubs.c:18105 的本地声明 extern uint8_t g_flagA24F —— 该 TU 仅含 stdint/stddef/stdbool/string/stdarg, 不含 pecmd_defs.h, 故 a189151 对头文件的修改治愈不了它。同 TU 18279/18293/18760/18799 的 '\\0' < g_flagA24F 在 flag=-1 时仍与 dc 反向(等待条件永不满足风险)。修复: 18105 一处改 extern int8_t g_flagA24F 即全 TU 治愈。"
+   }
   },
   {
    "file": "core_b3_remaining.c",
@@ -48,7 +64,15 @@
    "dc_line": 50210,
    "dc": "FUN_140053c5c((longlong)param_1,(uint)(-1 < *(short *)(param_1 + 0xe)));   /* FUN_140054bb8, +0xe*8=字节0x70 */",
    "verdict": "REAL_BUG",
-   "fix": "dc 读 short(有符号16位): 字段≥0x8000 时 -1<x 为假 → 控件禁用位不置位; 我们读 uint16_t 使 '-1 < x' 恒真(gcc type-limits 在警), 分支永真。fix: 改读有符号: (uint32_t)(-1 < *(int16_t *)((char *)param_1 + 0x70))。census 遗留的唯一现存 type-limits 警告点。"
+   "fix": "dc 读 short(有符号16位): 字段≥0x8000 时 -1<x 为假 → 控件禁用位不置位; 我们读 uint16_t 使 '-1 < x' 恒真(gcc type-limits 在警), 分支永真。fix: 改读有符号: (uint32_t)(-1 < *(int16_t *)((char *)param_1 + 0x70))。census 遗留的唯一现存 type-limits 警告点。",
+   "round2_verification": {
+    "status": "NOT_LANDED",
+    "note": "修复提交 a189151 信息声称『b3r:7129改int16_t读』但 diff 未含该文件, 当前树仍为 *(uint16_t*) 恒真(gcc type-limits 仍在警)。需按原建议落地: 改 *(int16_t *)。"
+   },
+   "proposed_patch": {
+    "diff": "-    ...(-1 < *(uint16_t *)((char *)param_1 + 0x70)));\n+    ...(-1 < *(int16_t *)((char *)param_1 + 0x70)));",
+    "verify": "/tmp 副本预编译: 警告 93→92, 唯一消失项 = 7129:70 恒真 type-limits(验收信号命中); 零新增; exit 0"
+   }
   },
   {
    "file": "core_thread.c",
@@ -58,7 +82,11 @@
    "dc_line": 24069,
    "dc": "if ((int)param_7 != -1) {\n    param_7 = param_7 + 5 + param_7 / 10;\n  }   /* FUN_140027eac 任务线程创建; 下游调用同传 param_7 & 0xffffffff */",
    "verdict": "REAL_BUG",
-   "fix": "宽度转写错误: dc 按 32 位有符号截断判 -1(INFINITE 哨兵 0xFFFFFFFF); 我们用 int64_t 判, 0xFFFFFFFF≠-1 → 对 INFINITE 超时错误执行 +5+1/10 调整并把垃圾值传给 FUN_1400195F0。fix: (int64_t)→(int): if ((int)a7 != -1)。"
+   "fix": "宽度转写错误: dc 按 32 位有符号截断判 -1(INFINITE 哨兵 0xFFFFFFFF); 我们用 int64_t 判, 0xFFFFFFFF≠-1 → 对 INFINITE 超时错误执行 +5+1/10 调整并把垃圾值传给 FUN_1400195F0。fix: (int64_t)→(int): if ((int)a7 != -1)。",
+   "round2_verification": {
+    "status": "FIXED@a189151",
+    "note": "(int)a7 已与 dc@24069 一致; 复核代理参数同一性(第7参)与下游 &0xffffffff 传参均确认。"
+   }
   },
   {
    "file": "core_b7c.c",
@@ -68,7 +96,17 @@
    "dc_line": 127424,
    "dc": "local_8f8 = (uint)*(short *)((longlong)(local_8a0 + 0xc) + (longlong)local_8b8);\nif ((local_904 == *(short *)((longlong)puVar20 + -2)) &&\n   (local_8f8 == (int)(short)*puVar20)) break;   /* FUN_1400cd3a8 SEG6 物理盘枚举 */",
    "verdict": "REAL_BUG",
-   "fix": "符号扩展不对称: dc 两侧均为 signed short 读(uint 存储亦经符号扩展), 值≥0x8000 时两侧同为 0xFFFFFFxx 可相等; 我们左侧 ushort 读零扩展(0x0000FFxx) vs 右侧符号扩展(0xFFFFFFxx) → 高位字对的配对扫描永不命中。fix: 左侧存储改 (uint)*(int16_t *)(...) (与 dc 同形), 右侧保持; 即可恢复等价。注: core_b7c.c 并发修改中, 当前快照行号 5466/5471(census 旧值 3311 已漂移), 定位锚 LAB_1400ce5a6 主循环内配对扫描。"
+   "fix": "符号扩展不对称: dc 两侧均为 signed short 读(uint 存储亦经符号扩展), 值≥0x8000 时两侧同为 0xFFFFFFxx 可相等; 我们左侧 ushort 读零扩展(0x0000FFxx) vs 右侧符号扩展(0xFFFFFFxx) → 高位字对的配对扫描永不命中。fix: 左侧存储改 (uint)*(int16_t *)(...) (与 dc 同形), 右侧保持; 即可恢复等价。注: core_b7c.c 并发修改中, 当前快照行号 5466/5471(census 旧值 3311 已漂移), 定位锚 LAB_1400ce5a6 主循环内配对扫描。",
+   "round2_verification": {
+    "status": "PARTIALLY_LANDED_STILL_ALIVE",
+    "note": "a189151 仅改比较侧 *(ushort*)→*(int16_t*); 存储侧 :5465 仍为 (uint)*(ushort *)(...) 零扩展 → 值≥0x8000 时左 0x0000XXXX vs 右 0xFFFFFFXX 仍永不相等(dc@127419 两侧同为符号扩展)。需再改 5465 读侧为 (short)/(int16_t)。"
+   },
+   "proposed_patch": {
+    "diff": "-                                local_8f8 = (uint)*(ushort *)((uintptr_t)ent + 24 +\n+                                local_8f8 = (uint)*(int16_t *)((uintptr_t)ent + 24 +\n                                                               (uintptr_t)local_8b8);",
+    "verify": "/tmp/t_b7c.c 预编译: 警告 42→42 且集合不变(5471:56 sign-compare 属比较形式本身非回归); exit 0。语义: 修复后两侧均为 int16 符号扩展像, uint==int 全值域等价 dc short 比较",
+    "corroboration": "local_8f8(b7c:4651,uint) 全文件仅此一处赋值, 修复无旁溢; dc@127419 存储侧 (uint)*(short*)",
+    "downstream": "回归审查补充: local_8f8 的有符号判读点 b7c:5541 (0 < (int)local_8f8) 与 :5560 ((int)local_8f8 < 1) 在高半区值下同样与 dc 反向——5465 存储侧修复可一并治愈"
+   }
   },
   {
    "file": "core_b1_remaining.c",
@@ -519,11 +557,339 @@
    "dc": "DAT_14013cad0 = -1; ... uVar7 = (ulonglong)DAT_14013cad0; if (DAT_14013cad0 != '\\0')   /* 仅零扩展与非零测试 */",
    "verdict": "FAITHFUL",
    "fix": "登记: dc 虽写 -1 但读侧仅 !=0/零扩展, uint8_t 行为等价, 不修。(对照 A24F: 读侧存在有序比较故必须改 int8_t)"
+  },
+  {
+   "file": "link_stubs.c",
+   "line": 18105,
+   "pattern": "B",
+   "ours": "extern uint8_t g_flagA24F;        /* DAT_14013a24f */   /* 本 TU 私有声明, 不含 pecmd_defs.h */",
+   "dc_line": 133234,
+   "dc": "DAT_14013a24f 为有符号 char(dc@2522=0xff, @81992/@133466/@133746=-1, @6580=0xfe; 读侧 @133234 '< \\'0\\'' 等)",
+   "verdict": "REAL_BUG",
+   "fix": "改为 extern int8_t g_flagA24F;(单点)——同 TU 18234(<'\u0000' 重入保护恒假)、18279/18293/18760/18799('\u0000'< 等待条件在 -1 时反转)、18465/18750((uint8_t)-1 赋值兼容) 全部随之治愈。",
+   "round2_verification": {
+    "status": "NEW_ROOT_CAUSE",
+    "note": "由第二轮复核发现: a189151 只改了 pecmd_defs.h, 漏掉此本地 extern。 [A24F集群定性: 该TU内7处序比较仍反转(HANG风险由其余各点超时兜底, 18234 关机通知恒丢); 且与 pecmd_defs.h:112 构成跨TU ODR 冲突]"
+   },
+   "proposed_patch": {
+    "diff": "-extern uint8_t g_flagA24F;        /* DAT_14013a24f */\n+extern int8_t g_flagA24F;        /* DAT_14013a24f */",
+    "verify": "/tmp 副本预编译: 警告 228→227, 唯一消失项 = link_stubs.c:18234 恒假 type-limits(即本缺陷验收信号); 零新增; exit 0",
+    "corroboration": "dc 全库 DAT_14013a24f 共 76 处使用均为有符号 char 模式; 副本 /tmp/u_link.c(03:18 并发修改后已按最新基线复验)"
+   }
+  },
+  {
+   "file": "core_globals.c",
+   "line": 672,
+   "pattern": "B",
+   "ours": "uint8_t g_charTableF;  /* 零初始化; 且状态被拆成 3 个影子变量: core_scriptdep.c:37 int8_t g_flagA248=0 / core_script2.c:41 static int32_t g_autoAppFlag */",
+   "dc_line": 29432,
+   "dc": "if (DAT_14013a248 < '\\0') { DAT_14013a248 = '\\x01'; }  (另 L15812 '\\0'<DAT 守卫; L30191/30262/30313 同型规格化)",
+   "verdict": "REAL_BUG",
+   "fix": "三重修复: ① 按 PE 初值改 int8_t g_charTableF = -1(0xFF); ② 合并三影子变量为单一 g_flagA248(int8_t) 并全库统一引用(CODE 命令写点 link_stubs.c:7149/7153 现写在 g_charTableF 上, RunCommand 移植版丢失 3 处规格化点); ③ 恢复 '< \\'0\\'' 有符号序语义。",
+   "pe_init": "0x14013a248 首字节 FF(pe_registry.json 实读)=-1 哨兵",
+   "discovery": "第二轮全局普查子代理(PE .data 直读仲裁)"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 372,
+   "pattern": "B",
+   "ours": "char g_scrollOff;  /* 零初始化 → '< \\'0\\'' 永假, 惰性加载永不触发, 列表位置计算恒用 0 */",
+   "dc_line": 49467,
+   "dc": "if (DAT_14013a320 < '\\0') { DAT_14013a320 = (char)local_res1c * '\\x02'; }  后续滚动定位使用该值",
+   "verdict": "REAL_BUG",
+   "fix": "类型忠实(signed char✓), 纯初值缺失: 改 char g_scrollOff = -8;(PE 0xF8)。移植代码 core_b3_remaining.c:6808-6812 比较逻辑本身无需动。",
+   "pe_init": "0x14013a320 首字节 F8=-8"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 189,
+   "pattern": "B",
+   "ours": "uint8_t g_tooltipThreshold;  /* 零初始化(TODO(verify)) */",
+   "dc_line": 155740,
+   "dc": "if (DAT_14013a861 < '\\x01') { FUN_1400f1448(...); };  L148822/L155829 与计数器相等比较",
+   "verdict": "REAL_BUG",
+   "fix": "改 uint8_t g_tooltipThreshold = 1;(PE 0x01)。现零初值使 b8i:619 '(int8_t)x<1' 为真(原假), 刷新时机提前; b8i:449/b8l:637 相等匹配永不相等。",
+   "pe_init": "0x14013a861 = 01"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 190,
+   "pattern": "B",
+   "ours": "uint8_t g_tooltipCount0;  /* 零初始化(TODO(verify)) */",
+   "dc_line": 148825,
+   "dc": "counter <= DAT_14013a860 (L148825/L155832); !=/== (L148828/L155835)",
+   "verdict": "REAL_BUG",
+   "fix": "改 uint8_t g_tooltipCount0 = 10;(PE 0x0A)。现计数上限变 0: 计数停于 1, '!=counter' 恒真提前 return(b8i:451-454) → tooltip 步进动画与 0x2A1 投递路径整体不可达。",
+   "pe_init": "0x14013a860 = 0A(10)"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 419,
+   "pattern": "B",
+   "ours": "uint8_t g_popmenuFlag;  /* 零初始化; 符号敏感读已正确(b2c:862 (int8_t) 强转), 但初值缺失 */",
+   "dc_line": 28754,
+   "dc": "(char)DAT_14013a348 < '\\0' (L28754); '\\0' < DAT (L121770); L7402 if(DAT!='\\0') 守卫下写 QueryCmd 结果",
+   "verdict": "REAL_BUG",
+   "fix": "改 uint8_t→int8_t 并按 PE 初值 -1 初始化(或至少 =0xff;)。现零初值使 L7402 非零守卫永假 → QueryCmd= 配置永不生效, 下游 L121770 序判定随之分叉。",
+   "pe_init": "0x14013a348 首字节 FF"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 306,
+   "pattern": "B",
+   "ours": "int g_tooltipTimeout;  /* 零初始化 */",
+   "dc_line": 27591,
+   "dc": "if (DAT_14013a258 < 1000) { DAT_14013a258 = 5000; }  L28008 作 SetTimer 周期",
+   "verdict": "REAL_BUG",
+   "fix": "低危: 改 int g_tooltipTimeout = 3000;(PE 0x0BB8)。现零初值使首跑即被钳到 5000, 默认提示周期 3000→5000ms 与原版不符。",
+   "pe_init": "0x14013a258 = B8 0B 00 00 (3000)"
+  },
+  {
+   "file": "core_globals.c",
+   "line": 514,
+   "pattern": "B",
+   "ours": "int g_intA240; / int g_intA244(:517);  /* 均零初始化 */",
+   "dc_line": 40999,
+   "dc": "if (DAT_14013a244 == -0x80000000) 重算路径(L40999); < 1 回退计算(L25406/L25410)",
+   "verdict": "REAL_BUG",
+   "fix": "低危: 两处补 = (-0x80000000);(PE INT_MIN 哨兵)。现零初值使哨兵检查在未配置 TIP= 时永不命中, 回退分支以 0 参与运算, 默认窗口矩形与原版不同。",
+   "pe_init": "0x14013a240/a244 = 00 00 00 80 (INT_MIN)"
   }
  ],
  "summary": {
-  "real_bugs": 7,
+  "real_bugs": 15,
   "faithful": 45,
   "unsure": 0
+ },
+ "a24f_cluster": {
+  "root_cause": "link_stubs.c:18105 extern uint8_t g_flagA24F 与 include/pecmd_defs.h:112 int8_t 构成跨TU非兼容声明(ODR); link_stubs TU 不含 pecmd_defs.h, 其内 7 处序比较仍按无符号反转",
+  "fix": "link_stubs.c:18105 一行改 extern int8_t g_flagA24F; 即全 TU 治愈(其余 38 处已随 a189151 的头文件/定义改型自动恢复)",
+  "risk_summary": {
+   "HANG": 8,
+   "WRONG-BRANCH": 24,
+   "LATENT": 2,
+   "BENIGN": 11,
+   "total_sites": 45
+  },
+  "key_rows": [
+   {
+    "site": "core_b1_remaining.c:4346-4351",
+    "form": "CAST-WIDEN <0",
+    "risk": "HANG(唯一无自然退出界: 服务主循环死循环, dc@6579)",
+    "status": "auto-cured@a189151"
+   },
+   {
+    "site": "core_b1_remaining.c:1575",
+    "form": "while(0<g){Sleep}",
+    "risk": "HANG(dc@2246)",
+    "status": "cured"
+   },
+   {
+    "site": "core_b2f.c:7609/7615",
+    "form": "'\\0'<g 等待",
+    "risk": "HANG(计数兜底, dc@37358/37364)",
+    "status": "cured"
+   },
+   {
+    "site": "core_b2c.c:329",
+    "form": "while(g>0&&hook==0) 泵消息",
+    "risk": "HANG(超时兜底, dc@22781)",
+    "status": "cured"
+   },
+   {
+    "site": "core_thread.c:298",
+    "form": "while(g>0){PeekMessage}",
+    "risk": "HANG(deadline/maxmsg兜底, dc@14362)",
+    "status": "cured"
+   },
+   {
+    "site": "core_b3_remaining.c:24514",
+    "form": "'\\0'<g 收尾等待",
+    "risk": "HANG(uVar2超时兜底, dc@112716)",
+    "status": "cured"
+   },
+   {
+    "site": "core_b3r_g1.c:210",
+    "form": "('\\0'<g) 定位窗口等待",
+    "risk": "HANG(param_7超时兜底, dc@62003)",
+    "status": "cured"
+   },
+   {
+    "site": "link_stubs.c:18234",
+    "form": "(g<'\\0')&&(msg!=0x43c) 关机通知",
+    "risk": "WRONG-BRANCH 恒假→通知丢失(dc@133234)",
+    "status": "ALIVE(本TU uint8_t)"
+   },
+   {
+    "site": "link_stubs.c:18279/18293/18760/18799/18876/18927",
+    "form": "('\\0'<g)&&… 守卫×6",
+    "risk": "WRONG-BRANCH 恒真→关机期菜单/托盘守卫恒放行(dc@133281/133295/133756/133793/133868/133920)",
+    "status": "ALIVE(本TU uint8_t)"
+   },
+   {
+    "site": "core_b8h.c:524",
+    "form": "if((int8_t)g>0)",
+    "risk": "BENIGN(显式cast两regime均对, dc@142567)",
+    "status": "ok"
+   }
+  ],
+  "side_finding": "dc FUN_14000a584 的 9 个读点(dc:5975/6092/6468-6529)在我方树为 UNIMPLEMENTED 桩; dc 写点 45829(=0xff)/81992(=-1) 也无对应实现 → 我方树负值写入源仅剩 b1:1771(dc@2522)、b1:4348(dc@6580)、link_stubs 18465/18750(dc@133466/133746)。超出符号性审计范围, 移交主代理作完整性线索。",
+  "note": "link_stubs.c 行号随并发修改漂移, 引用以形式原文重新定位"
+ },
+ "global_sweep": {
+  "method": "dc 全库 DAT_ 有序比较(对 -2..2 常量)机械提取 → 26 候选 → 逐个映射我方声明类型与使用形态",
+  "conclusion": "无新增 REAL_BUG；A24F 家族为此类唯一缺陷",
+  "resolved": [
+   {
+    "dat": "14013a249",
+    "verdict": "已修(int8_t, git 96d2544)"
+   },
+   {
+    "dat": "14013a24b",
+    "verdict": "int8_t ✓"
+   },
+   {
+    "dat": "14013a24c",
+    "verdict": "int16_t g_transState ✓"
+   },
+   {
+    "dat": "14013a24f",
+    "verdict": "REAL_BUG 已立案(见 audit#1/#4)"
+   },
+   {
+    "dat": "14013a848",
+    "verdict": "FAITHFUL(extern uint32_t 但全部使用点显式 (int32_t) 转换; b3_rem:21800-21823)",
+    "note": "声明类型与 dc int 不一致属脆弱写法,建议顺手改 int32_t"
+   },
+   {
+    "dat": "14013a854",
+    "verdict": "FAITHFUL(int DAT=-64 与 .data 0xFFFFFFC0 一致; b8_remaining:86)"
+   },
+   {
+    "dat": "14013d868(g_dpi)",
+    "verdict": "BENIGN(uint32 但值域恒正 96/120; dc '0<x' 正数域)"
+   },
+   {
+    "dat": "14013a058/a078/a098/ca98",
+    "verdict": "extern int ✓"
+   },
+   {
+    "dat": "14013e240",
+    "verdict": "long long ✓"
+   },
+   {
+    "dat": "14013cf80",
+    "verdict": "BENIGN(link_stubs:16259 ushort 热键计数, 小正数域)"
+   },
+   {
+    "dat": "14013f524/140140780/14013bf48",
+    "verdict": "N/A(CRT 内部 _free_osfhnd/__initstdio/cvtdate, 不在移植范围)"
+   },
+   {
+    "dat": "1401261a0",
+    "verdict": "N/A(double 常量 1.0)"
+   },
+   {
+    "dat": "14013ccb8/d3b8/d5a8/d7dc/d7e8/d870/e128/a240/a244/helpVerFlag",
+    "verdict": "有符号声明 ✓"
+   }
+  ]
+ },
+ "sentinel_sweep": {
+  "method": "grep 显式cast+-1/0xffffffff 比较(收窄版, 吸收两次失败的子代理任务)+逐点dc对照",
+  "conclusion": "该类别干净: 6 个非结案候选全部 FAITHFUL",
+  "checked": [
+   {
+    "site": "core_b1_remaining.c:9523",
+    "dc": "FUN_14001f1d4 body42 (HICON)0xffffffffffffffff 等值",
+    "verdict": "FAITHFUL"
+   },
+   {
+    "site": "core_b1_remaining.c:9624",
+    "dc": "body139 (longlong)param_1 - 1U == 0xfffffffffffffffd 同宽包裹等值",
+    "verdict": "FAITHFUL"
+   },
+   {
+    "site": "core_b2f.c:4415",
+    "dc": "FUN_1400369d0 local_1d8[0]=0xffffffff 哨兵,布尔化等值",
+    "verdict": "FAITHFUL"
+   },
+   {
+    "site": "core_b3_remaining.c:16660",
+    "dc": "body52 (longlong)param_1 - 0x10001U < 0xfffffffffffaffff 同式范围检查",
+    "verdict": "FAITHFUL"
+   },
+   {
+    "site": "core_b8m.c:3265",
+    "dc": "body88 if ((int)CVar5 < -1) 逐字同形",
+    "verdict": "FAITHFUL"
+   },
+   {
+    "site": "core_b3r_h3.c:1294",
+    "dc": "99015 ((char)*pWVar17==-2)&&(*(char*)(+1)==-1) 逐字同形(BOM写探测)",
+    "verdict": "FAITHFUL"
+   }
+  ],
+  "note": "原派发代理 953875ce/843f14f1 均无输出中止; 任务由主审计自行吸收完成"
+ },
+ "regression_review": {
+  "scope": "a189151 实际落地的 4 处(globals:31/pecmd_defs.h:112/b7c:5472/thread:382)",
+  "verdict": "无行为回归; 3 处遗漏适配+1 处文档回归(=本审计已立案的 P1-P4)",
+  "confirmed_ok": {
+   "assign_points": 8,
+   "api_pass_points": 0,
+   "printf_format_uses": 0,
+   "ordered_eq_points": 30,
+   "note": "值域{0,1,2,-1,-2}逐类核对与 dc 一致; b8h:524 显式(int8_t)转换现冗余但无害; b1:1771/=0xff 与 b1:4348/=0xfe 为实现定义截断,gcc 得 -1/-2 与 dc 一致(可选风格化)"
+  },
+  "build_baseline": {
+   "tus": 96,
+   "pass": 90,
+   "fail": 6,
+   "fail_note": "全部为 ghidra_out/ 原始转储碎片(如 140034788.c),与本库无关的既有噪音",
+   "warnings_total": 422,
+   "key_files": {
+    "core_b7c.c": 42,
+    "link_stubs.c": 228,
+    "core_b3_remaining.c": 93
+   },
+   "type_limits": "全库仅存 2 条: b3_rem:7129:70(恒真) 与 link_stubs:18234:21(恒假) —— 恰为两处未落地符号读,交叉印证",
+   "tool_side_finding": "build.sh 无参数时循环为空,'默认全部'注释失效"
+  },
+  "p4_note": "link_stubs 该块整体是工作区未提交 WIP(HEAD 版本零处 g_flagA24F); WIP 落地前须同步 18105 为 int8_t"
+ },
+ "field_read_sweep": {
+  "method": "dc 全库 *(short*)/*(char*) 字段有序比较穷举 grep + 逐点对照我方读取类型(吸收失败子代理任务)",
+  "conclusion": "无新增 REAL_BUG; 已知 b3_rem:7129/b8k:992 外全部忠实",
+  "key_results": [
+   {
+    "site": "msgbox +0x37c",
+    "verdict": "int16_t 读 ✓"
+   },
+   {
+    "site": "b2d +0x14e",
+    "verdict": "int16_t 读 ✓"
+   },
+   {
+    "site": "b9 +0xf9/0xfa",
+    "verdict": "char 读 ✓"
+   },
+   {
+    "site": "b8i:401 FUN_1400f20c0 +0xa2",
+    "verdict": "FAITHFUL(dc 此处按 char 视图读同址, 我们 int8_t 对应)"
+   },
+   {
+    "site": "+0xa2 其余 8 处(b8i/b8k/b8l/b8m)",
+    "verdict": "int16_t 读与 dc short 一致 ✓"
+   },
+   {
+    "site": "数字判定族 (ushort)(short-0x30)<10 @27957/31178/86899/99599",
+    "verdict": "包裹形式符号安全, 我方 uint16 同形 ✓"
+   },
+   {
+    "site": "FUN_1400f6db0/1400d85d0",
+    "verdict": "我方为纯桩, 无转写对象"
+   }
+  ]
  }
 }
