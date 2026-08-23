@@ -3564,3 +3564,14 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - **固化策略(下批起执行)**: 每函数改名前先全库收割「定义签名+全部声明+调用实参拼写」, 以定义为规范,
   声明归一 + 少数派调用点显式 cast, 同一脚本趟内完成; 每组 ≤6 名过 build/link 门再下一组。
   首参可 void* 化的串构造器族(FreeStrBuf 已实证 28 声明归一零痛)优先。
+
+## 125. 命名批 P1/G2/G3（逐函数归一化管线成型, goal 复启后）
+- 管线定型: rename(--sync-ls) → 定义签名收割 → 全库声明归一 → 少数派调用点 cast(编译器驱动)
+  → 孪生定义 ls 侧 static 化/删除 → build/link 门。P1=7名/G2=4名+AllocWStringBuffer归并/G3=24名。
+- **EXEC 巨命令定名**: 14000e26c → PECMD_ExecCmdDispatch(nm 唯一强符号, 调用点 NULL→0 共9语句)。
+- 关键发现: 库内【同地址多拼写+多真体】现象系统性存在(FreeStrBuf/StrBld族/RasDialEntry/EvalParenthesizedExpr
+  等 20+)。core 侧早期手写体与 R1 直移体并存时一律保留 core 版、ls 版 static 化或删除;
+  EvalParenthesizedExpr 类「core 真体 + ls 旧桩」直接删桩。
+- G2 附带: 63694 实为已命名 PECMD_AllocWStringBuffer(core_var), ls 内 FUN_ 拼写全库归并;
+  StrBldCopyWide 按调用点证据补 return(槽指针)。
+- 累计: rename_map 1157→**1270**; 未命名唯一 FUN_ 630→**517**(biz 370/crt147)。
