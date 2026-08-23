@@ -1,0 +1,2698 @@
+{
+  "generated": "2026-08-24T01:56:10",
+  "toolchain": "gcc 15.2.0 -std=c99 -Wall -Wextra -Wno-implicit-function-declaration -Iinclude -fsyntax-only, LC_ALL=C",
+  "files_scanned": 95,
+  "total": 244,
+  "by_class": {
+    "unused-parameter": 71,
+    "cast-function-type": 58,
+    "int-to-pointer-cast": 22,
+    "discarded-qualifiers": 17,
+    "unused-but-set-variable": 15,
+    "sign-compare": 14,
+    "incompatible-function-call(unflagged)": 11,
+    "pointer-sign": 10,
+    "unused-variable": 9,
+    "type-limits": 8,
+    "nonnull": 4,
+    "shift-count-overflow": 1,
+    "parentheses": 1,
+    "pointer-to-int-cast": 1,
+    "builtin-declaration-mismatch": 1,
+    "conflicting-types": 1
+  },
+  "requested_classes_zero": {
+    "incompatible-pointer-types": 0,
+    "int-conversion": 0,
+    "missing-field-initializers": 0,
+    "old-style-definition": 0
+  },
+  "by_nature": {
+    "behavioral": 120,
+    "mechanical": 124
+  },
+  "by_file_top": [
+    {
+      "file": "core_b3_remaining.c",
+      "count": 99
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "count": 43
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "count": 17
+    },
+    {
+      "file": "core_b7c.c",
+      "count": 15
+    },
+    {
+      "file": "core_b2f.c",
+      "count": 6
+    },
+    {
+      "file": "core_b2d.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3i.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "count": 5
+    },
+    {
+      "file": "core_b8m.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3r_h1.c",
+      "count": 4
+    }
+  ],
+  "by_file_all": [
+    {
+      "file": "core_b3_remaining.c",
+      "count": 99
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "count": 43
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "count": 17
+    },
+    {
+      "file": "core_b7c.c",
+      "count": 15
+    },
+    {
+      "file": "core_b2f.c",
+      "count": 6
+    },
+    {
+      "file": "core_b2d.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3i.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "count": 5
+    },
+    {
+      "file": "core_b8m.c",
+      "count": 5
+    },
+    {
+      "file": "core_b3r_h1.c",
+      "count": 4
+    },
+    {
+      "file": "core_b3r_i28f.c",
+      "count": 4
+    },
+    {
+      "file": "core_b3r_g.c",
+      "count": 3
+    },
+    {
+      "file": "core_script.c",
+      "count": 3
+    },
+    {
+      "file": "core_b2b.c",
+      "count": 2
+    },
+    {
+      "file": "core_b2c.c",
+      "count": 2
+    },
+    {
+      "file": "core_b2e.c",
+      "count": 2
+    },
+    {
+      "file": "core_b3b.c",
+      "count": 2
+    },
+    {
+      "file": "core_b3d.c",
+      "count": 2
+    },
+    {
+      "file": "core_b3l.c",
+      "count": 2
+    },
+    {
+      "file": "core_b3r_h2.c",
+      "count": 2
+    },
+    {
+      "file": "core_main.c",
+      "count": 2
+    },
+    {
+      "file": "core_script2.c",
+      "count": 2
+    },
+    {
+      "file": "core_b3h.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3j.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_a.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_c.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_g1.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_g5.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_g7.c",
+      "count": 1
+    },
+    {
+      "file": "core_b3r_i28a.c",
+      "count": 1
+    },
+    {
+      "file": "core_b8c.c",
+      "count": 1
+    },
+    {
+      "file": "core_b8g.c",
+      "count": 1
+    },
+    {
+      "file": "core_exec4.c",
+      "count": 1
+    },
+    {
+      "file": "core_sys.c",
+      "count": 1
+    }
+  ],
+  "mechanical_cleanable": {
+    "count": 124,
+    "unique_sites": 124,
+    "items": [
+      {
+        "file": "core_b1_remaining.c",
+        "line": 7645,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_24",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_24' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b1_remaining.c",
+        "line": 7646,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_20",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_20' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b1_remaining.c",
+        "line": 7647,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_1c",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_1c' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b1_remaining.c",
+        "line": 7648,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_18",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_18' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b1_remaining.c",
+        "line": 9341,
+        "col": 24,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b2b.c",
+        "line": 1038,
+        "col": 46,
+        "cls": "unused-parameter",
+        "symbol": "a",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'a'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b2b.c",
+        "line": 1038,
+        "col": 58,
+        "cls": "unused-parameter",
+        "symbol": "b",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'b'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b2c.c",
+        "line": 509,
+        "col": 78,
+        "cls": "unused-parameter",
+        "symbol": "lParamIn",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'lParamIn'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b2e.c",
+        "line": 2514,
+        "col": 61,
+        "cls": "unused-parameter",
+        "symbol": "a2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'a2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b2e.c",
+        "line": 2514,
+        "col": 74,
+        "cls": "unused-parameter",
+        "symbol": "a3",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'a3'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b2f.c",
+        "line": 4493,
+        "col": 31,
+        "cls": "unused-parameter",
+        "symbol": "hdcIn",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'hdcIn'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 946,
+        "col": 78,
+        "cls": "unused-parameter",
+        "symbol": "param_3",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_3'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 6696,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 9314,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_40",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_40' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 9315,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_3c",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_3c' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 12180,
+        "col": 39,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 12180,
+        "col": 56,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 12264,
+        "col": 44,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21117,
+        "col": 12,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_98",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_98' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21152,
+        "col": 22,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21199,
+        "col": 59,
+        "cls": "parentheses",
+        "symbol": "+",
+        "func": null,
+        "count": 1,
+        "msg": "suggest parentheses around '+' in operand of '&'",
+        "fix": "'&' 与 '+' 混用处按意图补括号"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21466,
+        "col": 11,
+        "cls": "unused-but-set-variable",
+        "symbol": "cVar4",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'cVar4' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21468,
+        "col": 9,
+        "cls": "unused-variable",
+        "symbol": "iVar8",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'iVar8'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21507,
+        "col": 14,
+        "cls": "unused-variable",
+        "symbol": "local_98b",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'local_98b'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21514,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_60",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_60' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21516,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_50",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_50' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21533,
+        "col": 19,
+        "cls": "unused-variable",
+        "symbol": "pwVar7",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'pwVar7'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21534,
+        "col": 15,
+        "cls": "unused-variable",
+        "symbol": "WVar5",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'WVar5'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21541,
+        "col": 25,
+        "cls": "unused-variable",
+        "symbol": "pWVar6",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'pWVar6'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21789,
+        "col": 29,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21790,
+        "col": 29,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21792,
+        "col": 33,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21793,
+        "col": 33,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21822,
+        "col": 33,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 21827,
+        "col": 45,
+        "cls": "unused-variable",
+        "symbol": "_Var1b",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable '_Var1b'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22069,
+        "col": 50,
+        "cls": "discarded-qualifiers",
+        "symbol": "lstrcpyW",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 1 of 'lstrcpyW' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22072,
+        "col": 50,
+        "cls": "discarded-qualifiers",
+        "symbol": "lstrcpyW",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 1 of 'lstrcpyW' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22096,
+        "col": 49,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22098,
+        "col": 50,
+        "cls": "discarded-qualifiers",
+        "symbol": "lstrcpyW",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 1 of 'lstrcpyW' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22111,
+        "col": 50,
+        "cls": "discarded-qualifiers",
+        "symbol": "lstrcpyW",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 1 of 'lstrcpyW' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22154,
+        "col": 55,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_UnquoteString",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 1 of 'PECMD_UnquoteString' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 22154,
+        "col": 33,
+        "cls": "pointer-sign",
+        "symbol": "short int *",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in assignment from 'short int *' to 'uint16_t *' {aka 'short unsigned int *'} differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3_remaining.c",
+        "line": 24576,
+        "col": 75,
+        "cls": "unused-parameter",
+        "symbol": "param_3",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_3'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3d.c",
+        "line": 79,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "b",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'b'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3d.c",
+        "line": 306,
+        "col": 58,
+        "cls": "unused-parameter",
+        "symbol": "lParam",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'lParam'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3h.c",
+        "line": 162,
+        "col": 46,
+        "cls": "unused-parameter",
+        "symbol": "b",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'b'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3j.c",
+        "line": 155,
+        "col": 48,
+        "cls": "unused-parameter",
+        "symbol": "data2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'data2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_a.c",
+        "line": 139,
+        "col": 62,
+        "cls": "unused-parameter",
+        "symbol": "param_6",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_6'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_c.c",
+        "line": 62,
+        "col": 53,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_g.c",
+        "line": 230,
+        "col": 52,
+        "cls": "unused-parameter",
+        "symbol": "param_5",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_5'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_g1.c",
+        "line": 140,
+        "col": 9,
+        "cls": "builtin-declaration-mismatch",
+        "symbol": "memset",
+        "func": null,
+        "count": 1,
+        "msg": "incompatible implicit declaration of built-in function 'memset'",
+        "fix": "文件头部补 #include <string.h>"
+      },
+      {
+        "file": "core_b3r_g5.c",
+        "line": 396,
+        "col": 41,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_g7.c",
+        "line": 122,
+        "col": 40,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_h1.c",
+        "line": 504,
+        "col": 57,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_CreateDtimItem",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 3 of 'PECMD_CreateDtimItem' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3r_h1.c",
+        "line": 505,
+        "col": 38,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_CreateDtimItem",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 8 of 'PECMD_CreateDtimItem' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3r_h1.c",
+        "line": 505,
+        "col": 49,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_CreateDtimItem",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 9 of 'PECMD_CreateDtimItem' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3r_h1.c",
+        "line": 1989,
+        "col": 28,
+        "cls": "discarded-qualifiers",
+        "symbol": "PECMD_FormatU64Dec",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 1 of 'PECMD_FormatU64Dec' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3r_h2.c",
+        "line": 227,
+        "col": 63,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_h2.c",
+        "line": 228,
+        "col": 54,
+        "cls": "unused-parameter",
+        "symbol": "param_5",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_5'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_h3.c",
+        "line": 428,
+        "col": 81,
+        "cls": "unused-parameter",
+        "symbol": "param_3",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_3'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b3r_i28a.c",
+        "line": 616,
+        "col": 56,
+        "cls": "discarded-qualifiers",
+        "symbol": "PECMD_CreateProgressItem",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 9 of 'PECMD_CreateProgressItem' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b3r_i28f.c",
+        "line": 561,
+        "col": 75,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_CreateImageItem",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 8 of 'PECMD_CreateImageItem' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b3r_i28f.c",
+        "line": 562,
+        "col": 64,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_CreateImageItem",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 10 of 'PECMD_CreateImageItem' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 530,
+        "col": 52,
+        "cls": "unused-parameter",
+        "symbol": "a3",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'a3'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2025,
+        "col": 11,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_e6",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_e6' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2026,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_e4",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_e4' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2027,
+        "col": 14,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_e2",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_e2' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2040,
+        "col": 15,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_88",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_88' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2041,
+        "col": 13,
+        "cls": "unused-but-set-variable",
+        "symbol": "local_80",
+        "func": null,
+        "count": 1,
+        "msg": "variable 'local_80' set but not used",
+        "fix": "确认为丢弃API返回值后，改为 (void)调用 或体末加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2135,
+        "col": 25,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2156,
+        "col": 37,
+        "cls": "discarded-qualifiers",
+        "symbol": "const",
+        "func": null,
+        "count": 1,
+        "msg": "assignment discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2530,
+        "col": 12,
+        "cls": "unused-variable",
+        "symbol": "tb",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'tb'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 2531,
+        "col": 12,
+        "cls": "unused-variable",
+        "symbol": "sc",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'sc'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 3047,
+        "col": 21,
+        "cls": "pointer-sign",
+        "symbol": "byte *",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in assignment from 'byte *' {aka 'unsigned char *'} to 'char *' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b7c.c",
+        "line": 4415,
+        "col": 9,
+        "cls": "unused-variable",
+        "symbol": "iVar17",
+        "func": null,
+        "count": 1,
+        "msg": "unused variable 'iVar17'",
+        "fix": "删除声明，或确认后加 (void)<var>;"
+      },
+      {
+        "file": "core_b8c.c",
+        "line": 87,
+        "col": 30,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_PaintLabelText",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 1 of 'PECMD_PaintLabelText' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b8g.c",
+        "line": 972,
+        "col": 26,
+        "cls": "pointer-sign",
+        "symbol": "PECMD_PaintLabelText",
+        "func": null,
+        "count": 1,
+        "msg": "pointer targets in passing argument 1 of 'PECMD_PaintLabelText' differ in signedness",
+        "fix": "实参/赋值处显式加 (WCHAR*)/(uint16_t*) 强转（16位宽度一致，纯符号性标注）"
+      },
+      {
+        "file": "core_b8m.c",
+        "line": 1383,
+        "col": 86,
+        "cls": "discarded-qualifiers",
+        "symbol": "PECMD_ZwUnmapViewOfSection",
+        "func": null,
+        "count": 1,
+        "msg": "passing argument 2 of 'PECMD_ZwUnmapViewOfSection' discards 'const' qualifier from pointer target type",
+        "fix": "被调形参补 const 或调用处显式强转；lstrcpyW 目标为常量者必须先核实缓冲区可写"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 551,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 551,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 558,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 558,
+        "col": 42,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 979,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 979,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1004,
+        "col": 29,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1011,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1011,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1767,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1767,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1824,
+        "col": 27,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1824,
+        "col": 42,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1855,
+        "col": 34,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1983,
+        "col": 30,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 1983,
+        "col": 45,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2396,
+        "col": 30,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2417,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2417,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2445,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2445,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2487,
+        "col": 34,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2494,
+        "col": 29,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2494,
+        "col": 46,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2501,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2501,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2515,
+        "col": 30,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2522,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2522,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2529,
+        "col": 30,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2536,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2536,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2543,
+        "col": 34,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2550,
+        "col": 34,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2557,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2557,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2564,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "param_1",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_1'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_b9_remaining.c",
+        "line": 2564,
+        "col": 50,
+        "cls": "unused-parameter",
+        "symbol": "param_2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'param_2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_exec4.c",
+        "line": 340,
+        "col": 63,
+        "cls": "unused-parameter",
+        "symbol": "cp",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'cp'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_main.c",
+        "line": 190,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "argv",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'argv'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_main.c",
+        "line": 196,
+        "col": 48,
+        "cls": "unused-parameter",
+        "symbol": "b",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'b'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_script.c",
+        "line": 170,
+        "col": 47,
+        "cls": "unused-parameter",
+        "symbol": "ctrl",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'ctrl'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_script.c",
+        "line": 170,
+        "col": 57,
+        "cls": "unused-parameter",
+        "symbol": "start",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'start'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_script.c",
+        "line": 171,
+        "col": 33,
+        "cls": "unused-parameter",
+        "symbol": "script2",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'script2'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_script2.c",
+        "line": 50,
+        "col": 42,
+        "cls": "unused-parameter",
+        "symbol": "hinst",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'hinst'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      },
+      {
+        "file": "core_script2.c",
+        "line": 50,
+        "col": 58,
+        "cls": "unused-parameter",
+        "symbol": "flag",
+        "func": null,
+        "count": 1,
+        "msg": "unused parameter 'flag'",
+        "fix": "形参名改注释或在函数体首行加 (void)<param>;"
+      }
+    ]
+  },
+  "behavioral_registered": "共 120 条行为相关警告（101 个唯一位置），分 9 类：cast-function-type=58, sign-compare=14, incompatible-function-call(unflagged)=11, type-limits=8, nonnull=4, int-to-pointer-cast=3, shift-count-overflow=1, pointer-to-int-cast=1, conflicting-types=1。共性结论：cast-function-type 及其无旗标同族(69)=Win32 回调/API 签名约定，须统一 typedef 原型而非消警；sign-compare/type-limits(22)=Ghidra uint 直译造成符号性丢失（含 BOM 判断恒假这类真实分支语义偏差）；int-to-pointer-cast/pointer-to-int-cast(23)=整数句柄直译存在截断风险；nonnull(4)=atexit(NULL) 占位的丢失回调；shift-count-overflow(1)=in_stack artifact；conflicting-types(1)=原型冲突须改头文件。行级清单见 behavioral_items。",
+  "behavioral_items": [
+    {
+      "file": "core_b1_remaining.c",
+      "line": 1311,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, uint32_t,  void *, void **)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, uint32_t,  void *, void **)' {aka 'int (*)(void *, void *, unsigned int,  void *, void **)'} to 'int (*)(void *, int,  int,  void *, int64_t **)' {ak",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 1374,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, uint32_t,  void *, void **)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, uint32_t,  void *, void **)' {aka 'int (*)(void *, void *, unsigned int,  void *, void **)'} to 'int (*)(void *, int,  int,  void *, int64_t **)' {ak",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 2745,
+      "col": 22,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 2824,
+      "col": 35,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 2842,
+      "col": 42,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 3033,
+      "col": 22,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 3121,
+      "col": 22,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 3261,
+      "col": 18,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 4567,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, uint32_t,  void *, void **)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, uint32_t,  void *, void **)' {aka 'int (*)(void *, void *, unsigned int,  void *, void **)'} to 'int (*)(void *, int,  int,  void *, int64_t **)' {ak",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 7622,
+      "col": 26,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const void *)' to 'int (*)(void *, void *, void *, void *)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 7628,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(int,  int,  void *)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b1_remaining.c",
+      "line": 7659,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "BOOL (*)(DWORD,  void *, void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'BOOL (*)(DWORD,  void *, void *)' {aka 'int (*)(unsigned int,  void *, void *)'} to 'BOOL (*)(DWORD,  int,  void *)' {aka 'int (*)(unsigned int,  int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2c.c",
+      "line": 1313,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)' {aka 'int (*)(long unsigned int,  const short unsigned int *, const short unsigned int *, unsigned",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2d.c",
+      "line": 360,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)' {aka 'int (*)(long unsigned int,  const short unsigned int *, const short unsigned int *, unsigned",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2d.c",
+      "line": 370,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(HKEY,  const WCHAR *, const WCHAR *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(HKEY,  const WCHAR *, const WCHAR *)' {aka 'int (*)(long unsigned int,  const short unsigned int *, const short unsigned int *)'} to 'void (*)(HKEY,  const WCHAR *, ",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2d.c",
+      "line": 964,
+      "col": 15,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always true due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b2d.c",
+      "line": 1256,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD,  const void *, DWORD)' {aka 'int (*)(long unsigned int,  const short unsigned int *, const short unsigned int *, unsigned",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2d.c",
+      "line": 1536,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(HICON)' {aka 'void (*)(long unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2f.c",
+      "line": 800,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, uint32_t,  void *, void **)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, uint32_t,  void *, void **)' {aka 'int (*)(void *, void *, unsigned int,  void *, void **)'} to 'int (*)(void *, int,  int,  void *, int64_t **)' {ak",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2f.c",
+      "line": 4590,
+      "col": 33,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always false due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b2f.c",
+      "line": 4724,
+      "col": 16,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always true due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b2f.c",
+      "line": 4826,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(HICON,  uint32_t *)' {aka 'void (*)(long unsigned int,  unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b2f.c",
+      "line": 4827,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(HICON)' {aka 'void (*)(long unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1085,
+      "col": 42,
+      "cls": "shift-count-overflow",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "right shift count >= width of type",
+      "why": "in_stack artifact：uint32 形参右移 0x20，需把参数重构回 64 位再取高半部"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1241,
+      "col": 38,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1242,
+      "col": 57,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1322,
+      "col": 19,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1866,
+      "col": 47,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1975,
+      "col": 39,
+      "cls": "cast-function-type",
+      "symbol": "void (*)(int64_t *, WCHAR *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void (*)(int64_t *, WCHAR *)' {aka 'void (*)(long int *, short unsigned int *)'} to 'void * (*)(void *, WCHAR *)' {aka 'void * (*)(void *, short unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 1975,
+      "col": 39,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 2883,
+      "col": 39,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const void *)' to 'void * (*)(void *, int,  int,  int)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 3017,
+      "col": 63,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(void *)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 3247,
+      "col": 74,
+      "cls": "cast-function-type",
+      "symbol": "BOOL (*)(void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'BOOL (*)(void *)' {aka 'int (*)(void *)'} to 'BOOL (*)(void *, void *, int)' {aka 'int (*)(void *, void *, int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 5578,
+      "col": 22,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 6839,
+      "col": 41,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(char *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(char *)' to 'uint64_t (*)(void)' {aka 'long unsigned int (*)(void)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 6841,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const char *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const char *)' to 'int64_t (*)(char *)' {aka 'long int (*)(char *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 7129,
+      "col": 70,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always true due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 8266,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "uint64_t (*)(uint64_t,  HWND,  int,  int,  int,  char)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'uint64_t (*)(uint64_t,  HWND,  int,  int,  int,  char)' {aka 'long unsigned int (*)(long unsigned int,  long unsigned int,  int,  int,  int,  char)'} to 'void (*)(uint64_t *",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 8266,
+      "col": 6,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 9325,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(void *, DWORD,  void *)' {aka 'int (*)(void *, unsigned int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 9429,
+      "col": 27,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 9434,
+      "col": 27,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 9455,
+      "col": 23,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 9458,
+      "col": 23,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 10475,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t,  int64_t *)' {aka 'void (*)(long int,  long int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 10476,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t,  int64_t *)' {aka 'void (*)(long int,  long int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 10886,
+      "col": 30,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const void *)' to 'void * (*)(const void *, DWORD,  void *, DWORD)' {aka 'void * (*)(const void *, unsigned int,  void *, unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 11010,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int64_t (*)(void)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int64_t (*)(void)' {aka 'long int (*)(void)'} to 'int (*)(int64_t,  int *)' {aka 'int (*)(long int,  int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 11011,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int64_t (*)(void)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int64_t (*)(void)' {aka 'long int (*)(void)'} to 'int (*)(int64_t,  int *)' {aka 'int (*)(long int,  int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 11046,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int64_t (*)(void)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int64_t (*)(void)' {aka 'long int (*)(void)'} to 'int (*)(HDC,  int64_t)' {aka 'int (*)(long unsigned int,  long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 11061,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int64_t (*)(void)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int64_t (*)(void)' {aka 'long int (*)(void)'} to 'int (*)(int64_t)' {aka 'int (*)(long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 12100,
+      "col": 23,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const void *)' to 'void * (*)(const void *, DWORD,  void *, DWORD)' {aka 'void * (*)(const void *, unsigned int,  void *, unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 12110,
+      "col": 24,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(void *, DWORD,  void *)' {aka 'int (*)(void *, unsigned int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 13269,
+      "col": 63,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 14800,
+      "col": 14,
+      "cls": "int-to-pointer-cast",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "cast to pointer from integer of different size",
+      "why": "Ghidra DWORD→HANDLE/整数直译，存在 32↔64 位截断风险，须逐点改用 uintptr_t 中转"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 14921,
+      "col": 17,
+      "cls": "int-to-pointer-cast",
+      "symbol": "?",
+      "func": null,
+      "count": 20,
+      "msg": "cast to pointer from integer of different size",
+      "why": "Ghidra DWORD→HANDLE/整数直译，存在 32↔64 位截断风险，须逐点改用 uintptr_t 中转"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 14931,
+      "col": 18,
+      "cls": "int-to-pointer-cast",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "cast to pointer from integer of different size",
+      "why": "Ghidra DWORD→HANDLE/整数直译，存在 32↔64 位截断风险，须逐点改用 uintptr_t 中转"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 15651,
+      "col": 30,
+      "cls": "cast-function-type",
+      "symbol": "void * (*)(const void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void * (*)(const void *)' to 'void * (*)(const void *, DWORD,  void *, DWORD)' {aka 'void * (*)(const void *, unsigned int,  void *, unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 15680,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(void *, DWORD,  void *)' {aka 'int (*)(void *, unsigned int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 15708,
+      "col": 30,
+      "cls": "cast-function-type",
+      "symbol": "BOOL (*)(void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'BOOL (*)(void *)' {aka 'int (*)(void *)'} to 'int (*)(void *, void *, uint32_t,  uint32_t,  WCHAR *, uint32_t,  uint32_t)' {aka 'int (*)(void *, void *, unsigned int,  unsig",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 15722,
+      "col": 34,
+      "cls": "cast-function-type",
+      "symbol": "BOOL (*)(void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'BOOL (*)(void *)' {aka 'int (*)(void *)'} to 'int (*)(void *, void *, uint32_t,  uint32_t,  WCHAR *, uint32_t,  uint32_t)' {aka 'int (*)(void *, void *, unsigned int,  unsig",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 15755,
+      "col": 22,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, DWORD)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, DWORD)' {aka 'int (*)(void *, unsigned int)'} to 'int (*)(void *, DWORD,  void *)' {aka 'int (*)(void *, unsigned int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 17605,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t)' {aka 'void (*)(long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 21739,
+      "col": 21,
+      "cls": "nonnull",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "argument 1 null where non-null expected",
+      "why": "atexit((void(*)(void))0)：原注册的退出清理回调符号未还原，传 NULL 属未定义行为，需还原回调或改空实现"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 21744,
+      "col": 21,
+      "cls": "nonnull",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "argument 1 null where non-null expected",
+      "why": "atexit((void(*)(void))0)：原注册的退出清理回调符号未还原，传 NULL 属未定义行为，需还原回调或改空实现"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 21749,
+      "col": 21,
+      "cls": "nonnull",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "argument 1 null where non-null expected",
+      "why": "atexit((void(*)(void))0)：原注册的退出清理回调符号未还原，传 NULL 属未定义行为，需还原回调或改空实现"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 21754,
+      "col": 21,
+      "cls": "nonnull",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "argument 1 null where non-null expected",
+      "why": "atexit((void(*)(void))0)：原注册的退出清理回调符号未还原，传 NULL 属未定义行为，需还原回调或改空实现"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 22064,
+      "col": 111,
+      "cls": "pointer-to-int-cast",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "cast from pointer to integer of different size",
+      "why": "指针→整数宽度不匹配，同 int-to-pointer-cast 族，逐点核实"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 24245,
+      "col": 17,
+      "cls": "sign-compare",
+      "symbol": "int64_t",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int64_t' {aka 'long int'} and 'long long unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 24911,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "uint32_t (*)(int64_t,  uint64_t)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'uint32_t (*)(int64_t,  uint64_t)' {aka 'unsigned int (*)(long int,  long unsigned int)'} to 'void (*)(int64_t,  uint64_t)' {aka 'void (*)(long int,  long unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3_remaining.c",
+      "line": 24911,
+      "col": 14,
+      "cls": "incompatible-function-call(unflagged)",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "function called through a non-compatible type",
+      "why": "cast-function-type 同族：经 FFVW_t/FNFVW_t 等中间 typedef 调用 FindFirstVolumeW/FindNextVolumeW，GCC 默认无旗标告警"
+    },
+    {
+      "file": "core_b3b.c",
+      "line": 91,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(uintptr_t,  int)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(uintptr_t,  int)' {aka 'int (*)(long unsigned int,  int)'} to 'void (*)(void *, int)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3b.c",
+      "line": 92,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(uintptr_t)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(uintptr_t)' {aka 'int (*)(long unsigned int)'} to 'void (*)(void *)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3i.c",
+      "line": 265,
+      "col": 17,
+      "cls": "cast-function-type",
+      "symbol": "uint32_t (*)(uint32_t)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'uint32_t (*)(uint32_t)' {aka 'unsigned int (*)(unsigned int)'} to 'uint32_t (*)(void)' {aka 'unsigned int (*)(void)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3i.c",
+      "line": 269,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(uintptr_t,  const void *, int)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(uintptr_t,  const void *, int)' {aka 'int (*)(long unsigned int,  const void *, int)'} to 'int (*)(int,  const void *, int)'",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3i.c",
+      "line": 329,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "void (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void (*)()' to 'int (*)(HANDLE,  uint64_t *)' {aka 'int (*)(long unsigned int,  long unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3i.c",
+      "line": 331,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "void (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'void (*)()' to 'int (*)(uint64_t,  HANDLE *, int)' {aka 'int (*)(long unsigned int,  long unsigned int *, int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3i.c",
+      "line": 332,
+      "col": 18,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(uint64_t)' {aka 'void (*)(long unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3l.c",
+      "line": 769,
+      "col": 6,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD *, void *, DWORD *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(HKEY,  const WCHAR *, const WCHAR *, DWORD *, void *, DWORD *)' {aka 'int (*)(long unsigned int,  const short unsigned int *, const short unsigned int *, unsigned in",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3l.c",
+      "line": 1117,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t)' {aka 'void (*)(long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3r_g.c",
+      "line": 183,
+      "col": 29,
+      "cls": "sign-compare",
+      "symbol": "long int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'long int' and 'long unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3r_g.c",
+      "line": 184,
+      "col": 29,
+      "cls": "sign-compare",
+      "symbol": "long int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'long int' and 'long unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "line": 1217,
+      "col": 79,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always false due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "line": 1221,
+      "col": 84,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always false due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "line": 1228,
+      "col": 62,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always false due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b3r_h3.c",
+      "line": 1230,
+      "col": 61,
+      "cls": "type-limits",
+      "symbol": "?",
+      "func": null,
+      "count": 1,
+      "msg": "comparison is always false due to limited range of data type",
+      "why": "符号性丢失致恒真/恒假：uint 化使 0<=x 恒真、带符号 char 使 BOM 字节==0xFF 恒假，直接改变分支行为"
+    },
+    {
+      "file": "core_b3r_i28f.c",
+      "line": 518,
+      "col": 22,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(HICON,  uint32_t *)' {aka 'void (*)(long unsigned int,  unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b3r_i28f.c",
+      "line": 519,
+      "col": 22,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(HICON,  void *)' {aka 'void (*)(long unsigned int,  void *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b7c.c",
+      "line": 1420,
+      "col": 30,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'unsigned int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b7c.c",
+      "line": 3286,
+      "col": 69,
+      "cls": "sign-compare",
+      "symbol": "int",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'int' and 'uint' {aka 'unsigned int'}",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b7c.c",
+      "line": 3311,
+      "col": 56,
+      "cls": "sign-compare",
+      "symbol": "uint",
+      "func": null,
+      "count": 1,
+      "msg": "comparison of integer expressions of different signedness: 'uint' {aka 'unsigned int'} and 'int'",
+      "why": "Ghidra uint 直译造成有/无符号比较；须判定原始有符号语义后修正变量类型，禁止强转消警"
+    },
+    {
+      "file": "core_b8m.c",
+      "line": 1121,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t,  uint64_t *)' {aka 'void (*)(long int,  long unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b8m.c",
+      "line": 1122,
+      "col": 10,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t)' {aka 'void (*)(long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b8m.c",
+      "line": 1146,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, int,  int,  int64_t,  int)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, int,  int,  int64_t,  int)' {aka 'int (*)(void *, void *, int,  int,  long int,  int)'} to 'void (*)(int64_t,  int64_t,  LONG,  int,  int,  uint64_t)",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b8m.c",
+      "line": 1149,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t)' {aka 'void (*)(long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "line": 96,
+      "col": 22,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *)' to 'int (*)(int64_t,  HBITMAP)' {aka 'int (*)(long int,  long unsigned int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "line": 100,
+      "col": 22,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, int,  void *)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, int,  void *)' to 'int (*)(int64_t,  int64_t)' {aka 'int (*)(long int,  long int)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "line": 410,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t,  uint32_t *)' {aka 'void (*)(long int,  unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "line": 414,
+      "col": 14,
+      "cls": "cast-function-type",
+      "symbol": "int (*)()",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)()' to 'void (*)(int64_t,  uint32_t *)' {aka 'void (*)(long int,  unsigned int *)'}",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_b9_remaining.c",
+      "line": 428,
+      "col": 30,
+      "cls": "cast-function-type",
+      "symbol": "int (*)(void *, void *, int,  int,  int64_t,  int)",
+      "func": null,
+      "count": 1,
+      "msg": "cast between incompatible function types from 'int (*)(void *, void *, int,  int,  int64_t,  int)' {aka 'int (*)(void *, void *, int,  int,  long int,  int)'} to 'void (*)(int64_t,  int64_t,  LONG,  int,  int,  int)' {ak",
+      "why": "Win32 API/回调签名约定：GetProcAddress 返回泛型指针强转真实原型，参数个数/宽度差异源于原始二进制调用约定；收口应统一 typedef 原型，不可静默"
+    },
+    {
+      "file": "core_sys.c",
+      "line": 177,
+      "col": 6,
+      "cls": "conflicting-types",
+      "symbol": "PECMD_LookupShellFolderVar",
+      "func": null,
+      "count": 1,
+      "msg": "conflicting types for 'PECMD_LookupShellFolderVar'; have 'void(const WCHAR *, const WCHAR *, const WCHAR *)' {aka 'void(const short unsigned int *, const short unsigned int *, const short unsigned int *)'}",
+      "why": "PECMD_LookupShellFolderVar 定义与既有声明签名冲突，须统一头文件原型（结构性修正）"
+    }
+  ]
+}
