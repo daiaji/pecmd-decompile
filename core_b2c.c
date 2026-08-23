@@ -508,6 +508,7 @@ uint64_t FUN_1400282D4(int *pe, short *args, uint64_t flag)
  */
 LRESULT PECMD_GraphSubclassWndProc(HWND hwnd, UINT msg, HDROP wParam, LPARAM lParamIn)
 {
+    (void)lParamIn;
     HBRUSH hbr;
     uint16_t uVar1;
     HWND hWnd;

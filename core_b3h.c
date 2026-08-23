@@ -161,6 +161,7 @@ uint64_t PECMD_ParseRegexRecursive(int *ctx, wchar_t **pp, uint8_t *out)
  */
 uint64_t FUN_140053BE8(uint32_t *a, int64_t *b)
 {
+    (void)b;
     (void)a;
     return 0xffffffff;
 }

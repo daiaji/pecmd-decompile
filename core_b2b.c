@@ -1038,6 +1038,7 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
 uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c,
                        uint64_t flags)
 {
+    (void)a; (void)b;
     WCHAR *local_18[2];
     LPCWSTR puVar1;
 

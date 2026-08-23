@@ -1380,7 +1380,7 @@ int PECMD_RunPeInjectStart(LPWSTR cmd, int64_t ctxBase, int64_t param3,
     if (pWVar6 == local_res8 && dataSize <= (uint32_t)local_res10[0]) {
         remoteBuf = (LPVOID)(uintptr_t)local_res8;
         VirtualProtectEx(pi->hProcess, remoteBuf, (size_t)local_res10[0], 0x40, oldProt);
-    } else if (PECMD_HasVirtualAllocEx() && PECMD_ZwUnmapViewOfSection(pi->hProcess, pWVar6)) {
+    } else if (PECMD_HasVirtualAllocEx() && PECMD_ZwUnmapViewOfSection(pi->hProcess, (void *)pWVar6)) {
         remoteBuf = (LPVOID)(uintptr_t)((uint32_t (*)(HANDLE, LPCVOID, size_t, DWORD, DWORD))
             (void *)g_pfnVirtualAllocEx)(pi->hProcess, pWVar6, dataSize, 0x3000, 0x40);
         if (remoteBuf == NULL && PECMD_PeCtxHasImageBase(ctxBase)) {

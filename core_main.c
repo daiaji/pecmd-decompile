@@ -189,12 +189,14 @@ static void PECMD_Main1(WCHAR *cmdline)
 /* ========== main @0x140017034 ========== */
 int PECMD_main(int argc, char **argv)
 {
+    (void)argv;
     return (int)PECMD_MainW(0, (WCHAR *)(uintptr_t)argc);  /* 反编译显示 arg 复用, TODO(verify) */
 }
 
 /* ========== main5 @0x140016aac ========== */
 static void PECMD_Main5(uintptr_t a, uintptr_t b, HINSTANCE hInstance, WCHAR *cmdline)
 {
+    (void)b;
     g_hInst = (HINSTANCE)a;
     PECMD_MainW(hInstance, cmdline);
 }

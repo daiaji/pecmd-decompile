@@ -558,8 +558,8 @@ int64_t PECMD_ImageCommand(LPCWSTR param_1, LPCWSTR param_2, WPARAM param_3)
                     param_1 = *(LPCWSTR *)((char *)(uintptr_t)param_3 + 0x290);
                 }
                 PECMD_CreateImageItem(param_3, (uint64_t)(uintptr_t)param_1, (int64_t *)&local_168, local_148, local_144[0],
-                              (int)(uint32_t)local_res20, local_res18[0], &local_138,
-                              (int64_t *)&local_160, local_144 + 1, (uint32_t)local_res8, local_130);
+                              (int)(uint32_t)local_res20, local_res18[0], (int64_t *)&local_138,
+                              (int64_t *)&local_160, (uint32_t *)(local_144 + 1), (uint32_t)local_res8, local_130);
                 PECMD_FreeStrBuf(&local_138);
             } else {
                 uVar6 = uVar6 & 0xff;

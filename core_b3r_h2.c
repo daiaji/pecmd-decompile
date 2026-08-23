@@ -227,6 +227,7 @@ longlong PECMD_ParseExtPathArg(longlong *param_1, short *param_2)
 undefined8 PECMD_ControlTimer(undefined8 *param_1, undefined8 param_2, ushort *param_3,
                          LPCWSTR param_4, undefined8 param_5, undefined8 *param_6)
 {
+    (void)param_2; (void)param_5;
     HWND  hWnd;
     void *lpCriticalSection;
     bool  bVar1;

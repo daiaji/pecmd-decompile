@@ -79,6 +79,7 @@ extern uint8_t PTR_FUN_1401250d0[];
 void PECMD_DebugOutput(uint64_t a, uint64_t b, uint64_t c,
                    uint64_t d)
 {
+    (void)b;
     if (g_u8CCB1 != 0) {
         c = 0x261d;
         PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"),
@@ -305,6 +306,7 @@ void PECMD_FillCharTable(uint16_t start, uint64_t *table)
  */
 void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam)
 {
+    (void)lParam;
     uint64_t local_38 = 1;
     return (void *)SendMessageW(*(HWND *)((uint8_t *)wParam + OBJ_HWND), 0x465,
                                 wParam, (LPARAM)&local_38);

@@ -4492,6 +4492,7 @@ LAB_140037a4d:
 HGDIOBJ PECMD_LogoDlgProc(uint64_t script, HWND hwnd, uint32_t msg,
                           HDC hdcIn, uint8_t *p5)
 {
+    (void)hdcIn;
     uint32_t uVar1;
     float fVar2;
     WCHAR *psVar3;

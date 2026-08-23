@@ -7652,6 +7652,8 @@ bool PECMD_RamdrivSetState(uint32_t param_1)
     local_24 = 0x12;
     local_1c = 2;
     local_20 = param_1;
+    /* local_28..local_18 模拟连续 SP_PROPCHANGE_PARAMS 结构, 仅首地址被取用 */
+    (void)local_24; (void)local_20; (void)local_1c; (void)local_18;
     iVar1 = ((BOOL (*)(int, void *, void *, DWORD))g_pSetupDiSetClassInstallParamsW)(
                 g_ramdrivFlag, &g_u64CB60, &local_28, 0x14);
     bVar2 = false;
@@ -9290,7 +9292,7 @@ uint8_t PECMD_WriteBackTextCRLF(int64_t param_1, LPCWSTR param_2)
     WCHAR WVar1;
     int iVar2;
     WCHAR *pWVar3;
-    LPCWSTR pWVar4;
+    WCHAR *pWVar4;
     uint8_t uVar5;
     LPCWSTR local_res8;
     LPCWSTR local_238;

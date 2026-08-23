@@ -230,6 +230,7 @@ uint32_t *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2, uint64_t *para
                         int64_t *param_4, uint64_t param_5, LPWSTR param_6,
                         LPWSTR param_7, int64_t *param_8, LPWSTR param_9)
 {
+    (void)param_5;
     ushort uVar1;
     short *psVar2;
     LPCSTR pCVar3;

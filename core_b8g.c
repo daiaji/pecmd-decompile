@@ -969,7 +969,7 @@ void PECMD_PaintCtlWithCaption(int64_t *obj, uint64_t wParam, uint64_t lParam)
     HGDIOBJ old_font = (HGDIOBJ)0;
     RECT rc;
 
-    PECMD_PaintLabelText((uint64_t *)obj, wParam, lParam);
+    PECMD_PaintLabelText((int64_t *)obj, wParam, lParam);
     if (*(short *)obj[0x1b] == 0) {
         return;
     }

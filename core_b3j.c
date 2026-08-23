@@ -157,6 +157,7 @@ uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
                                       uint32_t flags1, uint32_t flags2,
                                       uint64_t data9)
 {
+    (void)data2;
     PECMD_ItemBaseInit(obj, 0x14, data1, (LPCWSTR)*p4,
                   g_szEmpty, g_szEmpty, 0, 0, 0, 0);
     obj[0xe] = data5;

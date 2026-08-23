@@ -2514,6 +2514,7 @@ shutdown_parse:
 void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a2, uint64_t a3,
                          uint64_t a4)
 {
+    (void)a2; (void)a3;
     WCHAR *shellCmd = NULL;
     WCHAR *cmdCopy = NULL;
     WCHAR *shellName = NULL;

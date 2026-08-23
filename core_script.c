@@ -170,6 +170,7 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
 uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
                           void *script2, uint32_t flags)
 {
+    (void)ctrl; (void)script2; (void)start;
     bool isDev = *(WCHAR *)(*out + 2) != 0;   /* 设备路径标志 TODO(verify) */
     WCHAR *s = StrChrW(script, L'|');
     WCHAR *path = NULL;

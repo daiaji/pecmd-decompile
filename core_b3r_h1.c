@@ -501,8 +501,8 @@ uint64_t PECMD_ParseMsgDispatch(int64_t *param_1, uint16_t *param_2, WPARAM para
         if (uVar1 != 0x2a) {
             param_1 = *(int64_t **)((uintptr_t)param_3 + 0x290);
         }
-        PECMD_CreateDtimItem(param_3, (int64_t)param_1, &local_80, local_88, local_84, local_res18[0],
-                      local_res8[0], &local_78, &local_68, uVar9);
+        PECMD_CreateDtimItem(param_3, (int64_t)param_1, (uint64_t *)&local_80, local_88, local_84, local_res18[0],
+                      local_res8[0], (uint64_t *)&local_78, (uint64_t *)&local_68, uVar9);
         PECMD_FreeStrBuf((void *)&local_68);
         PECMD_FreeStrBuf((void *)&local_70);
         PECMD_FreeStrBuf((void *)&local_78);
@@ -1986,7 +1986,7 @@ LAB_140094864:
     local_110[2].QuadPart = 0;
     BVar6 = GetDiskFreeSpaceExW(pWVar8, local_110, local_110 + 1, local_110 + 2);
     if (BVar6 != 0) {
-        PECMD_FormatU64Dec((LPCWSTR)&local_b8, local_110[(int)cVar11].QuadPart);
+        PECMD_FormatU64Dec((WCHAR *)&local_b8, local_110[(int)cVar11].QuadPart);
     }
     PECMD_SetVariable(param_1, local_130, (LPCWSTR)&local_b8);
     pWVar12 = (LPCWSTR)(uintptr_t)(BVar6 == 0);

@@ -613,7 +613,7 @@ uint64_t PECMD_ParseControlCommand(longlong *param_1, LPWSTR param_2, WPARAM par
             param_1 = *(longlong **)(param_3 + 0x290);
         }
         PECMD_CreateProgressItem(param_3, (int64_t)param_1, (uint64_t *)&local_48, local_50[0], local_54,
-                      local_58, local_res20[0], iVar5, (LPCWSTR)pWVar3,
+                      local_58, local_res20[0], iVar5, (LPWSTR)pWVar3,
                       (uint32_t)(cVar2 != '\0'));
         uVar4 = 0;
     }

@@ -945,6 +945,7 @@ LAB_14004074a:
 
 FILETIME PECMD_ParseDateTimeSpec(int64_t *script, FILETIME param_2, uint32_t param_3, FILETIME param_4)
 {
+    (void)param_3;
     /* @0x1400408d0 size=20373
      * 大日期/时间解析器。解析形如 "*..."/"-*..." 的格式串，抽取
      * c/cd/ncd/nrcd/rcd/qd 及 '#','*','>','$','@','=','<' 令牌，并按令牌做
@@ -6696,6 +6697,7 @@ static int PECMD_ClampInt(int *param_1, int param_2, int param_3)
 uint64_t PECMD_SendDateTimeMessage(uint64_t param_1, HWND param_2, int param_3, int param_4,
                        int param_5, char param_6)
 {
+    (void)param_1;
     /* @0x140053f4c size=345 计算时间并发送 WM_ 时间消息 */
     BOOL BVar1;
     WORD WVar2;
@@ -9331,6 +9333,7 @@ bool PECMD_ChangeDeviceProperty(uint32_t param_1, uint32_t param_2, void *param_
         *(uint32_t *)(local_48 + 4) = 0x12;   /* InstallFunction = DIF_PROPERTYCHANGE */
         local_3c = 1;
         local_40 = param_1;
+        (void)local_40; (void)local_3c;   /* 模拟 SP_PROPCHANGE_PARAMS 字段写入, 仅记录语义 */
         BVar2 = SetupDiSetClassInstallParamsW(param_3, (void *)plocal_30, local_48, 0x14);
         bVar4 = BVar2 != 0;
         if (bVar4) {
@@ -12179,6 +12182,7 @@ void PECMD_ReleaseObjectListTail(int64_t param_1, int param_2)
 
 void PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2)
 {
+    (void)param_1; (void)param_2;
     /* UNIMPLEMENTED @0xFUN_140066f64 — decompile-failed, body 未还原 */
 /* @0x140066f64 size=214 */
 }
@@ -12264,6 +12268,7 @@ int16_t *psVar1;
 LPCWSTR PECMD_ExtractTokenByIndex(int64_t *param_1, int *param_2, WCHAR *param_3,
                       int64_t *param_4, uint32_t param_5, uint16_t *param_6)
 {
+    (void)param_1;
     /* @0x140067278 size=831 按分隔符切分参数串，跳过前 count 个令牌，
      * 把命中的令牌写入 param_4，返回命中令牌起始指针 */
     WCHAR WVar1;
@@ -21149,7 +21154,8 @@ LAB_140097333:
             uVar8 = 0;
             cCountOfExplicitEntries = 2;                 /* 残留: CONCAT44(…,2) → 项数 */
             local_a0 = (WIN32_FIND_DATAW *)0x140128080;  /* L"administrators" */
-            local_98 = WSTR("Everyone");
+            local_98 = (WCHAR *)WSTR("Everyone");
+            (void)local_98;   /* (&local_a0)[i] 数组模拟成员 */
             if ((local_110 != (WIN32_FIND_DATAW *)0x0) && ((short)local_110->dwFileAttributes != 0)) {
                 cCountOfExplicitEntries = 1;             /* 残留: CONCAT44(…,1) → 项数 */
                 local_a0 = local_110;
@@ -21463,9 +21469,7 @@ LPCWSTR PECMD_PinStartMenuTask(int64_t *param_1, LPCWSTR param_2)
      *   直接布尔判断; _Var12/_Var1/_Var13/_Var25 等 FILETIME 同时用作大缓冲串指针(0x1400x2a50 等偏移
      *   别名)与返回值, 以 uint64 暂存 + WCHAR* 指针别名具体化; CONCAT44(...)/掩码按整数位运算保留。 */
     WCHAR WVar3;
-    WCHAR cVar4;
     int iVar5;
-    int iVar8;
     DWORD DVar6;
     uint32_t uVar7;
     uint32_t uVar26;
@@ -21504,7 +21508,6 @@ LPCWSTR PECMD_PinStartMenuTask(int64_t *param_1, LPCWSTR param_2)
     uint16_t *local_b0;
     uint16_t *local_a8;
     uint16_t *local_a0;
-    uint64_t local_98b;        /* 角色别名(见 0x140099455 附近) 未用则忽略 */
     int64_t local_90;
     uint64_t local_88;
     HANDLE local_80;
@@ -21530,15 +21533,12 @@ LPCWSTR PECMD_PinStartMenuTask(int64_t *param_1, LPCWSTR param_2)
         void *pHVar10;
         uint16_t *pwVar17;
         uint16_t *pwVar20;
-        uint16_t *pwVar7;
-        WCHAR WVar5;
         int64_t *plVar24;
         int64_t *plVar11;
         uint64_t *puVar15;
         uint8_t *puVar2;
-        LPCWSTR lpString1;
+        uint16_t *lpString1;
         char *lpString;
-        const uint16_t *pWVar6;
 
         for (; (WVar3 = *local_res10, WVar3 != L'\0' && ((uint16_t)WVar3 < 9 || (uint16_t)WVar3 > 0xd) && WVar3 != L' ');
              local_res10 = local_res10 + 1) {
@@ -21581,7 +21581,7 @@ LPCWSTR PECMD_PinStartMenuTask(int64_t *param_1, LPCWSTR param_2)
             WVar3 = *local_res10;
             uVar7 = local_108;
             while (WVar3 == L'-') {
-                cVar4 = PECMD_MatchTokPrefixAdv(WSTR("-dir"), &local_res10, 4) ? 0 : 1;
+                (void)(PECMD_MatchTokPrefixAdv(WSTR("-dir"), &local_res10, 4) ? 0 : 1);
                 if (PECMD_MatchTokPrefixAdv(WSTR("-dir"), &local_res10, 4) == 0) {
                     if (PECMD_MatchTokPrefixAdv(WSTR("-file"), &local_res10, 5) == 0) {
                         if (PECMD_MatchTokPrefixAdv(WSTR("-TaskBand"), &local_res10, 9) == 0) {
@@ -21786,11 +21786,11 @@ LAB_140099063:
                         local_c0 = (void *)(uintptr_t)(uint64_t)uVar7;
                         local_c8 = WSTR("\\Explorer.exe");
                     }
-                    pwVar17 = WSTR("WIN10ToStartMenu");
-                    pwVar20 = WSTR("WIN10ToTaskBand");
+                    pwVar17 = (uint16_t *)WSTR("WIN10ToStartMenu");
+                    pwVar20 = (uint16_t *)WSTR("WIN10ToTaskBand");
                     if (local_128 != 0) {
-                        pwVar17 = WSTR("WIN10FromStartMenu");
-                        pwVar20 = WSTR("WIN10FromTaskBand");
+                        pwVar17 = (uint16_t *)WSTR("WIN10FromStartMenu");
+                        pwVar20 = (uint16_t *)WSTR("WIN10FromTaskBand");
                     }
                     if (local_137 != 0) {
                         pwVar20 = pwVar17;
@@ -21819,12 +21819,11 @@ LAB_140099063:
                             }
                         }
                         bVar28 = true;
-                        pWVar16 = WSTR(".USRCFG.INI");
+                        pWVar16 = (uint16_t *)WSTR(".USRCFG.INI");
                         if (((-1 < (int32_t)uVar26) || (-1 < (int32_t)DAT_14013a848)) &&
                             (bVar29 = true, *plVar24 != 0))
                             goto LAB_140099455;
                         for (;;) {
-                            const uint16_t *_Var1b = (const uint16_t *)(uintptr_t)local_100;
                             pWVar14 = (uint16_t *)(uintptr_t)(local_100 + (uint64_t)local_120 * 2);
                             lstrcpyW(pWVar14, pWVar16);
                             *pWVar14 = L'.';
@@ -22026,6 +22025,7 @@ LAB_140099c06:
                         local_60 = 0x20001;
                         local_58 = (HANDLE)0x0;
                         local_50 = 0;
+                        (void)local_60; (void)local_50;   /* Ghidra 残留状态字段, 仅记录语义 */
                         {
                             uint64_t _Var13b = _Var25 + (uint64_t)(iVar5 + 0x1e) * 2;
                             uint64_t _Var12b = _Var13b + 2;
@@ -22093,7 +22093,7 @@ LAB_140099c06:
                                                                    (void *)0x0, (uint64_t *)0x0);
                                             local_128 = (uint32_t)_Var13;
                                         }
-                                        pWVar22 = local_c8;
+                                        pWVar22 = (uint16_t *)local_c8;
                                         lstrcpyW(pWVar14b, local_c8);
                                         lstrcpyW(lpString1, WSTR("\\PECMDExp.exe"));
                                         iVar8_2 = 5000;
@@ -22151,7 +22151,7 @@ LAB_140099c06:
                         pWVar18 = local_110;
 LAB_140099e11:
                         if (*local_a8 == L'\0') goto LAB_140099e1e;
-                        pWVar16 = PECMD_UnquoteString(local_a8);
+                        pWVar16 = (uint16_t *)PECMD_UnquoteString((short *)local_a8);
                         bVar27 = FUN_140101e70(pWVar16);
                         if (bVar27 == 0) goto LAB_140099eb0;
                         PECMD_ExpandPathAlloc2(pWVar16, &local_d8, &local_90);
@@ -24576,6 +24576,7 @@ uint64_t PECMD_TrayIconLoadThread(int64_t param_1)
 uint8_t PECMD_DhcpWriteAndWait(LPCWSTR param_1, LPCWSTR param_2, uint64_t param_3, int param_4,
                       LPCWSTR param_5, uint32_t param_6, uint64_t param_7, uint32_t param_8)
 {
+    (void)param_3;
     /* @0x1400b6018 size=551 创建工作线程执行 DHCP 注册表写盘并等待完成 */
     uint8_t uVar1;
     uint64_t *lpParameter;

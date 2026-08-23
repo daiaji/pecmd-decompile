@@ -339,6 +339,7 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
  */
 int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp)
 {
+    (void)cp;
     uint64_t enc = FUN_14005F33C((const uint8_t *)*in, (int)in[1]);
     uint8_t *data;
     int64_t len;

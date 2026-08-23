@@ -49,6 +49,7 @@ static int32_t g_cmdlineMode;      /* DAT_14013ccb0 */
  */
 int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
 {
+    (void)flag; (void)hinst;
     LPCWSTR p = cmdline;
     WCHAR *cmd = NULL;
     uint16_t seed;

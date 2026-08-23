@@ -396,6 +396,7 @@ int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_
 int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param_3,
                   int param_4)
 {
+    (void)param_1;
     LPCWSTR lpString;
     HANDLE  hObject;
     int     iVar1;

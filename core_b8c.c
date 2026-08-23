@@ -84,7 +84,7 @@ void FUN_1400EF620(uint64_t *obj, uint64_t wParam, uint64_t lParam)
     uint8_t flags = *(uint8_t *)((uint8_t *)obj + OBJ_FLAGS);
 
     if (((flags & 1) == 0) && ((flags & 6) == 0)) {
-        PECMD_PaintLabelText(obj, wParam, lParam);
+        PECMD_PaintLabelText((int64_t *)obj, wParam, lParam);
     } else {
         (**(void (**)(uint64_t, uint32_t, uint64_t, uint64_t))(*obj + 8))
             (obj[4], 0xf, wParam, lParam);

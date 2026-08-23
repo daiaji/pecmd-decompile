@@ -141,6 +141,7 @@ int64_t PECMD_FindPatternInFile(int64_t *param_1, HANDLE param_2, uint64_t param
                       int param_9, int param_10, LPCVOID param_11,
                       uint64_t param_12)
 {
+    (void)param_6;
     int iVar1;
     BOOL BVar2;
     int iVar3;

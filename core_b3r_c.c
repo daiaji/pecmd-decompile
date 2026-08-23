@@ -61,6 +61,7 @@ extern void *g_pGdipGetPropertyItem;     /* GdipGetPropertyItem */
  * ==================================================================== */
 uint64_t PECMD_QueryDevice(HANDLE param_1, uint64_t param_2, uint16_t *param_3, int64_t param_4)
 {
+    (void)param_2;
     uint8_t *buf;                /* local_48[0] */
     uint8_t *lpOutBuffer;        /* buf + 0x400 */
     uint16_t *run;               /* local_res18 */

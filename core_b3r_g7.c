@@ -121,6 +121,7 @@ HANDLE PECMD_LoadImageFileToMemory(LPCWSTR param_1, uint64_t param_2)
  */
 uint64_t PECMD_DriveLetterSet(uint64_t param_1, LPCWSTR param_2)
 {
+    (void)param_1;
     char cVar1;
     DWORD DVar2;
     UINT UVar3;

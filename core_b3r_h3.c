@@ -427,6 +427,7 @@ LAB_0a0a21:
  * ========================================================================== */
 LPCWSTR *PECMD_SearchStringAndLocate(int64_t *param_1, WCHAR *param_2, uint64_t param_3, uint8_t param_4)
 {
+    (void)param_3;
     WCHAR WVar1;
     bool bVar2;
     char cVar3;

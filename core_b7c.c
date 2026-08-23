@@ -532,6 +532,7 @@ DWORD PECMD_MounResolveDiskNo(LPCWSTR a1, uint32_t a2, LPCWSTR a3,
  */
 HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
 {
+    (void)a3;
     WCHAR WVar10;
     char cVar6;
     bool bVar4;
@@ -1993,6 +1994,7 @@ extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int);         /* 转换�
 void *PECMD_EnviMemReadWrite(WCHAR *a1, void *a2, uint64_t a3,
                              WCHAR *a4, char a5)
 {
+    (void)a3;
     /* ---- 寄存器/槽位镜像 (名称对应 decompiled local_*) ---- */
     uint64_t *r1_lenptr;              /* ppppppppppppWVar1: 记录长度域指针 */
     bool bVar2;                       /* -tom 负计数旗标 */
@@ -4506,7 +4508,7 @@ void FUN_1400a8664(longlong lf, LPWSTR spec, uint32_t *pflags)
             tail++;
             c = *tail;
         }
-        unq = PECMD_UnquoteString((short *)spec);
+        unq = (uint16_t *)PECMD_UnquoteString((short *)spec);
         if (unq != spec) {
             lstrcpyW(spec, unq);
         }
@@ -5231,8 +5233,6 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3,
     int local_124;
     int local_c8;
     int local_c4[35];
-    int local_120;
-    WCHAR *local_110;
     uint8_t lvi_ins[0x54];                        /* LVITEM #1 (插入): 基址 = 原 &local_188 */
     uint8_t lvi_set[0x20];                        /* LVITEM #2 (更新): 基址 = 原 &local_128 */
     uint16_t *local_240;
@@ -5327,7 +5327,7 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3,
     puVar12 = (uint64_t *)operator_new(0x400);
     plVar13 = plVar21;
     if (puVar12 != NULL) {
-        plVar13 = FUN_1400f9134(puVar12, (uint64_t)(uintptr_t)(a1 + 0xb),
+        plVar13 = (longlong *)FUN_1400f9134(puVar12, (uint64_t)(uintptr_t)(a1 + 0xb),
                                 (uint64_t)(uintptr_t)a1);
     }
     dVar5 = g_fontMinus0;                         /* DAT_140125238 = -0.0 */
@@ -6010,6 +6010,7 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
     local_80 = 0;
     local_a0 = (WCHAR *)(uintptr_t)g_szEmpty;
     local_88 = a1;
+    (void)local_80; (void)local_88;   /* xctx 槽位镜像 */
     PECMD_StrAssign(&local_d0, g_szEmpty);
     PECMD_AllocStrSlot(&local_c0);
     PECMD_AllocStrSlot(&local_b8);
@@ -6034,6 +6035,7 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
     local_e6 = L'\t';
     local_e4 = 0;
     local_e2 = 0;
+    (void)local_e6; (void)local_e4; (void)local_e2;   /* -sl/-sc 解析旗标 */
     WVar1 = *local_b0;
     if (WVar1 == L'*') {
         local_res10 = local_b0 + 1;
@@ -6086,7 +6088,7 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
             }
             PECMD_SplitTokenTrimWs((WCHAR **)&local_res10, &local_d0, 0x2c);
             b7c_003a20((longlong *)a1, &local_d0, 1);
-            local_res10 = pWVar18;
+            local_res10 = (WCHAR *)pWVar18;
             if (*pWVar18 == L',') {
                 local_res10 = (WCHAR *)pWVar18 + 1;
                 plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90,
@@ -6107,7 +6109,7 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
                             (pWVar18 = local_res10 + 2, *pWVar18 == L',')) {
                             puVar12 = (ushort *)1;
                         }
-                        local_res10 = pWVar18;
+                        local_res10 = (WCHAR *)pWVar18;
                         plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90,
                                                            &local_res10, 0x2c, 1);
                         PECMD_ExtractTokenByDelim((WCHAR **)plVar7, &local_b8, 0);
@@ -6481,8 +6483,6 @@ int64_t PECMD_PartShowHideDrive(uint64_t a1, WCHAR *a2)
     uint local_994;                      /* 内层跳步计数 */
     ulonglong pv18;                      /* decompiled puVar18 字节旗标扩展 */
     HANDLE hDev;                         /* pWVar27 设备句柄复用 */
-    LPWSTR tb;                           /* 驱动器表基址 (local_918+0x20C010 字节) */
-    LPWSTR sc;                           /* 大缓冲尾部 scratch (+0x20F970 字节) */
     byte *info;                          /* 分区信息数组基址 (local_8b8) */
     byte *ent;                           /* 分区信息条目 (i*0x90) */
     longlong rbx_ret;                    /* unaff_RBX 保守承载 */
@@ -6998,7 +6998,7 @@ LAB_1400ce173:
     if ((local_96c == '\0') || (local_995 != 0)) {
         if ((0 < local_90c) || (local_96c != '\0')) {
             local_93c = (int)(char)local_995;
-            pcVar23 = &local_858[0];
+            pcVar23 = (char *)&local_858[0];
             if (local_858[0] == '\0') {
                 pcVar23 = local_898;
             }
@@ -8453,7 +8453,7 @@ longlong FUN_140061c44(void)
 /* ========== FUN_140079f50 @0x140079f50 ("路径"#资源名 拆分, 忠实直移) ========== */
 LPCWSTR FUN_140079f50(WCHAR **pcursor, uint mode)
 {
-    LPCWSTR base;
+    WCHAR *base;
     WCHAR quote;
     WCHAR *q;
     LPWSTR hash;
@@ -8714,16 +8714,8 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     uint64_t uVar20;
     uint32_t y1;
     uint32_t y2;
-    uint32_t uVar23;
     longlong key_color;
     BITMAP bm;
-    HDC hdcMem;
-    HGDIOBJ old_sel;
-    uint64_t selrec[3];
-    int dib_w;
-    unsigned char *pixbuf;
-    LPCWSTR lpvBits;
-    longlong row_last;
     longlong dst_w;
     longlong dst_h;
     longlong scaled_w;
@@ -8736,9 +8728,9 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     local_e8 = stack_size;
     local_f0 = (HRGN)0;
     iVar27 = 1;
-    local_190 = name_arg;
+    local_190 = (WCHAR *)name_arg;
     if (name_arg == NULL) {
-        local_190 = *(LPCWSTR *)((char *)obj + 0x260);
+        local_190 = (WCHAR *)*(LPCWSTR *)((char *)obj + 0x260);
     }
     else if (*name_arg == L'\0') {
         if ((flagbyte & 0x40) == 0) {
@@ -8781,7 +8773,7 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     /* ---- "frm<" 框架样式前缀 ---- */
     if (FUN_14005c788((char *)"frm<", (uint16_t *)local_190, 4) != 0) {
         pWVar18 += 4;
-        local_190 = pWVar18;
+        local_190 = (WCHAR *)pWVar18;
         b7c_skip_to((WCHAR **)&local_190, L'>');
         WVar22 = *local_190;
         if (WVar22 != L'\0') {
@@ -8798,7 +8790,7 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     /* ---- "%索引%" / "%hex%" 参数 ---- */
     WVar22 = L'(';
     if (*pWVar18 == L'%') {
-        local_190 = pWVar18 + 1;
+        local_190 = (WCHAR *)(pWVar18 + 1);
         FUN_14005B154((WCHAR **)&local_190);
         WVar2 = *local_190;
         local_118 = 0;
@@ -8839,13 +8831,13 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
 
     /* ---- '*' 星标模式 ---- */
     if (*pWVar18 == L'*') {
-        local_190 = pWVar18 + 1;
+        local_190 = (WCHAR *)(pWVar18 + 1);
         WVar22 = *local_190;
         if (WVar22 != L'*') {
             local_198 = 2;
         }
         else {
-            local_190 = pWVar18 + 2;
+            local_190 = (WCHAR *)(pWVar18 + 2);
             local_198 = 0x42;
         }
         bVar5 = (WVar22 == L'*');
@@ -8906,7 +8898,7 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     if ((local_120 != &local_a0) || ((HBITMAP)(uintptr_t)old_bmp == 0) || (stack_size >= 1)) {
         WCHAR *cur = (WCHAR *)local_190;
         LPCWSTR resref = FUN_140079f50(&cur, 1);
-        local_190 = (LPCWSTR)cur;
+        local_190 = cur;
         if (*local_190 == L'#') {
             int resid = 0;
             LPCWSTR pk = local_190;
@@ -9384,7 +9376,6 @@ uint64_t PECMD_DiskFindLoadHives(int64_t *a1, WCHAR *a2)
     WCHAR *pWVar14;
     longlong lVar15;
     int *piVar16;
-    int iVar17;
     WCHAR *pWVar18;
     LPWSTR lpString;
     WCHAR *local_res10;                  /* 游标 */
