@@ -109,9 +109,9 @@ void FUN_1400E56E4(uint64_t *slot)
  */
 void FUN_1400E5708(int64_t obj)
 {
-    uint8_t *ref = (uint8_t *)(obj + 0x123);
+    int8_t *ref = (int8_t *)(obj + 0x123);   /* dc@140194: '\0' < *(char*) 有符号序 */
     if (*ref > 0) {
-        *ref = (uint8_t)(*ref - 1);
+        *ref = (int8_t)(*ref - 1);
         ShowWindow(*(HWND *)(obj + OBJ_HWND), SW_HIDE);
     }
 }

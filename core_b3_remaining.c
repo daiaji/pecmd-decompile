@@ -20573,7 +20573,7 @@ LAB_14008c016:
                     else {
                         iVar8 = PECMD_AnsiStrNCompare((char *)&pLVar25->QuadPart, 0x140124d20, 0x10);
                         if (iVar8 == 0) {
-                            uVar15 = (uint64_t)*puVar12 / (uint64_t)(int)local_508;
+                            uVar15 = (uint64_t)((int64_t)*puVar12 / (int64_t)(int)local_508);
                             local_500 = uVar15;
                         }
                     }

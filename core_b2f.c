@@ -4829,8 +4829,8 @@ LAB_14003858a:
             uVar16 = (uint64_t)g_tipOffX;
             uVar14 = (uint64_t)local_104;
             uVar15 = (uint64_t)g_tipOffY;
-            local_100 = (WCHAR *)(uintptr_t)(((int64_t)iVar6 * (int64_t)uVar14) / (int64_t)uVar15);
-            local_f8 = (WCHAR *)(uintptr_t)(((int64_t)cx * (int64_t)uVar17) / (int64_t)uVar16);
+            local_100 = (WCHAR *)(uintptr_t)((int64_t)iVar6 * uVar14 / uVar15);
+            local_f8 = (WCHAR *)(uintptr_t)((int64_t)cx * uVar17 / uVar16);
             iVar7 = ((int (*)(HDC, int64_t *))g_pGdipCreateFromHDC)(hdc, &local_f0);
             if (iVar7 == 0) {
                 ((void (*)(int64_t, HICON, int, int, uint64_t, uint64_t, int, int, int, int,
@@ -4838,10 +4838,10 @@ LAB_14003858a:
                     local_f0, g_hIconCF88, 0, 0,
                     ((uint64_t)uVar21 << 32) | (uint32_t)cx,
                     ((uint64_t)uVar22 << 32) | (uint32_t)iVar5,
-                    (int)(((int64_t)(int32_t)DVar10 * (int64_t)uVar17) / (int64_t)uVar16),
+                    (int)((int64_t)(int32_t)DVar10 * uVar17 / uVar16),
                     (int)(intptr_t)local_100,
                     (int)(intptr_t)local_f8,
-                    (int)(((int64_t)iVar5 * (int64_t)uVar14) / (int64_t)uVar15),
+                    (int)((int64_t)iVar5 * uVar14 / uVar15),
                     2, 0, 0, 0);
                 if ((g_pwszD258 != NULL) && (*g_pwszD258 != 0)) {
                     PECMD_DrawTooltipText(script, hdc, local_res10);
