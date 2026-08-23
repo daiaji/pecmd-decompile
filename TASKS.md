@@ -515,3 +515,26 @@ _ftol/__CxxFrameHandler 等 — 全部跳过, 标准库等价替换
 - 在途: R3=27debcf1(core_b7c 四命令); 已回交: lowconf_review.json(37升级/3维持/0SKIP)。
 - **待执行队列**(A 回交后串行): ①验证A+提交 → ②R1 还原批(1子代理独占ls) → ③主命名批
   (apply_rename2 --sync-ls, B2-B4 提案~130个, 每批25-30保绿) → ④TASKS/REVIEW记账+里程碑。
+
+## 12.【最终收尾完整行动规划】S2–S5（2026-08-23 用户审定待启动）
+> 前置状态: 命名战线实质收尾(rename_map 1594, biz 未命名 46); 本规划为剩余全部工作。
+> 总验收口径: 每批 build 95 OK / link exit 0; 不虚构语义; 同一巨函数连续失败 2 次→转「需原 EXE 对照」登记。
+
+### S2 core_b7c 四命令真体重派（1 派发 + 回交修复 ≈ 2 轮）
+- 单代理独占 core_b7c.c；落地顺序按体量升序: caf78/TABL(278) → d7038/DISK(401) → c13f8/REGI(1267) → cd3a8/SHOW(1680)。
+- 提示词必须附加(R3 首败教训): ①文件头补 #include <stdbool.h> 与 typedef ushort/longlong/ulonglong;
+  ②SplitTokenTrimWs/ExtractTokenByDelim 首参传 &槽变量(WCHAR**); ③禁用未声明 param_N 变量;
+  ④参考存档 tools/r3_partial_core_b7c.patch 复用已译段落; ⑤依赖子函数(c9b9c 列表控件创建等)随需在本文件补齐。
+- 验证: 每函数双绿门; REGI 特别核对返回值链(不得再把脚本指针当 HKEY 返回)。
+
+### S3 大桩还原波「1 agent 1 巨」（≈4–6 轮）
+- 队列(升序): 1001c0(272·活调用优先补体) → c0ad8(224) → c9b9c(625·TABL依赖) → d5b48(632)
+  → e9724(1047·RAMD) → c6324(1838·ENVI 内存引擎)。
+- 每个一代理独占其所在文件; 失败 2 次转登记; INDIR 3 个(f6db0/d9818/100ac4)与零引用对(d85d0/d7ce4/f36ec 待上游)默认排后或登记。
+
+### S4 biz 残余甄别（1 轮）
+- 46 个中零引用者按 c8b/c8c 已附语义推断批量 SKIP 登记; 有引用者回 S3 队列或提名应用。
+
+### S5 P5 收口（1 轮）
+- 编译警告全量分类复核(行为相关者终账登记); TASKS/REVIEW 数据汇总终账;
+  gen_tasks 刷新; git 里程碑 tag(p4-close); 完成判定=build/link 绿+未命名仅剩登记项+无未处理 TODO。
