@@ -1,0 +1,791 @@
+{
+  "batch": "c5",
+  "proposals": [
+    {
+      "addr": "140063b64",
+      "old": "FUN_140063b64",
+      "spelling_variants": [
+        "FUN_140063B64",
+        "FUN_140063b64"
+      ],
+      "name": "PECMD_InitPtrTable",
+      "confidence": "medium",
+      "evidence": "分配带内联头(容量=8,魔数0xAA55)的可增长指针表并清空首槽；被多个UI对象构造器(如1400f5c74)初始化成员表。"
+    },
+    {
+      "addr": "1400f1490",
+      "old": "FUN_1400f1490",
+      "spelling_variants": [
+        "FUN_1400F1490"
+      ],
+      "name": "PECMD_ClearStringItemList",
+      "confidence": "medium",
+      "evidence": "按0x28步长遍历条目并对非空项调用字符串释放(FUN_14005b0d4@+0x10)，最后释放整个数组。"
+    },
+    {
+      "addr": "140027eac",
+      "old": "FUN_140027eac",
+      "spelling_variants": [
+        "FUN_140027EAC"
+      ],
+      "name": "PECMD_StartWorkerThread",
+      "confidence": "high",
+      "evidence": "以CREATE_SUSPENDED创建线程FUN_14001ff24、引用计数上下文、ResumeThread并可按超时*1.1+5ms等待，供InstallFonts等命令异步执行。"
+    },
+    {
+      "addr": "14006764c",
+      "old": "FUN_14006764c",
+      "spelling_variants": [
+        "FUN_14006764C",
+        "FUN_14006764c"
+      ],
+      "name": "PECMD_CopyLineTrimmed",
+      "confidence": "low",
+      "evidence": "游标扫描至两个分隔字符之一，剔除尾部空格/控制符(0x08-0x0E)后拷贝进目标缓冲，被多处控件文本解析器调用。"
+    },
+    {
+      "addr": "1400fd538",
+      "old": "FUN_1400fd538",
+      "spelling_variants": [
+        "FUN_1400FD538"
+      ],
+      "name": "PECMD_InvalidateParentRect",
+      "confidence": "medium",
+      "evidence": "取GetParent后按param_2外扩子窗口矩形，经ClientToScreen/OffsetRect换算后在父窗口上InvalidateRect强制重绘。"
+    },
+    {
+      "addr": "14006d880",
+      "old": "FUN_14006d880",
+      "spelling_variants": [
+        "FUN_14006D880"
+      ],
+      "name": "PECMD_TextBufReserve",
+      "confidence": "medium",
+      "evidence": "按需扩容文本构建器(param_2个宽字符)，同步刷新长度/末尾/限界指针；%变量展开引擎高频调用。"
+    },
+    {
+      "addr": "14006159c",
+      "old": "FUN_14006159c",
+      "spelling_variants": [
+        "FUN_14006159C",
+        "FUN_14006159c"
+      ],
+      "name": "PECMD_InitObfuscatedKeywords",
+      "confidence": "high",
+      "evidence": "向结构体字段写入XOR混淆常量，解码后为SUB/sub/END/end/[/]/_ 等脚本关键字字符，供子程序调用路径使用。"
+    },
+    {
+      "addr": "14001b510",
+      "old": "FUN_14001b510",
+      "spelling_variants": [
+        "FUN_14001B510"
+      ],
+      "name": "PECMD_GenRandomSeed16",
+      "confidence": "low",
+      "evidence": "循环叠加GetTickCount与内部时钟生成16位随机值，直到满足低位/半字节/置位计数约束；用于脚本随机源。"
+    },
+    {
+      "addr": "1400b638c",
+      "old": "FUN_1400b638c",
+      "spelling_variants": [
+        "FUN_1400B638C"
+      ],
+      "name": "PECMD_RunScriptText",
+      "confidence": "high",
+      "evidence": "保存&CurDir/&CurDrv/&CurFile、设置&&__MAIN__、ENTER:/LEAVE:跟踪后执行脚本文本并恢复环境；LOAD/DISP/SUB调用路径的核心执行体。"
+    },
+    {
+      "addr": "14001bf20",
+      "old": "FUN_14001bf20",
+      "spelling_variants": [
+        "FUN_14001BF20"
+      ],
+      "name": "PECMD_LookupShellFolderVar",
+      "confidence": "high",
+      "evidence": "先读环境变量否则查HKCU Explorer User Shell Folders，结果写入全局ENVI表DAT_14013d130，属Shell文件夹变量解析。"
+    },
+    {
+      "addr": "1400cada0",
+      "old": "FUN_1400cada0",
+      "spelling_variants": [
+        "FUN_1400CADA0",
+        "FUN_1400cada0"
+      ],
+      "name": "PECMD_ParseNumberToken",
+      "confidence": "medium",
+      "evidence": "用FUN_1400c11f4解析数字或括号表达式到输出后跳过一个字符，是表达式取数入口。"
+    },
+    {
+      "addr": "1400f0fa8",
+      "old": "FUN_1400f0fa8",
+      "spelling_variants": [
+        "FUN_1400F0FA8"
+      ],
+      "name": "PECMD_PaintLabelText",
+      "confidence": "medium",
+      "evidence": "BeginPaint后选字体、DrawTextW垂直居中绘制文本并处理前景色/禁用态，是文本控件虚表的绘制实现。"
+    },
+    {
+      "addr": "1400e648c",
+      "old": "FUN_1400e648c",
+      "spelling_variants": [
+        "FUN_1400E648C"
+      ],
+      "name": "PECMD_GetUiFontById",
+      "confidence": "medium",
+      "evidence": "按字体ID构造HFONT：无资源时经LoadString取\"文本|字面名\"再由FUN_1400b89dc建字体存回参数。"
+    },
+    {
+      "addr": "140053dc8",
+      "old": "FUN_140053dc8",
+      "spelling_variants": [
+        "FUN_140053DC8",
+        "FUN_140053dc8"
+      ],
+      "name": "PECMD_ItemBaseInit",
+      "confidence": "high",
+      "evidence": "写入基础虚表PTR_FUN_1401234f0并初始化控件项的id/名称/文本/提示/坐标等公共字段，所有控件项构造的基类初始化。"
+    },
+    {
+      "addr": "1400f425c",
+      "old": "FUN_1400f425c",
+      "spelling_variants": [
+        "FUN_1400F425C"
+      ],
+      "name": "PECMD_ClearPtrArrayItems",
+      "confidence": "medium",
+      "evidence": "倒序free可增长指针数组中每个非NULL元素并将count清零。"
+    },
+    {
+      "addr": "1400c11f4",
+      "old": "FUN_1400c11f4",
+      "spelling_variants": [
+        "FUN_1400C11F4",
+        "FUN_1400c11f4"
+      ],
+      "name": "PECMD_EvalParenExprRounded",
+      "confidence": "medium",
+      "evidence": "匹配括号取内部表达式交FUN_1400bf358求值并按偏移DAT_140125230四舍五入为整数。"
+    },
+    {
+      "addr": "1400a4020",
+      "old": "FUN_1400a4020",
+      "spelling_variants": [
+        "FUN_1400A4020"
+      ],
+      "name": "PECMD_AdoptRefCountedString",
+      "confidence": "low",
+      "evidence": "临界区内释放旧引用计数对象后新建{串指针,引用=1}持有者，直接接管外部wchar缓冲(旧池块按-8头释放)。"
+    },
+    {
+      "addr": "1400f2b84",
+      "old": "FUN_1400f2b84",
+      "spelling_variants": [
+        "FUN_1400F2B84"
+      ],
+      "name": "PECMD_ItemPropUpsertEntry",
+      "confidence": "medium",
+      "evidence": "在管理器属性表中定位/追加{标志,id,值}条目(槽复用)，属性设置辅助FUN_1400f5e2c等使用。"
+    },
+    {
+      "addr": "1400251ac",
+      "old": "FUN_1400251ac",
+      "spelling_variants": [
+        "FUN_1400251AC",
+        "FUN_1400251ac"
+      ],
+      "name": "PECMD_CheckFirstStartupFlag",
+      "confidence": "medium",
+      "evidence": "读写HKLM\\SOFTWARE\\PELOGON\\RAMDATA\"SysStartuped.load\"，首次缺失则写1并触发FUN_140025180一次性初始化。"
+    },
+    {
+      "addr": "1400f072c",
+      "old": "FUN_1400f072c",
+      "spelling_variants": [
+        "FUN_1400F072C",
+        "FUN_1400f072c"
+      ],
+      "name": "PECMD_CreateButtonWindow",
+      "confidence": "high",
+      "evidence": "CreateWindowExW创建L\"BUTTON\"子窗口(样式含BS_*|WS_CHILD)并存入控件对象hwnd字段。"
+    },
+    {
+      "addr": "14007af60",
+      "old": "FUN_14007af60",
+      "spelling_variants": [
+        "FUN_14007AF60"
+      ],
+      "name": "PECMD_ExpandEnvVars",
+      "confidence": "high",
+      "evidence": "%VAR%展开引擎：支持%%/%#/%*/%@/%n参数/%RANDOM%/%__THIS%、:~起止子串与?缺省回退，经GetEnvironmentVariableW及内部变量表解析。"
+    },
+    {
+      "addr": "140022a70",
+      "old": "FUN_140022a70",
+      "spelling_variants": [
+        "FUN_140022A70"
+      ],
+      "name": "PECMD_LoadPelogonShellCfg",
+      "confidence": "high",
+      "evidence": "读写HKLM\\SOFTWARE\\PELOGON：保存/加载SysShell(UShell)，读取Hide/HOOKKBD/TOPICON/AUTOUSB/FirstUsb开关。"
+    },
+    {
+      "addr": "1400f0814",
+      "old": "FUN_1400f0814",
+      "spelling_variants": [
+        "FUN_1400F0814"
+      ],
+      "name": "PECMD_CtlDrawClickHandler",
+      "confidence": "low",
+      "evidence": "处理WM_DRAWITEM(0x2B)、BM_GETCHECK/SETCHECK切换与WM_LBUTTONDOWN/UP点击跟踪，并以魔数0x5AA555AA向父窗口转发0x450/0x451通知。"
+    },
+    {
+      "addr": "1400e3d60",
+      "old": "FUN_1400e3d60",
+      "spelling_variants": [
+        "FUN_1400E3D60",
+        "FUN_1400e3d60"
+      ],
+      "name": "PECMD_FindTargetWindow",
+      "confidence": "high",
+      "evidence": "按{标题,pid,tid}条件EnumWindows/EnumChildWindows(回调FUN_1400748a0)查找目标窗口，WIN/SEND类命令使用。"
+    },
+    {
+      "addr": "1400efff8",
+      "old": "FUN_1400efff8",
+      "spelling_variants": [
+        "FUN_1400EFFF8"
+      ],
+      "name": "PECMD_CreateStaticWindow",
+      "confidence": "high",
+      "evidence": "CreateWindowExW创建L\"STATIC\"子窗口并保存句柄，静态文本控件创建例程。"
+    },
+    {
+      "addr": "1400efec8",
+      "old": "FUN_1400efec8",
+      "spelling_variants": [
+        "FUN_1400EFEC8"
+      ],
+      "name": "PECMD_InitImageHolder",
+      "confidence": "high",
+      "evidence": "基类初始化后挂虚表PTR_FUN_14012BE90并默认图像类型=1(图标)；其析构1400eff10按类型DestroyIcon/DeleteObject。"
+    },
+    {
+      "addr": "1400f00f4",
+      "old": "FUN_1400f00f4",
+      "spelling_variants": [
+        "FUN_1400F00F4"
+      ],
+      "name": "PECMD_DrawItemContent",
+      "confidence": "medium",
+      "evidence": "自绘绘制核心：按类型填背景刷、BitBlt位图或绘图标(GetObjectW/兼容DC)、再以主题色绘制文本。"
+    },
+    {
+      "addr": "1400f30c0",
+      "old": "FUN_1400f30c0",
+      "spelling_variants": [
+        "FUN_1400F30C0"
+      ],
+      "name": "PECMD_TableSetCellPos",
+      "confidence": "low",
+      "evidence": "经自定义消息0x1038取条目矩形、0x100E设置新位置(缩进2px)并InvalidateRect，表格/列表控件的单元格重排。"
+    },
+    {
+      "addr": "1400f3554",
+      "old": "FUN_1400f3554",
+      "spelling_variants": [
+        "FUN_1400F3554"
+      ],
+      "name": "PECMD_TableSetCellFormat",
+      "confidence": "low",
+      "evidence": "先0x104D查询索引再用0x102B写入{0x1000,0xf000}格式标志，TABL控件构造与布局代码调用。"
+    },
+    {
+      "addr": "1400f4114",
+      "old": "FUN_1400f4114",
+      "spelling_variants": [
+        "FUN_1400F4114"
+      ],
+      "name": "PECMD_ItemPropFindIdxNamed",
+      "confidence": "medium",
+      "evidence": "在+0x2F0列表按int id查找，输出值域[2]并可选复制名称串[4]，延续ItemPropFindIdx命名族(带名字段)。"
+    },
+    {
+      "addr": "1400b0380",
+      "old": "FUN_1400b0380",
+      "spelling_variants": [
+        "FUN_1400B0380",
+        "FUN_1400b0380"
+      ],
+      "name": "PECMD_ParseTabItemAttr",
+      "confidence": "low",
+      "evidence": "TABS解析链(FUN_1400b52b8)内分派属性token：小整数走字符处理、\"cmd\"字面量存文本、其余走通用处理。"
+    },
+    {
+      "addr": "1400b2a4c",
+      "old": "FUN_1400b2a4c",
+      "spelling_variants": [
+        "FUN_1400B2A4C"
+      ],
+      "name": "PECMD_CreateTabsItem",
+      "confidence": "high",
+      "evidence": "TABS命令解析器FUN_1400b48e0调用：operator_new后由内层ctor(类型0xE,虚表PTR_FUN_1401272A8)建页签控件，id=槽位+0x1000。"
+    },
+    {
+      "addr": "1400b2b64",
+      "old": "FUN_1400b2b64",
+      "spelling_variants": [
+        "FUN_1400B2B64"
+      ],
+      "name": "PECMD_CreateListItem",
+      "confidence": "high",
+      "evidence": "LIST命令解析器FUN_1400b4b58调用：同族包装，内层ctor类型9建列表控件(虚表PTR_FUN_140126740)。"
+    },
+    {
+      "addr": "1400bd620",
+      "old": "FUN_1400bd620",
+      "spelling_variants": [
+        "FUN_1400BD620",
+        "FUN_1400bd620"
+      ],
+      "name": "PECMD_CreateImageItem",
+      "confidence": "high",
+      "evidence": "IMAG命令解析器FUN_1400be64c调用：内层ctor类型0xD接受HBITMAP建图片控件(虚表PTR_FUN_1401296E8)。"
+    },
+    {
+      "addr": "1400ec428",
+      "old": "FUN_1400ec428",
+      "spelling_variants": [
+        "FUN_1400EC428"
+      ],
+      "name": "PECMD_SelectTabPageIndex",
+      "confidence": "medium",
+      "evidence": "校验索引后SetWindowPos隐藏旧页显示新页并发送选择消息(0x1330)，页容器切换当前页。"
+    },
+    {
+      "addr": "1400f4064",
+      "old": "FUN_1400f4064",
+      "spelling_variants": [
+        "FUN_1400F4064"
+      ],
+      "name": "PECMD_SetSelIdxInvalidate",
+      "confidence": "low",
+      "evidence": "保存选中索引(+0x218)并按模式选择擦除与否InvalidateRect，选中态刷新辅助。"
+    },
+    {
+      "addr": "140063ed4",
+      "old": "FUN_140063ed4",
+      "spelling_variants": [
+        "FUN_140063ED4",
+        "FUN_140063ed4"
+      ],
+      "name": "PECMD_CreateDtimItem",
+      "confidence": "high",
+      "evidence": "DTIM(日期时间)命令解析器FUN_140083f74调用：内层ctor类型0x12(虚表PTR_FUN_140123540)建日期时间项。"
+    },
+    {
+      "addr": "1400aaa4c",
+      "old": "FUN_1400aaa4c",
+      "spelling_variants": [
+        "FUN_1400AAA4C",
+        "FUN_1400aaa4c"
+      ],
+      "name": "PECMD_CreateSliderItem",
+      "confidence": "high",
+      "evidence": "SLID命令解析器FUN_1400abc74调用：内层ctor解析min:max范围(默认0..100)建滑动条项(类型0x15)。"
+    },
+    {
+      "addr": "1400b9204",
+      "old": "FUN_1400b9204",
+      "spelling_variants": [
+        "FUN_1400B9204"
+      ],
+      "name": "PECMD_CreateLabelItem",
+      "confidence": "high",
+      "evidence": "LABE(LABEL)命令解析器FUN_1400b9788调用：内层ctor解析\"*字号:字体名\"建文本标签项(类型1)。"
+    },
+    {
+      "addr": "1400b9340",
+      "old": "FUN_1400b9340",
+      "spelling_variants": [
+        "FUN_1400B9340",
+        "FUN_1400b9340"
+      ],
+      "name": "PECMD_CreateGroupItem",
+      "confidence": "high",
+      "evidence": "GROU(GROUP)命令解析器FUN_1400b9f1c调用：内层ctor经FUN_1400f072c建WS_CHILD|BS_GROUPBOX按钮窗口。"
+    },
+    {
+      "addr": "1400e6f18",
+      "old": "FUN_1400e6f18",
+      "spelling_variants": [
+        "FUN_1400E6F18"
+      ],
+      "name": "PECMD_IsAdminGroupMember",
+      "confidence": "high",
+      "evidence": "AllocateAndInitializeSid构造S-1-5-32-544(BUILTIN\\Administrators)后CheckTokenMembership判断并FreeSid。"
+    },
+    {
+      "addr": "1400f4ca0",
+      "old": "FUN_1400f4ca0",
+      "spelling_variants": [
+        "FUN_1400F4CA0"
+      ],
+      "name": "PECMD_MgrFindDualKeyEntry",
+      "confidence": "low",
+      "evidence": "在+0x350列表顺序查找同时匹配qword键[+8]与[+0x10]的条目并返回槽位指针。"
+    },
+    {
+      "addr": "1400f5104",
+      "old": "FUN_1400f5104",
+      "spelling_variants": [
+        "FUN_1400F5104"
+      ],
+      "name": "PECMD_TableSetCurSel",
+      "confidence": "medium",
+      "evidence": "更新当前(+0x3D0)/副(+0x3CC)/旧(+0x3D4)索引三元组并定向重绘新旧单元格。"
+    },
+    {
+      "addr": "1400f5c74",
+      "old": "FUN_1400f5c74",
+      "spelling_variants": [
+        "FUN_1400F5C74"
+      ],
+      "name": "PECMD_InitTableCellModel",
+      "confidence": "medium",
+      "evidence": "TABL项构造器FUN_1400c9b9c内部创建的子对象(PTR_FUN_14012C550)：双指针表+默认标题+配色(171,199,235)+缩放1.0，表格单元模型。"
+    },
+    {
+      "addr": "140063be8",
+      "old": "FUN_140063be8",
+      "spelling_variants": [
+        "FUN_140063BE8"
+      ],
+      "name": "PECMD_ResizePtrTable",
+      "confidence": "medium",
+      "evidence": "把指针表重设为param_2+1个槽位、全部清零并写count/capacity，是上述PtrTable的配套调整函数。"
+    },
+    {
+      "addr": "1400aa7e4",
+      "old": "FUN_1400aa7e4",
+      "spelling_variants": [
+        "FUN_1400AA7E4",
+        "FUN_1400aa7e4"
+      ],
+      "name": "PECMD_CreateProgressItem",
+      "confidence": "high",
+      "evidence": "PBAR命令解析器FUN_1400ab51c调用(支持-smooth)：内层ctor类型8建进度条项(样式WS_CHILD|1)。"
+    },
+    {
+      "addr": "1400f51d8",
+      "old": "FUN_1400f51d8",
+      "spelling_variants": [
+        "FUN_1400F51D8"
+      ],
+      "name": "PECMD_TableSetHoverIdx",
+      "confidence": "medium",
+      "evidence": "设置悬停索引(+0x3D4)并清除其余索引后重绘对应单元格，与SetCurSel成对出现。"
+    },
+    {
+      "addr": "1400e429c",
+      "old": "FUN_1400e429c",
+      "spelling_variants": [
+        "FUN_1400E429C"
+      ],
+      "name": "PECMD_GetModulePathAlt",
+      "confidence": "medium",
+      "evidence": "GetModuleFileNameW取自身路径入新缓冲；标志开启时追加字符'2'且仅当该变体文件存在才保留。"
+    },
+    {
+      "addr": "1400ec7c0",
+      "old": "FUN_1400ec7c0",
+      "spelling_variants": [
+        "FUN_1400EC7C0"
+      ],
+      "name": "PECMD_ShowFirstTabPage",
+      "confidence": "medium",
+      "evidence": "先做页面布局(FUN_1400ec0f0)再将首页SetWindowPos显示、其余页隐藏。"
+    },
+    {
+      "addr": "1400f3674",
+      "old": "FUN_1400f3674",
+      "spelling_variants": [
+        "FUN_1400F3674"
+      ],
+      "name": "PECMD_ForcePosChanged",
+      "confidence": "medium",
+      "evidence": "以窗口尺寸伪造WINDOWPOS并发送WM_WINDOWPOSCHANGED(0x47)强制宿主重新布局。"
+    },
+    {
+      "addr": "1400f40c8",
+      "old": "FUN_1400f40c8",
+      "spelling_variants": [
+        "FUN_1400F40C8"
+      ],
+      "name": "PECMD_ItemPropFindIdxList5",
+      "confidence": "medium",
+      "evidence": "延续已命名ItemPropFindIdxList族：在+0x308列表按int id查找并输出值域[2]。"
+    },
+    {
+      "addr": "1400f4c28",
+      "old": "FUN_1400f4c28",
+      "spelling_variants": [
+        "FUN_1400F4C28"
+      ],
+      "name": "PECMD_MgrFindEntryByKey64",
+      "confidence": "low",
+      "evidence": "在+0x338列表查找qword键[+8]等于param_2的条目并返回槽位。"
+    },
+    {
+      "addr": "1400f5c10",
+      "old": "FUN_1400f5c10",
+      "spelling_variants": [
+        "FUN_1400F5C10"
+      ],
+      "name": "PECMD_ClearNamedPropArray",
+      "confidence": "medium",
+      "evidence": "倒序释放每条目的字符串(+0x10)并调用条目析构FUN_1400f2b6c后free，清空具名属性数组。"
+    },
+    {
+      "addr": "1400634d4",
+      "old": "FUN_1400634d4",
+      "spelling_variants": [
+        "FUN_1400634D4"
+      ],
+      "name": "PECMD_SetPooledAnsi",
+      "confidence": "low",
+      "evidence": "将ANSI串复制进带8字节头的自定义堆池缓冲(FUN_140063118分配/HeapFree释放旧块)并以NUL收尾。"
+    },
+    {
+      "addr": "14006c648",
+      "old": "FUN_14006c648",
+      "spelling_variants": [
+        "FUN_14006C648"
+      ],
+      "name": "PECMD_DtorListItem",
+      "confidence": "high",
+      "evidence": "先挂LIST项类虚表PTR_FUN_140126740释放子对象，再回基类虚表逐字段清理；该虚表正是LIST内层ctor所挂。"
+    },
+    {
+      "addr": "1400ecdd8",
+      "old": "FUN_1400ecdd8",
+      "spelling_variants": [
+        "FUN_1400ECDD8"
+      ],
+      "name": "PECMD_FreeNamedEntryArray",
+      "confidence": "medium",
+      "evidence": "倒序释放条目内字符串(+8)再free条目本身并清count。"
+    },
+    {
+      "addr": "1400eeea0",
+      "old": "FUN_1400eeea0",
+      "spelling_variants": [
+        "FUN_1400EEEA0"
+      ],
+      "name": "PECMD_DtorMemDcCanvas",
+      "confidence": "medium",
+      "evidence": "恢复DC原选GDI对象、ReleaseDC并清引用，虚表PTR_FUN_14012BD70(内存画布类，ctor返回HBITMAP)。"
+    },
+    {
+      "addr": "1400f4208",
+      "old": "FUN_1400f4208",
+      "spelling_variants": [
+        "FUN_1400F4208"
+      ],
+      "name": "PECMD_ClearPropArrayItems",
+      "confidence": "medium",
+      "evidence": "对每条目调用析构FUN_1400f2b6c后free并清count，属性条目数组清理。"
+    },
+    {
+      "addr": "1400e4228",
+      "old": "FUN_1400e4228",
+      "spelling_variants": [
+        "FUN_1400E4228"
+      ],
+      "name": "PECMD_ZwUnmapViewOfSection",
+      "confidence": "high",
+      "evidence": "动态加载ntdll.dll取ZwUnmapViewOfSection调用并返回NTSTATUS==0，进程镜像卸载封装。"
+    },
+    {
+      "addr": "1400feda4",
+      "old": "FUN_1400feda4",
+      "spelling_variants": [
+        "FUN_1400FEDA4"
+      ],
+      "name": "PECMD_TreeGetItemState",
+      "confidence": "medium",
+      "evidence": "以mask=TVIF_STATE(8)发TVM_GETITEMW(0x113E)读取树项状态字。"
+    },
+    {
+      "addr": "140054b18",
+      "old": "FUN_140054b18",
+      "spelling_variants": [
+        "FUN_140054B18"
+      ],
+      "name": "PECMD_DtorEditItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140123580为EDIT/MEMO共用内层ctor(FUN_140054bb8)所挂，本函数是其析构：释放子对象并回基类清理。"
+    },
+    {
+      "addr": "14006c430",
+      "old": "FUN_14006c430",
+      "spelling_variants": [
+        "FUN_14006C430"
+      ],
+      "name": "PECMD_DtorCheckboxItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140126708对应CHEC(CHECKBOX)内层ctor FUN_14009cacc(类型5)，本函数为其析构。"
+    },
+    {
+      "addr": "14006fc4c",
+      "old": "FUN_14006fc4c",
+      "spelling_variants": [
+        "FUN_14006FC4C"
+      ],
+      "name": "PECMD_DtorTableItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140126888对应TABL(TABLE)内层ctor FUN_1400c9b9c，本函数为其析构。"
+    },
+    {
+      "addr": "14006fcb4",
+      "old": "FUN_14006fcb4",
+      "spelling_variants": [
+        "FUN_14006FCB4"
+      ],
+      "name": "PECMD_DtorTreeItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_1401268A8对应TREE内层ctor FUN_1400bcc5c，本函数为其析构。"
+    },
+    {
+      "addr": "1400aa094",
+      "old": "FUN_1400aa094",
+      "spelling_variants": [
+        "FUN_1400AA094"
+      ],
+      "name": "PECMD_DtorRadioItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140129060对应RADI(RADIO)内层ctor FUN_1400a9ce4(类型4)，本函数为其析构。"
+    },
+    {
+      "addr": "1400aa2fc",
+      "old": "FUN_1400aa2fc",
+      "spelling_variants": [
+        "FUN_1400AA2FC"
+      ],
+      "name": "PECMD_DtorProgressItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140129080对应PBAR内层ctor FUN_1400aa144(类型8)，本函数为其析构。"
+    },
+    {
+      "addr": "1400b916c",
+      "old": "FUN_1400b916c",
+      "spelling_variants": [
+        "FUN_1400B916C"
+      ],
+      "name": "PECMD_DtorLabelControlItem",
+      "confidence": "medium",
+      "evidence": "虚表PTR_FUN_1401294F0为LABEL(类型1)与GROUP(类型7)两个内层ctor共用的父类虚表，本函数为其共享析构。"
+    },
+    {
+      "addr": "1400e412c",
+      "old": "FUN_1400e412c",
+      "spelling_variants": [
+        "FUN_1400E412C"
+      ],
+      "name": "PECMD_ContextHasToken",
+      "confidence": "low",
+      "evidence": "按运行模式(DAT_14013A84D==4取备用组+0xB0/+0xB4，否则+0xA0/+0xA4)校验指针与值均非零，被CreateProcess封装FUN_1400e4480调用判断令牌/凭据就绪。"
+    },
+    {
+      "addr": "140054a50",
+      "old": "FUN_140054a50",
+      "spelling_variants": [
+        "FUN_140054A50"
+      ],
+      "name": "PECMD_DtorDtimItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140123540对应DTIM内层ctor FUN_140057334(类型0x12)，本函数为其析构。"
+    },
+    {
+      "addr": "140054ab4",
+      "old": "FUN_140054ab4",
+      "spelling_variants": [
+        "FUN_140054AB4"
+      ],
+      "name": "PECMD_DtorIpadItem",
+      "confidence": "high",
+      "evidence": "虚表PTR_FUN_140123560对应IPAD(IP地址项)内层ctor FUN_14005762c，本函数为其析构。"
+    },
+    {
+      "addr": "14006c3cc",
+      "old": "FUN_14006c3cc",
+      "spelling_variants": [
+        "FUN_14006C3CC"
+      ],
+      "name": "PECMD_DtorSbarItem",
+      "confidence": "medium",
+      "evidence": "虚表PTR_FUN_1401266E8对应SBAR命令内层ctor FUN_1400c3cf8，本函数为其析构(SBAR为滚动/状态条项，具体形态未细分)。"
+    },
+    {
+      "addr": "1400aa484",
+      "old": "FUN_1400aa484",
+      "spelling_variants": [
+        "FUN_1400AA484"
+      ],
+      "name": "PECMD_DtorHotkeyItem",
+      "confidence": "high",
+      "evidence": "析构时UnregisterHotKey并GlobalDeleteAtom清理热键原子，虚表PTR_FUN_1401290A8对应HKEY(HOTKEY)内层ctor FUN_1400aa394。"
+    },
+    {
+      "addr": "1400eff10",
+      "old": "FUN_1400eff10",
+      "spelling_variants": [
+        "FUN_1400EFF10"
+      ],
+      "name": "PECMD_DtorImageHolder",
+      "confidence": "high",
+      "evidence": "按图像类型字段DestroyIcon(1)或DeleteObject(0)释放图像句柄，与InitImageHolder配对(虚表PTR_FUN_14012BE90)。"
+    },
+    {
+      "addr": "1400fed38",
+      "old": "FUN_1400fed38",
+      "spelling_variants": [
+        "FUN_1400FED38"
+      ],
+      "name": "PECMD_TreeGetItemParam",
+      "confidence": "medium",
+      "evidence": "以mask=TVIF_PARAM(4)+hItem发TVM_GETITEMW(0x113E)取树项lParam；被BuildTreeIndexPathStr等树遍历使用。"
+    },
+    {
+      "addr": "1400fee24",
+      "old": "FUN_1400fee24",
+      "spelling_variants": [
+        "FUN_1400FEE24"
+      ],
+      "name": "PECMD_TreeGetItemInfoEx",
+      "confidence": "low",
+      "evidence": "以mask=0x100经TVM_GETITEMW(0x113E)查询树项扩展信息(0x50字节TVITEMEX缓冲)，具体语义未完全确认。"
+    },
+    {
+      "addr": "1400a9c40",
+      "old": "FUN_1400a9c40",
+      "spelling_variants": [
+        "FUN_1400A9C40"
+      ],
+      "name": "PECMD_DtorTimerItem",
+      "confidence": "high",
+      "evidence": "析构时KillTimer停止定时器并清计数，虚表PTR_FUN_140129040对应TIME(TIMER)内层ctor FUN_1400a9aa8。"
+    },
+    {
+      "addr": "1400b2218",
+      "old": "FUN_1400b2218",
+      "spelling_variants": [
+        "FUN_1400B2218"
+      ],
+      "name": "PECMD_CreateFontAdjusted",
+      "confidence": "medium",
+      "evidence": "调FUN_1400b1f34建HFONT后按阈值对字号做±微调(DAT_140126070)并回写调用方。"
+    }
+  ],
+  "skips": []
+}

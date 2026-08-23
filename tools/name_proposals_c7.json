@@ -1,0 +1,888 @@
+{
+  "batch": "c7",
+  "proposals": [
+    {
+      "addr": "1400fe4a4",
+      "old": "FUN_1400fe4a4",
+      "spelling_variants": [
+        "FUN_1400FE4A4",
+        "FUN_1400fe4a4"
+      ],
+      "name": "PECMD_ApplyControlProperty",
+      "confidence": "medium",
+      "evidence": "SET 属性应用器：属性名后缀为空→SetWindowTextW 设文本(可选 FUN_14007d0ac 带前缀写变量)；'color'/'enable' 经 FUN_140067d20 求值存控件字段(+0x15)并 FUN_1400fd538 重绘；其余转发通用属性分发 FUN_1400c493c。还原注释『应用控件属性』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f20c0",
+      "old": "FUN_1400f20c0",
+      "spelling_variants": [
+        "FUN_1400F20C0",
+        "FUN_1400f20c0"
+      ],
+      "name": "PECMD_SetCtlStateBrush",
+      "confidence": "medium",
+      "evidence": "按状态索引(byte@0xa2)应用文本/背景色：数组 +0x90/+0x94，无画刷时 GetBkColor+CreateSolidBrush 缓存于 +0x80，SetTextColor/SetBkColor 后返回画刷；WS_DISABLED(样式 bit11)或标志+0xd0&2 时跳过；空闲态置 SetCursor(DAT_14013e4d8)。还原注释『设置文本/画刷』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f5e2c",
+      "old": "FUN_1400f5e2c",
+      "spelling_variants": [
+        "FUN_1400F5E2C",
+        "FUN_1400f5e2c"
+      ],
+      "name": "PECMD_ItemPropSetPair13",
+      "confidence": "medium",
+      "evidence": "项属性映射更新 A：PECMD_ItemPropFindIdxList1/List3 定位两映射槽，FUN_1400f2b84 更新数组项值(+0x260/+0x2a8)后调用添加映射项 FUN_1400f5724/FUN_1400f586c。还原注释『更新映射双值 A』。"
+    },
+    {
+      "addr": "1400f5f60",
+      "old": "FUN_1400f5f60",
+      "spelling_variants": [
+        "FUN_1400F5F60",
+        "FUN_1400f5f60"
+      ],
+      "name": "PECMD_ItemPropSetPairSub",
+      "confidence": "medium",
+      "evidence": "项属性映射更新 B：使用 Sub1/Sub2 查找器(ItemPropFindIdxSub1/Sub2)与列表 +0x290/+0x2d8，流程同 1400f5e2c(FUN_1400f57f4/FUN_1400f5adc)。还原注释『更新映射双值 B』。"
+    },
+    {
+      "addr": "1400f8f00",
+      "old": "FUN_1400f8f00",
+      "spelling_variants": [
+        "FUN_1400F8F00",
+        "FUN_1400f8f00"
+      ],
+      "name": "PECMD_ItemPropSetPair24",
+      "confidence": "medium",
+      "evidence": "项属性映射更新 C：使用 List2/List4 查找器与列表 +0x278/+0x2c0，流程同上(FUN_1400f578c/FUN_1400f58d4)。还原注释『更新映射双值 C』。"
+    },
+    {
+      "addr": "1400e6fb8",
+      "old": "FUN_1400e6fb8",
+      "spelling_variants": [
+        "FUN_1400E6FB8",
+        "FUN_1400e6fb8"
+      ],
+      "name": "PECMD_IsProcessElevated",
+      "confidence": "high",
+      "evidence": "进程提权检测：先 FUN_1400e6f18(是否管理员)，GetVersion>5.0 时 OpenProcessToken+GetTokenInformation(TokenElevation) 返回提升状态。还原注释『是否进程提升权限』。"
+    },
+    {
+      "addr": "1400fbbb0",
+      "old": "FUN_1400fbbb0",
+      "spelling_variants": [
+        "FUN_1400FBBB0",
+        "FUN_1400fbbb0"
+      ],
+      "name": "PECMD_SetCtlStateBrush2",
+      "confidence": "medium",
+      "evidence": "1400f20c0 的姊妹变体（short 状态@0xa2、无 WS_DISABLED 预检、SetBkColor 无条件）：同按状态取色建刷并返回。还原注释『设置绘制画刷』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "14005f60c",
+      "old": "FUN_14005f60c",
+      "spelling_variants": [
+        "FUN_14005F60C",
+        "FUN_14005f60c"
+      ],
+      "name": "PECMD_LoadVhdApi",
+      "confidence": "high",
+      "evidence": "延迟装载 VHD API：VirtDisk.DLL 的 CreateVirtualDisk/AttachVirtualDisk/DetachVirtualDisk/GetVirtualDiskPhysicalPath/GetVirtualDiskInformation/OpenVirtualDisk 及 vhdmount.dll 的 MountVHD/UnmountVHD，缓存于 g_p* 全局槽。还原注释『加载虚拟磁盘 API』。"
+    },
+    {
+      "addr": "14006abb8",
+      "old": "FUN_14006abb8",
+      "spelling_variants": [
+        "FUN_14006ABB8",
+        "FUN_14006abb8"
+      ],
+      "name": "PECMD_UpdatePartitionLayout",
+      "confidence": "medium",
+      "evidence": "分区表项布局刷新：PECMD_GetDiskLayoutInfo 定位表项、PECMD_QueryDeviceIoInfo(0x200)、PECMD_FindPartitionInfo 计算偏移写回 entry[6]，再 PECMD_ParsePartitionTable 更新计数，错误标志入 param_4。还原注释『查询设备布局』。"
+    },
+    {
+      "addr": "1400e59c0",
+      "old": "FUN_1400e59c0",
+      "spelling_variants": [
+        "FUN_1400E59C0",
+        "FUN_1400e59c0"
+      ],
+      "name": "PECMD_CtlNotifyDispatch",
+      "confidence": "medium",
+      "evidence": "控件通知分发：按 param_4(0..6) 组合子命令码 0x132..0x138 调用虚表槽 1（(*obj)[4] 为目标）。还原注释『控件通知消息分发』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f2dd4",
+      "old": "FUN_1400f2dd4",
+      "spelling_variants": [
+        "FUN_1400F2DD4",
+        "FUN_1400f2dd4"
+      ],
+      "name": "PECMD_CtlFilterKeyMouseA",
+      "confidence": "low",
+      "evidence": "控件消息过滤 A：先以 0x233 经 PECMD_DispatchMessageMap 链(+0x3E8)探测处理，未处理时对键鼠消息集(WM_KEYDOWN/UP/CHAR、鼠标 0x200-0x208、0x1000、WM_MOUSEHOVER/LEAVE)在焦点匹配时以 0x80 标志转发；全局 DAT_14013a358 自乘 0x1f 作指纹。还原注释『控件消息处理 A』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400fef3c",
+      "old": "FUN_1400fef3c",
+      "spelling_variants": [
+        "FUN_1400FEF3C",
+        "FUN_1400fef3c"
+      ],
+      "name": "PECMD_CtlFilterKeyMouseB",
+      "confidence": "low",
+      "evidence": "控件消息过滤 B：与 1400f2dd4 仅消息链偏移不同(+0x108)。还原注释『控件消息处理 B』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f527c",
+      "old": "FUN_1400f527c",
+      "spelling_variants": [
+        "FUN_1400F527C",
+        "FUN_1400f527c"
+      ],
+      "name": "PECMD_DrawAlignedText",
+      "confidence": "high",
+      "evidence": "对象文本绘制：选控件字体(PECMD_GetControlFont)+SetBkMode(TRANSPARENT)+SetTextColor 后 DrawTextW 单行|VCENTER|EXPANDTABS|END_ELLIPSIS，对齐字节 'C'→DT_CENTER、'R'→DT_RIGHT。还原注释『绘制对象文本』。"
+    },
+    {
+      "addr": "1400fb934",
+      "old": "FUN_1400fb934",
+      "spelling_variants": [
+        "FUN_1400FB934",
+        "FUN_1400fb934"
+      ],
+      "name": "PECMD_ApplyFontToControl",
+      "confidence": "medium",
+      "evidence": "字体应用到控件：WM_SETFONT(0x30) 后 GetObjectW(LOGFONT) 取高度并按 DAT_14013d868 换算，PECMD_InitControlFlags 构建参数块发私有消息 0x444。还原注释『应用字体到控件』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f1f78",
+      "old": "FUN_1400f1f78",
+      "spelling_variants": [
+        "FUN_1400F1F78",
+        "FUN_1400f1f78"
+      ],
+      "name": "PECMD_CtlKeyEnterNotify",
+      "confidence": "medium",
+      "evidence": "控件按键处理：WM_KEYDOWN VK_RETURN 且标志+0xD0&1 时向父窗口 PostMessage WM_COMMAND(控件ID,BN_CLICKED=0x100)；其余经链(+0xD8)转发；返回 DLGC 组合码(0x102/0x10102)。还原注释『控件按键消息处理』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f3264",
+      "old": "FUN_1400f3264",
+      "spelling_variants": [
+        "FUN_1400F3264",
+        "FUN_1400f3264"
+      ],
+      "name": "PECMD_ListScrollIntoView",
+      "confidence": "medium",
+      "evidence": "列表项滚动到可见区：param_2==0 时 LVM_REDRAWITEMS(left=2) 否则 0x1038(top=n)，随后 InvalidateRect 失效重绘该条带。还原注释『滚动列表项到可见区』。"
+    },
+    {
+      "addr": "1400fbab8",
+      "old": "FUN_1400fbab8",
+      "spelling_variants": [
+        "FUN_1400FBAB8",
+        "FUN_1400fbab8"
+      ],
+      "name": "PECMD_CtlTranslateKey",
+      "confidence": "medium",
+      "evidence": "控件按键翻译：ESC(VK_ESCAPE 0x1B) keydown/up 直接返回 1 吞掉；VK_RETURN 时通知父 WM_COMMAND(id,0x100)；其余经链(+0xD8)以 0x80 转发并回传 0x233 探测结果。还原注释『翻译控件按键』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400cadec",
+      "old": "FUN_1400cadec",
+      "spelling_variants": [
+        "FUN_1400CADEC",
+        "FUN_1400cadec"
+      ],
+      "name": "PECMD_AddDialogControl",
+      "confidence": "low",
+      "evidence": "对话框添加控件对象：PECMD_SendCtrlMessage_0834 找类型槽(DAT_14011c638)+PECMD_ScaleQuadByFactor 缩放坐标+operator_new(0x78)+大构造器 FUN_1400c9b9c(内含 DragAcceptFiles/GetSysColor 初始化) 注册，最后 DialogBeepNotify。还原注释『添加控件』。"
+    },
+    {
+      "addr": "1400746b0",
+      "old": "FUN_1400746b0",
+      "spelling_variants": [
+        "FUN_1400746B0",
+        "FUN_1400746b0"
+      ],
+      "name": "PECMD_ParseNumOrVar",
+      "confidence": "high",
+      "evidence": "表达式数字/变量解析：首字符非数字且非'(' 时以 0x3a 截断当前 token 用 PECMD_FindVarValue 查变量写入 out；否则走 PECMD_EvalParenStripped 路径。还原注释『解析数字或变量』。"
+    },
+    {
+      "addr": "1400ec500",
+      "old": "FUN_1400ec500",
+      "spelling_variants": [
+        "FUN_1400EC500",
+        "FUN_1400ec500"
+      ],
+      "name": "PECMD_CtlDispatchBuddyMsg",
+      "confidence": "medium",
+      "evidence": "控件消息分派(带 buddy)：有关联窗口(+0xF0)时先转发 0x407；WM_MOUSEMOVE 走虚表+0x48；0x233 无 lParam 时分配自增 ID(DAT_14013a354+=2) 并经链(+0xE8)以 0x80 分发。还原注释『分发控件消息』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f0a3c",
+      "old": "FUN_1400f0a3c",
+      "spelling_variants": [
+        "FUN_1400F0A3C",
+        "FUN_1400f0a3c"
+      ],
+      "name": "PECMD_GetOrCreateCtlBrush",
+      "confidence": "high",
+      "evidence": "OnCtlColor 取/建画刷：SetBkMode(TRANSPARENT)+SetTextColor(+0xa8)，无自定义色/刷(-1)时回落 PECMD_CtlCalcColorBrush，否则确保 COLOR_BTNFACE 兜底刷(+0x48) 返回。还原注释『取/建对象画刷』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "14006857c",
+      "old": "FUN_14006857c",
+      "spelling_variants": [
+        "FUN_14006857C",
+        "FUN_14006857c"
+      ],
+      "name": "PECMD_ReadEncByte",
+      "confidence": "high",
+      "evidence": "加密流读字节：PECMD_StreamReadByte 读 1 字节，按计数器公式 (n*2+3)*cnt 的移位异或展开解码，计数自增，EOF 返回 -1。与 FUN_1400684fc 成对。还原注释『读取加密字节』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400c45a4",
+      "old": "FUN_1400c45a4",
+      "spelling_variants": [
+        "FUN_1400C45A4",
+        "FUN_1400c45a4"
+      ],
+      "name": "PECMD_AddUpDownControl",
+      "confidence": "medium",
+      "evidence": "添加 UpDown 包装对象：SendCtrlMessage_0834 找槽+坐标缩放+operator_new(0x90)+构造 FUN_1400c3820 注册。还原注释『添加 UpDown 控件』。"
+    },
+    {
+      "addr": "1400c46cc",
+      "old": "FUN_1400c46cc",
+      "spelling_variants": [
+        "FUN_1400C46CC",
+        "FUN_1400c46cc"
+      ],
+      "name": "PECMD_AddScrollBarObject",
+      "confidence": "medium",
+      "evidence": "添加滚动条包装对象：同上模式 operator_new(0x70)+构造 FUN_1400c3cf8。还原注释『添加滚动条控件』。"
+    },
+    {
+      "addr": "1400f2bf0",
+      "old": "FUN_1400f2bf0",
+      "spelling_variants": [
+        "FUN_1400F2BF0",
+        "FUN_1400f2bf0"
+      ],
+      "name": "PECMD_PolylineRectOutline",
+      "confidence": "high",
+      "evidence": "矩形折线绘制：将 RECT 四角展开为 5 点序列后 Polyline 描边框。还原注释『矩形折线绘制』。"
+    },
+    {
+      "addr": "1400f6944",
+      "old": "FUN_1400f6944",
+      "spelling_variants": [
+        "FUN_1400F6944",
+        "FUN_1400f6944"
+      ],
+      "name": "PECMD_ListSelectFromHit",
+      "confidence": "medium",
+      "evidence": "命中即选中：thunk PECMD_ListSubItemHitTest 取 item/subitem，标志+0x3F8&2 时从数组(+0x380)解析实际行号并调 FUN_1400f5104(设置列表选择)。还原注释『刷新控件当前选择』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400fce6c",
+      "old": "FUN_1400fce6c",
+      "spelling_variants": [
+        "FUN_1400FCE6C",
+        "FUN_1400fce6c"
+      ],
+      "name": "PECMD_ParseBuddyPrefix",
+      "confidence": "high",
+      "evidence": "buddy 前缀解析：关键字 'cmd' 匹配后识别 \"<buddy>\" 前缀(7 字符)，PECMD_ParseNumSkipWs 解析 HWND 并交换关联窗口(FUN_1400fc458)；其余回落通用属性分发 FUN_1400c493c。还原注释『解析 buddy 前缀』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400ff154",
+      "old": "FUN_1400ff154",
+      "spelling_variants": [
+        "FUN_1400FF154",
+        "FUN_1400ff154"
+      ],
+      "name": "PECMD_TreeInsertItem",
+      "confidence": "high",
+      "evidence": "TreeView 插入项：组装 0x60 字节 TVINSERTSTRUCTW 发 TVM_INSERTITEMW(0x1132)。还原注释『发送控件设置信息消息』。"
+    },
+    {
+      "addr": "1400ff20c",
+      "old": "FUN_1400ff20c",
+      "spelling_variants": [
+        "FUN_1400FF20C",
+        "FUN_1400ff20c"
+      ],
+      "name": "PECMD_TreeSetItemInfo",
+      "confidence": "high",
+      "evidence": "TreeView 设置项：组装 0x50 字节 TVITEMW 发 TVM_SETITEMW(0x113F)。还原注释『发送控件查询消息』。"
+    },
+    {
+      "addr": "1400fc378",
+      "old": "FUN_1400fc378",
+      "spelling_variants": [
+        "FUN_1400FC378",
+        "FUN_1400fc378"
+      ],
+      "name": "PECMD_CreateScrollBarCtrl",
+      "confidence": "high",
+      "evidence": "创建滚动条子控件：CreateWindowExW(L\"ScrollBar\") 尺寸取 RECT 差值，PECMD_ContainerAppend 挂接，样式 bit28 置 ShowWindow(SW_SHOW)。还原注释『创建滚动条控件』。"
+    },
+    {
+      "addr": "14001fd60",
+      "old": "FUN_14001fd60",
+      "spelling_variants": [
+        "FUN_14001FD60",
+        "FUN_14001fd60"
+      ],
+      "name": "PECMD_SendMsgThreadProc",
+      "confidence": "high",
+      "evidence": "SendMessage 子线程体：按任务结构(hwnd/msg/wp/lp)同步 SendMessage 或 SendMessageTimeoutW(带超时字段)，完成后 ReleaseRefCount 并释放两个串缓冲；core_thread.c 以 CreateThread 引用（非死代码）。还原注释『SendMessage 子线程』。"
+    },
+    {
+      "addr": "14006306c",
+      "old": "FUN_14006306c",
+      "spelling_variants": [
+        "FUN_14006306C",
+        "FUN_14006306c"
+      ],
+      "name": "PECMD_FreeHandleRecordArray",
+      "confidence": "medium",
+      "evidence": "句柄记录数组释放：遍历数组逐项 CloseHandle+释放串缓冲+free 记录并清空。还原注释『释放句柄数组』。"
+    },
+    {
+      "addr": "1400f345c",
+      "old": "FUN_1400f345c",
+      "spelling_variants": [
+        "FUN_1400F345C",
+        "FUN_1400f345c"
+      ],
+      "name": "PECMD_CreateListViewCtrl",
+      "confidence": "high",
+      "evidence": "创建 SysListView32 子控件(LVS_SHOWSELALWAYS|0x400)，PECMD_ContainerAppend+UpdateWindow。还原注释『创建列表视图控件』。"
+    },
+    {
+      "addr": "1400f35b8",
+      "old": "FUN_1400f35b8",
+      "spelling_variants": [
+        "FUN_1400F35B8",
+        "FUN_1400f35b8"
+      ],
+      "name": "PECMD_GetIconSize",
+      "confidence": "high",
+      "evidence": "取图标尺寸：GetIconInfo+GetObjectW(hbmColor,BITMAP) 输出宽高并 DeleteObject 清理掩码/颜色位图。还原注释『取图标尺寸』。"
+    },
+    {
+      "addr": "14005d8bc",
+      "old": "FUN_14005d8bc",
+      "spelling_variants": [
+        "FUN_14005D8BC",
+        "FUN_14005d8bc"
+      ],
+      "name": "PECMD_CopyImageFallback",
+      "confidence": "medium",
+      "evidence": "复制图像兜底：CopyImage 失败时经 shell 函数指针表(DAT_14013ce70/cdf0/cd90)复制图标返回。还原注释『复制图像』。"
+    },
+    {
+      "addr": "1400e5a58",
+      "old": "FUN_1400e5a58",
+      "spelling_variants": [
+        "FUN_1400E5A58",
+        "FUN_1400e5a58"
+      ],
+      "name": "PECMD_SetCtlBackBrush",
+      "confidence": "medium",
+      "evidence": "设置控件背景色/画刷：COLORREF 存 +0x40，CreateSolidBrush 存 +0x38(旧刷 DeleteObject)，InvalidateRect 重绘。还原注释『设置颜色画刷』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f2c44",
+      "old": "FUN_1400f2c44",
+      "spelling_variants": [
+        "FUN_1400F2C44",
+        "FUN_1400f2c44"
+      ],
+      "name": "PECMD_RefreshListScrollbar",
+      "confidence": "medium",
+      "evidence": "刷新列表垂直滚动条可见性：标志+0x3F8&0xC==4 时 GETITEMCOUNT>0 且内容超高则 ShowScrollBar 隐/显修正。还原注释『刷新滚动条可见性』。"
+    },
+    {
+      "addr": "1400d6f8c",
+      "old": "FUN_1400d6f8c",
+      "spelling_variants": [
+        "FUN_1400D6F8C",
+        "FUN_1400d6f8c"
+      ],
+      "name": "PECMD_RedrawCtlBackground",
+      "confidence": "low",
+      "evidence": "重绘控件背景：清度量字段(+0x238..+0x250)、读样式、GetDC 后 FUN_1400d5b48 重算背景并 ReleaseDC。还原注释『重绘控件背景』。"
+    },
+    {
+      "addr": "1400e3f94",
+      "old": "FUN_1400e3f94",
+      "spelling_variants": [
+        "FUN_1400E3F94",
+        "FUN_1400e3f94"
+      ],
+      "name": "PECMD_RefreshDesktopIcons",
+      "confidence": "high",
+      "evidence": "刷新桌面图标：SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST) + Progman→SHELLDLL_DefView→SysListView32 逐层 FindWindow(Ex) 后 PostMessage F5 按下/抬起。还原注释『刷新桌面』。"
+    },
+    {
+      "addr": "1400f5338",
+      "old": "FUN_1400f5338",
+      "spelling_variants": [
+        "FUN_1400F5338",
+        "FUN_1400f5338"
+      ],
+      "name": "PECMD_CtlSendNcCalcSize",
+      "confidence": "medium",
+      "evidence": "发送 NCCALCSIZE：按标志清除 WS_HSCROLL/VSCROLL(0x100000/0x200000) 后经虚表槽 1 转发 WM_NCCALCSIZE(0x83)。还原注释『发送控件 0x83 消息』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "14001bb30",
+      "old": "FUN_14001bb30",
+      "spelling_variants": [
+        "FUN_14001BB30",
+        "FUN_14001bb30"
+      ],
+      "name": "PECMD_UninstallInputHook",
+      "confidence": "high",
+      "evidence": "钩子卸载与资源清理：双临界区内 UnhookWindowsHookEx(DAT_14013d068) 置空并 HeapFree 关联缓冲。还原注释『钩子/资源清理』。"
+    },
+    {
+      "addr": "140069b68",
+      "old": "FUN_140069b68",
+      "spelling_variants": [
+        "FUN_140069B68",
+        "FUN_140069b68"
+      ],
+      "name": "PECMD_ReadTokenString",
+      "confidence": "medium",
+      "evidence": "脚本流读 token 到串缓冲：长度=(short)code-1，标志 0x70000000==0x10000000 时先跳控制符，经 FUN_140067278 写入；调用点紧接 PECMD_SetVarEn 写变量。还原注释『解析 token』。"
+    },
+    {
+      "addr": "14007efa4",
+      "old": "FUN_14007efa4",
+      "spelling_variants": [
+        "FUN_14007EFA4",
+        "FUN_14007efa4"
+      ],
+      "name": "PECMD_ParsePathRecord2",
+      "confidence": "medium",
+      "evidence": "路径记录解析 2：PECMD_InitFieldContainer(mode=1)+PECMD_ParseExpression 求值，三个标志字节 OR 合并输出。还原注释『解析路径记录2』。"
+    },
+    {
+      "addr": "14007f018",
+      "old": "FUN_14007f018",
+      "spelling_variants": [
+        "FUN_14007F018",
+        "FUN_14007f018"
+      ],
+      "name": "PECMD_ParsePathRecord",
+      "confidence": "medium",
+      "evidence": "路径记录解析：mode=0 变体，其余同 14007efa4。还原注释『解析路径记录』。"
+    },
+    {
+      "addr": "1400857e4",
+      "old": "FUN_1400857e4",
+      "spelling_variants": [
+        "FUN_1400857E4",
+        "FUN_1400857e4"
+      ],
+      "name": "PECMD_ParseDollarShift",
+      "confidence": "high",
+      "evidence": "解析 $ 移位操作数：统计连续 '$' 个数 n，解析数值后左移 n 位。还原注释『解析 $ 移位』。"
+    },
+    {
+      "addr": "1400a4350",
+      "old": "FUN_1400a4350",
+      "spelling_variants": [
+        "FUN_1400A4350",
+        "FUN_1400a4350"
+      ],
+      "name": "PECMD_FreeMutexGuardObj",
+      "confidence": "medium",
+      "evidence": "互斥体守卫对象析构：ReleaseMutex+虚表 Release(1)+PECMD_ReleaseKernelObject(+0x18) 后置 purecall 虚表并可 free。还原注释『释放互斥体对象』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400402ec",
+      "old": "FUN_1400402ec",
+      "spelling_variants": [
+        "FUN_1400402EC",
+        "FUN_1400402ec"
+      ],
+      "name": "PECMD_CreateVarWithValue",
+      "confidence": "medium",
+      "evidence": "变量创建扩展：PECMD_CreateVariable 包装，成功后把值串写入节点[1] 区并按 param_4>>8 写标志到节点[2]+0x10。还原注释『参数解析扩展』。"
+    },
+    {
+      "addr": "14005b3e4",
+      "old": "FUN_14005b3e4",
+      "spelling_variants": [
+        "FUN_14005B3E4",
+        "FUN_14005b3e4"
+      ],
+      "name": "PECMD_ThemeDrawDispatch",
+      "confidence": "low",
+      "evidence": "主题绘制分发：绘制类消息先经链(+0x38)以 0x80 分发，未处理回落 PECMD_ControlWindowProc，再以标志 2 后处理。还原注释『主题绘制文本』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "14005f750",
+      "old": "FUN_14005f750",
+      "spelling_variants": [
+        "FUN_14005F750",
+        "FUN_14005f750"
+      ],
+      "name": "PECMD_RegCreateKeyRetryWow64",
+      "confidence": "high",
+      "evidence": "创建注册表键：RegCreateKeyExW(KEY_READ|KEY_WRITE)，失败 0x3fd 且未带 WOW64 标志时以 WOW64 选项重试一次。还原注释『创建注册表键』。"
+    },
+    {
+      "addr": "1400e86b4",
+      "old": "FUN_1400e86b4",
+      "spelling_variants": [
+        "FUN_1400E86B4",
+        "FUN_1400e86b4"
+      ],
+      "name": "PECMD_CtlSendChildCmd",
+      "confidence": "low",
+      "evidence": "下发子控件命令：id-0x1000 索引子控件表(+0x34/+0x35)向其窗口发送 0xbc2b，再经虚表转发 WM_MEASUREITEM(0x2C)；受 DAT_14013a24f 开关控制。还原注释『下发控件命令』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400bcbe0",
+      "old": "FUN_1400bcbe0",
+      "spelling_variants": [
+        "FUN_1400BCBE0",
+        "FUN_1400bcbe0"
+      ],
+      "name": "PECMD_DtorBitmapControl",
+      "confidence": "high",
+      "evidence": "位图控件对象析构：换虚表逐级释放——PECMD_ReleaseImageHandle、清空对象数组(FUN_1400f1490)、多个 StrBldFree(+0x10..+0x58)。还原注释『释放位图控件对象』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f21c0",
+      "old": "FUN_1400f21c0",
+      "spelling_variants": [
+        "FUN_1400F21C0",
+        "FUN_1400f21c0"
+      ],
+      "name": "PECMD_CreateEditCtrl",
+      "confidence": "high",
+      "evidence": "创建 EDIT 子控件：CreateWindowExW(L\"EDIT\")，样式 bit12 置 EM_SETWORDBREAKPROC(0xD0) 挂自定义换行回调 FUN_1400f21a8。还原注释『创建编辑控件』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f42c4",
+      "old": "FUN_1400f42c4",
+      "spelling_variants": [
+        "FUN_1400F42C4",
+        "FUN_1400f42c4"
+      ],
+      "name": "PECMD_SkipPastChar",
+      "confidence": "high",
+      "evidence": "跳到目标字符之后：前移游标直至 wchar==ch(或串尾)，命中再跨过该字符。还原注释『跳到目标字符之后』。"
+    },
+    {
+      "addr": "1400f5dc4",
+      "old": "FUN_1400f5dc4",
+      "spelling_variants": [
+        "FUN_1400F5DC4",
+        "FUN_1400f5dc4"
+      ],
+      "name": "PECMD_ItemPropGetPair24",
+      "confidence": "medium",
+      "evidence": "映射双值读取 A：ItemPropFindIdxList2/List4 读两映射项整值(out=List2 值，返回 List4 值)。还原注释『取映射双值 A』。"
+    },
+    {
+      "addr": "1400f5ef8",
+      "old": "FUN_1400f5ef8",
+      "spelling_variants": [
+        "FUN_1400F5EF8",
+        "FUN_1400f5ef8"
+      ],
+      "name": "PECMD_ItemPropGetPair13",
+      "confidence": "medium",
+      "evidence": "映射双值读取 B：List1/List3 变体。还原注释『取映射双值 B』。"
+    },
+    {
+      "addr": "1400f6034",
+      "old": "FUN_1400f6034",
+      "spelling_variants": [
+        "FUN_1400F6034",
+        "FUN_1400f6034"
+      ],
+      "name": "PECMD_ItemPropGetPairSub",
+      "confidence": "medium",
+      "evidence": "映射双值读取 C：Sub1/Sub2 变体。还原注释『取映射双值 C』。"
+    },
+    {
+      "addr": "1400229f8",
+      "old": "FUN_1400229f8",
+      "spelling_variants": [
+        "FUN_1400229F8",
+        "FUN_1400229f8"
+      ],
+      "name": "PECMD_PatchRemoteWinExec",
+      "confidence": "high",
+      "evidence": "远程进程 WinExec 补丁：以 PECMD_StartDownMode 模板(0x3D 字节)+相对地址段经 WriteProcessMemory 写入目标进程 ExitWindowsEx 区域。decompiled 调用点在 OpenProcess 之后；本库 link_stubs.c 有桩并被引用。还原注释『写远程进程 WinExec 补丁』。"
+    },
+    {
+      "addr": "1400f230c",
+      "old": "FUN_1400f230c",
+      "spelling_variants": [
+        "FUN_1400F230C",
+        "FUN_1400f230c"
+      ],
+      "name": "PECMD_PostCtlPressNotify",
+      "confidence": "medium",
+      "evidence": "发送控件按下通知：虚表发合成 WM_LBUTTONDOWN(0x201,POINT 打包)，标志 byte+0x1A&1 未置时 PostMessage 父 WM_COMMAND(控件ID,0x201)。还原注释『发送控件按下通知』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f2a00",
+      "old": "FUN_1400f2a00",
+      "spelling_variants": [
+        "FUN_1400F2A00",
+        "FUN_1400f2a00"
+      ],
+      "name": "PECMD_CtlPreTranslateMsg",
+      "confidence": "medium",
+      "evidence": "消息预翻译：0x233 经链(+0xD0)以 0x80 探测，已处理返回结果否则返回 0x100。还原注释『消息预翻译』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400fbde0",
+      "old": "FUN_1400fbde0",
+      "spelling_variants": [
+        "FUN_1400FBDE0",
+        "FUN_1400fbde0"
+      ],
+      "name": "PECMD_PostCtlPressNotify2",
+      "confidence": "medium",
+      "evidence": "发送控件按下通知 B：与 1400f230c 同构，判定条件为 char+0xD0!=0 的另一控件族。还原注释『发送控件按下通知 B』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f400c",
+      "old": "FUN_1400f400c",
+      "spelling_variants": [
+        "FUN_1400F400C",
+        "FUN_1400f400c"
+      ],
+      "name": "PECMD_SetCtlLayoutMetrics",
+      "confidence": "medium",
+      "evidence": "设置控件布局度量：left/top/right≥0 分别写 +0x1F0/+0x1F4/+0x1F8，第四参无条件写 +0x1FC。还原注释『设置控件布局』。"
+    },
+    {
+      "addr": "1400f4194",
+      "old": "FUN_1400f4194",
+      "spelling_variants": [
+        "FUN_1400F4194",
+        "FUN_1400f4194"
+      ],
+      "name": "PECMD_CtlOnSetFontLinked",
+      "confidence": "medium",
+      "evidence": "WM_SETFONT 处理(带链接)：守卫字段+0x68 为空时缓存 WPARAM 至 +0x70、直发 WM_SETFONT，并向关联窗口(+0xF8)转发 0x452。还原注释『转发取文本长度(带链接)』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400684fc",
+      "old": "FUN_1400684fc",
+      "spelling_variants": [
+        "FUN_1400684FC",
+        "FUN_1400684fc"
+      ],
+      "name": "PECMD_WriteEncByte",
+      "confidence": "high",
+      "evidence": "加密流写字节：同一计数器移位异或公式编码后 PECMD_BufferedWriteByte 写出。与 FUN_14006857c 成对。还原注释『写加密字节』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400c453c",
+      "old": "FUN_1400c453c",
+      "spelling_variants": [
+        "FUN_1400C453C",
+        "FUN_1400c453c"
+      ],
+      "name": "PECMD_ParseU64SkipSep",
+      "confidence": "high",
+      "evidence": "解析 UInt64 并跳分隔符：PECMD 解析(in_RDX)后若当前 wchar 非 NUL 且非空白(<0x09||>0x0d||!=0x20) 则跨过 1 字符。还原注释『解析 UInt64 并跳非空』。"
+    },
+    {
+      "addr": "1400e62e4",
+      "old": "FUN_1400e62e4",
+      "spelling_variants": [
+        "FUN_1400E62E4",
+        "FUN_1400e62e4"
+      ],
+      "name": "PECMD_CtlOnSetFont",
+      "confidence": "high",
+      "evidence": "WM_SETFONT 直通：守卫+0x68 后直发 WM_SETFONT 并缓存 WPARAM，无链接转发。还原注释『转发取文本长度』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400ebfe4",
+      "old": "FUN_1400ebfe4",
+      "spelling_variants": [
+        "FUN_1400EBFE4",
+        "FUN_1400ebfe4"
+      ],
+      "name": "PECMD_CreateTooltipWnd",
+      "confidence": "high",
+      "evidence": "创建 tooltips_class32 窗口：样式 param|0x80000080，位置全部 -0x80000000(CW_USEDEFAULT/离屏)，PECMD_ContainerAppend 挂接。还原注释『创建 tooltips 窗口』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400ec5e4",
+      "old": "FUN_1400ec5e4",
+      "spelling_variants": [
+        "FUN_1400EC5E4",
+        "FUN_1400ec5e4"
+      ],
+      "name": "PECMD_CreateTabCtrl",
+      "confidence": "high",
+      "evidence": "创建 SysTabControl32 子控件并挂接容器。还原注释『创建标签控件』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400fc114",
+      "old": "FUN_1400fc114",
+      "spelling_variants": [
+        "FUN_1400FC114",
+        "FUN_1400fc114"
+      ],
+      "name": "PECMD_SetSliderPos",
+      "confidence": "medium",
+      "evidence": "设置滑块位置：lParam bit15 置位时暂存 +0x54，否则 SendMessageW 私有 0x2001 设置位置。还原注释『设置滑块位置』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400fc2e0",
+      "old": "FUN_1400fc2e0",
+      "spelling_variants": [
+        "FUN_1400FC2E0",
+        "FUN_1400fc2e0"
+      ],
+      "name": "PECMD_InitGdiWidgetObj",
+      "confidence": "low",
+      "evidence": "GDI 控件对象初始化：PECMD_InitWinObjBase 后设 vtable(PTR_FUN_14012CB90)，清 msg 链(+0xE8)/buddy(+0xF0)/标志字段并存参数至 +0xD8，byte+0x61=0x18。还原注释『初始化 GDI 对象 C』。"
+    },
+    {
+      "addr": "1400ef8c8",
+      "old": "FUN_1400ef8c8",
+      "spelling_variants": [
+        "FUN_1400EF8C8",
+        "FUN_1400ef8c8"
+      ],
+      "name": "PECMD_CalcGcdU64",
+      "confidence": "high",
+      "evidence": "64 位欧几里得辗转相除求最大公约数。还原注释『最大公约数』。"
+    },
+    {
+      "addr": "1400f05f8",
+      "old": "FUN_1400f05f8",
+      "spelling_variants": [
+        "FUN_1400F05F8",
+        "FUN_1400f05f8"
+      ],
+      "name": "PECMD_CtlOnPaint",
+      "confidence": "high",
+      "evidence": "WM_PAINT 处理：BeginPaint→FUN_1400f00f4 绘制→EndPaint。还原注释『绘制对象』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f1f28",
+      "old": "FUN_1400f1f28",
+      "spelling_variants": [
+        "FUN_1400F1F28",
+        "FUN_1400f1f28"
+      ],
+      "name": "PECMD_PostNotif203Bit",
+      "confidence": "medium",
+      "evidence": "父窗口命令通知(bit)：byte+0xD0&1 置位时 PostMessage 父 WM_COMMAND(控件ID,0x203)。还原注释『父窗口命令通知(位)』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400f3640",
+      "old": "FUN_1400f3640",
+      "spelling_variants": [
+        "FUN_1400F3640",
+        "FUN_1400f3640"
+      ],
+      "name": "PECMD_ListGetNextSelected",
+      "confidence": "medium",
+      "evidence": "LVM_GETNEXTITEM(param_2,LVNI_SELECTED) 取下一选中项；标志+0x3F8&0x10 置位时改回缓存值(+0x3D4)。还原注释标『取组合框选择』，按消息码实为 listview 语义，命名从 API 行为。"
+    },
+    {
+      "addr": "1400fba68",
+      "old": "FUN_1400fba68",
+      "spelling_variants": [
+        "FUN_1400FBA68",
+        "FUN_1400fba68"
+      ],
+      "name": "PECMD_PostNotif203Byte",
+      "confidence": "medium",
+      "evidence": "父窗口命令通知(byte)：char+0xD0!=0 判定变体，其余同 1400f1f28。还原注释『父窗口命令通知(值)』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400c3ca4",
+      "old": "FUN_1400c3ca4",
+      "spelling_variants": [
+        "FUN_1400C3CA4",
+        "FUN_1400c3ca4"
+      ],
+      "name": "PECMD_DtorUpDownControl",
+      "confidence": "high",
+      "evidence": "UpDown 控件析构：StrBldFree(+0x78/+0x80/+0x88) 后调基类 PECMD_DtorTrackbarControl，可 free。还原注释『释放 UpDown 控件』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    },
+    {
+      "addr": "1400e6cf8",
+      "old": "FUN_1400e6cf8",
+      "spelling_variants": [
+        "FUN_1400E6CF8",
+        "FUN_1400e6cf8"
+      ],
+      "name": "PECMD_GrowCapacityAligned",
+      "confidence": "high",
+      "evidence": "对齐扩容：需求超过容量(+0x10)时向上取 param_3 倍数并 PECMD_AllocString 重分配。还原注释『对齐扩容』。"
+    },
+    {
+      "addr": "1400eceb4",
+      "old": "FUN_1400eceb4",
+      "spelling_variants": [
+        "FUN_1400ECEB4",
+        "FUN_1400eceb4"
+      ],
+      "name": "PECMD_DtorWinObjWithStrings",
+      "confidence": "medium",
+      "evidence": "带串窗口对象析构：释放串指针数组(FUN_1400ecdd8@+0x108)+StrBldFree(+0x108/+0xD8)+PECMD_DestroyWindowObj。还原注释『销毁对象(带释放) F』。",
+      "note": "possible-dead: decompiled.c 全文(符号名/裸地址任一形式)在本函数体之外零引用，本库 core 文件亦无任何调用或取址；可能仅经 Ghidra 未渲染的间接跳转/vtable 到达，或确为死代码。"
+    }
+  ],
+  "skips": []
+}
