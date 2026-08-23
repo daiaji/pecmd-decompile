@@ -1,0 +1,307 @@
+{
+ "batch": "c8a",
+ "proposals": [
+  {
+   "addr": "140004e34",
+   "old": "FUN_140004e34",
+   "spelling_variants": ["FUN_140004E34", "FUN_140004e34"],
+   "name": "PECMD_PumpMessagesTimeout",
+   "confidence": "high",
+   "evidence": "在 param_1 毫秒预算内循环 PeekMessageW/TranslateMessage/DispatchMessageW 抽干消息队列，见到 WM_QUIT(0x12) 则置停止字节(param_2+1)=0x20 并返回1。仅被启动看门狗线程 FUN_140004ebc 以 5ms/5005ms 两段调用。"
+  },
+  {
+   "addr": "140005390",
+   "old": "FUN_140005390",
+   "spelling_variants": ["FUN_140005390", "FUN_140005390"],
+   "name": "PECMD_SafeMemset",
+   "confidence": "high",
+   "evidence": "count>=1 守卫后调用 FUN_140102a90（按字节填充的 memset 展开）填充并返回 dst；全部调用点均为整块清零结构体。"
+  },
+  {
+   "addr": "1400083c0",
+   "old": "FUN_1400083c0",
+   "spelling_variants": ["FUN_1400083C0", "FUN_1400083c0"],
+   "name": "PECMD_InitSystemApiGlobals",
+   "confidence": "medium",
+   "evidence": "一次性全局初始化：打开共享映射 \"PECMD:MSGSVR:HWND\"、探测代码页、RegisterWindowMessageW(\"TaskbarButtonCreated\")、经 System32 路径取 kernel32 并 LoadLibrary user32/GDI32、缓存 MultiByteToWideChar，最后注册 &bX64/&ptrlen/&WM_TASKBARBUTTONCREATED 变量。仅被 PECMD_InitEnvironmentVars(FUN_140027690) 调用一次。"
+  },
+  {
+   "addr": "140016ae0",
+   "old": "FUN_140016ae0",
+   "spelling_variants": ["FUN_140016AE0", "FUN_140016ae0"],
+   "name": "PECMD_ServiceMainEntry",
+   "confidence": "high",
+   "evidence": "SCM 服务入口：RegisterServiceCtrlHandlerW(命令行服务名, FUN_140008c5c) + SetServiceStatus 上报状态，再 CreateThread(PECMD_ServiceMainLoop, GetCommandLineW()) 启动主逻辑。被 FUN_140017048 的 SERVICE_TABLE_ENTRY 直接引用。"
+  },
+  {
+   "addr": "140017afc",
+   "old": "FUN_140017afc",
+   "spelling_variants": ["FUN_140017AFC", "FUN_140017afc"],
+   "name": "PECMD_IsPecmdScriptFile",
+   "confidence": "high",
+   "evidence": "路径存在性(CreateFile 存在探测)+扩展名前缀 StrCmpNIW \".WC\"/\".IN\"/\".TX\" 判定是否 PECMD 配置脚本：是→1，存在但非脚本→0，不存在→-1。调度器用其决定走 RunCommand 还是进程执行。"
+  },
+  {
+   "addr": "14001a56c",
+   "old": "FUN_14001a56c",
+   "spelling_variants": ["FUN_14001A56C", "FUN_14001a56c"],
+   "name": "PECMD_NtShutdownSystemCall",
+   "confidence": "high",
+   "evidence": "GetProcAddress(ntdll,\"NtShutdownSystem\") 后以动作码 (param_1!=1)+1（关机/重启二选一）直接调用，是 DOWN/SHUT 断电路径的原生兜底实现。唯一调用点为关机实现 FUN_14003d608。"
+  },
+  {
+   "addr": "14001a640",
+   "old": "FUN_14001a640",
+   "spelling_variants": ["FUN_14001A640", "FUN_14001a640"],
+   "name": "PECMD_SetCurrentDirIfChanged",
+   "confidence": "high",
+   "evidence": "GetCurrentDirectoryW 与目标比较不同才 SetCurrentDirectoryW，避免冗余切换。LOAD/EXEC 等多处路径切换共用。"
+  },
+  {
+   "addr": "14001ab84",
+   "old": "FUN_14001ab84",
+   "spelling_variants": ["FUN_14001AB84", "FUN_14001ab84"],
+   "name": "PECMD_LineIsTeamExecLoad",
+   "confidence": "high",
+   "evidence": "StrCmpNIW 前缀+分隔符校验判定一行是否以 TEAM/EXEC/LOAD 开头。Shell 启动例程 FUN_14003e768 与主加载 FUN_140045c90 用它分流：命中则交 FUN_14004c0bc 分派，否则按普通外部命令执行。"
+  },
+  {
+   "addr": "14001af0c",
+   "old": "FUN_14001af0c",
+   "spelling_variants": ["FUN_14001AF0C", "FUN_14001af0c"],
+   "name": "PECMD_UserCmdHandler",
+   "confidence": "high",
+   "evidence": "分派表锚定：tag 0x52455355(\"USER\") 的处理体，转发 FUN_14001ada8(args,'\\0')——展开 \"A,B\" 后写 HKLM CurrentVersion 的 RegisteredOwner 与 RegisteredOrganization。"
+  },
+  {
+   "addr": "14001b168",
+   "old": "FUN_14001b168",
+   "spelling_variants": ["FUN_14001B168", "FUN_14001b168"],
+   "name": "PECMD_StripInlineComments",
+   "confidence": "medium",
+   "evidence": "对解码后的 token 就地裁剪注释：首字符为 `~/#'=;: 之一则清空整个串返回1；否则扫描『空白后跟 ` 或 //』处截断返回1。仅在全局标志 DAT_14013a248>0 时由 token 解码器 FUN_14001b23c 调用。"
+  },
+  {
+   "addr": "14001b4f8",
+   "old": "FUN_14001b4f8",
+   "spelling_variants": ["FUN_14001B4F8", "FUN_14001b4f8"],
+   "name": "PECMD_StrChrOffset",
+   "confidence": "high",
+   "evidence": "扫描宽字符串直到等于 param_2 的字符，返回该字符的下标（wcschr 的索引版）。RunCommand/TEAM 解析等 15 处用于定位分隔符位置。"
+  },
+  {
+   "addr": "14001b660",
+   "old": "FUN_14001b660",
+   "spelling_variants": ["FUN_14001B660", "FUN_14001b660"],
+   "name": "PECMD_RunClearTmpMbrosOnce",
+   "confidence": "medium",
+   "evidence": "一次性守卫(DAT_14013d260)：PECMD_ReadRamdataDword(\"CheckTmpMBROS\")==0 时经 PECMD_RunCommand 执行内部行 \"#22:INDATA ClearTmpMBROSAll\"。由 PECMD_RunSysInit(FUN_140025180) 触发。"
+  },
+  {
+   "addr": "14001b850",
+   "old": "FUN_14001b850",
+   "spelling_variants": ["FUN_14001B850", "FUN_14001b850"],
+   "name": "PECMD_InstallKeyboardHook",
+   "confidence": "high",
+   "evidence": "未安装时 SetWindowsHookExW(13=WH_KEYBOARD_LL, PECMD_KeyboardHookProcTaskMgr, hMod, 0) 并缓存句柄于 DAT_14013cf58。与已命名的 PECMD_UninstallInputHook(14001bb30) 成对。"
+  },
+  {
+   "addr": "14001bbac",
+   "old": "FUN_14001bbac",
+   "spelling_variants": ["FUN_14001BBAC", "FUN_14001bbac"],
+   "name": "PECMD_MsgWaitForObjects",
+   "confidence": "high",
+   "evidence": "MsgWaitForMultipleObjects 直通薄封装；EXEC 等待子进程退出时统一以 wake-mask 0x4ff 调用，兼顾消息泵。"
+  },
+  {
+   "addr": "14002ca30",
+   "old": "FUN_14002ca30",
+   "spelling_variants": ["FUN_14002CA30", "FUN_14002ca30"],
+   "name": "PECMD_BroadcastEnvChange",
+   "confidence": "high",
+   "evidence": "清除待广播标志 DAT_14013ccc8 后起广播线程：EnumWindows 对每个顶层窗口 SendMessageTimeoutW(msg=0x1A=WM_SETTINGCHANGE, lParam=L\"Environment\"@0x140121020)，总预算 5000ms；主退出与末线程清理路径调用。"
+  },
+  {
+   "addr": "140035b08",
+   "old": "FUN_140035b08",
+   "spelling_variants": ["FUN_140035B08", "FUN_140035b08"],
+   "name": "PECMD_IfexCmdHandler",
+   "confidence": "high",
+   "evidence": "分派表锚定：tag 0x58454649(\"IFEX\") 处理体，参数含 '|'(0x7c) 时置条件输出指针为空，转调共享求值器 FUN_140034788(flag=1)。注意 FUN_140034788 旧名 BuildImDiskMenu 与 FIND/IFEX 双锚点矛盾，疑为早前误名。"
+  },
+  {
+   "addr": "140035b24",
+   "old": "FUN_140035b24",
+   "spelling_variants": ["FUN_140035B24", "FUN_140035b24"],
+   "name": "PECMD_FindCmdHandler",
+   "confidence": "high",
+   "evidence": "分派表锚定：tag 0x444e4946(\"FIND\") 处理体，同样把 '|' 参数规约后转调共享求值器 FUN_140034788(flag=0)；与 IFEX 入口互为 flag 0/1 姊妹对。"
+  },
+  {
+   "addr": "140037b84",
+   "old": "FUN_140037b84",
+   "spelling_variants": ["FUN_140037B84", "FUN_140037b84"],
+   "name": "PECMD_HelpDialogProc",
+   "confidence": "high",
+   "evidence": "HELP 对话框实际注册的 DLGPROC：DialogBoxParamW(hInst, MAKEINTRESOURCE(0x12e), NULL, 本函数) 于帮助文本加载器 FUN_1400403d8 中使用，全部消息绑定全局状态 DAT_14013cfb0 转发给 PECMD_HelpDlgProc(FUN_140028a00)。"
+  },
+  {
+   "addr": "14003e1f0",
+   "old": "FUN_14003e1f0",
+   "spelling_variants": ["FUN_14003E1F0", "FUN_14003e1f0"],
+   "name": "PECMD_EnsureCallbackWindow",
+   "confidence": "high",
+   "evidence": "回调窗口尚未创建(DAT_14013cf78==0)时依次 RegisterCallbackWindowClass + CreateCallbackWindow；由主加载 FUN_140045c90 在写 PELOGON 注册表前后调用。"
+  },
+  {
+   "addr": "14005b0d4",
+   "old": "FUN_14005b0d4",
+   "spelling_variants": ["FUN_14005B0D4", "FUN_14005b0d4"],
+   "name": "PECMD_HeapFreeWithHeader",
+   "confidence": "medium",
+   "evidence": "HeapFree(GetProcessHeap 缓存 DAT_14013d328, 0, ptr-8) 释放带 8 字节头的分配块并清空句柄，与分配侧 FUN_14005b0b8 配对；17 处释放缓冲/控件数据。"
+  },
+  {
+   "addr": "14005b21c",
+   "old": "FUN_14005b21c",
+   "spelling_variants": ["FUN_14005B21C", "FUN_14005b21c"],
+   "name": "PECMD_ExitProcessCall",
+   "confidence": "high",
+   "evidence": "ExitProcess(param_1) 直通封装；主入口变体 FUN_14000a14c 以 PECMD_GetExitCodeGlobal 的值调用它收尾。"
+  },
+  {
+   "addr": "14005b228",
+   "old": "FUN_14005b228",
+   "spelling_variants": ["FUN_14005B228", "FUN_14005b228"],
+   "name": "PECMD_CreateDetachedThread",
+   "confidence": "high",
+   "evidence": "CreateThread 成功即 CloseHandle 丢弃句柄的发离式线程封装（栈参 0x10000），启动 DebugOutput/消息泵等后台线程三处。"
+  },
+  {
+   "addr": "14005b7dc",
+   "old": "FUN_14005b7dc",
+   "spelling_variants": ["FUN_14005B7DC", "FUN_14005b7dc"],
+   "name": "PECMD_GetExitCodeGlobal",
+   "confidence": "medium",
+   "evidence": "返回 *DAT_14013d180（CRT 初始化时指向 DAT_14013caf0 的进程退出码槽）；两个 main 变体以其返回值作为进程返回码/ExitProcess 参数。"
+  },
+  {
+   "addr": "14005b9a0",
+   "old": "FUN_14005b9a0",
+   "spelling_variants": ["FUN_14005B9A0", "FUN_14005b9a0"],
+   "name": "PECMD_GetTaskbarCreatedMsg",
+   "confidence": "high",
+   "evidence": "懒注册 RegisterWindowMessageW(\"TaskbarCreated\") 并缓存于 DAT_14013d3e8；初始化与主流程用它注册 &WM_TaskbarRestart 类变量及任务栏重建监听。"
+  },
+  {
+   "addr": "14005c904",
+   "old": "FUN_14005c904",
+   "spelling_variants": ["FUN_14005C904", "FUN_14005c904"],
+   "name": "PECMD_LoadComDlgApis",
+   "confidence": "high",
+   "evidence": "懒加载 COMDLG32.DLL 的 GetOpenFileNameW/GetSaveFileNameW 至全局（复用 PECMD_GetApiProcCached）；浏览文件夹对话框 FUN_140087690 首用时触发。"
+  },
+  {
+   "addr": "14005dff4",
+   "old": "FUN_14005dff4",
+   "spelling_variants": ["FUN_14005DFF4", "FUN_14005dff4"],
+   "name": "PECMD_RandSeedAdvance",
+   "confidence": "medium",
+   "evidence": "推进 48 位 LCG 种子 DAT_14013a360（乘 0x5deece66d 加 0xb，java.util.Random 同族常数）；每条分派行首与随机数派生(FUN_14005e04c 等)都会步进。"
+  },
+  {
+   "addr": "14005e51c",
+   "old": "FUN_14005e51c",
+   "spelling_variants": ["FUN_14005E51C", "FUN_14005e51c"],
+   "name": "PECMD_SemicolonRunToNewline",
+   "confidence": "medium",
+   "evidence": "原地把 \" ;;; \" 序列改写为 '\\n' 并用 MemMoveSafe 收紧剩余文本（尾部 ';;;' 连串同理剥离），将三连分号分隔还原为多逻辑行；TEAM/行预处理器 FUN_14004eb34 调用。"
+  },
+  {
+   "addr": "14005f3bc",
+   "old": "FUN_14005f3bc",
+   "spelling_variants": ["FUN_14005F3BC", "FUN_14005f3bc"],
+   "name": "PECMD_SwapBufDesc24",
+   "confidence": "medium",
+   "evidence": "经 32 字节栈临时对两个 0x18 字节（指针/长度/容量）缓冲描述符做三方交换；列表构建 FUN_1400ac094 中用于交换两条记录的缓冲。"
+  },
+  {
+   "addr": "140062a2c",
+   "old": "FUN_140062a2c",
+   "spelling_variants": ["FUN_140062A2C", "FUN_140062a2c"],
+   "name": "PECMD_SetVarAndEnvSync",
+   "confidence": "high",
+   "evidence": "先 PECMD_SetVariable 写入变量存储，再 SetEnvironmentVariableW(name+2 跳过 \"&&\" 前缀) 同步真实环境变量；&&ERROR/&&CurDir/&&YESNO 等 && 系变量均经此写入。"
+  },
+  {
+   "addr": "1400679dc",
+   "old": "FUN_1400679dc",
+   "spelling_variants": ["FUN_1400679DC", "FUN_1400679dc"],
+   "name": "PECMD_ParseIntSkipSepChar",
+   "confidence": "medium",
+   "evidence": "经 PECMD_ParseShortStore 解析整数成功后，若游标处字符非 NUL 再前进一个 wchar（跳过分隔符）。SUB/分区等解析处以 ','、'|' 为界连续取参。"
+  },
+  {
+   "addr": "140067d20",
+   "old": "FUN_140067d20",
+   "spelling_variants": ["FUN_140067D20", "FUN_140067d20"],
+   "name": "PECMD_ParseNumTryWriteback",
+   "confidence": "high",
+   "evidence": "包装 PECMD_ParseNumSkipWs 的 try 版本：返回解析是否成功并把解析出的数值回写 *param_2；29 处参数解析通用入口。"
+  },
+  {
+   "addr": "1400692d8",
+   "old": "FUN_1400692d8",
+   "spelling_variants": ["FUN_1400692D8", "FUN_1400692d8"],
+   "name": "PECMD_AppendHexDumpWide",
+   "confidence": "medium",
+   "evidence": "缺省长度取 lstrlenW 后把宽字符串原始字节(len*2)交给十六进制格式化器 FUN_14006923c 以 \"0xXX \" 追加到缓冲；CODE 转换命令以此把结果编码进变量。"
+  },
+  {
+   "addr": "140077358",
+   "old": "FUN_140077358",
+   "spelling_variants": ["FUN_140077358", "FUN_140077358"],
+   "name": "PECMD_RelaunchLoadFirstUsb",
+   "confidence": "medium",
+   "evidence": "读 HKLM\\SOFTWARE\\PELOGON 的 FirstUsb，非空则以格式串 \"PECMD**pecmd-cmd* LOAD *qk #20:INDATA …\" 组装命令行并调 PECMD_RestartSelf 重启自身加载 U 盘配置；主加载与设备到达路径多次触发。"
+  },
+  {
+   "addr": "1400a9a84",
+   "old": "FUN_1400a9a84",
+   "spelling_variants": ["FUN_1400A9A84", "FUN_1400a9a84"],
+   "name": "PECMD_EvalExprSkipOneChar",
+   "confidence": "high",
+   "evidence": "先 PECMD_EvalParenStripped 求括号表达式值，随后游标处字符非 NUL 即前进一个 wchar 跳过尾随分隔符；全库 50+ 处数值/表达式实参解析的标准入口。"
+  },
+  {
+   "addr": "1400c0ad8",
+   "old": "FUN_1400c0ad8",
+   "spelling_variants": ["FUN_1400C0AD8", "FUN_1400c0ad8"],
+   "name": "PECMD_HashCmdCompute",
+   "confidence": "high",
+   "evidence": "分派表锚定：tag 0x48534148(\"HASH\") 处理体——'$' 前缀取字符串否则 '$*','&' 加锁读源，算法名 SHA1/SHA256/SHA384/SHA512/CRC32/list 映射 ALG_ID，文件经映射视图或内存喂给 PECMD_CryptoHashCompute/PECCrc32HexOfBytes，结果写入 param_3 或环境变量。"
+  }
+ ],
+ "skips": [
+  {
+   "addr": "140001188",
+   "reason": "恒返 0 桩(size=3 xor eax,eax;ret)：CRT 数学错误路径(_set_errno_from_matherr)与业务处各一引用，返回值恒 0 无业务语义可命名，沿用纯桩 skip 先例。"
+  },
+  {
+   "addr": "14001c82c",
+   "reason": "恒返 1 桩：11 处调用均为错误映射(FUN_140103a20/_dosmaperr)后的占位调用，函数体无任何业务语义，按纯桩先例归 skips。"
+  },
+  {
+   "addr": "140053e78",
+   "reason": "空函数体(void 直返)：初始化/执行主线 10 处调用但无任何副作用，无语义可命名，按纯桩先例归 skips。"
+  },
+  {
+   "addr": "140063060",
+   "reason": "纯恒等桩(return param_1;)：tools/name_proposals.json 已以同理由 skip 过，本轮复核无新证据，维持 skip。"
+  },
+  {
+   "addr": "14007033c",
+   "reason": "decompiled.c 中无定义块(grep 零命中)无法阅读函数体；refactored 库内 core_b3r_i28b.c 仅一处 extern 调用(签名似 (strbuf*,LPCWSTR))，证据不足，维持 tools/name_proposals.json 既有 skip 结论。"
+  }
+ ]
+}
