@@ -3732,3 +3732,42 @@ G0 门禁实质达成（冒烟可运行+退出干净）; check_corpus 30/30 结�
 ### 工具债备忘
 - msvc_build.bat 失败时 build\msvc\pecmd_msvc.exe 残留旧件, Test-Path 门会被
   旧件骗过 —— 部署脚本应改判 exe 时间戳 > 最新源文件时间戳(待 T2 一并修)。
+
+
+## 133. S7 落地(子代理) + 掩码极性归正 + S8 桩墙定案(Round 3)
+
+### S7 — FUN_14004eb34 直移 (commit e727b25, 子代理交付)
+core_script2.c 全文直移(695 行, 逐块 dc 行号标注): SCRIPTINIT/SCRIPT 资源、
+__Autoapp/__bInitWin、g_cmdlineMode 正向判定、WVar27 三分支、LAB_14004efda 全段
+(CopyCommandLine/LOAD 前缀补写/克隆脚本+InitObfuscatedKeywords/MaskScriptEndFileTail/
+ParseScriptSegments/XOR 还原/RunScriptText takeover/收尾消息泵)。
+修正影子 g_bInitWin 与 local_228 先行分配缺失(NULL 解引用实测爆)。
+门B(t1 exit=0)/门C(corpus 28/28) 过; 门A 卡桩墙。
+
+### 掩码极性归正 (commit 139fba1)
+core_exec2.c PECMD_MaskScriptEndFileTail 曾把"非 _ENDFILE-IMPORT 行"掩成空格,
+与原文(dc:22019-22030 仅 IMPORT 匹配行掩码)相反 ⇒ 交予 RunScriptText 的文本
+被整体抹空。已按原文归正并复测。
+
+### 门A 终局卡点 = S8 桩墙 (证据三重)
+t2probe 在掩码修复后仍无产物; 探针时序走完 S7 全段(tail-1..tail-7)后空转。
+行执行器两符号均为 no-op 桩(unimplemented_stubs.c):
+- FUN_140003a20 @350 — 原文 dc:1236-1264 (29 行, size=139), 签名
+  longlong(longlong*, undefined8*, byte)
+- FUN_1400b1724 @397 — 原文 dc:110300-110509 (210 行, size=1733), 签名
+  undefined8(LARGE_INTEGER, ulonglong)
+
+### S8 规格(Round 4 执行)
+1. 按原文直移上列两函数真体, 替换 unimplemented_stubs.c 两处桩
+   (或移入相应 core 文件, 注意单编辑者纪律与跨 TU 原型一致——§6 红线 6);
+2. FUN_1400b1724 内部如引用未还原依赖, 按"最小桩+TODO(verify)"处理并登记;
+3. 验收门: t2probe 产出 probe_vars.txt=CASE=t2probe|A|B + probe_done.txt=OK;
+   t1 冒烟 exit=0; corpus 28/28 结构过;
+4. 过门后立即 T4: run_case --all(msvc) → diff --all → report, 首轮全量对拍数据落账。
+
+### 其他登记
+- S7 子代理发现并登记: 收尾 LOGS 对 "LOGS\0\n\n" 输入稳定 AV(restored_bodies.c:4755
+  PECMD_ScriptInitParse, 待修); 托盘清理缓冲未按 0x3f0 落位(沿用 no-op 桩约定);
+  FUN_14005E51C/FUN_140063888 已在 core_script2.c 内按 dc 直移为 static S7_*。
+- 工具债更新: msvc_build.bat 本身有 del 旧 exe(line 58), Round2 的"假绿"实为
+  会话命令拼写错误中途夭折所致 —— 判据仍建议加 exe 时间戳校验(T2 遗留项可关一半)。
