@@ -55,3 +55,15 @@
 - STATIC 287 条 → B5b 标签改造时逐条换 KNOWN-LIMIT 或直接销号（附 dc_hint）
 - BLACKBOX 46 条 → C-P0 语料用例设计输入（探针用例来源）
 - UNK 90 条 → B5b 转 KNOWN-LIMIT 格式入 docs/known_limits.md 附录
+
+## 6. 分诊发现 7 处静态可证问题的复核结论（2026-08-24 会话）
+
+| # | 位置 | 分诊断言 | 复核结论 | 处置 |
+|---|---|---|---|---|
+| ① | resdecode BOM×3 | UTF-16LE/BE/UTF-8 BOM | ✅ 确认（PE .data 提取铁证+dc 常量比较佐证） | 已修 (66c3d17) |
+| ② | b3r_g1 消息块 | offset 12→0x10 | ✅ 确认，另发现第二处 0x2c→0x30 与 memset 起点 | 已修 (66c3d17) |
+| ③ | b3e FormatSetVar | 按0补齐疑错 | ⚠️ 证据不足：dc 无 param_2 透传，r8 残留不可静态定案 | 注释升级 BLACKBOX |
+| ④ | b3r_g2 NTP | local_246 实为 sockaddr | ✅ 确认且影响最大（NTP connect 恒失败） | 已修 (66c3d17) |
+| ⑤ | b3r_g2 CM 实参对调 | 疑似对调 | ❌ 误报：与 dc:62965 逐字一致 | 不修 |
+| ⑥ | b3b 返回值 | 高位编码丢失 | ✅ 确认（dc:55027），零调用方死代码 | 已修 (66c3d17) |
+| ⑦ | b7c 分块注释 | 注释断言有误 | ❌ 误报：dc cVar12<1 与移植条件逻辑等价（-1=未知算法非 list） | 不修 |
