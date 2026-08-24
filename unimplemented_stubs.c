@@ -1,5 +1,38 @@
 /* unimplemented_stubs.c - B0/P3: FUN_/thunk_/DAT_/PTR_/gap-stub definitions. FOR LINK VERIFICATION ONLY. */
 #include "stubs_common.h"
+#include <string.h>
+#include <stdio.h>
+
+/* ==================== S8 新增 extern（真体所在文件见注释；仅本文件引用） ====================
+ * 同址别名依据 tools/rename_map.json 权威映射：
+ *   FUN_14007bda8 ≡ PECMD_ExpandVarsRecursive   真体 src/lang/core_execline.c
+ *   FUN_14007a224 ≡ PECMD_ExpandCommandLine     真体 src/lang/core_execline.c
+ *   FUN_14006e030 ≡ PECMD_CopyPathToken         真体 src/commands/core_b3m.c
+ *   FUN_1400702d4 ≡ PECMD_StrBldCopyWideN       真体 src/runtime/core_var2.c */
+extern int64_t FUN_14007BDA8(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt);
+extern int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t opt);
+extern void    PECMD_FreeStrBuf(WCHAR **ps);            /* @0x14005b104 core_string.c */
+extern void    PECMD_ZeroLenBuf(void *p);               /* @0x14005b0b8 core_thread.c */
+extern int64_t FUN_14006E030(int64_t script, int64_t *pp, int64_t *out, int64_t limit); /* @0x14006e030 core_b3m.c */
+extern void    PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len); /* @0x1400702d4 core_var2.c */
+/* ---- S8 第二批（运行时取证新增的同址别名真体） ---- */
+extern void     FUN_1400702B0(WCHAR **ps, LPCWSTR src);                      /* @0x1400702b0 core_string.c */
+extern int32_t  FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);         /* @0x14001b5ac core_var3.c */
+extern uint16_t *FUN_14002FD88(int64_t *ctx, WCHAR *text, uint32_t *flags, int64_t *out); /* @0x14002fd88 core_b2e.c */
+extern void    *FUN_14003CD0C(int64_t *script, LPCRITICAL_SECTION name);     /* @0x14003cd0c core_b2f.c */
+extern int64_t  FUN_14003ED4C(int64_t *script, LPCWSTR cmd);                 /* @0x14003ed4c core_b2f.c */
+extern void     FUN_14009BB28(void *script, int flag);                       /* @0x14009bb28 restored_bodies.c */
+
+/* ---- S8 TEMP PROBE（诊断行执行器链路用，过门后随 [S7] 系列一并移除） ---- */
+void P8_Probe(const char *tag, long long v1, long long v2)
+{
+    FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+    if (pf_) {
+        fprintf(pf_, "[S8] %s a=%llx b=%llx\n", tag,
+                (unsigned long long)(uintptr_t)v1, (unsigned long long)(uintptr_t)v2);
+        fclose(pf_);
+    }
+}
 
 
 uint64_t FUN_140103020(const uint16_t *s) { (void)s; return 0; }
@@ -16,7 +49,10 @@ uint64_t PTR_u_a__a_zA_Z0_9___14013a2d0[] = {
     0x1401233c0, 0x1401233e0, 0x1401233f8, 0x140123410, 0x140123428,
     0x140123448, 0x140123460, 0x140123490, 0x1401234b0, 0
 };   /* arity 修正 0->3 (PECMD_ToSysCopyFiles 直移) */
-uint64_t PECMD_RunCommandLine(void *script, WCHAR **str, int mode) { (void)script;(void)str;(void)mode; return 0; }                                           /* def @6907 */
+/* S8: @0x140003a20 双名归一 —— rename_map.json: FUN_140003a20 ≡ PECMD_RunCommandLine。
+ * 原 no-op 桩使全部命令 TU 的行级变量展开死路; 现转发本文件下方 FUN_140003a20 直移真体。 */
+uint64_t PECMD_RunCommandLine(void *script, WCHAR **str, int mode)
+    { return (uint64_t)FUN_140003a20((longlong *)script,(undefined8 *)str,(byte)mode); }   /* def @6907 → 真体见本文件 FUN_140003a20 */
      /* 新增桩 @0x1400c10c0 */
 const uint8_t DAT_14011dcb0[16] = {0x2a,0,0,0,'p','p','i','d',':',0,0,0,'h','p','i','d'}; /* 新增桩 */
 const uint16_t DAT_14011d108[] = {'.','t','m','p',0};   /* argv 表末端字节偏移 (初 0) */
@@ -24,7 +60,9 @@ void FUN_1400166b4(void) { /* 初始化 argv 表 (缺失 helper, no-op 桩) */ }
 uint64_t PECMD_ScriptInit(void) { return 0; }
 uint64_t PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3, uint64_t *param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
 
-uint64_t PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }
+/* S8: 同址别名归一 —— rename_map.json: FUN_14001b5ac ≡ PECMD_XorEncode（真体 core_var3.c）。 */
+uint64_t PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c)
+    { return (uint64_t)(uint32_t)FUN_14001B5AC((LPCWSTR)(uintptr_t)a,b,(int64_t)c); }
 uint64_t PECMD_InstallKeyboardHook(void) { return 0; }
 uint64_t PECMD_ExpandDrivePathAlloc(void) { return 0; }
 uint64_t PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag) { (void)script;(void)name;(void)val;(void)len;(void)flag; return 0; }   /* arity 修正 0->5 (PECMD_ExecCmdDispatch 恢复体) */
@@ -71,14 +109,25 @@ void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c) { (void)a;(void)
 uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d) { (void)a;(void)b;(void)c;(void)d; return 0; }
 long long FUN_140064a34(uint16_t *s) { (void)s; return 0; }
 uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode) { (void)name;(void)out;(void)mode; return 0; }
-void PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; }
+/* S8: 同址别名归一 —— FUN_1400702b0 ≡ PECMD_StrDupAssign（真体 core_string.c）。 */
+void PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src)
+    { FUN_1400702B0((WCHAR **)ps,(LPCWSTR)(uintptr_t)src); }
 void PECMD_HeapFreeWithHeader(long long *a) { (void)a; }   /* @0x14005b0d4 串槽释放 (leaf stub), 原体见 decompiled.c:53617 */
 uint64_t PECMD_ParsePrefixColon(void) { return 0; }
-long long PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
-long long PECMD_ExpandVarsRecursive(long long *a, WCHAR *b, void *c, int d, uint8_t e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
+/* S8: 同址别名归一 —— rename_map.json: FUN_14007a224 ≡ PECMD_ExpandCommandLine,
+ * FUN_14007bda8 ≡ PECMD_ExpandVarsRecursive（真体均在 core_execline.c）。
+ * 原 no-op 桩使 ProcessScriptBlock→PECMD_ExpandVarDispatch 展开支路整体空转
+ * （%VAR% 不展开, 且输出槽不写→调用方读未初始化）。现转发真体。 */
+long long PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e)
+    { P8_Probe("ExpandCL", (longlong)(uintptr_t)b, (longlong)d);
+      return (long long)FUN_14007A224((void *)a,(WCHAR *)b,(WCHAR **)c,d,e); }
+long long PECMD_ExpandVarsRecursive(long long *a, WCHAR *b, void *c, int d, uint8_t e)
+    { P8_Probe("ExpandVR", (longlong)(uintptr_t)b, (longlong)d);
+      return (long long)FUN_14007BDA8((void *)a,(WCHAR *)b,(WCHAR **)c,d,e); }
 uint64_t PECMD_SetVariableWithPrefix(void) { return 0; }
 uint64_t PECMD_SetCheckVariable(void) { return 0; }
-uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { (void)a;(void)b; return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
+/* S8: 同址别名归一 —— FUN_14009bb28 ≡ PECMD_NotifyMainWindowRefresh（真体 restored_bodies.c）。 */
+uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { FUN_14009BB28((void *)(uintptr_t)a,b); return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
 int PECMD_ParseHexOrDec() { return 1; }  /* 目标句柄克隆 (leaf stub) */
   /* 资源名定位 (leaf stub) */
@@ -125,11 +174,21 @@ int32_t PECMD_DecodeEncTextToUtf16(uint32_t spec, const uint8_t *src, int srclen
 { (void)spec; (void)src; (void)srclen; (void)dst; (void)dstcap; (void)key; return 0; }
 
 uint64_t PECMD_ScriptCopy(void) { return 0; }
-uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
+/* S8: 同址别名归一 —— FUN_14002fd88 ≡ PECMD_ParseCommandPath（真体 core_b2e.c）。 */
+uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d)
+    { return (uint64_t)(uintptr_t)FUN_14002FD88((int64_t *)(uintptr_t)a,(WCHAR *)(uintptr_t)b,c,d); }   /* arity 修正 0->4 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 uint64_t FUN_140061E98(void) { return 0; }
 uint64_t FUN_1400688E0(void) { return 0; }
 uint64_t FUN_14006A81C(void) { return 0; }
-uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d) { (void)a;(void)b;(void)c;(void)d; return 0; }
+/* S8: 同址别名归一 —— rename_map.json: FUN_14006e030 ≡ PECMD_CopyPathToken（真体 core_b3m.c）。
+ * 运行时取证: 本桩原返回 0 → DispatchExpressionBlock→ProcessScriptBlock 拿到
+ * NULL 命令指针, SkipLeadingControls 解引用爆 C0000005(dump 0x12dddb 实锤)。 */
+uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d)
+{
+    uint64_t r = (uint64_t)FUN_14006E030((int64_t)a,(int64_t *)(uintptr_t)b,(int64_t *)(uintptr_t)c,(int64_t)d);
+    P8_Probe("CopyPathToken", (longlong)r, d);
+    return r;
+}
 
 /* FUN_ helper 无操作桩 */
 uint64_t FUN_140001188(void) { return 0; }
@@ -198,8 +257,12 @@ void PECMD_AllocExpandPath(void *a, int64_t *b){ (void)a;(void)b; }
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c){ (void)a;(void)b;(void)c; return 0; }   /* arity 修正 0->2 (PECMD_ExecCmdDispatch 恢复体) */
 void PECMD_ScanDeviDirInfFiles(void *a, uint64_t b, uint64_t c, int d, void *e){ (void)a;(void)b;(void)c;(void)d;(void)e; }
 uint64_t PECMD_UpdateDriverSigning(int a, int b){ (void)a;(void)b; return 0; }
-int PECMD_CmdKill() { }
-int PECMD_DispatchSystemCommandLine() { }   /* arity 修正 0->2 (PECMD_ExecCmdDispatch 恢复体) */
+/* S8: 同址别名归一 —— FUN_14003cd0c/FUN_14003ed4c ≡ CmdKill/DispatchSystemCommandLine
+ * （真体 core_b2f.c）。原 0 元桩按调用点实参补齐 arity 后转发。 */
+int PECMD_CmdKill(int64_t *script, LPCWSTR name)
+    { return (int)(intptr_t)FUN_14003CD0C(script,name); }
+int PECMD_DispatchSystemCommandLine(int64_t *script, LPCWSTR cmd)
+    { return (int)FUN_14003ED4C(script,cmd); }   /* arity 修正 0->2 (PECMD_ExecCmdDispatch 恢复体) */
 
 /* ---- B3 还原批次 (core_b3r_*.c) 依赖补充 ---- */
 uint64_t PECMD_ManualMapPeImage(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
@@ -333,7 +396,24 @@ uint64_t FUN_14005370c(uint32_t *a, void *b, uint64_t c) { (void)a;(void)b;(void
 int      FUN_14005ceec(const uint16_t *a, const char *b) { (void)a;(void)b; return 1; }
 void     FUN_14005d694(void) {}
 void     FUN_14006355c(void *a, const WCHAR *b, int c, uint64_t d) { (void)a;(void)b;(void)c;(void)d; }
-void     FUN_140063888(void *a, const WCHAR *b, int64_t c) { (void)a;(void)b;(void)c; }
+/* S8 直移: FUN_140063888 @0x140063888 size=109 (decompiled.c:60952-60968)
+ * ≡ PECMD_StrCopyW。len<0→lstrlen; AllocString(len+1); 拷贝 len*2 字节; 终止 0。
+ * 原为 no-op 桩 ⇒ PECMD_StrBldCopyWide/StrBldCopyWideN 全部空转,
+ * ProcessScriptBlock 行展开结果槽保持 NULL → SkipLeadingControls 读 NULL 爆
+ * C0000005(dumpbt 0x12dddb 实锤)。FUN_14001d78c=内联 memcpy。 */
+void FUN_140063888(void *a, const WCHAR *b, int64_t c)
+{
+  longlong *slot = (longlong *)(uintptr_t)a;
+  if (c < 0) {
+    c = lstrlenW(b);
+  }
+  FUN_140063720(slot, c + 1);
+  if (*slot != 0) {
+    memcpy((void *)(uintptr_t)*slot, (const void *)(uintptr_t)b, (size_t)(c * 2));
+    *(undefined2 *)(uintptr_t)(c * 2 + *slot) = 0;
+  }
+  P8_Probe("StrCopyW", (longlong)(uintptr_t)*slot, (longlong)c);
+}
 uint64_t FUN_14009d4b8(uint64_t a, uint64_t b, const WCHAR *c, int16_t d, const WCHAR *e, int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
 
 /* ---- P4 wave-4 补桩: 声明存在但缺定义的内部 helper ---- */
@@ -347,10 +427,40 @@ uint64_t FUN_1400630d0(int a) { (void)a; return 0; }
 /* ---- P4 wave-4 helper 补定义 (2) ---- */
 uint64_t FUN_14005c7c4(const char *a, const uint16_t *b) { (void)a;(void)b; return 0; }
 void FUN_1400702b0(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; } /* @0x14005b6ac 资源串 */
-longlong FUN_140003a20(longlong *param_1, undefined8 *param_2, byte param_3) { (void)param_1;(void)param_2;(void)param_3; return 0; }
+/* ==== S8 直移: FUN_140003a20 @0x140003a20 size=139 (decompiled.c:1236-1264) ====
+ * 变量展开包装（PECMD_RunCommandLine 同体）: 备份 *param_2 旧串→置空输出槽→
+ * 按脚本标志单遍(14007bda8=ExpandVarsRecursive)或双遍(14007a224=ExpandCommandLine,
+ * 第二遍 opt=0)展开→释放旧串。依赖真体: core_execline.c / PECMD_FreeStrBuf。 */
+longlong FUN_140003a20(longlong *param_1,undefined8 *param_2,byte param_3)
+
+{
+  WCHAR *pWVar1;
+  longlong lVar2;
+  WCHAR *local_res8;
+
+  local_res8 = (WCHAR *)(uintptr_t)*param_2;
+  *param_2 = 0;
+  if ((*(char *)((longlong)(uintptr_t)param_1 + 0xda) == '\0') &&
+     ((*(byte *)((longlong)(uintptr_t)param_1 + 0xd) & 0xf) == 0)) {
+    lVar2 = (longlong)FUN_14007BDA8((void *)(uintptr_t)param_1,local_res8,(WCHAR **)param_2,0,param_3);
+  }
+  else {
+    (void)FUN_14007A224((void *)(uintptr_t)param_1,local_res8,(WCHAR **)param_2,0,param_3);
+    pWVar1 = (WCHAR *)(uintptr_t)*param_2;
+    *param_2 = (undefined8)(uintptr_t)local_res8;
+    local_res8 = pWVar1;
+    lVar2 = (longlong)FUN_14007A224((void *)(uintptr_t)param_1,pWVar1,(WCHAR **)param_2,0,0);
+  }
+  PECMD_FreeStrBuf((WCHAR **)&local_res8);
+  P8_Probe("RunCmdLine", (longlong)lVar2, (longlong)param_3);
+  return lVar2;
+}
 undefined8 FUN_1400748a0(HWND param_1, undefined8 *param_2) { (void)param_1;(void)param_2; return 1; }
 void       FUN_1400f172c(longlong *a, UINT b, ulonglong c, ulonglong *d, longlong e, int f, undefined8 *g) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g; }   /* 0x14013e290 原始: 48 b8 05 00 86 b8 05 00 (RTL_UTF8... 文本转储回调表) */
-void  FUN_140063720(longlong **_ps, longlong len) { (void)_ps;(void)len; }
+/* S8: 同址别名归一 —— rename_map.json: FUN_140063720 ≡ PECMD_AllocString
+ * （真体 core_string.c:96, 经 PECMD_HeapRealloc@0x140063118）。 */
+void  FUN_140063720(longlong **_ps, longlong len)
+    { PECMD_AllocString((WCHAR **)(uintptr_t)_ps, len); }
 
 /* ---- wave-current support: 018220/018c6c/01b3a0/01b888 deps ---- */
 undefined8 FUN_14005c788(char *a, ushort *b, int c) { (void)a;(void)b;(void)c; return 0; }   /* 模块名前缀判定 (leaf stub) */
@@ -394,7 +504,224 @@ uint32_t FUN_14007e15c(byte *slot, void *hwnd, LPCWSTR a3, HICON a4, LPCWSTR a5,
     { (void)slot;(void)hwnd;(void)a3;(void)a4;(void)a5;(void)a6;(void)a7; return 0; }
 void FUN_1400e6860(WPARAM a1, int a2) { (void)a1;(void)a2; }
 void FUN_14006703c(longlong obj) { (void)obj; }
-ulonglong FUN_1400b1724(LARGE_INTEGER li, ulonglong a2) { (void)a2; return li.QuadPart; }
+/* ==== S8 直移: FUN_1400b1724 @0x1400b1724 size=1733 (decompiled.c:110300-110509) ====
+ * 行循环执行器（PECMD_DispatchExpressionBlock 同体, rename_map.json 权威）。
+ * 依赖重绑真体（绕开同址 no-op 桩）: FUN_14006156c→PECMD_MatchPattern(core_b3c.c),
+ * FUN_1400a53e4→PECMD_TokenizeExpression(core_b3_remaining.c), FUN_14001b23c→
+ * PECMD_ExtractTableSegment(core_b1_remaining.c), FUN_14006e030→FUN_14006E030
+ * (core_b3m.c), FUN_1400702d4→PECMD_StrBldCopyWideN(core_var2.c),
+ * FUN_14005b0b8→PECMD_ZeroLenBuf, FUN_14005b104→PECMD_FreeStrBuf,
+ * FUN_14006159c→PECMD_InitObfuscatedKeywords(core_exec2.c), FUN_1400251ac→
+ * PECMD_CheckFirstStartupFlag(core_scriptdep.c), FUN_14004c0bc→
+ * PECMD_ProcessScriptBlock(restored_bodies.c 真体)。
+ * DAT_14013d080→g_msgLockCount, DAT_14013d058→g_sysinitState。 */
+ulonglong FUN_1400b1724(LARGE_INTEGER param_1,ulonglong param_2)
+
+{
+  ushort uVar1;
+  ushort uVar2;
+  int iVar3;
+  WCHAR *pWVar4;
+  uint64_t uVar5;
+  LPCWSTR pWVar6;
+  LARGE_INTEGER lpStr1;
+  WCHAR WVar7;
+  WCHAR WVar8;
+  longlong lVar9;
+  int iVar10;
+  WCHAR *pWVar11;
+  WCHAR *pWVar12;
+  LPCWSTR *ppWVar13;
+  WCHAR *local_res10;
+  ulonglong *local_res18;
+  WCHAR *local_res20;
+  LPCWSTR local_58;
+  LPCWSTR local_50 [2];
+
+  uVar1 = *(ushort *)(param_1.QuadPart + 0x48);
+  iVar10 = 0;
+  pWVar11 = (WCHAR *)(uintptr_t)(param_2 & 0xfffffffffffffffeULL);
+  local_res18 = (ulonglong *)0x0;
+  if ((param_2 & 1) == 0) {
+    PECMD_InitObfuscatedKeywords((void *)(uintptr_t)param_1.QuadPart,
+        (uint64_t)(*(ushort *)(param_1.QuadPart + 0x48) | 0x10000));
+    *(undefined2 *)(uintptr_t)(param_1.QuadPart + 200) = 0;
+    for (; (((WVar8 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+             (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+            (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8)) ||
+           (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar8)); pWVar11 = pWVar11 + 1) {
+    }
+  }
+  local_58 = (LPCWSTR)0x0;
+  if (((*(byte *)(param_1.QuadPart + 0x10) & 0x80) == 0) ||
+     (ppWVar13 = &local_58, g_msgLockCount == 0)) {
+    ppWVar13 = local_50;
+  }
+  local_res10 = pWVar11;
+  if (*pWVar11 != *(WCHAR *)(param_1.QuadPart + 0x88)) {
+LAB_1400b17e7:
+    do {
+      if ((*(byte *)(param_1.QuadPart + 0x11) & 1) != 0) {
+        PECMD_ZeroLenBuf(local_res18);
+      }
+      if ((*(byte *)(param_1.QuadPart + 200) & 0x42) != 0) break;
+      WVar8 = *(WCHAR *)(param_1.QuadPart + 0x88);
+      local_res10 = pWVar11;
+      pWVar4 = (WCHAR *)(uintptr_t)FUN_140063060((uint64_t)(uintptr_t)pWVar11);
+      if (*pWVar4 == WVar8) break;
+      if (iVar10 < 1) {
+        if (*(WCHAR *)(param_1.QuadPart + 0x96) == *pWVar11) {
+          pWVar4 = pWVar11 + 1;
+          for (pWVar11 = pWVar4;
+              ((WVar7 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar7 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar7)) ||
+              ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar7 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar7)))); pWVar11 = pWVar11 + 1) {
+          }
+          local_res10 = pWVar11;
+          if (((*pWVar11 != WVar8) &&
+              (uVar5 = PECMD_MatchPattern((int16_t *)(uintptr_t)pWVar11,param_1.QuadPart + 0xaa), (int)uVar5 != 0)) &&
+             (uVar5 = PECMD_MatchPattern((int16_t *)(uintptr_t)pWVar11,param_1.QuadPart + 0x9a), (int)uVar5 != 0)) {
+            local_res10 = pWVar4;
+            PECMD_TokenizeExpression(param_1,*(int64_t *)(param_1.QuadPart + 0x40),
+                          (int64_t *)(intptr_t)&local_res10,0,(WCHAR *)(uintptr_t)&DAT_14011c638);
+            for (; ((WVar8 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                    (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                   ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8 ||
+                    (pWVar11 = local_res10, *(WCHAR *)(param_1.QuadPart + 0x90) == WVar8))));
+                local_res10 = local_res10 + 1) {
+            }
+          }
+          goto LAB_1400b17e7;
+        }
+        if ((*pWVar11 == *(WCHAR *)(param_1.QuadPart + 0xba)) &&
+           (pWVar11[1] == *(WCHAR *)(param_1.QuadPart + 0xbc))) {
+          for (local_res10 = pWVar11 + 2;
+              (((WVar7 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar7 ||
+                (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar7)) ||
+               (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar7)) ||
+              (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar7)); local_res10 = local_res10 + 1) {
+          }
+          WVar7 = *local_res10;
+          if (WVar7 != WVar8) {
+            do {
+              if (((WVar7 == *(WCHAR *)(param_1.QuadPart + 0x8a)) ||
+                  (WVar7 == *(WCHAR *)(param_1.QuadPart + 0x90))) ||
+                 (*(WCHAR *)(param_1.QuadPart + 0x96) == WVar7)) break;
+              local_res10 = local_res10 + 1;
+              WVar7 = *local_res10;
+            } while (WVar7 != *(WCHAR *)(param_1.QuadPart + 0x88));
+          }
+          for (pWVar4 = local_res10;
+              ((*(WCHAR *)(param_1.QuadPart + 0x92) == *pWVar4 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x94) == *pWVar4)) ||
+              ((*(WCHAR *)(param_1.QuadPart + 0x8a) == *pWVar4 ||
+               (*(WCHAR *)(param_1.QuadPart + 0x90) == *pWVar4)))); pWVar4 = pWVar4 + 1) {
+          }
+          if ((uVar1 ^ 0x7b) == *pWVar4) {
+            PECMD_StrBldCopyWideN((WCHAR **)&local_res20,pWVar11,
+                          (longlong)local_res10 - (longlong)pWVar11 >> 1);
+            for (lVar9 = (longlong)((int)((longlong)local_res10 - (longlong)pWVar11 >> 1) + -1);
+                -1 < lVar9; lVar9 = lVar9 + -1) {
+              local_res20[lVar9] = local_res20[lVar9] ^ *(ushort *)(param_1.QuadPart + 0x48);
+            }
+            for (pWVar11 = pWVar4 + 1;
+                (((WVar8 = *pWVar11, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                  (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                 (*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8)) ||
+                (*(WCHAR *)(param_1.QuadPart + 0x90) == WVar8)); pWVar11 = pWVar11 + 1) {
+            }
+            local_res10 = pWVar11;
+            if (((*pWVar11 != *(WCHAR *)(param_1.QuadPart + 0x88)) &&
+                (pWVar12 = local_res20, uVar5 = PECMD_MatchPattern((int16_t *)(uintptr_t)pWVar11,param_1.QuadPart + 0xaa),
+                (int)uVar5 != 0)) &&
+               (uVar5 = PECMD_MatchPattern((int16_t *)(uintptr_t)pWVar11,param_1.QuadPart + 0x9a), (int)uVar5 != 0)) {
+              local_res10 = pWVar4 + 1;
+              PECMD_TokenizeExpression(param_1,*(int64_t *)(param_1.QuadPart + 0x40),
+                            (int64_t *)(intptr_t)&local_res10,0,pWVar12);
+              pWVar11 = local_res10;
+              PECMD_FreeStrBuf((WCHAR **)&local_res20);
+              goto LAB_1400b17e7;
+            }
+            PECMD_FreeStrBuf((WCHAR **)&local_res20);
+          }
+          WVar8 = *local_res10;
+          if (((WVar8 == *(WCHAR *)(param_1.QuadPart + 0x92)) ||
+              (WVar8 == *(WCHAR *)(param_1.QuadPart + 0x94))) ||
+             ((WVar8 == *(WCHAR *)(param_1.QuadPart + 0x8a) ||
+              (WVar8 == *(WCHAR *)(param_1.QuadPart + 0x90))))) {
+            while (((*(WCHAR *)(param_1.QuadPart + 0x88) != WVar8 &&
+                    (*(WCHAR *)(param_1.QuadPart + 0x8a) != WVar8)) &&
+                   (*(WCHAR *)(param_1.QuadPart + 0x90) != WVar8))) {
+              local_res10 = local_res10 + 1;
+              WVar8 = *local_res10;
+            }
+          }
+          for (; ((WVar8 = *local_res10, *(WCHAR *)(param_1.QuadPart + 0x92) == WVar8 ||
+                  (*(WCHAR *)(param_1.QuadPart + 0x94) == WVar8)) ||
+                 ((*(WCHAR *)(param_1.QuadPart + 0x8a) == WVar8 ||
+                  (pWVar11 = local_res10, *(WCHAR *)(param_1.QuadPart + 0x90) == WVar8))));
+              local_res10 = local_res10 + 1) {
+          }
+          goto LAB_1400b17e7;
+        }
+      }
+      local_res10 = (WCHAR *)0x0;
+      local_50[0] = pWVar11;
+      pWVar6 = PECMD_ExtractTableSegment(param_1.QuadPart,(uint64_t *)&local_res18,
+                             (uint16_t *)(uintptr_t)pWVar11,
+                             (int64_t *)(intptr_t)&local_res10,'\0');
+      if (((*pWVar6 != L'\0') && (*pWVar6 != L'/')) && ((*pWVar6 != L';' && (*pWVar6 != L'`')))) {
+        lpStr1.QuadPart =
+             (longlong)FUN_14006E030(param_1.QuadPart,(int64_t *)(intptr_t)&local_res10,
+                           (int64_t *)(intptr_t)&local_res18,
+                           (int64_t)(intptr_t)pWVar6);
+        iVar3 = StrCmpNIW((LPCWSTR)(uintptr_t)lpStr1.QuadPart,L"_SUB",4);
+        if ((iVar3 == 0) &&
+           ((((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), 8 < uVar2 && (uVar2 < 0xe)) ||
+             (uVar2 == 0x20)) || (uVar2 == 0)))) {
+          iVar10 = iVar10 + 1;
+        }
+        else {
+          iVar3 = StrCmpNIW((LPCWSTR)(uintptr_t)lpStr1.QuadPart,L"_END",4);
+          if ((iVar3 == 0) &&
+             (((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), 8 < uVar2 && (uVar2 < 0xe)) ||
+              ((uVar2 == 0x20 || (uVar2 == 0)))))) {
+            if (0 < iVar10) {
+              iVar10 = iVar10 + -1;
+            }
+          }
+          else if (iVar10 < 1) {
+            if ((((g_sysinitState == '\x03') &&
+                 ((iVar3 = StrCmpNIW(L"REGI",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,4), iVar3 != 0 ||
+                  (((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), uVar2 < 9 || (0xd < uVar2)) &&
+                   ((uVar2 != 0x20 && (uVar2 != 0)))))))) &&
+                ((iVar3 = StrCmpNIW(L"ENVI",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,4), iVar3 != 0 ||
+                 ((((uVar2 = *(ushort *)(lpStr1.QuadPart + 8), uVar2 < 9 || (0xd < uVar2)) &&
+                   (uVar2 != 0x20)) && (uVar2 != 0)))))) &&
+               ((iVar3 = StrCmpNIW(L"SET",(LPCWSTR)(uintptr_t)lpStr1.QuadPart,3), iVar3 != 0 ||
+                (((uVar2 = *(ushort *)(lpStr1.QuadPart + 6), uVar2 < 9 || (0xd < uVar2)) &&
+                 ((uVar2 != 0x20 && (uVar2 != 0)))))))) {
+              PECMD_CheckFirstStartupFlag(param_1.QuadPart);
+            }
+            PECMD_ProcessScriptBlock(param_1,lpStr1,(longlong *)0x0,(longlong *)&local_res10,
+                          (pthreadmbcinfo)*ppWVar13);
+          }
+        }
+      }
+      for (; (*local_res10 == *(WCHAR *)(param_1.QuadPart + 0x8a) ||
+             (*local_res10 == *(WCHAR *)(param_1.QuadPart + 0x90))); local_res10 = local_res10 + 1)
+      {
+      }
+      pWVar11 = local_res10;
+    } while (*local_res10 != *(WCHAR *)(param_1.QuadPart + 0x88));
+  }
+  if ((param_2 & 1) == 0) {
+    *(undefined2 *)(uintptr_t)(param_1.QuadPart + 200) = 0;
+  }
+  PECMD_FreeStrBuf((WCHAR **)&local_res18);
+  return 0;
+}
 void FUN_140066d18(longlong a1, longlong a2) { (void)a1;(void)a2; }
 ulonglong FUN_14006b7f0(longlong obj, longlong *a2) { (void)obj;(void)a2; return 0; }
 void FUN_14007df90(longlong a1, int a2) { (void)a1;(void)a2; }
