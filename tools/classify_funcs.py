@@ -2,7 +2,7 @@
 """classify_funcs.py — PECMD 反编译函数分类 (业务 vs CRT内联 vs thunk)
 
 用法: python3 tools/classify_funcs.py
-输出: /tmp/opencode/pecmd_func_classes.json + 分类摘要
+输出: tools/pecmd_func_classes.json + 分类摘要  (B0 工具债固化, §8.3检查单7)
 
 PECMD 布局 (PE32+ x64, ImageBase=0x140000000):
   .text   0x140001000 ~ 0x14011A000  代码
@@ -124,8 +124,8 @@ def main():
 
     out = {c: [{'name': f['name'], 'addr': f['addr'], 'size': f['size'], 'lines': f['lines']}
                for f in fs] for c, fs in cat.items()}
-    json.dump(out, open('/tmp/opencode/pecmd_func_classes.json', 'w'), indent=1)
-    print('已存 /tmp/opencode/pecmd_func_classes.json')
+    json.dump(out, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pecmd_func_classes.json'), 'w'), indent=1)
+    print('已存 tools/pecmd_func_classes.json')
 
 
 if __name__ == '__main__':

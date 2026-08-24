@@ -19,8 +19,9 @@ ROOT = os.path.dirname(BASE)                                         # PECMD反�
 SRC = os.path.join(ROOT, 'decompiled.c')
 
 DONE_CACHE = None
-CLASSES = json.load(open('/tmp/opencode/pecmd_func_classes.json')) \
-    if os.path.exists('/tmp/opencode/pecmd_func_classes.json') else {}
+# B5 工具债固化 (§8.3 检查单第7项): 易失 /tmp 路径改为仓库内固化 JSON
+CLASSES = json.load(open(os.path.join(BASE, 'tools', 'pecmd_func_classes.json'))) \
+    if os.path.exists(os.path.join(BASE, 'tools', 'pecmd_func_classes.json')) else {}
 
 KW = {'if', 'for', 'while', 'switch', 'return', 'sizeof', 'else', 'do',
       'case', 'default', 'typedef', 'struct', 'enum', 'static_assert'}
@@ -31,12 +32,13 @@ def done_functions():
     if DONE_CACHE is not None:
         return DONE_CACHE
     done = {}
-    for path in os.listdir(BASE):
-        if not path.endswith('.c') or path.startswith(('TASKS', 'REVIEW', 'PLAN')):
-            continue
-        p = os.path.join(BASE, path)
-        if not os.path.isfile(p):
-            continue
+    for root, _dirs, files in os.walk(BASE):
+        for path in files:
+            if not path.endswith('.c'):
+                continue
+            p = os.path.join(root, path)
+            if not os.path.isfile(p):
+                continue
         txt = open(p, encoding='utf-8', errors='replace').read()
         # 跳过 TODO/依赖标注行, 防止把待重构地址当已完成
         for line in txt.split('\n'):
