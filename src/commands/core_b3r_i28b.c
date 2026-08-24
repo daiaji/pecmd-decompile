@@ -696,7 +696,7 @@ uint PECMD_AssignDriveLetter(LPCWSTR param_1, WCHAR *param_2)
                             PECMD_ReadDiskSectorScan((ulonglong *)&hObject,
                                                      (ulonglong *)((char *)local_250 + 0x81cb0),
                                                      (uint)puVar11[5], local_264, 0, (ulonglong *)0,
-                                                     ((LARGE_INTEGER){0}));
+                                                     (PECMD_LI(0)));
                             uVar17 = (ulonglong)local_264;
                         }
                         /* 分区项遍历 (反编译对 puVar11 数组做逐项扫描) —— 化简

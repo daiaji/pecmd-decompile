@@ -482,8 +482,8 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3, ui
         lpWindowName_00 = param_3;
         if (param_1 == 2) {
             pwVar8 = (LPCWSTR)0;
-            lpWindowName_00 = WSTR("\x63d0\x793a\x4fe1\x606f\x3000\x3000\x3000\x3000\x3000\x3000"
-                                   "\x3000\x3000\x3000\x3000");
+            /* 单一字面量: WSTR 只粘首段, 相邻续行段会丢失 L 前缀 (窄串 \x3000 越界) */
+            lpWindowName_00 = WSTR("\x63d0\x793a\x4fe1\x606f\x3000\x3000\x3000\x3000\x3000\x3000\x3000\x3000\x3000\x3000");
             lpWindowName = WSTR("\x7cfb\x7edf\x5173\x673a");
             local_58 = (LPCWSTR)0;
         }

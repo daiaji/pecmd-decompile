@@ -1163,7 +1163,7 @@ int64_t PECMD_LaunchAsyncScriptThread(int64_t *param_1, WCHAR *param_2, uint64_t
                 lVar18 = -0x7ff8ffa9;
             }
             else {
-                _Memory = (LARGE_INTEGER){.QuadPart = (int64_t)(uintptr_t)operator_new(8)};
+                _Memory = PECMD_LI((int64_t)(uintptr_t)operator_new(8));
                 if ((long long *)(uintptr_t)_Memory.QuadPart == (long long *)0) {
                     _Memory.QuadPart = 0;
                 }
@@ -1183,7 +1183,7 @@ int64_t PECMD_LaunchAsyncScriptThread(int64_t *param_1, WCHAR *param_2, uint64_t
                 lVar18 = param_1[0x10];
                 local_98 = _Memory;
                 (void)local_98;
-                _Memory_00 = (LARGE_INTEGER){.QuadPart = (int64_t)(uintptr_t)operator_new(0xf0)};
+                _Memory_00 = PECMD_LI((int64_t)(uintptr_t)operator_new(0xf0));
                 if ((long long *)(uintptr_t)_Memory_00.QuadPart == (long long *)0) {
                     _Memory_00.QuadPart = 0;
                 }

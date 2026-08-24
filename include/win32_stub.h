@@ -426,6 +426,15 @@ typedef union _LARGE_INTEGER {
     int64_t QuadPart;
 } LARGE_INTEGER;
 
+/* MSVC C has no compound literals: build (LARGE_INTEGER){.QuadPart=x} via helper.
+ * Semantically identical to the GCC compound-literal form it replaces (P0-1). */
+static __inline LARGE_INTEGER PECMD_LI(long long qp) {
+    LARGE_INTEGER li; li.QuadPart = qp; return li;
+}
+static __inline FILETIME PECMD_FT(unsigned long lo, unsigned long hi) {
+    FILETIME ft; ft.dwLowDateTime = lo; ft.dwHighDateTime = hi; return ft;
+}
+
 typedef struct _OVERLAPPED {
     ULONG_PTR Internal;
     ULONG_PTR InternalHigh;
@@ -962,7 +971,10 @@ int MessageBoxW(HWND, LPCWSTR, LPCWSTR, uint32_t);
 intptr_t DialogBoxParamW(HINSTANCE, LPCWSTR, HWND, void *, LPARAM);
 
 /* ---- 崩溃处理 ---- */
+/* MSVC has native __debugbreak; the GCC shim is only for non-MSVC hosts */
+#ifndef _MSC_VER
 #define __debugbreak() __asm__ __volatile__("int3")
+#endif
 
 /* ---- 宽字符串字面量 (Linux wchar_t=4B vs Windows WCHAR=2B) ---- */
 /* L"..." 在 Linux 是 int[]; 小端下字节布局与 UTF-16LE 一致, 强转即可.

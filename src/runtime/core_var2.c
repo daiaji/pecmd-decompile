@@ -150,7 +150,7 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
         while (tbl != NULL && (guard = guard - 1, 0 < guard)) {
             if (*(int *)((uint8_t *)tbl + 8) > 0) {
                 for (i = 0; i < *(int *)((uint8_t *)tbl + 8); i++) {
-                    void *node = *(void **)(*(void **)tbl + (size_t)i * 8);
+                    void *node = *(void **)((char *)*(void **)tbl + (size_t)i * 8);
                     if (lstrcmpiW(*(LPCWSTR *)node, name) == 0) {
                         if (found != NULL) {
                             *found = tbl;
@@ -177,7 +177,7 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
             guard--;
             if (*(int *)((uint8_t *)tbl + 8) > 0) {
                 for (i = 0; i < *(int *)((uint8_t *)tbl + 8); i++) {
-                    void *node = *(void **)(*(void **)tbl + (size_t)i * 8);
+                    void *node = *(void **)((char *)*(void **)tbl + (size_t)i * 8);
                     LPCWSTR n = *(LPCWSTR *)node;
                     if (StrCmpNIW(n, name, namelen) == 0 && n[namelen] == L'\0') {
                         if (found != NULL) {

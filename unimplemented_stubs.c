@@ -634,14 +634,14 @@ uint8_t DAT_14013e1f5;
 void *DAT_14013e458;
 
 /* ==== B0/P3: function-pointer data definitions ==== */
-void (*DAT_14013cd90)(...) = 0;
+void (*DAT_14013cd90)() = 0;
 int    (*DAT_14013d800)(int) = 0;
 void   (*DAT_14013d808)(void) = 0;
 int    (*DAT_14013d820)(int) = 0;
-void (*DAT_14013cb48)(...) = 0;
-int  (*DAT_14013cd30)(...) = 0;
-int  (*DAT_14013cd38)(...) = 0;
-void (*DAT_14013cd40)(...) = 0;
+void (*DAT_14013cb48)() = 0;
+int  (*DAT_14013cd30)() = 0;
+int  (*DAT_14013cd38)() = 0;
+void (*DAT_14013cd40)() = 0;
 void (*DAT_14013d380)(void *h, long long len) = 0;
 int64_t (*DAT_14013d408)(HKEY, LPCWSTR, uint32_t, uint32_t) = 0;
 int64_t (*DAT_14013ce08)(void) = 0;

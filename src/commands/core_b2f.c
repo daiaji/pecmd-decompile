@@ -46,6 +46,34 @@
 
 #include "pecmd_defs.h"
 
+/* Portable (a*b)/d with 128-bit intermediate for MSVC C (no __int128).
+ * Bit-by-bit long division; safe because r < d <= 2^63 keeps r<<1 in range.
+ * Replaces the GCC (__uint128_t) product form. */
+static uint64_t PECMD_MulDivU64(uint64_t a, uint64_t b, uint64_t d)
+{
+    uint64_t ua = a, ub = b;
+    uint64_t al = ua & 0xffffffffULL, ah = ua >> 32;
+    uint64_t bl = ub & 0xffffffffULL, bh = ub >> 32;
+    uint64_t ll = al * bl;
+    uint64_t lm = al * bh;
+    uint64_t mh = ah * bl;
+    uint64_t hh = ah * bh;
+    uint64_t mid = (ll >> 32) + (lm & 0xffffffffULL) + (mh & 0xffffffffULL);
+    uint64_t hi = hh + (lm >> 32) + (mh >> 32) + (mid >> 32);
+    uint64_t lo = (ll & 0xffffffffULL) | (mid << 32);
+    uint64_t q = 0, r = 0;
+    int i;
+    for (i = 127; i >= 0; i--) {
+        uint64_t bit = (i >= 64) ? ((hi >> (i - 64)) & 1) : ((lo >> i) & 1);
+        r = (r << 1) | bit;
+        if (r >= d) {
+            r -= d;
+            if (i >= 64) q |= 1ULL << (i - 64); else q |= 1ULL << i;
+        }
+    }
+    return q;
+}
+
 /* ---- 宽字符 CRT 辅助 (Linux wchar_t=4B, 这里按 PECMD 的 WCHAR=2B 声明) ---- */
 extern WCHAR *wcscat(WCHAR *, const WCHAR *);
 extern int wcscmp(const WCHAR *, const WCHAR *);
@@ -4245,10 +4273,11 @@ parse_loop:
                                             }
                                             GlobalMemoryStatus(&local_178.ms);
                                             {
-                                                __uint128_t product =
-                                                    (__uint128_t)local_178.ms.dwAvailPhys *
-                                                    local_1d0[0];
-                                                local_1d0[0] = (uint64_t)(product / 100);
+                                                /* (__uint128_t)a*b/100: portable 128-bit
+                                                 * mul-div (MSVC C lacks __int128) */
+                                                local_1d0[0] = PECMD_MulDivU64(
+                                                    local_178.ms.dwAvailPhys,
+                                                    (uint64_t)local_1d0[0], 100);
                                             }
                                         }
                                     }
@@ -5584,8 +5613,8 @@ joined_r0x00014003919a:
                     uVar22 = lVar35 + 1;
                     B2F_HI64(auVar4) = 0;
                     B2F_LO64(auVar4) = uVar22;
-                    lVar28 =
-                        (uint64_t)((__uint128_t)0x56ac0156ac0156adULL * (uint64_t)B2F_LO64(auVar4));
+                    /* (uint64_t)(__uint128_t M * x) == low 64 bits == plain mul */
+                    lVar28 = 0x56ac0156ac0156adULL * (uint64_t)B2F_LO64(auVar4);
                     wsprintfW(local_608, WSTR("%d"), (lVar28 + ((uVar22 - lVar28) >> 1)) >> 0x10);
                 }
             LAB_140039748:
@@ -6670,10 +6699,10 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
         FUN_14006375C((WCHAR **)&local_res20.QuadPart, (LPCWSTR)(uintptr_t)local_res10.QuadPart);
         lVar13 = PECMD_RunCommand((void *)g_Script, (WCHAR *)local_res20.QuadPart);
         PECMD_FreeStrBuf((WCHAR **)&local_res20.QuadPart);
-        return (LARGE_INTEGER){.QuadPart = (int64_t)lVar13};
+        return PECMD_LI((int64_t)lVar13);
     }
     if (*(int16_t *)(uintptr_t)local_res10.QuadPart == 0) {
-        return (LARGE_INTEGER){.QuadPart = (int64_t)-0x7ff8ffa9};
+        return PECMD_LI((int64_t)-0x7ff8ffa9);
     }
     iVar9 = lstrlenW((LPCWSTR)(uintptr_t)local_res10.QuadPart);
     PECMD_AllocWStringBuffer((WCHAR **)&local_78, (int64_t)((iVar9 + 1) * 2 + 4));
@@ -7179,7 +7208,7 @@ LPCRITICAL_SECTION FUN_14003CD0C(int64_t *script, LPCRITICAL_SECTION name)
                         }
                         if (((intptr_t)p_Var11 < 1) || (local_b0 = local_b0 + -1, local_b0 < 1))
                             goto LAB_14003d40f;
-                    LAB_14003d2f8:
+                    LAB_14003d2f8:; /* empty stmt: MSVC requires a statement after a label */
                     } while (p_Var16 == (LPCRITICAL_SECTION)0x0);
                 } while (true);
             }

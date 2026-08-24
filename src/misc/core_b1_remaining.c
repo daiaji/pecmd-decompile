@@ -6257,7 +6257,8 @@ uint64_t PECMD_RelocateImage(int64_t param_1, int64_t param_2)
 void PECMD_ResolveExportProc(HMODULE param_1, LPCSTR param_2)
 {
     /* @0x140018148 size=46 解析模块导出函数(内存模块走内部解析) */
-    if ((g_pMapBlk == (int *)0x0) || (*(HMODULE *)(g_pMapBlk + 6) != param_1)) {
+    /* (+6 为 Ghidra int* 步长 = 0x18 字节, 与下方 GetModuleFileName 取字段一致) */
+    if ((g_pMapBlk == (int *)0x0) || (*(HMODULE *)((uint8_t *)g_pMapBlk + 0x18) != param_1)) {
         GetProcAddress(param_1, param_2);
     }
     else {
@@ -9467,7 +9468,7 @@ uint32_t PECMD_ReadFileStr(LPCWSTR param_1, int64_t *param_2)
     }
     else {
         nNumberOfBytesToRead = PECMD_GetFileSize(hFile);
-        PECMD_SetFilePointer(hFile, (LARGE_INTEGER){0}, 0);
+        PECMD_SetFilePointer(hFile, PECMD_LI(0), 0);
         PECMD_GrowByteBuffer((void **)param_2, (int64_t)nNumberOfBytesToRead + 0xc);
         local_res20[0] = 0;
         ReadFile(hFile, (LPVOID)*param_2, nNumberOfBytesToRead, local_res20, 0);

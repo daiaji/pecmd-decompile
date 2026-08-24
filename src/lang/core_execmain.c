@@ -347,7 +347,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         PECMD_DispatchExpressionBlock(pExec, pFile);
         curWin = *(int64_t *)((char *)pExec + 0x40);
         if (curWin != 0 && noWin == 0 && (*(uint8_t *)((char *)pExec + 0xd9) & 1) != 0 &&
-            curWin != *(int64_t *)(*(void **)((char *)pExec + 0x38) + 0x40) &&
+            curWin != *(int64_t *)((char *)*(void **)((char *)pExec + 0x38) + 0x40) &&
             oldWinSaved != curWin && (void *)pExec != pScript &&
             curWin != *(int64_t *)((char *)pScript + 0x40)) {
             PostMessageW(*(HWND *)(curWin + 0x20), 0x10, 0, 0);

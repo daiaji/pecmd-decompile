@@ -1223,7 +1223,7 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
                 } while (*(WCHAR *)(uintptr_t)local_res20 != L'\0');
             }
             PECMD_GenerateTimeText((LPCWSTR)(uintptr_t)_Var24, (int64_t *)&local_80,
-                                   (LPCWSTR)(uintptr_t)_Var15, 0x10000, (FILETIME){0, 0});
+                                   (LPCWSTR)(uintptr_t)_Var15, 0x10000, PECMD_FT(0, 0));
             if (0 < (int)local_78) {
                 local_res10 = (uint64_t)((int64_t)local_80 + local_70);
             }
@@ -1487,7 +1487,7 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
             PECMD_FreeStrBuf((void *)&local_60);
             PECMD_FreeStrBuf((void *)&local_b8);
             PECMD_FreeStrBuf((void *)&local_90);
-            return (LARGE_INTEGER){.QuadPart = 0};
+            return PECMD_LI(0);
         }
         if ((bVar16 == 1) && (*(WCHAR *)(uintptr_t)local_res10 != L',')) {
             DVar32 = 0x80070057;
@@ -1813,7 +1813,7 @@ LAB_14009f024:
     PECMD_FreeStrBuf((void *)&local_60);
     PECMD_FreeStrBuf((void *)&local_b8);
     PECMD_FreeStrBuf((void *)&local_90);
-    return (LARGE_INTEGER){.QuadPart = LVar19.QuadPart};
+    return PECMD_LI(LVar19.QuadPart);
 }
 
 
@@ -2368,20 +2368,20 @@ LAB_14009f52b:
                     if (LVar25.QuadPart == 0) {
                         if (local_c8 == '+') {
                             PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                 (LARGE_INTEGER){.QuadPart = 0}, 2);
+                                                 PECMD_LI(0), 2);
                             bVar33 = local_res20;
                         }
                         else {
                             PECMD_SetFilePointer((HANDLE)LVar21.QuadPart, LVar24, 0);
                             LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             bVar8 = PECMD_ReadFileLine((void *)&local_c0, (int64_t *)local_a0,
                                                        uVar11, local_res20, (uint32_t *)0);
                             bVar33 = local_res20;
                             iVar32 = (int)bVar8;
                             while ((LVar34 = LVar31), iVar32 != 0) {
                                 LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                              (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                              PECMD_LI(0), 1);
                                 bVar8 = PECMD_ReadFileLine((void *)&local_c0, (int64_t *)local_a0,
                                                            uVar11, bVar33, (uint32_t *)0);
                                 LVar25 = local_88;
@@ -2411,7 +2411,7 @@ LAB_14009f52b:
                         }
                         else {
                             LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             DVar12 = PECMD_GetFileSize((HANDLE)LVar21.QuadPart);
                             DVar23 = LVar31.LowPart;
                             DVar12 = DVar12 - DVar23;
@@ -2423,7 +2423,7 @@ LAB_14009f52b:
                                                    (int64_t)(int)(DVar12 + 0xca));
                             PECMD_SetFilePointer(
                                 (HANDLE)LVar21.QuadPart,
-                                (LARGE_INTEGER){.QuadPart = (int64_t)(int32_t)DVar23}, 0);
+                                PECMD_LI((int64_t)(int32_t)DVar23), 0);
                             local_res10.QuadPart = local_res10.QuadPart & 0xffffffff00000000;
                             ReadFile((HANDLE)LVar21.QuadPart,
                                      (LPVOID) * (WCHAR **)(void *)&local_res20,
@@ -2431,7 +2431,7 @@ LAB_14009f52b:
                                      (OVERLAPPED *)0);
                             PECMD_SetFilePointer(
                                 (HANDLE)LVar21.QuadPart,
-                                (LARGE_INTEGER){.QuadPart = (int64_t)(int32_t)DVar23}, 0);
+                                PECMD_LI((int64_t)(int32_t)DVar23), 0);
                             WriteFile((HANDLE)LVar21.QuadPart,
                                       (LPCVOID)(uintptr_t)local_a8.QuadPart, DVar13,
                                       (DWORD *)&local_res8, (OVERLAPPED *)0);
@@ -2451,11 +2451,11 @@ LAB_14009f52b:
                             if (LVar25.QuadPart == 0)
                                 goto LAB_1400a0253;
                             LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             PECMD_ReadFileLine((void *)&local_c0, (int64_t *)local_a0, uVar11,
                                                bVar33, (uint32_t *)0);
                             LVar25 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             DVar12 = PECMD_GetFileSize((HANDLE)LVar21.QuadPart);
                             iVar32 = (int)(DVar12 - LVar25.LowPart);
                             PECMD_AllocStringSlot2((void **)&local_res20, (int64_t)(iVar32 + 0xca));
@@ -2471,19 +2471,19 @@ LAB_14009f52b:
                                       (LPCVOID) * (WCHAR **)(void *)&local_res20,
                                       local_res10.LowPart, (DWORD *)&local_res8, (OVERLAPPED *)0);
                             LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             PECMD_SetEndOfFileWrap(
                                 (void *)&local_c0,
-                                (LARGE_INTEGER){.QuadPart = (int64_t)(int32_t)LVar31.LowPart});
+                                PECMD_LI((int64_t)(int32_t)LVar31.LowPart));
                             goto LAB_1400a0366;
                         }
                         if (LVar25.QuadPart != 0) {
                             LVar31 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             PECMD_ReadFileLine((void *)&local_c0, (int64_t *)local_a0, uVar11,
                                                bVar33, (uint32_t *)0);
                             LVar25 = PECMD_SetFilePointer((HANDLE)LVar21.QuadPart,
-                                                          (LARGE_INTEGER){.QuadPart = 0}, 1);
+                                                          PECMD_LI(0), 1);
                             DVar13 = PECMD_GetFileSize((HANDLE)LVar21.QuadPart);
                             iVar32 = (int)(DVar13 - LVar25.LowPart);
                             PECMD_AllocStringSlot2((void **)&local_res20, (int64_t)(iVar32 + 0xca));
@@ -2590,7 +2590,7 @@ LAB_14009f52b:
                 plVar14 = (int64_t *)(uintptr_t)FUN_140063060((uint32_t *)&local_68);
                 LVar34 = LVar21;
                 if ((*plVar14 == 0) || (bVar4)) {
-                    PECMD_SetFilePointer((HANDLE)LVar21.QuadPart, (LARGE_INTEGER){.QuadPart = 0},
+                    PECMD_SetFilePointer((HANDLE)LVar21.QuadPart, PECMD_LI(0),
                                          0);
                     if (bVar4) {
                         SetEndOfFile((HANDLE)LVar21.QuadPart);

@@ -104,6 +104,9 @@ void PECMD_OpenSharedMapping(uint64_t tag, LPCSTR name)
 }
 
 /* ========== 路径变量初始化 @0x14001c01c ========== */
+/* 定义在本文件 179 行; 前置声明避免 MSVC 隐式 int 声明与 void 定义冲突 (C2371) */
+void PECMD_LookupShellFolderVar(LPCWSTR var, LPCWSTR env, const WCHAR *suffix);
+
 void PECMD_InitShellFolderEnvVars(void)
 {
     WCHAR *pBuf;

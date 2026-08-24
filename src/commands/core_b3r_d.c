@@ -988,7 +988,7 @@ uint32_t PECMD_EnumeratePhysicalDrives(longlong *param_1, uint param_2)
                     if (iVar16 == 1) {
                         PECMD_ReadDiskSectorScan((uint64_t *)&local_2f8, local_2e8,
                                                  (uint32_t)puVar15[5], DVar4, 0, (uint64_t *)0x0,
-                                                 (LARGE_INTEGER){.QuadPart = 0});
+                                                 PECMD_LI(0));
                     }
                     local_308 = (WCHAR *)0x0;
                     local_2e8 = (ulonglong *)0x0;

@@ -10,7 +10,15 @@ CASES = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REQUIRED = {"id", "cmds", "vars", "timeout_s", "flaky", "gui"}
 ID_RE = re.compile(r"^\d{3}_[a-z0-9_]+$")
 
+def _force_utf8_console():
+    # WIN 端 GBK 控制台兼容: ✓ 等字符在 cp936 下不可编码
+    for s in (sys.stdout, sys.stderr):
+        reconf = getattr(s, "reconfigure", None)
+        if reconf is not None:
+            reconf(encoding="utf-8", errors="replace")
+
 def main():
+    _force_utf8_console()
     strict = "--strict" in sys.argv
     problems = []
     cases = sorted(os.listdir(CASES))

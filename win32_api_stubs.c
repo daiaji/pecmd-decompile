@@ -149,7 +149,7 @@ DWORD GetCurrentDirectoryW(DWORD n, WCHAR *buf) { (void)n;(void)buf; return 0; }
 uint64_t GetCurrentProcess(void) { return 0; }
 uint64_t GetCurrentProcessId(void) { return 0; }
 uint64_t GetCurrentThread(void) { return 0; }
-uint64_t GetCurrentThreadId(void) { return 0; }
+DWORD GetCurrentThreadId(void) { return 0; }
 int GetCursorPos(void *p) { (void)p; return 0; }
 HDC GetDC(void *h) { (void)h; return (HDC)0; }
 uint64_t GetDIBits(void) { return 0; }

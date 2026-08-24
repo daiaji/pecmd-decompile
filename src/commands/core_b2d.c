@@ -217,7 +217,7 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
     hFile = (HANDLE)local_res18;
     if (hFile != (HANDLE)0) {
         DVar3 = FUN_1400E693C(hFile);
-        PECMD_SetFilePointer(hFile, (LARGE_INTEGER)(int64_t)0, 0);
+        PECMD_SetFilePointer(hFile, PECMD_LI((int64_t)0), 0);
         FUN_1400633A8((void **)&local_68, (int64_t)(int)(DVar3 + 0xc));
         local_78 = local_68;
         bytesRead[0] = 0;
@@ -262,7 +262,7 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
                         if (local_98[1] == 0x6f && local_98[2] == 0x70 && local_98[3] == 0x79 &&
                             local_98[4] == 0x66 && local_98[5] == 0x69 && local_98[6] == 0x6c &&
                             local_98[7] == 0x65 && local_98[8] == 0x73) {
-                            PECMD_SetFilePointer(hFile, (LARGE_INTEGER)(int64_t)(puVar7 - local_78),
+                            PECMD_SetFilePointer(hFile, PECMD_LI((int64_t)(puVar7 - local_78)),
                                                  0);
                             bytesRead[0] = 0;
                             local_res18 = (local_res18 & ~(uint64_t)0xffffULL) | 0x43;
@@ -272,7 +272,7 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
                                  local_98[3] == 0x66 && local_98[4] == 0x69 &&
                                  local_98[5] == 0x6c && local_98[6] == 0x65 &&
                                  local_98[7] == 0x73) {
-                            PECMD_SetFilePointer(hFile, (LARGE_INTEGER)(int64_t)(puVar7 - local_78),
+                            PECMD_SetFilePointer(hFile, PECMD_LI((int64_t)(puVar7 - local_78)),
                                                  0);
                             local_res18 = (local_res18 & ~(uint64_t)0xffffULL) | 0x44;
                             WriteFile(hFile, &local_res18, DVar3, bytesRead, NULL);
@@ -289,7 +289,7 @@ void PECMD_PatchInfDirectives(LPCWSTR path)
                                  local_98[4] == 0x69 && local_98[5] == 0x6c &&
                                  local_98[6] == 0x65 && local_98[7] == 0x73;
                     if (isCopy || isDel) {
-                        PECMD_SetFilePointer(hFile, (LARGE_INTEGER)(int64_t)(puVar7 - local_78), 0);
+                        PECMD_SetFilePointer(hFile, PECMD_LI((int64_t)(puVar7 - local_78)), 0);
                         local_res18 = (local_res18 & ~(uint64_t)0xffffULL) | 0x3b;
                         ReadFile(hFile, &local_res18, DVar3, bytesRead, NULL);
                     }

@@ -604,8 +604,8 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
             else {
                 local_ef0 = (LPCWSTR)(LVar7.QuadPart + 10);
                 local_ee0 = (WCHAR *)0x0;
-                LVar7 = (LARGE_INTEGER)(intptr_t)PECMD_NextToken((longlong *)&local_ef0,
-                                                                 (longlong *)&local_ee0, 5);
+                LVar7 = PECMD_LI((intptr_t)PECMD_NextToken((longlong *)&local_ef0,
+                                                                 (longlong *)&local_ee0, 5));
                 local_res10 = LVar7;
                 if (0 < (longlong)(intptr_t)local_ee0) {
                     PECMD_StrCopyW(&local_ee8, local_ef0, (longlong)(intptr_t)local_ee0);
@@ -721,7 +721,7 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
                           WSTR("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"),
                           WSTR("TMP"), (longlong *)&local_ec0, &local_ef4, (LSTATUS *)0x0);
     }
-    LVar7 = (LARGE_INTEGER)(intptr_t)local_ec0;
+    LVar7 = PECMD_LI((intptr_t)local_ec0);
     if (*local_ed0 != L'\0') {
         PECMD_SetVariable(param_1, local_ed0, (LPCWSTR)local_ec0);
     }
@@ -738,8 +738,8 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
             goto LAB_14009c4e0;
     }
     PECMD_ExpandCommandLine(param_1, (WCHAR *)LVar7.QuadPart, &local_eb0, 0, 0);
-    LVar16 = (LARGE_INTEGER)(intptr_t)local_eb0;
-    local_res10 = (LARGE_INTEGER)(intptr_t)local_eb0;
+    LVar16 = PECMD_LI((intptr_t)local_eb0);
+    local_res10 = PECMD_LI((intptr_t)local_eb0);
     local_eb0 = (WCHAR *)LVar7.QuadPart;
     pWVar9 = PECMD_LoadLocalizedString(g_hInstance, 0x2718, local_ea8, 0x104);
     pLVar12 = pLVar17;
@@ -770,7 +770,7 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
         local_ed8 = (ushort *)0x0;
         PECMD_AllocStrSlot(&local_ec0);
         PECMD_AllocStrSlot(&local_ed8);
-        LVar7 = (LARGE_INTEGER)(intptr_t)local_ee0;
+        LVar7 = PECMD_LI((intptr_t)local_ee0);
         if ((*(short *)local_ee0 == 0) || ((char)local_res20 == '\0')) {
             iVar5 = MessageBoxW((HWND)0x0, local_ec8, pWVar11, 4);
             if (iVar5 == 6) {
@@ -782,7 +782,7 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
                 PECMD_AppendWideStr((WCHAR **)&local_ed8, WSTR(",,,0x10"));
                 PECMD_ShowBrowseFolder(param_1, (ushort *)local_ed8, local_res18,
                                        (longlong *)&local_ec0);
-                LVar7 = (LARGE_INTEGER)(intptr_t)local_ec0;
+                LVar7 = PECMD_LI((intptr_t)local_ec0);
                 if (*(short *)local_ec0 != 0)
                     goto LAB_14009c3db;
             }
@@ -1784,9 +1784,9 @@ longlong PECMD_VolumeDeviceCommand(longlong *param_1, LPCWSTR param_2)
                         if ((int)(uintptr_t)local_1108 <= iVar24) {
                             PECMD_SetFilePointer(
                                 local_10b8,
-                                (LARGE_INTEGER)(longlong)(int)((iVar24 /
+                                PECMD_LI((longlong)(int)((iVar24 /
                                                                 (int)(uintptr_t)local_1108) *
-                                                               (uintptr_t)local_1108),
+                                                               (uintptr_t)local_1108)),
                                 0);
                         }
                         ReadFile(pvVar17, local_103c, DVar5, (LPDWORD)&local_10e0, (void *)0x0);

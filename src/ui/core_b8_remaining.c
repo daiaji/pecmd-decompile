@@ -12,6 +12,25 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
+
+/* MSVC C lacks __int128: portable signed 64x64 -> high 64 of 128-bit product
+ * (Hacker's Delight mulhs, replaces the GCC (__int128) form). */
+static long long PECMD_MulHi64(long long a, long long b)
+{
+    unsigned long long ua = (unsigned long long)a, ub = (unsigned long long)b;
+    unsigned long long al = ua & 0xffffffffULL, ah = ua >> 32;
+    unsigned long long bl = ub & 0xffffffffULL, bh = ub >> 32;
+    unsigned long long ll = al * bl;
+    unsigned long long lm = al * bh;
+    unsigned long long mh = ah * bl;
+    unsigned long long hh = ah * bh;
+    unsigned long long mid = (ll >> 32) + (lm & 0xffffffffULL) + (mh & 0xffffffffULL);
+    unsigned long long hi = hh + (lm >> 32) + (mh >> 32) + (mid >> 32);
+    if (a < 0) hi -= ub;
+    if (b < 0) hi -= ua;
+    return (long long)hi;
+}
+
 /* ========== PECMD_SockCreateIpcObj @0x1400e1228 ==========
  * [简化桩] 原函数为 8K 大函数，按签名返回 0。
  * TODO(verify): 需完整还原脚本执行逻辑。
@@ -592,11 +611,10 @@ LAB_1400e9774:
                 if (0 < (long long)local_290) {
                     /* SUB168(SEXT816(C)*SEXT816(x),8) = 128 位有符号乘法高 64 位(mulhi);
                      * 整体系编译器魔法除法序列。TODO(verify): 等价除数语义待核对 */
-                    __int128 prod;
                     DVar25 = PECMD_QueryPhysicalMemory(1);
-                    prod = (__int128)(long long)(DVar25 * local_290) *
-                           (__int128)(long long)(uint64_t)0xA3D70A3D70A3D70BULL;
-                    lVar18 = (long long)(DVar25 * local_290) + (long long)(uint64_t)(prod >> 64);
+                    lVar18 = (long long)(DVar25 * local_290) +
+                             PECMD_MulHi64((long long)(DVar25 * local_290),
+                                           (long long)(uint64_t)0xA3D70A3D70A3D70BULL);
                     uVar22 = (uint64_t)(((lVar18 >> 6) - (lVar18 >> 63)) >> 20);
                 }
                 if ((long long)uVar22 < (long long)local_270) {
@@ -942,8 +960,8 @@ LAB_1400e9774:
             local_3e8 = local_3f0;
             pvVar23 = (HANDLE)CreateEventW((LPSECURITY_ATTRIBUTES)0, 0, 0, local_378);
             (void)PECMD_ProcessScriptBlock(
-                (LARGE_INTEGER){.QuadPart = (long long)(uintptr_t)out},
-                (LARGE_INTEGER){.QuadPart = (long long)(uintptr_t)local_2e0}, (long long *)0,
+                PECMD_LI((long long)(uintptr_t)out),
+                PECMD_LI((long long)(uintptr_t)local_2e0), (long long *)0,
                 (long long *)0, (char *)0);
             DVar15 = WaitForSingleObject(pvVar23, 60000);
             CloseHandle(pvVar23);

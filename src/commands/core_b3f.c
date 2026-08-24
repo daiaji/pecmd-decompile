@@ -106,7 +106,7 @@ void PECMD_StripTrailingSlash(int64_t *path)
         if (*(int16_t *)(*path - 2 + (int64_t)iVar1 * 2) == 0x5c) {
             *(uint16_t *)(*path - 2 + (int64_t)iVar1 * 2) = 0;
         }
-        FUN_14003C06C((int64_t *)g_Script, (LARGE_INTEGER)*path, 1);
+        FUN_14003C06C((int64_t *)g_Script, PECMD_LI(*path), 1);
         *(uint16_t *)*path = 0;
     }
 }

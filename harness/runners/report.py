@@ -11,7 +11,16 @@ HARNESS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_ROOT = os.path.join(HARNESS, "results")
 
 
+def force_utf8_console():
+    # WIN 端 GBK 控制台兼容: 中文/符号输出在 cp936 下可能不可编码
+    for s in (sys.stdout, sys.stderr):
+        reconf = getattr(s, "reconfigure", None)
+        if reconf is not None:
+            reconf(encoding="utf-8", errors="replace")
+
+
 def main():
+    force_utf8_console()
     backend = "win_real"
     if "--backend" in sys.argv:
         backend = sys.argv[sys.argv.index("--backend") + 1]

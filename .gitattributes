@@ -6,6 +6,7 @@
 *.h  text eol=lf
 *.py text eol=lf
 *.sh text eol=lf
+*.bat text eol=crlf
 *.md text eol=lf
 *.json text eol=lf
 *.txt text eol=lf

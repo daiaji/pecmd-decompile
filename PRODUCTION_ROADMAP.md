@@ -95,7 +95,7 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 
 | 阶段 | 内容 | 门禁 |
 |---|---|---|
-| **P0 MSVC 化** | ① 33 处复合字面量改写（(LARGE_INTEGER){…}→局部变量赋值） ② crt_shims.c 按 MSVC 裁剪（删 MSVC CRT 机制桩/入口桩，业务缺口桩保留） ③ 构建管线（WSL/git-bash 跑 bash 调 cl.exe，或 CMake） ④ cl 试编译 → **pecmd_msvc.exe 产出** | G0: pecmd_msvc.exe 可运行（至少冒烟用例能跑） |
+| **P0 MSVC 化** | ① 33 处复合字面量改写（(LARGE_INTEGER){…}→局部变量赋值） ② crt_shims.c 按 MSVC 裁剪（删 MSVC CRT 机制桩/入口桩，业务缺口桩保留） ③ 构建管线（**已交付**：`tools\msvc_build.bat` 原生驱动 cl.exe，见 docs/msvc_build.md） ④ cl 试编译 → **pecmd_msvc.exe 产出** | G0: pecmd_msvc.exe 可运行（至少冒烟用例能跑） |
 | **P1 验证闭环打通** | ① 冒烟用例 001 双跑（原版 vs msvc 产物） ② 4 维采集（stdout/exit/vars/fs） ③ diff_case 判读 → verdict ④ golden 录制规范确立 | G1: 001 用例 verdict 闭环跑通（PASS/FAIL 均能判定且可归因） |
 | **P2 核心命令对拍** | 30 条语料逐条双跑；FAIL 分诊补全（桩→真体 / 分歧修正）；**BLACKBOX 46 条转化为探针用例**补入语料 | G2: 核心命令集 verdict 全绿（或分歧均登记且归因） |
 | **P3 可读性推进** | B1 语义化按配方推进（local_xx/param_N→语义名）；与验证循环并行（改后可重跑已绿用例回归） | G3: 精修区 A 区（b7c/b8m/b8h/b2f）local_xx≈0 |
@@ -118,7 +118,7 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 | 剩余工作全在 WIN 端 | 用户裁定；验证闭环（编译→双跑→判读→补全）可全部在 WIN 完成 |
 | **MSVC 为主编译器** | **原版 PECMD.EXE 即 MSVC 编译**——同 CRT/ABI/编译器行为，对拍假分歧最小；crt_shims 的 MSVC CRT 桩在 MSVC 下可删（系统 CRT 即原版所用） |
 | mingw 弃用 | 交叉编译优势不再需要；其 7 处 CRT 冲突侦察结论（pthreadlocinfo/wcstok/GetCurrentThreadId）在 MSVC 下以"删桩"形式自然消解 |
-| WSL/git-bash 保留 | 管线脚本（build.sh/run_case/diff_case/check_corpus）是 bash+python3，WSL 或 git-bash 直接跑，改动最小 |
+| ~~WSL/git-bash 保留~~ → **管线纯 WIN 化（2026-08-24 v4.1 用户裁定）** | 判读层（diff_case/report/check_corpus）本就纯 stdlib Python，原生可跑零改动；唯一 POSIX 硬绑的 run_case.sh 移植为 run_case.py（双跑内置）；MSVC 构建交 `tools\msvc_build.bat` 原生驱动。环境收敛为 VS2019 + Windows Python，弃 WSL2/git-bash/GNU coreutils |
 
 ### 4.2 MSVC 化侦察结论（2026-08-24 实测）
 
@@ -136,7 +136,7 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 ### 4.3 环境要求（WIN 端）
 
 - Windows 10/11 + Visual Studio 2019 16.8+（含 C 编译器；免费 Community 版即可）
-- WSL2 或 git-bash（bash + python3 ≥3.8 + GNU coreutils）
+- Windows 原生 Python ≥3.8（验证闭环脚本，纯 stdlib；无需 WSL/git-bash/coreutils）
 - 原版 `PECMD原始.EXE` 放 C:\pectest\（对拍真值）
 
 ---
@@ -145,8 +145,8 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 
 - 目录约定/manifest 契约/尾声规范/4 维采集/diff 契约：沿用 v3 §4.C.1-0.1~0.5（设计有效，不再重复）
 - **改动点**：
-  1. 后端：`win_real.sh` 唯一后端（v3 的 wine/qemu 全部移除——WIN 全包下无意义）
-  2. run_case.sh 同时驱动**原版与编译产物**双跑（v3 只驱动被测方；golden 由人工录）
+  1. 后端：`win_real` 唯一被测后端 + `win_real_orig` 原版参考后端（v3 的 wine/qemu 全部移除——WIN 全包下无意义）
+  2. run_case.py 同时驱动**原版与编译产物**双跑（v3 只驱动被测方；golden 由原版结果经 `--record-golden` 晋升）
   3. diff_case.py 的 NO-GOLDEN 状态保留（先录 golden 再判读）
 - 语料扩充：按需（新项目功能对齐需求驱动），BLACKBOX 46 条为探针用例现成来源
 
@@ -155,7 +155,8 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 ## 6. 流程纪律（全程有效）
 
 1. 每阶段一个 git 提交点；破坏性实验开分支
-2. **双绿门**：bash build.sh 全绿 + cl 编译通过 + 链接 exit 0（MSVC 化后含 cl 门）
+2. **双绿门（v4.1）**：`tools\msvc_build.bat syntax` 全绿 + cl 编译通过 + 链接 exit 0
+   （build.sh 为 Linux gcc 参考门，留档不作为 WIN 门禁）
 3. 补全/重写必须携带"驱动它的 diff 失败证据"（记入 commit message）
 4. 台账活页：本文档（方案）+ harness/results（事实）；REVIEW/TASKS 冻结为历史
 5. 单编辑者纪律：桩文件并发修改禁止
@@ -176,19 +177,24 @@ docs/divergences.md               # 分歧登记（不可对齐项的完备清�
 
 ---
 
-## 附录 A：关键命令速查（WIN 端）
+## 附录 A：关键命令速查（WIN 端，v4.1 纯原生）
 
-```bash
+```bat
 cd refactored
-bash build.sh                                             # gcc 语法门(参考) 99 OK
-# MSVC 化后: 见 docs/msvc_build.md (P0 产出)
-bash harness/runners/run_case.sh 001_envi_smoke           # 双跑(原版+编译产物)
-python3 harness/runners/diff_case.py 001_envi_smoke       # verdict
-python3 harness/runners/check_corpus.py                   # 语料结构自检
-python3 harness/runners/report.py                         # 汇总
+tools\msvc_build.bat syntax                          :: cl 语法门 (WIN 主门禁)
+tools\msvc_build.bat                                 :: 完整构建 → build\msvc\pecmd_msvc.exe
+python harness\runners\check_corpus.py               :: 语料结构自检
+python harness\runners\run_case.py 001_envi_smoke    :: 双跑(原版+编译产物)
+python harness\runners\run_case.py --all             :: 全语料双跑
+python harness\runners\diff_case.py 001_envi_smoke   :: verdict
+python harness\runners\report.py                     :: 汇总
 ```
 
-## 附录 B：指标命令（M1-M10，口径同 v3 附录 B，路径随 src/ 布局）
+注：`build.sh` 为 Linux gcc 参考门留档；构建细节见 docs/msvc_build.md。
+
+## 附录 B：指标命令（M1-M10，Linux 侧历史口径，随 v3 冻结）
+
+> 以下为 Linux 端已执行的度量配方（证据已固化于 tools/*.json），非 WIN 端日常命令。
 
 ```bash
 M1: grep -rPno 'FUN_14[0-9a-fA-F]+' --include='*.c' src/ *.c | wc -l
@@ -207,4 +213,6 @@ M10: git ls-files | grep -vcE '^src/|^include/|^tools/|^docs/|^attic/|^harness/|
 
 - **v1-v3（2026-08-23~24）**：场景 B/C 框架（风格生产化 / pecmd-next 重写）——因用户方向裁定**废弃**；
   其执行产出作为资产继承（§2.2）。历史方案见 git 历史（72080e2 起）。
-- **v4（本版）**：参考库 + 验证驱动补全 + WIN/MSVC 全包。
+- **v4（2026-08-24）**：参考库 + 验证驱动补全 + WIN/MSVC 全包。
+- **v4.1（2026-08-24）**：管线纯 WIN 化——run_case.sh→run_case.py、tools\msvc_build.bat
+  交付、弃 WSL2/git-bash/coreutils（§4.1 决策记录）。

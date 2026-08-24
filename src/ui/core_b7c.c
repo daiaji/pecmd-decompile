@@ -13,6 +13,7 @@
  * ==================================================================== */
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef uint16_t ushort;
 typedef unsigned int uint;

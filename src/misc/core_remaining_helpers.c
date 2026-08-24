@@ -57,7 +57,7 @@ LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER dist, DWORD method)
     /* @0x14005c674 移动文件指针并返回新位置 */
     int64_t newPos = -1;
     SetFilePointerEx(h, dist.QuadPart, &newPos, method);
-    return (LARGE_INTEGER)newPos;
+    return PECMD_LI(newPos);
 }
 
 /* @0x1400675b8 size=145 — 按定界符切分 token (跳过前导/尾随空白), 写入 dst 容器 */

@@ -1407,7 +1407,7 @@ LARGE_INTEGER PECMD_EvalSpecialToken(LARGE_INTEGER script, LPCWSTR arg, char mod
     }
 
     if (*p2 == L'@') {
-        return PECMD_EvalAtCommand(script, (LARGE_INTEGER)(intptr_t)(p2 + 1), (uint16_t *)arg2,
+        return PECMD_EvalAtCommand(script, PECMD_LI((intptr_t)(p2 + 1)), (uint16_t *)arg2,
                                    param5);
     }
 

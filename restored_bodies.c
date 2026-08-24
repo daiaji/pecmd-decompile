@@ -3689,7 +3689,7 @@ LAB_140014c93:
                           (int)local_af8.dwProcessId);
       }
       if (local_a10.QuadPart != 0) {
-        PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)param_1 },
+        PECMD_ProcessScriptBlock(PECMD_LI((long long)(uintptr_t)param_1),
                       local_a10,(longlong *)0x0,(longlong *)0x0,(pthreadmbcinfo)0x0);
       }
     }
@@ -3911,7 +3911,7 @@ LAB_1400153e3:
             }
             if ((local_c48 != (LPCWSTR)0x0) && (local_d40 != 0)) {
               PECMD_StrDupAssign((uint16_t **)(void *)&local_930,local_c48);
-              PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)param_1 },
+              PECMD_ProcessScriptBlock(PECMD_LI((long long)(uintptr_t)param_1),
                             local_930,(longlong *)0x0,(longlong *)0x0,(pthreadmbcinfo)0x0);
               PECMD_FreeStrBuf(&local_930.QuadPart);
             }
@@ -4476,14 +4476,14 @@ uint64_t PECMD_LoadNtdllApis(void)
     if ((uintptr_t)DAT_14013ccf8 == 0 &&
         (DAT_14013ccf8 = (void *)(uintptr_t)LoadLibraryW((const uint16_t *)L"ntdll.dll"),
          (uintptr_t)DAT_14013ccf8 == 0)) return 0;
-    DAT_14013cb48 = (void (*)(...))GetProcAddress(DAT_14013ccf8,"RtlInitUnicodeString");
+    DAT_14013cb48 = (void (*)())GetProcAddress(DAT_14013ccf8,"RtlInitUnicodeString");
     DAT_14013cd18 = (void *)(uintptr_t)GetProcAddress(DAT_14013ccf8,"NtOpenFile");
     DAT_14013cd20 = (void *)(uintptr_t)GetProcAddress(DAT_14013ccf8,"NtCreateFile");
     DAT_14013cd28 = (void *)(uintptr_t)GetProcAddress(DAT_14013ccf8,"NtReadFile");
     DAT_14013cb10 = (void *)(uintptr_t)GetProcAddress(DAT_14013ccf8,"ZwOpenSection");
-    DAT_14013cd40 = (void (*)(...))GetProcAddress(DAT_14013ccf8,"NtClose");
-    DAT_14013cd30 = (int (*)(...))GetProcAddress(DAT_14013ccf8,"NtCreateDirectoryObject");
-    DAT_14013cd38 = (int (*)(...))GetProcAddress(DAT_14013ccf8,"NtCreateSymbolicLinkObject");
+    DAT_14013cd40 = (void (*)())GetProcAddress(DAT_14013ccf8,"NtClose");
+    DAT_14013cd30 = (int (*)())GetProcAddress(DAT_14013ccf8,"NtCreateDirectoryObject");
+    DAT_14013cd38 = (int (*)())GetProcAddress(DAT_14013ccf8,"NtCreateSymbolicLinkObject");
   }
   return 1;
 }                  /* ZwClose 类槽 */
@@ -5816,7 +5816,7 @@ PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *p
   local_180.QuadPart = -0x7fffbfff;
   sVar26 = 0;
   if (*(WCHAR *)(uintptr_t)local_res10.QuadPart == L'\0') {
-    return (LARGE_INTEGER){0};
+    return PECMD_LI(0);
   }
   uVar29 = 0;
   local_128.QuadPart = 0;
@@ -6839,11 +6839,11 @@ LAB_14004cb4c:
               if ((((int)uVar12 < 1) && (*local_100 != L'\0')) &&
                  (lVar32 = PECMD_VarLookup((longlong *)(uintptr_t)param_1.QuadPart,local_100,(void *)0,-1,
                                          (undefined8 *)0x0), lVar32 != 0)) {
-                local_108 = (LARGE_INTEGER)((LARGE_INTEGER *)(lVar32 + 8))->QuadPart;
+                local_108 = PECMD_LI(((LARGE_INTEGER *)(lVar32 + 8))->QuadPart);
               }
             }
             else {
-              local_108 = (LARGE_INTEGER)(*(LARGE_INTEGER **)(param_1.QuadPart + 0x50))->QuadPart;
+              local_108 = PECMD_LI((*(LARGE_INTEGER **)(param_1.QuadPart + 0x50))->QuadPart);
             }
             (*(LARGE_INTEGER **)(uintptr_t)(param_1.QuadPart + 0x50))->QuadPart = (LONGLONG)local_108.QuadPart;
             ((LARGE_INTEGER *)(uintptr_t)(param_1.QuadPart + 0xd0))->QuadPart = (LONGLONG)local_108.QuadPart;
@@ -8679,7 +8679,7 @@ LAB_1400d4465:
             }
             else if ((WCHAR *)LVar27.QuadPart != (WCHAR *)0x0) {
               if (local_14c == 0) {
-                LVar36 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){0},2);
+                LVar36 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(0),2);
                 if ((LVar36.QuadPart < (longlong)(local_e0.QuadPart + -0x400)) &&
                    ((WCHAR *)local_120.QuadPart == (WCHAR *)0x0)) {
                   CloseHandle((HANDLE)(uintptr_t)LVar17.QuadPart);
@@ -8737,7 +8737,7 @@ LAB_1400d55a8:
             LVar36.QuadPart = LVar36.QuadPart - local_100.QuadPart;
             if (((char)local_134 != '\0') ||
                (LVar18 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,
-                                                (LARGE_INTEGER){ .QuadPart = local_100.QuadPart - (uVar33 & 0xffff) },0),
+                                                PECMD_LI(local_100.QuadPart - (uVar33 & 0xffff)),0),
                -1 < LVar18.QuadPart)) {
               if (local_148 == '\0') {
                 if ((-1 < LVar24.QuadPart) && (LVar24.QuadPart < LVar36.QuadPart)) {
@@ -8950,7 +8950,7 @@ LAB_1400d453f:
 LAB_1400d4746:
           if ((local_f0.QuadPart < 1) || (local_e8.QuadPart < 1)) {
             if (local_e0.QuadPart != 0) {
-              PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){ .QuadPart = local_e0.QuadPart },0);
+              PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(local_e0.QuadPart),0);
               LVar37.QuadPart = 0;
             }
           }
@@ -8966,7 +8966,7 @@ LAB_1400d4746:
             }
             LVar23.QuadPart = local_e0.QuadPart - local_108.QuadPart;
             if (((0 < LVar23.QuadPart) && ((char)local_134 < '\x01')) &&
-               (LVar24 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){ .QuadPart = LVar23.QuadPart },0), LVar24.QuadPart != LVar23.QuadPart)) {
+               (LVar24 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(LVar23.QuadPart),0), LVar24.QuadPart != LVar23.QuadPart)) {
               DVar9 = GetLastError();
               LVar23.s.HighPart = 0;
               LVar23.s.LowPart = DVar9;
@@ -9028,7 +9028,7 @@ LAB_1400d4b59:
                   uVar33 = (ulonglong)local_154;
                 }
                 if (0 < local_108.QuadPart) {
-                  LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){0},1);
+                  LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(0),1);
                   local_110.QuadPart = 0;
                   ReadFile((HANDLE)(uintptr_t)LVar27.QuadPart,(LPVOID)(uintptr_t)local_118.QuadPart,local_138,(LPDWORD)&local_110.QuadPart,
                            (LPOVERLAPPED)0x0);
@@ -9036,7 +9036,7 @@ LAB_1400d4b59:
                                 ,LVar36.s.LowPart);
                   PECMD_MemMoveSafe((undefined1 *)(uintptr_t)LVar18.QuadPart,local_118.QuadPart,local_108.s.LowPart);
                   LVar36.QuadPart = LVar36.QuadPart + local_108.QuadPart;
-                  PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){ .QuadPart = LVar23.QuadPart },0);
+                  PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(LVar23.QuadPart),0);
                   local_154 = local_154 & 0xff;
                   if ((local_res20.s.LowPart & 0xff) != '\0') {
                     local_154 = 1;
@@ -9182,14 +9182,14 @@ LAB_1400d500b:
                       local_120 = LVar23;
                       FUN_140102a90((ulonglong *)(uintptr_t)local_118.QuadPart,0,LVar23.QuadPart);
                       lVar15 = LVar23.QuadPart - local_f0.QuadPart;
-                      LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){0},1);
+                      LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(0),1);
                       local_110.QuadPart = 0;
                       ReadFile((HANDLE)(uintptr_t)LVar27.QuadPart,(LPVOID)(uintptr_t)local_118.QuadPart,local_138,
                                (LPDWORD)&local_110.QuadPart,(LPOVERLAPPED)0x0);
                       PECMD_MemMoveSafe((undefined1 *)(local_108.QuadPart + LVar36.QuadPart),
                                     local_f0.QuadPart + local_118.QuadPart,(int)lVar15);
                       LVar36.QuadPart = LVar36.QuadPart + lVar15;
-                      PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){ .QuadPart = LVar23.QuadPart },0);
+                      PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(LVar23.QuadPart),0);
                       uVar33 = (ulonglong)(byte)local_154;
                       if ((local_res20.s.LowPart & 0xff) != '\0') {
                         uVar33 = 1;
@@ -9277,7 +9277,7 @@ LAB_1400d52a2:
                 }
                 LVar23.QuadPart = local_c8.QuadPart - LVar23.QuadPart;
                 if ((LVar23.QuadPart < 1) ||
-                   (LVar18 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar24.QuadPart,(LARGE_INTEGER){ .QuadPart = LVar23.QuadPart },0), LVar18.QuadPart == LVar23.QuadPart))
+                   (LVar18 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar24.QuadPart,PECMD_LI(LVar23.QuadPart),0), LVar18.QuadPart == LVar23.QuadPart))
                 goto LAB_1400d4b59;
                 DVar9 = GetLastError();
                 LVar23.s.HighPart = 0;
@@ -9378,17 +9378,17 @@ LAB_1400d463a:
             LVar24.QuadPart = 0x7ffffffffffffdff;
           }
           if ((char)local_80 == '\0') {
-            LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){0},2);
+            LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(0),2);
             LVar25.s.LowPart = (uint)local_80 & 0xff;
             if (LVar23.QuadPart < LVar24.QuadPart) {
               LVar25.s.LowPart = 1;
             }
             local_80 = (LPCWSTR)(((uintptr_t)local_80 & 0xffffffff00000000ULL) | (uint32_t)LVar25.s.LowPart);
           }
-          LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){ .QuadPart = LVar24.QuadPart },0);
+          LVar23 = PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(LVar24.QuadPart),0);
           if (LVar23.QuadPart != LVar24.QuadPart) {
             if (local_f0.QuadPart < 0x7fffffffffffffff) {
-              PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,(LARGE_INTEGER){0},0);
+              PECMD_SetFilePointer((HANDLE)(uintptr_t)LVar27.QuadPart,PECMD_LI(0),0);
             }
 LAB_1400d4737:
             goto LAB_1400d4746;
@@ -11889,8 +11889,8 @@ L_after_init:
                 PECMD_CrtShim(pBuf + 900, (size_t)0x140122980 /* "LOAD *sysinit %s" (DAT 真值) */,
                               p, (void *)&lpNumberOfBytesRead->s);
                 g_flagD032 = 1;
-                PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)a },
-                                         (LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)(pBuf + 900) },
+                PECMD_ProcessScriptBlock(PECMD_LI((long long)a),
+                                         PECMD_LI((long long)(uintptr_t)(pBuf + 900)),
                                          (longlong *)0x0, (longlong *)0x0, (pthreadmbcinfo)0x0);
             }
             else {
@@ -11917,8 +11917,8 @@ L_after_init:
             if ((char)uVar16 != '\0') {
                 g_flagD032 = 1;
             }
-            PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)a },
-                                     (LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)pCmd },
+            PECMD_ProcessScriptBlock(PECMD_LI((long long)a),
+                                     PECMD_LI((long long)(uintptr_t)pCmd),
                                      (longlong *)0x0, (longlong *)0x0, (pthreadmbcinfo)0x0);
             PECMD_FreeStrBuf(&pCmd);
         }
@@ -12214,10 +12214,10 @@ LARGE_INTEGER PECMD_IndataCopyDirs(longlong *param_1,LARGE_INTEGER param_2,uint 
     PECMD_AppendWideStr(&local_res20.QuadPart,(LPCWSTR)(uintptr_t)local_res10.QuadPart);
     lVar13 = PECMD_RunCommand((void *)&DAT_14013d130,(WCHAR *)(uintptr_t)local_res20.QuadPart);
     PECMD_FreeStrBuf(&local_res20.QuadPart);
-    return (LARGE_INTEGER){ .QuadPart = (long long)lVar13 };
+    return PECMD_LI((long long)lVar13);
   }
   if (*(int16_t *)(uintptr_t)local_res10.QuadPart == 0) {
-    return (LARGE_INTEGER){ .QuadPart = (long long)-0x7ff8ffa9 };
+    return PECMD_LI((long long)-0x7ff8ffa9);
   }
   iVar9 = lstrlenW((LPCWSTR)(uintptr_t)local_res10.QuadPart);
   PECMD_AllocWStringBuffer((WCHAR **)&local_78,(long long)((iVar9 + 1) * 2 + 4));
@@ -12949,8 +12949,8 @@ void PECMD_ExecInterpString(uint64_t a, void *b)
     param_2[2] = 0;
     if (*lpString == L'*') {
       if (((*(longlong *)(lpString + -4) < 5) || (lpString[1] != L'\0')) || (lpString[2] != L'^')) {
-        PECMD_ProcessScriptBlock((LARGE_INTEGER){ .QuadPart = (long long)a },
-                                 (LARGE_INTEGER){ .QuadPart = (long long)(uintptr_t)(lpString + 1) },
+        PECMD_ProcessScriptBlock(PECMD_LI((long long)a),
+                                 PECMD_LI((long long)(uintptr_t)(lpString + 1)),
                                  (longlong *)0x0,(longlong *)0x0,(pthreadmbcinfo)0x0);
       }
       else {
@@ -16318,7 +16318,7 @@ LAB_1400d9e20:
                 }
                 local_108[0] = (uint)(ushort)sVar22;
                 local_d0 = (HWND)(uintptr_t)((longlong (*)(void *,ulonglong,ulonglong,ulonglong)
-                             )(*(void **)(*(void **)o1 + 0x08)))
+                             )(*(void **)((char *)*(void **)o1 + 0x08)))
                              (*(void **)(o1 + 0x08*4),(ulonglong)param_2,(ulonglong)(uintptr_t)param_3,p4);
                 if (param_2 != 0x20a) {
                     local_100 = o1 + 0x84*4;
@@ -16678,7 +16678,7 @@ LAB_1400daa6a:
                                                     local_d8 = *(HWND *)((longlong)local_e0 + 0xe*4);
                                                     uVar11 = (uint)((short)local_res18 == lVar29);
                                                     LVar13 = SendMessageW(*(HWND *)((longlong)local_d8 + 0x20),0xf0,0,0);
-                                                    ((void (*)(void *,uint))(*(void **)(*(void **)local_d8 + 0x118)))
+                                                    ((void (*)(void *,uint))(*(void **)((char *)*(void **)local_d8 + 0x118)))
                                                         (local_d8,uVar11);
                                                     if ((uVar11 == 0) != ((int)LVar13 == 0)) {
                                                         InvalidateRect(*(HWND *)((longlong)local_d8 + 0x20),(RECT *)0x0,1);
@@ -16781,7 +16781,7 @@ LAB_1400daa84:
                             return (HWND)0x1;
                         }
                         if (p4 != 0) {
-                            ((void (*)(void *))(*(void **)(*(void **)(uintptr_t)p4 + 0xb0)))((void *)(uintptr_t)p4);
+                            ((void (*)(void *))(*(void **)((char *)*(void **)(uintptr_t)p4 + 0xb0)))((void *)(uintptr_t)p4);
                             return (HWND)0x1;
                         }
                         return (HWND)0x1;
@@ -16968,7 +16968,7 @@ LAB_1400da346:
         }
         else if ((param_2 == 0x459) && (param_3 == param_1)) {
             lVar29 = ((longlong (*)(void *,ulonglong,ulonglong,ulonglong,ulonglong,ulonglong,ulonglong))
-                      (*(void **)(*(void **)o1 + 0xf0)))
+                      (*(void **)((char *)*(void **)o1 + 0xf0)))
                      (param_1,*(ulonglong *)(uintptr_t)p4,*(ulonglong *)(uintptr_t)(p4 + 8),
                       *(ulonglong *)(uintptr_t)(p4 + 0x10),*(ulonglong *)(uintptr_t)(p4 + 0x18),0,
                       *(ulonglong *)(uintptr_t)(p4 + 0x30));

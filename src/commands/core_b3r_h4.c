@@ -777,7 +777,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
     if (pcVar13 == (char *)0x0) {
         pcVar13 = (char *)(param_1[8] + 0x2b0);
     }
-    LVar5 = (LARGE_INTEGER)(intptr_t)operator_new(0x48);
+    LVar5 = PECMD_LI((intptr_t)operator_new(0x48));
     LVar10.QuadPart = LVar11.QuadPart;
     if ((void *)(intptr_t)LVar5.QuadPart != (void *)0x0) {
         PECMD_AllocStrSlot((void *)(uintptr_t)(LVar5.QuadPart + 8));
@@ -857,7 +857,7 @@ byte *PECMD_CreateMenuItem(longlong *param_1, int16_t *param_2)
                     *(uint64_t *)(uintptr_t)(LVar10.QuadPart + 0x10) = 0;
                 }
                 *(undefined1 **)(uintptr_t)(LVar10.QuadPart + 0x10) = puVar6;
-                LVar7 = (LARGE_INTEGER)(intptr_t)operator_new(0xf0);
+                LVar7 = PECMD_LI((intptr_t)operator_new(0xf0));
                 LVar5.QuadPart = LVar11.QuadPart;
                 if ((undefined8 *)(uintptr_t)LVar7.QuadPart != (undefined8 *)0x0) {
                     PECMD_ScriptCopy((uint64_t *)(uintptr_t)LVar7.QuadPart, (uint64_t *)param_1);
@@ -1320,8 +1320,8 @@ LAB_1400a344b:
                 }
             }
             else {
-                lVar12 = (longlong)((__int128)(int64_t)-0x29406b2a1a85bd43LL *
-                                    (__int128)local_1908.QuadPart) +
+                /* (longlong)(__int128 x * M) == low 64 bits of product == plain 64-bit mul */
+                lVar12 = -0x29406b2a1a85bd43LL * local_1908.QuadPart +
                          local_1908.QuadPart;
                 PECMD_FormatI64Dec(
                     lpString, (uint64_t)(((lVar12 >> 0x17) + -0x2b6109100) - (lVar12 >> 0x3f)));

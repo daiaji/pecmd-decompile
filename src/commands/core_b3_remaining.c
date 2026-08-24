@@ -4943,7 +4943,7 @@ uint64_t PECMD_ParseAndExecuteLine(int64_t param_1, LPCWSTR param_2, uint64_t pa
                  local_res8 = local_res8 + 1) {
             }
         }
-    LAB_14004e697:
+    LAB_14004e697:; /* empty stmt: MSVC requires a statement after a label */
     } while (local_res8 != (uint16_t *)0x0);
     *(uint16_t *)(param_1 + 200) = *(uint16_t *)(param_1 + 200) & 0x82;
     *(uint16_t *)(param_1 + 200) = *(uint16_t *)(param_1 + 200) | (uint16_t)(int8_t)(bVar1 & 0x80);
@@ -7932,7 +7932,7 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
     }
     plVar3_bb8 = (int64_t *)param_1[7];
     if ((uVar4 & 1) == 0) {
-        (*(void (**)(...))(*(char **)plVar2_bb8 + 0x118))(plVar2_bb8, uVar14, uVar10, &local_d8,
+        (*(void (**)())(*(char **)plVar2_bb8 + 0x118))(plVar2_bb8, uVar14, uVar10, &local_d8,
                                                           *(uint64_t *)((char *)local_res10 + 0x20),
                                                           (uint64_t)local_res18);
         pHVar8 = local_res10;
@@ -7978,7 +7978,7 @@ uint64_t *PECMD_CreateControl(uint64_t *param_1, int64_t param_2, uint32_t param
         h = (HFONT)PECMD_BuildFontFromObject(local_res10, &local_res8_bb8, param_13);
     }
     if (h != (HFONT)0x0) {
-        (*(void (**)(...))(*(char **)plVar2_bb8 + 0x108))(plVar2_bb8, h, 1);
+        (*(void (**)())(*(char **)plVar2_bb8 + 0x108))(plVar2_bb8, h, 1);
     }
     if (((param_14 < 1) || (param_15 < 1)) && (*(char *)((char *)param_1 + 0x78) < '\0')) {
         memset(local_a8, 0, 0x5c);
@@ -8347,7 +8347,7 @@ uint64_t PECMD_GenerateTimeText(LPCWSTR param_1, int64_t *param_2, uint64_t para
         local_138 = (uint64_t)(int64_t)(int)((uint32_t)*lpBuffer_01 + uVar6 + 1);
         local_154 = (uint32_t)lpBuffer_01[4];
         local_128 = (uint32_t)param_4 & 0x60000;
-        LVar10 = PECMD_SetFilePointer((HANDLE)_Var22, (LARGE_INTEGER){.QuadPart = 0x8600}, 0);
+        LVar10 = PECMD_SetFilePointer((HANDLE)_Var22, PECMD_LI(0x8600), 0);
         lVar21 = 0;
         if (LVar10.QuadPart == 0x8600) {
             local_178 = 0;
@@ -8386,7 +8386,7 @@ uint64_t PECMD_GenerateTimeText(LPCWSTR param_1, int64_t *param_2, uint64_t para
             lpBuffer_01 = local_168;
         }
         LVar10 = PECMD_SetFilePointer((HANDLE)_Var22,
-                                      (LARGE_INTEGER){.QuadPart = (int64_t)_Var23 * 0x200}, 0);
+                                      PECMD_LI((int64_t)_Var23 * 0x200), 0);
         if ((int64_t)_Var23 * 0x200 - (int64_t)LVar10.QuadPart == 0) {
             local_150 = (LPWSTR)*param_2;
             if (((param_4 & 0x60000) == 0) || (local_158 != 0)) {
@@ -8560,7 +8560,7 @@ uint64_t PECMD_GenerateTimeText(LPCWSTR param_1, int64_t *param_2, uint64_t para
                                         uVar14 = *(uint32_t *)((uint8_t *)puVar26 + 2);
                                         LVar10 = PECMD_SetFilePointer(
                                             (HANDLE)_Var22,
-                                            (LARGE_INTEGER){.QuadPart = (uint64_t)uVar14 * 0x200},
+                                            PECMD_LI((uint64_t)uVar14 * 0x200),
                                             0);
                                         if ((uint64_t)uVar14 * 0x200 - (int64_t)LVar10.QuadPart ==
                                             0) {
@@ -14280,7 +14280,7 @@ uint64_t PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2, uint32_t
         } while (lVar2 < 499);
     }
     PECMD_SetFilePointer((HANDLE)*param_1,
-                         (LARGE_INTEGER){.QuadPart = (int64_t)(uVar5 * uVar3 + param_7.QuadPart)},
+                         PECMD_LI((int64_t)(uVar5 * uVar3 + param_7.QuadPart)),
                          0);
     ReadFile((HANDLE)*param_1, (LPVOID)(uVar5 + (int64_t)param_2), (iVar1 + 3) * param_4,
              local_res20, (void *)0x0);
@@ -14292,7 +14292,7 @@ uint64_t PECMD_ReadDiskSectorScan(uint64_t *param_1, uint64_t *param_2, uint32_t
         }
         PECMD_SetFilePointer(
             (HANDLE)*param_1,
-            (LARGE_INTEGER){.QuadPart = (int64_t)(*puVar4 * uVar5 + param_7.QuadPart)}, 0);
+            PECMD_LI((int64_t)(*puVar4 * uVar5 + param_7.QuadPart)), 0);
         ReadFile((HANDLE)*param_1, lpBuffer, param_4, local_res20, (void *)0x0);
     }
     return uVar3;
@@ -18717,7 +18717,7 @@ int64_t PECMD_FindPartitionStartSector(HANDLE param_1, int *param_2, int64_t *pa
     if ((iVar4 == 0x46424246) || (iVar4 == 0x534c5055)) {
         cVar9 = '\x01';
         memset(lpBuffer, 0, 0x200);
-        PECMD_SetFilePointer(param_1, (LARGE_INTEGER){.QuadPart = 0x8600}, 0);
+        PECMD_SetFilePointer(param_1, PECMD_LI(0x8600), 0);
         BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
         if ((BVar3 == 0) || ((*(uint8_t *)((int64_t)local_res20 + 0x9f8) & 0xc0) != 0x40))
             goto LAB_14007874b;
@@ -18728,7 +18728,7 @@ int64_t PECMD_FindPartitionStartSector(HANDLE param_1, int *param_2, int64_t *pa
             (*(int *)((int64_t)local_res20 + 0x1c) != 0))
             goto LAB_14007874b;
         memset(lpBuffer, 0, 0x200);
-        PECMD_SetFilePointer(param_1, (LARGE_INTEGER){.QuadPart = 0x4a00}, 0);
+        PECMD_SetFilePointer(param_1, PECMD_LI(0x4a00), 0);
         BVar3 = ReadFile(param_1, lpBuffer, 0x200, local_res10, (void *)0x0);
         if (((BVar3 == 0) || (*(int *)((int64_t)local_res20 + 0x9b4) != 0x5352424d)) ||
             ((*(short *)((int64_t)local_res20 + 0x9fe) != -0x55ab) ||
@@ -21561,7 +21561,7 @@ int64_t PECMD_EnumeratePartitions(int64_t param_1, int64_t *param_2, uint32_t *p
                 if (bVar20) {
                     PECMD_ReadDiskSectorScan((uint64_t *)&local_a0, local_70 + 0x40002,
                                              (uint32_t)puVar6[5], uVar3, 0, (uint64_t *)0x0,
-                                             (LARGE_INTEGER){.QuadPart = 0});
+                                             PECMD_LI(0));
                 }
                 LVar10.QuadPart = 0;
                 LVar9.QuadPart = (int64_t)(puVar6 + 6);
@@ -22134,7 +22134,7 @@ LAB_14008c004:
         local_4f0 = (uint32_t)puVar12[5];
         PECMD_ReadDiskSectorScan((uint64_t *)&local_530,
                                  (uint64_t *)(uintptr_t)(local_510 + 0x100008), local_4f0, DVar7, 0,
-                                 (uint64_t *)0x0, (LARGE_INTEGER)(int64_t)0x0);
+                                 (uint64_t *)0x0, PECMD_LI((int64_t)0x0));
     }
     pLVar22 = (LARGE_INTEGER *)(puVar12 + 6);
     local_538 = local_544;
@@ -25600,7 +25600,7 @@ uint64_t PECMD_ScriptThreadProc(int64_t *param_1)
         local_68 = CONCAT71((uint64_t)param_1[10] >> 0x11, (char)((uint64_t)param_1[10] >> 9)) &
                    0xffffffffffffff01ULL;
         local_a0 = param_1[4];
-        _Memory = (LARGE_INTEGER)((LARGE_INTEGER *)(param_1 + 0xd))->QuadPart;
+        _Memory = PECMD_LI(((LARGE_INTEGER *)(param_1 + 0xd))->QuadPart);
         *(uint64_t **)(_Memory.QuadPart + 0x50) = &local_80;
         _Memory_00 = (int64_t *)param_1[0xc];
         lVar4 = *(int64_t *)(_Memory.QuadPart + 0x40);

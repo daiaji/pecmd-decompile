@@ -5,7 +5,7 @@
  *   PECMD_CreateControlWindow @0x1400a9ce4  window 对象初始化
  *   PECMD_CreateMessageBox @0x1400b5aa4  创建消息框/窗口
  *
- * 说明: 虚拟调用 (**(code**)(*obj + off))(...) 等无法解析虚表处的调用
+ * 说明: 虚拟调用 (**(code**)(*obj + off))() 等无法解析虚表处的调用
  * 保留为直接函数指针调用形式 (通过 *(uint64_t*)(*obj+off) 取槽)。
  */
 

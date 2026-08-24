@@ -80,7 +80,7 @@ void PECMD_DebugOutput(uint64_t a, uint64_t b, uint64_t c, uint64_t d)
         c = 0x261d;
         PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x261d, d);
     }
-    PECMD_ShellLaunchThread((LARGE_INTEGER)(int64_t)(uintptr_t)g_Script, a, c, d);
+    PECMD_ShellLaunchThread(PECMD_LI((int64_t)(uintptr_t)g_Script), a, c, d);
 }
 
 /* ========== PECMD_RestoreAndDeleteObject @0x14005b07c ==========

@@ -367,7 +367,7 @@ extern void *DAT_14013ccf8;
 ;
 ;
 
-extern void (*DAT_14013cb48)(...);
+extern void (*DAT_14013cb48)();
 extern void *DAT_14013cd18;
 ;
 ;
@@ -378,9 +378,9 @@ extern void *DAT_14013cd28;
 ;
 ;
 
-extern int (*DAT_14013cd30)(...);
-extern int (*DAT_14013cd38)(...);
-extern void (*DAT_14013cd40)(...);
+extern int (*DAT_14013cd30)();
+extern int (*DAT_14013cd38)();
+extern void (*DAT_14013cd40)();
 extern void *DAT_14013cfb0;
 ;
 ;
@@ -478,7 +478,7 @@ void PECMD_StrDupAssign(uint16_t **ps, const uint16_t *src);
 /* @0x1400702b0 */
 uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode);
 
-extern void (*DAT_14013cd90)(...);
+extern void (*DAT_14013cd90)();
 
 /* ---- 早期放置的 wave-current 还原体所需 Win32 前置声明 (定义见字母桩区) ---- */
 void GetStartupInfoW(void *d);
@@ -640,6 +640,15 @@ typedef union _ULARGE_INTEGER {
     } s;
     unsigned long long QuadPart;
 } ULARGE_INTEGER;
+
+/* MSVC C has no compound literals: build (LARGE_INTEGER){.QuadPart=x} via helper.
+ * Semantically identical to the GCC compound-literal form it replaces (P0-1). */
+static __inline LARGE_INTEGER PECMD_LI(long long qp) {
+    LARGE_INTEGER li; li.QuadPart = qp; return li;
+}
+static __inline FILETIME PECMD_FT(unsigned long lo, unsigned long hi) {
+    FILETIME ft; ft.dwLowDateTime = lo; ft.dwHighDateTime = hi; return ft;
+}
 
 typedef uint64_t undefined7;
 /* Ghidra 7字节伪类型 (按 64 位承载) */
@@ -1218,13 +1227,13 @@ extern uint8_t DAT_14013d270;
 ;
 ;
 /* 一次性初始化标志 (静区, 初 0) */
-extern void (*DAT_14013cb48)(...);
+extern void (*DAT_14013cb48)();
 /* RtlInitUnicodeString 类槽 (reroute, 初 0) */
-extern int (*DAT_14013cd30)(...);
+extern int (*DAT_14013cd30)();
 /* ZwOpenKey 类槽 */
-extern int (*DAT_14013cd38)(...);
+extern int (*DAT_14013cd38)();
 /* ZwQueryKey 类槽 */
-extern void (*DAT_14013cd40)(...);
+extern void (*DAT_14013cd40)();
 
 /* ---- R1 批: FUN_140025f10 (PECMD_AppendLogMessage) 还原依赖前置声明/桩 ---- */
 extern void PECMD_CrtShim(WCHAR *out, size_t fmt, ...);
@@ -2856,7 +2865,8 @@ uint64_t PECMD_SetCheckVariable(void);
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c);
 uint64_t PECMD_CreateFont(void *a, void *b, void *c);
 static HANDLE PECMD_HandleDuplicateValid(HANDLE h, LARGE_INTEGER *out);
-static longlong PECMD_GetPartitionLayoutEntry(uintptr_t h, int mode, ulonglong *out);
+/* 非 static: restored_bodies.c 调用 (定义 core_b3l.c / unimplemented_stubs.c) */
+longlong PECMD_GetPartitionLayoutEntry(uintptr_t h, int mode, ulonglong *out);
 void PECMD_GetWindowTextAlloc(HWND param_1, uint64_t *param_2);
 uint64_t PECMD_GetOwnerWindow(uint64_t param_1);
 void PECMD_ShowAboutDialog(void);

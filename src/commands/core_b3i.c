@@ -114,7 +114,7 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
         return (uint32_t)LVar3;
     }
     else {
-        FUN_14003C06C(pp, (LARGE_INTEGER)(int64_t)(uintptr_t)(s + 1), 0);
+        FUN_14003C06C(pp, PECMD_LI((int64_t)(uintptr_t)(s + 1)), 0);
     }
     return 0;
 }
