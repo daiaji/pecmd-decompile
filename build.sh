@@ -1,13 +1,15 @@
 #!/bin/bash
 # 重构代码语法编译验证 (不链接, 不依赖平台)
-# 用法: ./build.sh [文件...]   默认全部 (core_*.c + crt_shims.c)
+# 用法: ./build.sh [文件...]   默认全量 (src/**/*.c + 桩文件)
 set -e
 CC=${CC:-gcc}
 CFLAGS="-std=c99 -Wall -Wextra -Wno-unused-parameter -Wno-implicit-function-declaration -fsyntax-only"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 FAIL=0
 if [ $# -eq 0 ]; then
-  set -- core_*.c crt_shims.c
+  set -- $(find "$ROOT/src" -name '*.c' | sort) \
+       "$ROOT/restored_bodies.c" "$ROOT/win32_api_stubs.c" \
+       "$ROOT/unimplemented_stubs.c" "$ROOT/crt_shims.c"
 fi
 for f in "$@"; do
   if [ -f "$f" ]; then
