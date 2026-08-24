@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include "win32_stub.h"
 #include "pecmd_defs.h"
+#include <string.h>
 
 /* ---- 本文件引用的全局 (link_stubs.c / core_globals.c 定义) ---- */
 extern int64_t g_pComWrite;       /* 全局 fnptr 槽 (COM 操作) */
@@ -133,13 +134,13 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
         (PECMD_GetTooltipWindow((-(unsigned int)bVar1 & 2) | (param_8 & 1), 0x514),
          g_hwndD310 != (HWND)0)) {
         hWnd = g_hwndD310;
-        /* 消息缓冲区布局 (TODO(verify): 偏移无法精确恢复) */
-        local_88 = (uint32_t *)(void *)local_buf;          /* offset 0  */
-        local_84 = (uint32_t *)(void *)(local_buf + 4);    /* offset 4  */
-        local_80 = (HWND *)(void *)(local_buf + 8);        /* offset 8  */
-        local_78 = (uint64_t *)(void *)(local_buf + 0x0c); /* offset 12 (TODO(verify)) */
-        local_58 = (uint64_t *)(void *)(local_buf + 0x2c); /* offset 44 */
-        memset(local_buf, 0, 0x44);
+        /* 消息缓冲区布局: Ghidra 栈偏移推导 (local_88=-0x88 为基址, 相邻变量差即块内偏移) */
+        local_88 = (uint32_t *)(void *)local_buf;          /* offset 0   */
+        local_84 = (uint32_t *)(void *)(local_buf + 4);    /* offset 4   */
+        local_80 = (HWND *)(void *)(local_buf + 8);        /* offset 8   */
+        local_78 = (uint64_t *)(void *)(local_buf + 0x10); /* offset 16  (保真度修复: dc local_78=-0x78, 基-0x88 → 0x10) */
+        local_58 = (uint64_t *)(void *)(local_buf + 0x30); /* offset 48  (保真度修复: dc local_58=-0x58 → 0x30) */
+        memset((uint8_t *)local_buf + 4, 0, 0x44);         /* dc: FUN_140102a90(&local_84,0,0x44) 从 offset4 起清 0x44 */
         *local_88 = 0x2c;
         *local_78 = param_9;
         *local_84 = 0x123;

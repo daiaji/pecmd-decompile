@@ -83,10 +83,10 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
     pHead[0] = ((uint16_t *)data)[0] ^ key16;
     pHead[1] = ((uint16_t *)data)[1] ^ key16;
     pHead[2] = ((uint16_t *)data)[2] ^ key16;
-    /* UTF-16BE（低字节 0 高字节非 0）或 2 字节前缀常量 @0x14012412c */
+    /* UTF-16BE（低字节 0 高字节非 0）或 2 字节前缀常量 @0x14012412c = FE FF (UTF-16BE BOM) */
     if ((len > 1 && (uint8_t)pHead[0] == 0 && (uint8_t)((char *)pHead)[1] != 0) ||
-        FUN_14005B184((const char *)pHead, "\x3a\x3a", 2) == 0) {
-        /* TODO(verify): 常量 @0x14012412c 内容待核对（疑似 "::"） */
+        FUN_14005B184((const char *)pHead, "\xfe\xff", 2) == 0) {
+        /* 保真度修复: 常量 @0x14012412c 经 PE .data 提取 = FE FF UTF-16BE BOM (dc:142251) */
         FUN_140060A74(data, len);
         bSkip = true;
     }
@@ -94,9 +94,9 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
     if ((uint8_t)pHead[0] != 0 && (uint8_t)((char *)pHead)[1] == 0) {
         bSkip = true;
     }
-    /* 2 字节前缀常量 @0x140124128：剥离 2 字节 */
-    if (FUN_14005B184((const char *)pHead, "\x3a\x3a", 2) == 0) {
-        /* TODO(verify): 常量 @0x140124128 内容待核对（疑似 "::"） */
+    /* 2 字节前缀常量 @0x140124128 = FF FE (UTF-16LE BOM)：剥离 2 字节 */
+    if (FUN_14005B184((const char *)pHead, "\xff\xfe", 2) == 0) {
+        /* 保真度修复: @0x140124128 = FF FE UTF-16LE BOM (dc:142263) */
         bSkip = true;
         skipN = 2;
     }
@@ -104,9 +104,9 @@ uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags)
         goto skip_prefix;
     }
     skipN = 3;
-    /* 3 字节前缀常量 @0x140124130：强制 spec=0xfde9 并剥离 3 字节 */
-    if (FUN_14005B184((const char *)pHead, "\x40\x3a\x3a", 3) == 0) {
-        /* TODO(verify): 常量 @0x140124130 内容待核对（疑似 "@::"） */
+    /* 3 字节前缀常量 @0x140124130 = EF BB BF (UTF-8 BOM)：强制 spec=0xfde9 并剥离 3 字节 */
+    if (FUN_14005B184((const char *)pHead, "\xef\xbb\xbf", 3) == 0) {
+        /* 保真度修复: @0x140124130 = EF BB BF UTF-8 BOM (dc:142280) */
         spec = 0xfde9;
         goto skip_prefix;
     }

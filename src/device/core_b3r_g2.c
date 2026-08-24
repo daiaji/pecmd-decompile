@@ -180,15 +180,12 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
     uint16_t local_22a;
     uint32_t local_228[2];
     uint64_t local_220;
-    uint16_t local_246; /* CONCAT42/62 拼接载体 (未用, TODO(verify)) */
+    uint16_t local_246; /* sockaddr_in.port 槽 (dc CONCAT42/62 载体, 见下) */
 
     uVar5 = 0;
     local_246 = 0;
     local_23e = 0;
     local_23a = 0;
-    (void)local_246;
-    (void)local_23e;
-    (void)local_23a;
     if (param_1 == (uint32_t *)0) {
         param_1 = (uint32_t *)g_timeServer;
     }
@@ -197,13 +194,17 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
         uVar2 = *(uint32_t *)g_timeServer;
     }
     else {
-        uVar2 = (*g_pinet_addr)((char *)0); /* TODO(verify) inet_addr 实参来源 */
+        uVar2 = (*g_pinet_addr)((char *)0); /* TODO(verify) inet_addr 实参来源(dc 无参, 寄存器残留) */
     }
-    /* TODO(verify): 原 CONCAT42(uVar2,local_246) / CONCAT62(...,uVar1)
-     * 仅用于构造未使用的 local_246, 归一化丢弃。 */
-    (void)uVar2;
-    uVar1 = (*g_phtons)(0x7b);
-    (void)uVar1;
+    /* 保真度修复: dc (63135-63137) 以 CONCAT42/CONCAT62 在 local_246 8B 槽构造
+     * sockaddr_in 的 sin_port/sin_addr — 最终内存布局 [port=uVar1][addr=uVar2][pad]。
+     * 等价写回: local_246@+2 为 port 槽, local_23e@+4 为 addr 槽。 */
+    uVar1 = (*g_phtons)(0x7b);   /* htons(123)=NTP 端口 */
+    local_246 = uVar1;           /* sockaddr_in.sin_port */
+    local_23e = uVar2;           /* sockaddr_in.sin_addr */
+    (void)local_246;             /* 经 &local_248 16B 块消费, 显式读防 unused-but-set */
+    (void)local_23e;
+    (void)local_23a;
 
     do {
         if (0 < (int)uVar5) {

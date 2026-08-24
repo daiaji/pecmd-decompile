@@ -459,7 +459,9 @@ int64_t PECMD_ParseHex_4a34(uint16_t *s)
 
 /* ========== PECMD_FormatSetVar @0x140066930 ==========
  * 格式化后设置变量。
- * TODO(verify): wsprintfW 缺实参, 按 0 补齐。
+ * TODO(verify): dc(63268) 中 wsprintfW 仅见 fmt 一实参(param_2 未透传),
+ * 变参寄存器(r8)残留值静态不可定案 → 当前按 0 补齐为保守近似。
+ * triage: [RESOLVABLE-BLACKBOX] C-P0 探针候选。
  */
 void PECMD_FormatSetVar(int64_t *script, uint64_t unused, LPCWSTR key, LPCWSTR fmt)
 {

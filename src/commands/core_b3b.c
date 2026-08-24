@@ -146,20 +146,23 @@ void PECMD_InitTable(int64_t obj)
 
 /* ========== PECMD_CompareAnsiWide @0x14005c800 ==========
  * ANSI 与宽字符串比较; 返回差异高位或 1。
- * TODO(verify): Ghidra CONCAT71 尾部按返回 1 近似。
+ * 相等路径: dc CONCAT71((int7)(in_RAX>>8),1) = (最后uVar2 高8位<<8)|1 (保真度修复)。
  */
 int64_t PECMD_CompareAnsiWide(char *a, uint16_t *w)
 {
+    uint16_t lastW = 0; /* dc in_RAX: 循环末次读取的 *w */
     while ((*a != '\0') || (*w != 0)) {
         char cVar1 = *a;
         uint16_t uVar2 = *w;
+        lastW = uVar2;
         w++;
         a++;
         if ((uint32_t)(uint8_t)cVar1 != (uint32_t)uVar2) {
             return (int64_t)((uint16_t)(uVar2 >> 8) << 8);
         }
     }
-    return 1;
+    /* 保真度修复: dc:55027 CONCAT71((int7)(in_RAX>>8),1) = ((lastW>>8)<<8)|1 */
+    return (int64_t)((uint16_t)((uint16_t)lastW >> 8) << 8 | 1);
 }
 
 /* ========== PECMD_CountSeparators @0x14005cbd8 ==========
