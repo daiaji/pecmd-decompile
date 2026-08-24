@@ -1,0 +1,10 @@
+{
+  "id": "001_envi_smoke",
+  "slug": "envi_write_smoke",
+  "cmds": ["ENVI", "WRITE"],
+  "vars": ["A", "B", "OUT"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "交接冒烟: ENVI 赋值 + WRITE 变量落盘 (真机试录首条, §8.3-6)"
+}
