@@ -3688,3 +3688,47 @@ G0 门禁实质达成（冒烟可运行+退出干净）; check_corpus 30/30 结�
 按原文直移 FUN_14004eb34 的完整分支树(重点 LAB_14004efda 启动分发段),
 替换 core_script2.c 的简化实现; 验收=t1 冒烟中 ENVI 真正执行
 (可用 EXEC 通道 echo %T1VAR% 回捞验证), 之后 T2/T3 照常推进。
+
+
+## 132. S7 前置侦察补充 — FUN_14005C7C4 标志倒置实锤 + 最小接线实验否决(Round 2)
+
+### 实验: run_script 分支替换为 FUN_140045C90(&g_Script, 参数尾, 0) 后重测
+- 新 exe 下探针时序**不变**(仍 RunCommand enter) ⇒ 该分支根本未被走到。
+- 复核 core_script2.c 的 g_cmdlineMode 判定并对照原文 @45617-45619:
+  ```c
+  // 还原版(错): r5 = FUN_14005C7C4("PECMD**pecmd-cmd*", cmdline)==0 ? 0 : 1;
+  //             g_cmdlineMode = 1; if (r5 == 0) g_cmdlineMode = 0;
+  // 原文(对):   uVar15 = FUN_14005b1a8(L"PECMD**pecmd-cmd*", &local_170, 0x11);
+  //             DAT_14013ccb0 = 1; if (uVar15 == 0) DAT_14013ccb0 = 0;
+  ```
+  即 **mode=1 当且仅当 cmdline 以 PECMD\*\*pecmd-cmd\* 开头**; 普通启动应为 mode=0。
+  现实现把普通启动也判成 mode=1 → 恒走 run_script→RunCommand(前缀-only) → 动词死路。
+- 另发现还原版分支条件用 `first`(cmd 首字符, 引号) 而原版用 `WVar27`
+  (__Autoapp 变量首字符, 通常 NUL), 两处语义均未对齐。
+
+### 最小接线方案否决理由
+尝试把参数尾直接交给已还原的脚本装载器 FUN_140045C90 —— 但原版普通 boot
+走的是 LAB_14004efda 分发段(非 '*' 分支), 绕过它无法保证与原版行为一致;
+且 efda 内含 LOAD/FIND/参数修饰等多种分流。**结论: 必须直移 FUN_14004eb34
+全文(size=3153, decompiled.c 行 45447-~45950), 无捷径。**
+
+### S7 直移规格(供执行代理)
+1. 范围: decompiled.c FUN_14004eb34 全函数(行 45447 起), 含 SCRIPTINIT/SCRIPT
+   资源加载、__Autoapp/__bInitWin、g_cmdlineMode(FUN_14005b1a8 版)、
+   WVar27('-'/'*'/'$')三分支、LAB_14004efda 启动分发段。
+2. 替换对象: src/lang/core_script2.c 的简化实现(保留 TEMP PROBE 风格)。
+3. 已还原依赖(勿重写): FUN_140045c90(core_execscript.c)/FUN_14004c0bc
+   ProcessScriptBlock(restored_bodies.c:5720)/FUN_140031454 RunCommand/
+   FUN_14000e26c ExecCmdDispatch/FUN_1400b638c RunScriptText/FUN_14001ea18
+   资源查找/FUN_1400e7d58 ResDecode/FUN_140067d20 等。
+4. 验收门(全过才算绿):
+   a. `pecmd_msvc.exe LOAD C:\pectest\t2probe.pecmd` 产出 probe_vars.txt
+      (内容 CASE=t2probe|A|B) 与 probe_done.txt(内容 OK);
+   b. t1.pecmd 冒烟 exit=0 且 memfail.log 出现 ≥2 次 RunCommand enter
+      (外层 boot + LOAD 进主脚本后的行执行);
+   c. build 双绿(syntax+full)。
+5. 纪律: 单编辑者; 每步保构建绿; 不臆造语义(对照原文, 无法核验处标 TODO 并登记)。
+
+### 工具债备忘
+- msvc_build.bat 失败时 build\msvc\pecmd_msvc.exe 残留旧件, Test-Path 门会被
+  旧件骗过 —— 部署脚本应改判 exe 时间戳 > 最新源文件时间戳(待 T2 一并修)。
