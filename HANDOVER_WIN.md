@@ -207,3 +207,13 @@ HANDOVER_WIN.md             # 本文
 - t2probe 仍无产物: 行执行器 FUN_140003a20(dc1236-1264)/FUN_1400b1724
   (dc110300-110509) 为 no-op 桩 —— **S8=移植这两个真体**, 规格见 REVIEW §133。
 - S8 过门后即进 T4 全量对拍。
+
+
+---
+
+## 11. 【v6.5 追记】S8 已落地; 门A 唯一根因=S9 命令表重建
+- S8(两行执行器真体+12 别名影子桩修复)已提交(ef1e9c2); 行执行已实证打通到动词分发口。
+- 门A 唯一剩余根因: g_cmdTable1..5 全零(原版 PE .data 指针数组未还原) ⇒
+  DispatchBuiltin 全失配。重建规格(REVIEW §134): pe_registry.json 取原始字节 →
+  按 DispatchBuiltin 读法反推表项结构 → VA 经 map 符号重定位 → 启动期填充。
+- S9 过门后即 T4 首轮有效对拍; 另登记 case-shadow 三处错链与大写符号混淆待办。

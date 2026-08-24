@@ -3771,3 +3771,44 @@ t2probe 在掩码修复后仍无产物; 探针时序走完 S7 全段(tail-1..tai
   FUN_14005E51C/FUN_140063888 已在 core_script2.c 内按 dc 直移为 static S7_*。
 - 工具债更新: msvc_build.bat 本身有 del 旧 exe(line 58), Round2 的"假绿"实为
   会话命令拼写错误中途夭折所致 —— 判据仍建议加 exe 时间戳校验(T2 遗留项可关一半)。
+
+
+## 134. S8 落地(子代理) — 行执行器真体+12 影子桩修复; 门A 收敛至唯一根因 S9 (Round 4)
+
+### 落地 (commit ef1e9c2)
+FUN_140003a20/FUN_1400b1724 真体直移 + 12 处同址别名 no-op 桩修复
+(rename_map.json 同址证据, 含两处 AV 修复: CopyPathToken NULL 命令指针、
+FUN_140063888 缺失致展开槽 NULL)。行为进展实证: 空转→两处 C0000005→
+干净 exit=0 且探针证明脚本行已进入 ProcessScriptBlock/ExecCmdDispatch。
+
+### 门A 收敛分析(本轮主代理复核)
+- 掩码极性已修(§133)后, t2probe 各行确实进入 ProcessScriptBlock;
+- ProcessScriptBlock(restored_bodies.c:5726) 的动词路由走
+  PECMD_DispatchBuiltin(core_b1_remaining.c:5602) → **g_cmdTable1..5**;
+- 五张命令表在 core_globals.c 全零初始化 —— 原版 PE .data 的指针数组未还原。
+  DispatchBuiltin 对 ENVI/EXEC 等全部失配 → 落 ExecCmdDispatch 通用路径 →
+  EXEC 行走进 "PECMD**pecmd-cmd* " self-relaunch 分支(restored_bodies.c:2702 附近,
+  [S8] StrCopyW len=18 指纹实锤), ENVI 无处理。
+- 子代理候选①(LoadEnvi≡e3804=ENVI 处理器)经原文核对不成立: 巨命令体内无 ENVI
+  字面量; ENVI 动词真分发点=ProcessScriptBlock→DispatchBuiltin→命令表。
+  LoadEnvi 注释 @0x140069f0 环境初始化, 与 e3804 是两个东西, 不改。
+
+### S9 规格(Round 5 执行): 原始命令表重建
+1. 数据源: tools/pe_registry.json (~L562-564 区域) 存有 DAT_14013ca90/caa0/
+   a058/a078/a098/a0c0 等 .data 原始字节(指针数组);
+2. 表项结构按 DispatchBuiltin 读法反推(core_b1_remaining.c:5639-5716):
+   表1 每项 0x18B([0x00 fn][0x08 ?][0x10 name_ptr]), 表3/表4 每项 0x10
+   ([0x00 fn][0x08 name_ptr]), 表5 每对槽 value/name 各 0x10;
+3. 重定位规则: 存储 VA(0x1400xxxxx) → 函数=查 build/msvc/pecmd_msvc.map 符号地址;
+   名字串=.rdata 字符串可直接复用原 VA 指向的字面量(拷贝为我们的静态串或指向等值串);
+4. 落位方式: core_globals.c 定义真实数组并初始化(替换全零), 或启动时由
+   初始化函数填充(推荐后者, 便于 map 符号解析失败时登记 SKIP 不臆造);
+5. 验收门: t2probe 产出 vars/done(门A); t1 exit=0; corpus 28/28;
+   过门后 T4: run_case --all --exe msvc + diff --all, 记录 pass/fail 变化。
+
+### 其他登记(S8 子代理)
+- case-shadow 缺陷待办: core_b3m.c:70/core_cmd4.c:56/core_b3i.c:58 大写
+  FUN_140003A20 实链 core_exec.c:113(@0x140004fd4), 三处调用语义错位, 待逐点核改;
+- WER LocalDumps 已配置(HKLM\...\LocalDumps\pecmd_msvc.exe→C:\pectest\dumps),
+  诊断用, T5 可关;
+- [S7]/[S8] TEMP PROBE 保留至门A 通过后统一拆除(T5)。
