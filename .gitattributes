@@ -1,0 +1,20 @@
+# 行尾策略: 全仓 LF (WIN 端接管前置, PRODUCTION_ROADMAP §8.3-5 / R8)
+# WIN 端 clone 后 git config core.autocrlf false 配合本文件生效。
+
+* text=auto
+*.c  text eol=lf
+*.h  text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.map text eol=lf
+*.ini text eol=lf
+
+# 二进制/不可文本化的保持原样
+*.exe binary
+*.tar.gz binary
+*.bundle binary
+*.png binary
+*.ico binary
