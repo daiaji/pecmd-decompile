@@ -30,8 +30,9 @@ gcc -std=c99 -w -Wno-implicit-function-declaration -Iinclude \
 | `src/misc` | 未归类 helper 与 SKIP 登记 |
 | `include/` | pecmd_defs.h(类型) / pecmd_globals.h(g_ 全局) / win32_stub.h / stubs_common.h(桩共享声明) |
 | `restored_bodies.c` 等 | 链接验证桩三件套 + crt_shims.c（**部署链接前必须移除后三者**，见各文件头横幅） |
+| `harness/` | C-P0 行为对拍最小闭环：corpus 30 条核心命令用例 + runners 四脚本（run_case/diff_case/report/check_corpus） |
 | `attic/` | 会话临时件与 ghidra_out 参考存档 |
-| `docs/` | known_limits / triage_map / provenance.map / mingw 冒烟 |
+| `docs/` | known_limits / triage_map / provenance.map / B1_pipeline_status / mingw 冒烟 |
 
 ## 关键文档
 
@@ -39,3 +40,4 @@ gcc -std=c99 -w -Wno-implicit-function-declaration -Iinclude \
 - `docs/triage_map.md` — TODO(verify) 423 条分诊地图（STATIC 287 / BLACKBOX 46 / UNK 90）
 - `docs/known_limits.md` — KNOWN-LIMIT 登记簿
 - `docs/provenance.map` — 新符号 ↔ 原 Ghidra 地址对照（1,594 条）
+- `harness/README.md` — C-P0 闭环用法（WIN 端三步 + Linux 判读 + 裁决纪律）
