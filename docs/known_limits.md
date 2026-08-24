@@ -166,3 +166,21 @@ TODO(verify) 共 426 处为诚实标注，分诊地图见 docs/triage_map.md（B
 | KL-T134 | restored_bodies.c:15237 | UNK | unaff_RDI 返回残留且无可见调用方, 伪代码无源; 黑盒需挂虚表消息链观察代价高 -> KNOWN-LIMIT |
 | KL-T135 | unimplemented_stubs.c:380 | UNK | wave-INDIR 最小桩为计划内后续波次工作项（真体还原），非单点验证，KNOWN-LIMIT |
 | KL-T136 | unimplemented_stubs.c:398 | UNK | wave-INDIR 最小桩为计划内后续波次工作项（真体还原），非单点验证，KNOWN-LIMIT |
+
+## 附录：FUN_ 残余豁免清单（B1 口径管理）
+
+M1 实测 4,791 处 FUN_14 引用 = 唯一拼写 737 个。豁免构成（REVIEW §128 处置已落账）：
+- biz 46 全部处置：纯桩 SKIP×5 / INDIR 已移植×3 / KEEP_LOW 待运行时钉死×3 / 零引用 vtable 候选 ~22 / 已还原待别名 25f10
+- crt 147 永久豁免（MSVC CRT 内部符号，C 阶段随 crt_shims 处理）
+- 其余为 thunk/别名拼写噪声（stubs_common.h 跨 TU 原型区 + 三个桩文件）
+
+## 附录：B 场景剩余工作登记（WIN 交接后 Linux 端续作）
+
+| 批次 | 剩余项 | 载体 |
+|---|---|---|
+| B1 | local_xx 26,565 / param_N 13,888 / DAT_ 2,632 语义化（精修区 A 区优先: b7c/b8m/b8h/b2f ≈5k） | docs/B1_pipeline_status.md |
+| B1 | 机械清扫剩余: set-but-used 31 + parentheses 57 + cast 类 ~90 | warning_census_b0.json |
+| B3 | OBJ_* 宏 235 处推广（domain 头已就绪, 试点 core_thread 已完成） | include/domain/pecmd_domain.h |
+| B4 | 家族合并 4 族 (Destroy/SendWindow/InitCore/Release) + 文件头模板统一 | PRODUCTION_ROADMAP §3.B.4 |
+| B5b | STATIC 287 条 TODO 销号（triage_map §2 已给 dc_hint） | docs/triage_map.md |
+| 还原期 | S2-fix (b7c 存储侧 ushort→int16_t) 行号漂移, 随 C-P1 符号性复核 | REVIEW 记录 |
