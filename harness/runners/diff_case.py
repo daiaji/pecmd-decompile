@@ -113,6 +113,16 @@ def verdict_for(case_id, backend="win_real"):
     return verdict
 
 
+def save_verdict(v, backend):
+    """verdict.json 落盘到 results/<backend>/<case>/ (report.py 的数据源)"""
+    rdir = os.path.join(RESULTS_ROOT, backend, v["case"])
+    if not os.path.isdir(rdir):
+        return
+    with open(os.path.join(rdir, "verdict.json"), "w", encoding="utf-8",
+              newline="\n") as f:
+        json.dump(v, f, indent=1, ensure_ascii=False)
+
+
 def force_utf8_console():
     # WIN 端 GBK 控制台兼容: 中文/符号输出在 cp936 下可能不可编码
     for s in (sys.stdout, sys.stderr):
@@ -133,16 +143,18 @@ def main():
         out = {"cases": [], "summary": {"total": 0, "pass": 0, "fail": 0}}
         for c in cases:
             v = verdict_for(c, backend)
+            save_verdict(v, backend)
             out["cases"].append(v)
             out["summary"]["total"] += 1
             out["summary"]["pass" if v["verdict"] == "PASS" else "fail"] += 1
-        print(json.dumps(out, indent=1, ensure_ascii=False))
+        print(json.dumps(out["summary"], indent=1, ensure_ascii=False))
         return
 
     if not args:
         print(__doc__)
         sys.exit(1)
     v = verdict_for(args[0], backend)
+    save_verdict(v, backend)
     print(json.dumps(v, indent=1, ensure_ascii=False))
     sys.exit(0 if v["verdict"] == "PASS" else 2)
 
