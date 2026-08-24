@@ -3654,3 +3654,37 @@ G0 门禁实质达成（冒烟可运行+退出干净）; check_corpus 30/30 结�
   FreeStrBuf 热路径探针已撤(性能污染)。
 - dumps 目录 ~660MB 已清理。
 - 下一步=T2(harness WRITE 回捞通道) → T3(G0 收口+P1 golden 录制) → T4(P2 全量对拍)。
+
+
+## 131. 【重要修正】t1 exit=0 系空转成功 — 启动分发链未接通(T2 真堵点)
+
+**修正 Round 130 的"G0 实质达成"结论**: 复核探针全序后发现 t1 冒烟的 exit=0x0
+是**空转成功** —— 内建动词(ENVI/EXEC/WRITE/…)从未被执行。
+
+### 证据链
+1. 探针时序(memfail.log): `RunCommand enter → SrParsePrefix → [RSTI](嵌套
+   RunScriptText) → [ADOPT]/[RSTX]/[REL] → [RCCLEAN] → done r=0`。
+   全程**只有一次** RunCommand 进入(外层), 嵌套层无第二次进入 ⇒ ENVI 行未执行。
+2. EXEC 语法矩阵(orig=PECMD.EXE 对照): `EXEC =cmd /c echo X>f` 在原版三种变体
+   全部产出文件(%VAR% 展开/\^| 转义/CRLF 均符合预期); msvc 构建全部静默无产物,
+   stdout 空, exit=0 ⇒ EXEC 动词在还原构建中根本未被分发。
+3. 源码核对: 还原版 core_scriptrun.c PECMD_RunCommand 只含前缀解析
+   (*qk/*sysinit/del/mem/m/local/EnviMode/ncd/logs:/*map:) + 展开 + *map/资源/变量
+   三支路 —— 与原文 FUN_140031454 一致(原文本就只做前缀, 无内建动词分发)。
+   **缺的是上游**: 原版 FUN_14004eb34(size=3153) 的 LAB_14004efda 启动分发块负责
+   解析 boot 命令行(LOAD <file> 等), 读文件后经 PECMD_ProcessScriptBlock(@14004c0bc)
+   进入逐行执行; 还原版 core_script2.c 用简化逻辑(大量 TODO(verify))替代,
+   把 boot 命令行直接塞给了 RunCommand ⇒ 路由错位。
+
+### 影响面
+- T2(harness 回捞通道): 改 EXEC 通道对原版可行(矩阵已验), 但 msvc 侧在分发链接通前
+  无法产出 vars.txt/done.txt ⇒ T2 实际被本堵点阻塞。
+- 已录 golden/win_real_orig 结果仍有效(原版行为正确); msvc 侧 results 为空转值,
+  不可作为对拍基线。
+- Round130 的五项修复(T1b/T1c/T1d/T1d2/T1e)本身仍然有效且必要 —— 它们位于
+  分发链下游, 链路接通后会立即被真实 exercising。
+
+### 下一步(S7 新任务, 插队到 T2 之前)
+按原文直移 FUN_14004eb34 的完整分支树(重点 LAB_14004efda 启动分发段),
+替换 core_script2.c 的简化实现; 验收=t1 冒烟中 ENVI 真正执行
+(可用 EXEC 通道 echo %T1VAR% 回捞验证), 之后 T2/T3 照常推进。
