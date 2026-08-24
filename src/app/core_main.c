@@ -197,11 +197,38 @@ static void PECMD_Main1(WCHAR *cmdline)
 }
 
 /* ========== main @0x140017034 ========== */
-/* CRT main: 链接为 /SUBSYSTEM:WINDOWS + /ENTRY:mainCRTStartup (与原版 GUI 子系统一致) */
+/* CRT main: 链接为 /SUBSYSTEM:WINDOWS + /ENTRY:mainCRTStartup (与原版 GUI 子系统一致).
+ *
+ * T1 后续修复 (原 TODO verify 定案): 原版 @0x140017034 实测字节为
+ *   48 8B D1  mov rdx, rcx     ; rdx <- rcx
+ *   33 C9     xor ecx, ecx     ; rcx = 0 (hInstance=NULL -> MainW 内取模块句柄)
+ *   E9 ...    jmp mainB        ; mainB: r8<-rdx, rdx<-rcx -> MainW(0, hinst, cmdline)
+ * 即原版 (mdyblog 改版 CRT 启动器) 把 **宽命令行参数尾 (WinMain lpCmdLine 语义)** 放在
+ * RCX 传入本函数; 原生 MSVC UCRT 的 invoke_main 传的是 (argc,argv,env), 旧还原把 argc
+ * 当指针透传 -> MainW 拿到野指针 (WCHAR*)argc, lstrlenW 内部 SEH 吞错返回垃圾长度,
+ * 最终 memmove 踢 0xC0000005。这里按等价语义自行取命令行尾部:
+ * 跳过程序名 (引号敏感) 再跳过分隔空白, 与 lpCmdLine 约定一致。 */
 int main(int argc, char **argv)
 {
+    WCHAR *cl = GetCommandLineW();
+    WCHAR *p = cl;
+    int inquote = 0;
+
+    (void)argc;
     (void)argv;
-    return (int)PECMD_MainW(0, (WCHAR *)(uintptr_t)argc); /* 反编译显示 arg 复用, TODO(verify) */
+    while (*p != L'\0') {
+        if (*p == L'"') {
+            inquote = !inquote;
+        }
+        else if (!inquote && (*p == L' ' || (*p >= 9 && *p <= 0xd))) {
+            break; /* 程序名结束 */
+        }
+        p++;
+    }
+    while (*p == L' ' || (*p >= 9 && *p <= 0xd)) {
+        p++; /* 跳过空白 -> 参数尾 */
+    }
+    return (int)PECMD_MainW((HINSTANCE)GetModuleHandleW(NULL), p);
 }
 
 /* ========== main5 @0x140016aac ========== */

@@ -19,3 +19,22 @@
     args: ['/c', 'npx', '-y', '@modelcontextprotocol/server-memory']
     env:
       MEMORY_FILE_PATH: 'C:\Users\Administrator\.dsh\memory\pecmd-knowledge.json'
+
+# GhidraMCP (bethington/ghidra-mcp v6.0.0, 272 tools) — 按地址查反编译/签名/xref,
+# 替代人工 grep decompiled.c。
+#
+# 启用前提 (一次性):
+#  1. 扩展已装: D:\ghidra_12.1.3_PUBLIC\Extensions\Ghidra\GhidraMCP\
+#     (若未生效, 在 Ghidra 里 File > Install Extensions 勾选并重启)
+#  2. CodeBrowser 中 File > Configure > Configure All Plugins > GhidraMCP 启用,
+#     打开 PECMD 项目后 bridge 默认监听 http://localhost:8080
+#  3. python bridge 已 pip 安装: Scripts\bridge-mcp-ghidra.exe
+#
+# 未开 Ghidra 时此 server 会启动成功但所有调用失败 — 可临时注释掉本条目,
+# 或给该条目加 failOnStartupError: false (默认即 false, 不阻塞其余插件)。
+- id: mcp-ghidra
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ghidra
+    transport: stdio
+    command: 'C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Scripts\bridge-mcp-ghidra.exe'

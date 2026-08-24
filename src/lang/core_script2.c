@@ -66,11 +66,18 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
     WCHAR *scriptBuf = NULL;
     int64_t r = 0;
 
-    /* 解析 & 前缀 */
-    p = (LPCWSTR)PECMD_GrowByteBuffer(NULL, 0);
-    (void)p;
+    /* 解析 & 前缀 — 按原文还原 (@0x14004eb34 头部):
+     *   local_res18 = FUN_140024c48(&local_res18,0,5);  取首个 token
+     *   FUN_1400170b0(&local_res18);                    跳空白到参数尾
+     * 旧还原误写作 PECMD_GrowByteBuffer(NULL,0): ps=NULL 直接解引用 -> 0xC0000005 (T1 链)
+     * (FUN_1400170b0 与 FUN_14005b154 同体, 复用后者真体) */
+    {
+        WCHAR *tok = FUN_140024C48((WCHAR **)&p, 0, 5);
+        (void)tok;
+        FUN_14005B154((WCHAR **)&p);
+    }
     FUN_1400702B0(&cmd, cmdline);
-    /* TODO(verify): 原实现 FUN_140024C48 跳过 & 前缀; hinst/flag 用于资源加载 */
+    /* TODO(verify): hinst/flag 用于资源加载 */
 
     seed = PECMD_GenRandomSeed16();
     (void)seed; /* TODO(verify): 用于脚本 XOR 密钥 */

@@ -136,8 +136,11 @@ tools/debug/thread_rip.py   # 挂起进程线程 RIP 直读
 compile_flags.txt           # clangd 配置 — 消除编辑器 'pecmd_defs.h' not found 误报
 .agents/skills/             # DSH 项目级 skills ×4: pecmd-build / msvc-compat /
                             #   win-crash-triage / pecmd-semantics (即装即用, 热发现)
-.dsh/cordis.yml             # MCP 插件配置 (memory server)。⚠️ 不自动发现:
+.dsh/cordis.yml             # MCP 插件配置 (memory + ghidra)。⚠️ 不自动发现:
                             #   启动时 dsh --config .dsh\cordis.yml 显式指定
+                            # ghidra 条目前提: Ghidra 开着且 GhidraMCP 插件已启用
+                            #   (扩展已装 D:\ghidra_12.1.3_PUBLIC\Extensions\Ghidra\,
+                            #    bridge exe 已 pip 装, 272 工具, 按地址查反编译/xref)
 include/win32_stub.h        # src/** 用头; PECMD_LI/FT + __debugbreak 垫片在此
 include/stubs_common.h      # 桩四件套用头; PECMD_LI/FT 另一份
 src/kernel/core_globals.c   # ★ .CRT$XCU CS 初始化器 (原版 FUN_14011a8b0 等价物)
