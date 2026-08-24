@@ -23,6 +23,9 @@
 #ifndef PECMD_OFFSETS_H
 #define PECMD_OFFSETS_H
 
+/* B3 提示: 本宏族的类型化访问器已迁至 include/domain/pecmd_domain.h
+ * (WO_* 系列)。新代码请用 domain 头; 本头保留供存量引用渐进迁移。 */
+
 #define OBJ_HWND         0x20   /* 子窗口/控件 HWND */
 #define OBJ_BRUSH        0x38   /* 画刷/旧 GDI 对象 */
 #define OBJ_COLOR        0x40   /* 颜色/前景色 */

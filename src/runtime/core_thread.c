@@ -18,6 +18,7 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
+#include "domain/pecmd_domain.h"
 extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
@@ -116,21 +117,21 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
 uint64_t PECMD_SendMsgThreadProc(void *task)
 {
     uint64_t refs[4];
-    uint32_t *msg = (uint32_t *)((uint8_t *)task + 0x18);
+    uint32_t *msg = (uint32_t *)&((PECMD_Task*)task)->msg;   /* B3: 原语义=读低32位消息号 */
 
     refs[1] = 0;
-    refs[0] = *(uint64_t *)((uint8_t *)task + 0x48);   /* 回调 */
+    refs[0] = *(uint64_t *)&((PECMD_Task*)task)->callback;   /* 回调 */
     refs[2] = (uint64_t)task;
-    if (*(uint32_t *)((uint8_t *)task + 0x38) == 0xffffffff) {
-        SendMessageW(*(HWND *)((uint8_t *)task + 0x40), msg[0],
-                     *(WPARAM *)((uint8_t *)task + 0x20),
-                     *(LPARAM *)((uint8_t *)task + 0x28));
+    if (*&((PECMD_Task*)task)->timeout == 0xffffffff) {
+        SendMessageW(*&((PECMD_Task*)task)->hwnd, msg[0],
+                     *&((PECMD_Task*)task)->wParam,
+                     *&((PECMD_Task*)task)->lParam);
     } else {
-        SendMessageTimeoutW(*(HWND *)((uint8_t *)task + 0x40), msg[0],
-                            *(WPARAM *)((uint8_t *)task + 0x20),
-                            *(LPARAM *)((uint8_t *)task + 0x28),
+        SendMessageTimeoutW(*&((PECMD_Task*)task)->hwnd, msg[0],
+                            *&((PECMD_Task*)task)->wParam,
+                            *&((PECMD_Task*)task)->lParam,
                             *(uint32_t *)((uint8_t *)task + 0x30),
-                            *(uint32_t *)((uint8_t *)task + 0x38),
+                            *&((PECMD_Task*)task)->timeout,
                             (DWORD *)(refs + 1));
     }
     PECMD_ReleaseRefCount((void **)&refs[0]);

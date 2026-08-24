@@ -4902,7 +4902,7 @@ uint64_t PECMD_ParseRegexAlternation(int *param_1, WCHAR **param_2, uint8_t *par
 
 uint64_t PECMD_ParseRegexNode(uint32_t *param_1, uint64_t param_2, uint64_t param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140050cb0 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140050cb0 — decompile-failed, body 未还原 */
 /* @0x140050cb0 size=668 */
     uint uVar1;
     int iVar2;
@@ -9822,7 +9822,7 @@ void PECMD_InstallWindowsHook(int64_t param_1, int64_t param_2)
 
 LPWSTR PECMD_ExpandStringMarkers(WCHAR *param_1, WCHAR *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14005efac — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14005efac — decompile-failed, body 未还原 */
 /* @0x14005efac size=426 拷贝并展开 %%d 占位/通配符 */
     WCHAR wc;
     int len;
@@ -12183,7 +12183,7 @@ void PECMD_ReleaseObjectListTail(int64_t param_1, int param_2)
 void PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2)
 {
     (void)param_1; (void)param_2;
-    /* UNIMPLEMENTED @0xFUN_140066f64 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140066f64 — decompile-failed, body 未还原 */
 /* @0x140066f64 size=214 */
 }
 
@@ -12191,7 +12191,7 @@ void PECMD_ReleaseObjectSlots(int64_t param_1, int64_t param_2)
 /* signature: void PECMD_ReleaseWindowHooks(int64_t param_1) */
 void PECMD_ReleaseWindowHooks(int64_t param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_14006703c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14006703c — decompile-failed, body 未还原 */
 int16_t *psVar1;
     int64_t lVar2;
     int64_t lVar3;
@@ -18311,7 +18311,7 @@ void PECMD_ReleaseControlObject(uint64_t *param_1)
 
 uint8_t PECMD_ParseSubWindowFlags(int64_t *param_1, uint32_t *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14007fcd4 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14007fcd4 — decompile-failed, body 未还原 */
 /* @0x14007fcd4 size=357 — 解析 "-sub L..T..H..W..<flags>" 窗口子命令参数 */
     uint16_t uVar1;
     uint16_t *puVar2;
@@ -21058,7 +21058,7 @@ LAB_14008cfad:
 }
 LARGE_INTEGER PECMD_ExecCommandLine(int64_t *param_1, LPCWSTR param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_14008cffc — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14008cffc — decompile-failed, body 未还原 */
 /* @0x14008cffc size=29895 */
     /* 简化桩: 巨型反编译(29895B)含 CRT/解析逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
     LARGE_INTEGER r;

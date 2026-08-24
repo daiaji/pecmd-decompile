@@ -812,7 +812,7 @@ void PECMD_LoadWtsUserEnvApis(void)
 
 uint32_t PECMD_WtsShowMessage(LPCWSTR param_1, LPCWSTR param_2, uint32_t param_3, int param_4)
 {
-    /* UNIMPLEMENTED @0xFUN_140003aac — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140003aac — decompile-failed, body 未还原 */
 /* @0x140003aac size=277 */
     int iVar1;
     int iVar2;
@@ -1773,7 +1773,7 @@ void PECMD_WaitServiceShutdown(void)
 
 uint64_t PECMD_AppendStringArraySlot(int64_t *param_1, LPCWSTR param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140005818 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140005818 — decompile-failed, body 未还原 */
 /* @0x140005818 size=115 */
     int64_t lVar1;
     void *puVar2;
@@ -6240,7 +6240,7 @@ bool PECMD_InitTlsBuffer(uint64_t *param_1)
 
 void PECMD_FlushLogBuffer(char param_1, int64_t *param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_1400185c8 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_1400185c8 — decompile-failed, body 未还原 */
 uint16_t *psVar1;
     int64_t *plVar2;
     int64_t lVar3;
@@ -8143,7 +8143,7 @@ void PECMD_LoadUnloadImdisk(uint64_t param_1, int param_2)
 
 uint64_t FUN_14001c82c(void)
 {
-    /* UNIMPLEMENTED @0xFUN_14001c82c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14001c82c — decompile-failed, body 未还原 */
 /* @0x14001c82c size=16 固定返回 1 */
     return 1;
 }

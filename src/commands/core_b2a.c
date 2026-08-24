@@ -174,7 +174,7 @@ void PECMD_ScriptWndProc(HWND hwnd, uint32_t msg, HDC hdc, void *p4)
  */
 LRESULT PECMD_WndProcForward(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    /* UNIMPLEMENTED @0xFUN_14003e16c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14003e16c — decompile-failed, body 未还原 */
 PECMD_MainMsgWndProc((uintptr_t)g_Script, hwnd, msg,
                   (void *)(uintptr_t)wParam, (int64_t)lParam);
     return 0;

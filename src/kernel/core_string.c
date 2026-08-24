@@ -36,7 +36,7 @@ void PECMD_ExitProcessCall(int code);    /* @0x14005b21c (TODO: 待重构确认)
  * 失败弹窗: 选 Retry(4)/Ignore(5) 重试, 否则退出+int3 */
 void *PECMD_HeapRealloc(void *ptr, size_t size)
 {
-    /* UNIMPLEMENTED @0xFUN_140063118 — decompile-failed, body 未还原 */
+    /* @0x140063118 — 已还原真体 (B4/P8: 原"UNIMPLEMENTED"标记过期移除) */
 if (ptr == NULL) {
         for (;;) {
             uint8_t *hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);

@@ -118,7 +118,7 @@ uint64_t _wcsnicmp(void)
 
 double FUN_140104b00(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140104b00 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140104b00 — decompile-failed, body 未还原 */
 /* @0x140104b00 size=773 */
     /* SKIP(CRT): MSVC CRT 三角函数 (asin/acos 多项式展开, 含 _controlfp_s/
        SQRT/系数表 _DAT_14012d2b0 与 FUN_14010da74 打印辅助). 使用 CRT 等价,
@@ -129,7 +129,7 @@ double FUN_140104b00(double param_1)
 
 double FUN_140104e08(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140104e08 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140104e08 — decompile-failed, body 未还原 */
 /* @0x140104e08 size=787 */
     /* SKIP(CRT): MSVC CRT 三角函数 (asin/acos 多项式展开, 含 _controlfp_s/
        SQRT/系数表 _DAT_14012d2b0 与 FUN_14010da74 打印辅助). 使用 CRT 等价. */
@@ -139,7 +139,7 @@ double FUN_140104e08(double param_1)
 
 double FUN_14010511c(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_14010511c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14010511c — decompile-failed, body 未还原 */
 /* @0x14010511c size=651 */
     /* SKIP(CRT): atan 数学函数，使用 CRT atan 句柄 */
     (void)param_1;
@@ -148,7 +148,7 @@ double FUN_14010511c(double param_1)
 
 double FUN_1401053a8(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_1401053a8 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_1401053a8 — decompile-failed, body 未还原 */
 /* @0x1401053a8 size=276 */
     /* SKIP(CRT): MSVC CRT ceil 实现 (幂尾数掩码 + 有小数位时 +1.0, 含
        FUN_14010da74 打印辅助/非法参数路径). 使用 CRT ceil 等价, 不还原内联. */
@@ -158,7 +158,7 @@ double FUN_1401053a8(double param_1)
 
 double FUN_1401055ec(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_1401055ec — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_1401055ec — decompile-failed, body 未还原 */
 /* @0x1401055ec size=734 */
     /* SKIP(CRT): MSVC CRT exp 数学函数内联实现 */
     (void)param_1;
@@ -167,7 +167,7 @@ double FUN_1401055ec(double param_1)
 
 double FUN_1401058cc(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_1401058cc — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_1401058cc — decompile-failed, body 未还原 */
 /* @0x1401058cc size=756 */
     /* SKIP(CRT): MSVC CRT atan 数学函数内联实现 */
     (void)param_1;
@@ -176,7 +176,7 @@ double FUN_1401058cc(double param_1)
 
 double FUN_140105bc0(uint64_t param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140105bc0 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140105bc0 — decompile-failed, body 未还原 */
 /* @0x140105bc0 size=846 */
     /* SKIP(CRT): 反编译为 MSVC CRT log10 数学函数内联实现 */
     (void)param_1;
@@ -185,7 +185,7 @@ double FUN_140105bc0(uint64_t param_1)
 
 double FUN_140105f10(double param_1, double param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140105f10 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140105f10 — decompile-failed, body 未还原 */
 /* @0x140105f10 size=1494 */
     /* SKIP(CRT): pow 数学函数，使用 log2/f2xm1/fscale 内联实现 */
     (void)param_1;
@@ -195,7 +195,7 @@ double FUN_140105f10(double param_1, double param_2)
 
 double FUN_140106500(double param_1, double param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140106500 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140106500 — decompile-failed, body 未还原 */
 /* @0x140106500 size=162 */
     /* SKIP(CRT): sin 三角函数，使用 CRT 内联实现 */
     (void)param_1;
@@ -205,7 +205,7 @@ double FUN_140106500(double param_1, double param_2)
 
 double FUN_1401065a4(double param_1, double param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_1401065a4 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_1401065a4 — decompile-failed, body 未还原 */
 /* @0x1401065a4 size=175 */
     /* SKIP(CRT): cos 三角函数，使用 CRT 内联实现 */
     (void)param_1;
@@ -215,7 +215,7 @@ double FUN_1401065a4(double param_1, double param_2)
 
 double FUN_140106654(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140106654 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140106654 — decompile-failed, body 未还原 */
 /* @0x140106654 size=807 */
     /* SKIP(CRT): MSVC CRT sin 数学函数内联实现 */
     (void)param_1;
@@ -224,7 +224,7 @@ double FUN_140106654(double param_1)
 
 double FUN_14010697c(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_14010697c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_14010697c — decompile-failed, body 未还原 */
 /* @0x14010697c size=266 */
     /* SKIP(CRT): MSVC CRT sqrt 数学函数内联实现 */
     (void)param_1;
@@ -233,7 +233,7 @@ double FUN_14010697c(double param_1)
 
 double FUN_140106a88(double param_1, double param_2, int param_3)
 {
-    /* UNIMPLEMENTED @0xFUN_140106a88 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140106a88 — decompile-failed, body 未还原 */
 /* @0x140106a88 size=468 */
     /* SKIP(CRT): atan/asin 数学函数，使用 CRT 内联实现 */
     (void)param_1;
@@ -244,7 +244,7 @@ double FUN_140106a88(double param_1, double param_2, int param_3)
 
 double FUN_140106c5c(double param_1)
 {
-    /* UNIMPLEMENTED @0xFUN_140106c5c — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140106c5c — decompile-failed, body 未还原 */
 /* @0x140106c5c size=791 */
     /* SKIP(CRT): MSVC CRT cos 数学函数内联实现 */
     (void)param_1;
@@ -259,7 +259,7 @@ uint64_t _purecall(void)
 
 double FUN_140107468(double param_1, double param_2)
 {
-    /* UNIMPLEMENTED @0xFUN_140107468 — decompile-failed, body 未还原 */
+    /* UNIMPLEMENTED @FUN_140107468 — decompile-failed, body 未还原 */
 /* @0x140107468 size=644 */
     /* SKIP(CRT): MSVC CRT _hypot 数学函数 */
     (void)param_1;
