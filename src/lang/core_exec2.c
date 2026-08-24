@@ -328,14 +328,14 @@ void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain)
         }
         if (FUN_14005C788("_ENDFILE", tmp, 8) != 0)
             break;
-        if (FUN_14005C788("_ENDFILE-IMPORT", start, 0xf) == 0) {
-            if (!stopMain) {
-                for (; start < p; start++)
-                    *start = *(WCHAR *)((char *)script + 0x48) ^ 0x20;
-            }
-            else {
+        /* 原文 @22019-22030 极性: 仅 "_ENDFILE-IMPORT" 匹配行被空格掩码
+         * (!stopMain 时); 普通行不掩码。曾写反导致交给 RunScriptText 的
+         * 脚本文本被整体抹空、动词永不执行 (REVIEW §133)。 */
+        if (FUN_14005C788("_ENDFILE-IMPORT", start, 0xf) != 0) {
+            if (stopMain)
                 break;
-            }
+            for (; start < p; start++)
+                *start = *(WCHAR *)((char *)script + 0x48) ^ 0x20;
         }
         else if (stopMain && FUN_14005C788("FIND $1 = %&&__MAIN__%,", start, 0x17) != 0) {
             break;
