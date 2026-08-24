@@ -634,3 +634,23 @@ MA: grep -rPno 'CONCAT[0-9]*\(|\bunaff_|\bextraout_|in_stack_ffff|\blocal_res\b'
 | B/C 评估输入材料索引 | docs/bc_evaluation_inputs.md |
 
 （完）
+
+
+---
+
+## 附录 D：B 执行状态登记（2026-08-24 会话，方案书本体不变）
+
+| 批次 | 状态 | 证据 |
+|---|---|---|
+| B0 | ✅ tag `B0` (f79bec0) | P1-P11 全部落地; link_stubs 四桶拆分; crt_shims 202 块; M7=0 |
+| 前置件 | ✅ | mingw 工具链确认 (GCC 15.2.0); TODO 分诊 423 条 (STATIC 287/BLACKBOX 46/UNK 90) |
+| B1 | 🟨 ~8% | 机械清扫 36 条; 配方文档 docs/B1_pipeline_status.md; 主体 local/param/DAT_ 待续 |
+| B2 | ✅ | src/ 八域重组 (95 TU) + 根/模块 README; build.sh find 注入 |
+| B3 | 🟨 试点 | domain 头 (VarNode/Script/Task 断言全过 + WndObj 访问器); core_thread 10 处; OBJ_* 235 处推广未做 |
+| B4 | 🟨 部分 | clang-format 全库; P8; @0xFUN_×147; 家族合并未做 |
+| B5 | 🟨 部分 | 5a 分诊✓ 5b 入册136/423 5c provenance 1594 5d 定位声明✓; STATIC 287 待销号 |
+| 保真度 | ✅ | 分诊 7 处静态可证问题: 4 修 (BOM/NTP sockaddr/消息块偏移/CONCAT71) 2 误报 1 注释升级 (66c3d17) |
+| WIN 交接 | ✅ | §8.3 检查单 Linux 侧全就绪; harness 语料 30 条; bundle @ a9f0c32; HANDOVER_WIN.md 活页 |
+
+**门禁 G-B 口径**：B 未达 100% (B1/B3 推广/B4 家族合并/B5b 收尾登记豁免，
+见 docs/known_limits.md 附录「B 场景剩余工作登记」)。C 场景不依赖这些残项。
