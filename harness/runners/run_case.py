@@ -71,16 +71,35 @@ def deploy(case_id, case_src, pectest_root):
     return dst
 
 
+def _cmd_meta_escape(s):
+    """cmd.exe 元字符转义 (^X)。用于 echo 内容安全通过 /c 传递。
+    注意: % 不转义 — cmd /c(非 batch)下单个 % 原样输出, 且 PECMD 已先做变量展开。"""
+    for ch in ("^", "&", "|", "<", ">"):
+        s = s.replace(ch, "^" + ch)
+    return s
+
+
 def make_epilogue(dst, case_id, manifest, pectest_root):
-    """[2/4] 尾声: 按 manifest.vars 写单行合并版 (不依赖 WRITE -a), 与 main 合并为单入口"""
+    """[2/4] 尾声: 按 manifest.vars 回捞产物。
+
+    T2 改造 (REVIEW §131): WRITE 在还原构建中尚不可靠, 统一改走
+    EXEC =cmd.exe /c echo ...>"file" 通道 —— 原版实测三种变体全通过
+    (%VAR% 展开/^| 转义/CRLF), msvc 构建经 S7 分发链接通后同样可用。
+    双方用同一通道 ⇒ golden 与 results 字节格式一致。
+    """
     out_dir = os.path.join(pectest_root, "out")
     os.makedirs(out_dir, exist_ok=True)
+    cmd_exe = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"),
+                           "System32", "cmd.exe")
     vars_bar = "|".join(manifest.get("vars", []))
+    vars_content = _cmd_meta_escape(f"CASE={case_id}|{vars_bar}")
+    vars_path = os.path.join(out_dir, "vars.txt")
+    done_path = os.path.join(out_dir, "done.txt")
     lines = [
         f"ENVI T_CASE={case_id}",
-        f"WRITE {pectest_root}\\out\\vars.txt,CASE={case_id}|{vars_bar}",
+        f'EXEC ={cmd_exe} /c echo {vars_content}>"{vars_path}"',
         "ENVI T_DONE=OK",
-        f"WRITE {pectest_root}\\out\\done.txt,%T_DONE%",
+        f'EXEC ={cmd_exe} /c echo %T_DONE%>"{done_path}"',
     ]
     epilogue = "\n".join(lines) + "\n"
 

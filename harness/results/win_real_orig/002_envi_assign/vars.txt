@@ -1,0 +1,1 @@
+CASE=002_envi_assign|A|B|C

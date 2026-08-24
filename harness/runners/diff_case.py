@@ -39,9 +39,10 @@ def normalize(text, masks):
 
 
 def diff_files(golden, result, masks):
-    """返回 (same, detail)"""
-    g = open(golden, encoding="utf-8", errors="replace").read()
-    r = open(result, encoding="utf-8", errors="replace").read()
+    """返回 (same, detail)。行尾归一 (T2): EXEC echo 通道产出 CRLF,
+    与历史 LF 产物混比时统一为 LF 再比较。"""
+    g = open(golden, encoding="utf-8", errors="replace").read().replace("\r\n", "\n")
+    r = open(result, encoding="utf-8", errors="replace").read().replace("\r\n", "\n")
     if normalize(g, masks) == normalize(r, masks):
         return True, []
     # 逐行 diff (前 10 行)
