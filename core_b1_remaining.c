@@ -331,8 +331,8 @@ extern int64_t  g_i64CCB8;
 extern uint8_t  g_svcStatus[128];  /* SERVICE_STATUS 缓冲 */
 
 extern void SwitchToFiber(void *lpFiber);                        /* Win32 API */
-/* win32_stub.h 中 FindFirstVolumeW/FindNextVolumeW 原型参数个数错误(多一个实参),
-   这里用正确签名的函数指针间接调用以修正(见 PECMD_OpenLockVolume)。 */
+/* B0/P2: win32_stub.h 原型已改为真实签名 (LPWSTR,DWORD)/(HANDLE,LPWSTR,DWORD);
+   本处历史函数指针间接调用保持不变(行为等价)。 */
 typedef HANDLE (*FFVW_t)(LPWSTR, DWORD);
 typedef BOOL   (*FNFVW_t)(HANDLE, LPWSTR, DWORD);
 

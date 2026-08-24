@@ -1,0 +1,705 @@
+{
+ "scope": "core_*.c + restored_bodies/win32_api_stubs/unimplemented_stubs/crt_shims",
+ "date": "2026-08-24",
+ "total": 333,
+ "behavior_class": 135,
+ "mechanical_class": 198,
+ "by_flag": {
+  "-Wcast-function-type": 63,
+  "-Wshift-count-overflow": 2,
+  "-Wsign-compare": 25,
+  "-Wint-to-pointer-cast": 31,
+  "-Wparentheses": 57,
+  "-Wnonnull": 4,
+  "-Wpointer-to-int-cast": 28,
+  "-Wbuiltin-declaration-mismatch": 4,
+  "-Wunused-label": 1,
+  "-Wunused-but-set-variable": 42,
+  "-Wpointer-sign": 13,
+  "-Waddress": 2,
+  "-Wdiscarded-qualifiers": 22,
+  "-Wunused-variable": 19,
+  "-Wunused-parameter": 14,
+  "-Wcompare-distinct-pointer-types": 3,
+  "-Wtautological-compare": 1,
+  "-Wcomment": 2
+ },
+ "policy": "behavior-class entries are REGISTERED (not fixed) per PRODUCTION_ROADMAP \u00a73.B.0-8; mechanical sweep deferred to B1 batch (merged with local_xx renaming).",
+ "behavior_entries": [
+  {
+   "file": "core_b1_remaining.c",
+   "line": 1311,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 1374,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 4572,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 7627,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 7633,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b1_remaining.c",
+   "line": 7666,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2c.c",
+   "line": 1314,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 360,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 370,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 1256,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2d.c",
+   "line": 1536,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 800,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 4827,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b2f.c",
+   "line": 4828,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3b.c",
+   "line": 91,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3b.c",
+   "line": 92,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3i.c",
+   "line": 265,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3i.c",
+   "line": 269,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3i.c",
+   "line": 329,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3i.c",
+   "line": 331,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3i.c",
+   "line": 332,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3l.c",
+   "line": 770,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3l.c",
+   "line": 1118,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1086,
+   "flag": "-Wshift-count-overflow"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1242,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1243,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1323,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 1976,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 2884,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 3018,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 3248,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 6841,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 6843,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 8268,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9327,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9432,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9437,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9458,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 9461,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 10478,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 10479,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 10889,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 11013,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 11014,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 11049,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 11064,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 12103,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 12113,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 13274,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14805,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14936,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 14926,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 15656,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 15685,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 15713,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 15727,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 15760,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 17610,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21739,
+   "flag": "-Wnonnull"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21744,
+   "flag": "-Wnonnull"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21749,
+   "flag": "-Wnonnull"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 21754,
+   "flag": "-Wnonnull"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 24245,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3_remaining.c",
+   "line": 24912,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3r_g1.c",
+   "line": 140,
+   "flag": "-Wbuiltin-declaration-mismatch"
+  },
+  {
+   "file": "core_b3r_g.c",
+   "line": 183,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3r_g.c",
+   "line": 184,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b3r_i28f.c",
+   "line": 518,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b3r_i28f.c",
+   "line": 519,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 1424,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 2778,
+   "flag": "-Wbuiltin-declaration-mismatch"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 7242,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b7c.c",
+   "line": 7267,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "core_b8m.c",
+   "line": 1121,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b8m.c",
+   "line": 1122,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b8m.c",
+   "line": 1146,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b8m.c",
+   "line": 1149,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b9_remaining.c",
+   "line": 96,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b9_remaining.c",
+   "line": 100,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b9_remaining.c",
+   "line": 410,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b9_remaining.c",
+   "line": 414,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "core_b9_remaining.c",
+   "line": 428,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 192,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 1023,
+   "flag": "-Waddress"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 3913,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 3919,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 4008,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 4987,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 9418,
+   "flag": "-Wcompare-distinct-pointer-types"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 9574,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 9848,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 10456,
+   "flag": "-Wtautological-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 10539,
+   "flag": "-Wbuiltin-declaration-mismatch"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 10772,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 10772,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 11638,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 11639,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 11679,
+   "flag": "-Waddress"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12461,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12478,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12503,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12507,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12659,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12675,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12691,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12708,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12724,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12728,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 12967,
+   "flag": "-Wbuiltin-declaration-mismatch"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 13004,
+   "flag": "-Wcompare-distinct-pointer-types"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 13246,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 13336,
+   "flag": "-Wcast-function-type"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 15122,
+   "flag": "-Wcompare-distinct-pointer-types"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 15123,
+   "flag": "-Wsign-compare"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 15144,
+   "flag": "-Wint-to-pointer-cast"
+  },
+  {
+   "file": "restored_bodies.c",
+   "line": 17917,
+   "flag": "-Wshift-count-overflow"
+  }
+ ]
+}

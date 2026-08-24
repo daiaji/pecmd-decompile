@@ -35,7 +35,7 @@ typedef uintptr_t HDC;
 typedef uintptr_t HBITMAP;
 typedef uintptr_t HPEN;
 typedef uintptr_t HBRUSH;
-typedef uintptr_t HFONT;
+/* B0/P2: duplicate HFONT typedef removed */
 typedef uintptr_t HICON;
 typedef uintptr_t HCURSOR;
 typedef uintptr_t HMENU;
@@ -521,8 +521,8 @@ HANDLE CreateFileMappingA(HANDLE, LPSECURITY_ATTRIBUTES, DWORD, DWORD, DWORD, LP
 HANDLE OpenFileMappingA(DWORD, BOOL, LPCSTR);
 LPVOID MapViewOfFile(HANDLE, DWORD, DWORD, DWORD, size_t);
 BOOL   UnmapViewOfFile(LPCVOID);
-HANDLE FindFirstVolumeW(LPWSTR, DWORD, DWORD *);
-BOOL   FindNextVolumeW(HANDLE, LPWSTR, DWORD, DWORD *);
+HANDLE FindFirstVolumeW(LPWSTR, DWORD);
+BOOL   FindNextVolumeW(HANDLE, LPWSTR, DWORD);
 BOOL   FindVolumeClose(HANDLE);
 BOOL   DeleteVolumeMountPointW(LPCWSTR);
 BOOL   GetVolumeNameForVolumeMountPointW(LPCWSTR, LPWSTR, DWORD);
@@ -856,7 +856,7 @@ BOOL    StrToIntExW(LPCWSTR, DWORD, int *);
 LPWSTR  StrCpyNW(LPWSTR, LPCWSTR, int);
 
 /* ---- 服务 ---- */
-typedef uintptr_t SC_HANDLE;
+/* B0/P2: duplicate SC_HANDLE typedef removed */
 typedef struct _SERVICE_STATUS {
     DWORD dwServiceType;
     DWORD dwCurrentState;

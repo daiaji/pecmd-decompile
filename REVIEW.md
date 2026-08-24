@@ -1,5 +1,9 @@
 # PECMD 重构 REVIEW.md — 反编译缺陷与代码事实登记
 
+> [!NOTE]
+> **历史台账声明（B0/P7）**：本文件为还原期历史记录，数据口径以
+> PRODUCTION_ROADMAP.md §2.1/§2.1a 的实测为准；早期重复合并章节未经复核。
+
 ## 1. 重构规范
 
 - 标准 C99, `gcc -std=c99 -Wall -Wextra -Wno-unused-parameter -fsyntax-only` 零警告

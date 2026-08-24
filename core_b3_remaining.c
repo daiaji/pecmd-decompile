@@ -20189,7 +20189,7 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
     }
     else {
         PECMD_AllocWStringBuffer((WCHAR **)&local_res20, 0x105);
-        hFindVolume = FindFirstVolumeW(local_res20, 0x103, NULL);
+        hFindVolume = FindFirstVolumeW(local_res20, 0x103);   /* B0/P2: 真实签名 (LPWSTR,DWORD) */
         if (hFindVolume == INVALID_HANDLE_VALUE) {
             PECMD_FreeStrBuf((WCHAR **)&local_res20);
             iVar4 = 0;
@@ -20220,7 +20220,7 @@ int PECMD_FindVolumeByDeviceId(uint32_t *param_1, int64_t *param_2, LPWSTR param
                 }
                 PECMD_FreeStrBuf((WCHAR **)&local_res18);
                 *local_res20 = L'\0';
-                BVar3 = FindNextVolumeW(hFindVolume, local_res20, 0x103, NULL);
+                BVar3 = FindNextVolumeW(hFindVolume, local_res20, 0x103);   /* B0/P2 */
             } while (BVar3 != 0);
             FindVolumeClose(hFindVolume);
             if (cVar1 != '\x02') {
