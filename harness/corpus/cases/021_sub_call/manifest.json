@@ -1,0 +1,13 @@
+{
+  "id": "021_sub_call",
+  "cmds": [
+    "SUB"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 子过程定义与调用"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "028_calc_hex",
+  "cmds": [
+    "CALC"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 十六进制输入"
+}

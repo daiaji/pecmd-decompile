@@ -1,0 +1,13 @@
+{
+  "id": "015_ifex_expr",
+  "cmds": [
+    "IFEX"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 数值表达式判断"
+}

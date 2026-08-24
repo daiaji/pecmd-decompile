@@ -1,0 +1,2 @@
+ENVI A=0
+TEAM ENVI A=1|IFEX $%A%=1, ENVI B=ok

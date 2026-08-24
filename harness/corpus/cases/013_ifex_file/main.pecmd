@@ -1,0 +1,1 @@
+IFEX C:\pectest\out\demo.txt, ENVI R=exists! ELSE ENVI R=missing

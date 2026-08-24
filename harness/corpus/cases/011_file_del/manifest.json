@@ -1,0 +1,13 @@
+{
+  "id": "011_file_del",
+  "cmds": [
+    "FILE"
+  ],
+  "vars": [
+    "F"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 删除文件(空<>后缀)"
+}

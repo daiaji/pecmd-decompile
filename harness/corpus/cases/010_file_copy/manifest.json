@@ -1,0 +1,13 @@
+{
+  "id": "010_file_copy",
+  "cmds": [
+    "FILE"
+  ],
+  "vars": [
+    "F"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 文件复制"
+}

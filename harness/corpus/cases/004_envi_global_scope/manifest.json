@@ -1,0 +1,13 @@
+{
+  "id": "004_envi_global_scope",
+  "cmds": [
+    "ENVI"
+  ],
+  "vars": [
+    "A"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "错误例(观察用): 作用域覆盖行为(探针)"
+}

@@ -1,0 +1,2 @@
+ENVI S=abcdef
+LSTR R=%S%,2,3

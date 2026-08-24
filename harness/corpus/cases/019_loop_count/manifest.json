@@ -1,0 +1,13 @@
+{
+  "id": "019_loop_count",
+  "cmds": [
+    "LOOP"
+  ],
+  "vars": [
+    "I"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 固定次数循环"
+}

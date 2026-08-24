@@ -1,0 +1,2 @@
+ENVI F=C:\pectest\out\demo.txt
+WRITE %F%,line1

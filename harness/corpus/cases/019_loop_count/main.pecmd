@@ -1,0 +1,2 @@
+ENVI I=0
+LOOP #3, ENVI I=%I%+1

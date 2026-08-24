@@ -1,0 +1,13 @@
+{
+  "id": "027_calc_div0",
+  "cmds": [
+    "CALC"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "错误例: 除零(观察处理)"
+}

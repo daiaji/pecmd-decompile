@@ -1,0 +1,1 @@
+IFEX C:\pectest\nofile.txt, ENVI R=exists! ELSE ENVI R=missing

@@ -1,0 +1,13 @@
+{
+  "id": "016_find_str",
+  "cmds": [
+    "FIND"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 子串查找"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "029_lstr_sub",
+  "cmds": [
+    "LSTR"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 子串提取(观察参数语义)"
+}

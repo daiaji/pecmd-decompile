@@ -1,0 +1,13 @@
+{
+  "id": "026_calc_arith",
+  "cmds": [
+    "CALC"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 算术优先级"
+}

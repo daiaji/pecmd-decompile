@@ -1,0 +1,14 @@
+{
+  "id": "025_team_with_if",
+  "cmds": [
+    "TEAM"
+  ],
+  "vars": [
+    "A",
+    "B"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 复合+条件混用"
+}

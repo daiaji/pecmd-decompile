@@ -1,0 +1,13 @@
+{
+  "id": "023_sub_missing",
+  "cmds": [
+    "SUB"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "错误例: 调用未定义子过程"
+}

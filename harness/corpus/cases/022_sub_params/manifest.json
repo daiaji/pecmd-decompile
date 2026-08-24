@@ -1,0 +1,13 @@
+{
+  "id": "022_sub_params",
+  "cmds": [
+    "SUB"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 带参子过程"
+}

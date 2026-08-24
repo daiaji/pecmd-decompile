@@ -1,0 +1,2 @@
+ENVI F=C:\pectest\out\demo.txt
+FILE %F%=>C:\pectest\out\copy.txt

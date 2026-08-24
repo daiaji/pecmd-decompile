@@ -1,0 +1,14 @@
+{
+  "id": "005_write_file",
+  "cmds": [
+    "WRITE"
+  ],
+  "vars": [
+    "F",
+    "C"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 写文件(绝对路径)"
+}

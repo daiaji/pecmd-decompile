@@ -1,0 +1,2 @@
+ENVI F=C:\pectest\nopath\x.txt
+WRITE %F%,data

@@ -1,0 +1,14 @@
+{
+  "id": "024_team_multi",
+  "cmds": [
+    "TEAM"
+  ],
+  "vars": [
+    "A",
+    "B"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 管道分隔多命令"
+}

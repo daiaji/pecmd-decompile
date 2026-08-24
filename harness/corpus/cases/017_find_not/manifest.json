@@ -1,0 +1,13 @@
+{
+  "id": "017_find_not",
+  "cmds": [
+    "FIND"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 未命中"
+}

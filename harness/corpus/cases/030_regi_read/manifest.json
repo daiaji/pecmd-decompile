@@ -1,0 +1,13 @@
+{
+  "id": "030_regi_read",
+  "cmds": [
+    "REGI"
+  ],
+  "vars": [
+    "V"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 只读注册表取值(常见键)"
+}

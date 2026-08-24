@@ -1,0 +1,3 @@
+ENVI A=Hello
+ENVI B=World
+ENVI C=%A%_%B%

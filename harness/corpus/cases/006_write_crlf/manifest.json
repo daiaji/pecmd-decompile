@@ -1,0 +1,13 @@
+{
+  "id": "006_write_crlf",
+  "cmds": [
+    "WRITE"
+  ],
+  "vars": [
+    "F"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 两次写覆盖 vs 追加行为(探针)"
+}

@@ -1,0 +1,4 @@
+_SUB F,a,b
+ ENVI R=%a%-%b%
+_END
+CALL F,X,Y

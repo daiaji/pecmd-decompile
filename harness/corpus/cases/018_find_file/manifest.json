@@ -1,0 +1,13 @@
+{
+  "id": "018_find_file",
+  "cmds": [
+    "FIND"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 文件内查找(探针, 观察--s语义)"
+}

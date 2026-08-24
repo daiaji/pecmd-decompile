@@ -1,0 +1,13 @@
+{
+  "id": "012_file_missing_src",
+  "cmds": [
+    "FILE"
+  ],
+  "vars": [
+    "F"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "错误例: 源不存在"
+}

@@ -1,0 +1,2 @@
+ENVI S=hello world
+FIND $%S%=world, ENVI R=found! ELSE ENVI R=nofind

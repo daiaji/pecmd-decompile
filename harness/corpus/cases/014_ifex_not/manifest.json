@@ -1,0 +1,13 @@
+{
+  "id": "014_ifex_not",
+  "cmds": [
+    "IFEX"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 不存在分支"
+}

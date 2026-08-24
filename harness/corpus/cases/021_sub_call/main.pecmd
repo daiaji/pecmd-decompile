@@ -1,0 +1,4 @@
+_SUB F
+ ENVI R=subok
+_END
+CALL F

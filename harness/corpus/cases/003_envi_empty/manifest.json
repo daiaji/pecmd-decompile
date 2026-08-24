@@ -1,0 +1,14 @@
+{
+  "id": "003_envi_empty",
+  "cmds": [
+    "ENVI"
+  ],
+  "vars": [
+    "A",
+    "B"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 空值赋值与引用空变量"
+}

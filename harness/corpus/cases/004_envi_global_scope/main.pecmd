@@ -1,0 +1,4 @@
+ENVI A=outer
+TEAM ENVI A=inner
+ENVI B=%A%
+ENVI A=outer2

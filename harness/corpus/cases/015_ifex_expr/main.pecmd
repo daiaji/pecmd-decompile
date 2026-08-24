@@ -1,0 +1,2 @@
+ENVI A=5
+IFEX $%A%>3, ENVI R=gt! ELSE ENVI R=le

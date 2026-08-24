@@ -1,0 +1,13 @@
+{
+  "id": "009_read_missing",
+  "cmds": [
+    "READ"
+  ],
+  "vars": [
+    "V"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "错误例: 读不存在文件"
+}

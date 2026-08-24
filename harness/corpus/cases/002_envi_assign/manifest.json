@@ -1,0 +1,15 @@
+{
+  "id": "002_envi_assign",
+  "cmds": [
+    "ENVI"
+  ],
+  "vars": [
+    "A",
+    "B",
+    "C"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 双变量赋值+拼接引用"
+}

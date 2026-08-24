@@ -1,0 +1,13 @@
+{
+  "id": "020_loop_break",
+  "cmds": [
+    "LOOP"
+  ],
+  "vars": [
+    "I"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "边界例: 提前退出观察(探针)"
+}

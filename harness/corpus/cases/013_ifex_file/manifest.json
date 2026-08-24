@@ -1,0 +1,13 @@
+{
+  "id": "013_ifex_file",
+  "cmds": [
+    "IFEX"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "正例: 文件存在判断"
+}

@@ -104,6 +104,11 @@ def verdict_for(case_id, backend="win_real"):
         verdict["verdict"] = "FAIL"
         verdict["fs"]["removed"].append("done.txt")
 
+    # golden 完整性: 关键产物缺失 = NO-GOLDEN (首次录制前不得判 PASS)
+    if not os.path.isdir(gdir) or not os.path.exists(os.path.join(gdir, "vars.txt")):
+        verdict["verdict"] = "NO-GOLDEN"
+        verdict["_note"] = "金标准缺失: 需先以原版 EXE 真机录制 (§6.7 单一裁判)"
+
     return verdict
 
 

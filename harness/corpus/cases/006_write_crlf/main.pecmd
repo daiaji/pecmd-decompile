@@ -1,0 +1,3 @@
+ENVI F=C:\pectest\out\crlf.txt
+WRITE %F%,lineA
+WRITE %F%,lineB
