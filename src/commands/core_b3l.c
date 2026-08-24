@@ -99,7 +99,7 @@ extern void PECMD_ErrorHandlerWrap(uint8_t *a1, int a2, uint64_t a3, int64_t a4,
 extern void PECMD_ClearFlagAndError(uint8_t *a1);
 extern int PECMD_InstallDevice(LPCWSTR a1, uint32_t a2);
 extern void FUN_14005D534(void *a1, LPCWSTR a2, LPCWSTR a3);
-extern void FUN_14001E6BC(void *a1, LPCWSTR a2, LPCWSTR a3, int a4);
+extern void FUN_14001E6BC(void *a1, LPCWSTR a2, LPCWSTR a3, int64_t a4); /* T1: int→int64_t 与定义一致 */
 extern void *PECMD_LoadIcon(LPCWSTR a1, uint64_t *a2);
 extern int64_t PECMD_GetConfigEntryByName(LPCWSTR a1, uint64_t *a2);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);

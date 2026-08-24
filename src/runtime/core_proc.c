@@ -173,10 +173,13 @@ void PECMD_ServiceEntry(LPCWSTR cmd)
 }
 
 /* ========== 父进程 PID @0x140006988 ========== */
-/* 通过 NtQueryInformationProcess 获取父进程 ID */
+/* 通过 NtQueryInformationProcess 获取父进程 ID.
+ * T1 后续修复: 缓冲须为 0x30 字节 (PBI 六域), 原文 local_38[5]+local_10 两变量合计;
+ * 曾写成 uint64_t[5] 却 memset/查询 0x30 → 踩 /GS cookie → __report_gsfailure(0xC0000409).
+ * 返回取 +0x28 InheritedFromUniqueProcessId (原文 local_10), 非误注的 +0x20. */
 uint64_t PECMD_GetParentProcessId(DWORD pid)
 {
-    uint64_t info[5];
+    uint64_t info[6]; /* PROCESS_BASIC_INFORMATION, 0x30 字节 */
     HANDLE h;
 
     PECMD_GetApiProcCached("NtQueryInformationProcess", "NTDLL.DLL", (void **)&g_pNtQueryInfo,
@@ -187,7 +190,7 @@ uint64_t PECMD_GetParentProcessId(DWORD pid)
         if (h) {
             if ((*g_pNtQueryInfo)(h, 0, info, 0x30, NULL) == 0) {
                 CloseHandle(h);
-                return info[4]; /* PROCESS_BASIC_INFORMATION.ParentProcessId @+0x20 */
+                return info[5]; /* PBI.InheritedFromUniqueProcessId @+0x28 */
             }
             CloseHandle(h);
             return 0;

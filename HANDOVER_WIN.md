@@ -131,6 +131,13 @@ diff_case --all → report.py。FAIL 按 HANDOVER v4 循环分诊 (桩缺失→�
 
 ```
 tools/msvc_build.bat        # 构建入口 (/MAP 输出 build\msvc\pecmd_msvc.map, 已 gitignore)
+tools/debug/parse_dump.py   # minidump 异常解析 (§4-1 的坑都已写进代码注释)
+tools/debug/thread_rip.py   # 挂起进程线程 RIP 直读
+compile_flags.txt           # clangd 配置 — 消除编辑器 'pecmd_defs.h' not found 误报
+.agents/skills/             # DSH 项目级 skills ×4: pecmd-build / msvc-compat /
+                            #   win-crash-triage / pecmd-semantics (即装即用, 热发现)
+.dsh/cordis.yml             # MCP 插件配置 (memory server)。⚠️ 不自动发现:
+                            #   启动时 dsh --config .dsh\cordis.yml 显式指定
 include/win32_stub.h        # src/** 用头; PECMD_LI/FT + __debugbreak 垫片在此
 include/stubs_common.h      # 桩四件套用头; PECMD_LI/FT 另一份
 src/kernel/core_globals.c   # ★ .CRT$XCU CS 初始化器 (原版 FUN_14011a8b0 等价物)

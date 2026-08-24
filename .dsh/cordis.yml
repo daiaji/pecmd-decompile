@@ -1,0 +1,21 @@
+# 项目级 DSH 插件配置 (cordis 加载层)。
+# ⚠️ cordis 配置不会被自动发现: 启动 DSH 时需显式指定, 例如
+#     dsh --config .dsh\cordis.yml        (相对 cwd 解析, 见 app-boot resolveConfigPath)
+#
+# MCP 服务器经 @deepseek-ai/dsh-mcp-client 挂载, 工具名形如 mcp__memory__xxx。
+#
+# 注意:
+# - stdio 传输在 Windows 上 spawn 的是 .cmd 垫片, 必须经 cmd /c 中转
+# - MEMORY_FILE_PATH 把记忆持久化到用户目录, 跨会话保留 (跨 agent 交接的事实沉淀)
+# - GhidraMCP (LaurieWired/GhidraMCP): 需要本机跑 Ghidra + 安装其插件后才有价值;
+#   启用方式 = 在 Ghidra 里开 bridge, 然后仿照下面条目加:
+#     transport: streamable-http / url: http://127.0.0.1:8080/sse (以该插件 README 为准)
+- id: mcp-memory
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: memory
+    transport: stdio
+    command: cmd
+    args: ['/c', 'npx', '-y', '@modelcontextprotocol/server-memory']
+    env:
+      MEMORY_FILE_PATH: 'C:\Users\Administrator\.dsh\memory\pecmd-knowledge.json'

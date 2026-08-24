@@ -18,7 +18,9 @@
 
 #include "pecmd_defs.h"
 /* ---- 待重构函数原型 (后续批次) ---- */
-void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int a);            /* @0x14001e6bc 变量写入 */
+void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int64_t a);        /* @0x14001e6bc 变量写入 */
+/* T1: 上行原为 `int a`, 与 core_var2.c 定义 (int64_t) 不一致 — MSVC 按int传参把 r9 高半
+ * 清零, 被调方读到 caplen=0x00000000FFFFFFFF (>0), 跳过 len 重算, 消费未初始化 len → OOM 弹窗 */
 void FUN_14005D534(void *s, LPCWSTR k, LPCWSTR v);                   /* @0x14005d534 无锁写入 */
 WCHAR *PECMD_SprintfRetEnd(WCHAR *buf, uint64_t value, LPCWSTR fmt); /* @0x1400e6d38 格式化 */
 

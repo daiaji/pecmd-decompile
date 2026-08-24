@@ -1,0 +1,5 @@
+-I
+include
+--target=x86_64-pc-windows-msvc
+-D_CRT_SECURE_NO_WARNINGS
+-std=c11

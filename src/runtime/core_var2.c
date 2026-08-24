@@ -257,7 +257,7 @@ void *FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int namelen, int6
 void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
 {
     void *node;
-    void *tbl;
+    void *scope;
     LPCWSTR p;
     LPCWSTR actual;
     int amp;
@@ -266,8 +266,17 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
     bool force_default;
     void *newarr;
 
+    node = NULL;
+    len = UINT64_MAX; /* 原文 uVar7 初值 0xffffffffffffffff (T1 根因之一: 曾未初始化) */
     amp = 0;
     p = key;
+    if (caplen < -0xf) {
+        /* 负值编码长度: caplen=-(字节数+0x10), 解码 len=-caplen-0x10 后归 -1.
+         * 必须先于 &/:: 处理且用原始 caplen (原文顺序); 旧代码在 caplen=-1
+         * 覆盖之后才解码、且只放在 :: 分支内, 双重失真 (T1). */
+        len = (uint64_t)(-caplen - 0x10);
+        caplen = -1;
+    }
     while (*p == L'&') {
         p++;
         amp++;
@@ -275,27 +284,25 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
     if (*p == L'\0') {
         return;
     }
-    tbl = NULL;
+    scope = NULL;
+    if (amp > 1) {
+        scope = script; /* 多 & 前缀: 回到脚本根表 */
+    }
     force_default = false;
     actual = key;
     if (*p == L':' && p[1] == L':') {
         p += 2;
         force_default = true;
-        tbl = &g_Script;
+        scope = &g_Script; /* :: 强制默认表, 后写覆盖 amp>1 (原文赋值顺序) */
         actual = p;
-        if (caplen >= -0xf) {
+        if (caplen > -1) { /* 原文 -1 < lVar10 */
             caplen -= 2;
-        }
-        else {
-            caplen = -1;
-            len = (uint64_t)(-caplen - 0x10); /* 保留: 反编译特殊值, TODO(verify) */
         }
     }
     namelen = (int)caplen;
-    node = PECMD_VarLookup(script, actual, (amp > 1) ? script : ((tbl != NULL) ? tbl : NULL),
-                           namelen, NULL);
+    node = PECMD_VarLookup(script, actual, scope, namelen, NULL);
 
-    if (caplen < 0) {
+    if ((int64_t)len < 1) { /* 原文守卫是 len<1, 非 caplen<0 (T1 根因之二) */
         len = (uint64_t)lstrlenW(value) * 2;
     }
     if (node == NULL) {
