@@ -7,6 +7,31 @@
 #include "pecmd_defs.h"
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
+/* ---- 关键段初始化 (原版 FUN_14011a8b0/8d4/... .CRT$XCU 初始化器表) ----
+ * 原版通过 CRT 初始化器表在 main 之前 InitializeCriticalSection;
+ * 还原时该机制丢失导致 Enter/Leave 未初始化 CS 而崩溃 (WIN 实测 dump 定位).
+ * DAT_14013d108/14013dcc0/14013dc98/14013d878 四个 CS 无还原引用, 不补. */
+static void PECMD_InitCriticalSections(void)
+{
+    InitializeCriticalSection(&g_csInit);
+    InitializeCriticalSection(&g_csCom);
+    InitializeCriticalSection(&g_csHook);
+    InitializeCriticalSection(&g_csThreadTbl);
+    InitializeCriticalSection(&g_csDisk);
+    InitializeCriticalSection(&g_csE138);
+}
+
+#if defined(_MSC_VER)
+#pragma section(".CRT$XCU", long, read)
+__declspec(allocate(".CRT$XCU")) static void (*g_pPECMD_CSInit)(void) =
+    PECMD_InitCriticalSections;
+#elif defined(__GNUC__)
+__attribute__((constructor)) static void g_PECMD_CSInit_ctor(void)
+{
+    PECMD_InitCriticalSections();
+}
+#endif
+
 /* 堆/实例 */
 HANDLE g_hHeap;        /* DAT_14013d328 进程堆 (mainW 初始化) */
 HINSTANCE g_hInstance; /* DAT_14013ca68 模块句柄 */
@@ -70,7 +95,7 @@ void (*g_pNtReadFile)(void);                                               /* DA
 void (*g_pNtClose)(void);                                                  /* DAT_14013cd40 */
 void (*g_pNtCreateDirectoryObject)(void);                                  /* DAT_14013cd30 */
 void (*g_pNtCreateSymbolicLinkObject)(void);                               /* DAT_14013cd38 */
-void *g_csInit;   /* DAT_14013e190 关键段 */
+CRITICAL_SECTION g_csInit; /* DAT_14013e190 关键段 */
 int64_t g_QPFreq; /* DAT_14013cb80 QPC 频率 */
 
 /* 系统状态 */

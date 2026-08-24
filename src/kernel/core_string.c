@@ -22,6 +22,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h> /* TEMP PROBE: memfail.log */
 
 #include "pecmd_defs.h" /* win32_stub.h: HeapAlloc/HeapFree/MessageBoxW 等 */
 
@@ -45,6 +46,14 @@ void *PECMD_HeapRealloc(void *ptr, size_t size)
                 *(uint32_t *)(hdr + 4) = 0xaa55; /* [-4] 魔数 */
                 return hdr + 8;
             }
+            { /* TEMP PROBE */
+                FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                if (pf_) {
+                    fprintf(pf_, "OOM str.c site=1 size=0x%llx ptr=NULL\n",
+                            (unsigned long long)size);
+                    fclose(pf_);
+                }
+            }
             FUN_1400630D0(2);
         }
     }
@@ -57,6 +66,14 @@ void *PECMD_HeapRealloc(void *ptr, size_t size)
                 nh = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);
                 if (nh)
                     break;
+                { /* TEMP PROBE */
+                    FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                    if (pf_) {
+                        fprintf(pf_, "OOM str.c site=2 size=0x%llx ptr=%p\n",
+                                (unsigned long long)size, (void *)ptr);
+                        fclose(pf_);
+                    }
+                }
                 FUN_1400630D0(2);
             }
             *(size_t *)nh = size;
@@ -114,6 +131,14 @@ WCHAR *PECMD_StrDupAlloc(LPCWSTR src)
         hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, len * 2 + 12);
         if (hdr)
             break;
+        { /* TEMP PROBE */
+            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf_) {
+                fprintf(pf_, "OOM str.c site=3 strdup len=0x%llx\n",
+                        (unsigned long long)len);
+                fclose(pf_);
+            }
+        }
         FUN_1400630D0(2);
     }
     *(size_t *)hdr = len * 2 + 4;
@@ -179,6 +204,15 @@ int FUN_14005C788(const char *s, const WCHAR *w, int n)
 /* mode: 0=内存错误, 其他=内存不足!; 返回 4(Retry)/5(Ignore) 继续, 否则退出 */
 void FUN_1400630D0(int mode)
 {
+    /* TEMP PROBE (P2 分诊): 记录 OOM 弹窗触发, 定位后移除 */
+    {
+        FILE *pf = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf) {
+            fprintf(pf, "OOM dialog mode=%d heap=%p GetProcessHeap=%p\n", mode,
+                    (void *)g_hHeap, (void *)GetProcessHeap());
+            fclose(pf);
+        }
+    }
     LPCWSTR msg = (mode == 0) ? WSTR("内存错误") : WSTR("内存不足!");
     int r = MessageBoxW((HWND)0, msg, WSTR("异常退出"), 5);
     if (r != 4 && r != 5) {

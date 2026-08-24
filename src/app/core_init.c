@@ -14,6 +14,7 @@
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h> /* TEMP PROBE: memfail.log */
 
 #include "pecmd_defs.h"
 
@@ -79,12 +80,21 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     if (!g_hHeap) {
         g_hHeap = GetProcessHeap();
     }
+#define PROBE_STEP(t) { FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a"); \
+        if (pf_) { fprintf(pf_, "PROBE init: %s\n", t); fclose(pf_); } }
+    PROBE_STEP("enter")
     PECMD_InitDynamicImports();
+    PROBE_STEP("dynimports-done")
     FUN_140053E78();
+    PROBE_STEP("53E78-done")
     FUN_14001D628();
+    PROBE_STEP("ntdll-done")
     FUN_1400186BC(&g_Script, 0);
+    PROBE_STEP("scriptinit-done")
     PECMD_InitSystemApiGlobals();
+    PROBE_STEP("sysapiglobals-done")
     PECMD_InitPerfCounterFreq();
+    PROBE_STEP("qpc-done")
     QueryPerformanceCounter(&g_QPC);
     GetSystemTimeAsFileTime((FILETIME *)&g_StartTime);
     /* thunk_PECMD_UpdateLcg = 性能计时, 忽略 */
@@ -97,9 +107,10 @@ void PECMD_InitEnvironmentVars(HINSTANCE hInstance, int show)
     FUN_14006375C(&pVer, PTR_u_2024_05_12_14013a000); /* .rdata 版本日期串 */
     FUN_1400629B8(&g_Script, WSTR("&PECMDBUILD"), pVer);
     PECMD_SetVarAndEnvSync(&g_Script, WSTR("&&ERROR"), WSTR("0"));
+    PROBE_STEP("ver-vars-done")
     /* thunk_PECMD_UpdateLcg(0x3a0c) 计时忽略 */
     PECMD_InitShellFolderEnvVars();
-    /* thunk_PECMD_UpdateLcg(0x3a0e) 计时忽略 */
+    PROBE_STEP("shellfolders-done")
     if (!g_hInstance) {
         g_hInstance = hInstance;
     }

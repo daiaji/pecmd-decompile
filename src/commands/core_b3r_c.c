@@ -603,14 +603,14 @@ uint64_t *PECMD_ShowShutdownUI(int param_1, LPCWSTR param_2, LPCWSTR param_3, ui
                 }
             }
         }
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         *lpParameter = *lpParameter - 1;
         *(uint32_t *)(lpParameter + 6) = 0;
         local_60 = lpParameter;
         if (0 < (int64_t)*lpParameter) {
             local_60 = puVar7;
         }
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
         if (hWnd != (HWND)0) {
             PostMessageW(hWnd, 0x10, 0, 0);
             SendMessageW(hWnd, 0x111, 2, 0);

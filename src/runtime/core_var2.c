@@ -333,8 +333,10 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
 }
 
 /* ========== 环境变量直写 @0x14005d534 ========== */
-BOOL FUN_14005D534(LPCWSTR key, LPCWSTR value)
+/* 原签名即三参 (调用方 FUN_1400629B8 传 script); script 在此路径不参与 */
+BOOL FUN_14005D534(void *script, LPCWSTR key, LPCWSTR value)
 {
+    (void)script;
     if (*key == L'\0') {
         return FALSE;
     }

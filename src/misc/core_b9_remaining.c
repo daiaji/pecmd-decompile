@@ -1133,11 +1133,8 @@ void FUN_140115488(char *param_1)
 }
 
 
-uint64_t wctomb_s(void)
-{
-    /* @0x140115b64 size=20 */
-    return 0;
-}
+/* @0x140115b64 wctomb_s size=20: SKIP(CRT) — 系统 CRT 提供真体 (P0-2 MSVC 裁剪,
+ * 无业务调用点, 原 uint64_t wctomb_s(void) 桩与 libucrt 同名强定义冲突已删) */
 
 
 /* @0x140118660 size=10 SKIP(CRT): MSVC CRT 设置 MXCSR 寄存器，不还原 */

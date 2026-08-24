@@ -293,9 +293,9 @@ LAB_1400e9774:
     lVar18 = PECMD_TokPrefixICmp("--free", local_300, 6);
     if ((char)lVar18 != '\0')
         goto LAB_1400ebcdd;
-    EnterCriticalSection(g_csInit);
+    EnterCriticalSection(&g_csInit);
     DAT_14013e240 = DAT_14013e240 + 1;
-    LeaveCriticalSection(g_csInit);
+    LeaveCriticalSection(&g_csInit);
     PECMD_LoadUnloadImdisk((uint64_t)(uintptr_t)local_res18, 0);
     bVar9 = PECMD_IsImDiskMountPointAvailable();
     local_320 = 0;
@@ -466,19 +466,19 @@ LAB_1400e9774:
             }
             PECMD_FreeStrBuf(&local_268);
         }
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         DAT_14013e240 = DAT_14013e240 + -1;
-        LeaveCriticalSection(g_csInit);
-        EnterCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
+        EnterCriticalSection(&g_csInit);
         while (0 < DAT_14013e240) {
-            LeaveCriticalSection(g_csInit);
+            LeaveCriticalSection(&g_csInit);
             uVar35 = 0;
             PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)out, 1, 0, (uint64_t *)0);
-            EnterCriticalSection(g_csInit);
+            EnterCriticalSection(&g_csInit);
             res38 = savedErr; /* _Var38 = local_358 */
         }
         PECMD_LoadUnloadImdisk((uint64_t)(uintptr_t)local_res18, -1);
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
         numbuf[0] = (uint16_t)((char)bVar39 + L'0');
         numbuf[1] = (uint16_t)0x20;
         numbuf[2] = L'\0';
@@ -498,19 +498,19 @@ LAB_1400e9774:
                               (uint64_t)(uintptr_t)local_338, uVar35);
         }
         PECMD_RunCommand(out, local_338);
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         DAT_14013e240 = DAT_14013e240 + 1;
         DAT_14013a854 = -64; /* 0xffffffc0 */
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
         PECMD_LoadUnloadImdisk((uint64_t)(uintptr_t)local_res18, 0);
         bVar9 = PECMD_IsImDiskMountPointAvailable();
         uVar17 = (uint32_t)(bVar9 == 0);
         local_330 = uVar17;
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         if (uVar17 == 0) {
             DAT_14013a854 = 0x38;
         }
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
         PECMD_FreeStrBuf(&local_338);
     }
     if (WVar1 != L'*') {
@@ -566,7 +566,7 @@ LAB_1400e9774:
             if (*local_3e0 != L'\0')
                 goto LAB_1400eb01d;
             RAMD_FREE_ALL();
-            EnterCriticalSection(g_csInit);
+            EnterCriticalSection(&g_csInit);
         }
         else {
             uVar35 = PECMD_IsDirectory(local_3e0);
@@ -673,7 +673,7 @@ LAB_1400e9774:
             }
             PECMD_FreeStrBuf(&local_2e8);
             RAMD_FREE_ALL();
-            EnterCriticalSection(g_csInit);
+            EnterCriticalSection(&g_csInit);
         }
         DAT_14013e240 = DAT_14013e240 + -1;
         errCode = 0x80070057u; /* dwHighDateTime = 0 */
@@ -938,7 +938,7 @@ LAB_1400e9774:
                 PECMD_FreeStrBuf(&local_2e0);
                 PECMD_FreeStrBuf(&local_2d0);
                 RAMD_FREE_ALL();
-                EnterCriticalSection(g_csInit);
+                EnterCriticalSection(&g_csInit);
                 DAT_14013e240 = DAT_14013e240 + -1;
                 errCode = 0xb7u;
                 goto LAB_1400ebd01;
@@ -1128,14 +1128,14 @@ LAB_1400eb33b:
     (void)PECMD_CreateWindow((int64_t *)out, (WCHAR *)(const uintptr_t)L"imdisk.cpl,", 0,
                              (LPCWSTR)g_szEmpty, -100);
     RAMD_FREE_ALL();
-    EnterCriticalSection(g_csInit);
+    EnterCriticalSection(&g_csInit);
     DAT_14013e240 = DAT_14013e240 + -1;
     goto LAB_1400ebd01;
 code_r0x0001400eb551:
     RAMD_FREE_ALL();
-    EnterCriticalSection(g_csInit);
+    EnterCriticalSection(&g_csInit);
     DAT_14013e240 = DAT_14013e240 + -1;
-    LeaveCriticalSection(g_csInit);
+    LeaveCriticalSection(&g_csInit);
     PECMD_FreeStrBuf(&local_260);
     goto LAB_1400e9774;
 LAB_1400eb8bc:
@@ -1153,21 +1153,21 @@ LAB_1400eb8bc:
         PECMD_SetVariable(out, local_3c0, pWVar29);
     }
     RAMD_FREE_ALL();
-    EnterCriticalSection(g_csInit);
+    EnterCriticalSection(&g_csInit);
     DAT_14013e240 = DAT_14013e240 + -1;
     goto LAB_1400ebd01;
 LAB_1400ebcdd:
     for (;;) {
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         if (!(0 < DAT_14013e240))
             break;
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
         PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)out, 1, 0, (uint64_t *)0);
     }
     PECMD_LoadUnloadImdisk((uint64_t)(uintptr_t)local_res18, -1);
     errCode = 0;
 LAB_1400ebd01:
-    LeaveCriticalSection(g_csInit);
+    LeaveCriticalSection(&g_csInit);
     PECMD_FreeStrBuf(&local_260);
     return (uint64_t)errCode & 0xffffffff;
 }

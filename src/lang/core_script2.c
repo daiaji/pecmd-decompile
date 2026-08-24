@@ -15,6 +15,7 @@
  * 待实现（extern）：FUN_140045C90(FUN_140045C90)、PECMD_RunCommand(PECMD_RunCommand)
  */
 #include <stdlib.h>
+#include <stdio.h> /* TEMP PROBE */
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -52,6 +53,8 @@ static int32_t g_cmdlineMode;    /* DAT_14013ccb0 */
  */
 int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
 {
+    FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+    if (pf_) { fprintf(pf_, "PROBE StartupScript enter cmd=%ls\n", (const wchar_t *)cmdline); fclose(pf_); }
     (void)flag;
     (void)hinst;
     LPCWSTR p = cmdline;
@@ -167,6 +170,10 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
         }
     }
 
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) { fprintf(pf_, "PROBE StartupScript done r=0x%llx\n", (unsigned long long)r); fclose(pf_); }
+    }
     /* 清理 */
     PECMD_FreeStrBuf(&scriptBuf);
     PECMD_FreeStrBuf(&cmd);

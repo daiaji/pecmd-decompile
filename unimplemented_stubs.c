@@ -109,7 +109,17 @@ void PECMD_RestartSelf(uint16_t *param_1) { (void)param_1; }int FUN_14005B184(co
 void thunk_PECMD_GetNetworkConnectionName(const char *a, void *b, const char *c) { (void)a; (void)b; (void)c; }
 uint16_t *PECMD_StrAlloc(uint16_t **ps, size_t count) { (void)ps; (void)count; return 0; }
 void FUN_140060A74(uint8_t *buf, int len) { (void)buf; (void)len; }
-int PECMD_RunBootScriptInFiber(uint16_t *cmdline) { (void)cmdline; return 0; }
+/* 原版 @0x1400050c8: CreateFiber(FUN_1400050a0)->SwitchToFiber, fiber 体经
+ * FUN_140004fd4 最终调用 PECMD_RunStartupScript(hinst,0,cmdline) (@0x14004eb34,
+ * 真体 core_script2.c). 单行命令行无并发 yield, 顺序调用语义等价. */
+int PECMD_RunBootScriptInFiber(uint16_t *cmdline)
+{
+    extern int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag,
+                                          const WCHAR *cmd);
+    extern HINSTANCE g_hInst; /* DAT_14013cf70 (原版实参来源 DAT_14013cad8 链) */
+    PECMD_RunStartupScript(g_hInst, 0, cmdline);
+    return 0;
+}
 int32_t PECMD_DecodeEncTextToUtf16(uint32_t spec, const uint8_t *src, int srclen,
                       uint16_t *dst, int dstcap, uint32_t key)
 { (void)spec; (void)src; (void)srclen; (void)dst; (void)dstcap; (void)key; return 0; }

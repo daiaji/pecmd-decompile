@@ -58,7 +58,9 @@ if defined SYN (
   del /q "%OUTDIR%\pecmd_msvc.exe" 2>nul
   cl %CFLAGS% /I"%ROOT%\include" @"%RSP%" ^
      /Fe"%OUTFWD%/pecmd_msvc.exe" /Fo"%OUTFWD%/" /Fd"%OUTFWD%/" ^
-     /link advapi32.lib user32.lib gdi32.lib shell32.lib ole32.lib ws2_32.lib winmm.lib
+     /link advapi32.lib user32.lib gdi32.lib shell32.lib ole32.lib ws2_32.lib winmm.lib ^
+     cfgmgr32.lib setupapi.lib shlwapi.lib version.lib ^
+     /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MAP:"%OUTFWD%/pecmd_msvc.map"
 )
 if errorlevel 1 (
   echo [msvc_build] FAIL: see errors above.

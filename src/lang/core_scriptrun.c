@@ -10,6 +10,7 @@
  *   PECMD_InvokeSubRoutine / FUN_1400E7D58 ResDecode 等）extern 挂起。
  * ==================================================================== */
 #include <stdbool.h>
+#include <stdio.h> /* TEMP PROBE */
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -72,6 +73,10 @@ extern void FUN_14009BB28(void *script, int flag);             /* @0x14009bb28 *
  */
 int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
 {
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) { fprintf(pf_, "PROBE RunCommand enter\n"); fclose(pf_); }
+    }
     WCHAR *pp = cmdline;
     int flags = 0, flags2 = 0;
     uint8_t m_flag = 0, mem_flag = 0;
@@ -82,6 +87,10 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
     int64_t DVar13 = 0;
 
     /* ---- 段1：前缀指令解析 ---- */
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) { fprintf(pf_, "PROBE before SrParsePrefix\n"); fclose(pf_); }
+    }
     PECMD_SrParsePrefix(script, &pp, &flags, &flags2, &m_flag, &mem_flag, &sysinit_name, &b_sysinit,
                         &outbuf, &qkmode);
 

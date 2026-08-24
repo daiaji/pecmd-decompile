@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h> /* TEMP PROBE: memfail.log */
 
 #include "pecmd_defs.h"
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
@@ -71,6 +72,10 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         return 0;
     }
     g_hHeap = GetProcessHeap();
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) { fprintf(pf_, "PROBE MainW heap-init\n"); fclose(pf_); }
+    }
     if (!hInstance) {
         hInstance = g_hInstance;
     }
@@ -80,6 +85,10 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         memset(&si.lpDesktop, 0, 0x58); /* 清零剩余字段 (FUN_140102a90 即 memset 内联) */
         GetStartupInfoW(&si);
         g_hInst = hInstance;
+        { /* TEMP PROBE */
+            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf_) { fprintf(pf_, "PROBE before InitEnvVars\n"); fclose(pf_); }
+        }
         PECMD_InitEnvironmentVars(hInstance, si.wShowWindow);
     }
     /* 复制命令行 */
@@ -188,7 +197,8 @@ static void PECMD_Main1(WCHAR *cmdline)
 }
 
 /* ========== main @0x140017034 ========== */
-int PECMD_main(int argc, char **argv)
+/* CRT main: 链接为 /SUBSYSTEM:WINDOWS + /ENTRY:mainCRTStartup (与原版 GUI 子系统一致) */
+int main(int argc, char **argv)
 {
     (void)argv;
     return (int)PECMD_MainW(0, (WCHAR *)(uintptr_t)argc); /* 反编译显示 arg 复用, TODO(verify) */

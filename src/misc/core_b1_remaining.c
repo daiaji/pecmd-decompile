@@ -8228,12 +8228,12 @@ int64_t PECMD_AdjustTokenPrivilege(LPCWSTR param_1, DWORD param_2, HANDLE param_
     else {
         local_18.PrivilegeCount = 1;
         local_18.Privileges[0].Attributes = param_2;
-        EnterCriticalSection(g_csInit);
+        EnterCriticalSection(&g_csInit);
         LookupPrivilegeValueW((LPCWSTR)0x0, param_1, &local_18.Privileges[0].Luid);
         BVar1 = AdjustTokenPrivileges(local_res20, 0, &local_18, 0x10, (TOKEN_PRIVILEGES *)0x0,
                                       (DWORD *)0x0);
         lVar2 = (int64_t)BVar1;
-        LeaveCriticalSection(g_csInit);
+        LeaveCriticalSection(&g_csInit);
     }
     return lVar2;
 }

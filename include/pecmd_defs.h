@@ -72,7 +72,7 @@ extern void (*g_pNtReadFile)(void);                      /* DAT_14013cd28 */
 extern void (*g_pNtClose)(void);                         /* DAT_14013cd40 */
 extern void (*g_pNtCreateDirectoryObject)(void);         /* DAT_14013cd30 */
 extern void (*g_pNtCreateSymbolicLinkObject)(void);      /* DAT_14013cd38 */
-extern void *g_csInit;                                   /* DAT_14013e190 */
+extern CRITICAL_SECTION g_csInit;                        /* DAT_14013e190 */
 extern int64_t g_QPFreq;                                 /* DAT_14013cb80 */
 
 /* ---- 公共工具 (core_string.c) ---- */
