@@ -1,160 +1,165 @@
-# HANDOVER_WIN.md — WIN 端作战手册 (v5, DSH 交接版)
+# HANDOVER_WIN.md — WIN 端作战手册 (v6, DSH 交接版)
 
-> 2026-08-24 重写于 P0 完成后｜前身 v4 (参考库路线)。
-> 本文是 **DSH 的行动手册**: 当前进度 → 已定案的技术档案 → 唯一堵点的完整证据链 → 下一步任务清单。
-> **读法**: §1 看状态, §5 直接开工, §3/§4 遇到同类问题再回来查。
+> 2026-08-25 更新｜v5 (P0 完成后) → v6: T1 OOM 链已修复, 运行链推进到脚本命令解析,
+> 出现**新堵点 T1b**(堆句柄双符号), 证据链已收窄到一步之遥。
+> **读法**: §1 看状态 → §5 直接开工; §3/§4 遇同类问题再回来查。
 
 ---
 
 ## 1. 状态一句话
 
-**P0 (MSVC 化) 已完成并超额** — 双绿门达成 (`tools\msvc_build.bat syntax` 全绿 + 完整构建 exit 0),
-`pecmd_msvc.exe` 产出且能运行到初始化深处。当前卡在 **P2 分诊的第一个运行时 bug**:
-LOAD 冒烟时变量写入链触发 OOM 弹窗循环, 证据链已收窄到一个函数内 (§5-T1), 但未修复。
+**T1 (OOM 弹窗循环) 已修复并连带修掉 3 个后续运行时 bug** — 冒烟 t1.pecmd 从
+"qpc-done 即死 + OOM 弹窗循环" 推进到 `RunCommand → SrParsePrefix 入口`。
+当前卡在 **T1b: 堆分配 API 收到无效堆句柄 (rcx=0x13) 在 ntdll 内 AV**,
+根因基本锁定为 `DAT_14013d328` / `g_hHeap` 双符号分裂 (§5-T1b), 未修。
 
 | 阶段 | 状态 |
 |---|---|
-| P0-① 复合字面量 | ✅ 完成 (56+1 处 → `PECMD_LI/PECMD_FT`, 另加 22 处标量强转、21 处裸 `(...)`) |
-| P0-② crt_shims 裁剪 | ✅ 完成 (202→12, 190 个 CRT 桩删; win32_api_stubs 另裁 506 个系统同名桩) |
-| P0-③ 构建管线 | ✅ 完成 (+ 补链 cfgmgr32/setupapi/shlwapi/version + GUI 子系统入口) |
-| G0 门禁 | ⚠️ exe 可运行不崩, 但冒烟用例未闭环 (堵在 T1) |
-| P1 验证闭环 | ⚠️ 半程: run_case.py 协议跑通; epilogue 的 WRITE 命令在原版不存在需换通道 (T2) |
-| P2 对拍/分诊 | 🔴 进行中: 第一个 FAIL (OOM) 定位完毕待修 |
+| P0 MSVC 化 | ✅ (v5 已达成) |
+| G0 门禁 | 🔴 exe 可运行、初始化全通、已进入命令解析; 卡 T1b |
+| P1 验证闭环 | ⚠️ 半程: run_case.py 协议通; epilogue WRITE 通道待换 (T2) |
+| P2 对拍/分诊 | 🔴 运行时 bug 连环修复中 (本轮 4 连修, 见 §3) |
 | P3/P4 | ⬜ 未动 |
+
+### 本轮 (v6) 战果清单 — 全部对照 decompiled.c 原文定案后修改
+
+| # | 文件 | 缺陷 | 根因/证据 | 结果 |
+|---|---|---|---|---|
+| 1 | src/runtime/core_var2.c | FUN_14001E6BC 五处失真: len 未初始化; 负值编码在 caplen=-1 覆盖后才解码且只放 :: 分支; 重算守卫误为 caplen<0; :: 与 amp>1 的 scope 优先级反 | 原文 @18137-18219: uVar7 初值 -1, `if(param_4<-0xf)` 最先解码, 守卫是 `(longlong)uVar7<1` | 按原文逐行还原 |
+| 2 | src/runtime/core_var.c, src/commands/core_b3l.c | FUN_14001E6BC 第 4 参声明为 `int`, 定义是 `int64_t` | x64 MSVC 按 int 传参清零 r9 高半位 → 被调方读到 caplen=0xFFFFFFFF(>0) → 跳过重算消费野 len → OOM 弹窗 (memfail.log site=1 size≈堆指针值实锤) | 统一 int64_t |
+| 3 | src/runtime/core_proc.c | PECMD_GetParentProcessId 缓冲 uint64_t[5] 却 memset/查询 0x30 字节 | 踩 /GS cookie → __report_gsfailure (0xC0000409); 原文 @3436 是 local_38[5]+local_10 共 6 qword, 取值 +0x28 InheritedFromUniqueProcessId (旧码误取 info[4]) | 改 uint64_t[6] 取 [5] |
+| 4 | src/app/core_main.c | main() 把 `(WCHAR*)argc` 当 cmdline 透传 | 原版 @0x17034 字节 `48 8B D1(mov rdx,rcx) 33 C9(xor ecx,ecx) E9(jmp mainB)` = mdyblog 改版 CRT 启动器把**宽命令行参数尾经 RCX** 传入 main; 原生 UCRT 传的是 argc! lstrlenW((WCHAR*)2) 内部 SEH 吞错返回垃圾长度 → memmove AV | 自行从 GetCommandLineW 引号敏感地取参数尾; hInstance 用 GetModuleHandleW(NULL) |
+| 5 | src/lang/core_script2.c | RunStartupScript 头部写作 `PECMD_GrowByteBuffer(NULL,0)` — ps=NULL 必炸 | 原文 @45530: `local_res18=FUN_140024c48(&local_res18,0,5)` 取首 token + `FUN_1400170b0(&local_res18)` 跳空白 (与 FUN_14005b154 同体) | 按原文还原头部 |
+
+**冒烟证据** (C:\pectest\memfail.log, 同一条 `LOAD t1.pecmd`):
+```
+v5 之前: qpc-done → OOM str.c site=1 size=0x172de9bfee4 → "内存不足!" 弹窗循环
+v6 现在: heap-init → InitEnvVars 全通过 (ver-vars/shellfolders-done)
+        → StartupScript enter → RunCommand enter → before SrParsePrefix → (T1b 崩点)
+```
+
+---
 
 ## 2. 环境 (已就绪, 勿重装)
 
-- VS 2022 Community + Windows Python 3.14。构建: 任意终端
-  `cmd /c "call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 && tools\msvc_build.bat"`
-- `C:\pectest\`: `PECMD.EXE` (=PECMD原始.EXE, 版本 **201201.88.05.94 mdyblog 修改版**) + `pecmd_msvc.exe`
-- WER LocalDumps 已配置 (HKLM\...\LocalDumps → C:\pectest\dumps, DumpType=2 全量)
-- git 身份已配 (repo-local: daiaji)
-- ⚠️ 本机 8GB 内存, 编译期峰值吃 ~2GB, 勿并行多份构建; 构建产物 (*.obj/*.pdb/*.map/dump) 用完即删
+- VS 2022 Community + Windows Python 3.14。构建:
+  ```bat
+  cmd /c "chcp 936 >nul & call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 & tools\msvc_build.bat"
+  ```
+  **⚠️ 必须 chcp 936**: msvc_build.bat 用 cmd echo 写 sources.rsp, 编码随控制台代码页;
+  pwsh 默认 UTF-8 下 rsp 里中文路径变 UTF-8 字节, cl 按 GBK 读 → C1083 找不到源文件
+  (报错形如 `PECMD鍙嶇紪璇慭`)。GBK 控制台则无此问题。syntax 门同理。
+- `C:\pectest\`: PECMD.EXE (=PECMD原始.EXE) + pecmd_msvc.exe + t1.pecmd (`ENVI T1VAR=hello`)
+- 构建后部署: `Stop-Process pecmd_msvc` 先杀 (常挂消息泵占 exe 锁) → Copy 到 C:\pectest\
+- WER LocalDumps → C:\pectest\dumps (DumpType=2 全量); **dumps 会积累, 定期清理**
+- git 身份 repo-local: daiaji
 
-## 3. 技术档案 — MSVC 化改动手法 (遇到同类报错直接套)
+## 3. 技术档案 — 运行时连环坑 (v6 新增, 遇同症直接套)
 
 | 症状 | 根因 | 手法 |
 |---|---|---|
-| C2059/C2143 `{...}` | GCC 复合字面量 `(LARGE_INTEGER){.QuadPart=x}` | → `PECMD_LI(x)` (辅助构造函数在 win32_stub.h 与 stubs_common.h 各一份, 语义等价) |
-| C2440 标量→struct | 反编译器 cast 残留 `(LARGE_INTEGER)(int64_t)x` | → `PECMD_LI(x)` |
-| C2059 在 `(...)` 前 | 函数指针参数表裸 `(...)` 是 GCC 扩展 | → `()` |
-| LNK2005 vs kernel32 等 | win32_api_stubs.c 定义了系统 DLL 导出同名函数 | 删定义让系统接管 (对照 dumpbin /linkermember:1 的导出全集); 该文件现在只剩 13 个非系统符号 |
-| LNK2019 `_snwprintf` | UCRT 无此导入符号 (头文件内联实现) | 转发真体 → `__stdio_common_vswprintf` (win32_api_stubs.c 顶部), **勿 include <stdio.h> 进该文件** |
-| C2371/C2129 static | 隐式声明/跨 TU static 不一致 | 补前置声明 / 去 static |
-| C2036 void* 未知大小 | GNU void* 算术扩展 | 显式 `(char *)` 步长; 注意 Ghidra 的 `int* +N` = 字节 `+4N` (曾因此把 g_pMapBlk+6 修正为 +0x18) |
-| C7744 \xXXXX 越界 | `WSTR("A" "B")` 续行段丢 L 前缀 | 合并为单一字面量 (宏只粘首段!) |
-| C2143 label 后 | 标签后无语句 (C23 不允许) | 加 `;` |
+| OOM 弹窗循环, size≈堆指针值 | E6BC 野 len (表#1/#2) | 对照原文还原 + 原型统一 |
+| 退出码 0xC0000409 (__report_gsfailure) | 栈缓冲比 memset/查询长度小 8 字节, 踩 GS cookie (GetParentProcessId 例) | 数组尺寸按原文变量合计; Ghidra 相邻局部可能是同一结构被拆开 |
+| 一启动就 AV 在 memmove/lstrlenW | 原版改版 CRT 经 RCX 传宽 cmdline 尾, 原生 UCRT 传 argc | 见 §3 表#4; 凡"反编译显示 arg 复用/寄存器残留"的入口都要用字节级核对 |
+| ps=NULL 必炸的辅助函数被显式传 NULL | 还原者臆造的调用 (GrowByteBuffer(NULL,0)) | 回原文找该位置真实调用序列 |
+| ntdll 内 AV, rcx=小整数, `[rcx+0x10] cmp 0xddeeddee` | 无效堆 HANDLE 传入分配 API (RtlAllocateHeap 校验 _HEAP+0x10 魔数) | 当前堵点 T1b, 见 §5 |
 
-## 4. WIN 调试工具箱 (本轮沉淀, 复用价值高)
+## 4. WIN 调试工具箱 (v6 增补)
 
-无 cdb/windbg/procdump 的环境下的替代方案:
-
-1. **崩溃**: WER LocalDumps 自动落 dump → Python 解析 minidump (纯 struct, 无依赖):
-   异常流(6)/模块流(4)/Memory64List(9)。注意两个坑:
-   - MINIDUMP_EXCEPTION 的 ExceptionAddress 实测在 offset 24 (非文档 16);
-   - ThreadContext 的 Rva 直指 CONTEXT (无 MEMORY_DESCRIPTOR 头), x64 RIP 在 ctx[0xF8]。
-   RIP → 模块偏移 → `build\msvc\pecmd_msvc.map` 第三列静态 VA (基址 0x140000000) 二分查符号。
-   **构建时 map 会生成, 但已被 gitignore — 要用就临时去掉 /MAP 或本地保留**。
-2. **挂起**: 不强杀! `GetThreadContext` 直读各线程 RIP (工具脚本思路见 commit e298ebd):
-   - rip 在 win32u.dll ≈ GetMessage 泵挂起; ntdll 多线程同址 = 事件等待;
-   - 配合 Memory64List 栈回扫可还原调用帧。
-3. **探针法** (GUI 子系统无 stdout): fopen 追加写 `C:\pectest\memfail.log`, 逐段插桩二分定位。
-   当前源码树里留有六处文件的 `TEMP PROBE` 探针网 (core_main/core_init/core_script2/
-   core_scriptrun/core_string/core_var, 全部带注释标记), **T1 用完后全局搜 TEMP PROBE 移除**。
-4. **原版行为对照**: 别猜命令语义! EXE 里 utf-16 字符串扫描可确认命令是否存在 (例:
-   WRITE 命令在此版本不存在, exit=2=未知命令; TEXT 是屏幕显示不是写文件)。
+1. **dumpbt.py (新, 已入库 tools/debug/, 权威版本)**: minidump 异常流+模块+Memory64List
+   栈回扫+map 符号一站式:
+   ```bat
+   python tools\debug\dumpbt.py C:\pectest\dumps\<最新>.dmp
+   ```
+   输出异常码/fastfail 子码/RIP 符号化/寄存器/栈上 pecmd_msvc 返回地址候选。
+   坑位备注: MINIDUMP_EXCEPTION.ExceptionAddress 在流内 offset 24; ThreadContext Rva
+   直指 CONTEXT, RIP 在 ctx+0xF8; MSVC map 第三列是裸 hex (无 h 后缀)。
+   ⚠️ 旧 parse_dump.py 曾出现"文件被回退成旧版"的现象, 以 dumpbt.py 为准。
+2. **ntdll/kern32 崩点定性**: 从 dump Memory64List 直接读 RIP 前后字节 capstone 反汇编;
+   再拿 C:\Windows\System32\ntdll.dll 导出表二分定位函数名 (脚本见 git 历史/本轮会话)。
+3. **map 符号 ↔ 运行地址换算**: 模块基址(从 dump ModuleList 取) + map RVA;
+   全局变量当前值可直接用 Memory64List 读出 (本轮读 DAT_14013d328/g_hHeap 实锤用此法)。
+4. **探针法**: memfail.log 探针网仍在 (core_main/core_init/core_script2/core_scriptrun/
+   core_string/core_var, 带 TEMP PROBE 注释)。**T1b 未闭环前不要拆** — 本轮全靠它收窄。
+5. WER LocalDumps / GetThreadContext 直读 RIP / 原版 EXE utf-16 字符串扫描: 同 v5 §4。
 
 ## 5. DSH 任务清单 (按序执行)
 
-### T1 — 修复 OOM 弹窗循环 (唯一硬堵点, 一步之遥)
+### T1b — 堆句柄双符号归一 (当前唯一硬堵点)
 
-**现象**: `pecmd_msvc.exe LOAD t1.pecmd` (内容仅一行 ENVI) 弹"内存不足!"对话框循环
-(FUN_1400630D0 mode=2, 用户点掉即退出)。
+**现象**: t1 冒烟崩在 SrParsePrefix 入口附近, RIP 在 ntdll 分配路径内
+(RtlAllocateMemoryBlockLookaside 导出区间 +0x2e), 指令 `cmp dword ptr [rdi+0x10], 0xddeeddee`,
+rdi=rcx=**0x13** → 分配 API 收到无效堆 HANDLE。
 
-**证据链** (探针日志 memfail.log):
+**已实锤** (dump 读全局, 方法见 §4-3, dump: pecmd_msvc.exe.12168.dmp):
 ```
-PROBE init: qpc-done          ← InitEnvironmentVars 走到这里都正常
-OOM str.c site=1 size=0x172de9bfee4 ptr=NULL    ← site=1 = PECMD_HeapRealloc(NULL分支)
+DAT_14013d328 (map: 0x1402b8fb8, unimplemented_stubs.obj) = 0x0    ← 从未被赋值!
+g_hHeap      (map: 0x1402c1850, <common>)             = 0x250fc340000 ← 正确进程堆
 ```
-size ≈ 当时堆指针值 → **某个未初始化/错位的值被当成分配长度**。
+原版只有一个全局 DAT_14013d328 (=GetProcessHeap(), mainW 设置)。还原工程裂成两个符号:
+- core_globals.c 定义并初始化 `g_hHeap` (pecmd_defs.h 注释明说 "DAT_14013d328 -> g_hHeap")
+- unimplemented_stubs.c:452 又定义了独立的 `void *DAT_14013d328 = 0;`,
+  stubs_common.h:553 extern 它 → **restored_bodies.c 约 12 处 HeapAlloc/HeapFree**
+  (AllocStrSlot@7318 / FreeStrBuf@7119 / AllocWStringBuffer 族) 全部用未初始化句柄!
 
-**锁定范围**: qpc-done 与 ver-vars-done 之间只有 core_init.c:93-99 (PECMDVER 变量设置),
-即变量写入链 `FUN_1400629B8 → FUN_14001E6BC (@0x14001e6bc, core_var2.c:257) → PECMD_NewVarNode (core_var2.c:96)`。
+**修法方向** (单一真源, 二选一, 推荐前者):
+1. stubs_common.h 里 `#define DAT_14013d328 (*(void**)&g_hHeap)` 或直接 extern g_hHeap,
+   并删除 unimplemented_stubs.c:452 的定义;
+2. 或在 MainW 设置 g_hHeap 处同步写 DAT_14013d328。
+修完重建跑 t1: 若仍崩, 重跑 dumpbt 看新 RIP — rcx 若仍是小整数, 用 §4-3 读调用点
+(rsp+0x8 返回地址) 所属 pecmd_msvc 符号再定位; 0x13 的精确来源尚未闭环, 不必预设。
 
-**头号嫌疑** (未验证, 先看这里): `FUN_14001E6BC` 中 `uint64_t len;` 未初始化,
-当 `caplen >= 0` 且 key 非 `::` 前缀时 **len 从未被赋值**, 而 else 分支 (node 存在时)
-`PECMD_AllocString((WCHAR**)((u8*)node+8), len + 2)` (core_var2.c:327) 直接消费它。
-次嫌疑: `PECMD_NewVarNode` 内部同类问题。另外注意 E6BC 大量 `node+偏移` 解引用前缺判空
-(calloc 后 node 理论非空, 但 VarLookup 返回的 node 走 else 分支前没判 NULL 以外的东西)。
-
-**修法纪律**: 对照 decompiled.c @14001e6bc 原文核对该路径 len 的真实来源后再补,
-不要拍脑袋赋 0 (可能破坏截断语义)。修完跑 t1 → 期望 exit=0 且无弹窗。
+**验收**: t1.pecmd exit=0 无弹窗; memfail.log 出现 SrParsePrefix 之后的进度标记。
 
 ### T2 — harness 回捞通道改造 (WRITE 命令不存在)
-
-run_case.py 的 make_epilogue 生成的 `WRITE <file>,<content>` 在本版原版里是未知命令 (exit=2)。
-已实测可用通道: `EXEC =C:\Windows\System32\cmd.exe /c echo <content>><file>` (exit=0, 文件落地)。
-改造 make_epilogue (注意 cmd 元字符转义), masks.conf 可能要加行尾 \r\n 归一化。
-改完跑 `python harness\runners\check_corpus.py` + 单条 run_case 验证双端产物一致。
+同 v5: make_epilogue 改 `EXEC =C:\Windows\System32\cmd.exe /c echo <content>><file>`,
+注意 cmd 元字符转义 + masks.conf 行尾归一; check_corpus + 单条 run_case 验证。
 
 ### T3 — G0 收口 → P1 golden 录制
-
-T1/T2 后: `python harness\runners\run_case.py 001_envi_smoke` 双跑 → diff_case 应 NO-GOLDEN →
-`--exe orig --record-golden` 晋升 → 复跑判 PASS。G0 门禁才算真达成。
-然后 `--all` 全量录 golden (30 条)。
+001 双跑 → NO-GOLDEN → `--exe orig --record-golden` → PASS; 然后 --all 录 30 条。
 
 ### T4 — P2 全量对拍分诊
-
-diff_case --all → report.py。FAIL 按 HANDOVER v4 循环分诊 (桩缺失→补真体/失真→点状重写/flaky→隔离)。
-已知情报: 原版是 PE 环境程序, 部分 API 行为 (注册表/服务/网络) 在普通桌面 Windows 与 PE 有差,
-差异先记 docs/divergences.md 不要硬凑。
+diff_case --all → report.py; FAIL 循环分诊; PE 环境差异先记 docs/divergences.md。
 
 ### T5 — 移除全部 TEMP PROBE
+**等 P2 稳定后再做**; 本轮证明探针网是命脉。若保留 memfail.log 作常驻诊断,
+收编成 PECMD_DiagLog(tag) helper, 不要散着。
 
-`grep -r "TEMP PROBE"` 六个文件清干净, 回归 syntax 门。memfail.log 写文件逻辑若想保留成
-常驻诊断, 统一收编成一个 PECMD_DiagLog(tag) helper 再说, 不要散着。
+### T6 — BLACKBOX 46 条探针用例 + P3/P4
+照 v4 文档推进。
 
-### T6 — BLACKBOX 46 条探针用例 (docs/triage_map.md 有现成清单) + P3/P4
-
-照 v4 文档推进, 无新增情报。
-
-## 6. 纪律红线 (沿用 v4, 血泪强化两条)
+## 6. 纪律红线 (沿用 + 本轮强化)
 
 1. 每阶段 commit; 补全必须携带"驱动它的失败证据"
-2. **双绿门**: syntax 全绿 + 构建 exit 0, 缺一不可 (本轮多次只绿一半就往下冲, 回头还债)
-3. **别猜原版语义** — 我们手里有三重真源: decompiled.c 原文 / 原版 EXE 二进制 (字符串/资源/反汇编) /
-   真机对照跑。CS 初始化缺失和 WRITE 不存在都是"对照原文/EXE"才定案的, 猜的方向全是错的
+2. 双绿门: syntax 全绿 + 构建 exit 0
+3. **别猜原版语义 — 三重真源**: decompiled.c 原文 / 原版 EXE 字节与资源 / 真机对照跑。
+   本轮 4 连修全部靠"先读原文再动手", 入口契约甚至要读到字节级 (@17034 反汇编)。
 4. 不虚构语义: 无法核验 → 登记 divergences
-5. 单编辑者纪律 (桩文件); 改动最小化 (每行 diff 能追溯到任务)
+5. 单编辑者纪律 (桩文件); 改动最小化
+6. **跨 TU 原型必须一致**: MSVC 无跨 TU 类型检查, int vs int64_t 这类分歧不报编译错,
+   只在运行时爆 (表#2)。新增 extern 时 grep 全树既有声明核对签名。
 
-## 7. 关键文件地图 (新增部分)
+## 7. 关键文件地图 (v6 增删)
 
 ```
-tools/msvc_build.bat        # 构建入口 (/MAP 输出 build\msvc\pecmd_msvc.map, 已 gitignore)
-tools/debug/parse_dump.py   # minidump 异常解析 (§4-1 的坑都已写进代码注释)
-tools/debug/thread_rip.py   # 挂起进程线程 RIP 直读
-compile_flags.txt           # clangd 配置 — 消除编辑器 'pecmd_defs.h' not found 误报
-.agents/skills/             # DSH 项目级 skills ×4: pecmd-build / msvc-compat /
-                            #   win-crash-triage / pecmd-semantics (即装即用, 热发现)
-.dsh/cordis.yml             # MCP 插件配置 (memory + ghidra)。⚠️ 不自动发现:
-                            #   启动时 dsh --config .dsh\cordis.yml 显式指定
-                            # ghidra 条目前提: Ghidra 开着且 GhidraMCP 插件已启用
-                            #   (扩展已装 D:\ghidra_12.1.3_PUBLIC\Extensions\Ghidra\,
-                            #    bridge exe 已 pip 装, 272 工具, 按地址查反编译/xref)
-include/win32_stub.h        # src/** 用头; PECMD_LI/FT + __debugbreak 垫片在此
-include/stubs_common.h      # 桩四件套用头; PECMD_LI/FT 另一份
-src/kernel/core_globals.c   # ★ .CRT$XCU CS 初始化器 (原版 FUN_14011a8b0 等价物)
-src/app/core_main.c         # main 入口 (原版 @0x140017034); MainW 主循环
-src/app/core_init.c         # InitEnvironmentVars (OOM 发生地, 探针密集区)
-src/runtime/core_var2.c     # ★ T1 目标: FUN_14001E6BC / PECMD_NewVarNode / FUN_14005D534
-unimplemented_stubs.c       # 空桩池; RunBootScriptInFiber 已改为转发真体
-harness/runners/*.py        # 四脚本已 GBK 控制台兼容; epilogue 待改 (T2)
+tools/msvc_build.bat        # 构建入口 (⚠️ chcp 936, 见 §2)
+tools/debug/dumpbt.py       # ★ minidump 一站式定位 (权威版, 已入库)
+src/runtime/core_var2.c     # FUN_14001E6BC 已按原文还原 (T1 核心)
+src/runtime/core_var.c      # 62a2c/629b8 包装族 (原型已修正)
+src/runtime/core_proc.c     # GetParentProcessId 已修 ([6] qword, 取[5])
+src/app/core_main.c         # main() 入口契约已按字节级证据重写
+src/lang/core_script2.c     # RunStartupScript 头部已按原文还原
+restored_bodies.c           # ★ T1b 主战场: ~12 处 HeapAlloc/Free 用 DAT_14013d328
+unimplemented_stubs.c:452   # ★ T1b 元凶之一: 多余的 DAT_14013d328 定义
+include/stubs_common.h:553  # ★ T1b: extern DAT_14013d328 的传播源头
+include/pecmd_defs.h        # 注释明确 DAT_14013d328 -> g_hHeap 应为同一变量
+harness/runners/*.py        # 四脚本; epilogue 待改 (T2)
+HANDOVER_WIN.md             # 本文
 ```
 
-## 8. 给 DSH 的三句话
+## 8. 给下任 DSH 的三句话
 
-1. 你接手的不是一个"坏在半路的工程", 而是一个**编译链全通、运行链只差最后一个未初始化变量**的工程 —
-   T1 就是临门一脚, 证据全在 §5-T1, 别重新排查。
-2. 所有 MSVC 兼容坑都已在 §3 表格化, 再遇到先查表再动手。
-3. 每次构建后记得 `Copy-Item build\msvc\pecmd_msvc.exe C:\pectest\ -Force`,
-   并且先 `Stop-Process pecmd_msvc` — 它经常挂着消息泵占着 exe 锁。
+1. 你接手的工程运行链已经打通到**脚本命令解析门口** — 初始化全绿, 只剩 restored_bodies
+   里那批用错堆句柄的分配器 (T1b), 修法已给到行号, 别重新排查。
+2. 所有新症状先查 §3 表格; 动手前必读 decompiled.c 对应函数原文, 入口类还要看字节。
+3. 构建/部署/调试三件套命令都在 §2/§4, 探针别拆, dumps 记得清。
