@@ -50,8 +50,12 @@ void FUN_1400633A8(void **ps, int64_t len)
                 break;
             FUN_1400630D0(2);
         }
-        *(size_t *)hdr = (size_t)len + 1;
+        /* 原文 @60699-60700 顺序: 先写魔数 dword(+4), 再写 qword 尺寸(+0);
+         * qword 存储会覆盖魔数高半部 ⇒ 魔数是死存储, 最终头 qword 仅含尺寸。
+         * 曾颠倒顺序导致尺寸高32位=0xaa55, PECMD_ZeroLenBuf 按 qword 头清零
+         * ~0xAA55_00000000 字节 → memset AV (T1c, dump r8=0xAA54FFFFC2F2 实锤)。 */
         *(uint32_t *)(hdr + 4) = 0xaa55;
+        *(size_t *)hdr = (size_t)len + 1;
         *ps = hdr + 8;
         if (*ps != NULL) {
             *(uint8_t *)*ps = 0;

@@ -449,7 +449,11 @@ void    *DAT_14013cfc8 = 0;
 void    *DAT_14013cfd0 = 0;
 void    *DAT_14013cfd8 = 0;
 uint8_t  DAT_14013d300 = 0x10;
-void    *DAT_14013d328 = 0;
+/* T1b: DAT_14013d328 独立定义已删除 — 与 core_globals.c 的 g_hHeap 是同一原版全局
+ * (pecmd_defs.h 注释 + 原版 Ghidra xref 实锤: 仅 mainW@0x9ccc 赋值 +
+ * attach 阶段 FUN_1400051b4@0x51fc 空守卫 GetProcessHeap)。
+ * stub 侧经 stubs_common.h 的 #define 别名访问 g_hHeap; 双定义曾致 restored_bodies
+ * 分配器拿到永远为 0 的句柄 (ntdll 分配路径 AV)。 */
 uint32_t DAT_140147000 = 0x100;
 void *DAT_14013d3b8 = 0;
 int64_t DAT_14013a24f = 0;

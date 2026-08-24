@@ -22,7 +22,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h> /* TEMP PROBE: memfail.log */
+#include <stdio.h> /* TEMP PROBE(既有 OOM 探针): memfail.log */
 
 #include "pecmd_defs.h" /* win32_stub.h: HeapAlloc/HeapFree/MessageBoxW 等 */
 
@@ -42,8 +42,10 @@ void *PECMD_HeapRealloc(void *ptr, size_t size)
         for (;;) {
             uint8_t *hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);
             if (hdr) {
+                /* 原文 @140063118: 先魔数(+4) 后 qword 尺寸(+0), 尺寸覆盖魔数(死存储);
+                 * 颠倒则头 qword 高32位=0xaa55 → 按 qword 读尺寸处巨量 memset/拷贝 (T1c) */
+                *(uint32_t *)(hdr + 4) = 0xaa55; /* [-4] 魔数 (被下行覆盖) */
                 *(size_t *)hdr = size;           /* [-8] 容量 */
-                *(uint32_t *)(hdr + 4) = 0xaa55; /* [-4] 魔数 */
                 return hdr + 8;
             }
             { /* TEMP PROBE */
@@ -76,15 +78,15 @@ void *PECMD_HeapRealloc(void *ptr, size_t size)
                 }
                 FUN_1400630D0(2);
             }
-            *(size_t *)nh = size;
             *(uint32_t *)(nh + 4) = 0xaa55;
+            *(size_t *)nh = size;
             size_t copy_len = (size < old) ? size : old;
             memcpy(nh + 8, ptr, copy_len); /* 反编译冗余空检查已删除 (恒真) */
             HeapFree(g_hHeap, 0, (uint8_t *)ptr - 8);
             return nh + 8;
         }
-        *(size_t *)nh = size;
         *(uint32_t *)(nh + 4) = 0xaa55;
+        *(size_t *)nh = size;
         return nh + 8;
     }
 }
@@ -141,8 +143,8 @@ WCHAR *PECMD_StrDupAlloc(LPCWSTR src)
         }
         FUN_1400630D0(2);
     }
-    *(size_t *)hdr = len * 2 + 4;
     *(uint32_t *)(hdr + 4) = 0xaa55;
+    *(size_t *)hdr = len * 2 + 4;
     memcpy(hdr + 8, src, len * 2 + 2);
     return (WCHAR *)(hdr + 8);
 }

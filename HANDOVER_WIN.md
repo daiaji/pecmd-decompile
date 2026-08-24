@@ -1,22 +1,22 @@
-# HANDOVER_WIN.md — WIN 端作战手册 (v6, DSH 交接版)
+# HANDOVER_WIN.md — WIN 端作战手册 (v6.2, DSH 中途交接版)
 
-> 2026-08-25 更新｜v5 (P0 完成后) → v6: T1 OOM 链已修复, 运行链推进到脚本命令解析,
-> 出现**新堵点 T1b**(堆句柄双符号), 证据链已收窄到一步之遥。
-> **读法**: §1 看状态 → §5 直接开工; §3/§4 遇同类问题再回来查。
+> 2026-08-25 更新｜v6.1 → v6.2: **T1b 闭环 + 连环修复 T1c/T1d/T1e 全部落地并验证**,
+> t1 冒烟 exit=0x0 全程跑通 (LOAD→解析→ENVI→退出), G0 实质达成。详见 REVIEW §130。
+> **读法**: §1 看状态 → §5 从 T2 开工; §3/§4 遇同类问题再回来查。
 
 ---
 
 ## 1. 状态一句话
 
-**T1 (OOM 弹窗循环) 已修复并连带修掉 3 个后续运行时 bug** — 冒烟 t1.pecmd 从
-"qpc-done 即死 + OOM 弹窗循环" 推进到 `RunCommand → SrParsePrefix 入口`。
-当前卡在 **T1b: 堆分配 API 收到无效堆句柄 (rcx=0x13) 在 ntdll 内 AV**,
-根因基本锁定为 `DAT_14013d328` / `g_hHeap` 双符号分裂 (§5-T1b), 未修。
+**运行时连环坑 T1→T1e 已全部闭环** — t1 冒烟 exit=0x0 全程跑通:
+堆句柄双符号归一(T1b) → 分配器头写序 6 处归正(T1c) → 引用计数块两函数按原文重写(T1d)
+→ ArgTokenize 直移重写(T1d2) → RunScriptText 所有权移交防 double-free(T1e)。
+全部有 dump 反汇编/探针/原版字节级证据, 明细见 REVIEW §130。
 
 | 阶段 | 状态 |
 |---|---|
 | P0 MSVC 化 | ✅ (v5 已达成) |
-| G0 门禁 | 🔴 exe 可运行、初始化全通、已进入命令解析; 卡 T1b |
+| G0 门禁 | 🟢 **冒烟 exit=0 跑通** (t1 单命令级); 全量 30 例待 T3/T4 |
 | P1 验证闭环 | ⚠️ 半程: run_case.py 协议通; epilogue WRITE 通道待换 (T2) |
 | P2 对拍/分诊 | 🔴 运行时 bug 连环修复中 (本轮 4 连修, 见 §3) |
 | P3/P4 | ⬜ 未动 |
@@ -53,6 +53,11 @@ v6 现在: heap-init → InitEnvVars 全通过 (ver-vars/shellfolders-done)
 - 构建后部署: `Stop-Process pecmd_msvc` 先杀 (常挂消息泵占 exe 锁) → Copy 到 C:\pectest\
 - WER LocalDumps → C:\pectest\dumps (DumpType=2 全量); **dumps 会积累, 定期清理**
 - git 身份 repo-local: daiaji
+- **MCP 状态 (v6.1 实测)**: 会话中曾成功使用 GhidraMCP (项目 `PECMD`, 程序 `/PECMD.exe`
+  = 原版, x64 base 0x140000000, 2726 函数已分析) 完成 xref/decompile 取证; **重启 DSH 后
+  ghidra-mcp 从工具列表消失**, windbg-mcp 一直未挂载。下任若需继续字节级取证, 先确认
+  MCP 配置 (参考 .dsh/cordis.yml) 与 Ghidra bridge 是否重新可见, 不可见时仍可回落
+  decompiled.c 原文 + 自研 dumpbt.py (§4) 完成同类工作。
 
 ## 3. 技术档案 — 运行时连环坑 (v6 新增, 遇同症直接套)
 
@@ -85,7 +90,13 @@ v6 现在: heap-init → InitEnvVars 全通过 (ver-vars/shellfolders-done)
 
 ## 5. DSH 任务清单 (按序执行)
 
-### T1b — 堆句柄双符号归一 (当前唯一硬堵点)
+### ✅ T1b/T1c/T1d/T1e — 已全部闭环 (2026-08-25, 见 REVIEW §130)
+
+历史档案: T1b 曾为"堆句柄双符号"堵点; 本轮连环修掉 T1c(分配器头写序×6)/
+T1d(AdoptRefCountedString+RefCountRelease 重写)/T1d2(ArgTokenize 直移重写)/
+T1e(RunScriptText 所有权 double-free)。以下原始记录保留供考古。
+
+#### 原始记录 — T1b — 堆句柄双符号归一
 
 **现象**: t1 冒烟崩在 SrParsePrefix 入口附近, RIP 在 ntdll 分配路径内
 (RtlAllocateMemoryBlockLookaside 导出区间 +0x2e), 指令 `cmp dword ptr [rdi+0x10], 0xddeeddee`,
@@ -96,18 +107,31 @@ rdi=rcx=**0x13** → 分配 API 收到无效堆 HANDLE。
 DAT_14013d328 (map: 0x1402b8fb8, unimplemented_stubs.obj) = 0x0    ← 从未被赋值!
 g_hHeap      (map: 0x1402c1850, <common>)             = 0x250fc340000 ← 正确进程堆
 ```
-原版只有一个全局 DAT_14013d328 (=GetProcessHeap(), mainW 设置)。还原工程裂成两个符号:
+原版只有一个全局 DAT_14013d328。还原工程裂成两个符号:
 - core_globals.c 定义并初始化 `g_hHeap` (pecmd_defs.h 注释明说 "DAT_14013d328 -> g_hHeap")
-- unimplemented_stubs.c:452 又定义了独立的 `void *DAT_14013d328 = 0;`,
-  stubs_common.h:553 extern 它 → **restored_bodies.c 约 12 处 HeapAlloc/HeapFree**
+- unimplemented_stubs.c 又定义了独立的 `void *DAT_14013d328 = 0;`,
+  stubs_common.h extern 它 → **restored_bodies.c 约 12 处 HeapAlloc/HeapFree**
   (AllocStrSlot@7318 / FreeStrBuf@7119 / AllocWStringBuffer 族) 全部用未初始化句柄!
 
-**修法方向** (单一真源, 二选一, 推荐前者):
-1. stubs_common.h 里 `#define DAT_14013d328 (*(void**)&g_hHeap)` 或直接 extern g_hHeap,
-   并删除 unimplemented_stubs.c:452 的定义;
-2. 或在 MainW 设置 g_hHeap 处同步写 DAT_14013d328。
-修完重建跑 t1: 若仍崩, 重跑 dumpbt 看新 RIP — rcx 若仍是小整数, 用 §4-3 读调用点
-(rsp+0x8 返回地址) 所属 pecmd_msvc 符号再定位; 0x13 的精确来源尚未闭环, 不必预设。
+**原版 Ghidra 交叉引用增补 (v6.1 新证据, 更强定案)**:
+DAT_14013d328 在原版恰有 **2 个写入点**:
+- `mainW @0x140009d12` → `GetProcessHeap()` (启动后)
+- `FUN_1400051b4 @0x140005213` → `if (DAT==0) DAT=GetProcessHeap()`, 由
+  `dllMain_Name@0x6a24` 在 **DLL attach 阶段 (main 之前!)** 调用 — 空守卫提前初始化,
+  保证所有分配器从进程一起跑就有合法句柄。约 50 处读取点全为分配器。
+**启发**: 还原项目里"唯一性工作" (单例句柄/标志) 值不值得用 Ghidra 查一遍 xref 全集
+来判断有没有同型分裂 — 本轮双符号就是靠 xref 才 100% 定案, 不再停留在"基本锁定"。
+
+**修复实施状态 (v6.1: 2/3 已完成, 未验证构建)**:
+| 步骤 | 状态 |
+|---|---|
+| 1. stubs_common.h:553 改为 `#define DAT_14013d328 ((void *)g_hHeap)` + `extern HANDLE g_hHeap;` | ✅ 已改 (工作区) |
+| 2. unimplemented_stubs.c 删除 `void *DAT_14013d328 = 0;` 独立定义 | ✅ 已改 (工作区) |
+| 3. core_globals.c `PECMD_InitCriticalSections` 开头补 `if(!g_hHeap) g_hHeap=GetProcessHeap();` (对应 attach 守卫) | ⏸️ **未做** (可选加固: 当前 MainW/InitEnvVars 也会设, 但非 main 前) |
+**接手第一步**: `git status` 确认两文件改动在 → 重建 (§2, chcp 936) → 跑 t1 冒烟。
+若绿: 补步骤 3 加固后再提交; 若仍崩: 重跑 dumpbt 看新 RIP — rcx 若仍是小整数,
+用 §4-3 读调用点 (rsp+0x8 返回地址) 所属 pecmd_msvc 符号再定位; 0x13 精确来源
+(疑为 HeapAlloc 收到 0 句柄后 Aslr/fastpath 传参混淆) 尚未闭环, 不必预设。
 
 **验收**: t1.pecmd exit=0 无弹窗; memfail.log 出现 SrParsePrefix 之后的进度标记。
 

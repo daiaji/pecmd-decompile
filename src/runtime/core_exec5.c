@@ -18,6 +18,12 @@ extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x14006
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
 extern int64_t *FUN_14005B154(WCHAR **ps);                 /* @0x14005b154 */
+extern void *PECMD_StrBldCopyWide(void *ps, const WCHAR *src);            /* @0x1400703e4 */
+extern uint8_t *PECMD_MemMoveForward(uint8_t *dst, uint8_t *src, int n);  /* @0x14001d78c */
+extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
+
+/* 原版 DAT_1401206f4: L"[]" 字面量 ([] 空参数的 argv[0]) */
+static const WCHAR s_EmptyBracket[] = L"[]";
 
 /* ========== FUN_140017CDC @0x140017cdc ==========
  * 脚本结构复制（0xe0 字节字段逐项复制，bit0 强制清除）。
@@ -191,90 +197,106 @@ int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len)
 }
 
 /* ========== FUN_140073CCC @0x140073ccc ==========
- * 参数表构建：把命令行拆为参数数组。
- *   script+0xe  : 参数存储缓冲（命令串 + 参数指针表）
- *   script+0xc  : 参数个数
- *   script+0xd  : 参数指针表基址（[n]=参数指针, [n+1..3]=辅助指针）
- * 返回参数个数。
- */
+ * 参数表构建（原文直移, v6.2 重写）。
+ * script 状态字段: +0x60 argc(uint) / +0x68 argv 表指针 / +0x70 命令文本串槽 / +0x4a flag。
+ * 文本缓冲布局: [命令文本第一份][前部副本(分词 NUL 不破坏 &&__arg 引用)][十进制argc][argv表]。
+ * 旧版失真: 缺 StrBldCopyWide 赋源/前部复制/表尾辅助指针, 重建逻辑野指针 → AV(T1d)。 */
 uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
 {
     uint8_t *s = script;
-    WCHAR *buf = NULL; /* 命令副本 */
-    WCHAR *p;
-    WCHAR *save;         /* 未用参数起点 */
-    WCHAR **argv = NULL; /* 参数指针表 */
-    uint32_t argc = 0;
-    int64_t len, cap;
+    int64_t *slot = (int64_t *)(s + 0x70); /* param_1+0xe: 命令文本槽 */
     char flag = *(char *)(s + 0x4a);
+    WCHAR **tmp = NULL;  /* local_68 临时 token 指针数组 (带8字节头串槽) */
+    WCHAR *cur;          /* local_70 */
+    WCHAR *save;         /* puVar12: 未消费参数起点(第一份文本内) */
+    WCHAR *tok;          /* local_60 */
+    int64_t baseOld, newBase;
+    int64_t quarter, qcnt, cap50, dupOff, table;
+    int64_t saveOff = 0; /* uVar16/iVar15 */
+    uint32_t argc = 0;   /* uVar9/uVar7 */
+    uint32_t capPlan;    /* local_res20 */
+    WCHAR c0;
+    int len, i;
 
+    PECMD_AllocWStringBuffer((WCHAR **)&tmp, 4);
+    PECMD_StrBldCopyWide((int64_t **)slot, cmdline);      /* 槽@0x70 = cmdline 副本 */
     len = lstrlenW(cmdline);
-    cap = (len + 8) >> 2;
-    PECMD_AllocWStringBuffer((WCHAR **)&argv, 4);
-    PECMD_AllocString(&buf, len + 1);
-    p = buf;
-    memcpy(p, cmdline, (size_t)len * 2);
-    p[len] = 0;
-    {
-        WCHAR *q = p;
-        FUN_14005B154(&q);
-        save = q;
-        /* 处理 [] 空参数 */
-        if (q[0] == L'[' && q[1] == L']') {
-            PECMD_AllocString((WCHAR **)&argv, 0xc);
-            q += 2;
-            FUN_14005B154(&q);
-            argv[0] = (WCHAR *)WSTR("[]");
-            argc = 1;
-        }
-        /* 逐参数切分 */
-        while (*q != 0) {
-            WCHAR *tok = q;
-            if (*q == 0x22) {
-                q++;
-                while (*q != 0 &&
-                       (*q != 0x22 || (q[1] != 0 && !((q[1] > 8 && q[1] < 0xe) || q[1] == 0x20))))
-                    q++;
-                if (*q == 0x22)
-                    q++;
+    quarter = (int64_t)((len + 8) / 4) * 4;               /* local_48 字节 */
+    qcnt = ((len + 8) / 4) * 8;                           /* iVar6 终值 */
+    cap50 = qcnt + 0x20;                                  /* local_50 wchars */
+    PECMD_AllocString((WCHAR **)slot, cap50);             /* 扩容命令缓冲 */
+    dupOff = quarter * 2;                                 /* local_58 字节偏移 */
+    PECMD_MemMoveForward((uint8_t *)(uintptr_t)*slot + dupOff,
+                         (uint8_t *)(uintptr_t)*slot, (int)dupOff);
+
+    cur = (WCHAR *)(uintptr_t)*slot;
+    FUN_14005B154(&cur);
+    save = cur;
+    tok = cur;
+    if (cur[0] == L'[' && cur[1] == L']') {
+        PECMD_AllocString((WCHAR **)&tmp, 0xc);
+        cur += 2;
+        *(int64_t *)tmp = (int64_t)(intptr_t)s_EmptyBracket;
+        tok = cur;
+        FUN_14005B154(&cur);
+        argc = 1;
+        saveOff = ((intptr_t)cur - (intptr_t)(uintptr_t)*slot) >> 1;
+    }
+    c0 = *cur;
+    if (c0 != 0) {
+        capPlan = argc * 4 + 0xc;
+        cur = tok;
+        do {
+            WCHAR *p = cur + 1;   /* 首字符已在 c0, 从下一个开始扫 */
+            WCHAR c = *p;
+            if (c0 == L'"') {
+                while (c != 0 && (c != L'"' || (p[1] != 0 &&
+                       !(((p[1] > 8 && p[1] < 0xe) || p[1] == 0x20)))))
+                    { p++; c = *p; }
+                if (*p == L'"')
+                    p++;
             }
             else {
-                while (*q != 0 && ((*q > 8 && *q < 0xe) || *q == 0x20) == 0)
-                    q++;
-            }
-            if (*q != 0) {
-                *q = 0;
-                q++;
+                while (c != 0 && !((c > 8 && c < 0xe) || c == 0x20))
+                    { p++; c = *p; }
             }
             if (argc == 0)
-                save = q;
-            argv = (WCHAR **)PECMD_GrowByteBuffer((void **)&argv, (int64_t)(argc + 3) * 4);
-            argv[argc] = tok;
+                save = p;
+            if (*p != 0) {
+                *p = 0;
+                p++;
+            }
+            tok = cur;
+            PECMD_AllocString((WCHAR **)&tmp, (int64_t)capPlan);
+            capPlan += 4;
+            tmp[argc] = tok;
             argc++;
-            FUN_14005B154(&q);
-        }
+            FUN_14005B154(&p);
+            if (argc == 1)
+                saveOff = ((intptr_t)p - (intptr_t)(uintptr_t)*slot) >> 1;
+            cur = p;
+            c0 = *cur;
+        } while (c0 != 0);
     }
     if (saveArg != 0 || flag != '\0') {
-        FUN_1400629B8(
-            script, WSTR("&&__arg"),
-            (LPCWSTR)(save - buf + (WCHAR *)(*(WCHAR **)(s + 0x70) ? 0 : (int64_t)buf * 0)));
+        FUN_1400629B8(script, WSTR("&&__arg"), (LPCWSTR)((intptr_t)save + dupOff));
     }
-    *(uint32_t *)(s + 0xc) = argc;
-    PECMD_AllocString(&buf, (int64_t)cap * 8 + 0x7a + (int64_t)argc * 4);
-    /* 重建参数指针表（指向重新分配后的缓冲） */
-    {
-        WCHAR *base = *(WCHAR **)(s + 0x70);
-        *(int64_t *)(s + 0x68) = (int64_t)base + cap * 8;
-        for (uint32_t i = 0; i < argc; i++) {
-            *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)i * 8) =
-                (int64_t)(argv[i] - buf + base) + 0;
-        }
-        *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8) = (int64_t)base + (cap + 0) * 2;
-        *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8 + 8) =
-            (int64_t)(base - buf + buf) + 0;
+    baseOld = *slot;
+    *(uint32_t *)(s + 0x60) = argc;
+    PECMD_AllocString((WCHAR **)slot, qcnt + 0x7a + (int64_t)argc * 4);
+    wsprintfW((LPWSTR)((WCHAR *)(uintptr_t)*slot + qcnt), WSTR("%d"), (int)argc);
+    newBase = *slot;
+    table = newBase + cap50 * 2;
+    *(int64_t *)(s + 0x68) = table;
+    for (i = 0; i < (int64_t)argc; i++) {
+        *(int64_t *)(table + i * 8) =
+            (int64_t)(tmp[i]) + (((newBase - baseOld) >> 1) * 2);
     }
-    PECMD_FreeStrBuf((WCHAR **)&argv);
-    PECMD_FreeStrBuf(&buf);
+    *(int64_t *)(table + (int64_t)argc * 8) =
+        newBase + (quarter + saveOff) * 2;
+    *(int64_t *)(table + ((int64_t)argc + 1) * 8) = dupOff + newBase;
+    *(int64_t *)(table + ((int64_t)argc + 2) * 8) = newBase + qcnt * 2;
+    PECMD_FreeStrBuf((WCHAR **)&tmp);
     return argc;
 }
 

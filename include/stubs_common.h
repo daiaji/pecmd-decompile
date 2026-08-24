@@ -550,7 +550,8 @@ extern uint8_t DAT_14013d300;
 ;
 ;
 /* RichEdit 选择标志 0x14013d300: 10 */
-extern void *DAT_14013d328;
+extern HANDLE g_hHeap; /* 定义于 core_globals.c; pecmd_defs.h 有同型声明 */
+#define DAT_14013d328 ((void *)g_hHeap) /* T1b: 同一原版全局的别名, 勿再定义独立变量 */
 ;
 ;
 /* g_hHeap */

@@ -72,8 +72,10 @@ void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count)
             }
             FUN_1400630D0(2);
         }
-        *(size_t *)hdr = (size_t)count * 2 + 2;
+        /* 原文 @60866-60867: 先魔数 dword(+4) 后 qword 尺寸(+0), 尺寸存储覆盖魔数
+         * ⇒ 头 qword 仅含尺寸; 颠倒则高32位=0xaa55 → ZeroLenBuf 巨量 memset AV (T1c) */
         *(uint32_t *)(hdr + 4) = 0xaa55;
+        *(size_t *)hdr = (size_t)count * 2 + 2;
         *ps = (WCHAR *)(hdr + 8);
         if (*ps != NULL) {
             **ps = L'\0';

@@ -13,6 +13,12 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
  * DAT_14013d108/14013dcc0/14013dc98/14013d878 四个 CS 无还原引用, 不补. */
 static void PECMD_InitCriticalSections(void)
 {
+    /* T1b 步骤3 加固 (对应原版 attach 阶段 FUN_1400051b4@0x51fc 空守卫
+     * GetProcessHeap, 由 dllMain 在 main 之前调用): 保证任何 main 前的
+     * 分配器也拿到合法堆句柄。 */
+    if (!g_hHeap) {
+        g_hHeap = GetProcessHeap();
+    }
     InitializeCriticalSection(&g_csInit);
     InitializeCriticalSection(&g_csCom);
     InitializeCriticalSection(&g_csHook);

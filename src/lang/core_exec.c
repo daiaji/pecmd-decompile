@@ -128,8 +128,9 @@ void *PECMD_AllocSmallObject(void **ps)
             break;
         FUN_1400630D0(2);
     }
-    *(size_t *)hdr = 2;
+    /* 原文顺序: 先魔数(+4) 后 qword 尺寸(+0, 覆盖魔数) — 见 core_string.c T1c 注 */
     *(uint32_t *)(hdr + 4) = 0xaa55;
+    *(size_t *)hdr = 2;
     *ps = hdr + 8;
     if (*ps) {
         *(uint8_t *)*ps = 0;

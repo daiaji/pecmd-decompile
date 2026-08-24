@@ -42,6 +42,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h> /* TEMP PROBE */
 
 #include "pecmd_defs.h"
 #include "win32_stub.h"
@@ -92,6 +93,14 @@ extern void FUN_14009BB28(void *script, int flag);    /* @0x14009bb28 脚本清�
 int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
                             uint32_t flags, LPCWSTR pFile, void *pPersist)
 {
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[RSTI] text=%p name=%p\n", (const void *)pText,
+                    (const void *)pName);
+            fclose(pf_);
+        }
+    }
     uint8_t cInitFlag;    /* 初始 g_flag16a */
     uint32_t noWin;       /* flags & 4 */
     uint32_t persistMode; /* flags&0x200 时的收尾模式 */
@@ -459,6 +468,14 @@ ref_done:
     PECMD_FreeStrBuf(&savedCurDrv);
     PECMD_FreeStrBuf(&savedCurDir);
     PECMD_FreeStrBuf(&savedCwd);
+    { /* TEMP PROBE */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[RSTX] bufRef=%p b0=%p ret=%lld\n", (void *)bufRef,
+                    (void *)(bufRef ? *(WCHAR **)bufRef : NULL), (long long)ret);
+            fclose(pf_);
+        }
+    }
     PECMD_RefCountRelease(&bufRef);
     return ret;
 }

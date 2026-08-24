@@ -278,6 +278,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                         DVar13 = PECMD_RunScriptText(script, local_1e8, local_278, local_1f8,
                                                      ((uint64_t)uVar42 << 16) | kf | 0x40,
                                                      local_240, NULL);
+                        local_1e8 = NULL; /* 所有权已移交内层(其退出时释放), 防外层重复释放 */
                     }
                     PECMD_FreeStrBuf(&local_1e8);
                 }
@@ -323,6 +324,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     FUN_1400702B0(&local_150, WSTR("**mem"));
                     DVar13 = PECMD_RunScriptText(script, local_210, local_278, local_150,
                                                  ((uint64_t)seed << 16) | 0x40, NULL, NULL);
+                    local_210 = NULL; /* 所有权已移交内层(其退出时释放), 防外层重复释放 (T1e) */
                     PECMD_FreeStrBuf(&local_150);
                 }
                 PECMD_FreeStrBuf(&local_210);
@@ -339,6 +341,15 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             PECMD_RunSysInit(script, WSTR("sysinit_end"));
         }
         FUN_14009BB28(script, 0);
+        { /* TEMP PROBE */
+            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf_) {
+                fprintf(pf_, "[RCCLEAN] f8=%p p40=%p p60=%p p78=%p ob=%p\n",
+                        (void *)local_1f8, (void *)local_240, (void *)local_260,
+                        (void *)local_278, (void *)outbuf);
+                fclose(pf_);
+            }
+        }
         PECMD_FreeStrBuf(&local_1f8);
         PECMD_FreeStrBuf(&local_240);
         PECMD_FreeStrBuf(&local_260);

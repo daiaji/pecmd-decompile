@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h> /* TEMP PROBE 用 */
 
 #include "pecmd_defs.h"
 
@@ -206,16 +207,34 @@ uint8_t PECMD_NormalizeDiskDevicePath(LPCWSTR *ps)
 
 /* ========== PECMD_RefCountRelease @0x140028270 ==========
  * 引用计数释放：计数-1，归零时释放。
- */
+ * 块布局同 AdoptRefCountedString: [+0 数据指针][+8 int 计数]。
+ * v6.2 修正: 计数偏移曾按 WCHAR*+8(字节+0x10)越界写 → 堆损坏; 释放改传块本身。 */
 void PECMD_RefCountRelease(WCHAR **ps)
 {
-    WCHAR *s = *ps;
-    if (s != NULL) {
+    int64_t *blk;
+
+    if (*ps != NULL) {
         EnterCriticalSection(&g_csInit);
-        *(int *)(s + 8) = *(int *)(s + 8) - 1;
-        if (*(int *)(s + 8) < 1 && s != NULL) {
-            PECMD_FreeStrBuf(&s);
-            free(s);
+        (*(int *)((char *)*ps + 8))--;
+        blk = (int64_t *)*ps;
+        if (*(int *)((char *)blk + 8) < 1 && blk != NULL) {
+            { /* TEMP PROBE */
+                extern void *_get_heap_handle(void);
+                FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                if (pf_) {
+                    int okU = (int)HeapValidate(_get_heap_handle(), 0, blk);
+                    int okG = g_hHeap ? (int)HeapValidate(g_hHeap, 0, blk) : -1;
+                    int64_t tb = *(int64_t *)blk;
+                    int okT = (tb != 0 && g_hHeap)
+                        ? (int)HeapValidate(g_hHeap, 0, (const void *)(uintptr_t)(tb - 8)) : -9;
+                    fprintf(pf_, "[REL] blk=%p ucrtOK=%d ghOK=%d cnt=%d b0=%p txtHdrOK=%d\n",
+                            (void *)blk, okU, okG,
+                            *(int *)((char *)blk + 8), (void *)tb, okT);
+                    fclose(pf_);
+                }
+            }
+            PECMD_FreeStrBuf((WCHAR **)blk); /* 原文 FUN_14005b104(块): 释块内数据并清零 */
+            free(blk);
         }
         *ps = NULL;
         LeaveCriticalSection(&g_csInit);
@@ -224,34 +243,47 @@ void PECMD_RefCountRelease(WCHAR **ps)
 
 /* ========== PECMD_AdoptRefCountedString @0x1400a4020 ==========
  * 引用计数字符串设置：释放旧值，赋新值（计数=1）。
- */
+ * 块布局 (0x10 字节): [+0 qword 数据指针][+8 int 引用计数]。
+ * v6.2 重写: 旧版误传 &s 给清零器致 s=NULL 后写 [NULL+0x10] AV,
+ * 且引用计数偏移按 WCHAR*+8 (字节+0x10) 越界出 16 字节块 — 均按原文修正。 */
 void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src)
 {
-    WCHAR *s;
+    int64_t *blk;
+
     EnterCriticalSection(&g_csInit);
     if (*ps != NULL) {
-        *(int *)(*ps + 8) = *(int *)(*ps + 8) - 1;
-        s = *ps;
-        if (*(int *)(s + 8) < 1 && s != NULL) {
-            PECMD_FreeStrBuf(&s);
-            free(s);
+        (*(int *)((char *)*ps + 8))--;
+        blk = (int64_t *)*ps;
+        if (*(int *)((char *)blk + 8) < 1 && blk != NULL) {
+            PECMD_FreeStrBuf((WCHAR **)blk); /* 原文 FUN_14005b104(块): 释放块内数据并清零 */
+            free(blk);
         }
         *ps = NULL;
     }
-    s = (WCHAR *)calloc(1, 0x10);
-    if (s == NULL) {
-        s = NULL;
+    blk = (int64_t *)calloc(1, 0x10); /* 原文 operator_new(0x10) */
+    if (blk == NULL) {
+        blk = NULL;
     }
     else {
-        FUN_1400702B0(&s, NULL);
-        *(uint32_t *)(s + 8) = 0;
+        { /* TEMP PROBE */
+            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf_) {
+                int okHdr = g_hHeap ? (int)HeapValidate(g_hHeap, 0,
+                    (const void *)(uintptr_t)((int64_t)(intptr_t)src - 8)) : -1;
+                fprintf(pf_, "[ADOPT] blk=%p src=%p hdrOK=%d\n",
+                        (void *)blk, (const void *)src, okHdr);
+                fclose(pf_);
+            }
+        }
+        FUN_1400702B0((WCHAR **)blk, NULL); /* 清零块首 qword (传块本身, 非 &local!) */
+        *(int *)((char *)blk + 8) = 0;
     }
-    *ps = s;
-    if (*s != 0) {
-        HeapFree(g_hHeap, 0, (void *)(uintptr_t)(*s - 8));
+    *ps = (WCHAR *)blk;
+    if (blk != NULL && *(int64_t *)blk != 0) { /* 原文双重条件恒假(新块已清零), 保守保留 */
+        HeapFree(g_hHeap, 0, (void *)(uintptr_t)(*(int64_t *)blk - 8));
     }
-    *(uint32_t *)(*ps + 8) = 1;
-    *(WCHAR **)s = (WCHAR *)src;
+    *(int *)((char *)*ps + 8) = 1;
+    *(int64_t *)(uintptr_t)*ps = (int64_t)(intptr_t)src;
     LeaveCriticalSection(&g_csInit);
 }
 

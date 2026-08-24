@@ -3619,3 +3619,38 @@ AMBIGUOUS（147010/d738/d5c0/d660/c970）·字节重叠（147001-3 与 g_runFlag
 - **审计移交线索(待清理批)**：GetTickCount双声明/f53c8疑似重复移植/b3l:419死条件/b1:548·4346过时注释/
   FUN_14000a584未实现桩登记。
 - gen_tasks 刷新与 tag p4-close 于线索清理批验收后执行。
+
+
+## 130. T1b 闭环 + 运行时连环修复 T1c/T1d/T1e（WIN 端 DSH, 冒烟 t1 exit=0）
+
+**里程碑**: `C:\pectest\pecmd_msvc.exe LOAD C:\pectest\t1.pecmd` 从 v6 的
+"ntdll AV(rcx=0x13)" → 本轮 **exit=0x0 全程跑通**（LOAD→脚本解析→ENVI 执行→退出）。
+G0 门禁实质达成（冒烟可运行+退出干净）; check_corpus 30/30 结构自检通过。
+
+### 战果链（每步均 dump/探针证据后落改）
+| # | 文件 | 缺陷 | 根因/证据 | 结果 |
+|---|---|---|---|---|
+| T1b | stubs_common.h/unimplemented_stubs.c | DAT_14013d328 与 g_hHeap 双符号分裂, 分配器用 0 句柄 | 原版 Ghidra xref: 仅 2 写点(mainW + attach 空守卫) | #define 别名归一 + 删独立定义 |
+| T1b-3 | core_globals.c | attach 阶段堆守卫缺失(可选加固) | 原版 FUN_1400051b4@0x51fc main 前初始化 | InitCriticalSections 头部补空守卫 |
+| T1c | core_thread/core_var/core_string×4/core_exec | **分配器写序颠倒**: 原文先魔数(+4)后 qword 尺寸(+0)(尺寸覆盖魔数=死存储); 移植版先尺寸后魔数 → 头 qword 高32位=0xaa55 → ZeroLenBuf 按 qword 清零 ~187TB (dump r8=0xAA54FFFFC2F2 实锤) | decompiled.c @60699/@60866/@140063118 逐处比对 | 6 处全部改回原文顺序 |
+| T1d | core_exec4.c AdoptRefCountedString / RefCountRelease | ①误传 &s 给清零器致 s=NULL 后写[NULL+0x10](dump 反汇编 mov [rax+0x10],0 实锤) ②引用计数偏移按 WCHAR*+8=字节+0x10 越界出 16B 块(原版 longlong[1]=字节+8) | capstone 读 dump 指令流 | 两函数按原文重写(计数在字节+8; FreeStrBuf 传块本身) |
+| T1d2 | core_exec5.c FUN_140073CCC ArgTokenize | 移植失真: 缺 StrBldCopyWide 赋源/前部复制(&&__arg 稳定引用)/表尾辅助指针/wsprintfW; 重建逻辑野指针 | 原文 @FUN_140073ccc 全文直移重写 | wsprintfW 第 3 参经原版字节核对=R8D=[script+0x60] argc(Ghidra vararg 丢失已补) |
+| T1e | core_scriptrun.c 变量/资源路径 | RunScriptText 所有权语义: 内层 Adopt/Release 已释放文本, 外层再 free → **double-free**(探针 [FREE] 同指针两次, 二次 hdr 变 freelist 碎片实锤) | _ReturnAddress() 探针定位 RA=RunCommand+0xd2f/d3a | 移交后置 NULL, 外层 free 变 no-op |
+
+### 教训固化（方法论）
+1. **反编译器算术类型陷阱**: `longlong+N` 是字节偏移; 移植成 `WCHAR*+N` 就变 +2N。
+   凡结构体字段偏移一律 `(char*)p + N` 或对齐原文声明类型。本轮两处计数偏移同病。
+2. **"死存储"也是语义**: 原版"先写魔数再写覆盖它的尺寸"看似冗余, 颠倒即爆雷。
+   直移必须保序, 不做"顺手优化"。
+3. **所有权契约要写进文件头**: RunScriptText 对 pText 是 takeover 语义(Adopt+Release),
+   调用方移交后禁止再释放。建议后续在 pecmd_defs.h 注明各 API 所有权。
+4. **IFEO PageHeap 未生效原因未查明**(GlobalFlag+PageHeapFlags 已设仍走 C0000374);
+   替代手法=HeapValidate/_get_heap_handle 探针 + _ReturnAddress 定位, 已够用。
+5. **dumpbt.py + map 符号 + capstone 现场 disasm** 三件套是 WIN 端定位主力;
+   Ghidra MCP(原版 xref/字节级取证)补齐 vararg 丢失类问题(wsprintfW argc 实锤 R8D)。
+
+### 遗留与下一步
+- TEMP PROBE(RSTI/RSTX/REL/ADOPT/RCCLEAN + 原 OOM 探针网)保留至 P2 稳定(T5 再拆);
+  FreeStrBuf 热路径探针已撤(性能污染)。
+- dumps 目录 ~660MB 已清理。
+- 下一步=T2(harness WRITE 回捞通道) → T3(G0 收口+P1 golden 录制) → T4(P2 全量对拍)。
