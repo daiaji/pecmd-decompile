@@ -40,8 +40,8 @@
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t PECMD_GetAvailPhysMemoryMB(void);
 extern int64_t PECMD_GetPhysicalMemoryMb(void);
-extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out,
-                         DWORD *type, LONG *status);
+extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out, DWORD *type,
+                         LONG *status);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
 extern BOOL FUN_140101E70(LPCWSTR s);
 extern uint64_t PECMD_IsDirectory(LPCWSTR s);
@@ -60,10 +60,10 @@ extern void PECMD_FreeNtdll(void);
 extern LPCWSTR FUN_140062EC8(LPCWSTR s, LPCWSTR sep, int mode, uint32_t flags);
 extern void PECMD_FixKnownDlls32(void);
 extern void PECMD_MounMountWimImage(void *script, WCHAR *cmd, uintptr_t flag);
-extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4,
-                          void *p5, int64_t *p6);
+extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4, void *p5, int64_t *p6);
 extern void PECMD_AppendKeyIfMissing(int64_t ctx, LPCWSTR path, int mode);
-extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
+extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4,
+                                        uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_CrtShim(WCHAR *out, size_t size, void *ctx, void *name);
 extern uint64_t PECMD_RamdMountImDisk(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
@@ -78,26 +78,25 @@ extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void PECMD_InitRamdataRegistry(uint32_t mode);
-extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
-                             uint32_t flag, void *p6, void *s7, void *p8);
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
+                                     void *p6, void *s7, void *p8);
 
 /* ---- 本批引用的全局数据 ---- */
-extern uint8_t g_sysStartFlag;        /* SystemStartOptions 缓存 */
-extern uint8_t g_answerFlag;        /* 应答标志 */
+extern uint8_t g_sysStartFlag;       /* SystemStartOptions 缓存 */
+extern uint8_t g_answerFlag;         /* 应答标志 */
 extern uint32_t g_sysVerClass;       /* 系统版本类别 */
-extern HANDLE g_u64cd08;         /* 句柄 */
+extern HANDLE g_u64cd08;             /* 句柄 */
 extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
-extern WCHAR g_wsz20c64[];        /* .rdata 字符串 */
-extern WCHAR g_wsz21014[];        /* .rdata 字符串 */
+extern WCHAR g_wsz20c64[];           /* .rdata 字符串 */
+extern WCHAR g_wsz21014[];           /* .rdata 字符串 */
 extern WCHAR DAT_1401214d8[];        /* .rdata 字体路径模板 */
-extern void *g_pInstallHinfSectionW;          /* MyInstallHinfSection 函数指针 */
+extern void *g_pInstallHinfSectionW; /* MyInstallHinfSection 函数指针 */
 
 /* ========== PECMD_ParseSize @0x140020b6c ==========
  * 解析 FBWF/内存大小串: Fxxx/Pxxx/Lxxx/Hxxx 混合, 返回最终 MB 值。
  * TODO(verify): P 分支的 Ghidra 魔数除法按 /100 近似。
  */
-uint32_t PECMD_ParseSize(LPWSTR s, uint32_t minMB, uint64_t unk,
-                       uint32_t defaultMB)
+uint32_t PECMD_ParseSize(LPWSTR s, uint32_t minMB, uint64_t unk, uint32_t defaultMB)
 {
     int64_t lVar1;
     LPWSTR pWVar2;
@@ -186,27 +185,26 @@ uint32_t PECMD_CheckSystemStartOptions(void)
         PECMD_AllocStrSlot(&local_res10);
         local_res8[0] = 0xffffffff;
         *((WCHAR *)local_res10) = L'\0';
-        iVar3 = FUN_1400690C0((HKEY)0xffffffff80000002,
-                              WSTR("SYSTEM\\CurrentControlSet\\Control"),
-                              WSTR("SystemStartOptions"), (int64_t *)&local_res10,
-                              local_res8, NULL);
+        iVar3 =
+            FUN_1400690C0((HKEY)0xffffffff80000002, WSTR("SYSTEM\\CurrentControlSet\\Control"),
+                          WSTR("SystemStartOptions"), (int64_t *)&local_res10, local_res8, NULL);
         if ((iVar3 < 0) || ((int)local_res8[0] < 0)) {
             PECMD_FreeStrBuf((WCHAR **)&local_res10);
             uVar2 = 0xffffffff;
-        } else {
+        }
+        else {
             local_res18 = local_res10;
             while (lpStr1 = local_res18, *local_res18 != L'\0') {
                 iVar3 = StrCmpNW(local_res18, WSTR("PECMDHB="), 8);
-                if ((iVar3 == 0) ||
-                    (iVar3 = StrCmpNW(lpStr1, WSTR("WIMHB="), 6), iVar3 == 0)) {
+                if ((iVar3 == 0) || (iVar3 = StrCmpNW(lpStr1, WSTR("WIMHB="), 6), iVar3 == 0)) {
                     g_sysStartFlag = 1;
                     PECMD_FreeStrBuf((WCHAR **)&local_res10);
                     return 1;
                 }
                 WVar1 = *lpStr1;
                 while ((WVar1 != L'\0' &&
-                        (((local_res18 = lpStr1, (uint16_t)WVar1 < 9 ||
-                          (0xd < (uint16_t)WVar1)) && (WVar1 != L' '))))) {
+                        (((local_res18 = lpStr1, (uint16_t)WVar1 < 9 || (0xd < (uint16_t)WVar1)) &&
+                          (WVar1 != L' '))))) {
                     local_res18 = lpStr1 + 1;
                     lpStr1 = local_res18;
                     WVar1 = *local_res18;
@@ -217,7 +215,8 @@ uint32_t PECMD_CheckSystemStartOptions(void)
             PECMD_FreeStrBuf((WCHAR **)&local_res10);
             uVar2 = 0;
         }
-    } else {
+    }
+    else {
         uVar2 = (uint32_t)g_sysStartFlag & 1;
     }
     return uVar2;
@@ -245,10 +244,9 @@ void PECMD_WriteParamRecord(int64_t ctx, char type, LPCWSTR a, LPCWSTR b)
         iVar3 = lstrlenW(b);
         iVar4 = lstrlenW(local_78);
         PECMD_AllocString((void *)*(int64_t *)(ctx + 0x160),
-                      (int64_t)iVar1 + iVar2 + iVar3 + iVar4 + 8);
+                          (int64_t)iVar1 + iVar2 + iVar3 + iVar4 + 8);
         sVar7 = 9;
-        psVar5 = (uint16_t *)(*(int64_t *)(*(int64_t *)(ctx + 0x160)) +
-                              (int64_t)iVar1 * 2);
+        psVar5 = (uint16_t *)(*(int64_t *)(*(int64_t *)(ctx + 0x160)) + (int64_t)iVar1 * 2);
         *psVar5 = (uint16_t)type;
         psVar5[1] = 9;
         psVar5 += 2;
@@ -302,13 +300,11 @@ void PECMD_AppendParamToken(int64_t *list, LPCWSTR token, char filter)
         FUN_14001C270(lpString, (WCHAR **)&local_res20);
         iVar3 = lstrlenW(local_res20);
         iVar3++;
-        if ((filter == '\0') ||
-            (bVar2 = FUN_140101E70(local_res20), bVar2 != 0)) {
+        if ((filter == '\0') || (bVar2 = FUN_140101E70(local_res20), bVar2 != 0)) {
             lVar1 = list[1] + 2 + iVar3;
             list[2] = lVar1;
             PECMD_AllocString(list, lVar1);
-            memcpy((uint8_t *)(*list + list[1] * 2),
-                          local_res20, iVar3 * 2);
+            memcpy((uint8_t *)(*list + list[1] * 2), local_res20, iVar3 * 2);
             list[1] += iVar3;
         }
         PECMD_FreeStrBuf((WCHAR **)&local_res20);
@@ -342,7 +338,8 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
         if (path[iVar3 - 1] == L'\\') {
             ((WCHAR *)path)[iVar3 - 1] = L'\0';
             iVar3 = 2;
-        } else {
+        }
+        else {
             uVar10 = PECMD_IsDirectory(path);
             iVar3 = 0;
             if ((int)uVar10 != 0) {
@@ -371,7 +368,8 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
                 uVar12 = 1;
                 DVar6 = 1;
             }
-        } else {
+        }
+        else {
             do {
                 ((WCHAR *)local_res18)[iVar4 + 1] = L'\0';
                 FUN_14006375C((WCHAR **)&local_res18, local_278.cFileName);
@@ -382,7 +380,8 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
                             uVar12 = uVar10 & 0xffffffff;
                             DVar6 = (DWORD)uVar10;
                         }
-                    } else {
+                    }
+                    else {
                         BVar5 = DeleteFileW(local_res18);
                         if (BVar5 == 0) {
                             DVar6 = GetLastError();
@@ -393,10 +392,11 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
                             }
                         }
                     }
-                } else if ((local_278.cFileName[0] != L'.') ||
-                           ((local_278.cFileName[1] != L'\0' &&
-                             ((local_278.cFileName[1] != L'.' ||
-                               (local_278.cFileName[2] != L'\0')))))) {
+                }
+                else if ((local_278.cFileName[0] != L'.') ||
+                         ((local_278.cFileName[1] != L'\0' &&
+                           ((local_278.cFileName[1] != L'.' ||
+                             (local_278.cFileName[2] != L'\0')))))) {
                     lVar9 = PECMD_DeleteDirectoryTree(local_res18, uVar13);
                     DVar6 = DVar6 & -(uint32_t)((int)lVar9 != 0);
                     uVar12 = DVar6;
@@ -415,7 +415,8 @@ int64_t PECMD_DeleteDirectoryTree(LPCWSTR path, uint32_t flags)
                     uVar12 = uVar10 & 0xffffffff;
                     DVar6 = (DWORD)uVar10;
                 }
-            } else {
+            }
+            else {
                 BVar5 = RemoveDirectoryW(path);
                 if (BVar5 == 0) {
                     DVar6 = GetLastError();
@@ -452,7 +453,8 @@ uint32_t PECMD_ParseVkKeyName(LPCWSTR s, char allowChar)
     uVar6 = (uint64_t)(uint16_t)WVar1;
     if (WVar1 == L'#') {
         local_res8 = s + 1;
-    } else {
+    }
+    else {
         local_res8 = s;
         if (((WVar1 != L'0') || ((WCHAR)(s[1] | 0x20U) != 0x78)) &&
             ((9 < (uint16_t)(WVar1 + 0xff10) || (9 < (uint16_t)(s[1] + 0xff10))))) {
@@ -461,13 +463,12 @@ uint32_t PECMD_ParseVkKeyName(LPCWSTR s, char allowChar)
             if ((int16_t)uVar6 != 0) {
                 do {
                     uVar5 = (uint16_t)uVar6;
-                    if ((uVar5 == 0x2c) || (((8 < uVar5 && (uVar5 < 0xe)) ||
-                                             (uVar5 == 0x20)))) break;
+                    if ((uVar5 == 0x2c) || (((8 < uVar5 && (uVar5 < 0xe)) || (uVar5 == 0x20))))
+                        break;
                     pWVar4++;
                     uVar6 = (uint64_t)(uint16_t)*pWVar4;
                 } while (*pWVar4 != L'\0');
-                if ((s < pWVar4) && ((pWVar4[-1] == L'_' ||
-                                            (pWVar4[-1] == L'^')))) {
+                if ((s < pWVar4) && ((pWVar4[-1] == L'_' || (pWVar4[-1] == L'^')))) {
                     pWVar4--;
                 }
             }
@@ -520,8 +521,7 @@ WCHAR *PECMD_RemoveDuplicateChar(LPCWSTR s, WCHAR allowChar)
                 if (allowChar != *pWVar3) {
                     return pWVar2;
                 }
-                memmove(pWVar2, pWVar3,
-                              (int)((int64_t)pWVar4 - (int64_t)pWVar2) / 2 * 2);
+                memmove(pWVar2, pWVar3, (int)((int64_t)pWVar4 - (int64_t)pWVar2) / 2 * 2);
                 pWVar4--;
                 for (; *pWVar3 == allowChar; pWVar3++) {
                     pWVar2 = pWVar3;
@@ -566,8 +566,7 @@ LPCWSTR PECMD_TrimTrailingSeparator(int64_t *list, LPCWSTR s, WCHAR sep)
                 }
                 return s;
             }
-        } while (((sep != *pWVar4) || (*pWVar1 == L'=')) ||
-                 (*pWVar1 == L'\''));
+        } while (((sep != *pWVar4) || (*pWVar1 == L'=')) || (*pWVar1 == L'\''));
         if ((pWVar4 <= s) || (sep != pWVar1[-2])) {
             *(WCHAR *)pWVar4 = L'\0';
             pWVar3 = pWVar1;
@@ -577,12 +576,12 @@ LPCWSTR PECMD_TrimTrailingSeparator(int64_t *list, LPCWSTR s, WCHAR sep)
             }
             return s;
         }
-        memmove((void *)pWVar4, (void *)pWVar1,
-                      (int)((int64_t)pWVar5 - (int64_t)pWVar4) / 2 * 2);
+        memmove((void *)pWVar4, (void *)pWVar1, (int)((int64_t)pWVar5 - (int64_t)pWVar4) / 2 * 2);
         pWVar5--;
         do {
             pWVar1 = pWVar4 - 1;
-            if (*pWVar1 != sep) break;
+            if (*pWVar1 != sep)
+                break;
             pWVar4 = pWVar1;
         } while (s < pWVar1);
     } while (1);
@@ -605,7 +604,8 @@ LRESULT PECMD_KeyboardHookProc(int nCode, WPARAM wParam, char *kb)
     bVar6 = 0;
     if (nCode < 0) {
         LVar3 = CallNextHookEx(g_hHook, nCode, wParam, (LPARAM)kb);
-    } else {
+    }
+    else {
         LVar3 = 1;
         if ((g_pHookData != NULL) && (nCode == 0)) {
             EnterCriticalSection(&g_csHook);
@@ -624,8 +624,7 @@ LRESULT PECMD_KeyboardHookProc(int nCode, WPARAM wParam, char *kb)
                 if ((uVar2 & 0x8000) != 0) {
                     uVar5 |= 0x400;
                 }
-                for (uVar2 = *puVar4; puVar4++, bVar6 = 0, 0 < (int16_t)uVar2;
-                     uVar2--) {
+                for (uVar2 = *puVar4; puVar4++, bVar6 = 0, 0 < (int16_t)uVar2; uVar2--) {
                     if ((cVar1 == (char)*puVar4) &&
                         ((*puVar4 & 0xff00) == (*puVar4 & 0xff00 & uVar5))) {
                         bVar6 = 1;
@@ -659,7 +658,8 @@ uint64_t PECMD_OneTimeInitBody(void)
     uVar3 = FUN_14001D628();
     if (((int)uVar3 == 0) || (uVar4 = PECMD_MapPhysicalMemoryNT5(), uVar4 == 0)) {
         uVar3 = 0;
-    } else {
+    }
+    else {
         iVar1 = PECMD_ReadPhysMemSlot(0xffdff124);
         iVar1 = PECMD_ReadPhysMemSlot((uint64_t)(iVar1 + 0x44));
         uVar2 = local_res8;
@@ -708,7 +708,8 @@ LPCWSTR PECMD_FindQuotedToken(LPCWSTR s, LPCWSTR sep, int mode, uint32_t flags)
             *(WCHAR *)local_res8 = WVar3;
             local_res8++;
         }
-        if (pWVar2 != NULL) break;
+        if (pWVar2 != NULL)
+            break;
         if ((local_res8 == NULL) || (s = local_res8, *local_res8 == L'\0')) {
             return NULL;
         }
@@ -719,8 +720,7 @@ LPCWSTR PECMD_FindQuotedToken(LPCWSTR s, LPCWSTR sep, int mode, uint32_t flags)
 /* ========== PECMD_ScanMenuRecursive @0x140023080 ==========
  * 递归扫描菜单, 收集项到动态数组; 返回第一个满足位置的项索引。
  */
-UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *count, LPCWSTR buf,
-                   int minId)
+UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *count, LPCWSTR buf, int minId)
 {
     int iVar1;
     UINT uPosition;
@@ -762,7 +762,8 @@ UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *count, LPCWSTR buf,
             *puVar3 = (WCHAR *)puVar4;
             if (*buf == L'\0') {
                 local_res20++;
-            } else {
+            }
+            else {
                 local_res20 = 0;
                 if (puVar4 != NULL && *puVar4 != NULL) {
                     *(uint16_t *)*puVar4 = (uint16_t)uPosition;
@@ -785,7 +786,8 @@ UINT PECMD_ScanMenuRecursive(HMENU menu, int64_t *arr, int *count, LPCWSTR buf,
                     }
                 }
             }
-        } else {
+        }
+        else {
             PECMD_ScanMenuRecursive(pHVar2, arr, count, buf, -1);
         }
         uIDItem++;
@@ -850,9 +852,9 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
     local_78[0] = 0;
     local_res18[0] = 0;
     local_res8[0] = 100;
-    iVar1 = ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *))g_pSHGetValueW)
-        ((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("OnlyApp"),
-         local_res18, local_78, local_res8);
+    iVar1 = ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *))g_pSHGetValueW)(
+        (HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("OnlyApp"), local_res18,
+        local_78, local_res8);
     if (iVar1 != 0) {
         local_78[0] = 0;
     }
@@ -860,10 +862,11 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
         PECMD_FixKnownDlls32();
         if (PECMD_CheckSystemStartOptions() == 0) {
             PECMD_InitRamdataRegistry(0);
-            ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)
-                ((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("OnlyApp"),
-                 1, g_wsz20c64, 2);
-        } else {
+            ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)(
+                (HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("OnlyApp"), 1,
+                g_wsz20c64, 2);
+        }
+        else {
             FUN_1400702B0(&local_res20, WSTR("-udm OnlyApp "));
             if (cmdline != NULL) {
                 FUN_14006375C(&local_res20, cmdline);
@@ -878,8 +881,8 @@ void PECMD_StartOnlyApp(LPCWSTR cmdline)
  * 构造命令行并创建进程; 等待结束并回写结果。
  * TODO(verify): 命令行偏移/空格细节按反编译保留。
  */
-uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
-                       uint64_t arg2, uint64_t flags)
+uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1, uint64_t arg2,
+                                 uint64_t flags)
 {
     BOOL bVar1;
     DWORD DVar2;
@@ -910,15 +913,18 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     iVar4 = lstrlenW((LPCWSTR)(arg1 & 0xfffffffffffffffeULL));
     if (lpString == NULL) {
         iVar5 = 0;
-    } else {
+    }
+    else {
         iVar5 = lstrlenW(lpString);
     }
     if (lpString_00 == NULL) {
         iVar6 = 0;
-    } else {
+    }
+    else {
         iVar6 = lstrlenW(lpString_00);
     }
-    PECMD_AllocWStringBuffer((WCHAR **)&local_d0, (int64_t)(iVar5 + 0x416 + iVar6 * 2 + iVar4 + local_res20));
+    PECMD_AllocWStringBuffer((WCHAR **)&local_d0,
+                             (int64_t)(iVar5 + 0x416 + iVar6 * 2 + iVar4 + local_res20));
     puVar7 = local_d0;
     memcpy(local_d0, WSTR("    *="), 0xc);
     lVar10 = (int64_t)local_res20 * 2;
@@ -929,7 +935,8 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     lVar10 = 2;
     if (lpString == NULL) {
         sVar12 = 0x22;
-    } else {
+    }
+    else {
         *psVar8 = 0x20;
         psVar8[1] = 0x2d;
         psVar8[2] = 0x6f;
@@ -966,17 +973,18 @@ uint32_t PECMD_RunProcessCommand(int64_t ctx, LPCWSTR cmd, uint64_t arg1,
     local_a8.wShowWindow = 0;
     local_a8.dwFlags = 0x81;
     CreateProcessW(NULL, (LPWSTR)(local_d0 + 0xc), NULL, NULL, 0,
-                   (((uint32_t)(arg1 << 7)) & 0x80) | 0x1000004,
-                   NULL, NULL, &local_a8, &local_c8);
+                   (((uint32_t)(arg1 << 7)) & 0x80) | 0x1000004, NULL, NULL, &local_a8, &local_c8);
     if (bVar1) {
         if (local_c8.hProcess != 0) {
             AssignProcessToJobObject(*(HANDLE *)(ctx + 0x1b8), local_c8.hProcess);
             goto LAB_14002b229;
         }
         local_res18[0] = GetLastError();
-        if (local_c8.hProcess == 0) goto LAB_14002b28d;
-    } else {
-LAB_14002b229:
+        if (local_c8.hProcess == 0)
+            goto LAB_14002b28d;
+    }
+    else {
+    LAB_14002b229:
         if (local_c8.hProcess == 0) {
             local_res18[0] = GetLastError();
             goto LAB_14002b28d;
@@ -989,8 +997,8 @@ LAB_14002b229:
     CloseHandle(local_c8.hProcess);
 LAB_14002b28d:
     if ((flags & 1) == 0) {
-        FUN_140025f10(ctx + 8, (LPCWSTR)(local_d0 + 0x12), local_res18[0],
-                      (void *)0x1100, NULL, NULL);
+        FUN_140025f10(ctx + 8, (LPCWSTR)(local_d0 + 0x12), local_res18[0], (void *)0x1100, NULL,
+                      NULL);
     }
     DVar2 = local_res18[0];
     PECMD_FreeStrBuf((WCHAR **)&local_d0);
@@ -1024,8 +1032,7 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
     }
     PECMD_AllocWStringBuffer(local_28, 0x2800);
     _snwprintf(local_28[0], 0x27ff, WSTR("Devcon安装驱动【%s】[%s]"), hwid, inf);
-    FUN_140025f10(ctx + 8, local_28[0], local_38.dwLowDateTime, (void *)0x1100,
-                  NULL, NULL);
+    FUN_140025f10(ctx + 8, local_28[0], local_38.dwLowDateTime, (void *)0x1100, NULL, NULL);
     PECMD_FreeStrBuf(local_28);
     DVar1 = local_38.dwLowDateTime;
     PECMD_FreeStrBuf(&local_30);
@@ -1035,10 +1042,10 @@ uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR inf, LPCWSTR hwid, int mode)
 /* ========== PECMD_ShowDriverInstallMsg @0x14002c7dc ==========
  * MyInstallHinfSection 驱动安装提示。
  */
-uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c,
-                       uint64_t flags)
+uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c, uint64_t flags)
 {
-    (void)a; (void)b;
+    (void)a;
+    (void)b;
     WCHAR *local_18[2];
     LPCWSTR puVar1;
 
@@ -1049,8 +1056,8 @@ uint64_t PECMD_ShowDriverInstallMsg(uint64_t a, uint64_t b, uint64_t c,
     if ((flags & 0xffff0000) != 0) {
         puVar1 = g_wsz21014;
     }
-    _snwprintf(local_18[0], 0x27ff, WSTR("MyInstallHinfSection安装驱动%s【%s】\r\n"),
-               puVar1, (LPCWSTR)c, 0);
+    _snwprintf(local_18[0], 0x27ff, WSTR("MyInstallHinfSection安装驱动%s【%s】\r\n"), puVar1,
+               (LPCWSTR)c, 0);
     FUN_140025f10(0x14013d130, local_18[0], 0, (void *)0x11, NULL, NULL);
     PECMD_FreeStrBuf(local_18);
     return 0;
@@ -1071,8 +1078,8 @@ void PECMD_SkipSwitches(uint16_t *p)
     if (*local_res8 == 0x2d) {
         uVar1 = 0x2d;
         do {
-            while ((((uVar1 != 0 && (uVar1 != 0x22)) &&
-                     ((uVar1 < 9 || (0xd < uVar1)))) && (uVar1 != 0x20))) {
+            while ((((uVar1 != 0 && (uVar1 != 0x22)) && ((uVar1 < 9 || (0xd < uVar1)))) &&
+                    (uVar1 != 0x20))) {
                 local_res8++;
                 uVar1 = *local_res8;
             }
@@ -1110,11 +1117,11 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
     if (local_res18 != 0) {
         do {
             if ((local_268.dwFileAttributes & 0x10) == 0) {
-                PECMD_CrtShim(local_res20, 0x208, (void *)dir,
-                              (void *)local_268.cFileName);
+                PECMD_CrtShim(local_res20, 0x208, (void *)dir, (void *)local_268.cFileName);
                 if (remove == 0) {
                     iVar1 = AddFontResourceW(local_res20);
-                } else {
+                }
+                else {
                     iVar1 = RemoveFontResourceW(local_res20);
                 }
                 iVar4 += iVar1;
@@ -1124,8 +1131,8 @@ BOOL PECMD_InstallFonts(void *dir, int remove)
             FindClose(local_res18);
         }
         local_res18 = 0;
-        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x1d, 0, 0, 0xffffffff,
-                      5000, 1, 0);
+        PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, NULL, 0x1d, 0, 0, 0xffffffff, 5000, 1,
+                                0);
     }
     if ((local_res18 != 0) && (local_res18 != INVALID_HANDLE_VALUE)) {
         FindClose(local_res18);
@@ -1147,17 +1154,19 @@ uint64_t PECMD_RunRamdriv(int64_t *ctx, LPCWSTR cmd)
     LPCWSTR local_res10;
     LPCWSTR local_res20;
     WCHAR *local_res18 = NULL;
-    WCHAR *local_28[2] = { NULL, NULL };
+    WCHAR *local_28[2] = {NULL, NULL};
 
     if (g_flagA24F < 1) {
         uVar3 = 0;
-    } else {
+    }
+    else {
         local_res10 = cmd;
         iVar1 = StrCmpNIW(cmd, WSTR("ImDisk"), 6);
         if (iVar1 == 0) {
             uVar3 = PECMD_RamdMountImDisk(cmd, ctx);
             uVar3 = (uint64_t)(int)uVar3;
-        } else {
+        }
+        else {
             PECMD_AllocWStringBuffer((WCHAR **)&local_res18, 0x50);
             FUN_1400702B0(local_28, WSTR("%ramdrv%"));
             FUN_14007BF44(ctx, local_28[0], &local_res18, 0, 1);
@@ -1259,9 +1268,9 @@ void PECMD_WriteSysAck(uint32_t ack, int mode)
 
     local_res8[0] = ack & 1;
     PECMD_InitRamdataRegistry(0);
-    ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)
-        ((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("SysShel.ack"),
-         4, local_res8, 4);
+    ((LONG (*)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD))g_pSHSetValueW)(
+        (HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON\\RAMDATA"), WSTR("SysShel.ack"), 4,
+        local_res8, 4);
     if (local_res8[0] != 0) {
         bVar1 = (uint8_t)(-(mode != 0) & 2);
         if (g_answerFlag == 1) {

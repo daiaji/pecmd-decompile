@@ -24,26 +24,27 @@
 #include "pecmd_defs.h"
 
 /* ---- 待重构函数原型 (后续批次) ---- */
-void FUN_140053E78(void);            /* @0x140053e78 */
-void PECMD_SetRdataTablePtr(void);            /* @0x14005d694 */
-extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);  /* @0x1400669c4 设置变量 */
-void PECMD_OpenSharedMapping(int a, const char *s);            /* @0x140005738 */
-void PECMD_DetectCodePage(void);            /* @0x14000500c */
-void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);   /* @0x1400629b8 */
-void PECMD_InstallWindowsService(LPCWSTR cmd);     /* @0x140008834 执行命令文本 */
-void PECMD_ServiceMainEntry(void);            /* @0x140016ae0 服务主过程 */
+void FUN_140053E78(void);          /* @0x140053e78 */
+void PECMD_SetRdataTablePtr(void); /* @0x14005d694 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value,
+                                    LPCWSTR key);   /* @0x1400669c4 设置变量 */
+void PECMD_OpenSharedMapping(int a, const char *s); /* @0x140005738 */
+void PECMD_DetectCodePage(void);                    /* @0x14000500c */
+void FUN_1400629B8(void *s, LPCWSTR k, LPCWSTR v);  /* @0x1400629b8 */
+void PECMD_InstallWindowsService(LPCWSTR cmd);      /* @0x140008834 执行命令文本 */
+void PECMD_ServiceMainEntry(void);                  /* @0x140016ae0 服务主过程 */
 
 /* ---- 全局 (core_globals.c) ---- */
-extern uint8_t g_flag16b;            /* DAT_14013c96b (DEBUGMDG) */
-extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);   /* DAT_14013d408 */
-extern void (*g_pSHGetValueA)(void);       /* DAT_14013cd50 */
-extern void (*g_pStrToIntExW)(void);       /* DAT_14013cd58 */
-extern HMODULE g_hNtdll;             /* DAT_14013ccf8 */
-extern void (*g_pNtOpenFile)(void);        /* DAT_14013cd18 */
-extern void (*g_pNtCreateFile)(void);      /* DAT_14013cd20 */
-extern void (*g_pNtReadFile)(void);        /* DAT_14013cd28 */
-extern void (*g_pNtCreateDirectoryObject)(void); /* DAT_14013cd30 */
-extern void (*g_pNtCreateSymbolicLinkObject)(void); /* DAT_14013cd38 */
+extern uint8_t g_flag16b; /* DAT_14013c96b (DEBUGMDG) */
+extern int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t); /* DAT_14013d408 */
+extern void (*g_pSHGetValueA)(void);                                     /* DAT_14013cd50 */
+extern void (*g_pStrToIntExW)(void);                                     /* DAT_14013cd58 */
+extern HMODULE g_hNtdll;                                                 /* DAT_14013ccf8 */
+extern void (*g_pNtOpenFile)(void);                                      /* DAT_14013cd18 */
+extern void (*g_pNtCreateFile)(void);                                    /* DAT_14013cd20 */
+extern void (*g_pNtReadFile)(void);                                      /* DAT_14013cd28 */
+extern void (*g_pNtCreateDirectoryObject)(void);                         /* DAT_14013cd30 */
+extern void (*g_pNtCreateSymbolicLinkObject)(void);                      /* DAT_14013cd38 */
 
 /* ========== 动态导入 @0x14005c828 ========== */
 /* *out = GetProcAddress(模块, name); 模块句柄缓存于 *hmod */
@@ -99,7 +100,8 @@ WCHAR *FUN_14000546C(WCHAR *p)
         if (*p == L'"') {
             p += 2;
         }
-    } else {
+    }
+    else {
         while (c != 0 && ((c < 9 || c > 0xd) && c != 0x20)) {
             p++;
             c = *p;
@@ -151,7 +153,8 @@ void FUN_140008B2C(WCHAR *name)
             CloseServiceHandle(hSvc);
             Sleep(200);
         }
-    } else {
+    }
+    else {
         GetLastError();
     }
     CloseServiceHandle(hMgr);
@@ -176,15 +179,15 @@ uint64_t PECMD_GetParentProcessId(DWORD pid)
     uint64_t info[5];
     HANDLE h;
 
-    PECMD_GetApiProcCached("NtQueryInformationProcess", "NTDLL.DLL",
-                      (void **)&g_pNtQueryInfo, NULL);
+    PECMD_GetApiProcCached("NtQueryInformationProcess", "NTDLL.DLL", (void **)&g_pNtQueryInfo,
+                           NULL);
     if (g_pNtQueryInfo != NULL) {
         memset(info, 0, 0x30);
-        h = OpenProcess(0x400, 0, pid);   /* PROCESS_QUERY_INFORMATION */
+        h = OpenProcess(0x400, 0, pid); /* PROCESS_QUERY_INFORMATION */
         if (h) {
             if ((*g_pNtQueryInfo)(h, 0, info, 0x30, NULL) == 0) {
                 CloseHandle(h);
-                return info[4];            /* PROCESS_BASIC_INFORMATION.ParentProcessId @+0x20 */
+                return info[4]; /* PROCESS_BASIC_INFORMATION.ParentProcessId @+0x20 */
             }
             CloseHandle(h);
             return 0;
@@ -196,8 +199,7 @@ uint64_t PECMD_GetParentProcessId(DWORD pid)
 /* ========== 动态导入初始化 @0x140017908 ========== */
 void PECMD_InitDynamicImports(void)
 {
-    PECMD_GetApiProcCached("RegDeleteKeyExW", "Advapi32.DLL",
-                      (void **)&g_pRegDeleteKeyExW, NULL);
+    PECMD_GetApiProcCached("RegDeleteKeyExW", "Advapi32.DLL", (void **)&g_pRegDeleteKeyExW, NULL);
     if (!g_pSHDeleteKeyW) {
         PECMD_GetApiProcCached("SHGetValueW", "ShLwAPI.DLL", (void **)&g_pSHGetValueW, NULL);
         PECMD_GetApiProcCached("SHGetValueA", "ShLwAPI.DLL", (void **)&g_pSHGetValueA, NULL);
@@ -212,9 +214,7 @@ void PECMD_InitDynamicImports(void)
 /* .rdata 表 @0x14013a260: SystemRoot/SystemDrive/windir/TEMP/TMP */
 void PECMD_ImportSystemEnvVars(void)
 {
-    static const char *const names[] = {
-        "SystemRoot", "SystemDrive", "windir", "TEMP", "TMP"
-    };
+    static const char *const names[] = {"SystemRoot", "SystemDrive", "windir", "TEMP", "TMP"};
     WCHAR key[56];
     WCHAR val[2604];
     int i;
@@ -253,7 +253,8 @@ int FUN_14001D628(void)
         g_pZwOpenSection = (void *)GetProcAddress(g_hNtdll, "ZwOpenSection");
         g_pNtClose = (void *)GetProcAddress(g_hNtdll, "NtClose");
         g_pNtCreateDirectoryObject = (void *)GetProcAddress(g_hNtdll, "NtCreateDirectoryObject");
-        g_pNtCreateSymbolicLinkObject = (void *)GetProcAddress(g_hNtdll, "NtCreateSymbolicLinkObject");
+        g_pNtCreateSymbolicLinkObject =
+            (void *)GetProcAddress(g_hNtdll, "NtCreateSymbolicLinkObject");
     }
     return 1;
 }

@@ -27,10 +27,8 @@
 #include "pecmd_defs.h"
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
-                              uint64_t cap);
-extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *out,
-                          int64_t *err);
+extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
 extern HWND PECMD_FindTrayWindow(void);
 extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
 
@@ -41,10 +39,9 @@ extern uint8_t g_flagD321;
 /* ========== PECMD_ItemBaseInit @0x140053dc8 ==========
  * 初始化对话框对象。
  */
-uint64_t *PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data,
-                                 LPCWSTR name1, LPCWSTR name2, LPCWSTR name3,
-                                 uint32_t flags1, uint32_t flags2, uint32_t flags3,
-                                 uint32_t flags4)
+uint64_t *PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data, LPCWSTR name1,
+                             LPCWSTR name2, LPCWSTR name3, uint32_t flags1, uint32_t flags2,
+                             uint32_t flags3, uint32_t flags4)
 {
     *(uint32_t *)(obj + 1) = id;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401234f0;
@@ -91,7 +88,8 @@ HANDLE PECMD_HandleDuplicateValid(HANDLE handle, uint64_t *out)
     BOOL BVar1 = GetHandleInformation(handle, local_res18);
     if ((BVar1 == 0) && (GetLastError() == 6)) {
         handle = (HANDLE)0;
-    } else if (out != NULL) {
+    }
+    else if (out != NULL) {
         HANDLE local_res20 = 0;
         HANDLE pvVar3 = GetCurrentProcess();
         BVar1 = DuplicateHandle(pvVar3, handle, pvVar3, &local_res20, 0, 0, 2);
@@ -150,14 +148,17 @@ LPWSTR FUN_14005EEFC(LPWSTR dst, WCHAR *src)
             if (src[1] == L'%') {
                 *dst = L'%';
                 dst++;
-            } else {
-                if (src[1] != L'd') goto LAB_14005ef73;
+            }
+            else {
+                if (src[1] != L'd')
+                    goto LAB_14005ef73;
                 int iVar2 = wsprintfW(dst, WSTR("%d"), 0);
                 dst += iVar2;
             }
             src += 2;
-        } else {
-LAB_14005ef73:
+        }
+        else {
+        LAB_14005ef73:
             *dst = WVar1;
             dst++;
             src++;
@@ -175,16 +176,20 @@ LPCWSTR FUN_14005FF30(int type, LPWSTR buf, int detail)
     LPCWSTR pwVar2;
     if (type == 0) {
         pwVar1 = WSTR("DRIVE_UNKNOWN");
-    } else if (type == 1) {
+    }
+    else if (type == 1) {
         pwVar1 = WSTR("DRIVE_NO_ROOT_DIR");
-    } else {
+    }
+    else {
         if (type == 2) {
             pwVar2 = WSTR("DRIVE_USBFLASH");
             pwVar1 = WSTR("DRIVE_REMOVABLE");
-        } else if (type == 3) {
+        }
+        else if (type == 3) {
             pwVar2 = WSTR("DRIVE_USBDISK");
             pwVar1 = WSTR("DRIVE_FIXED");
-        } else {
+        }
+        else {
             if (type == 4) {
                 return WSTR("DRIVE_REMOTE");
             }
@@ -208,8 +213,7 @@ LPCWSTR FUN_14005FF30(int type, LPWSTR buf, int detail)
 /* ========== FUN_14005F1B0 @0x14005f1b0 ==========
  * 从流读取一个字节。
  */
-bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
-                          DWORD *readCount)
+bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused, DWORD *readCount)
 {
     (void)unused;
     DWORD local_res8[2] = {0, 0};
@@ -222,10 +226,10 @@ bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
         do {
             stream[2] = 0;
             local_res8[0] = 0;
-            BOOL BVar4 = ReadFile((HANDLE)*stream, (LPVOID)stream[1], 0x1000,
-                                  local_res8, NULL);
+            BOOL BVar4 = ReadFile((HANDLE)*stream, (LPVOID)stream[1], 0x1000, local_res8, NULL);
             stream[3] = local_res8[0];
-            if (((BVar4 == 0) && (GetLastError() == 0x6d)) || (local_res8[0] != 0)) break;
+            if (((BVar4 == 0) && (GetLastError() == 0x6d)) || (local_res8[0] != 0))
+                break;
             *piVar1 = *piVar1 - 1;
         } while (-1 < *piVar1);
     }
@@ -233,7 +237,8 @@ bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
     int64_t lVar3 = stream[3];
     if (lVar3 <= lVar2) {
         *pDVar6 = 0;
-    } else {
+    }
+    else {
         stream[2] = lVar2 + 1;
         *out = *(uint8_t *)(lVar2 + stream[1]);
         *pDVar6 = 1;
@@ -259,13 +264,15 @@ LPCWSTR FUN_140062EC8(LPCWSTR text, LPCWSTR tokens, int len, uint32_t flags)
                 }
             }
             iVar1 = 0;
-        } else {
+        }
+        else {
             iVar1 = (int)PECMD_MatchPatternSwap(tokens, text);
         }
         if (iVar1 != 0) {
             return tokens;
         }
-        if ((char)flags != '\0') break;
+        if ((char)flags != '\0')
+            break;
         iVar1 = lstrlenW(tokens);
         tokens += (iVar1 + 1);
         if (*tokens == L'\0') {
@@ -298,7 +305,8 @@ void PECMD_RemoveObjectByKey(int64_t *arr, int *count, int64_t key)
     lVar2 = (int64_t)(*count - 1);
     if (-1 < *count - 1) {
         do {
-            if (*(int64_t *)(*arr + lVar2 * 8) != 0) break;
+            if (*(int64_t *)(*arr + lVar2 * 8) != 0)
+                break;
             *count = *count - 1;
             lVar2--;
         } while (-1 < lVar2);
@@ -313,10 +321,14 @@ void PECMD_LoadImageListApi(void)
 {
     int64_t local_res8[4] = {0, 0, 0, 0};
     if (g_flagD321 == 0) {
-        PECMD_GetApiProcCached("ImageList_Create", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListCreate, local_res8);
-        PECMD_GetApiProcCached("ImageList_Destroy", "Comctl32.DLL", (int64_t *)(void **)&g_pFnCleanup, local_res8);
-        PECMD_GetApiProcCached("ImageList_ReplaceIcon", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
-        PECMD_GetApiProcCached("ImageList_Add", "Comctl32.DLL", (int64_t *)(void **)&g_pImageListAdd, local_res8);
+        PECMD_GetApiProcCached("ImageList_Create", "Comctl32.DLL",
+                               (int64_t *)(void **)&g_pImageListCreate, local_res8);
+        PECMD_GetApiProcCached("ImageList_Destroy", "Comctl32.DLL",
+                               (int64_t *)(void **)&g_pFnCleanup, local_res8);
+        PECMD_GetApiProcCached("ImageList_ReplaceIcon", "Comctl32.DLL",
+                               (int64_t *)(void **)&g_pImageListReplaceIcon, local_res8);
+        PECMD_GetApiProcCached("ImageList_Add", "Comctl32.DLL",
+                               (int64_t *)(void **)&g_pImageListAdd, local_res8);
         g_flagD321 = (g_pImageListAdd != 0) ? 1 : 0xff;
     }
 }

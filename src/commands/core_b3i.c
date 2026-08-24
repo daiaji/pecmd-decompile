@@ -52,17 +52,14 @@ extern WCHAR *FUN_14001BE14(WCHAR *s);
 extern void PECMD_SetCurrentDirIfChanged(WCHAR *buf);
 extern void PECMD_SyncWorkingDirectory(void);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
-extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2,
-                              void *p3, void *p4, void *p5);
+extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2, void *p3, void *p4, void *p5);
 extern int PECMD_ParseCharClassRanges(int *a1, int64_t *a2, uint32_t a3);
-extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3,
-                          int16_t a4);
+extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3, int16_t a4);
 extern void FUN_140003A20(void *script, WCHAR **out, int mode);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
 extern int PECMD_CalcDayOfYear(uint16_t *a1);
 extern void PECMD_ReleaseImageHandle(int64_t a1);
-extern DWORD FUN_14006459C(LPCWSTR a1, uint32_t a2, LPWSTR a3,
-                           LPWSTR *a4);
+extern DWORD FUN_14006459C(LPCWSTR a1, uint32_t a2, LPWSTR a3, LPWSTR *a4);
 extern uint64_t PECMD_QueryFileAttributes(LPCWSTR a1, uint32_t *a2, int *a3);
 extern void FUN_14007A224(void *script, LPCWSTR text, WCHAR **out, int c, int d);
 extern uint64_t *FUN_14007DE70(uint64_t *a1, int64_t *a2, LPCWSTR a3);
@@ -82,7 +79,7 @@ extern __time64_t _time64(__time64_t *);
 extern int FUN_1400630D0(int a1);
 
 /* ---- 本批引用的全局数据 ---- */
-extern uint8_t DAT_14013d660;          /* 数组释放哨兵 */
+extern uint8_t DAT_14013d660; /* 数组释放哨兵 */
 extern uint8_t PTR_FUN_1401234f0[];
 extern uint8_t PTR_FUN_140126740[];
 extern uint8_t PTR_FUN_1401290a8[];
@@ -90,9 +87,9 @@ extern uint8_t PTR_FUN_1401296e8[];
 extern int64_t g_pCacheBlock;
 extern int32_t g_flagD6F0;
 extern int32_t DAT_14013d738;
-extern void (*g_pGdipCreateBitmapFromHICON)();          /* GdipCreateBitmapFromHICON */
-extern void (*g_pGdipCreateHBITMAPFromBitmap)();          /* GdipCreateHBITMAPFromBitmap */
-extern int (*g_pGdipDisposeImage)();          /* GdipDisposeImage */
+extern void (*g_pGdipCreateBitmapFromHICON)();   /* GdipCreateBitmapFromHICON */
+extern void (*g_pGdipCreateHBITMAPFromBitmap)(); /* GdipCreateHBITMAPFromBitmap */
+extern int (*g_pGdipDisposeImage)();             /* GdipDisposeImage */
 extern int64_t *g_pi64e118;
 
 /* ========== PECMD_DispatchSpecialDirective @0x140040350 ==========
@@ -104,17 +101,19 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
         WCHAR *pWVar2 = FUN_14001BE14((WCHAR *)(s + 1));
         PECMD_SetCurrentDirIfChanged(pWVar2);
         PECMD_SyncWorkingDirectory();
-    } else if (*s != 0x23) {
+    }
+    else if (*s != 0x23) {
         if (*s != 0) {
             return PECMD_CreateDirectory((uint64_t)pp, (WCHAR *)s);
         }
         uint8_t local_58[80];
         memcpy(local_58, WSTR("PATH  @%SystemRoot%\\SYSTEM32"), 0x42);
-        uint64_t LVar3 = PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)g_Script,
-                                         (uint64_t)(uintptr_t)local_58,
-                                         (void *)0, (void *)0, (void *)0);
+        uint64_t LVar3 =
+            PECMD_ProcessScriptBlock((uint64_t)(uintptr_t)g_Script, (uint64_t)(uintptr_t)local_58,
+                                     (void *)0, (void *)0, (void *)0);
         return (uint32_t)LVar3;
-    } else {
+    }
+    else {
         FUN_14003C06C(pp, (LARGE_INTEGER)(int64_t)(uintptr_t)(s + 1), 0);
     }
     return 0;
@@ -123,8 +122,7 @@ uint32_t PECMD_DispatchSpecialDirective(int64_t *pp, uint16_t *s)
 /* ========== PECMD_RegexParseCharItem @0x14004faa8 ==========
  * 解析 [start-end] 范围说明；返回 0 成功，-1 失败并置错误码。
  */
-uint64_t PECMD_RegexParseCharItem(uint32_t *errCode, int64_t *pp, uint16_t *start,
-                              uint16_t *end)
+uint64_t PECMD_RegexParseCharItem(uint32_t *errCode, int64_t *pp, uint16_t *start, uint16_t *end)
 {
     uint16_t uVar1 = *(uint16_t *)*pp;
     if (uVar1 == 0x5c) {
@@ -143,7 +141,8 @@ uint64_t PECMD_RegexParseCharItem(uint32_t *errCode, int64_t *pp, uint16_t *star
         uVar1 = *puVar2;
         if ((uVar1 == 0) || (uVar1 == 0x5d)) {
             *errCode = 4;
-        } else {
+        }
+        else {
             *end = uVar1;
             *pp += 2;
             if (*start <= *end) {
@@ -214,8 +213,8 @@ void FUN_140053C5C(int64_t obj, int mode)
 /* ========== PECMD_SplitNextToken @0x1400547bc ==========
  * 追加一个 token；若当前字符为分隔符则跳过。
  */
-int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out,
-                                    int16_t sep1, int16_t sep2)
+int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out, int16_t sep1,
+                              int16_t sep2)
 {
     PECMD_CopyTokenTrimmed(pp, out, sep1, sep2);
     int16_t *psVar1 = (int16_t *)*pp;
@@ -259,7 +258,10 @@ void FUN_14005D30C(int mode)
     uint32_t local_c;
 
     memset(&local_38, 0, 0x30);
-    (void)local_34; (void)local_30; (void)local_10; (void)local_c;
+    (void)local_34;
+    (void)local_30;
+    (void)local_10;
+    (void)local_c;
     local_38 = ((uint32_t (*)(uint32_t))g_phtonl)(0x1b0004fa);
     local_34 = ((uint32_t (*)(uint32_t))g_phtonl)(0x10000);
     local_30 = ((uint32_t (*)(void))g_phtonl)(); /* TODO(verify): 原反编译缺 htonl 参数 */
@@ -306,9 +308,9 @@ void FUN_14005D770(void)
         DWORD local_res18[4] = {0, 0, 0, 0};
         DWORD local_res10[2] = {4, 0};
         g_flagD6F0 = -1;
-        DWORD DVar1 = FUN_14005C4E0(HKEY_CURRENT_USER, WSTR("Control Panel\\Desktop"),
-                                     WSTR("LogPixels"), local_res18, (BYTE *)local_res8,
-                                     local_res10);
+        DWORD DVar1 =
+            FUN_14005C4E0(HKEY_CURRENT_USER, WSTR("Control Panel\\Desktop"), WSTR("LogPixels"),
+                          local_res18, (BYTE *)local_res8, local_res10);
         if ((DVar1 == 0) && (0 < local_res8[0])) {
             g_flagD6F0 = -0x60;
         }
@@ -318,8 +320,7 @@ void FUN_14005D770(void)
 /* ========== PECMD_CopyImageFallback @0x14005d8bc ==========
  * 复制图像；CopyImage 失败时通过 GDI+ 转换图标。
  */
-HANDLE PECMD_CopyImageFallback(HANDLE src, uint8_t type, int cx, int cy,
-                       UINT flags)
+HANDLE PECMD_CopyImageFallback(HANDLE src, uint8_t type, int cx, int cy, UINT flags)
 {
     HANDLE local_10 = CopyImage(src, (UINT)type, cx, cy, flags);
     if (local_10 == (HANDLE)0) {
@@ -328,7 +329,8 @@ HANDLE PECMD_CopyImageFallback(HANDLE src, uint8_t type, int cx, int cy,
             uint64_t local_18 = 0;
             ((int (*)(HANDLE, uint64_t *))g_pGdipCreateBitmapFromHICON)(src, &local_18);
             if (local_18 != 0) {
-                ((int (*)(uint64_t, HANDLE *, int))g_pGdipCreateHBITMAPFromBitmap)(local_18, &local_10, 0);
+                ((int (*)(uint64_t, HANDLE *, int))g_pGdipCreateHBITMAPFromBitmap)(local_18,
+                                                                                   &local_10, 0);
                 ((void (*)(uint64_t))g_pGdipDisposeImage)(local_18);
                 return local_10;
             }
@@ -349,8 +351,8 @@ int FUN_14005F96C(HANDLE hDevice, int defaultSize)
     int local_14 = 0x200;
 
     memset(local_24, 0, 0x14);
-    BOOL BVar1 = DeviceIoControl(hDevice, 0x70000, (LPVOID)0, 0, &local_28, 0x18,
-                                 local_res18, NULL);
+    BOOL BVar1 =
+        DeviceIoControl(hDevice, 0x70000, (LPVOID)0, 0, &local_28, 0x18, local_res18, NULL);
     if ((BVar1 != 0) || (defaultSize == 0)) {
         defaultSize = local_14;
     }
@@ -366,11 +368,11 @@ uint64_t *FUN_14005FEAC(HANDLE hDevice, uint64_t *info, uint32_t *outSize)
 
     *outSize = 0;
     memset(info, 0, 0xc0);
-    BOOL BVar1 = DeviceIoControl(hDevice, 0x70050, (LPVOID)0, 0, info, 0x100000,
-                                 local_res10, NULL);
+    BOOL BVar1 = DeviceIoControl(hDevice, 0x70050, (LPVOID)0, 0, info, 0x100000, local_res10, NULL);
     if (BVar1 == 0) {
         info = NULL;
-    } else {
+    }
+    else {
         *outSize = *(uint32_t *)((uint8_t *)info + 4);
     }
     return info;
@@ -430,7 +432,8 @@ void PECMD_TrimOuterQuotes(int64_t *pp, uint8_t mode, int16_t sep)
                 }
             }
         }
-    } else {
+    }
+    else {
         psVar1[(int64_t)iVar2 - 1] = 0;
         *pp += 2;
     }
@@ -448,7 +451,8 @@ int FUN_140060EE0(uint16_t *s, int mode)
     }
     if (mode == 0) {
         iVar1 = (iVar2 + iVar1) / 7 + 1;
-    } else {
+    }
+    else {
         if (iVar2 == 0) {
             iVar2 = 7;
         }
@@ -505,8 +509,8 @@ int64_t *PECMD_StrCopyA(int64_t *ps, LPCSTR src, int64_t len)
 /* ========== FUN_1400639F0 @0x1400639f0 ==========
  * 向动态数组追加一个元素；容量不足时增长。
  */
-int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
-                                 void *data, uint32_t esize, int64_t grow)
+int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, uint32_t esize,
+                      int64_t grow)
 {
     int64_t lVar1;
     int64_t lVar2;
@@ -515,7 +519,8 @@ int64_t FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
     if (*cap - 1 <= *cnt) {
         lVar1 = *cap + grow;
         *cap = lVar1;
-        plVar3 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*arr, (size_t)((uint64_t)esize * lVar1));
+        plVar3 = (int64_t *)(uintptr_t)PECMD_HeapRealloc((void *)*arr,
+                                                         (size_t)((uint64_t)esize * lVar1));
         *arr = (int64_t)plVar3;
     }
     memcpy((void *)(*cnt * (uint64_t)esize + *arr), data, esize);
@@ -540,7 +545,8 @@ int64_t *PECMD_InitPtrTable(int64_t *arr)
     arr[1] = 1;
     do {
         puVar3 = (uint64_t *)HeapAlloc(g_hHeap, 0, 0x10);
-        if (puVar3 != NULL) break;
+        if (puVar3 != NULL)
+            break;
         iVar2 = FUN_1400630D0(2);
     } while (iVar2 == 4);
     *(uint32_t *)((uint8_t *)puVar3 + 4) = 0xaa55;
@@ -565,14 +571,14 @@ void PECMD_ForwardCustomMessage(int64_t *obj, WPARAM wParam, LPARAM lParam)
     int iVar2 = (int)((uint32_t)wParam & 0xffff) - 0x1000;
     if (((-1 < iVar2) && ((int64_t)iVar2 < (int64_t)*(int *)obj[0x35])) &&
         (*(int64_t *)(*(int64_t *)(*(int64_t *)obj[0x34] + (int64_t)iVar2 * 8) + 0x38) != 0)) {
-        HWND hWnd = *(HWND *)(*(int64_t *)(*(int64_t *)(*(int64_t *)obj[0x34] +
-                                                         (int64_t)iVar2 * 8) + 0x38) + OBJ_HWND);
+        HWND hWnd = *(
+            HWND *)(*(int64_t *)(*(int64_t *)(*(int64_t *)obj[0x34] + (int64_t)iVar2 * 8) + 0x38) +
+                    OBJ_HWND);
         if (hWnd != (HWND)0) {
             SendMessageW(hWnd, 0xbc2c, wParam, lParam);
         }
     }
-    (**(void (**)(int64_t, int, WPARAM, LPARAM))(*obj + 8))(obj[4], 0x2c,
-                                                                  wParam, lParam);
+    (**(void (**)(int64_t, int, WPARAM, LPARAM))(*obj + 8))(obj[4], 0x2c, wParam, lParam);
 }
 
 /* ========== PECMD_DetachVirtualDisk @0x140069044 ==========
@@ -588,7 +594,8 @@ uint64_t PECMD_DetachVirtualDisk(LPCWSTR name, uint32_t flags)
             return 0x80004001;
         }
         return ((uint64_t (*)(LPCWSTR, int))g_pUnmountVHD)(name, 3);
-    } else {
+    }
+    else {
         HANDLE hObject = (HANDLE)PECMD_QueryFileAttributes(name, local_res10, (int *)0);
         if (hObject == (HANDLE)0) {
             return 0;
@@ -698,9 +705,7 @@ uint64_t PECMD_ParseFirstWordToken(int64_t *a, int64_t *b, uint64_t *c)
     WCHAR *pWVar2 = (WCHAR *)*b;
     WCHAR WVar1 = *pWVar2;
     while ((WVar1 != L'\0') &&
-           ((*((uint16_t *)*b) < 9 ||
-             (0xd < *((uint16_t *)*b))) &&
-            (*((uint16_t *)*b) != 0x20))) {
+           ((*((uint16_t *)*b) < 9 || (0xd < *((uint16_t *)*b))) && (*((uint16_t *)*b) != 0x20))) {
         *b = (int64_t)((uint16_t *)*b + 1);
         WVar1 = *((uint16_t *)*b);
     }

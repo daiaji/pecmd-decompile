@@ -29,10 +29,10 @@
 
 #include "pecmd_defs.h"
 
-extern WCHAR **FUN_14005B154(WCHAR **pp);                 /* @0x14005b154 见 core_string.c */
-extern char *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
-extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
-extern void PECMD_ExitProcessCall(UINT code);                  /* @0x14005b21c */
+extern WCHAR **FUN_14005B154(WCHAR **pp);            /* @0x14005b154 见 core_string.c */
+extern char *PECMD_AllocAnsiString(const char *src); /* @0x140070044 */
+extern int32_t FUN_1400630D0(int mode);              /* @0x1400630d0 */
+extern void PECMD_ExitProcessCall(UINT code);        /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
 
 /* FUN_14005B154 实现见 core_string.c (@0x14005b154)。 */
@@ -47,7 +47,8 @@ int32_t FUN_14005B1A8(const WCHAR *s, const WCHAR **pw, int n)
     while (n-- > 0) {
         WCHAR c = *s++;
         WCHAR d = *w++;
-        if (c != d) return 0;
+        if (c != d)
+            return 0;
     }
     if (*w != L'\0' && !((*w > 8 && *w < 0xe) || *w == 0x20)) {
         return 0;
@@ -66,9 +67,12 @@ uint64_t FUN_14005F33C(const uint8_t *data, int len)
 {
     /* 简化：UTF-16 LE BOM FF FE / UTF-16 BE FE FF / UTF-8 BOM EF BB BF */
     if (len > 12) {
-        if (data[0]==0xff && data[1]==0xfe) return 4 | 1;
-        if (data[0]==0xfe && data[1]==0xff) return 8 | 1;
-        if (data[0]==0xef && data[1]==0xbb && data[2]==0xbf) return 0x14 | 1;
+        if (data[0] == 0xff && data[1] == 0xfe)
+            return 4 | 1;
+        if (data[0] == 0xfe && data[1] == 0xff)
+            return 8 | 1;
+        if (data[0] == 0xef && data[1] == 0xbb && data[2] == 0xbf)
+            return 0x14 | 1;
     }
     return 0;
 }
@@ -96,7 +100,8 @@ char *PECMD_AllocAnsiString(const char *src)
     int r;
     do {
         p = (int64_t *)HeapAlloc(g_hHeap, 0, (size_t)n + 9);
-        if (p != NULL) break;
+        if (p != NULL)
+            break;
         r = FUN_1400630D0(2);
     } while (r == 4);
     *(uint32_t *)((char *)p + 4) = 0xaa55;
@@ -122,7 +127,8 @@ void *PECMD_ReallocBuffer(void *old, int64_t size)
     int r;
     do {
         p = (int64_t *)HeapAlloc(g_hHeap, 0, (size_t)size + 8);
-        if (p != NULL) break;
+        if (p != NULL)
+            break;
         r = FUN_1400630D0(2);
     } while (r == 4);
     *(uint32_t *)((char *)p + 4) = 0xaa55;
@@ -130,7 +136,8 @@ void *PECMD_ReallocBuffer(void *old, int64_t size)
     if (old != NULL) {
         uint64_t osize = (uint64_t)((int64_t *)old)[-1];
         int copy = (int)osize;
-        if (size < (int64_t)osize) copy = (int)size;
+        if (size < (int64_t)osize)
+            copy = (int)size;
         memcpy(p + 1, old, (size_t)copy);
         memset(old, 0, (size_t)osize);
         HeapFree(g_hHeap, 0, (char *)old - 8);
@@ -142,13 +149,15 @@ void *PECMD_ReallocBuffer(void *old, int64_t size)
  * 打开文件到 *out（失败置 NULL）。INVALID_HANDLE_VALUE → NULL。
  */
 HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
-                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl)
+                            LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl)
 {
     HANDLE h = *out;
-    if (h != 0 && h != (HANDLE)-1) CloseHandle(h);
+    if (h != 0 && h != (HANDLE)-1)
+        CloseHandle(h);
     *out = 0;
     h = CreateFileW(path, access, share, sa, disp, flags, tmpl);
-    if (h == (HANDLE)-1) h = 0;
+    if (h == (HANDLE)-1)
+        h = 0;
     *out = h;
     return h;
 }
@@ -159,7 +168,8 @@ bool FUN_140101E70(LPCWSTR path)
     HANDLE h = 0;
     PECMD_OpenFileHandle(&h, path, 0, 7, (LPSECURITY_ATTRIBUTES)0, 3, 0, (HANDLE)0);
     bool b = h != 0;
-    if (h != 0 && h != (HANDLE)-1) CloseHandle(h);
+    if (h != 0 && h != (HANDLE)-1)
+        CloseHandle(h);
     return b;
 }
 
@@ -173,18 +183,21 @@ DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf, LPWSTR *last)
         return GetFullPathNameW(src, buflen, buf, last);
     }
     cwd[0] = L'\0';
-    if (last) *last = NULL;
+    if (last)
+        *last = NULL;
     GetCurrentDirectoryW(0x104, cwd);
     if (*src == cwd[0]) {
         DWORD n = lstrlenW(cwd);
         uint32_t u = n + 1;
         if (u > 4) {
-            if (buflen < u) return u;
+            if (buflen < u)
+                return u;
             memcpy(buf, cwd, (u) * 2);
             return n;
         }
     }
-    if (buflen < 4) return 4;
+    if (buflen < 4)
+        return 4;
     buf[0] = *src;
     buf[1] = L':';
     buf[2] = L'\\';
@@ -215,7 +228,8 @@ WCHAR *FUN_14001BE14(WCHAR *s)
         s++;
         *tail = 0;
         tail--;
-        if (tail < s) break;
+        if (tail < s)
+            break;
     }
     return s;
 }
@@ -282,21 +296,26 @@ void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain)
     WCHAR *tmp = NULL;
 
     PECMD_AllocWStringBuffer((WCHAR **)&tmp, 0x1000);
-    if (*buf == sep) return;
+    if (*buf == sep)
+        return;
     do {
         /* 跳过前导分隔符 */
         while (*p == *(WCHAR *)((char *)script + 0x92) || *p == *(WCHAR *)((char *)script + 0x94) ||
-               *p == *(WCHAR *)((char *)script + 0x8a) || *p == *(WCHAR *)((char *)script + 0x90)) p++;
+               *p == *(WCHAR *)((char *)script + 0x8a) || *p == *(WCHAR *)((char *)script + 0x90))
+            p++;
         WCHAR *start = p;
         WCHAR c = *p;
-        while (c != sep && c != *(WCHAR *)((char *)script + 0x8a) && c != *(WCHAR *)((char *)script + 0x90)) {
+        while (c != sep && c != *(WCHAR *)((char *)script + 0x8a) &&
+               c != *(WCHAR *)((char *)script + 0x90)) {
             p++;
             c = *p;
         }
         int64_t n = p - start;
         if (cap < n) {
             int64_t newCap = cap;
-            do { newCap = newCap * 2 + 1; } while (newCap < n);
+            do {
+                newCap = newCap * 2 + 1;
+            } while (newCap < n);
             PECMD_AllocString(&tmp, newCap + 1);
             cap = newCap;
         }
@@ -304,16 +323,21 @@ void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain)
         tmp[n] = 0;
         WCHAR xor = *(WCHAR *)((char *)script + 0x48);
         if (xor != 0) {
-            for (int64_t i = 0; i < n; i++) tmp[i] = tmp[i] ^ xor;
+            for (int64_t i = 0; i < n; i++)
+                tmp[i] = tmp[i] ^ xor;
         }
-        if (FUN_14005C788("_ENDFILE", tmp, 8) != 0) break;
+        if (FUN_14005C788("_ENDFILE", tmp, 8) != 0)
+            break;
         if (FUN_14005C788("_ENDFILE-IMPORT", start, 0xf) == 0) {
             if (!stopMain) {
-                for (; start < p; start++) *start = *(WCHAR *)((char *)script + 0x48) ^ 0x20;
-            } else {
+                for (; start < p; start++)
+                    *start = *(WCHAR *)((char *)script + 0x48) ^ 0x20;
+            }
+            else {
                 break;
             }
-        } else if (stopMain && FUN_14005C788("FIND $1 = %&&__MAIN__%,", start, 0x17) != 0) {
+        }
+        else if (stopMain && FUN_14005C788("FIND $1 = %&&__MAIN__%,", start, 0x17) != 0) {
             break;
         }
         sep = *(WCHAR *)((char *)script + 0x88);
@@ -340,21 +364,29 @@ uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32
     int64_t *buf;
     uint64_t dec;
 
-    if (flags) f = *flags;
-    if (flags) key = *(uint16_t *)((char *)flags + 2);
+    if (flags)
+        f = *flags;
+    if (flags)
+        key = *(uint16_t *)((char *)flags + 2);
     res = FindResourceW(mod, id, type);
-    if (res != 0) sz = SizeofResource(mod, res);
-    if (res != 0) data = (uint8_t *)LoadResource(mod, res);
+    if (res != 0)
+        sz = SizeofResource(mod, res);
+    if (res != 0)
+        data = (uint8_t *)LoadResource(mod, res);
     if ((f & 1) != 0) {
-        if (data == 0) goto done;
+        if (data == 0)
+            goto done;
         data = (uint8_t *)LockResource((HGLOBAL)(uintptr_t)data);
     }
-    if (data == 0 || sz == 0) goto done;
+    if (data == 0 || sz == 0)
+        goto done;
     if ((f & 0x40) == 0) {
         /* 解码文本 */
         dec = FUN_14005F33C(data, (int)sz);
-        if (dec == 0) goto done;
-        if ((f & 0x20) != 0 && (dec & 2) != 0) return NULL;
+        if (dec == 0)
+            goto done;
+        if ((f & 0x20) != 0 && (dec & 2) != 0)
+            return NULL;
         /* TODO(verify): 原实现经 PECMD_ReadFile 解码填充 *out */
         {
             uint8_t *t = (uint8_t *)PECMD_AllocAnsiString((const char *)data);
@@ -372,7 +404,8 @@ uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32
         FUN_14001B5AC((WCHAR *)buf, key, (int64_t)((sz + 1) >> 1));
     }
     *out = buf;
-    if (key != 0) FUN_14001B5AC((WCHAR *)buf, key, (int64_t)((sz + 1) >> 1));
+    if (key != 0)
+        FUN_14001B5AC((WCHAR *)buf, key, (int64_t)((sz + 1) >> 1));
 done:
     return (uint8_t *)*out;
 }

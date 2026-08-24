@@ -52,18 +52,23 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id, uint64_t *outValue); /* @0x1400f40c8 */
-extern void PECMD_DeleteEntryGdiHandle(int64_t obj);                            /* @0x1400f2b6c */
-extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1, int32_t field2);                     /* @0x1400f2b84 */
-extern void PECMD_TrackItemChangeList1(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f5724 */
-extern void PECMD_TrackItemChangeList2(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f578c */
-extern void PECMD_TrackItemChangeList3(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f586c */
-extern void PECMD_TrackItemChangeList4(int64_t obj, uint32_t key, uint64_t value); /* @0x1400f58d4 */
-extern uint64_t PECMD_SetTrackbarBuddyWindow(int64_t obj, HWND hwnd);        /* @0x1400fc458 */
-extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2,
-                                 LPCWSTR a3);                         /* @0x14007d0ac */
-extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);                          /* @0x140067d20 */
-extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);             /* @0x14005c7c4 */
+extern int64_t PECMD_ItemPropFindIdxList5(int64_t obj, int id,
+                                          uint64_t *outValue); /* @0x1400f40c8 */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj);           /* @0x1400f2b6c */
+extern uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value,
+                                          uint32_t field1, int32_t field2); /* @0x1400f2b84 */
+extern void PECMD_TrackItemChangeList1(int64_t obj, uint32_t key,
+                                       uint64_t value); /* @0x1400f5724 */
+extern void PECMD_TrackItemChangeList2(int64_t obj, uint32_t key,
+                                       uint64_t value); /* @0x1400f578c */
+extern void PECMD_TrackItemChangeList3(int64_t obj, uint32_t key,
+                                       uint64_t value); /* @0x1400f586c */
+extern void PECMD_TrackItemChangeList4(int64_t obj, uint32_t key,
+                                       uint64_t value);               /* @0x1400f58d4 */
+extern uint64_t PECMD_SetTrackbarBuddyWindow(int64_t obj, HWND hwnd); /* @0x1400fc458 */
+extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);       /* @0x14007d0ac */
+extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);               /* @0x140067d20 */
+extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);          /* @0x14005c7c4 */
 
 /* ---- win32_stub.h 暂缺的 API ---- */
 extern DWORD GetVersion(void);
@@ -75,28 +80,22 @@ extern void PECMD_AllocStrSlot(void *ps);
 extern void PECMD_LayoutTabPageArea(int64_t a1, char a2);
 extern int64_t PECMD_ContainerAppend(uint64_t *a1);
 extern LRESULT FUN_1400E5890(int64_t a1);
-extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
-                          int64_t esize, int32_t mode);
+extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, int64_t esize,
+                          int32_t mode);
 extern int64_t PECMD_ItemPropFindIdxList1(int64_t a1, int a2, int *a3);
 extern int64_t PECMD_ItemPropFindIdxList3(int64_t a1, int a2, int *a3);
-extern int64_t PECMD_ItemPropFindIdxSub1(int64_t a1, int a2, int a3,
-                             int *a4);
-extern int64_t PECMD_ItemPropFindIdxSub2(int64_t a1, int a2, int a3,
-                             int *a4);
+extern int64_t PECMD_ItemPropFindIdxSub1(int64_t a1, int a2, int a3, int *a4);
+extern int64_t PECMD_ItemPropFindIdxSub2(int64_t a1, int a2, int a3, int *a4);
 extern int64_t PECMD_ItemPropFindIdxList2(int64_t a1, int a2, int *a3);
 extern int64_t PECMD_ItemPropFindIdxList4(int64_t a1, int a2, int *a3);
 extern void PECMD_TrackItemChangeSub1(int64_t obj, int key1, int key2, uint64_t value);
 extern void PECMD_TrackItemChangeSub2(int64_t obj, int key1, int key2, uint64_t value);
-extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2,
-                              uint64_t a3, uint64_t *a4,
-                              int64_t a5, uint32_t a6,
-                              int64_t *a7);
+extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3, uint64_t *a4, int64_t a5,
+                              uint32_t a6, int64_t *a7);
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 extern bool PECMD_ParseNumSkipWs(WCHAR **pp, int64_t *out);
-extern uint64_t PECMD_CtlDispatchGenericProp(int64_t *a1, int64_t *a2,
-                              LPCWSTR a3, uint16_t *a4,
-                              uint64_t a5, uint64_t a6,
-                              int64_t a7);
+extern uint64_t PECMD_CtlDispatchGenericProp(int64_t *a1, int64_t *a2, LPCWSTR a3, uint16_t *a4,
+                                             uint64_t a5, uint64_t a6, int64_t a7);
 extern void PECMD_RichEditWordBreakProc(void);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
@@ -108,10 +107,8 @@ extern uint8_t PTR_FUN_14012bfb0[];
  * 构造窗口查找参数并枚举顶层窗口或指定父窗口的子窗口。
  * TODO(verify): 回调 PECMD_EnumWindowCallback 写入 local_50 的具体含义。
  */
-uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord,
-                                  HWND parent, uint32_t flags1,
-                                  uint32_t flags2, uint64_t value1,
-                                  uint64_t value2)
+uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord, HWND parent,
+                                uint32_t flags1, uint32_t flags2, uint64_t value1, uint64_t value2)
 {
     struct {
         LPCWSTR text;
@@ -144,7 +141,8 @@ uint64_t PECMD_FindTargetWindow(LPCWSTR text, char matchCase, char matchWord,
 
     if (parent == (HWND)0) {
         EnumWindows((void *)PECMD_EnumWindowCallback, (LPARAM)&info);
-    } else {
+    }
+    else {
         EnumChildWindows(parent, (void *)PECMD_EnumWindowCallback, (LPARAM)&info);
     }
     result = info.result;
@@ -178,8 +176,8 @@ void PECMD_RefreshDesktopIcons(void)
  * 并把节点文本写入 matchWord。
  * TODO(verify): wsprintfW 缺少的 %d 参数按匹配 key 还原。
  */
-uint64_t PECMD_SearchMenuTreeById(int64_t root, uint64_t searchKey,
-                                     int64_t *outText, int64_t *outFmt)
+uint64_t PECMD_SearchMenuTreeById(int64_t root, uint64_t searchKey, int64_t *outText,
+                                  int64_t *outFmt)
 {
     uint8_t *node;
     uint8_t *base;
@@ -192,13 +190,13 @@ uint64_t PECMD_SearchMenuTreeById(int64_t root, uint64_t searchKey,
     for (i = 0; i < count; i++) {
         node = *(uint8_t **)(base + i * 8);
         if (*node == (uint8_t)0x80) {
-            uint64_t r = PECMD_SearchMenuTreeById(
-                *(int64_t *)(node + 0x10), key, outText, outFmt);
+            uint64_t r = PECMD_SearchMenuTreeById(*(int64_t *)(node + 0x10), key, outText, outFmt);
             if ((int)r != 0) {
                 return r;
             }
             key = searchKey & 0xffffffffU;
-        } else if ((uint32_t)*(uint16_t *)(node + 2) == (uint32_t)key) {
+        }
+        else if ((uint32_t)*(uint16_t *)(node + 2) == (uint32_t)key) {
             if (outFmt != (int64_t *)0) {
                 WCHAR **ps = (WCHAR **)outFmt;
                 int len = lstrlenW((LPCWSTR)*ps);
@@ -280,15 +278,16 @@ uint32_t PECMD_IsProcessElevated(void)
         token = (HANDLE)0;
         if (OpenProcessToken(GetCurrentProcess(), 8, &token) != 0) {
             DWORD needed = 0;
-            uint32_t elev[2] = { 0, 0 };
+            uint32_t elev[2] = {0, 0};
 
             u = 0;
-            if ((GetTokenInformation(token, 20 /* TokenElevation */, elev, 4,
-                                     &needed) != 0) && (needed == 4)) {
+            if ((GetTokenInformation(token, 20 /* TokenElevation */, elev, 4, &needed) != 0) &&
+                (needed == 4)) {
                 u = elev[0];
             }
             CloseHandle(token);
-        } else {
+        }
+        else {
             u = 0;
         }
     }
@@ -348,8 +347,7 @@ void PECMD_OnTabSelChange(int64_t obj)
 
     old_sel = *(int *)(self + 0x120);
     new_sel = (int)SendMessageW(*(HWND *)(self + OBJ_HWND), 0x132f, 0, 0);
-    if ((new_sel == old_sel) || (new_sel < 0) ||
-        ((int64_t)new_sel >= *(int64_t *)(self + 0x118))) {
+    if ((new_sel == old_sel) || (new_sel < 0) || ((int64_t)new_sel >= *(int64_t *)(self + 0x118))) {
         return;
     }
 
@@ -393,10 +391,10 @@ int PECMD_SelectTabPageIndex(int64_t obj, int index)
 
     old_sel = *(int *)(self + 0x120);
     if (old_sel != index) {
-        old_hwnd = *(HWND *)(**(int64_t **)(*(int64_t **)(self + 0x108) +
-                                            (int64_t)old_sel * 8) + OBJ_HWND);
-        new_hwnd = *(HWND *)(**(int64_t **)(*(int64_t **)(self + 0x108) +
-                                            (int64_t)index * 8) + OBJ_HWND);
+        old_hwnd = *(HWND *)(**(int64_t **)(*(int64_t **)(self + 0x108) + (int64_t)old_sel * 8) +
+                             OBJ_HWND);
+        new_hwnd =
+            *(HWND *)(**(int64_t **)(*(int64_t **)(self + 0x108) + (int64_t)index * 8) + OBJ_HWND);
         *(int *)(self + 0x120) = index;
         SetWindowPos(old_hwnd, (HWND)0, 0, 0, 0, 0, 0x97);
         SetWindowPos(new_hwnd, (HWND)0, 0, 0, 0, 0, 0x43);
@@ -408,16 +406,13 @@ int PECMD_SelectTabPageIndex(int64_t obj, int index)
 /* ========== PECMD_CreateTabCtrl @0x1400ec5e4 ==========
  * 创建 SysTabControl32 子控件并挂到对象容器。
  */
-bool PECMD_CreateTabCtrl(int64_t *obj, DWORD style, int *rect,
-                            HWND parent, uint32_t id)
+bool PECMD_CreateTabCtrl(int64_t *obj, DWORD style, int *rect, HWND parent, uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("SysTabControl32"), (LPCWSTR)0, style,
-                           rect[0], rect[1], rect[2] - rect[0],
-                           rect[3] - rect[1], parent,
-                           (HMENU)(uintptr_t)id,
+    hwnd = CreateWindowExW(0, WSTR("SysTabControl32"), (LPCWSTR)0, style, rect[0], rect[1],
+                           rect[2] - rect[0], rect[3] - rect[1], parent, (HMENU)(uintptr_t)id,
                            (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
@@ -452,16 +447,14 @@ void PECMD_ShowFirstTabPage(int64_t obj, char mode)
 /* ========== PECMD_CreateStaticWindow @0x1400efff8 ==========
  * 创建 STATIC 子控件并挂到对象容器。
  */
-bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style,
-                                int *rect, HWND parent, uint32_t id)
+bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
+                              uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("STATIC"), text, style,
-                           rect[0], rect[1], rect[2] - rect[0],
-                           rect[3] - rect[1], parent,
-                           (HMENU)(uintptr_t)id,
+    hwnd = CreateWindowExW(0, WSTR("STATIC"), text, style, rect[0], rect[1], rect[2] - rect[0],
+                           rect[3] - rect[1], parent, (HMENU)(uintptr_t)id,
                            (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
@@ -504,9 +497,8 @@ uint64_t *FUN_1400F0648(uint64_t *obj, uint64_t data)
 /* ========== PECMD_CreateButtonWindow @0x1400f072c ==========
  * 创建 BUTTON 子控件并挂到对象容器。
  */
-bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style,
-                               int *rect, HWND parent, uint32_t id,
-                               DWORD exStyle)
+bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent,
+                              uint32_t id, DWORD exStyle)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -515,10 +507,8 @@ bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(exStyle, WSTR("BUTTON"), text, style,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(exStyle, WSTR("BUTTON"), text, style, x0, y0, x1 - x0, y1 - y0, parent,
+                           (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     return obj[4] != 0;
@@ -527,8 +517,7 @@ bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style,
 /* ========== FUN_1400F1378 @0x1400f1378 ==========
  * 创建 SysDateTimePick32 子控件并挂到对象容器。
  */
-bool FUN_1400F1378(int64_t *obj, uint32_t style,
-                                 int *rect, HWND parent, uint32_t id)
+bool FUN_1400F1378(int64_t *obj, uint32_t style, int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -537,9 +526,8 @@ bool FUN_1400F1378(int64_t *obj, uint32_t style,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("SysDateTimePick32"), (LPCWSTR)0,
-                           style | 0x40000000U, x0, y0, x1 - x0, y1 - y0,
-                           parent, (HMENU)(uintptr_t)id,
+    hwnd = CreateWindowExW(0, WSTR("SysDateTimePick32"), (LPCWSTR)0, style | 0x40000000U, x0, y0,
+                           x1 - x0, y1 - y0, parent, (HMENU)(uintptr_t)id,
                            (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
@@ -549,22 +537,19 @@ bool FUN_1400F1378(int64_t *obj, uint32_t style,
 /* ========== PECMD_CreateEditCtrl @0x1400f21c0 ==========
  * 创建 EDIT 子控件并挂到对象容器；指定标志时安装编辑回调。
  */
-bool PECMD_CreateEditCtrl(int64_t *obj, uint32_t flags, DWORD style,
-                             int *rect, HWND parent, uint32_t id)
+bool PECMD_CreateEditCtrl(int64_t *obj, uint32_t flags, DWORD style, int *rect, HWND parent,
+                          uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(flags & 0xffffefffU, WSTR("EDIT"), (LPCWSTR)0,
-                           style, rect[0], rect[1], rect[2] - rect[0],
-                           rect[3] - rect[1], parent,
-                           (HMENU)(uintptr_t)id,
+    hwnd = CreateWindowExW(flags & 0xffffefffU, WSTR("EDIT"), (LPCWSTR)0, style, rect[0], rect[1],
+                           rect[2] - rect[0], rect[3] - rect[1], parent, (HMENU)(uintptr_t)id,
                            (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     if ((flags >> 0xc & 1U) != 0U) {
-        SendMessageW((HWND)obj[4], 0xd0, 0,
-                     (LPARAM)(uintptr_t)&PECMD_RichEditWordBreakProc);
+        SendMessageW((HWND)obj[4], 0xd0, 0, (LPARAM)(uintptr_t)&PECMD_RichEditWordBreakProc);
     }
     return obj[4] != 0;
 }
@@ -572,8 +557,7 @@ bool PECMD_CreateEditCtrl(int64_t *obj, uint32_t flags, DWORD style,
 /* ========== FUN_1400F2934 @0x1400f2934 ==========
  * 创建 SysIPAddress32 子控件并挂到对象容器。
  */
-bool FUN_1400F2934(int64_t *obj, DWORD style, int *rect,
-                                  HWND parent, uint32_t id)
+bool FUN_1400F2934(int64_t *obj, DWORD style, int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -582,10 +566,8 @@ bool FUN_1400F2934(int64_t *obj, DWORD style, int *rect,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("SysIPAddress32"), (LPCWSTR)0, style,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(0, WSTR("SysIPAddress32"), (LPCWSTR)0, style, x0, y0, x1 - x0, y1 - y0,
+                           parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     return obj[4] != 0;
@@ -606,19 +588,19 @@ void PECMD_ListInvalidateCellRect(int64_t obj, int row, int top)
     memset(&rc, 0, sizeof(rc));
     if (*(int64_t *)(self + 0x3a0) < 1) {
         data = 0;
-    } else {
+    }
+    else {
         data = *(int64_t *)(self + 0x398);
     }
     if (data != 0) {
-        width = *(short *)(*(int64_t *)(self + 0x368) +
-                           *(int64_t *)(data + wParam * 8) * 2);
+        width = *(short *)(*(int64_t *)(self + 0x368) + *(int64_t *)(data + wParam * 8) * 2);
     }
 
     if ((data != 0) && (0 < width)) {
         rc.left = 0;
         rc.top = top;
-        SendMessageW(*(HWND *)(self + OBJ_HWND), 0x1038,
-                     (WPARAM)(int64_t)(width - 1 + row), (LPARAM)&rc);
+        SendMessageW(*(HWND *)(self + OBJ_HWND), 0x1038, (WPARAM)(int64_t)(width - 1 + row),
+                     (LPARAM)&rc);
     }
 
     old_bottom = rc.bottom;
@@ -626,7 +608,8 @@ void PECMD_ListInvalidateCellRect(int64_t obj, int row, int top)
         rc.left = 2;
         SendMessageW(*(HWND *)(self + OBJ_HWND), 0x100e, wParam, (LPARAM)&rc);
         rc.left = 0;
-    } else {
+    }
+    else {
         rc.left = 0;
         rc.top = top;
         SendMessageW(*(HWND *)(self + OBJ_HWND), 0x1038, wParam, (LPARAM)&rc);
@@ -640,8 +623,7 @@ void PECMD_ListInvalidateCellRect(int64_t obj, int row, int top)
 /* ========== PECMD_CreateListViewCtrl @0x1400f345c ==========
  * 创建 SysListView32 子控件并挂到对象容器，保存自引用后立即更新。
  */
-bool PECMD_CreateListViewCtrl(int64_t *obj, uint32_t style,
-                                 int *rect, HWND parent, uint32_t id)
+bool PECMD_CreateListViewCtrl(int64_t *obj, uint32_t style, int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -651,10 +633,9 @@ bool PECMD_CreateListViewCtrl(int64_t *obj, uint32_t style,
     HWND hwnd;
 
     obj[0x42] = (uint64_t)(uintptr_t)obj;
-    hwnd = CreateWindowExW(0, WSTR("SysListView32"), (LPCWSTR)0,
-                           style | 0x400U, x0, y0, x1 - x0, y1 - y0,
-                           parent, (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(0, WSTR("SysListView32"), (LPCWSTR)0, style | 0x400U, x0, y0, x1 - x0,
+                           y1 - y0, parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst,
+                           (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     UpdateWindow((HWND)obj[4]);
@@ -664,8 +645,7 @@ bool PECMD_CreateListViewCtrl(int64_t *obj, uint32_t style,
 /* ========== PECMD_DrawAlignedText @0x1400f527c ==========
  * 用对象字体/颜色在指定矩形内绘制文本。
  */
-void PECMD_DrawAlignedText(int64_t obj, HDC hdc, uint64_t *info,
-                          LPRECT rc)
+void PECMD_DrawAlignedText(int64_t obj, HDC hdc, uint64_t *info, LPRECT rc)
 {
     HGDIOBJ font;
     HGDIOBJ old_font = (HGDIOBJ)0;
@@ -714,8 +694,7 @@ void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
 
             node[0] = id;
             *(int64_t *)(node + 2) = value;
-            FUN_1400639F0((int64_t *)(self + 0x308),
-                          (int64_t *)(self + 0x310),
+            FUN_1400639F0((int64_t *)(self + 0x308), (int64_t *)(self + 0x310),
                           (int64_t *)(self + 0x318), &node, 8, 1);
         }
         return;
@@ -728,7 +707,8 @@ void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
             *(int64_t *)(base + idx * 8) = 0;
             PECMD_DeleteEntryGdiHandle((int64_t)item);
             free(item);
-        } else {
+        }
+        else {
             *(int64_t *)((uint8_t *)item + 8) = value;
             **(int **)(base + idx * 8) = id;
         }
@@ -738,8 +718,7 @@ void PECMD_SetListItemParamPtr(int64_t obj, int id, int64_t value)
 /* ========== PECMD_ItemPropSetPair13 @0x1400f5e2c ==========
  * 更新两组单键映射值；未找到且值非负/更新成功时补加新项。
  */
-void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1,
-                                uint32_t val2)
+void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1, uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int dummy;
@@ -749,10 +728,10 @@ void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1,
         int64_t idx = PECMD_ItemPropFindIdxList1(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x260),
-                                               idx, (int32_t)val2,
-                                               (uint32_t)key, -3);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x260), idx, (int32_t)val2,
+                                                   (uint32_t)key, -3);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -764,10 +743,10 @@ void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1,
         int64_t idx = PECMD_ItemPropFindIdxList3(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2a8),
-                                               idx, (int32_t)val1,
-                                               (uint32_t)key, -3);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2a8), idx, (int32_t)val1,
+                                                   (uint32_t)key, -3);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -779,8 +758,7 @@ void PECMD_ItemPropSetPair13(int64_t obj, int key, uint32_t val1,
 /* ========== PECMD_ItemPropSetPairSub @0x1400f5f60 ==========
  * 更新两组双键映射值；未找到且值非负/更新成功时补加新项。
  */
-void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2,
-                                uint32_t val1, uint32_t val2)
+void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2, uint32_t val1, uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int dummy;
@@ -790,10 +768,10 @@ void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2,
         int64_t idx = PECMD_ItemPropFindIdxSub1(obj, key1, key2, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x290),
-                                               idx, (int32_t)val2,
-                                               (uint32_t)key1, key2);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x290), idx, (int32_t)val2,
+                                                   (uint32_t)key1, key2);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -805,10 +783,10 @@ void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2,
         int64_t idx = PECMD_ItemPropFindIdxSub2(obj, key1, key2, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2d8),
-                                               idx, (int32_t)val1,
-                                               (uint32_t)key1, key2);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2d8), idx, (int32_t)val1,
+                                                   (uint32_t)key1, key2);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -820,8 +798,7 @@ void PECMD_ItemPropSetPairSub(int64_t obj, int key1, int key2,
 /* ========== PECMD_ItemPropSetPair24 @0x1400f8f00 ==========
  * 更新另一组单键映射值；未找到且值非负/更新成功时补加新项。
  */
-void PECMD_ItemPropSetPair24(int64_t obj, int key, uint32_t val1,
-                                uint32_t val2)
+void PECMD_ItemPropSetPair24(int64_t obj, int key, uint32_t val1, uint32_t val2)
 {
     uint8_t *self = (uint8_t *)(uintptr_t)obj;
     int dummy;
@@ -831,10 +808,10 @@ void PECMD_ItemPropSetPair24(int64_t obj, int key, uint32_t val1,
         int64_t idx = PECMD_ItemPropFindIdxList2(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val2;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x278),
-                                               idx, (int32_t)val2,
-                                               (uint32_t)key, -3);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x278), idx, (int32_t)val2,
+                                                   (uint32_t)key, -3);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -846,10 +823,10 @@ void PECMD_ItemPropSetPair24(int64_t obj, int key, uint32_t val1,
         int64_t idx = PECMD_ItemPropFindIdxList4(obj, key, &dummy);
         if (idx < 0) {
             changed = -1 < (int)val1;
-        } else {
-            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2c0),
-                                               idx, (int32_t)val1,
-                                               (uint32_t)key, -3);
+        }
+        else {
+            uint64_t r = PECMD_ItemPropUpsertEntry((int64_t *)(self + 0x2c0), idx, (int32_t)val1,
+                                                   (uint32_t)key, -3);
             changed = (char)r != 0;
         }
         if (changed != 0) {
@@ -879,11 +856,9 @@ uint32_t PECMD_CtlTranslateKey(int64_t obj, int64_t pmsg)
         return 1;
     }
 
-    FUN_1400F172C(*(int64_t **)(self + 0xd8), (uint32_t)msg, vk,
-                  *(uint64_t **)(pmsg + 0x18), *(int64_t *)(self + OBJ_HWND),
-                  0x80, (int64_t *)0);
-    flags = FUN_1400F172C(*(int64_t **)(self + 0xd8), 0x233, vk,
-                          *(uint64_t **)(pmsg + 0x18),
+    FUN_1400F172C(*(int64_t **)(self + 0xd8), (uint32_t)msg, vk, *(uint64_t **)(pmsg + 0x18),
+                  *(int64_t *)(self + OBJ_HWND), 0x80, (int64_t *)0);
+    flags = FUN_1400F172C(*(int64_t **)(self + 0xd8), 0x233, vk, *(uint64_t **)(pmsg + 0x18),
                           *(int64_t *)(self + OBJ_HWND), 1, (int64_t *)&result);
     return ((flags & 4) != 0) ? (uint32_t)result : 0;
 }
@@ -891,8 +866,8 @@ uint32_t PECMD_CtlTranslateKey(int64_t obj, int64_t pmsg)
 /* ========== FUN_1400FBF00 @0x1400fbf00 ==========
  * 创建指定类名的自定义子控件并挂到对象容器。
  */
-bool FUN_1400FBF00(int64_t *obj, uint32_t style, int *rect,
-                               HWND parent, uint32_t id, LPCWSTR class_name)
+bool FUN_1400FBF00(int64_t *obj, uint32_t style, int *rect, HWND parent, uint32_t id,
+                   LPCWSTR class_name)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -901,10 +876,8 @@ bool FUN_1400FBF00(int64_t *obj, uint32_t style, int *rect,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, class_name, (LPCWSTR)0, style,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(0, class_name, (LPCWSTR)0, style, x0, y0, x1 - x0, y1 - y0, parent,
+                           (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     if ((style >> 0x1c & 1U) != 0U) {
@@ -916,16 +889,13 @@ bool FUN_1400FBF00(int64_t *obj, uint32_t style, int *rect,
 /* ========== FUN_1400FC060 @0x1400fc060 ==========
  * 创建 msctls_progress32 进度条控件并挂到对象容器。
  */
-bool FUN_1400FC060(int64_t *obj, DWORD style, int *rect,
-                                    HWND parent, uint32_t id)
+bool FUN_1400FC060(int64_t *obj, DWORD style, int *rect, HWND parent, uint32_t id)
 {
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("msctls_progress32"), (LPCWSTR)0, style,
-                           rect[0], rect[1], rect[2] - rect[0],
-                           rect[3] - rect[1], parent,
-                           (HMENU)(uintptr_t)id,
+    hwnd = CreateWindowExW(0, WSTR("msctls_progress32"), (LPCWSTR)0, style, rect[0], rect[1],
+                           rect[2] - rect[0], rect[3] - rect[1], parent, (HMENU)(uintptr_t)id,
                            (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
@@ -935,8 +905,7 @@ bool FUN_1400FC060(int64_t *obj, DWORD style, int *rect,
 /* ========== PECMD_CreateScrollBarCtrl @0x1400fc378 ==========
  * 创建 ScrollBar 子控件并挂到对象容器。
  */
-bool PECMD_CreateScrollBarCtrl(int64_t *obj, uint32_t style, int *rect,
-                                  HWND parent, uint32_t id)
+bool PECMD_CreateScrollBarCtrl(int64_t *obj, uint32_t style, int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -945,10 +914,8 @@ bool PECMD_CreateScrollBarCtrl(int64_t *obj, uint32_t style, int *rect,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("ScrollBar"), (LPCWSTR)0, style,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(0, WSTR("ScrollBar"), (LPCWSTR)0, style, x0, y0, x1 - x0, y1 - y0,
+                           parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     if ((style >> 0x1c & 1U) != 0U) {
@@ -1002,10 +969,8 @@ void PECMD_PaintCtlWithCaption(int64_t *obj, uint64_t wParam, uint64_t lParam)
  * 识别 "cmd<buddy>..." 前缀：解析 buddy 窗口并交换关联窗口后返回 0；
  * 否则转发到普通控件创建/解析流程。
  */
-uint64_t PECMD_ParseBuddyPrefix(int64_t *obj, int64_t *ctx,
-                                LPCWSTR text, uint16_t *name,
-                                uint64_t a5, uint64_t a6,
-                                int64_t a7)
+uint64_t PECMD_ParseBuddyPrefix(int64_t *obj, int64_t *ctx, LPCWSTR text, uint16_t *name,
+                                uint64_t a5, uint64_t a6, int64_t a7)
 {
     WCHAR *p = (WCHAR *)text;
     int64_t buddy = 0;
@@ -1027,9 +992,8 @@ uint64_t PECMD_ParseBuddyPrefix(int64_t *obj, int64_t *ctx,
 /* ========== FUN_1400FD220 @0x1400fd220 ==========
  * STATIC 控件核心创建：保存样式低字节标志，创建时清除 SS_TYPEMASK 位。
  */
-bool FUN_1400FD220(int64_t *obj, DWORD exStyle,
-                                   LPCWSTR text, uint32_t style, int *rect,
-                                   HWND parent, uint32_t id)
+bool FUN_1400FD220(int64_t *obj, DWORD exStyle, LPCWSTR text, uint32_t style, int *rect,
+                   HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -1039,10 +1003,9 @@ bool FUN_1400FD220(int64_t *obj, DWORD exStyle,
     HWND hwnd;
 
     *(uint8_t *)((uint8_t *)obj + 0xd1) = (uint8_t)style & 0xa3;
-    hwnd = CreateWindowExW(exStyle, WSTR("STATIC"), text, style & 0xffffff5fU,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(exStyle, WSTR("STATIC"), text, style & 0xffffff5fU, x0, y0, x1 - x0,
+                           y1 - y0, parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst,
+                           (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     return obj[4] != 0;
@@ -1081,31 +1044,30 @@ void PECMD_InvalidateParentRect(HWND child, int margin)
 /* ========== PECMD_ApplyControlProperty @0x1400fe4a4 ==========
  * 处理控件属性：空文本/color/enable 就地应用，其余转发到通用解析器。
  */
-uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx,
-                                    LPCWSTR text, LPWSTR param,
-                                    uint64_t a5, uint64_t a6,
-                                    int64_t a7)
+uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx, LPCWSTR text, LPWSTR param,
+                                         uint64_t a5, uint64_t a6, int64_t a7)
 {
     WCHAR *s = (WCHAR *)text;
 
     if (*param == L'\0') {
         SetWindowTextW((HWND)obj[4], text);
         if (**(LPCWSTR *)(a7 + 0x10) != L'\0') {
-            FUN_14007D0AC(*(int64_t **)(a7 + 0x50),
-                                 *(LPCWSTR *)(a7 + 0x10), s);
+            FUN_14007D0AC(*(int64_t **)(a7 + 0x50), *(LPCWSTR *)(a7 + 0x10), s);
         }
-    } else {
+    }
+    else {
         if (lstrcmpW(WSTR("color"), param) == 0) {
-            int value[2] = { (int)0x80000000, 0 };
+            int value[2] = {(int)0x80000000, 0};
 
             *param = L'\0';
             PECMD_ParseUIntValue(&s, value);
             *(int *)((uint8_t *)obj + 0xa8) = value[0];
-        } else if (lstrcmpW(WSTR("enable"), param) != 0) {
-            return PECMD_CtlDispatchGenericProp(obj, ctx, s, (uint16_t *)param,
-                                 a5, a6, a7);
-        } else {
-            int value[2] = { (int)0x80000000, 0 };
+        }
+        else if (lstrcmpW(WSTR("enable"), param) != 0) {
+            return PECMD_CtlDispatchGenericProp(obj, ctx, s, (uint16_t *)param, a5, a6, a7);
+        }
+        else {
+            int value[2] = {(int)0x80000000, 0};
 
             *param = L'\0';
             PECMD_ParseUIntValue(&s, value);
@@ -1118,8 +1080,7 @@ uint64_t PECMD_ApplyControlPropertyFe4a4(int64_t *obj, int64_t *ctx,
 /* ========== FUN_1400FF080 @0x1400ff080 ==========
  * 创建 SysTreeView32 子控件并挂到对象容器，立即更新。
  */
-bool FUN_1400FF080(int64_t *obj, DWORD style, int *rect,
-                                 HWND parent, uint32_t id)
+bool FUN_1400FF080(int64_t *obj, DWORD style, int *rect, HWND parent, uint32_t id)
 {
     int x0 = rect[0];
     int y0 = rect[1];
@@ -1128,10 +1089,8 @@ bool FUN_1400FF080(int64_t *obj, DWORD style, int *rect,
     LONG inst = GetWindowLongW(parent, -6);
     HWND hwnd;
 
-    hwnd = CreateWindowExW(0, WSTR("SysTreeView32"), (LPCWSTR)0, style,
-                           x0, y0, x1 - x0, y1 - y0, parent,
-                           (HMENU)(uintptr_t)id,
-                           (HINSTANCE)(intptr_t)inst, (LPVOID)0);
+    hwnd = CreateWindowExW(0, WSTR("SysTreeView32"), (LPCWSTR)0, style, x0, y0, x1 - x0, y1 - y0,
+                           parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)inst, (LPVOID)0);
     obj[4] = (uint64_t)(uintptr_t)hwnd;
     PECMD_ContainerAppend((uint64_t *)obj);
     UpdateWindow((HWND)obj[4]);
@@ -1141,11 +1100,8 @@ bool FUN_1400FF080(int64_t *obj, DWORD style, int *rect,
 /* ========== PECMD_TreeInsertItem @0x1400ff154 ==========
  * 组装 0x60 字节参数块并发送消息 0x1132。TODO(verify): 字段语义。
  */
-void PECMD_TreeInsertItem(int64_t obj, uint32_t a2,
-                                     uint64_t a3, uint32_t a4,
-                                     uint32_t a5, uint32_t a6,
-                                     uint32_t a7, uint64_t a8,
-                                     uint64_t a9, uint64_t a10)
+void PECMD_TreeInsertItem(int64_t obj, uint32_t a2, uint64_t a3, uint32_t a4, uint32_t a5,
+                          uint32_t a6, uint32_t a7, uint64_t a8, uint64_t a9, uint64_t a10)
 {
     uint8_t msg[0x60];
 
@@ -1165,11 +1121,8 @@ void PECMD_TreeInsertItem(int64_t obj, uint32_t a2,
 /* ========== PECMD_TreeSetItemInfo @0x1400ff20c ==========
  * 组装 0x50 字节参数块并发送消息 0x113f。TODO(verify): 字段语义。
  */
-void PECMD_TreeSetItemInfo(int64_t obj, uint64_t a2,
-                                   uint32_t a3, uint64_t a4,
-                                   uint32_t a5, uint32_t a6,
-                                   uint32_t a7, uint32_t a8,
-                                   uint64_t a9, uint32_t a10)
+void PECMD_TreeSetItemInfo(int64_t obj, uint64_t a2, uint32_t a3, uint64_t a4, uint32_t a5,
+                           uint32_t a6, uint32_t a7, uint32_t a8, uint64_t a9, uint32_t a10)
 {
     uint8_t msg[0x50];
 

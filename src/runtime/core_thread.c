@@ -20,10 +20,10 @@
 #include "pecmd_defs.h"
 #include "domain/pecmd_domain.h"
 extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
+extern WCHAR **FUN_14005B154(WCHAR **pp);               /* @0x14005b154 */
 
 /* 全局 */
-extern uint32_t g_threadId;      /* g_dwC96C 线程 ID 输出 */
+extern uint32_t g_threadId; /* g_dwC96C 线程 ID 输出 */
 
 /* ========== 字节缓冲扩容 @0x140063424 ========== */
 void *PECMD_GrowByteBuffer(void **ps, int64_t len)
@@ -46,7 +46,8 @@ void FUN_1400633A8(void **ps, int64_t len)
     if (len >= 0) {
         for (;;) {
             hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, (size_t)len + 9);
-            if (hdr) break;
+            if (hdr)
+                break;
             FUN_1400630D0(2);
         }
         *(size_t *)hdr = (size_t)len + 1;
@@ -103,7 +104,7 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
         n = (int)lstrlenA(word);
     }
     p = *pp;
-    r = FUN_14005C788(word, p, n);   /* PECMD_TokPrefixICmp 等价实现 */
+    r = FUN_14005C788(word, p, n); /* PECMD_TokPrefixICmp 等价实现 */
     if (r != 0) {
         *pp = p + n;
         FUN_14005B154(pp);
@@ -117,22 +118,19 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
 uint64_t PECMD_SendMsgThreadProc(void *task)
 {
     uint64_t refs[4];
-    uint32_t *msg = (uint32_t *)&((PECMD_Task*)task)->msg;   /* B3: 原语义=读低32位消息号 */
+    uint32_t *msg = (uint32_t *)&((PECMD_Task *)task)->msg; /* B3: 原语义=读低32位消息号 */
 
     refs[1] = 0;
-    refs[0] = *(uint64_t *)&((PECMD_Task*)task)->callback;   /* 回调 */
+    refs[0] = *(uint64_t *)&((PECMD_Task *)task)->callback; /* 回调 */
     refs[2] = (uint64_t)task;
-    if (*&((PECMD_Task*)task)->timeout == 0xffffffff) {
-        SendMessageW(*&((PECMD_Task*)task)->hwnd, msg[0],
-                     *&((PECMD_Task*)task)->wParam,
-                     *&((PECMD_Task*)task)->lParam);
-    } else {
-        SendMessageTimeoutW(*&((PECMD_Task*)task)->hwnd, msg[0],
-                            *&((PECMD_Task*)task)->wParam,
-                            *&((PECMD_Task*)task)->lParam,
-                            *(uint32_t *)((uint8_t *)task + 0x30),
-                            *&((PECMD_Task*)task)->timeout,
-                            (DWORD *)(refs + 1));
+    if (*&((PECMD_Task *)task)->timeout == 0xffffffff) {
+        SendMessageW(*&((PECMD_Task *)task)->hwnd, msg[0], *&((PECMD_Task *)task)->wParam,
+                     *&((PECMD_Task *)task)->lParam);
+    }
+    else {
+        SendMessageTimeoutW(*&((PECMD_Task *)task)->hwnd, msg[0], *&((PECMD_Task *)task)->wParam,
+                            *&((PECMD_Task *)task)->lParam, *(uint32_t *)((uint8_t *)task + 0x30),
+                            *&((PECMD_Task *)task)->timeout, (DWORD *)(refs + 1));
     }
     PECMD_ReleaseRefCount((void **)&refs[0]);
     refs[0] = 0;
@@ -148,8 +146,8 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
     uint64_t *c = (uint64_t *)ctx;
     void *task;
     HANDLE hThread;
-    int64_t idx = (int64_t)c[2];           /* +0x10 当前数 */
-    int64_t cap = (int64_t)c[3];           /* +0x18 容量 */
+    int64_t idx = (int64_t)c[2]; /* +0x10 当前数 */
+    int64_t cap = (int64_t)c[3]; /* +0x18 容量 */
 
     if (cap <= idx) {
         cap += 0x40;
@@ -157,23 +155,23 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
         PECMD_GrowByteBuffer((void **)&c[1], cap * 0x18);
     }
     {
-        uintptr_t *arr = (uintptr_t *)c[1];  /* +0x08 句柄数组 */
+        uintptr_t *arr = (uintptr_t *)c[1]; /* +0x08 句柄数组 */
         FUN_1400633A8(&task, 0x60);
         PECMD_ZeroLenBuf(task);
         {
             uint8_t *t = (uint8_t *)task;
             *(uint32_t *)(t + 0x18) = *(uint32_t *)((uint8_t *)c + 0x20);
-            *(uint64_t *)(t + 0x20) = c[5];  /* +0x28 */
-            *(uint64_t *)(t + 0x28) = c[6];  /* +0x30 */
+            *(uint64_t *)(t + 0x20) = c[5]; /* +0x28 */
+            *(uint64_t *)(t + 0x28) = c[6]; /* +0x30 */
             *(uint32_t *)(t + 0x30) = *(uint32_t *)((uint8_t *)c + 0x38);
             *(uint64_t *)(t + 0x40) = (uint64_t)hwnd;
-            *(uint64_t *)(t + 0x38) = c[7];  /* +0x40 超时 */
-            *(uint64_t *)(t + 0x48) = c[9];  /* +0x50 回调 */
+            *(uint64_t *)(t + 0x38) = c[7]; /* +0x40 超时 */
+            *(uint64_t *)(t + 0x48) = c[9]; /* +0x50 回调 */
             *(uint64_t *)(t + 0x50) = (uint64_t)ctx;
         }
-        hThread = CreateThread(NULL, 0x10000, (void *)PECMD_SendMsgThreadProc, task,
-                               0x10004, &g_threadId);
-        arr[idx * 0x18 / 8] = (uintptr_t)hThread;  /* 每项 0x18 字节, 首 qword 存句柄 */
+        hThread = CreateThread(NULL, 0x10000, (void *)PECMD_SendMsgThreadProc, task, 0x10004,
+                               &g_threadId);
+        arr[idx * 0x18 / 8] = (uintptr_t)hThread; /* 每项 0x18 字节, 首 qword 存句柄 */
         if (hThread) {
             if (c[9] != 0) {
                 EnterCriticalSection(&g_csInit);
@@ -187,7 +185,7 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
         }
         PECMD_FreeStrBuf((WCHAR **)&task);
     }
-    return 1;   /* 继续枚举 */
+    return 1; /* 继续枚举 */
 }
 
 /* ========== 线程主函数 @0x14001ff24 ========== */
@@ -203,17 +201,18 @@ uint64_t PECMD_ThreadMainLoop(void *task)
 
     if (task == NULL) {
         refs = NULL;
-    } else {
+    }
+    else {
         refs = (void *)((uint8_t *)task + 8);
     }
-    n = (int64_t)((uint64_t *)refs)[9];       /* 回调引用 */
-    handles = *(HANDLE **)refs;               /* 句柄数组 */
-    timeout = (DWORD)((uint64_t *)refs)[7];   /* 超时 */
+    n = (int64_t)((uint64_t *)refs)[9];     /* 回调引用 */
+    handles = *(HANDLE **)refs;             /* 句柄数组 */
+    timeout = (DWORD)((uint64_t *)refs)[7]; /* 超时 */
     r = (uint64_t)task;
 
     EnumWindows((void *)PECMD_EnumWindowsCallback, (LONG_PTR)task);
 
-    n = (int64_t)((uint64_t *)refs)[1];       /* 数量 */
+    n = (int64_t)((uint64_t *)refs)[1]; /* 数量 */
     handles = *(HANDLE **)refs;
     if (n > 0) {
         if (timeout != 0xffffffff) {
@@ -251,7 +250,8 @@ DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4)
         hwnd = 0;
         opts = 0;
         handles = local;
-    } else {
+    }
+    else {
         hwnd = (HWND)((uint64_t *)param4)[0];
         opts = ((uint64_t *)param4)[1];
         handles = (HANDLE *)((uint64_t *)param4 + 2);
@@ -264,7 +264,8 @@ DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4)
             Sleep(0);
             return 0;
         }
-    } else {
+    }
+    else {
         timeout = 10000000;
     }
     r = 0;
@@ -284,8 +285,8 @@ DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4)
             if (t > 1000) {
                 t = 1000;
             }
-            r = MsgWaitForMultipleObjects((DWORD)nCount, handles, (uint32_t)(opts >> 0x10) & 1,
-                                          t, 0x4ff);
+            r = MsgWaitForMultipleObjects((DWORD)nCount, handles, (uint32_t)(opts >> 0x10) & 1, t,
+                                          0x4ff);
             if (r == 0xffffffff) {
                 if (nCount != 0) {
                     return GetLastError();
@@ -314,7 +315,7 @@ DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4)
                 maxmsg--;
             }
         }
-        if (r == 0x102) {       /* WM_TIMER */
+        if (r == 0x102) { /* WM_TIMER */
             maxmsg = 0;
         }
     }
@@ -335,8 +336,8 @@ done:
 /* ========== 任务线程创建 @0x140027eac ========== */
 /* 创建线程执行 PECMD_ThreadMainLoop; 任务结构记录参数/回调/句柄
  * a5 = 回调表, a6 超时, a7 计数, a8 等待 */
-uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4,
-                         uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9)
+uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4, uint64_t a5,
+                                 uint32_t a6, uint64_t a7, int64_t a8, int a9)
 {
     void *task;
     uint8_t *t;
@@ -347,7 +348,7 @@ uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_
     PECMD_ZeroLenBuf(task);
     t = (uint8_t *)task;
     if (task != NULL) {
-        *(uint32_t *)t = 1;              /* 引用计数 */
+        *(uint32_t *)t = 1; /* 引用计数 */
     }
     if (task != NULL) {
         t = t + 8;
@@ -386,10 +387,10 @@ uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_
     if (hThread) {
         if (a8 != 0) {
             uint64_t w[4];
-            w[0] = 0;              /* hwnd */
-            w[1] = 0;              /* opts */
-            w[2] = 1;              /* handles[0] */
-            w[3] = (uint64_t)hThread;   /* handles[1] */
+            w[0] = 0;                 /* hwnd */
+            w[1] = 0;                 /* opts */
+            w[2] = 1;                 /* handles[0] */
+            w[3] = (uint64_t)hThread; /* handles[1] */
             FUN_1400195F0(script, a7 & 0xffffffff, a9, w);
         }
         CloseHandle(hThread);

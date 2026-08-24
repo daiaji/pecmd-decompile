@@ -57,17 +57,17 @@ typedef struct {
 } PECMD_SID_AUTHORITY;
 
 typedef struct {
-    BOOL     fIcon;
+    BOOL fIcon;
     uint32_t xHotspot;
     uint32_t yHotspot;
-    HBITMAP  hbmMask;
-    HBITMAP  hbmColor;
+    HBITMAP hbmMask;
+    HBITMAP hbmColor;
 } PECMD_ICONINFO;
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern BOOL FUN_1400E6314(HWND hwnd, POINT pt);                 /* @0x1400e6314 */
-extern bool FUN_1400E6350(HWND hwnd, POINT *ctx);            /* @0x1400e6350 */
-extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);             /* @0x14007034c */
+extern BOOL FUN_1400E6314(HWND hwnd, POINT pt);        /* @0x1400e6314 */
+extern bool FUN_1400E6350(HWND hwnd, POINT *ctx);      /* @0x1400e6350 */
+extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src); /* @0x14007034c */
 
 /* ---- win32_stub.h 暂缺的 API ---- */
 extern BOOL EndDialog(HWND hwnd, intptr_t result);
@@ -75,8 +75,7 @@ extern BOOL AllocateAndInitializeSid(PECMD_SID_AUTHORITY *pAuthority, BYTE nSubA
                                      DWORD dwSubAuthority0, DWORD dwSubAuthority1,
                                      DWORD dwSubAuthority2, DWORD dwSubAuthority3,
                                      DWORD dwSubAuthority4, DWORD dwSubAuthority5,
-                                     DWORD dwSubAuthority6, DWORD dwSubAuthority7,
-                                     void **ppSid);
+                                     DWORD dwSubAuthority6, DWORD dwSubAuthority7, void **ppSid);
 extern BOOL CheckTokenMembership(HANDLE token, void *sid, BOOL *isMember);
 extern void FreeSid(void *sid);
 extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
@@ -85,16 +84,15 @@ extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
 extern int64_t PECMD_AlignUpSize(int64_t value, uint32_t align);
 extern void *FUN_1400E57C0(void *obj);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern int64_t * PECMD_InitPtrTable(int64_t *arr);
-extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
-                           uint32_t esize);
-extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt,
-                          void *data, int64_t esize, int32_t mode);
+extern int64_t *PECMD_InitPtrTable(int64_t *arr);
+extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize);
+extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, int64_t esize,
+                          int32_t mode);
 extern void FUN_14005D558(void *obj, HWND hwnd);
 extern void PECMD_FreeContainer(int64_t *container);
 extern int64_t PECMD_ContainerAppend(uint64_t *container);
 extern void PECMD_DtorCtlCoreObj(uint64_t *obj);
-extern HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc);   /* @0x1400fd35c */
+extern HBRUSH PECMD_CtlCalcColorBrush(int64_t obj, HDC hdc); /* @0x1400fd35c */
 extern void PECMD_ListInvalidateCellRect(int64_t obj, int mode, int value);
 
 /* ---- 本批引用的虚表/数据符号 ---- */
@@ -107,8 +105,8 @@ extern uint8_t PTR_FUN_14012ccc0[];
  * 计算 PE 文件映像所需总尺寸：按节对齐累加各节大小，越界时返回 0。
  * TODO(verify): sectionTable 指向节表头，40 字节/项。
  */
-int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
-                              int64_t peHeader, int64_t sectionTable)
+int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize, int64_t peHeader,
+                              int64_t sectionTable)
 {
     uint32_t align = *(uint32_t *)(peHeader + 0x38);
     int64_t total = PECMD_AlignUpSize(*(uint32_t *)(peHeader + 0x54), align);
@@ -117,8 +115,7 @@ int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
 
     (void)file;
     for (i = 0; i < count; i++) {
-        uint32_t *entry = (uint32_t *)((char *)sectionTable + 0x10 +
-                                       (int64_t)i * 40);
+        uint32_t *entry = (uint32_t *)((char *)sectionTable + 0x10 + (int64_t)i * 40);
         uint32_t uVar1 = entry[0];
 
         if (fileSize < uVar1 + entry[1]) {
@@ -129,7 +126,8 @@ int64_t PECMD_CalcPeImageSize(uint64_t file, uint32_t fileSize,
                 uVar1 = entry[-2];
             }
             total += PECMD_AlignUpSize((int64_t)uVar1, align);
-        } else {
+        }
+        else {
             if (entry[-2] != 0) {
                 uVar1 = entry[-2];
             }
@@ -155,7 +153,8 @@ void *PECMD_SearchMenuTreeByCaption(int64_t node, LPCWSTR name)
             if (found != NULL) {
                 return found;
             }
-        } else if (lstrcmpiW(*(LPCWSTR *)(item + 0x18), name) == 0) {
+        }
+        else if (lstrcmpiW(*(LPCWSTR *)(item + 0x18), name) == 0) {
             return item;
         }
     }
@@ -165,23 +164,37 @@ void *PECMD_SearchMenuTreeByCaption(int64_t node, LPCWSTR name)
 /* ========== PECMD_CtlNotifyDispatch @0x1400e59c0 ==========
  * 把 0..6 的控件通知索引映射为 0x132..0x138 消息并调用虚表 +8。
  */
-LRESULT PECMD_CtlNotifyDispatch(int64_t *obj, WPARAM wParam,
-                                     LPARAM lParam, int index)
+LRESULT PECMD_CtlNotifyDispatch(int64_t *obj, WPARAM wParam, LPARAM lParam, int index)
 {
     UINT msg;
     LRESULT (*fn)(int64_t, UINT, WPARAM, LPARAM);
 
     switch (index) {
-    case 0: msg = 0x132; break;
-    case 1: msg = 0x133; break;
-    case 2: msg = 0x134; break;
-    case 3: msg = 0x135; break;
-    case 4: msg = 0x136; break;
-    case 5: msg = 0x137; break;
-    case 6: msg = 0x138; break;
-    default: return 0;
+    case 0:
+        msg = 0x132;
+        break;
+    case 1:
+        msg = 0x133;
+        break;
+    case 2:
+        msg = 0x134;
+        break;
+    case 3:
+        msg = 0x135;
+        break;
+    case 4:
+        msg = 0x136;
+        break;
+    case 5:
+        msg = 0x137;
+        break;
+    case 6:
+        msg = 0x138;
+        break;
+    default:
+        return 0;
     }
-    fn = *(LRESULT (**)(int64_t, UINT, WPARAM, LPARAM))(*obj + 8);
+    fn = *(LRESULT(**)(int64_t, UINT, WPARAM, LPARAM))(*obj + 8);
     return fn(obj[4], msg, wParam, lParam);
 }
 
@@ -192,13 +205,12 @@ LRESULT PECMD_CtlNotifyDispatch(int64_t *obj, WPARAM wParam,
 BOOL FUN_1400E63C8(HWND hwnd, LPARAM lParam)
 {
     POINT *ctx = (POINT *)lParam;
-    DWORD pid[2] = { 0, 0 };
+    DWORD pid[2] = {0, 0};
 
     if (FUN_1400E6314(hwnd, *ctx) != 0 &&
         (GetWindowThreadProcessId(hwnd, pid), pid[0] == (DWORD)ctx[2].x)) {
-        uint64_t hit = (uint64_t)SendMessageW(hwnd, 0x45e,
-                                              (WPARAM)(int64_t)ctx[1].x,
-                                              (LPARAM)(uintptr_t)hwnd);
+        uint64_t hit =
+            (uint64_t)SendMessageW(hwnd, 0x45e, (WPARAM)(int64_t)ctx[1].x, (LPARAM)(uintptr_t)hwnd);
         if ((hit >> 0x11 & 1) != 0) {
             *(uintptr_t *)(ctx + 3) = (uintptr_t)hwnd;
         }
@@ -220,14 +232,15 @@ void FUN_1400E6860(uint64_t *obj, int result)
 
         if (flags == 0) {
             hwnd = (HWND)obj[4];
-        } else {
+        }
+        else {
             *(uint8_t *)((char *)obj + 0x120) = flags | 0x80;
-            PostMessageW((HWND)obj[4], 0, (WPARAM)(uintptr_t)obj,
-                         (LPARAM)(intptr_t)result);
+            PostMessageW((HWND)obj[4], 0, (WPARAM)(uintptr_t)obj, (LPARAM)(intptr_t)result);
             hwnd = (HWND)obj[4];
         }
         EndDialog(hwnd, (intptr_t)result);
-    } else {
+    }
+    else {
         HWND hwnd = (HWND)obj[4];
 
         if (hwnd != (HWND)0) {
@@ -244,12 +257,11 @@ void FUN_1400E6860(uint64_t *obj, int result)
  */
 BOOL PECMD_IsAdminGroupMember(void)
 {
-    PECMD_SID_AUTHORITY authority = { { 0, 0, 0, 0, 0, 5 } };
+    PECMD_SID_AUTHORITY authority = {{0, 0, 0, 0, 0, 5}};
     void *sid = NULL;
     BOOL isMember = FALSE;
 
-    if (AllocateAndInitializeSid(&authority, 2, 32, 544, 0, 0, 0, 0, 0, 0,
-                                 &sid) != 0) {
+    if (AllocateAndInitializeSid(&authority, 2, 32, 544, 0, 0, 0, 0, 0, 0, &sid) != 0) {
         CheckTokenMembership((HANDLE)0, sid, &isMember);
         FreeSid(sid);
     }
@@ -291,11 +303,9 @@ void FUN_1400E8940(uint64_t *obj)
 BOOL PECMD_CreateTooltipWnd(int64_t *obj, HWND parent, uint32_t style)
 {
     HINSTANCE hInst = (HINSTANCE)GetWindowLongPtrW(parent, GWLP_HINSTANCE);
-    HWND hwnd = CreateWindowExW(0, WSTR("tooltips_class32"), NULL,
-                                style | 0x80000080u,
-                                CW_USEDEFAULT, CW_USEDEFAULT,
-                                CW_USEDEFAULT, CW_USEDEFAULT,
-                                parent, (HMENU)0, hInst, NULL);
+    HWND hwnd =
+        CreateWindowExW(0, WSTR("tooltips_class32"), NULL, style | 0x80000080u, CW_USEDEFAULT,
+                        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, parent, (HMENU)0, hInst, NULL);
 
     obj[4] = (int64_t)hwnd;
     (void)PECMD_ContainerAppend((uint64_t *)obj);
@@ -317,8 +327,7 @@ int64_t FUN_1400EC71C(int64_t obj, LPCWSTR text, uint64_t value)
     node[0] = value;
     PECMD_AllocStrSlot((WCHAR **)(node + 1));
     FUN_14007034C((WCHAR **)(node + 1), text);
-    slot = (uint64_t *)FUN_140063B00((int64_t)count,
-                                     (int64_t *)(obj + 0x108),
+    slot = (uint64_t *)FUN_140063B00((int64_t)count, (int64_t *)(obj + 0x108),
                                      (int64_t *)(obj + 0x110), 8);
     *slot = (uint64_t)node;
     *(int64_t *)(obj + 0x118) = (int64_t)(count + 1);
@@ -359,8 +368,7 @@ void PECMD_DtorMemDcCanvas(uint64_t *obj)
     }
     releaseObj = (void *)obj[0x22];
     if (releaseObj != NULL) {
-        void (*fn)(void *, int) =
-            *(void (**)(void *, int))((char *)*(void **)releaseObj + 0x18);
+        void (*fn)(void *, int) = *(void (**)(void *, int))((char *)*(void **)releaseObj + 0x18);
         fn(releaseObj, 1);
     }
     obj[0x22] = 0;
@@ -374,14 +382,12 @@ void PECMD_DtorMemDcCanvas(uint64_t *obj)
 /* ========== PECMD_DrawVertCenteredText @0x1400ef08c ==========
  * 先用 DT_CALCRECT 测量，再纵向居中并右移 2 像素后实际绘制。
  */
-void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length,
-                            RECT *rect, uint32_t flags)
+void PECMD_DrawVertCenteredText(HDC hdc, LPCWSTR text, int length, RECT *rect, uint32_t flags)
 {
     RECT measure = *rect;
 
     DrawTextW(hdc, text, -1, &measure, flags | 0x400);
-    OffsetRect(rect, 0, (((rect->bottom - rect->top) - measure.bottom) +
-                         measure.top) / 2);
+    OffsetRect(rect, 0, (((rect->bottom - rect->top) - measure.bottom) + measure.top) / 2);
     rect->left += 2;
     DrawTextW(hdc, text, length, rect, flags);
 }
@@ -444,7 +450,7 @@ uint64_t PECMD_GetOrCreateCtlBrush(int64_t obj, HDC hdc)
  */
 void PECMD_RefreshListScrollbar(int64_t obj)
 {
-    uint8_t buf[0x10] = { 0 };
+    uint8_t buf[0x10] = {0};
     RECT client;
     RECT win;
     LRESULT result;
@@ -484,8 +490,7 @@ void PECMD_ListRedrawGroupItems(int64_t obj, int index)
     table = *(int64_t *)(table + (int64_t)index * 8);
     count = *(int16_t *)(*(int64_t *)(obj + 0x368) + table * 2);
     for (i = 0; i < (int64_t)count; i++) {
-        SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x102a,
-                     (WPARAM)(int64_t)(table + i), 0);
+        SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x102a, (WPARAM)(int64_t)(table + i), 0);
     }
 }
 
@@ -494,15 +499,16 @@ void PECMD_ListRedrawGroupItems(int64_t obj, int index)
  */
 void PECMD_ListScrollIntoView(int64_t obj, int index)
 {
-    RECT area = { 0, 0, 0, 0 };
-    RECT client = { 0, 0, 0, 0 };
+    RECT area = {0, 0, 0, 0};
+    RECT client = {0, 0, 0, 0};
     UINT msg;
 
     GetClientRect(*(HWND *)(obj + OBJ_HWND), &client);
     if (index == 0) {
         area.left = 2;
         msg = 0x100e;
-    } else {
+    }
+    else {
         area.left = 0;
         area.top = index;
         msg = 0x1038;
@@ -560,15 +566,13 @@ void PECMD_ForcePosChanged(HWND hwnd)
 /* ========== PECMD_ItemPropFindIdxNamed @0x1400f4114 ==========
  * 在 +0x2f0 数组中按 ID 查找项，写出值，并可选复制关联字符串。
  */
-int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue,
-                                     WCHAR **outString)
+int64_t PECMD_ItemPropFindIdxNamed(int64_t obj, int id, uint64_t *outValue, WCHAR **outString)
 {
     int count = *(int *)(obj + 0x300);
     int i;
 
     for (i = 0; i < count; i++) {
-        uint8_t *item = *(uint8_t **)(*(int64_t *)(obj + 0x2f0) +
-                                      (int64_t)i * 8);
+        uint8_t *item = *(uint8_t **)(*(int64_t *)(obj + 0x2f0) + (int64_t)i * 8);
         if (item != NULL && *(int *)item == id) {
             LPCWSTR str;
 
@@ -594,13 +598,11 @@ int64_t *PECMD_ListFindCellRec(int64_t obj, int64_t key1, int64_t key2)
     int i;
 
     for (i = 0; i < count; i++) {
-        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i,
-                                                 (int64_t *)(obj + 0x350),
+        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i, (int64_t *)(obj + 0x350),
                                                  (int64_t *)(obj + 0x358), 8);
         int64_t item = *slot;
 
-        if (item != 0 && *(int64_t *)(item + 8) == key1 &&
-            *(int64_t *)(item + 0x10) == key2) {
+        if (item != 0 && *(int64_t *)(item + 8) == key1 && *(int64_t *)(item + 0x10) == key2) {
             return slot;
         }
     }
@@ -648,8 +650,7 @@ void PECMD_TableSetHoverIdx(int64_t obj, int current)
     if (oldCurrent >= 0 && oldCurrent != current) {
         PECMD_ListRedrawGroupItems(obj, oldCurrent);
     }
-    if (oldSel >= 0 && oldScroll >= 0 && oldSel != oldCurrent &&
-        oldSel != current) {
+    if (oldSel >= 0 && oldScroll >= 0 && oldSel != oldCurrent && oldSel != current) {
         PECMD_ListInvalidateCellRect(obj, oldSel, oldScroll);
     }
     if (current != oldCurrent && current >= 0) {
@@ -677,21 +678,20 @@ void PECMD_CtlSendNcCalcSize(int64_t *obj, WPARAM wParam, LPARAM lParam)
     }
     {
         LRESULT (*fn)(int64_t, UINT, WPARAM, LPARAM) =
-            *(LRESULT (**)(int64_t, UINT, WPARAM, LPARAM))(*obj + 8);
+            *(LRESULT(**)(int64_t, UINT, WPARAM, LPARAM))(*obj + 8);
         fn(obj[4], 0x83, wParam, lParam);
     }
 }
 
 /* ---- 映射数组查找/添加辅助 ---- */
-static int64_t PECMD_FindSingleMapValue(int64_t obj, int dataOff, int capOff,
-                                        int countOff, int key, int *outValue)
+static int64_t PECMD_FindSingleMapValue(int64_t obj, int dataOff, int capOff, int countOff, int key,
+                                        int *outValue)
 {
     int count = *(int *)(obj + countOff);
     int i;
 
     for (i = 0; i < count; i++) {
-        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i,
-                                                 (int64_t *)(obj + dataOff),
+        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i, (int64_t *)(obj + dataOff),
                                                  (int64_t *)(obj + capOff), 8);
         int *node = (int *)*slot;
 
@@ -703,16 +703,14 @@ static int64_t PECMD_FindSingleMapValue(int64_t obj, int dataOff, int capOff,
     return -1;
 }
 
-static int64_t PECMD_FindDoubleMapValue(int64_t obj, int dataOff, int capOff,
-                                        int countOff, int key1, int key2,
-                                        int *outValue)
+static int64_t PECMD_FindDoubleMapValue(int64_t obj, int dataOff, int capOff, int countOff,
+                                        int key1, int key2, int *outValue)
 {
     int count = *(int *)(obj + countOff);
     int i;
 
     for (i = 0; i < count; i++) {
-        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i,
-                                                 (int64_t *)(obj + dataOff),
+        int64_t *slot = (int64_t *)FUN_140063B00((int64_t)i, (int64_t *)(obj + dataOff),
                                                  (int64_t *)(obj + capOff), 8);
         int *node = (int *)*slot;
 
@@ -724,9 +722,8 @@ static int64_t PECMD_FindDoubleMapValue(int64_t obj, int dataOff, int capOff,
     return -1;
 }
 
-static void PECMD_AddDoubleMapEntry(int64_t obj, int dataOff, int capOff,
-                                    int countOff, int key1, int key2,
-                                    uint64_t value)
+static void PECMD_AddDoubleMapEntry(int64_t obj, int dataOff, int capOff, int countOff, int key1,
+                                    int key2, uint64_t value)
 {
     uint32_t *node = (uint32_t *)calloc(1, 0x18);
     int64_t *arr = (int64_t *)(obj + dataOff);
@@ -754,15 +751,13 @@ int64_t PECMD_ItemPropFindIdxList2(int64_t obj, int key, int *outValue)
 /* ========== PECMD_ItemPropFindIdxSub1 @0x1400f568c ========== */
 int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int key1, int key2, int *outValue)
 {
-    return PECMD_FindDoubleMapValue(obj, 0x290, 0x298, 0x2a0,
-                                    key1, key2, outValue);
+    return PECMD_FindDoubleMapValue(obj, 0x290, 0x298, 0x2a0, key1, key2, outValue);
 }
 
 /* ========== PECMD_TrackItemChangeSub1 @0x1400f57f4 ========== */
 void PECMD_TrackItemChangeSub1(int64_t obj, int key1, int key2, uint64_t value)
 {
-    PECMD_AddDoubleMapEntry(obj, 0x290, 0x298, 0x2a0,
-                            key1, key2, value);
+    PECMD_AddDoubleMapEntry(obj, 0x290, 0x298, 0x2a0, key1, key2, value);
 }
 
 /* ========== PECMD_ItemPropFindIdxList3 @0x1400f593c ========== */
@@ -780,15 +775,13 @@ int64_t PECMD_ItemPropFindIdxList4(int64_t obj, int key, int *outValue)
 /* ========== PECMD_ItemPropFindIdxSub2 @0x1400f5a44 ========== */
 int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int key1, int key2, int *outValue)
 {
-    return PECMD_FindDoubleMapValue(obj, 0x2d8, 0x2e0, 0x2e8,
-                                    key1, key2, outValue);
+    return PECMD_FindDoubleMapValue(obj, 0x2d8, 0x2e0, 0x2e8, key1, key2, outValue);
 }
 
 /* ========== PECMD_TrackItemChangeSub2 @0x1400f5adc ========== */
 void PECMD_TrackItemChangeSub2(int64_t obj, int key1, int key2, uint64_t value)
 {
-    PECMD_AddDoubleMapEntry(obj, 0x2d8, 0x2e0, 0x2e8,
-                            key1, key2, value);
+    PECMD_AddDoubleMapEntry(obj, 0x2d8, 0x2e0, 0x2e8, key1, key2, value);
 }
 
 /* ========== FUN_1400FD1A8 @0x1400fd1a8 ==========
@@ -817,8 +810,7 @@ void FUN_1400FD1A8(uint64_t *obj)
 /* ========== PECMD_TreeGetItemState @0x1400feda4 ==========
  * 发送 0x113e 查询结构；成功时把 +0x10 处的 32 位结果写入 *out。
  */
-int PECMD_TreeGetItemState(int64_t obj, uint64_t param2,
-                                 uint64_t *out, uint32_t param4)
+int PECMD_TreeGetItemState(int64_t obj, uint64_t param2, uint64_t *out, uint32_t param4)
 {
     uint8_t buf[0x38];
     LRESULT result;
@@ -849,8 +841,7 @@ int64_t PECMD_TreeCountItemsRecursive(int64_t obj, LRESULT hItem, int64_t recurs
     while (hItem != 0) {
         total++;
         if (recurse == 0) {
-            LRESULT child = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x110a, 4,
-                                         hItem);
+            LRESULT child = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x110a, 4, hItem);
             if (child != 0) {
                 int64_t childCount = PECMD_TreeCountItemsRecursive(obj, child, 0);
                 if (childCount < 0) {

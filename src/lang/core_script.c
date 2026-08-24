@@ -20,27 +20,28 @@
 
 #include "pecmd_defs.h"
 
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
-extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);  /* @0x14001b5ac */
-extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch); /* @0x14001b4f8 */
-extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                  /* @0x140063424 */
+extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n);         /* @0x14001b5ac */
+extern uint64_t PECMD_StrChrOffset(const WCHAR *buf, WCHAR ch);             /* @0x14001b4f8 */
+extern void PECMD_ZeroLenBuf(void *p);                                      /* @0x14005b0b8 */
 extern void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script); /* @0x140024a54 */
-extern uint64_t FUN_14005F33C(const uint8_t *data, int len);    /* @0x14005f33c */
-extern char PECMD_NormalizeVolumeDevPath(LPCWSTR *ps);                /* @0x14006ccd4 */
-extern int32_t FUN_140006A4C(LPCWSTR path);             /* @0x140006a4c */
+extern uint64_t FUN_14005F33C(const uint8_t *data, int len);                /* @0x14005f33c */
+extern char PECMD_NormalizeVolumeDevPath(LPCWSTR *ps);                      /* @0x14006ccd4 */
+extern int32_t FUN_140006A4C(LPCWSTR path);                                 /* @0x140006a4c */
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
-                           LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl); /* @0x140003864 */
+                                 LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                 HANDLE tmpl);                              /* @0x140003864 */
 extern int64_t FUN_14001D810(LPCWSTR path, uint64_t access, int64_t share); /* @0x14001d810 */
-extern int64_t PECMD_GetDeviceSize(HANDLE h, uint8_t mtype);   /* @0x140061070 */
-extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out); /* @0x14006a7f4 */
-extern int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp); /* @0x140068984 */
+extern int64_t PECMD_GetDeviceSize(HANDLE h, uint8_t mtype);                /* @0x140061070 */
+extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out);                  /* @0x14006a7f4 */
+extern int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp);   /* @0x140068984 */
 
 /* B9 待实现 */
 extern uint32_t FUN_1400E7D58(int64_t *ps, uint32_t flags); /* @0x1400e7d58 */
 
 /* 前向声明（本文件内相互调用） */
 extern uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
-                                 void *script2, uint32_t flags); /* @0x1400307c8 */
+                                            void *script2, uint32_t flags); /* @0x1400307c8 */
 
 /* ========== PECMD_ParseScriptSegments @0x140030420 ==========
  * 脚本执行器：
@@ -52,8 +53,8 @@ extern uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR sc
  *   flags  : 编码标志（高 16 位=编码, 低=状态）
  * 处理段切分、import 前缀、递归合并。
  */
-uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *out,
-                          LPCWSTR script, uint32_t flags)
+uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *out, LPCWSTR script,
+                                   uint32_t flags)
 {
     WCHAR *base = (WCHAR *)ctrl[0];
     WCHAR *p = base + start;
@@ -64,7 +65,8 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
     uint32_t ret = flags;
 
     /* 跳过前导分隔符 */
-    while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] || *p == script[0x48]) p++;
+    while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] || *p == script[0x48])
+        p++;
 
     PECMD_AllocWStringBuffer((WCHAR **)&tmp, 0x804);
     if (p < end) {
@@ -73,11 +75,14 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
             WCHAR *seg2;
             int n;
             uint32_t f2 = flags;
-            if (*p == script[0x44]) break;
+            if (*p == script[0x44])
+                break;
             /* 找段尾 */
-            while (*t != script[0x45] && *t != script[0x48] && *t != script[0x44]) t++;
+            while (*t != script[0x45] && *t != script[0x48] && *t != script[0x44])
+                t++;
             n = (int)(t - p);
-            if (n > 0x800) n = 0x800;
+            if (n > 0x800)
+                n = 0x800;
             tmp[n] = L'\0';
             memcpy(tmp, p, (size_t)n * 2);
             FUN_14001B5AC(tmp, code & 0xffff, n);
@@ -108,7 +113,8 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                 /* 提取文件名（到空白或文件分隔符） */
                                 WCHAR *qe = q;
                                 while (qe < tmp + n && *qe != L' ' && *qe != L';' && *qe != L'#' &&
-                                       !(*qe > 8 && *qe < 0xe)) qe++;
+                                       !(*qe > 8 && *qe < 0xe))
+                                    qe++;
                                 PECMD_AllocStrSlot(&fnbuf);
                                 memcpy(fnbuf, q, (size_t)(qe - q) * 2);
                                 fnbuf[qe - q] = 0;
@@ -120,17 +126,19 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
                                 if (found == 0) {
                                     /* 跳过分隔符后递归处理 import 文件 */
                                     WCHAR *r2 = qe;
-                                    while (*r2 == script[0x45] || *r2 == script[0x48]) r2++;
+                                    while (*r2 == script[0x45] || *r2 == script[0x48])
+                                        r2++;
                                     {
                                         int imp_off = (int)(r2 - base);
-                                        uint32_t u = PECMD_LoadScriptFileSegment(ctrl, imp_off, script, out,
-                                                                      (void *)script, flags);
+                                        uint32_t u = PECMD_LoadScriptFileSegment(
+                                            ctrl, imp_off, script, out, (void *)script, flags);
                                         if (u != 0xffffffff) {
                                             ret = f2 | u;
                                         }
                                         /* 更新游标：定位到新合并文本的主分隔符 */
                                         {
-                                            uint64_t nl = PECMD_StrChrOffset((WCHAR *)(base + imp_off), (WCHAR)code);
+                                            uint64_t nl = PECMD_StrChrOffset(
+                                                (WCHAR *)(base + imp_off), (WCHAR)code);
                                             end = (WCHAR *)(base + ((int)nl + imp_off) * 2);
                                             p = end;
                                         }
@@ -146,7 +154,9 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
             (void)seg2;
             /* 跳到下一个分隔符 */
             p = t;
-            while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] || *p == script[0x48]) p++;
+            while (*p == script[0x49] || *p == script[0x4a] || *p == script[0x45] ||
+                   *p == script[0x48])
+                p++;
             code = ret >> 0x10;
         } while (p < end);
     }
@@ -168,10 +178,12 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
  *   XOR 解码，合并到 ctrl 缓冲，递归 PECMD_ParseScriptSegments。
  */
 uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, int64_t *out,
-                          void *script2, uint32_t flags)
+                                     void *script2, uint32_t flags)
 {
-    (void)ctrl; (void)script2; (void)start;
-    bool isDev = *(WCHAR *)(*out + 2) != 0;   /* 设备路径标志 TODO(verify) */
+    (void)ctrl;
+    (void)script2;
+    (void)start;
+    bool isDev = *(WCHAR *)(*out + 2) != 0; /* 设备路径标志 TODO(verify) */
     WCHAR *s = StrChrW(script, L'|');
     WCHAR *path = NULL;
     int64_t off = 0;
@@ -191,13 +203,15 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
         s++;
         {
             uint64_t v = 0;
-            if (FUN_14006A7F4((LPCWSTR *)&s, &v)) off = (int64_t)(int32_t)v;
+            if (FUN_14006A7F4((LPCWSTR *)&s, &v))
+                off = (int64_t)(int32_t)v;
         }
         if (*s == L'|') {
             s++;
             {
                 uint64_t v = 0;
-                if (FUN_14006A7F4((LPCWSTR *)&s, &v)) limit = (int64_t)(int32_t)v;
+                if (FUN_14006A7F4((LPCWSTR *)&s, &v))
+                    limit = (int64_t)(int32_t)v;
             }
         }
     }
@@ -206,14 +220,17 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
     isDev = PECMD_NormalizeVolumeDevPath((LPCWSTR *)&p2) != 0;
     if (isDev && FUN_140006A4C(p2)) {
         h = (HANDLE)FUN_14001D810(p2, 0x80000000, 7);
-    } else {
+    }
+    else {
         PECMD_OpenFileHandle(&h, p2, 0x80000000, 7, NULL, 3, 0, (HANDLE)0);
     }
-    if (h == 0) goto done;
+    if (h == 0)
+        goto done;
 
     if (isDev) {
         fsize = PECMD_GetDeviceSize(h, (uint8_t)isDev);
-    } else {
+    }
+    else {
         int64_t sz = 0;
         GetFileSizeEx(h, (void *)&sz);
         fsize = sz;
@@ -222,9 +239,12 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
         CloseHandle(h);
         goto done;
     }
-    if (off > 0) fsize -= off;
-    if (fsize > 0x10000000) fsize = 0x10000000;
-    if (limit > 0 && limit < fsize) fsize = limit;
+    if (off > 0)
+        fsize -= off;
+    if (fsize > 0x10000000)
+        fsize = 0x10000000;
+    if (limit > 0 && limit < fsize)
+        fsize = limit;
 
     buf = (uint8_t *)PECMD_GrowByteBuffer((void **)&buf, fsize + 0x10);
     if (buf == NULL) {
@@ -264,10 +284,11 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
                 }
             }
             ret = (u13 << 0x10) | (flags & 0xffff);
-        } else {
+        }
+        else {
             /* 编码文本：经 PECMD_EncodeBuffer 解码 */
-            int64_t in[3] = { (int64_t)buf, bsize, bsize };
-            int64_t out2[3] = { 0, 0, 0 };
+            int64_t in[3] = {(int64_t)buf, bsize, bsize};
+            int64_t out2[3] = {0, 0, 0};
             PECMD_EncodeBuffer(in, out2, (uint8_t)u17);
             ret = (u13 << 0x10) | (flags & 0xffff) | (int)(uint8_t)enc;
             flags = (int)(uint8_t)enc | flags;
@@ -277,7 +298,8 @@ uint32_t PECMD_LoadScriptFileSegment(int64_t *ctrl, int start, LPCWSTR script, i
     PECMD_FreeStrBuf((WCHAR **)&buf);
     return ret;
 done:
-    if (buf) PECMD_FreeStrBuf((WCHAR **)&buf);
+    if (buf)
+        PECMD_FreeStrBuf((WCHAR **)&buf);
     PECMD_FreeStrBuf(&path);
     return 0xffffffff;
 }

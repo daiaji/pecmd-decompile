@@ -7,7 +7,8 @@
  * 说明:
  *   - FUN_140102a90(...) 是 memset 别名, 直接写 memset。
  *   - g_pOleInit / g_pOleUninit 为 OleInit/OleUninit 延迟槽。
- *   - PECMD_DestroyWindowLocked / PECMD_GetTooltipWindow / PECMD_TimerMessage 定义于 core_b3d/e/j.c (大写)。
+ *   - PECMD_DestroyWindowLocked / PECMD_GetTooltipWindow / PECMD_TimerMessage 定义于 core_b3d/e/j.c
+ * (大写)。
  *   - 消息缓冲区 (local_84/local_88/local_80/local_78/local_58) 的栈布局偏移
  *     无法从伪代码精确恢复, 以字节缓冲重建并用 TODO(verify) 标注。
  */
@@ -17,19 +18,20 @@
 #include "pecmd_defs.h"
 
 /* ---- 本文件引用的全局 (link_stubs.c / core_globals.c 定义) ---- */
-extern int64_t g_pComWrite;               /* 全局 fnptr 槽 (COM 操作) */
-extern CRITICAL_SECTION g_csE138;        /* 全局临界区 (工具提示) */
-extern HWND   g_hwndD310;                  /* 当前工具提示/消息窗口 */
-extern uint8_t g_msgWndMode;                 /* 消息窗口模式字节 */
-extern uint32_t g_msgWndState[2];                /* 消息窗口状态/定时器标志 */
+extern int64_t g_pComWrite;       /* 全局 fnptr 槽 (COM 操作) */
+extern CRITICAL_SECTION g_csE138; /* 全局临界区 (工具提示) */
+extern HWND g_hwndD310;           /* 当前工具提示/消息窗口 */
+extern uint8_t g_msgWndMode;      /* 消息窗口模式字节 */
+extern uint32_t g_msgWndState[2]; /* 消息窗口状态/定时器标志 */
 
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
-extern int32_t PECMD_LoadOle32Apis(void);                            /* @0x140061c44 OLE 初始化协助 */
-extern HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth);   /* @0x14005b9c8 获取提示窗口 */
-extern void   PECMD_DestroyWindowLocked(void);                            /* @0x14005ba6c 销毁窗口 */
-extern void   PECMD_TimerMessage(HWND hwnd, uint64_t wParam, int timerId); /* @0x14005bb6c 定时器过程 */
-extern DWORD  PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3,
-                            uint64_t *param_4);               /* @0x1400195f0 消息泵/等待 */
+extern int32_t PECMD_LoadOle32Apis(void);                         /* @0x140061c44 OLE 初始化协助 */
+extern HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth); /* @0x14005b9c8 获取提示窗口 */
+extern void PECMD_DestroyWindowLocked(void);                      /* @0x14005ba6c 销毁窗口 */
+extern void PECMD_TimerMessage(HWND hwnd, uint64_t wParam,
+                               int timerId); /* @0x14005bb6c 定时器过程 */
+extern DWORD PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3,
+                                         uint64_t *param_4); /* @0x1400195f0 消息泵/等待 */
 
 /* ================================================================
  * @0x1400644c8  (undefined4 PECMD_ComWriteSlot(longlong, undefined8))
@@ -54,9 +56,9 @@ uint32_t PECMD_ComWriteSlot(int64_t param_1, uint64_t param_2)
                 (*g_pOleUninit)();
             }
         }
-        uVar2 = (uint32_t)((uint32_t (*)(int64_t *, int, uint64_t, int, int, int, int,
-                                         int, int))g_pComWrite)(
-                    (int64_t *)(param_1 + 0xd0), 2, param_2, 0, 0, 0, 0, 0, 0);
+        uVar2 = (uint32_t)((uint32_t (*)(int64_t *, int, uint64_t, int, int, int, int, int,
+                                         int))g_pComWrite)((int64_t *)(param_1 + 0xd0), 2, param_2,
+                                                           0, 0, 0, 0, 0, 0);
         if ((g_pOleUninit != (void (*)(void))0) && (iVar1 == 0)) {
             (*g_pOleUninit)();
         }
@@ -71,9 +73,9 @@ uint32_t PECMD_ComWriteSlot(int64_t param_1, uint64_t param_2)
  * 移动/定位工具提示窗口; 若处于"非前台/消息窗口"状态则先恢复先前的
  * 前台窗口 (local_90 = GetForegroundWindow(), 结束 SetForegroundWindow)。
  * ================================================================ */
-void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3, unsigned int param_4,
-                   int param_5, int param_6, unsigned int param_7, unsigned int param_8,
-                   uint64_t param_9)
+void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
+                                 unsigned int param_4, int param_5, int param_6,
+                                 unsigned int param_7, unsigned int param_8, uint64_t param_9)
 {
     bool bVar1;
     HWND hWnd;
@@ -90,10 +92,10 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
     unsigned int local_9c;
     unsigned int local_98;
     HWND local_90;
-    uint8_t local_buf[0x50];      /* 消息缓冲区 (重建, 见文件头说明) */
+    uint8_t local_buf[0x50]; /* 消息缓冲区 (重建, 见文件头说明) */
     uint32_t *local_88;
     uint32_t *local_84;
-    HWND     *local_80;
+    HWND *local_80;
     uint64_t *local_78;
     uint64_t *local_58;
 
@@ -132,11 +134,11 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
          g_hwndD310 != (HWND)0)) {
         hWnd = g_hwndD310;
         /* 消息缓冲区布局 (TODO(verify): 偏移无法精确恢复) */
-        local_88 = (uint32_t *)(void *)local_buf;            /* offset 0  */
-        local_84 = (uint32_t *)(void *)(local_buf + 4);      /* offset 4  */
-        local_80 = (HWND *)(void *)(local_buf + 8);          /* offset 8  */
-        local_78 = (uint64_t *)(void *)(local_buf + 0x0c);   /* offset 12 (TODO(verify)) */
-        local_58 = (uint64_t *)(void *)(local_buf + 0x2c);   /* offset 44 */
+        local_88 = (uint32_t *)(void *)local_buf;          /* offset 0  */
+        local_84 = (uint32_t *)(void *)(local_buf + 4);    /* offset 4  */
+        local_80 = (HWND *)(void *)(local_buf + 8);        /* offset 8  */
+        local_78 = (uint64_t *)(void *)(local_buf + 0x0c); /* offset 12 (TODO(verify)) */
+        local_58 = (uint64_t *)(void *)(local_buf + 0x2c); /* offset 44 */
         memset(local_buf, 0, 0x44);
         *local_88 = 0x2c;
         *local_78 = param_9;
@@ -180,7 +182,8 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
             param_4 = param_4 + (unsigned int)(local_b8.left - local_b8.right);
         }
         else {
-            param_4 = param_4 + (unsigned int)(local_b8.left - local_b8.right) + (unsigned int)iVar2;
+            param_4 =
+                param_4 + (unsigned int)(local_b8.left - local_b8.right) + (unsigned int)iVar2;
         }
         if (local_9c == 0) {
             if (local_a8 != 0) {
@@ -207,9 +210,9 @@ void PECMD_PositionMessageWindow(HWND param_1, uint64_t param_2, LPARAM param_3,
 
     if ((local_a4 != 0) && (g_hwndD310 != (HWND)0)) {
         DVar4 = GetTickCount();
-        while ((((sVar7 == (short)g_msgWndState[0]) && ('\0' < g_flagA24F)) &&
-                (0 < (int)param_7)) &&
-               (DVar5 = GetTickCount(), DVar5 - DVar4 < param_7)) {
+        while (
+            (((sVar7 == (short)g_msgWndState[0]) && ('\0' < g_flagA24F)) && (0 < (int)param_7)) &&
+            (DVar5 = GetTickCount(), DVar5 - DVar4 < param_7)) {
             PECMD_WaitHandlesOrMessages((uint64_t)(uintptr_t)g_Script, 1, 0, (uint64_t *)0);
         }
     }

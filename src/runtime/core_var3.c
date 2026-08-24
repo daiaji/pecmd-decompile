@@ -21,10 +21,9 @@
 #include "pecmd_defs.h"
 
 
-
 /* 内部：变量查找 (无锁) */
-extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
-                              int64_t len, void **out); /* @0x140018978 */
+extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len,
+                             void **out); /* @0x140018978 */
 
 /* ========== FUN_14001E69C @0x14001e69c ==========
  * VarFind 包装：返回指向 value 字段（节点+8）的指针；未命中返回 NULL。
@@ -32,7 +31,8 @@ extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
 uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len)
 {
     uint8_t *n = PECMD_VarLookup(script, name, scope, len, NULL);
-    if (n) n += 8;
+    if (n)
+        n += 8;
     return n;
 }
 
@@ -41,7 +41,8 @@ uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len)
  */
 static int32_t FUN_14005D534(const char *name, LPCWSTR value)
 {
-    if (*name == L'\0') return 0;
+    if (*name == L'\0')
+        return 0;
     return SetEnvironmentVariableW((LPCWSTR)name, value);
 }
 
@@ -84,7 +85,8 @@ uint16_t PECMD_GenRandomSeed16(void)
         hw = 0;
         v = t;
         for (i = 0; i < 16; i++) {
-            if (v & 1) hw++;
+            if (v & 1)
+                hw++;
             v >>= 1;
         }
         v = t;

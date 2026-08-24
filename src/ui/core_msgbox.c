@@ -30,11 +30,11 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 全局 */
-extern uint32_t g_dpi;           /* g_dpi */
-extern WCHAR *g_pLocale;         /* DAT_14013ca70 */
-extern int g_msgboxFlag;         /* g_hPelogonWnd 置顶标志 */
-extern uint8_t g_msgboxActive;   /* g_u8CF84 */
-extern void *g_pVtblA;           /* DAT_14013d670 */
+extern uint32_t g_dpi;         /* g_dpi */
+extern WCHAR *g_pLocale;       /* DAT_14013ca70 */
+extern int g_msgboxFlag;       /* g_hPelogonWnd 置顶标志 */
+extern uint8_t g_msgboxActive; /* g_u8CF84 */
+extern void *g_pVtblA;         /* DAT_14013d670 */
 
 /* 已实现 (core_exec.c / core_var.c / core_string.c) */
 extern void FUN_1400633A8(void **ps, int64_t len);
@@ -46,34 +46,32 @@ extern void PECMD_MoveBtnTextToID9(void *mbox, int btnId);
 extern void FUN_14005D9A8(void *mbox, int mode);
 extern void PECMD_SetChildFont(HWND hwnd, int64_t font);
 extern bool FUN_1400E5900(HWND hwnd, uint32_t clear, uint64_t set);
-extern HWND PECMD_CreateControlSubclass(LPCWSTR cls, LPCWSTR text, DWORD style, int x, int y,
-                             int w, int h, HWND parent, HMENU id, HINSTANCE inst, void *extra);
+extern HWND PECMD_CreateControlSubclass(LPCWSTR cls, LPCWSTR text, DWORD style, int x, int y, int w,
+                                        int h, HWND parent, HMENU id, HINSTANCE inst, void *extra);
 extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);
 
 /* 待实现 (B7 后续) */
-extern void FUN_140017CDC(void *dst, void *src);   /* FUN_140017CDC */
+extern void FUN_140017CDC(void *dst, void *src); /* FUN_140017CDC */
 
 /* .rdata 常量表 */
 /* DAT_14011c544: 默认按钮禁用表 (7 项, 与按钮 ID 对应) */
-static const uint8_t s_btnDisable[7] = { 2, 1, 3, 4, 5, 6, 7 };
+static const uint8_t s_btnDisable[7] = {2, 1, 3, 4, 5, 6, 7};
 /* DAT_14011c570: 图标表 (8 项 × 8 字节; 值=系统图标 ID, 0=无) */
-static const uint64_t s_iconTbl[8] = {
-    0, 0x7f03, 0x7f03, 0x7f04, 0x7f04, 0x7f02, 0x7f01, 0x7f01
-};
+static const uint64_t s_iconTbl[8] = {0, 0x7f03, 0x7f03, 0x7f04, 0x7f04, 0x7f02, 0x7f01, 0x7f01};
 /* g_szEmpty: 默认文本 (按钮 1 文本 / 复位文本) */
-static const WCHAR s_btnDef[2] = { 0, 0 };
+static const WCHAR s_btnDef[2] = {0, 0};
 
 /* ========== 消息框初始化 @0x14000142c ========== */
 /* mbox: 调用方分配的结构; type: 参数 uVar4 & 0xf 选按钮集 */
 uint64_t PECMD_MsgBoxInit(int64_t *mbox)
 {
     uint8_t *m = (uint8_t *)mbox;
-    HWND wnd = (HWND)mbox[4];        /* +0x20 */
+    HWND wnd = (HWND)mbox[4]; /* +0x20 */
     uint32_t t = *(uint32_t *)(m + 0x31c);
     uint32_t u19 = t & 0xf;
     uint32_t u28 = t & 0xffff0000;
-    HWND hStat;                      /* 0x7575 静态框 */
-    HWND hProg;                      /* 0x7572/0x7576 进度区 */
+    HWND hStat; /* 0x7575 静态框 */
+    HWND hProg; /* 0x7572/0x7576 进度区 */
     int i;
     LPCWSTR titleStr = (LPCWSTR)mbox[0xd];
     RECT rc;
@@ -84,7 +82,7 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
 
     PECMD_GetDpiCached(wnd);
     g_flag16a = 0;
-    if (g_pVtblA == NULL) {          /* DAT_14013e2c0: 字体/样式对象懒初始化 */
+    if (g_pVtblA == NULL) { /* DAT_14013e2c0: 字体/样式对象懒初始化 */
         PECMD_GetUiFontById(&g_pVtblA, 0x3ec);
     }
     if (titleStr != NULL && titleStr != (LPCWSTR)-1) {
@@ -94,8 +92,9 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
     u19 = t & 0xf;
     u28 = t & 0xffff0000;
     if ((mbox[0x62] & 1U) == 0) {
-        mbox[0x62] = 5;              /* 默认: 5 秒? */
-    } else {
+        mbox[0x62] = 5; /* 默认: 5 秒? */
+    }
+    else {
         mbox[0x62] = mbox[0x62] >> 1;
     }
     {
@@ -104,41 +103,41 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
     }
     if (u19 == 4) {
         GetSystemMenu(wnd, 0);
-        EnableMenuItem(GetSystemMenu(wnd, 0), 0xf060, 1);   /* SC_CLOSE 允许 */
+        EnableMenuItem(GetSystemMenu(wnd, 0), 0xf060, 1); /* SC_CLOSE 允许 */
     }
-    *(int32_t *)(m + 0x358) = 1;     /* m+0x6b 首按钮 */
-    *(int16_t *)(m + 0x37c) = 1;     /* 按钮计数 */
+    *(int32_t *)(m + 0x358) = 1; /* m+0x6b 首按钮 */
+    *(int16_t *)(m + 0x37c) = 1; /* 按钮计数 */
     switch (u19) {
-    case 4:                          /* Yes/No */
+    case 4: /* Yes/No */
         *(int32_t *)(m + 0x358) = 6;
         *(int32_t *)(m + 0x35c) = 7;
         *(int16_t *)(m + 0x37c) = 2;
         break;
-    case 3:                          /* Yes/No/Cancel */
+    case 3: /* Yes/No/Cancel */
         *(int32_t *)(m + 0x358) = 6;
         *(int32_t *)(m + 0x35c) = 7;
         *(int16_t *)(m + 0x37c) = 2;
         *(int16_t *)(m + 0x37c) = *(int16_t *)(m + 0x37c) + 1;
         *(int32_t *)(m + 0x358 + (int32_t)*(int16_t *)(m + 0x37c) * 4) = 2;
         break;
-    case 1:                          /* OK/Cancel */
+    case 1: /* OK/Cancel */
         *(int32_t *)(m + 0x358) = 1;
         *(int32_t *)(m + 0x35c) = 2;
         *(int16_t *)(m + 0x37c) = 2;
         break;
-    case 5:                          /* Retry/Cancel */
+    case 5: /* Retry/Cancel */
         *(int32_t *)(m + 0x358) = 4;
         *(int32_t *)(m + 0x35c) = 2;
         *(int16_t *)(m + 0x37c) = 2;
         break;
-    case 2:                          /* Abort/Retry/Ignore */
+    case 2: /* Abort/Retry/Ignore */
         *(int32_t *)(m + 0x358) = 3;
         *(int32_t *)(m + 0x35c) = 4;
         *(int16_t *)(m + 0x37c) = 2;
         *(int16_t *)(m + 0x37c) = *(int16_t *)(m + 0x37c) + 1;
         *(int32_t *)(m + 0x358 + (int32_t)*(int16_t *)(m + 0x37c) * 4) = 5;
         break;
-    default:                         /* OK */
+    default: /* OK */
         *(int32_t *)(m + 0x358) = 1;
         *(int32_t *)(m + 0x35c) = 2;
         break;
@@ -183,35 +182,36 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
             int bx = MulDiv(6, dpi, 0x48);
             int by = MulDiv(6, dpi, 0x48);
             /* 按钮 9: 默认复位按钮 (不可见) */
-            PECMD_CreateControlSubclass(WSTR("BUTTON"), s_btnDef, 0x50010001, bx, by, bw, bh,
-                             wnd, (HMENU)9, g_hInstance, NULL);
+            PECMD_CreateControlSubclass(WSTR("BUTTON"), s_btnDef, 0x50010001, bx, by, bw, bh, wnd,
+                                        (HMENU)9, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("确定&O"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)1, g_hInstance, NULL);
+                                        wnd, (HMENU)1, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("取消&C"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)2, g_hInstance, NULL);
+                                        wnd, (HMENU)2, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("&Abort"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)3, g_hInstance, NULL);
+                                        wnd, (HMENU)3, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("重试&R"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)4, g_hInstance, NULL);
+                                        wnd, (HMENU)4, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("忽略&I"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)5, g_hInstance, NULL);
+                                        wnd, (HMENU)5, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("是&Y"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)6, g_hInstance, NULL);
+                                        wnd, (HMENU)6, g_hInstance, NULL);
             PECMD_CreateControlSubclass(WSTR("BUTTON"), WSTR("否&N"), 0x40010000, bx, by, bw, bh,
-                             wnd, (HMENU)7, g_hInstance, NULL);
+                                        wnd, (HMENU)7, g_hInstance, NULL);
             if (!hasProg) {
-                hStat = CreateWindowExW(0, WSTR("STATIC"), NULL, 0x50000003,
-                                        MulDiv(7, dpi, 0x48), MulDiv(2, dpi, 0x48),
-                                        MulDiv(2, dpi, 0x48), MulDiv(0x15, dpi, 0x48),
-                                        wnd, (HMENU)0x7575, g_hInstance, NULL);
-            } else {
+                hStat =
+                    CreateWindowExW(0, WSTR("STATIC"), NULL, 0x50000003, MulDiv(7, dpi, 0x48),
+                                    MulDiv(2, dpi, 0x48), MulDiv(2, dpi, 0x48),
+                                    MulDiv(0x15, dpi, 0x48), wnd, (HMENU)0x7575, g_hInstance, NULL);
+            }
+            else {
                 hProg = CreateWindowExW(0x20, WSTR("STATIC"), NULL, 0x50000000,
                                         MulDiv(0x20, dpi, 0x48), MulDiv(5, dpi, 0x48),
-                                        MulDiv(0xce, dpi, 0x48), MulDiv(0x73, dpi, 0x48),
-                                        wnd, (HMENU)((hasProg ? 4 : 0) + 0x7572),
-                                        g_hInstance, NULL);
+                                        MulDiv(0xce, dpi, 0x48), MulDiv(0x73, dpi, 0x48), wnd,
+                                        (HMENU)((hasProg ? 4 : 0) + 0x7572), g_hInstance, NULL);
             }
-        } else if (hasProg) {
+        }
+        else if (hasProg) {
             ShowWindow(GetDlgItem(wnd, 0x7572), 0);
             ShowWindow(hProg, 5);
         }
@@ -243,7 +243,8 @@ uint64_t PECMD_MsgBoxInit(int64_t *mbox)
                     SendMessageW(hStat, 0x170, (WPARAM)hico, 0);
                 }
             }
-        } else {
+        }
+        else {
             HICON hico = LoadIconW(g_hInst, (LPCWSTR)(uintptr_t)((st & 0x3fffffff) - 1));
             mbox[0x77] = (int64_t)hico;
             if (hico && hStat) {
@@ -263,14 +264,14 @@ noicon:
             wsprintfW((LPWSTR)(m + 0x164 + *(int32_t *)(m + 0x2f4) * 2), WSTR("(%d)ms"));
         }
         if (tm > 1000 && (*(int32_t *)(m + 0x160) / 1000) * 1000 == *(int32_t *)(m + 0x160)) {
-            *(int32_t *)(m + 0x318) = 1000;        /* m[99] */
+            *(int32_t *)(m + 0x318) = 1000; /* m[99] */
             wsprintfW((LPWSTR)(m + 0x164 + *(int32_t *)(m + 0x2f4) * 2), WSTR("(%ld)"));
         }
     }
     /* 消息文本宽度测量 */
     {
         HDC dc = GetDC(hProg);
-        RECT tr = { 0, 0, 0, 0 };
+        RECT tr = {0, 0, 0, 0};
         DrawTextW(dc, (LPCWSTR)(m + 0x164), -1, &tr, 0x420);
         {
             int w = tr.right - tr.left;
@@ -307,10 +308,10 @@ noicon:
         *(int32_t *)(m + 0x394) = MulDiv(0x1e, dpi, 0x48) + *(int32_t *)(m + 0x344);
         *(int32_t *)(m + 0x360) = *(int32_t *)(m + 0x340) + *(int32_t *)(m + 0x33c);
         *(int32_t *)(m + 0x34c) = MulDiv(0x2a, dpi, 0x48);
-        *(int32_t *)(m + 0x350) = rc2.right - rc2.left;    /* +0x6a */
+        *(int32_t *)(m + 0x350) = rc2.right - rc2.left; /* +0x6a */
         *(int32_t *)(m + 0x354) = rc2.bottom - rc2.top;
-        *(int32_t *)(m + 0x380) = GetSystemMetrics(0x3d);   /* +0x70 */
-        *(int32_t *)(m + 0x384) = GetSystemMetrics(0x3e);   /* +0x38c+? */
+        *(int32_t *)(m + 0x380) = GetSystemMetrics(0x3d); /* +0x70 */
+        *(int32_t *)(m + 0x384) = GetSystemMetrics(0x3e); /* +0x38c+? */
         *(int32_t *)(m + 0x388) = *(int32_t *)(m + 0x380) - *(int32_t *)(m + 0x360);
         *(int32_t *)(m + 0x38c) = *(int32_t *)(m + 0x384) - *(int32_t *)(m + 0x394);
     }
@@ -332,8 +333,9 @@ noicon:
         if (u19 != 0 || tlen <= 0) {
             /* 简化: 单行测量 */
             lines = 1;
-        } else {
-            RECT tr = { 0, 0, 0, 0 };
+        }
+        else {
+            RECT tr = {0, 0, 0, 0};
             HDC dc = GetDC(hProg);
             DrawTextW(dc, msg, -1, &tr, 0x400);
             if (dc) {
@@ -364,10 +366,9 @@ noicon:
         }
         for (iBtn = 0; iBtn < n; iBtn++) {
             HWND b = GetDlgItem(wnd, (int)pb[iBtn]);
-            SetWindowPos(b, 0,
-                         iBtn * x + ((x / 2 - (x * n) / 2) + *(int32_t *)(m + 0x388) / 2) - hw_all / 2,
-                         *(int32_t *)(m + 0x38c) - bw2,
-                         (int32_t)mbox[0x6a], *(int32_t *)(m + 0x354), 5);
+            SetWindowPos(
+                b, 0, iBtn * x + ((x / 2 - (x * n) / 2) + *(int32_t *)(m + 0x388) / 2) - hw_all / 2,
+                *(int32_t *)(m + 0x38c) - bw2, (int32_t)mbox[0x6a], *(int32_t *)(m + 0x354), 5);
             ShowWindow(GetDlgItem(wnd, (int)pb[iBtn]), 5);
         }
     }
@@ -388,7 +389,8 @@ noicon:
             if (!present) {
                 if (bid == 2) {
                     SetWindowTextW(GetDlgItem(wnd, 2), s_btnDef);
-                } else {
+                }
+                else {
                     EnableWindow(GetDlgItem(wnd, bid), 0);
                 }
             }
@@ -430,7 +432,7 @@ noicon:
         uint32_t period;
         DWORD now = GetTickCount();
         if (tm > 0) {
-            m[0x328] = (uint8_t)(now + (uint32_t)tm);   /* 简化 */
+            m[0x328] = (uint8_t)(now + (uint32_t)tm); /* 简化 */
         }
         period = 0x32;
         if (tm > 1000 && (tm / 1000) * 1000 == tm) {
@@ -485,7 +487,8 @@ noicon:
             }
         }
         if (mbox[0x7b] != 0 && mbox[0x7a] != 0) {
-            PECMD_AppendFmtValue((void *)mbox[0x7a], (uint64_t)(uintptr_t)mbox[0x40], (LPCWSTR)(uintptr_t)mbox[0x7b], WSTR("%I64u"));
+            PECMD_AppendFmtValue((void *)mbox[0x7a], (uint64_t)(uintptr_t)mbox[0x40],
+                                 (LPCWSTR)(uintptr_t)mbox[0x7b], WSTR("%I64u"));
         }
     }
     return 1;

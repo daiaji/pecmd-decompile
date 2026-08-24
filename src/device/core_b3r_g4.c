@@ -17,34 +17,34 @@
 /* =====================================================================
  * 本文件引用的全局数据 (extern, 定义在其他翻译单元)
  * ===================================================================== */
-extern WCHAR g_szEmpty[];    /* .rdata 空串 */
-extern char * g_timeServer;      /* time-server 名 / 解析结果 (char*) */
-extern int32_t g_qMode;      /* -q/-qo 模式 */
-extern int64_t DAT_14013d5c0;      /* 临时缓冲指针槽 */
-extern int32_t g_i32D6F4;      /* config dirty flag */
-extern void *g_pConfigStr;      /* config string pointer */
+extern WCHAR g_szEmpty[];     /* .rdata 空串 */
+extern char *g_timeServer;    /* time-server 名 / 解析结果 (char*) */
+extern int32_t g_qMode;       /* -q/-qo 模式 */
+extern int64_t DAT_14013d5c0; /* 临时缓冲指针槽 */
+extern int32_t g_i32D6F4;     /* config dirty flag */
+extern void *g_pConfigStr;    /* config string pointer */
 
 /* 动态导入的函数指针槽 */
 
 /* =====================================================================
  * 未被 win32_stub.h / pecmd_defs.h 声明的辅助函数 (extern, 不在此定义)
  * ===================================================================== */
-extern LPWSTR  lstrcatW(LPWSTR, LPCWSTR);
+extern LPWSTR lstrcatW(LPWSTR, LPCWSTR);
 
-extern void    PECMD_InitWinsock(void *p);                 /* 懒加载 WS2_32 指针 */
-extern int32_t PECMD_QueryState_cfc0(void);                    /* 初始化成功? */
-extern void    PECMD_InitWinsockOnce(void *p);                 /* 附加初始化 */
-extern void    PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
-                             uint64_t cap);            /* 复制/解析串 */
-extern void    PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
-extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);  /* 分配缓冲 */
-extern void    PECMD_AllocStrSlot(void *ps);                /* 初始化串容器 */
-extern void    PECMD_NtpSyncLoop(uint32_t *addr);          /* IP 地址 → 串 */
-extern void    PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2); /* 行切分 */
-extern HANDLE  PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
-                             DWORD share, LPSECURITY_ATTRIBUTES sa,
-                             DWORD disp, DWORD flags, HANDLE tmpl); /* CreateFile 包装 */
-extern void    PECMD_SetConfigString(WCHAR *param_1, int param_2); /* config string store */
+extern void PECMD_InitWinsock(void *p);     /* 懒加载 WS2_32 指针 */
+extern int32_t PECMD_QueryState_cfc0(void); /* 初始化成功? */
+extern void PECMD_InitWinsockOnce(void *p); /* 附加初始化 */
+extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
+                                uint64_t cap);                                 /* 复制/解析串 */
+extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
+extern void PECMD_AllocStringSlot2(void **ps, int64_t len);                    /* 分配缓冲 */
+extern void PECMD_AllocStrSlot(void *ps);                                      /* 初始化串容器 */
+extern void PECMD_NtpSyncLoop(uint32_t *addr);                                 /* IP 地址 → 串 */
+extern void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2);            /* 行切分 */
+extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                                   LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                   HANDLE tmpl);                /* CreateFile 包装 */
+extern void PECMD_SetConfigString(WCHAR *param_1, int param_2); /* config string store */
 
 /* ===================================================================== */
 /* @0x140071ae8                                                        */
@@ -60,7 +60,7 @@ DWORD PECMD_RegScrubKey(HKEY param_1, LPCWSTR param_2, unsigned int param_3)
     DWORD local_34;
     DWORD local_30;
     DWORD local_2c;
-    HKEY  local_28;
+    HKEY local_28;
     LPWSTR local_20;
 
     local_28 = (HKEY)0;
@@ -73,9 +73,9 @@ DWORD PECMD_RegScrubKey(HKEY param_1, LPCWSTR param_2, unsigned int param_3)
         if ((param_3 & 1) != 0) {
             RegDeleteValueW(local_28, (LPCWSTR)g_szEmpty);
         }
-        DVar2 = RegQueryInfoKeyW(local_28, (LPWSTR)0, (DWORD *)0, (DWORD *)0,
-                                 &local_30, local_res20, (DWORD *)0, &local_34,
-                                 &local_38, (DWORD *)0, (DWORD *)0, (FILETIME *)0);
+        DVar2 = RegQueryInfoKeyW(local_28, (LPWSTR)0, (DWORD *)0, (DWORD *)0, &local_30,
+                                 local_res20, (DWORD *)0, &local_34, &local_38, (DWORD *)0,
+                                 (DWORD *)0, (FILETIME *)0);
         if (local_res20[0] < local_38) {
             local_res20[0] = local_38;
         }
@@ -87,12 +87,12 @@ DWORD PECMD_RegScrubKey(HKEY param_1, LPCWSTR param_2, unsigned int param_3)
                 for (;;) {
                     DVar2 = DVar3;
                     DVar1 = DVar1 - 1;
-                    if (!(-1 < (int)DVar1)) break;
+                    if (!(-1 < (int)DVar1))
+                        break;
                     local_2c = local_res20[0] * 4 + 1;
                     *local_20 = L'\0';
-                    DVar3 = RegEnumValueW(local_28, DVar1, local_20, &local_2c,
-                                          (DWORD *)0, (DWORD *)0, (BYTE *)0,
-                                          (DWORD *)0);
+                    DVar3 = RegEnumValueW(local_28, DVar1, local_20, &local_2c, (DWORD *)0,
+                                          (DWORD *)0, (BYTE *)0, (DWORD *)0);
                     if ((DVar3 == 0) && (DVar3 = DVar2, *local_20 != L'\0')) {
                         DVar2 = RegDeleteValueW(local_28, local_20);
                         if (DVar2 != 0) {
@@ -107,15 +107,15 @@ DWORD PECMD_RegScrubKey(HKEY param_1, LPCWSTR param_2, unsigned int param_3)
                 for (;;) {
                     DVar2 = DVar3;
                     DVar1 = DVar1 - 1;
-                    if (!(-1 < (int)DVar1)) break;
+                    if (!(-1 < (int)DVar1))
+                        break;
                     local_2c = local_res20[0] * 4 + 1;
                     *local_20 = L'\0';
-                    DVar3 = RegEnumKeyExW(local_28, DVar1, local_20, &local_2c,
-                                          (DWORD *)0, (LPWSTR)0, (DWORD *)0,
-                                          (FILETIME *)0);
+                    DVar3 = RegEnumKeyExW(local_28, DVar1, local_20, &local_2c, (DWORD *)0,
+                                          (LPWSTR)0, (DWORD *)0, (FILETIME *)0);
                     if ((DVar3 == 0) && (DVar3 = DVar2, *local_20 != L'\0')) {
-                        DVar2 = ((LONG (*)(HKEY, LPCWSTR))(uintptr_t)g_pSHDeleteKeyW)(
-                            local_28, local_20);
+                        DVar2 = ((LONG (*)(HKEY, LPCWSTR))(uintptr_t)g_pSHDeleteKeyW)(local_28,
+                                                                                      local_20);
                         if (DVar2 != 0) {
                             DVar3 = DVar2;
                         }
@@ -136,7 +136,7 @@ DWORD PECMD_RegScrubKey(HKEY param_1, LPCWSTR param_2, unsigned int param_3)
 uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
 {
     WCHAR WVar1;
-    int   iVar4;
+    int iVar4;
     int64_t lVar5;
     LPCWSTR pWVar6;
     WCHAR *pWVar7;
@@ -146,7 +146,7 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
     WCHAR *local_res18;
     WCHAR *local_res20;
     WCHAR *local_58;
-    void  *local_50;
+    void *local_50;
     int64_t local_48[2];
 
     local_res10 = param_2;
@@ -181,9 +181,8 @@ uint64_t PECMD_SntpResolveServer(int64_t *param_1, LPCWSTR param_2)
             g_qMode = 2;
         }
         WVar1 = *local_res10;
-        while (WVar1 != L'\0' &&
-               ((((unsigned short)WVar1 < 9) || (0xd < (unsigned short)WVar1)) &&
-                (WVar1 != L' '))) {
+        while (WVar1 != L'\0' && ((((unsigned short)WVar1 < 9) || (0xd < (unsigned short)WVar1)) &&
+                                  (WVar1 != L' '))) {
             local_res10 = local_res10 + 1;
             WVar1 = *local_res10;
         }
@@ -283,9 +282,8 @@ uint64_t PECMD_ReadTipDummyConfig(void)
         local_res18[0] = 1;
         local_res8[0] = 0x1ffe;
         local_res20 = local_30;
-        DVar2 = PECMD_RegQuery(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"),
-                               WSTR("TIPSDUMMY"), local_res18, (BYTE *)local_30,
-                               local_res8);
+        DVar2 = PECMD_RegQuery(HKEY_LOCAL_MACHINE, WSTR("SOFTWARE\\PELOGON"), WSTR("TIPSDUMMY"),
+                               local_res18, (BYTE *)local_30, local_res8);
         bVar5 = (DVar2 == 0);
         local_res8[0] = (DWORD)(-(uint32_t)bVar5) & local_res8[0];
         local_30[local_res8[0] >> 1] = L'\0';
@@ -296,7 +294,7 @@ uint64_t PECMD_ReadTipDummyConfig(void)
             lstrcatW(local_30 + 0x1000, WSTR(".USRCFG.INI"));
             local_38 = (HANDLE)0;
             PECMD_OpenFileHandle(&local_38, local_30 + 0x1000, 0x80000000u, 7,
-                          (LPSECURITY_ATTRIBUTES)0, 3, 0x80, (HANDLE)0);
+                                 (LPSECURITY_ATTRIBUTES)0, 3, 0x80, (HANDLE)0);
             hObject = local_38;
             local_res10[0] = 0;
             *local_30 = L'\0';
@@ -327,8 +325,7 @@ uint64_t PECMD_ReadTipDummyConfig(void)
                 }
                 wVar1 = *local_res20;
             }
-            if ((hObject != (HANDLE)0) &&
-                (hObject != (HANDLE)(uintptr_t)-1)) {
+            if ((hObject != (HANDLE)0) && (hObject != (HANDLE)(uintptr_t)-1)) {
                 CloseHandle(hObject);
             }
         }

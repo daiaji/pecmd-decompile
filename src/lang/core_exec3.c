@@ -23,10 +23,11 @@
 #include "pecmd_defs.h"
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
-extern void PECMD_ZeroLenBuf(void *p);         /* @0x14005b0b8 */
-extern DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf, LPWSTR *last); /* @0x14006459c */
-extern void FUN_14004E2CC(int64_t table, int64_t *task);  /* @0x14004e2cc */
-extern void FUN_14006E8F4(int64_t table);               /* @0x14006e8f4 */
+extern void PECMD_ZeroLenBuf(void *p); /* @0x14005b0b8 */
+extern DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf,
+                           LPWSTR *last);                /* @0x14006459c */
+extern void FUN_14004E2CC(int64_t table, int64_t *task); /* @0x14004e2cc */
+extern void FUN_14006E8F4(int64_t table);                /* @0x14006e8f4 */
 
 /* ========== PECMD_SetEnvIfChanged @0x140061508 ==========
  * 设置环境变量（仅当与当前值不同时写入）。
@@ -53,7 +54,8 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
     WCHAR *file = NULL;
     LPCWSTR raw = curfile;
 
-    if (((flag >> 0x10 & 1) != 0) || ((flag & 0x40) == 0)) bSet = true;
+    if (((flag >> 0x10 & 1) != 0) || ((flag & 0x40) == 0))
+        bSet = true;
 
     PECMD_AllocWStringBuffer((WCHAR **)&cur, 0x41c);
     *cur = L'\0';
@@ -69,27 +71,31 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
     if (curfile != NULL && !(curfile[0] == L'#' && curfile[1] != L'\0' && curfile[1] < 0x90)) {
         if (lstrcmpW(WSTR("**#101"), curfile) == 0) {
             p = WSTR("#101");
-        } else {
-            if (curfile[0] == L'*' && curfile[1] == L'*' &&
-                curfile[2] == L'm' && curfile[3] == L'a' && curfile[4] == L':' &&
-                curfile[5] == L':') {
+        }
+        else {
+            if (curfile[0] == L'*' && curfile[1] == L'*' && curfile[2] == L'm' &&
+                curfile[3] == L'a' && curfile[4] == L':' && curfile[5] == L':') {
                 /* **map: 前缀 — 跳过 */
                 p = curfile + 2;
-            } else {
+            }
+            else {
                 /* 普通路径：去引号/前缀 */
                 WCHAR *s = (WCHAR *)curfile;
                 if (*s == L'"') {
                     s++;
                     WCHAR *e = s;
-                    while (*e != L'\0' && *e != L'"') e++;
+                    while (*e != L'\0' && *e != L'"')
+                        e++;
                     if (*e != L'\0') {
                         *e = L'\0';
                         e++;
                     }
                     /* TODO(verify): 引号后残留并入 file */
                     p = s;
-                } else {
-                    if (*s == L'*') s++;
+                }
+                else {
+                    if (*s == L'*')
+                        s++;
                     p = s;
                 }
             }
@@ -113,26 +119,32 @@ int32_t PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag)
     }
 
     /* 大写首字母 */
-    if (file[0] > 0x60 && file[0] < 0x7b) file[0] = file[0] & 0xffdf;
+    if (file[0] > 0x60 && file[0] < 0x7b)
+        file[0] = file[0] & 0xffdf;
 
     FUN_1400629B8(script, WSTR("&&CurFile"), file);
-    if (bSet) PECMD_SetEnvIfChanged(WSTR("CurFile"), file);
+    if (bSet)
+        PECMD_SetEnvIfChanged(WSTR("CurFile"), file);
 
     /* 目录部分 */
     {
         WCHAR *slash = StrRChrW(file, NULL, L'\\');
-        if (slash != NULL) slash[1] = L'\0';
+        if (slash != NULL)
+            slash[1] = L'\0';
         if ((flag & 0x40) == 0) {
             SetCurrentDirectoryW(file);
         }
-        if (slash != NULL) *slash = L'\0';
+        if (slash != NULL)
+            *slash = L'\0';
         FUN_1400629B8(script, WSTR("&&CurDir"), file);
-        if (bSet) PECMD_SetEnvIfChanged(WSTR("CurDir"), file);
+        if (bSet)
+            PECMD_SetEnvIfChanged(WSTR("CurDir"), file);
 
         /* 盘符部分 */
         file[2] = L'\0';
         FUN_1400629B8(script, WSTR("&&CurDrv"), file);
-        if (bSet) PECMD_SetEnvIfChanged(WSTR("CurDrv"), file);
+        if (bSet)
+            PECMD_SetEnvIfChanged(WSTR("CurDrv"), file);
     }
 
     PECMD_FreeStrBuf(&file);
@@ -189,7 +201,7 @@ void FUN_14005B7E8(char *nid)
     }
     *nid = '\0';
     memset(nid + 0x10, 0, 0x3d0);
-    nid[0x10] = (char)0xd0;   /* cbSize 低字节 (sizeof-4=0x3d0 实际 TODO(verify)) */
+    nid[0x10] = (char)0xd0; /* cbSize 低字节 (sizeof-4=0x3d0 实际 TODO(verify)) */
     nid[0x11] = 0x03;
     nid[0x12] = 0;
     nid[0x13] = 0;
@@ -214,7 +226,8 @@ int32_t PECMD_LoadOle32Apis(void)
 void FUN_140017F54(int *blk)
 {
     if (*blk == 1 && *(int64_t *)(blk + 6) != 0) {
-        if (g_pMapBlk == blk) g_pMapBlk = NULL;
+        if (g_pMapBlk == blk)
+            g_pMapBlk = NULL;
         if (*(int64_t *)(blk + 6) != 0) {
             (*(void (**)(int64_t, int, int))(blk + 2))(*(int64_t *)(blk + 6), 0, 0);
         }
@@ -260,7 +273,8 @@ void PECMD_ShutdownCom(void)
 void FUN_14004EAA8(int64_t table, int min)
 {
     int n;
-    if (min < 0) min = 0;
+    if (min < 0)
+        min = 0;
     if (*(int64_t *)table != 0) {
         n = *(int32_t *)(table + 8);
         while (min < n) {
@@ -287,9 +301,9 @@ void FUN_14004EAA8(int64_t table, int min)
  */
 void FUN_14004E2CC(int64_t table, int64_t *task)
 {
-    LPCWSTR lpString = (LPCWSTR)task[2];   /* 前缀 */
-    LPCWSTR lpStr1 = (LPCWSTR)task[1];     /* 命令 */
-    LPCWSTR lpStr0 = (LPCWSTR)task[0];     /* 回调 */
+    LPCWSTR lpString = (LPCWSTR)task[2]; /* 前缀 */
+    LPCWSTR lpStr1 = (LPCWSTR)task[1];   /* 命令 */
+    LPCWSTR lpStr0 = (LPCWSTR)task[0];   /* 回调 */
     WCHAR *buf;
     WCHAR *old;
 
@@ -303,15 +317,17 @@ void FUN_14004E2CC(int64_t table, int64_t *task)
             /* 内置命令 **..^^ */
             if (*(int64_t *)(lpString - 4) < 5 || lpString[1] != L'\0' || lpString[2] != L'^') {
                 /* TODO(verify): 递归执行 */
-            } else {
+            }
+            else {
                 (*(void (**)(void))(*(int64_t *)(lpString + 4) + 8))();
             }
-        } else {
+        }
+        else {
             /* 拼接 "prefix &cmd 回调" 并执行 */
             PECMD_AllocWStringBuffer((WCHAR **)&buf, (int64_t)i2 + i3 + i4 + 4);
             lstrcpyW(buf, lpString);
             buf[i2] = L' ';
-            buf[i2+1] = L'&';
+            buf[i2 + 1] = L'&';
             lstrcpyW(buf + i2 + 2, lpStr1);
             buf[i2 + 2 + i3] = L' ';
             lstrcpyW(buf + i2 + 3 + i3, lpStr0);
@@ -357,21 +373,24 @@ void FUN_14006E8F4(int64_t table)
         if (*(int32_t *)(table + 0xe8) > 0) {
             maxRef = *(int32_t *)(*tasks + 0x14);
         }
-        if (*(int64_t *)(table + 0x38) == 0 ||
-            *(int64_t *)(table + 0x38) == (int64_t)&g_Script) {
+        if (*(int64_t *)(table + 0x38) == 0 || *(int64_t *)(table + 0x38) == (int64_t)&g_Script) {
             maxRef = 0;
         }
         /* 引用计数裁剪 */
         for (i = 1; i < *(int32_t *)(table + 0xe8); i++) {
             int ref = *(int32_t *)(tasks[i] + 0x14);
-            if (ref < 0) *(uint32_t *)(tasks[i] + 0x14) = 0;
-            else if (maxRef < ref) *(int32_t *)(tasks[i] + 0x14) = maxRef;
-            else if (ref < maxRef) maxRef = ref;
+            if (ref < 0)
+                *(uint32_t *)(tasks[i] + 0x14) = 0;
+            else if (maxRef < ref)
+                *(int32_t *)(tasks[i] + 0x14) = maxRef;
+            else if (ref < maxRef)
+                maxRef = ref;
         }
         /* 释放无父任务 */
         while (*(int32_t *)(table + 0xe8) > 0) {
             int last = *(int32_t *)(table + 0xe8) - 1;
-            if (*(int32_t *)(tasks[last] + 0x14) > 0 && *(int64_t *)(table + 0x38) != 0) break;
+            if (*(int32_t *)(tasks[last] + 0x14) > 0 && *(int64_t *)(table + 0x38) != 0)
+                break;
             *(int32_t *)(table + 0xe8) = last;
             (*(void (**)(void))(*(int64_t *)tasks[last] + 8))();
             tasks[*(int32_t *)(table + 0xe8)] = 0;

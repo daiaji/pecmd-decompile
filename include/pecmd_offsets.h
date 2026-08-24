@@ -26,17 +26,17 @@
 /* B3 提示: 本宏族的类型化访问器已迁至 include/domain/pecmd_domain.h
  * (WO_* 系列)。新代码请用 domain 头; 本头保留供存量引用渐进迁移。 */
 
-#define OBJ_HWND         0x20   /* 子窗口/控件 HWND */
-#define OBJ_BRUSH        0x38   /* 画刷/旧 GDI 对象 */
-#define OBJ_COLOR        0x40   /* 颜色/前景色 */
-#define OBJ_CUSTOMMODE   0x68   /* 自定义模式/字体句柄（按对象族区分） */
-#define OBJ_WPARAM       0x70   /* 暂存 wParam/消息参数 */
-#define OBJ_LINK         0xd0   /* 关联对象/内部数据 */
-#define OBJ_TEXTCOLOR    0xe0   /* 文本颜色 */
-#define OBJ_FLAGS        0xe8   /* 样式/标志 */
-#define OBJ_BITMAP       0xe8   /* 控件背景位图/缓存（部分对象族） */
-#define OBJ_SUBWND       0xf0   /* 子窗口对象/关联窗口 */
-#define OBJ_DOUBLE_200   0x200  /* double 字段（滚动比例等） */
-#define OBJ_FLAGS_3B4    0x3b4  /* 标志字段 */
+#define OBJ_HWND       0x20  /* 子窗口/控件 HWND */
+#define OBJ_BRUSH      0x38  /* 画刷/旧 GDI 对象 */
+#define OBJ_COLOR      0x40  /* 颜色/前景色 */
+#define OBJ_CUSTOMMODE 0x68  /* 自定义模式/字体句柄（按对象族区分） */
+#define OBJ_WPARAM     0x70  /* 暂存 wParam/消息参数 */
+#define OBJ_LINK       0xd0  /* 关联对象/内部数据 */
+#define OBJ_TEXTCOLOR  0xe0  /* 文本颜色 */
+#define OBJ_FLAGS      0xe8  /* 样式/标志 */
+#define OBJ_BITMAP     0xe8  /* 控件背景位图/缓存（部分对象族） */
+#define OBJ_SUBWND     0xf0  /* 子窗口对象/关联窗口 */
+#define OBJ_DOUBLE_200 0x200 /* double 字段（滚动比例等） */
+#define OBJ_FLAGS_3B4  0x3b4 /* 标志字段 */
 
 #endif /* PECMD_OFFSETS_H */

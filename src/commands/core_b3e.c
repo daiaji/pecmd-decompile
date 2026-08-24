@@ -47,26 +47,24 @@ extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x14006
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint64_t PECMD_ParseDateTimeSpec(int64_t *script, uint64_t cmd, uint32_t flags,
-                              uint64_t extra);
-extern int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out,
-                             LPCWSTR extra, uint32_t flags);
-extern int64_t PECMD_ExecuteCommand(int64_t *script, LPCWSTR cmd, uint64_t ctx,
-                             LPCWSTR extra, uint32_t flags, int64_t a, int b);
+                                        uint64_t extra);
+extern int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out, LPCWSTR extra,
+                                    uint32_t flags);
+extern int64_t PECMD_ExecuteCommand(int64_t *script, LPCWSTR cmd, uint64_t ctx, LPCWSTR extra,
+                                    uint32_t flags, int64_t a, int b);
 extern void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2);
 extern void PECMD_ReleaseGdiImage(int64_t obj);
 extern void FUN_1400FD1A8(void *obj);
 extern void FUN_14005B7E8(char *s);
 extern void PECMD_ControlHoverTimer(int64_t *obj, uint32_t msg); /* @0x1400fd86c */
 extern uint64_t FUN_140063060(uint32_t *buf);
-extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char *out,
-                          uint64_t ctx, int mode);
+extern bool PECMD_CheckNetAddress(LPCSTR cmd, uint32_t flags, char *state, char *out, uint64_t ctx,
+                                  int mode);
 extern void FUN_14005CC4C(void);
 extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out);
 extern void *PECMD_AllocMagicString(LPCWSTR src);
-extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
-                          DWORD *readCount);
-extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
-                            uint32_t c, WCHAR *d);
+extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused, DWORD *readCount);
+extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b, uint32_t c, WCHAR *d);
 
 /* ---- 本批引用的全局数据 ---- */
 extern HWND g_hwndD310;
@@ -92,9 +90,11 @@ void PECMD_DispatchCommand(int64_t *script, LPCWSTR cmd, int64_t *out)
 {
     if (*cmd == L'$') {
         PECMD_ParseDateTimeSpec(script, (uint64_t)(uintptr_t)(cmd + 1), 0, 0);
-    } else if (*cmd == L'@') {
+    }
+    else if (*cmd == L'@') {
         PECMD_ExecSubCommand(script, (WCHAR *)(cmd + 1), out, NULL, 0);
-    } else {
+    }
+    else {
         PECMD_ExecuteCommand(script, cmd, (uint64_t)(uintptr_t)out, NULL, 0, 0, 0);
     }
 }
@@ -153,10 +153,11 @@ int PECMD_PadTrailingSpaces(char *s, int len)
     pcVar2[1] = '\0';
     *pcVar2 = '\0';
     for (; s < pcVar2; pcVar2--) {
-        if (*pcVar2 != '\0') goto LAB_14005cc31;
+        if (*pcVar2 != '\0')
+            goto LAB_14005cc31;
     }
     if (*pcVar2 != '\0') {
-LAB_14005cc31:
+    LAB_14005cc31:
         pcVar2++;
     }
     for (; s < pcVar2; s++) {
@@ -271,8 +272,7 @@ uint64_t PECMD_ReadByte_f264(int64_t stream)
 /* ========== PECMD_ErrorHandlerWrap @0x1400601b8 ==========
  * 错误处理封装。
  */
-void PECMD_ErrorHandlerWrap(uint8_t *flags, int mode, uint64_t a, int64_t b,
-                   uint32_t c, WCHAR *d)
+void PECMD_ErrorHandlerWrap(uint8_t *flags, int mode, uint64_t a, int64_t b, uint32_t c, WCHAR *d)
 {
     if (((*flags & 0x11) == 0) || (d != NULL)) {
         PECMD_OpenLockVolume(mode, a, b, c, d);
@@ -328,8 +328,8 @@ int64_t PECMD_GetTimeMs(void)
     QueryPerformanceCounter(&counter);
     uint64_t q = (uint64_t)counter;
     int64_t freq = g_QPFreq;
-    return (int64_t)(((q - (q / (uint64_t)freq) * (uint64_t)freq) * 1000) /
-                     (uint64_t)freq + (q / (uint64_t)freq) * 1000);
+    return (int64_t)(((q - (q / (uint64_t)freq) * (uint64_t)freq) * 1000) / (uint64_t)freq +
+                     (q / (uint64_t)freq) * 1000);
 }
 
 /* ========== PECMD_GetTimeNs @0x140061020 ==========
@@ -342,7 +342,8 @@ int64_t PECMD_GetTimeNs(void)
     uint64_t q = (uint64_t)counter;
     int64_t freq = g_QPFreq;
     return (int64_t)(((q - (q / (uint64_t)freq) * (uint64_t)freq) * 1000000000ULL) /
-                     (uint64_t)freq + (q / (uint64_t)freq) * 1000000000ULL);
+                         (uint64_t)freq +
+                     (q / (uint64_t)freq) * 1000000000ULL);
 }
 
 /* ========== PECMD_FreeModules @0x140061bf4 ==========
@@ -442,13 +443,13 @@ void PECMD_SendCtrlMessage_3d00(int64_t obj, LPARAM lParam1, LPARAM lParam2)
 int64_t PECMD_ParseHex_4a34(uint16_t *s)
 {
     int64_t lVar3 = 0;
-    while (((0x2f < *s && (*s < 0x3a)) ||
-            ((0x60 < (*s | 0x20) && ((*s | 0x20) < 0x67))))) {
+    while (((0x2f < *s && (*s < 0x3a)) || ((0x60 < (*s | 0x20) && ((*s | 0x20) < 0x67))))) {
         uint16_t uVar1 = *s++;
         int iVar2;
         if (uVar1 < 0x3a) {
             iVar2 = uVar1 - 0x30;
-        } else {
+        }
+        else {
             iVar2 = (uVar1 | 0x20) - 0x57;
         }
         lVar3 = lVar3 * 0x10 + iVar2;
@@ -489,8 +490,7 @@ uint64_t PECMD_ControlMessage(HWND hwnd, uint32_t msg, uint64_t unused, LPARAM l
 void PECMD_ArrayAppend(int64_t arr, int64_t value)
 {
     int64_t *plVar1 = (int64_t *)(uintptr_t)PECMD_HeapRealloc(
-        *(void **)(arr + 0xe0),
-        (size_t)((int64_t)(*(int *)(arr + 0xe8) + 1) << 3));
+        *(void **)(arr + 0xe0), (size_t)((int64_t)(*(int *)(arr + 0xe8) + 1) << 3));
     *(int64_t **)(arr + 0xe0) = plVar1;
     plVar1[*(int *)(arr + 0xe8)] = value;
     *(int *)(arr + 0xe8) = *(int *)(arr + 0xe8) + 1;
@@ -517,7 +517,7 @@ int64_t *PECMD_ReplaceStringSlot(int64_t *ps, uint64_t *src)
  * 命令行处理。
  */
 uint64_t PECMD_ProcessCommandLine(LPCSTR cmd, uint32_t flags, char *state, char *out,
-                       uint64_t unused, uint64_t ctx, int mode)
+                                  uint64_t unused, uint64_t ctx, int mode)
 {
     (void)unused;
     if (*state == '*') {

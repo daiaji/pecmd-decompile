@@ -33,34 +33,36 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 全局 */
-extern WCHAR *g_pLangBuf;        /* DAT_14013ca78 lang 缓冲 */
-extern int64_t g_langLen;        /* DAT_14013ca80 lang 数据长度 */
-extern uint32_t g_dpi;           /* g_dpi */
-extern void *g_subWndProc;       /* DAT_14013c908 原 WndProc */
-extern HANDLE g_pFontBase;      /* DAT_14013e2a8 字体基对象 */
+extern WCHAR *g_pLangBuf;  /* DAT_14013ca78 lang 缓冲 */
+extern int64_t g_langLen;  /* DAT_14013ca80 lang 数据长度 */
+extern uint32_t g_dpi;     /* g_dpi */
+extern void *g_subWndProc; /* DAT_14013c908 原 WndProc */
+extern HANDLE g_pFontBase; /* DAT_14013e2a8 字体基对象 */
 
 /* .rdata 常量 */
-extern double g_fontSizeDef;     /* DAT_1401293c0 = -0x80000000.0 */
-extern double g_fontRound;       /* DAT_140126070 = 0.499 */
-extern double g_fontMinus0;      /* DAT_140125238 = -0.0 */
-extern double g_dpiBase;         /* DAT_140126078 = 72.0 */
+extern double g_fontSizeDef; /* DAT_1401293c0 = -0x80000000.0 */
+extern double g_fontRound;   /* DAT_140126070 = 0.499 */
+extern double g_fontMinus0;  /* DAT_140125238 = -0.0 */
+extern double g_dpiBase;     /* DAT_140126078 = 72.0 */
 
-extern int64_t PECMD_LoadLanguageFile(void);   /* PECMD_LoadLanguageFile */
-extern WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen, int64_t codepage); /* FUN_1400637DC core_init.c */
-extern void FUN_1400633A8(void **ps, int64_t len);  /* FUN_1400633A8 core_thread.c */
-extern void PECMD_ZeroLenBuf(void *p);                /* PECMD_ZeroLenBuf core_thread.c */
+extern int64_t PECMD_LoadLanguageFile(void); /* PECMD_LoadLanguageFile */
+extern WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen,
+                            int64_t codepage);     /* FUN_1400637DC core_init.c */
+extern void FUN_1400633A8(void **ps, int64_t len); /* FUN_1400633A8 core_thread.c */
+extern void PECMD_ZeroLenBuf(void *p);             /* PECMD_ZeroLenBuf core_thread.c */
 
 /* 待实现 (B7 后续/声明) */
-extern uint64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmd);   /* PECMD_RunStartupScript */
-extern int PECMD_ReadFileStr(const WCHAR *path, void **pbuf);                          /* PECMD_ReadFileStr */
-extern int PECMD_EvalExpr(WCHAR **pp, double *out);                                    /* PECMD_ParseParenthesizedExpression */
+extern uint64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag,
+                                       const WCHAR *cmd);     /* PECMD_RunStartupScript */
+extern int PECMD_ReadFileStr(const WCHAR *path, void **pbuf); /* PECMD_ReadFileStr */
+extern int PECMD_EvalExpr(WCHAR **pp, double *out); /* PECMD_ParseParenthesizedExpression */
 
 /* ========== 控件子类化 @0x1400011d4 ========== */
 /* Enter 键 → 向父窗发 WM_COMMAND(id); 其余转发原 WndProc */
 void PECMD_SubclassEnterControl(HWND hwnd, int msg, WPARAM wp, LPARAM lp)
 {
-    if (msg == 0x100 && wp == 0xd) {            /* WM_KEYDOWN VK_RETURN */
-        SendMessageW(GetParent(hwnd), 0x111,     /* WM_COMMAND */
+    if (msg == 0x100 && wp == 0xd) {         /* WM_KEYDOWN VK_RETURN */
+        SendMessageW(GetParent(hwnd), 0x111, /* WM_COMMAND */
                      (WPARAM)(uint16_t)GetDlgCtrlID(hwnd), 0x100);
     }
     if (g_subWndProc) {
@@ -69,8 +71,8 @@ void PECMD_SubclassEnterControl(HWND hwnd, int msg, WPARAM wp, LPARAM lp)
 }
 
 /* ========== 创建控件+子类化 @0x140001258 ========== */
-HWND PECMD_CreateControlSubclass(LPCWSTR cls, LPCWSTR text, DWORD style, int x, int y,
-                      int w, int h, HWND parent, HMENU id, HINSTANCE inst, void *extra)
+HWND PECMD_CreateControlSubclass(LPCWSTR cls, LPCWSTR text, DWORD style, int x, int y, int w, int h,
+                                 HWND parent, HMENU id, HINSTANCE inst, void *extra)
 {
     HWND hw;
     LONG_PTR old;
@@ -122,7 +124,8 @@ void *PECMD_AllocSmallObject(void **ps)
     *ps = NULL;
     for (;;) {
         hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, 10);
-        if (hdr) break;
+        if (hdr)
+            break;
         FUN_1400630D0(2);
     }
     *(size_t *)hdr = 2;
@@ -156,7 +159,8 @@ int FUN_140067B78(WCHAR **pp, uint64_t *out)
             while (((WCHAR)(*p - L'0') <= 9) || ((WCHAR)((*p | 0x20) - L'a') <= 5)) {
                 if ((WCHAR)(*p - L'0') <= 9) {
                     *out = *out * 16 + (uint64_t)(*p - L'0');
-                } else {
+                }
+                else {
                     *out = *out * 16 + (uint64_t)((*p | 0x20) - L'a' + 10);
                 }
                 p++;
@@ -226,7 +230,7 @@ bool FUN_1400E5900(HWND hwnd, uint32_t clear, uint64_t set)
 int PECMD_GetDpi(HWND hwnd)
 {
     HDC dc = GetDC(hwnd);
-    int v = GetDeviceCaps(dc, 0x5a);    /* LOGPIXELSX */
+    int v = GetDeviceCaps(dc, 0x5a); /* LOGPIXELSX */
     if (dc) {
         ReleaseDC(hwnd, dc);
     }
@@ -244,7 +248,7 @@ void PECMD_GetDpiCached(HWND hwnd)
 /* ========== EnumChildWindows 回调 @0x140062970 ========== */
 int PECMD_EnumChildProc(HWND hwnd, WPARAM lp)
 {
-    SendMessageW(hwnd, 0x452, lp, 1);   /* WM_SETFONT */
+    SendMessageW(hwnd, 0x452, lp, 1); /* WM_SETFONT */
     return 1;
 }
 
@@ -283,7 +287,8 @@ void FUN_14005D9A8(void *mbox, int mode)
         if ((*(uint32_t *)((uint8_t *)mbox + 0xd0) >> 0xd & 1) != 0) {
             return;
         }
-    } else if (mode != 0x10) {
+    }
+    else if (mode != 0x10) {
         goto beep;
     }
     {
@@ -390,11 +395,12 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
     WCHAR *buf;
     (void)flag;
 
-    d = g_fontRound;                    /* 0.499 */
+    d = g_fontRound; /* 0.499 */
     s = *size;
     if (s < 0.0) {
         s = s - g_fontRound;
-    } else {
+    }
+    else {
         s = s + g_fontRound;
     }
     weight = *lf;
@@ -404,7 +410,7 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
         weight = -weight;
     }
     FUN_1400702B0(&buf, name);
-    s = g_fontMinus0;                   /* -0.0 */
+    s = g_fontMinus0; /* -0.0 */
     special = -0x80000000;
     t = buf;
     if ((h < 1) || (*lf == (int)0x80000000)) {
@@ -419,7 +425,8 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
                 h = (int)(v + g_fontRound);
             }
             flag = 1;
-        } else if (h == -1) {
+        }
+        else if (h == -1) {
             h = (int)0x80000000;
         }
         if (h != special) {
@@ -427,9 +434,10 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
             weight = h;
         }
         face = buf;
-    } else {
+    }
+    else {
         int dpi2 = dpi;
-        if (*t == L'~') {               /* 固定字号模式 */
+        if (*t == L'~') { /* 固定字号模式 */
             t++;
             if (dpi != 0) {
                 dpi2 = 0x60;
@@ -439,7 +447,8 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
             if (*t != L'\0') {
                 buf = t + 1;
             }
-        } else if (*t == L'^') {        /* DPI 缩放模式 */
+        }
+        else if (*t == L'^') { /* DPI 缩放模式 */
             t++;
             flag = 4;
             if (dpi == 0) {
@@ -448,7 +457,8 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
                 if (*t != L'\0') {
                     buf = t + 1;
                 }
-            } else {
+            }
+            else {
                 dpi2 = 0x48;
             }
         }
@@ -458,14 +468,15 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
                 if (*size <= 0.0 && *size != 0.0) {
                     *size = s - *size;
                 }
-                d = ((double)dpi2 * *size) / g_dpiBase;   /* /72 */
+                d = ((double)dpi2 * *size) / g_dpiBase; /* /72 */
                 *size = d;
                 weight = (int)(d + g_fontRound);
                 *lf = -weight;
                 if (lf[1] != 0) {
                     lf[1] = -weight / 2;
                 }
-            } else {
+            }
+            else {
                 if (h != special) {
                     *lf = h;
                     weight = h;
@@ -486,12 +497,9 @@ HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name)
     {
         uint32_t b5 = (uint32_t)lf[5];
         uint32_t b6 = (uint32_t)lf[6];
-        HFONT f = CreateFontW(-weight, lf[1], lf[2], lf[3], lf[4],
-                              (uint8_t)b5, (uint8_t)(b5 >> 8),
-                              (uint8_t)(b5 >> 16), (uint8_t)(b5 >> 24),
-                              (uint8_t)b6, (uint8_t)(b6 >> 8),
-                              (uint8_t)(b6 >> 16), (uint8_t)(b6 >> 24),
-                              face);
+        HFONT f = CreateFontW(-weight, lf[1], lf[2], lf[3], lf[4], (uint8_t)b5, (uint8_t)(b5 >> 8),
+                              (uint8_t)(b5 >> 16), (uint8_t)(b5 >> 24), (uint8_t)b6,
+                              (uint8_t)(b6 >> 8), (uint8_t)(b6 >> 16), (uint8_t)(b6 >> 24), face);
         PECMD_FreeStrBuf(&buf);
         return f;
     }
@@ -505,10 +513,10 @@ HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name)
 
     FUN_1400633A8(&buf, 0x5c);
     PECMD_ZeroLenBuf(buf);
-    *(uint32_t *)((uint8_t *)buf + 8) = 400;    /* lfWeight 默认 */
+    *(uint32_t *)((uint8_t *)buf + 8) = 400; /* lfWeight 默认 */
     GetObjectW(obj, 0x5c, buf);
-    *(uint32_t *)buf = 0;                       /* lfHeight */
-    *(uint8_t *)((uint8_t *)buf + 0x17) = 1;    /* DEFAULT_CHARSET */
+    *(uint32_t *)buf = 0;                    /* lfHeight */
+    *(uint8_t *)((uint8_t *)buf + 0x17) = 1; /* DEFAULT_CHARSET */
     f = FUN_1400B1F34((int *)buf, size, name);
     PECMD_FreeStrBuf((WCHAR **)&buf);
     return f;
@@ -541,7 +549,7 @@ void PECMD_GetUiFontById(void **pfont, UINT id)
     }
     sz = g_fontSizeDef;
     base = (HANDLE)-1;
-    if (g_pFontBase) {                          /* DAT_14013e2a8 */
+    if (g_pFontBase) { /* DAT_14013e2a8 */
         base = g_pFontBase;
     }
     if (g_dpi < 1) {
@@ -566,7 +574,7 @@ int64_t PECMD_LoadLanguageFile(void)
     int64_t r;
 
     if (g_pLangBuf == NULL) {
-        FUN_1400637DC(&g_pLangBuf, "", -1, -1);    /* 空表 */
+        FUN_1400637DC(&g_pLangBuf, "", -1, -1); /* 空表 */
         g_langLen = 0;
         PECMD_AllocString(&buf, 0x105);
         *buf = L'\0';
@@ -578,7 +586,7 @@ int64_t PECMD_LoadLanguageFile(void)
             FUN_14006375C((WCHAR **)&buf, s);
             PECMD_FreeStrBuf(&s);
         }
-        FUN_14006375C((WCHAR **)&buf, g_pLocale);       /* DAT_14013ca70 代码页串 */
+        FUN_14006375C((WCHAR **)&buf, g_pLocale); /* DAT_14013ca70 代码页串 */
         {
             WCHAR *s = NULL;
             FUN_1400637DC(&s, ".lang", -1, -1);
@@ -588,7 +596,7 @@ int64_t PECMD_LoadLanguageFile(void)
         ftmp = NULL;
         r = PECMD_ReadFileStr(buf, &ftmp);
         if (r == -2) {
-            buf[len] = L'\0';                        /* 回退: 去掉扩展名再试 */
+            buf[len] = L'\0'; /* 回退: 去掉扩展名再试 */
             WCHAR *s = NULL;
             FUN_1400637DC(&s, ".lang", -1, -1);
             FUN_14006375C((WCHAR **)&buf, s);
@@ -612,32 +620,35 @@ int64_t PECMD_LoadLanguageFile(void)
                 src = q;
                 p = src;
                 /* #str: 段逐条解析, \r \n \\) 转义 */
-                while (*p != L'\0' &&
-                       (FUN_14005C788("#str:", p, 5) == 0)) {
+                while (*p != L'\0' && (FUN_14005C788("#str:", p, 5) == 0)) {
                     WCHAR *line = p;
                     while (*line != L'\0' && *line != L'\r' && *line != L'\n') {
                         line++;
                     }
                     p += 5;
-                    if ((WCHAR)(*p + 0xff00) < 10) {   /* 16 进制数字开头 */
+                    if ((WCHAR)(*p + 0xff00) < 10) { /* 16 进制数字开头 */
                         while (p < line) {
                             if (*p == L'\\') {
                                 WCHAR c1 = p[1];
                                 if (c1 == L'r') {
                                     *dst++ = L'\r';
                                     p += 2;
-                                } else if (c1 == L'n') {
+                                }
+                                else if (c1 == L'n') {
                                     *dst++ = L'\n';
                                     p += 2;
-                                } else {
+                                }
+                                else {
                                     *dst++ = L'\\';
                                     if (c1 == L'\\') {
                                         p += 2;
-                                    } else {
+                                    }
+                                    else {
                                         p++;
                                     }
                                 }
-                            } else {
+                            }
+                            else {
                                 *dst++ = *p++;
                             }
                         }

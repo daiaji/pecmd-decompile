@@ -1,0 +1,15 @@
+# B4: 项目格式规范 (PRODUCTION_ROADMAP §3.B.4-4)
+BasedOnStyle: LLVM
+ColumnLimit: 100
+IndentWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Stroustrup
+PointerAlignment: Right
+AlignConsecutiveMacros: Consecutive
+SortIncludes: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2

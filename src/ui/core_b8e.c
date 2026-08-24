@@ -47,7 +47,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void PECMD_DeleteEntryGdiHandle(int64_t obj);            /* @0x1400f2b6c */
+extern void PECMD_DeleteEntryGdiHandle(int64_t obj); /* @0x1400f2b6c */
 
 /* ---- 全局数据符号 ---- */
 extern uint8_t PTR_FUN_14012bbf0[];
@@ -61,20 +61,17 @@ extern void PECMD_FreeNamedEntryArray(uint64_t *arr);
 extern void FUN_1400E8940(uint64_t *obj);
 extern void FUN_1400F0648(uint64_t *obj, uint64_t value);
 extern void PECMD_HeapFreeWithHeader(void *ps);
-extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
-                           uint32_t esize);
-extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data,
-                          int64_t esize, int32_t mode);
+extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize);
+extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, int64_t esize,
+                          int32_t mode);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
 extern void PECMD_ForcePosChanged(HWND hwnd);
 extern int64_t PECMD_ItemPropFindIdxList2(int64_t obj, int idx, int *out);
 extern int64_t PECMD_ItemPropFindIdxList4(int64_t obj, int idx, int *out);
 extern int64_t PECMD_ItemPropFindIdxList1(int64_t obj, int idx, int *out);
 extern int64_t PECMD_ItemPropFindIdxList3(int64_t obj, int idx, int *out);
-extern int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int idx, int mode,
-                             int *out);
-extern int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int idx, int mode,
-                             int *out);
+extern int64_t PECMD_ItemPropFindIdxSub1(int64_t obj, int idx, int mode, int *out);
+extern int64_t PECMD_ItemPropFindIdxSub2(int64_t obj, int idx, int mode, int *out);
 extern void PECMD_ListSubItemHitTest(int64_t obj, int *out_index, int *out_flag); /* @0x1400f3308 */
 extern void PECMD_TableSetCurSel(int64_t obj, int current, int scroll);
 extern void *FUN_1400E57C0(void *obj);
@@ -105,8 +102,7 @@ bool PECMD_ZwUnmapViewOfSection(HANDLE process, void *baseAddress)
 bool FUN_1400E5960(HWND hwnd, uint32_t clearBits, uint32_t setBits)
 {
     LONG_PTR oldStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
-    LONG_PTR newStyle = (LONG_PTR)(((uint64_t)oldStyle & ~(uint64_t)clearBits) |
-                                   (uint64_t)setBits);
+    LONG_PTR newStyle = (LONG_PTR)(((uint64_t)oldStyle & ~(uint64_t)clearBits) | (uint64_t)setBits);
 
     SetWindowLongPtrW(hwnd, GWL_EXSTYLE, newStyle);
     return oldStyle != newStyle;
@@ -122,9 +118,10 @@ bool FUN_1400E6350(HWND hwnd, POINT *ctx)
 
     if (FUN_1400E6314(hwnd, *ctx) == 0) {
         keepGoing = true;
-    } else {
-        uint64_t hit = SendMessageW(hwnd, 0x45e, (WPARAM)(int64_t)ctx[1].x,
-                                    (LPARAM)(uintptr_t)hwnd);
+    }
+    else {
+        uint64_t hit =
+            SendMessageW(hwnd, 0x45e, (WPARAM)(int64_t)ctx[1].x, (LPARAM)(uintptr_t)hwnd);
         if ((hit >> 0x11 & 1) != 0) {
             *(uintptr_t *)(ctx + 3) = (uintptr_t)hwnd;
         }
@@ -162,7 +159,8 @@ void FUN_1400EC084(uint64_t *out, int64_t obj, uint64_t param4)
         *(uint32_t *)((char *)out + 4) = 1;
         out[2] = (uint64_t)hwnd;
         out[1] = (uint64_t)parent;
-    } else {
+    }
+    else {
         *(uint32_t *)((char *)out + 4) = 0;
         out[1] = (uint64_t)hwnd;
         out[2] = param4;
@@ -172,8 +170,7 @@ void FUN_1400EC084(uint64_t *out, int64_t obj, uint64_t param4)
 /* ========== FUN_1400EC6A8 @0x1400ec6a8 ==========
  * 构造 0x38 字节查找结构，附带最多 0x10 字节附加数据，发送消息 0x432。
  */
-void FUN_1400EC6A8(int64_t obj, int64_t target, uint64_t param3,
-                                   const void *extra, uint64_t param5)
+void FUN_1400EC6A8(int64_t obj, int64_t target, uint64_t param3, const void *extra, uint64_t param5)
 {
     uint64_t msg[7];
 
@@ -243,8 +240,7 @@ void PECMD_PostCtlPressNotify(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
 {
     void (*fn)(uint64_t, uint32_t, uint32_t, uint64_t) =
         *(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8);
-    int32_t lParam32 = (int32_t)(((uint32_t)(packedXY >> 32) << 16) |
-                                 (uint32_t)packedXY);
+    int32_t lParam32 = (int32_t)(((uint32_t)(packedXY >> 32) << 16) | (uint32_t)packedXY);
 
     fn(obj[4], 0x201, wParam, (int64_t)lParam32);
     if ((*(uint8_t *)((char *)obj + OBJ_LINK) & 1) == 0) {
@@ -258,8 +254,8 @@ void PECMD_PostCtlPressNotify(uint64_t *obj, uint32_t wParam, uint64_t packedXY)
  * 更新数组中已存在项：value<0 时释放并清空；否则更新 key/value/扩展字段。
  * TODO(verify): 返回值保留 Ghidra 的指针低字节清零形式，调用方仅关心 AL。
  */
-uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value,
-                               uint32_t field1, int32_t field2)
+uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value, uint32_t field1,
+                                   int32_t field2)
 {
     void **slot;
     void *item;
@@ -273,7 +269,8 @@ uint64_t PECMD_ItemPropUpsertEntry(int64_t *array, int64_t index, int32_t value,
         if (value < 0) {
             *slot = NULL;
             free(item);
-        } else {
+        }
+        else {
             *(int64_t *)((char *)item + 8) = value;
             *(uint32_t *)item = field1;
             if (field2 > -2) {
@@ -295,8 +292,7 @@ uint64_t PECMD_ListInsertItemSetState(int64_t obj, LPARAM param2)
     value = (uint64_t)SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x104d, 0, param2);
     *(uint32_t *)(buf + 12) = 0x1000;
     *(uint32_t *)(buf + 16) = 0xf000;
-    SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x102b,
-                 (WPARAM)(int64_t)(int32_t)value, (LPARAM)buf);
+    SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x102b, (WPARAM)(int64_t)(int32_t)value, (LPARAM)buf);
     return value & 0xffffffff;
 }
 
@@ -316,7 +312,8 @@ void PECMD_SetSelIdxRefresh(int64_t obj, int height, int mode)
         hwnd = *(HWND *)(obj + OBJ_HWND);
         if (mode == 2) {
             erase = FALSE;
-        } else {
+        }
+        else {
             PECMD_ForcePosChanged(hwnd);
             if (height > -2) {
                 return;
@@ -340,7 +337,8 @@ LRESULT PECMD_CtlOnSetFontLinked(int64_t obj, WPARAM wParam, LPARAM lParam)
         *(WPARAM *)(obj + OBJ_WPARAM) = wParam;
         result = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x30, wParam, lParam);
         SendMessageW(*(HWND *)(obj + 0xf8), 0x452, wParam, lParam);
-    } else {
+    }
+    else {
         result = 0;
     }
     return result;
@@ -355,8 +353,8 @@ int64_t *PECMD_ListFindItemRec(int64_t obj, int64_t value)
     int i;
 
     for (i = 0; i < count; i++) {
-        int64_t *slot = (int64_t *)FUN_140063B00(i, (int64_t *)(obj + 0x338),
-                                                 (int64_t *)(obj + 0x340), 8);
+        int64_t *slot =
+            (int64_t *)FUN_140063B00(i, (int64_t *)(obj + 0x338), (int64_t *)(obj + 0x340), 8);
         if ((*slot != 0) && (*(int64_t *)(*slot + 8) == value)) {
             return slot;
         }
@@ -365,8 +363,8 @@ int64_t *PECMD_ListFindItemRec(int64_t obj, int64_t value)
 }
 
 /* ---- 内部辅助：把 {key,value} 节点追加到映射数组 ---- */
-static void PECMD_AddMapEntryToArray(int64_t *array, int64_t *cap, int64_t *cnt,
-                                     uint32_t key, uint64_t value)
+static void PECMD_AddMapEntryToArray(int64_t *array, int64_t *cap, int64_t *cnt, uint32_t key,
+                                     uint64_t value)
 {
     uint32_t *node = (uint32_t *)calloc(1, 0x18);
 
@@ -524,7 +522,8 @@ void PECMD_ListSelectFromHit(int64_t obj)
 
         if (*(int64_t *)(obj + 0x388) < 1) {
             data = 0;
-        } else {
+        }
+        else {
             data = *(int64_t *)(obj + 0x380);
         }
         value = local_res8[0];
@@ -542,8 +541,7 @@ void PECMD_PostCtlPressNotify2(uint64_t *obj, uint32_t wParam, uint64_t packedXY
 {
     void (*fn)(uint64_t, uint32_t, uint32_t, uint64_t) =
         *(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8);
-    int32_t lParam32 = (int32_t)(((uint32_t)(packedXY >> 32) << 16) |
-                                 (uint32_t)packedXY);
+    int32_t lParam32 = (int32_t)(((uint32_t)(packedXY >> 32) << 16) | (uint32_t)packedXY);
 
     fn(obj[4], 0x201, wParam, (int64_t)lParam32);
     if (*(uint8_t *)((char *)obj + OBJ_LINK) == 0) {

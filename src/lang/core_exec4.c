@@ -23,12 +23,13 @@
 
 #include "pecmd_defs.h"
 
-extern int32_t FUN_1400630D0(int mode);                 /* @0x1400630d0 */
-extern void *PECMD_AllocAnsiString(const char *src);            /* @0x140070044 */
-extern int64_t *FUN_14005B154(WCHAR **ps);           /* @0x14005b154 */
+extern int32_t FUN_1400630D0(int mode);                          /* @0x1400630d0 */
+extern void *PECMD_AllocAnsiString(const char *src);             /* @0x140070044 */
+extern int64_t *FUN_14005B154(WCHAR **ps);                       /* @0x14005b154 */
 extern int64_t PECMD_ParseUIntValue(LPCWSTR *ps, uint64_t *out); /* @0x140067d20 */
-extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out);  /* @0x14006a7f4 */
-extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
+extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out);       /* @0x14006a7f4 */
+extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
+                              int64_t len);                  /* @0x14001e69c */
 extern uint64_t FUN_14005F33C(const uint8_t *data, int len); /* @0x14005f33c */
 
 /* ========== FUN_140006A4C @0x140006a4c ==========
@@ -50,9 +51,9 @@ int32_t FUN_140006A4C(LPCWSTR path)
  */
 int64_t FUN_14001D810(LPCWSTR path, uint64_t access, int64_t share)
 {
-    HANDLE h = CreateFileW(path, (DWORD)access, (DWORD)share, NULL,
-                           OPEN_EXISTING, 0, (HANDLE)0);
-    if (h == (HANDLE)-1) h = 0;
+    HANDLE h = CreateFileW(path, (DWORD)access, (DWORD)share, NULL, OPEN_EXISTING, 0, (HANDLE)0);
+    if (h == (HANDLE)-1)
+        h = 0;
     return (int64_t)h;
 }
 
@@ -72,8 +73,7 @@ int64_t FUN_14005FBD4(HANDLE h, int64_t *geo)
         /* 几何扇区数 × 每扇区字节 */
         size = (uint64_t)*(uint32_t *)((char *)geo + 0x14) *
                (uint64_t)*(uint32_t *)((char *)geo + 0x18) *
-               (uint64_t)*(uint32_t *)((char *)geo + 0x24) *
-               (uint64_t)*(uint32_t *)(geo + 0);
+               (uint64_t)*(uint32_t *)((char *)geo + 0x24) * (uint64_t)*(uint32_t *)(geo + 0);
     }
     return size;
 }
@@ -87,7 +87,8 @@ int64_t PECMD_GetDeviceSize(HANDLE h, uint8_t mtype)
     if ((mtype & 0xf) == 1) {
         int64_t geo[3] = {0};
         size = FUN_14005FBD4(h, geo);
-    } else if ((mtype & 0xf) == 2) {
+    }
+    else if ((mtype & 0xf) == 2) {
         int64_t geoex[0x12] = {0};
         DWORD ret = 0;
         if (DeviceIoControl(h, 0x70048, NULL, 0, geoex, 0x90, &ret, NULL)) {
@@ -107,13 +108,19 @@ int32_t FUN_14006A740(LPCWSTR *ps, uint64_t *out)
     uint16_t ch;
     FUN_14005B154((WCHAR **)ps);
     r = FUN_14006A7F4(ps, out);
-    if (r < 1) return 0;
+    if (r < 1)
+        return 0;
     ch = **ps & 0xffdf;
-    if (ch == L'T') *out <<= 0x28;
-    else if (ch == L'G') *out <<= 0x1e;
-    else if (ch == L'M') *out <<= 0x14;
-    else if (ch == L'K') *out <<= 10;
-    else if (ch == L'S') *out <<= 9;
+    if (ch == L'T')
+        *out <<= 0x28;
+    else if (ch == L'G')
+        *out <<= 0x1e;
+    else if (ch == L'M')
+        *out <<= 0x14;
+    else if (ch == L'K')
+        *out <<= 10;
+    else if (ch == L'S')
+        *out <<= 9;
     else {
         (*ps)--;
         *ps = (LPCWSTR)((WCHAR *)*ps - 1);
@@ -155,26 +162,33 @@ char PECMD_NormalizeVolumeDevPath(LPCWSTR *ps)
     c = (r == 0);
     if (!c) {
         r = FUN_140006A4C(*ps);
-        if (r == 0) goto check_dos;
+        if (r == 0)
+            goto check_dos;
         c = 0x21;
     }
-    if (c == 1) return 1;
+    if (c == 1)
+        return 1;
 check_dos:
     r = StrCmpNIW(*ps, WSTR("\\\\?\\"), 4);
-    if (r == 0 && *(WCHAR *)(*ps + 8) != 0 &&
-        *(WCHAR *)(*ps + 10) == L':' && *(WCHAR *)(*ps + 12) == 0) {
+    if (r == 0 && *(WCHAR *)(*ps + 8) != 0 && *(WCHAR *)(*ps + 10) == L':' &&
+        *(WCHAR *)(*ps + 12) == 0) {
         WCHAR *slash = StrRChrW(p + 5, NULL, L'\\');
-        if (slash != NULL) return c;
+        if (slash != NULL)
+            return c;
         *(WCHAR *)(*ps + 4) = L'.';
-    } else {
+    }
+    else {
         r = StrCmpNIW(*ps, WSTR("\\\\.\\"), 4);
         if (r != 0 || *(WCHAR *)(*ps + 8) == 0) {
             WCHAR first = **(WCHAR **)ps;
-            if (first == 0) return c;
-            if (((WCHAR *)*ps)[1] != L':') return c;
-            if (((WCHAR *)*ps)[2] != 0) return c;
+            if (first == 0)
+                return c;
+            if (((WCHAR *)*ps)[1] != L':')
+                return c;
+            if (((WCHAR *)*ps)[2] != 0)
+                return c;
             PECMD_AllocString(ps, 0x20);
-            memcpy((void *)*ps, WSTR("\\\\.\\"), 14);  /* "\\\\.\\" + 盘符占位 */
+            memcpy((void *)*ps, WSTR("\\\\.\\"), 14); /* "\\\\.\\" + 盘符占位 */
             *(WCHAR *)(*ps + 8) = first;
             return 2;
         }
@@ -227,7 +241,8 @@ void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src)
     s = (WCHAR *)calloc(1, 0x10);
     if (s == NULL) {
         s = NULL;
-    } else {
+    }
+    else {
         FUN_1400702B0(&s, NULL);
         *(uint32_t *)(s + 8) = 0;
     }
@@ -251,13 +266,16 @@ void *FUN_14007DE70(LPCWSTR *a, LPCWSTR *out, LPCWSTR src)
 
     if (src == NULL) {
         FUN_1400702B0((WCHAR **)out, (LPCWSTR)*a);
-    } else {
-        if ((LPCWSTR)*a != NULL) n1 = lstrlenW((LPCWSTR)*a);
+    }
+    else {
+        if ((LPCWSTR)*a != NULL)
+            n1 = lstrlenW((LPCWSTR)*a);
         n2 = lstrlenW(src);
         total = (int64_t)((n2 + 1 + n1) * 2);
         do {
             p = (int64_t *)HeapAlloc(g_hHeap, 0, (size_t)total + 8);
-            if (p != NULL) break;
+            if (p != NULL)
+                break;
             r = FUN_1400630D0(2);
         } while (r == 4);
         *(uint32_t *)((char *)p + 4) = 0xaa55;
@@ -281,21 +299,24 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
     WCHAR *tmp = NULL;
     uint8_t *curdir;
 
-    if (*p == L'\0') return;
+    if (*p == L'\0')
+        return;
     /* 定位行尾 */
     end = (WCHAR *)p;
-    while (*end != L'\r' && *end != L'\n' && *end != L'\0') end++;
+    while (*end != L'\r' && *end != L'\n' && *end != L'\0')
+        end++;
     /* 去前导空白 */
-    while (p < end && (((WCHAR)*p < 9 || *p > 0xd) == 0 || *p == L' ')) p++;
-    if (p >= end) return;
+    while (p < end && (((WCHAR)*p < 9 || *p > 0xd) == 0 || *p == L' '))
+        p++;
+    if (p >= end)
+        return;
     start = (WCHAR *)p;
     /* 找注释起点（// 、;、#、`） */
     {
         WCHAR *q = start;
         while (q < end) {
             if (((*q > 8 && *q < 0xe) || *q == L' ') &&
-                ((q[1] == L'/' && q[2] == L'/') || q[1] == L'`' ||
-                 q[1] == L';' || q[1] == L'#')) {
+                ((q[1] == L'/' && q[2] == L'/') || q[1] == L'`' || q[1] == L';' || q[1] == L'#')) {
                 end = q;
                 break;
             }
@@ -304,10 +325,13 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
     }
     /* 去尾部空白 */
     while (end > start && ((*(WCHAR *)(end - 1) < 9 || *(WCHAR *)(end - 1) > 0xd) == 0 ||
-                           *(WCHAR *)(end - 1) == L' ')) end--;
+                           *(WCHAR *)(end - 1) == L' '))
+        end--;
     /* 去引号 */
-    if (*start == L'"') start++;
-    if (end > start && *(end - 1) == L'"') end--;
+    if (*start == L'"')
+        start++;
+    if (end > start && *(end - 1) == L'"')
+        end--;
 
     if (start < end) {
         PECMD_AllocString(&tmp, (int64_t)(end - start) + 1);
@@ -322,7 +346,7 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
             if (curdir != NULL) {
                 WCHAR *old = *out;
                 *out = NULL;
-                FUN_1400702B0(out, (LPCWSTR)*(int64_t *)curdir);
+                FUN_1400702B0(out, (LPCWSTR) * (int64_t *)curdir);
                 FUN_14006375C(out, WSTR("\\"));
                 FUN_14006375C(out, old);
                 PECMD_FreeStrBuf(&old);
@@ -344,7 +368,8 @@ int64_t PECMD_EncodeBuffer(int64_t *in, int64_t *out, uint8_t cp)
     uint8_t *data;
     int64_t len;
 
-    if ((uint8_t)enc == 0) return 1;
+    if ((uint8_t)enc == 0)
+        return 1;
     data = (uint8_t *)PECMD_AllocAnsiString((const char *)*in);
     len = in[1];
     out[0] = (int64_t)data;

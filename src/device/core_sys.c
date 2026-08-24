@@ -22,8 +22,8 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src);   /* 前置(首用先于定义) */
-extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
+static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src);         /* 前置(首用先于定义) */
+extern WCHAR **FUN_14005B154(WCHAR **pp);                            /* @0x14005b154 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 /* 前向声明 (定义在下方, 调用在前) */
@@ -35,16 +35,16 @@ int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag);
 
 
 /* ---- 待重构函数原型 (后续批次) ---- */
-void PECMD_EnablePrivilege_impl(void);   /* 本文件实现 */
+void PECMD_EnablePrivilege_impl(void); /* 本文件实现 */
 
 /* ---- 全局 (core_globals.c) ---- */
-extern WCHAR *g_pLocale;         /* DAT_14013ca70 代码页字符串 */
-extern void *g_pSharedMap;       /* DAT_14013ca30 共享映射 */
-extern uint8_t g_flag13f;        /* DAT_14013d13f */
-extern void *g_pVtblA;           /* DAT_14013d670 */
-extern void *g_pVtblB;           /* DAT_14013d5e0 */
-extern int32_t g_val668;         /* DAT_14013d668 = 0xffffff9c */
-extern int32_t g_val5d8;         /* DAT_14013d5d8 = 0xffffff9c */
+extern WCHAR *g_pLocale;   /* DAT_14013ca70 代码页字符串 */
+extern void *g_pSharedMap; /* DAT_14013ca30 共享映射 */
+extern uint8_t g_flag13f;  /* DAT_14013d13f */
+extern void *g_pVtblA;     /* DAT_14013d670 */
+extern void *g_pVtblB;     /* DAT_14013d5e0 */
+extern int32_t g_val668;   /* DAT_14013d668 = 0xffffff9c */
+extern int32_t g_val5d8;   /* DAT_14013d5d8 = 0xffffff9c */
 
 /* 特殊目录变量表 (.rdata @0x140121020 附近, TODO(verify): 见 PECMD_StartWorkerThread) */
 
@@ -57,9 +57,10 @@ void PECMD_DetectCodePage(void)
     buf[0] = L'\0';
     GetEnvironmentVariableW(WSTR("LC_ALL"), buf, 0x20);
     if (buf[0] == L'\0') {
-        GetLocaleInfoW(0x800, 0xb, buf, 0x20);   /* LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE */
+        GetLocaleInfoW(0x800, 0xb, buf,
+                       0x20); /* LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE */
     }
-    cp = WSTR("936");   /* 默认 GBK */
+    cp = WSTR("936"); /* 默认 GBK */
     if (buf[0] != L'\0') {
         cp = buf;
     }
@@ -85,9 +86,10 @@ void PECMD_OpenSharedMapping(uint64_t tag, LPCSTR name)
         if (!hMap) {
             return;
         }
-    } else {
+    }
+    else {
         err = GetLastError();
-        if (err == 0xb7) {          /* ERROR_ALREADY_EXISTS */
+        if (err == 0xb7) { /* ERROR_ALREADY_EXISTS */
             created = FALSE;
         }
     }
@@ -132,7 +134,7 @@ void PECMD_InitShellFolderEnvVars(void)
     PECMD_LookupShellFolderVar(WSTR("&IECache"), WSTR("Cache"), NULL);
     PECMD_LookupShellFolderVar(WSTR("&Startup"), NULL, NULL);
     PECMD_LookupShellFolderVar(WSTR("&QuickLaunch"), WSTR("AppData"),
-                        WSTR("\\Microsoft\\Internet Explorer\\Quick Launch"));
+                               WSTR("\\Microsoft\\Internet Explorer\\Quick Launch"));
     PECMD_FreeStrBuf(&pBuf);
 }
 
@@ -153,7 +155,7 @@ void PECMD_GetTaskbarCreatedMsg(void)
 /* ========== 设置 .rdata 表指针 @0x14005d694 ========== */
 void PECMD_SetRdataTablePtr(void)
 {
-    g_pVtblA = (void *)0x14011c638;   /* g_szEmpty (.rdata) */
+    g_pVtblA = (void *)0x14011c638; /* g_szEmpty (.rdata) */
     g_pVtblB = (void *)0x14011c638;
     g_val668 = 0xffffff9c;
     g_val5d8 = 0xffffff9c;
@@ -195,13 +197,15 @@ void PECMD_LookupShellFolderVar(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
     type = 0;
     GetEnvironmentVariableW(name, (LPWSTR)buf, 0x104);
     if (*buf == L'\0') {
-        r = FUN_14005C4E0((HKEY)0xffffffff80000001,   /* HKEY_CURRENT_USER */
-                           WSTR("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"),
-                           name, &type, (BYTE *)buf, &size);
+        r = FUN_14005C4E0(
+            (HKEY)0xffffffff80000001, /* HKEY_CURRENT_USER */
+            WSTR("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"),
+            name, &type, (BYTE *)buf, &size);
         if (r == 0) {
             PECMD_RegValueToVar(var, (int)type, buf, pBuf, suffix);
         }
-    } else {
+    }
+    else {
         FUN_1400629B8(&g_Script, var, buf);
     }
     PECMD_FreeStrBuf(&pBuf);
@@ -210,8 +214,8 @@ void PECMD_LookupShellFolderVar(LPCWSTR var, LPCWSTR env, const WCHAR *suffix)
 /* ========== 注册表值 -> 变量 @0x14001bea8 ========== */
 void PECMD_RegValueToVar(LPCWSTR var, int type, LPCWSTR value, LPWSTR tmp, const WCHAR *suffix)
 {
-    if (type != 1) {                    /* REG_SZ */
-        if (type != 2) {                /* REG_EXPAND_SZ */
+    if (type != 1) {     /* REG_SZ */
+        if (type != 2) { /* REG_EXPAND_SZ */
             return;
         }
         ExpandEnvironmentStringsW(value, tmp, 0x104);
@@ -225,18 +229,17 @@ void PECMD_RegValueToVar(LPCWSTR var, int type, LPCWSTR value, LPWSTR tmp, const
 }
 
 /* ========== 注册表查询 (带权限重试) @0x14005c4e0 ========== */
-DWORD FUN_14005C4E0(HKEY root, LPCWSTR subkey, LPCWSTR name, DWORD *type,
-                     BYTE *data, DWORD *size)
+DWORD FUN_14005C4E0(HKEY root, LPCWSTR subkey, LPCWSTR name, DWORD *type, BYTE *data, DWORD *size)
 {
     HKEY hKey;
     uint32_t opt;
     DWORD r;
 
     hKey = 0;
-    opt = 4;                            /* REG_OPTION_BACKUP_RESTORE */
+    opt = 4; /* REG_OPTION_BACKUP_RESTORE */
     for (;;) {
         r = FUN_14005C394(root, subkey, &hKey, 0x20019, opt);
-        if (r != 5) {                   /* ERROR_ACCESS_DENIED */
+        if (r != 5) { /* ERROR_ACCESS_DENIED */
             if (r != 0) {
                 return r;
             }
@@ -259,14 +262,13 @@ DWORD FUN_14005C394(HKEY root, LPCWSTR subkey, HKEY *out, REGSAM access, uint32_
     DWORD r;
     DWORD disp;
 
-    FUN_14001C2CC(WSTR("SeBackupPrivilege"), 2, 1);   /* SE_PRIVILEGE_ENABLED */
+    FUN_14001C2CC(WSTR("SeBackupPrivilege"), 2, 1); /* SE_PRIVILEGE_ENABLED */
     FUN_14001C2CC(WSTR("SeRestorePrivilege"), 2, 0x10);
     disp = 0;
     r = RegCreateKeyExW(root, subkey, 0, NULL, opt, 0xf003f, NULL, out, &disp);
     if (!*out) {
         if ((opt & 4) != 0) {
-            r = RegCreateKeyExW(root, subkey, 0, NULL, opt & 0xfffffffb,
-                                0xf003f, NULL, out, &disp);
+            r = RegCreateKeyExW(root, subkey, 0, NULL, opt & 0xfffffffb, 0xf003f, NULL, out, &disp);
         }
         if (!*out) {
             r = RegCreateKeyExW(root, subkey, 0, NULL, 0, access, NULL, out, &disp);
@@ -299,7 +301,7 @@ int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag)
         ret = 0;
         hToken = 0;
         hProc = GetCurrentProcess();
-        ok = OpenProcessToken(hProc, 0x28, &hToken);   /* TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY */
+        ok = OpenProcessToken(hProc, 0x28, &hToken); /* TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY */
         if (ok) {
             tp.PrivilegeCount = 1;
             tp.Attributes = attr;
@@ -311,7 +313,8 @@ int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag)
             ret = (int64_t)ok;
         }
         LeaveCriticalSection(&g_csInit);
-    } else {
+    }
+    else {
         LeaveCriticalSection(&g_csInit);
         ret = 0;
     }

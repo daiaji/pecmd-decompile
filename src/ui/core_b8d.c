@@ -57,13 +57,10 @@ extern void FUN_1400E8940(uint64_t *obj);
 extern void PECMD_OnTabSelChange(int64_t obj);
 extern void *FUN_1400F0648(uint64_t *obj, uint64_t value);
 extern void PECMD_DrawItemContent(int64_t obj, HDC hdc, int64_t target, int64_t overrideObj);
-extern uint16_t FUN_1400F172C(int64_t *map, uint32_t msg,
-                              uint64_t wParam, uint64_t *lParam,
-                              int64_t hwnd, uint32_t mode,
-                              int64_t *out);
-extern BOOL FUN_1400FD220(int64_t *map, DWORD msg, LPCWSTR text,
-                          uint32_t flags, int *out, HWND hwnd,
-                          uint32_t mode);
+extern uint16_t FUN_1400F172C(int64_t *map, uint32_t msg, uint64_t wParam, uint64_t *lParam,
+                              int64_t hwnd, uint32_t mode, int64_t *out);
+extern BOOL FUN_1400FD220(int64_t *map, DWORD msg, LPCWSTR text, uint32_t flags, int *out,
+                          HWND hwnd, uint32_t mode);
 extern uint64_t *FUN_1400FCF44(uint64_t *obj, uint64_t value);
 extern void PECMD_ControlPaint(int64_t obj, HDC hdc); /* @0x1400fe610 */
 
@@ -114,8 +111,7 @@ void PECMD_SetCtlBackBrush(int64_t obj, COLORREF color, int64_t mode)
 int64_t PECMD_CtlForwardSetBlock(int64_t *obj, uint64_t *args)
 {
     int (*fn)(int64_t *, uint64_t, uint64_t, uint64_t, uint64_t, int, uint64_t) =
-        *(int (**)(int64_t *, uint64_t, uint64_t, uint64_t, uint64_t, int, uint64_t))
-            (*obj + 0xf0);
+        *(int (**)(int64_t *, uint64_t, uint64_t, uint64_t, uint64_t, int, uint64_t))(*obj + 0xf0);
     return (int64_t)fn(obj, args[0], args[1], args[2], args[3], 0, args[6]);
 }
 
@@ -124,7 +120,7 @@ int64_t PECMD_CtlForwardSetBlock(int64_t *obj, uint64_t *args)
  */
 BOOL FUN_1400E6314(HWND hwnd, POINT pt)
 {
-    RECT rc = { 0, 0, 0, 0 };
+    RECT rc = {0, 0, 0, 0};
     GetWindowRect(hwnd, &rc);
     return PtInRect(&rc, pt);
 }
@@ -151,8 +147,7 @@ void PECMD_StrAppendFormat(WCHAR **ps, uint64_t arg, LPCWSTR fmt)
 /* ========== PECMD_GrowCapacityAligned @0x1400e6cf8 ==========
  * 字符串容器容量不足时按 align 对齐后扩容。
  */
-uint64_t *PECMD_GrowCapacityAligned(uint64_t *container, int64_t needed,
-                                      int64_t align)
+uint64_t *PECMD_GrowCapacityAligned(uint64_t *container, int64_t needed, int64_t align)
 {
     if ((int64_t)container[2] <= needed) {
         int64_t cap = ((needed - 1 + align) / align) * align;
@@ -171,8 +166,7 @@ void FUN_1400EC9C0(int64_t *obj, uint32_t param2, uint64_t param3)
     uint32_t packed = (uint32_t)(((uint32_t)(param3 >> 32) << 16) | (uint32_t)param3);
     void (*fn)(int64_t, uint32_t, WPARAM, LPARAM) =
         *(void (**)(int64_t, uint32_t, WPARAM, LPARAM))(*obj + 8);
-    fn((int64_t)obj[4], 0x201, (WPARAM)param2,
-       (LPARAM)(int64_t)(int32_t)packed);
+    fn((int64_t)obj[4], 0x201, (WPARAM)param2, (LPARAM)(int64_t)(int32_t)packed);
     PECMD_OnTabSelChange((int64_t)obj);
 }
 
@@ -251,7 +245,8 @@ void PECMD_DtorImageHolder(uint64_t *obj)
     if (icon != (HICON)0) {
         if (*(char *)((char *)obj + 0xdc) == '\x01') {
             DestroyIcon(icon);
-        } else if (*(char *)((char *)obj + 0xdc) == '\0') {
+        }
+        else if (*(char *)((char *)obj + 0xdc) == '\0') {
             DeleteObject((HGDIOBJ)icon);
         }
     }
@@ -290,8 +285,7 @@ void PECMD_PostNotif203Bit(int64_t obj)
     if ((*(uint8_t *)(obj + OBJ_LINK) & 1) != 0) {
         HWND hwnd = *(HWND *)(obj + OBJ_HWND);
         int id = GetDlgCtrlID(hwnd);
-        PostMessageW(GetParent(hwnd), WM_COMMAND, (WPARAM)(uint16_t)id,
-                     (LPARAM)0x203);
+        PostMessageW(GetParent(hwnd), WM_COMMAND, (WPARAM)(uint16_t)id, (LPARAM)0x203);
     }
 }
 
@@ -313,11 +307,9 @@ uint64_t *PECMD_CtorIpadSubObj(uint64_t *obj, uint64_t param2)
 uint64_t PECMD_CtlPreTranslateMsg(int64_t obj, int64_t msg)
 {
     int64_t result = 0;
-    uint16_t flags = FUN_1400F172C(*(int64_t **)(obj + OBJ_LINK), 0x233,
-                                   *(uint64_t *)(msg + 0x10),
-                                   *(uint64_t **)(msg + 0x18),
-                                   *(int64_t *)(obj + OBJ_HWND),
-                                   1, &result);
+    uint16_t flags =
+        FUN_1400F172C(*(int64_t **)(obj + OBJ_LINK), 0x233, *(uint64_t *)(msg + 0x10),
+                      *(uint64_t **)(msg + 0x18), *(int64_t *)(obj + OBJ_HWND), 1, &result);
     if ((flags & 4) != 0) {
         return (uint64_t)result & 0xffffffff;
     }
@@ -330,11 +322,16 @@ uint64_t PECMD_CtlPreTranslateMsg(int64_t obj, int64_t msg)
 void PECMD_PolylineRectOutline(HDC hdc, LONG *rect)
 {
     POINT pts[5];
-    pts[0].x = rect[0]; pts[0].y = rect[1];
-    pts[1].x = rect[2]; pts[1].y = rect[1];
-    pts[2].x = rect[2]; pts[2].y = rect[3];
-    pts[3].x = rect[0]; pts[3].y = rect[3];
-    pts[4].x = rect[0]; pts[4].y = rect[1];
+    pts[0].x = rect[0];
+    pts[0].y = rect[1];
+    pts[1].x = rect[2];
+    pts[1].y = rect[1];
+    pts[2].x = rect[2];
+    pts[2].y = rect[3];
+    pts[3].x = rect[0];
+    pts[3].y = rect[3];
+    pts[4].x = rect[0];
+    pts[4].y = rect[1];
     Polyline(hdc, pts, 5);
 }
 
@@ -421,8 +418,7 @@ void PECMD_PostNotif203Byte(int64_t obj)
     if (*(uint8_t *)(obj + OBJ_LINK) != 0) {
         HWND hwnd = *(HWND *)(obj + OBJ_HWND);
         int id = GetDlgCtrlID(hwnd);
-        PostMessageW(GetParent(hwnd), WM_COMMAND, (WPARAM)(uint16_t)id,
-                     (LPARAM)0x203);
+        PostMessageW(GetParent(hwnd), WM_COMMAND, (WPARAM)(uint16_t)id, (LPARAM)0x203);
     }
 }
 
@@ -471,8 +467,7 @@ uint64_t PECMD_SetTrackbarBuddyWindow(int64_t obj, HWND hwnd)
 /* ========== FUN_1400FD318 @0x1400fd318 ==========
  * 使用 RECT 参数包装 FUN_1400FD220，创建 STATIC 控件。
  */
-void FUN_1400FD318(int64_t *obj, LPCWSTR text, uint32_t style,
-                               RECT *rect, HWND parent, uint32_t id)
+void FUN_1400FD318(int64_t *obj, LPCWSTR text, uint32_t style, RECT *rect, HWND parent, uint32_t id)
 {
     RECT rc = *rect;
     FUN_1400FD220(obj, 0, text, style, (int *)&rc, parent, id);

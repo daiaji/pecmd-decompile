@@ -46,12 +46,13 @@ int FUN_140060B5C(uint64_t *text, int start, int mode, int end)
                 count++;
             }
         }
-    } else {
+    }
+    else {
         step = (char)((uint32_t)mode >> 8) * step;
         puVar3 = (uint64_t *)((uint8_t *)puVar3 + (int64_t)stride * -2 + 2);
         if ((char)mode < 1) {
             puVar3 = (uint64_t *)((uint8_t *)puVar5 +
-                     (((int64_t)((end / stride) * stride) - stride) - start) * 2);
+                                  (((int64_t)((end / stride) * stride) - stride) - start) * 2);
             text = puVar3;
         }
         if (stride == 3) {
@@ -61,11 +62,11 @@ int FUN_140060B5C(uint64_t *text, int start, int mode, int end)
                     count++;
                 }
             }
-        } else {
+        }
+        else {
             for (; (text <= puVar3 && (puVar5 <= text));
                  text = (uint64_t *)((uint8_t *)text + (int64_t)step * 2)) {
-                if (((int16_t)text[1] == 0x41) &&
-                    (*text == 0x30003000300020ULL)) {
+                if (((int16_t)text[1] == 0x41) && (*text == 0x30003000300020ULL)) {
                     count++;
                 }
             }
@@ -85,7 +86,9 @@ uint32_t FUN_140065EFC(LPCWSTR path, HANDLE hFile)
     uint32_t local_48 = 0;
     uint32_t local_44 = 0;
     uint32_t local_40 = 0;
-    (void)pvVar1; (void)local_44; (void)local_40;
+    (void)pvVar1;
+    (void)local_44;
+    (void)local_40;
     uint32_t local_38 = 0;
     uint32_t local_34[6];
     uint32_t local_1c = 0;
@@ -96,9 +99,8 @@ uint32_t FUN_140065EFC(LPCWSTR path, HANDLE hFile)
             hObject = 0;
         }
         hFile = hObject;
-        if ((hObject == 0) &&
-            (hObject = CreateFileW(path, 0, 3, NULL, 3, 0, (HANDLE)0),
-             hFile = hObject, hObject == INVALID_HANDLE_VALUE)) {
+        if ((hObject == 0) && (hObject = CreateFileW(path, 0, 3, NULL, 3, 0, (HANDLE)0),
+                               hFile = hObject, hObject == INVALID_HANDLE_VALUE)) {
             hObject = 0;
             hFile = 0;
         }
@@ -108,7 +110,8 @@ uint32_t FUN_140065EFC(LPCWSTR path, HANDLE hFile)
             CloseHandle(hObject);
         }
         local_1c = 0xffffffff;
-    } else {
+    }
+    else {
         local_48 = 0;
         local_44 = 0;
         local_40 = 0;
@@ -116,8 +119,7 @@ uint32_t FUN_140065EFC(LPCWSTR path, HANDLE hFile)
         local_38 = 0;
         memset(local_34, 0, 0x24);
         local_34[0] = 0x28;
-        DeviceIoControl(hFile, 0x2d1400, &local_48, 0xc, &local_38, 0x28,
-                        local_res10, NULL);
+        DeviceIoControl(hFile, 0x2d1400, &local_48, 0xc, &local_38, 0x28, local_res10, NULL);
         if ((hObject != 0) && (hObject != INVALID_HANDLE_VALUE)) {
             CloseHandle(hObject);
         }
@@ -128,8 +130,7 @@ uint32_t FUN_140065EFC(LPCWSTR path, HANDLE hFile)
 /* ========== FUN_1400690C0 @0x1400690c0 ==========
  * 读取注册表字符串值。
  */
-int FUN_1400690C0(HKEY root, LPCWSTR subkey, LPCWSTR name,
-                         int64_t *out, DWORD *size, LONG *status)
+int FUN_1400690C0(HKEY root, LPCWSTR subkey, LPCWSTR name, int64_t *out, DWORD *size, LONG *status)
 {
     LONG LVar2;
     int64_t lVar1;
@@ -143,13 +144,11 @@ int FUN_1400690C0(HKEY root, LPCWSTR subkey, LPCWSTR name,
         *size = 0xffa;
         PECMD_GrowByteBuffer((uint64_t *)out, 0x1000);
         *(uint8_t *)*out = 0;
-        LVar2 = RegQueryValueExW(local_20, name, NULL, local_28,
-                                 (BYTE *)*out, size);
+        LVar2 = RegQueryValueExW(local_20, name, NULL, local_28, (BYTE *)*out, size);
         if (LVar2 == 0xea) {
             *size = *size + 10;
             PECMD_GrowByteBuffer((uint64_t *)out, (int64_t)(int)(*size + 6));
-            LVar2 = RegQueryValueExW(local_20, name, NULL, local_28,
-                                     (BYTE *)*out, size);
+            LVar2 = RegQueryValueExW(local_20, name, NULL, local_28, (BYTE *)*out, size);
         }
         RegCloseKey(local_20);
         result = -1;

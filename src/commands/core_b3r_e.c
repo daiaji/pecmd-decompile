@@ -5,29 +5,31 @@
 /* ---- extern declarations for symbols not in win32_stub.h / pecmd_defs.h ---- */
 
 /* globals used by PECMD_ParseFontOptions (doubles) */
-extern double g_dpiBase;   /* _DAT_140126078 */
+extern double g_dpiBase; /* _DAT_140126078 */
 extern double g_fontRound;
 extern uint32_t g_dpi;
 extern double g_fontMinus0;
 
 /* internal helpers (bodies provided elsewhere; refactored PECMD_* aliases are
  * already declared in pecmd_defs.h and are used for the confirmed mappings) */
-extern LPCWSTR PECMD_UnquoteString(LPCWSTR);                       /* string tag/prefix lookup */
-extern void    PECMD_SkipWCharUntil(void *, int);                   /* delimiter scan ('#') */
-extern int     PECMD_ParseNumSkipChar_0224(void *, int *);                 /* parse int field */
-extern int     PECMD_ParseNumSkipChar_de4c(void *, double *);              /* parse double field */
-extern int     PECMD_OnDeleteCommand(void *, LPCWSTR, HWND);         /* list-control accept check */
-extern int     PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *, HWND, int64_t);
-extern int     PECMD_ParseUIntValue(LPCWSTR *, int *);              /* scan list token */
-extern void    PECMD_AllocStrSlot(void *);                        /* string release/cleanup */
-extern void    PECMD_SplitTokenTrimWs(void *, void *, int);           /* split list string on delim */
+extern LPCWSTR PECMD_UnquoteString(LPCWSTR);              /* string tag/prefix lookup */
+extern void PECMD_SkipWCharUntil(void *, int);            /* delimiter scan ('#') */
+extern int PECMD_ParseNumSkipChar_0224(void *, int *);    /* parse int field */
+extern int PECMD_ParseNumSkipChar_de4c(void *, double *); /* parse double field */
+extern int PECMD_OnDeleteCommand(void *, LPCWSTR, HWND);  /* list-control accept check */
+extern int PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *,
+                                        HWND, int64_t);
+extern int PECMD_ParseUIntValue(LPCWSTR *, int *);       /* scan list token */
+extern void PECMD_AllocStrSlot(void *);                  /* string release/cleanup */
+extern void PECMD_SplitTokenTrimWs(void *, void *, int); /* split list string on delim */
 
 #ifndef SE_REGISTRY_KEY
 #define SE_REGISTRY_KEY 5
 #endif
 
 /* ========== PECMD_SetRegistryKeySecurity @ 140096f84 ========== */
-/* signature: LSTATUS __fastcall PECMD_SetRegistryKeySecurity(HKEY param_1, PACL param_2, undefined8 * param_3) */
+/* signature: LSTATUS __fastcall PECMD_SetRegistryKeySecurity(HKEY param_1, PACL param_2, undefined8
+ * * param_3) */
 int PECMD_SetRegistryKeySecurity(HKEY param_1, void *param_2, WCHAR **param_3)
 {
     int LVar1;
@@ -42,9 +44,9 @@ int PECMD_SetRegistryKeySecurity(HKEY param_1, void *param_2, WCHAR **param_3)
     dwIndex = 0;
     local_38 = 0;
     local_res20[0] = 0;
-    LVar1 = RegQueryInfoKeyW(param_1, (LPWSTR)0, (DWORD *)0, (DWORD *)0, &local_38,
-                             local_res20, (DWORD *)0, (DWORD *)0, (DWORD *)0,
-                             (DWORD *)0, (DWORD *)0, (FILETIME *)0);
+    LVar1 =
+        RegQueryInfoKeyW(param_1, (LPWSTR)0, (DWORD *)0, (DWORD *)0, &local_38, local_res20,
+                         (DWORD *)0, (DWORD *)0, (DWORD *)0, (DWORD *)0, (DWORD *)0, (FILETIME *)0);
     if (LVar1 == 0) {
         PECMD_StrAlloc2(&local_20, (int64_t)(local_res20[0] * 4 + 8));
         if (0 < (int)local_38) {
@@ -52,14 +54,14 @@ int PECMD_SetRegistryKeySecurity(HKEY param_1, void *param_2, WCHAR **param_3)
                 local_28 = (HKEY)0;
                 local_34 = local_res20[0] << 2;
                 *local_20 = L'\0';
-                LVar1 = RegEnumKeyExW(param_1, dwIndex, local_20, &local_34, (DWORD *)0,
-                                      (LPWSTR)0, (DWORD *)0, (FILETIME *)0);
+                LVar1 = RegEnumKeyExW(param_1, dwIndex, local_20, &local_34, (DWORD *)0, (LPWSTR)0,
+                                      (DWORD *)0, (FILETIME *)0);
                 if ((LVar1 == 0) && (*local_20 != L'\0')) {
                     PECMD_StrAssign(&local_30, *param_3);
                     PECMD_StrCat(&local_30, WSTR("\\"));
                     PECMD_StrCat(&local_30, local_20);
-                    SetNamedSecurityInfoW(local_30, SE_REGISTRY_KEY, 4, (void *)0,
-                                          (void *)0, param_2, (void *)0);
+                    SetNamedSecurityInfoW(local_30, SE_REGISTRY_KEY, 4, (void *)0, (void *)0,
+                                          param_2, (void *)0);
                     LVar1 = RegOpenKeyExW(param_1, local_20, 0, 0xf003f, &local_28);
                     if ((local_28 != (HKEY)0) &&
                         (LVar1 = PECMD_SetRegistryKeySecurity(local_28, param_2, &local_30),
@@ -77,11 +79,12 @@ int PECMD_SetRegistryKeySecurity(HKEY param_1, void *param_2, WCHAR **param_3)
 }
 
 /* ========== PECMD_ListControlCommand @ 14009d1b0 ========== */
-/* signature: undefined8 __fastcall PECMD_ListControlCommand(undefined8 * param_1, longlong * param_2,
- *   short * param_3, LPCWSTR param_4, LPCWSTR param_5, WPARAM param_6, undefined8 * param_7) */
+/* signature: undefined8 __fastcall PECMD_ListControlCommand(undefined8 * param_1, longlong *
+ * param_2, short * param_3, LPCWSTR param_4, LPCWSTR param_5, WPARAM param_6, undefined8 * param_7)
+ */
 uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *param_3,
-                         LPCWSTR param_4, LPCWSTR param_5, WPARAM param_6,
-                         uint64_t *param_7)
+                                  LPCWSTR param_4, LPCWSTR param_5, WPARAM param_6,
+                                  uint64_t *param_7)
 {
     HWND hWnd;
     HWND pHVar1;
@@ -114,8 +117,8 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
         *param_7 = 0;
         LeaveCriticalSection(lpCriticalSection);
     }
-    if (PECMD_DispatchControlCommand((void *)param_1[7], param_5, param_6, hWnd, param_4, (void *)param_1[10],
-                      param_2, pHVar1, (int64_t)param_1) != 0) {
+    if (PECMD_DispatchControlCommand((void *)param_1[7], param_5, param_6, hWnd, param_4,
+                                     (void *)param_1[10], param_2, pHVar1, (int64_t)param_1) != 0) {
         return 0;
     }
     iVar4 = lstrcmpiW(param_5, WSTR("QUERY"));
@@ -149,8 +152,10 @@ uint64_t PECMD_ListControlCommand(uint64_t *param_1, int64_t *param_2, short *pa
             param_4 = param_4 + 1;
         }
         cVar2 = '*';
-        if (*param_4 != L'\n') goto LAB_14009d456;
-    } else {
+        if (*param_4 != L'\n')
+            goto LAB_14009d456;
+    }
+    else {
         iVar4 = lstrcmpiW(param_5, WSTR("DEL"));
         if (iVar4 == 0) {
             cVar6 = '-';
@@ -210,7 +215,8 @@ LAB_14009d456:
 }
 
 /* ========== PECMD_ParseFontOptions @ 1400a8664 ========== */
-/* signature: undefined __fastcall PECMD_ParseFontOptions(longlong param_1, LPWSTR param_2, uint * param_3) */
+/* signature: undefined __fastcall PECMD_ParseFontOptions(longlong param_1, LPWSTR param_2, uint *
+ * param_3) */
 void PECMD_ParseFontOptions(int64_t param_1, LPWSTR param_2, uint32_t *param_3)
 {
     WCHAR *lpStart;
@@ -334,7 +340,7 @@ void PECMD_ParseFontOptions(int64_t param_1, LPWSTR param_2, uint32_t *param_3)
 /* signature: undefined __fastcall PECMD_SetControlTooltip(longlong param_1, HWND param_2,
  *   int param_3, LPCWSTR param_4, char param_5) */
 void PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3, LPCWSTR param_4,
-                   char param_5)
+                             char param_5)
 {
     LPWSTR local_res8;
     WCHAR local_78[56];

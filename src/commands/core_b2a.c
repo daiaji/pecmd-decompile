@@ -29,15 +29,15 @@ extern uint64_t PECMD_ParseCommandBlock(void *script, void **args, int count, ui
 extern uint64_t PECMD_OneTimeInitBody(void);
 extern void PECMD_SetObjectVtable(void *obj);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
-extern HMENU PECMD_BuildImDiskMenu(int64_t *obj, ULARGE_INTEGER pos, int mode,
-                           int64_t *out, uint64_t flags);
+extern HMENU PECMD_BuildImDiskMenu(int64_t *obj, ULARGE_INTEGER pos, int mode, int64_t *out,
+                                   uint64_t flags);
 extern uint64_t PECMD_HelpDlgProc(void *app, HWND hwnd, uint32_t msg, HDC hdc, HWND wnd);
 extern HGDIOBJ PECMD_LogoDlgProc(void *script, HWND hwnd, uint32_t msg, HDC hdc, void *p4);
 extern int64_t PECMD_MainMsgWndProc(uintptr_t script, HWND hwnd, uint32_t msg, void *wParam,
-                             int64_t lParam);
+                                    int64_t lParam);
 extern uint32_t PECMD_ParseSize(LPWSTR s, int a, int b, int c);
-extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type,
-                           BYTE *data, DWORD size);
+extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data,
+                                       DWORD size);
 extern uint64_t PECMD_ServiceControl(void *script, LPCWSTR name);
 extern void PECMD_RunFbwfHookScript(void);
 extern void PECMD_TerminateJobObject(int64_t obj);
@@ -46,8 +46,8 @@ extern void PECMD_BuildExecCommand(int64_t obj);
 extern void PECMD_CleanupTaskEnvObject(int64_t obj);
 extern void *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
 extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
-extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
-                             uint32_t flag, void *p6, void *s7, void *p8);
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
+                                     void *p6, void *s7, void *p8);
 extern int64_t PECMD_RegisterCallbackWnd(uint32_t mode);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
 extern WCHAR *FUN_14001BE14(WCHAR *s);
@@ -59,7 +59,7 @@ extern uint32_t PECMD_ReadRamdataDword(LPCWSTR name);
 extern uint64_t PECMD_CreateDirectoryTree(LPCWSTR path);
 extern void FUN_140017F54(int *p);
 extern int64_t PECMD_MatchPatternSwap(LPCWSTR a, LPCWSTR b);
-extern void FUN_14006F884(LPCWSTR name, WCHAR **out);         /* @0x14006f884 已实现 */
+extern void FUN_14006F884(LPCWSTR name, WCHAR **out); /* @0x14006f884 已实现 */
 extern uint64_t *PECMD_SkipLeadingControls(WCHAR **pp);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern WCHAR **FUN_14007034C(void *ps, LPCWSTR src);
@@ -68,18 +68,17 @@ extern uint64_t PECMD_ApplyTextWindowLayout(uint64_t value, LPCWSTR text);
 extern int64_t PECMD_RunCommand(void *script, WCHAR *cmd);
 
 /* ---- 本批引用的全局数据 ---- */
-extern uint8_t g_initOnceFlag;        /* 一次性初始化标志 */
-extern CRITICAL_SECTION g_csThreadTbl;  /* 线程表临界区 */
-extern DWORD g_dwC96C;          /* 线程 ID 输出 */
-extern uint8_t g_sysStartuped;        /* SysStartuped 标志 */
+extern uint8_t g_initOnceFlag;         /* 一次性初始化标志 */
+extern CRITICAL_SECTION g_csThreadTbl; /* 线程表临界区 */
+extern DWORD g_dwC96C;                 /* 线程 ID 输出 */
+extern uint8_t g_sysStartuped;         /* SysStartuped 标志 */
 
 /* ========== PECMD_IsVkPrefix @0x1400226b0 ==========
  * 判断串是否为 "vk_" 前缀 (忽略前两字符大小写)。
  */
 int64_t PECMD_IsVkPrefix(WCHAR *s)
 {
-    if ((((*s | 0x20) == 0x76) && ((s[1] | 0x20) == 0x6b)) &&
-        (s[2] == 0x5f)) {
+    if ((((*s | 0x20) == 0x76) && ((s[1] | 0x20) == 0x6b)) && (s[2] == 0x5f)) {
         return 1;
     }
     return 0;
@@ -135,8 +134,7 @@ void PECMD_InitIfOldSystem(void)
  * @0x140035b08 size=25 — 文件大小/位置包装(asm→C): 纯尾调用包装,
  *   将第4参(r8)移入第4槽(r9)、置第3参 r8b=1, call PECMD_BuildImDiskMenu。
  */
-void PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos,
-                   int64_t *out, uint64_t flags)
+void PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
     PECMD_BuildImDiskMenu(obj, pos, 1, out, flags);
 }
@@ -145,8 +143,7 @@ void PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos,
  * @0x140035b24 size=25 — 文件大小/位置包装(asm→C): 同 b08, 第3参 xor r8d=0,
  *   call PECMD_BuildImDiskMenu。
  */
-void PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos,
-                   int64_t *out, uint64_t flags)
+void PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
     PECMD_BuildImDiskMenu(obj, pos, 0, out, flags);
 }
@@ -175,8 +172,8 @@ void PECMD_ScriptWndProc(HWND hwnd, uint32_t msg, HDC hdc, void *p4)
 LRESULT PECMD_WndProcForward(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     /* UNIMPLEMENTED @FUN_14003e16c — decompile-failed, body 未还原 */
-PECMD_MainMsgWndProc((uintptr_t)g_Script, hwnd, msg,
-                  (void *)(uintptr_t)wParam, (int64_t)lParam);
+    PECMD_MainMsgWndProc((uintptr_t)g_Script, hwnd, msg, (void *)(uintptr_t)wParam,
+                         (int64_t)lParam);
     return 0;
 }
 
@@ -190,8 +187,8 @@ int64_t PECMD_SetFbwfThreshold(uint64_t unused, LPWSTR spec)
     (void)unused;
     val[0] = PECMD_ParseSize(spec, 4, 0x400, 0x20);
     PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
-                  WSTR("SYSTEM\\ControlSet001\\Services\\FBWF"),
-                  WSTR("WinPECacheThreshold"), 4, (BYTE *)val, 4);
+                              WSTR("SYSTEM\\ControlSet001\\Services\\FBWF"),
+                              WSTR("WinPECacheThreshold"), 4, (BYTE *)val, 4);
     PECMD_ServiceControl(g_Script, WSTR("FBWF"));
     PECMD_RunFbwfHookScript();
     return 0;
@@ -227,8 +224,8 @@ int64_t PECMD_CleanupTaskThread(void *task)
  */
 void PECMD_CreateCleanupThread(void *task)
 {
-    HANDLE hThread = CreateThread(NULL, 0x10000, (void *)PECMD_CleanupTaskThread,
-                                  task, 0x10004, &g_dwC96C);
+    HANDLE hThread =
+        CreateThread(NULL, 0x10000, (void *)PECMD_CleanupTaskThread, task, 0x10004, &g_dwC96C);
     if (hThread != (HANDLE)0) {
         EnterCriticalSection(&g_csInit);
         g_taskCount++;
@@ -247,11 +244,15 @@ int32_t PECMD_GetPathType(WCHAR *s)
     if ((u == 0) || (s[1] != 0x3a)) {
         return -1;
     }
-    if (u == 0x40) return 2;
+    if (u == 0x40)
+        return 2;
     u = (uint16_t)(u | 0x20);
-    if (u == 0x68) return 0;
-    if (u == 99) return 4;
-    if (u == 0x2b) return 8;
+    if (u == 0x68)
+        return 0;
+    if (u == 99)
+        return 4;
+    if (u == 0x2b)
+        return 8;
     return -1;
 }
 
@@ -265,7 +266,8 @@ LPCWSTR PECMD_DerefVarName(void *script, WCHAR **pp)
         void *node = FUN_14001E69C(script, s, NULL, -1);
         if (node == NULL) {
             s = *pp;
-        } else {
+        }
+        else {
             s = *(LPCWSTR *)((uint8_t *)node + 8);
             *pp = (WCHAR *)s;
         }
@@ -329,7 +331,7 @@ uint64_t PECMD_ApplyWallpaper(WCHAR *path)
     ps = FUN_14001C270(ps, &local_res10);
     len = PECMD_WideStrLen(ps);
     PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, WSTR("Control Panel\\Desktop"),
-                  WSTR("Wallpaper.PECMD"), 1, (BYTE *)ps, (int)len * 2);
+                              WSTR("Wallpaper.PECMD"), 1, (BYTE *)ps, (int)len * 2);
     r = PECMD_SetDesktopWallpaper(ps, 1);
     PECMD_FreeStrBuf(&local_res10);
     return r;
@@ -359,8 +361,7 @@ int64_t PECMD_CollapseRepeatedChars(LPCWSTR s, WCHAR ch)
     while (*s != 0) {
         if (*s == ch && s[1] == ch) {
             LPCWSTR q = s + 1;
-            memmove((void *)s, (void *)q,
-                    (int)((end - s) / 2) * 2);
+            memmove((void *)s, (void *)q, (int)((end - s) / 2) * 2);
             end--;
             while (*q == ch) {
                 s = q;
@@ -431,7 +432,8 @@ int64_t PECMD_MatchPatternWithQuotes(LPCWSTR text, LPCWSTR pattern)
             *(WCHAR *)quote_end = saved;
             quote_end++;
         }
-        if (r != 0) break;
+        if (r != 0)
+            break;
         if (quote_end == NULL || (pattern = quote_end, *quote_end == 0)) {
             return 0;
         }
@@ -449,11 +451,13 @@ int64_t PECMD_ResolveScriptVariable(void *script, LPCWSTR name, void **out)
     if (*(uint8_t *)((uint8_t *)script + 0xd) == 0 && *name != L'&') {
         FUN_14006F884(name, (WCHAR **)out);
         v = (int64_t)(uintptr_t)*out;
-    } else {
+    }
+    else {
         node = FUN_14001E69C(script, name, NULL, -1);
         if (node == NULL) {
             v = 0;
-        } else {
+        }
+        else {
             v = *(int64_t *)((uint8_t *)node + 8);
         }
     }
@@ -506,10 +510,11 @@ void PECMD_SetPELogonParamText(uint64_t value, LPCWSTR text, HWND hwnd)
     int len;
     if (hwnd == (HWND)0) {
         PECMD_ApplyTextWindowLayout(value, text);
-    } else {
+    }
+    else {
         len = lstrlenW(text);
         PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002, WSTR("SOFTWARE\\PELOGON"),
-                      WSTR("Text.Paramd"), 1, (BYTE *)text, len * 2 + 2);
+                                  WSTR("Text.Paramd"), 1, (BYTE *)text, len * 2 + 2);
         SendMessageW(hwnd, 0x453, 0, 0);
     }
 }

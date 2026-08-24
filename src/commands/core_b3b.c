@@ -52,23 +52,21 @@ extern uint64_t FUN_14005F158(uint64_t *obj, uint8_t *data);
 extern uint64_t PECMD_ParseNumberToDouble(int64_t *pp, double *out);
 extern uint32_t PECMD_EnumDeviceInterfaces(int dev, uint32_t flags, void *ctx);
 extern int FUN_14005B184(char *a, int64_t b, int64_t n);
-extern void PECMD_SetWindowProcHook(uint64_t *arr, uint64_t value,
-                                    LONG_PTR *slot);
+extern void PECMD_SetWindowProcHook(uint64_t *arr, uint64_t value, LONG_PTR *slot);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos, DWORD method);
 extern uint64_t PECMD_ParseIntWithSign(void *pp, int *out);
 extern bool PECMD_ParseUIntValue(int64_t *pp, int *out);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
 extern uint64_t PECMD_ParseInt64Round(int64_t *pp, int64_t *out);
 extern uint64_t PECMD_EvalExpressionTree(int64_t *pp, double *out);
-extern uint32_t PECMD_EnumDevices(LPCWSTR path, LPWSTR buf, uint32_t flags,
-                              void *guid);
+extern uint32_t PECMD_EnumDevices(LPCWSTR path, LPWSTR buf, uint32_t flags, void *guid);
 extern uint64_t PECMD_ParseSizeWithUnit(int64_t *pp, double *out);
-extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out,
-                         DWORD *type, LONG *status);
+extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out, DWORD *type,
+                         LONG *status);
 
 /* ---- 本批引用的全局数据 ---- */
-extern double g_fontMinus0;         /* 常量 */
-extern uint8_t g_bE870[];      /* GUID 数据 */
+extern double g_fontMinus0; /* 常量 */
+extern uint8_t g_bE870[];   /* GUID 数据 */
 
 /* ========== AtlThrowImpl @0x14004f908 ==========
  * ATL 抛错: 按错误码抛异常。
@@ -171,8 +169,7 @@ int PECMD_CountSeparators(char *s)
 {
     int count = 0;
     for (; *s != '\0'; s++) {
-        if ((((*s == ';') || (*s == '&')) || (*s == ':')) ||
-            ((*s == ',' || (*s == ' ')))) {
+        if ((((*s == ';') || (*s == '&')) || (*s == ':')) || ((*s == ',' || (*s == ' ')))) {
             count++;
             *s = '\0';
         }
@@ -226,8 +223,7 @@ void PECMD_FlushFileThrice(HANDLE hFile)
  */
 uint64_t PECMD_IsAlphaNumeric(uint16_t ch)
 {
-    if ((((ch < 0x61) || (0x7a < ch)) &&
-         ((ch < 0x41 || (0x5a < ch)))) &&
+    if ((((ch < 0x61) || (0x7a < ch)) && ((ch < 0x41 || (0x5a < ch)))) &&
         (9 < (uint16_t)(ch - 0x30))) {
         return 0;
     }
@@ -290,8 +286,8 @@ void PECMD_IncAndForward_8558(int64_t obj, uint8_t value)
 /* ========== PECMD_RegReadWrap @0x140069218 ==========
  * 注册表读取包装。
  */
-void PECMD_RegReadWrap(HKEY root, LPCWSTR sub, LPCWSTR name,
-                   int64_t *out, DWORD *type, LONG *status)
+void PECMD_RegReadWrap(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out, DWORD *type,
+                       LONG *status)
 {
     FUN_1400690C0(root, sub, name, out, type, status);
 }
@@ -330,7 +326,8 @@ int64_t PECMD_StripDevicePrefix(int64_t path)
  */
 int64_t PECMD_ContainerAppend(int64_t *container)
 {
-    PECMD_SetWindowProcHook((uint64_t *)container, (uint64_t)*container, (int64_t *)((uint8_t *)*container + 8));
+    PECMD_SetWindowProcHook((uint64_t *)container, (uint64_t)*container,
+                            (int64_t *)((uint8_t *)*container + 8));
     return *container + 8;
 }
 

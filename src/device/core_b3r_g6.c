@@ -19,33 +19,34 @@
 
 /* ---- 本文件引用的全局/数据 (extern, 定义于别处) ---- */
 extern WCHAR g_szEmpty[];            /* .rdata 空串/虚表基址 */
-extern uint16_t u__Y__X_1401270d0[];        /* "/Y /X " 10 字节宽串 (u__Y__X_1401270d0) */
-extern double   g_dbl27190;              /* clamp 上界 */
-extern double   g_dbl27188;              /* clamp 下界 */
+extern uint16_t u__Y__X_1401270d0[]; /* "/Y /X " 10 字节宽串 (u__Y__X_1401270d0) */
+extern double g_dbl27190;            /* clamp 上界 */
+extern double g_dbl27188;            /* clamp 下界 */
 
 /* ---- 本文件引用的内部辅助函数 (extern, 不在此定义) ---- */
-extern WCHAR    *PECMD_SkipLeadingControlChars(WCHAR **ps);                 /* @0x14005b154 trim 空白 */
-extern void PECMD_FreeStrBuf(void *ps);                /* @0x14005b104 释放字符串槽 */
-extern uint64_t  PECMD_GetPackedSystemVersion(void);                       /* @0x14005ea5c 版本号 */
-extern WCHAR    *PECMD_AssignString(WCHAR **ps, LPCWSTR src);    /* @0x14007034c 字符串赋值 */
-extern WCHAR    *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);    /* @0x14006375c 字符串追加 */
-extern void      PECMD_AllocStrSlot(WCHAR **out);                /* @0x140063620 字符串清理 */
-extern void      PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, short delim); /* @0x1400675b8 按分隔切分 */
-extern WCHAR    *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
-extern WCHAR    *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);    /* @0x140024c48 展转义 */
-extern void      PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);       /* @0x1400679b0 解析整数 */
-extern WCHAR    *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);                /* @0x140070310 token 扫描 */
-extern int32_t   PECMD_AsciiWideICmp(const char *a, const WCHAR *w);         /* @0x14005c7c4 (icmp) */
-extern int64_t   PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4,
-                               uint32_t flag, void *p6, void *s7, void *p8); /* @0x14000e26c 脚本执行 */
-extern int       PECMD_OnDeleteCommand(void *arg, LPCWSTR w, HWND hwnd);       /* @0x14005b2c0 */
-extern int       PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d,
-                               LPCWSTR e, void *f, int64_t *g, HWND h,
-                               int64_t i);                              /* @0x140057b80 */
-extern int       PECMD_ParseUIntValue(LPCWSTR *pp, int *out);                  /* @0x140074838 解析整数 token */
-extern uint64_t  PECMD_ParseAndSkipSpace_7b54(WCHAR **pp, double *out);                /* @0x140067b54 解析 double */
-extern LPCWSTR   PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3,
-                               int64_t *a4, uint32_t a5, uint16_t *a6); /* @0x140067278 取变量 */
+extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **ps);    /* @0x14005b154 trim 空白 */
+extern void PECMD_FreeStrBuf(void *ps);                     /* @0x14005b104 释放字符串槽 */
+extern uint64_t PECMD_GetPackedSystemVersion(void);         /* @0x14005ea5c 版本号 */
+extern WCHAR *PECMD_AssignString(WCHAR **ps, LPCWSTR src);  /* @0x14007034c 字符串赋值 */
+extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 字符串追加 */
+extern void PECMD_AllocStrSlot(WCHAR **out);                /* @0x140063620 字符串清理 */
+extern void PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst,
+                                   short delim);                    /* @0x1400675b8 按分隔切分 */
+extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
+extern WCHAR *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);  /* @0x140024c48 展转义 */
+extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x1400679b0 解析整数 */
+extern WCHAR *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);          /* @0x140070310 token 扫描 */
+extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);  /* @0x14005c7c4 (icmp) */
+extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
+                                     void *p6, void *s7, void *p8); /* @0x14000e26c 脚本执行 */
+extern int PECMD_OnDeleteCommand(void *arg, LPCWSTR w, HWND hwnd);  /* @0x14005b2c0 */
+extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, void *f,
+                                        int64_t *g, HWND h, int64_t i); /* @0x140057b80 */
+extern int PECMD_ParseUIntValue(LPCWSTR *pp, int *out); /* @0x140074838 解析整数 token */
+extern uint64_t PECMD_ParseAndSkipSpace_7b54(WCHAR **pp,
+                                             double *out); /* @0x140067b54 解析 double */
+extern LPCWSTR PECMD_ExtractTokenByIndex(uint64_t a1, int *a2, LPCWSTR a3, int64_t *a4, uint32_t a5,
+                                         uint16_t *a6); /* @0x140067278 取变量 */
 
 /* ================================================================
  * @0x140078f00  FORMAT.COM 包装器
@@ -67,14 +68,14 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
     WCHAR *local_res10;
     int local_res20;
     int local_88;
-    uint32_t _Var7low;               /* _Var7.dwLowDateTime */
-    WCHAR *local_80;                 /* 命令串槽 (局部 _FILETIME 复用) */
+    uint32_t _Var7low; /* _Var7.dwLowDateTime */
+    WCHAR *local_80;   /* 命令串槽 (局部 _FILETIME 复用) */
     LPCWSTR local_78;
     LPCWSTR local_70;
     LPCWSTR local_68;
     LPCWSTR local_60;
     LPCWSTR local_58;
-    WCHAR local_50[16];              /* "/Y /X " 宽串 (CONCAT26 splice 折叠) */
+    WCHAR local_50[16]; /* "/Y /X " 宽串 (CONCAT26 splice 折叠) */
     LPCWSTR pwVar8;
 
     local_res10 = param_2;
@@ -111,7 +112,8 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
 
     if (WVar11 == L'*') {
         PECMD_AppendWideStr(&local_80, local_res10);
-        if ((!bVar2) && ((pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0))) {
+        if ((!bVar2) &&
+            ((pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/Y")), pWVar5 == (LPWSTR)0))) {
             PECMD_AppendWideStr(&local_80, WSTR(" /Y "));
         }
         pWVar5 = (LPWSTR)(uintptr_t)StrStrIW(pWVar6, WSTR("/X"));
@@ -119,14 +121,14 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
             PECMD_AppendWideStr(&local_80, WSTR(" /X "));
         }
         pWVar9 = local_70;
-        if (!bVar2) goto LAB_140079428;
+        if (!bVar2)
+            goto LAB_140079428;
         if (*pWVar6 == L'/') {
             WVar11 = L'/';
             do {
                 /* 跳过参数之间的空白 (9/0xd/' ') — 原 Ghidra 条件已简化 */
                 while ((WVar11 != L'\0') &&
-                       ((((uint16_t)WVar11 < 9 || (0xd < (uint16_t)WVar11)) &&
-                         (WVar11 != L' ')))) {
+                       ((((uint16_t)WVar11 < 9 || (0xd < (uint16_t)WVar11)) && (WVar11 != L' ')))) {
                     pWVar6 = pWVar6 + 1;
                     local_res10 = pWVar6;
                     WVar11 = *pWVar6;
@@ -137,11 +139,13 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
             } while (WVar11 == L'/');
         }
         pWVar9 = local_70;
-        if ((*pWVar6 == L'\0') || (pWVar6[1] != L':')) goto LAB_140079428;
+        if ((*pWVar6 == L'\0') || (pWVar6[1] != L':'))
+            goto LAB_140079428;
         pWVar6[2] = L'\0';
         local_70 = pWVar6;
         sVar10 = 0;
-    } else {
+    }
+    else {
         PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_70, 0x2c);
         if (*local_res10 == L',') {
             local_res10 = local_res10 + 1;
@@ -163,9 +167,11 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
             if (*local_res10 == L'\"') {
                 local_58 = local_res10;
                 local_res10 = (WCHAR *)pWVar9;
-                pWVar6 = (WCHAR *)PECMD_NextToken((int64_t *)&local_58, (int64_t *)&local_res10, 0x85);
+                pWVar6 =
+                    (WCHAR *)PECMD_NextToken((int64_t *)&local_58, (int64_t *)&local_res10, 0x85);
                 PECMD_StrCopyW((WCHAR **)&local_78, local_58, (int64_t)local_res10);
-            } else {
+            }
+            else {
                 PECMD_SplitTokenTrimWs(&local_res10, (WCHAR **)&local_78, sVar10);
                 pWVar6 = local_res10;
             }
@@ -228,18 +234,18 @@ int64_t PECMD_FormatVolume(int64_t *param_1, WCHAR *param_2)
         PECMD_AppendWideStr(&local_80, local_50);
 
         pWVar9 = local_70;
-        if (!bVar2) goto LAB_140079428;
+        if (!bVar2)
+            goto LAB_140079428;
     }
     if (local_70 != (LPCWSTR)0) {
         SetVolumeLabelW(local_70, (LPCWSTR)g_szEmpty);
     }
 
-LAB_140079428:
-    {
-        int64_t _Var7 = PECMD_ExecCmdDispatch((void *)param_1, (void *)local_80, (void *)param_1,
-                                      (void *)0, (uint32_t)1, (void *)0, (void *)0, (void *)0);
-        _Var7low = (uint32_t)_Var7;                     /* _Var7.dwLowDateTime */
-    }
+LAB_140079428: {
+    int64_t _Var7 = PECMD_ExecCmdDispatch((void *)param_1, (void *)local_80, (void *)param_1,
+                                          (void *)0, (uint32_t)1, (void *)0, (void *)0, (void *)0);
+    _Var7low = (uint32_t)_Var7; /* _Var7.dwLowDateTime */
+}
     if (sVar10 != 0) {
         SetVolumeLabelW(pWVar9, local_78);
     }
@@ -257,8 +263,8 @@ LAB_140079428:
  *   longlong *param_2, LPCWSTR param_3, LPCWSTR param_4, WPARAM param_5,
  *   undefined8 *param_6)
  */
-uint64_t PECMD_SetListParam(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
-                       LPCWSTR param_4, WPARAM param_5, uint64_t *param_6)
+uint64_t PECMD_SetListParam(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3, LPCWSTR param_4,
+                            WPARAM param_5, uint64_t *param_6)
 {
     HWND hWnd;
     HWND pHVar1;
@@ -295,14 +301,15 @@ uint64_t PECMD_SetListParam(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3
     bVar8 = *(uint8_t *)((char *)lVar9 + 0xe4);
     uVar5 = (int64_t)PECMD_AsciiWideICmp("percent", (const WCHAR *)param_4);
     if ((char)uVar5 == '\0') {
-LAB_140079792:
+    LAB_140079792:
         lpCriticalSection = (LPCRITICAL_SECTION)*param_6;
         if (lpCriticalSection != (LPCRITICAL_SECTION)0) {
             *param_6 = 0;
             LeaveCriticalSection(lpCriticalSection);
         }
-        uVar5 = PECMD_DispatchControlCommand((void *)(intptr_t)param_1[7], param_4, param_5, hWnd, param_3,
-                              (void *)(intptr_t)param_1[10], param_2, pHVar1, (int64_t)param_1);
+        uVar5 = PECMD_DispatchControlCommand((void *)(intptr_t)param_1[7], param_4, param_5, hWnd,
+                                             param_3, (void *)(intptr_t)param_1[10], param_2,
+                                             pHVar1, (int64_t)param_1);
         if ((int)uVar5 == 0) {
             iVar4 = lstrcmpW(WSTR("color"), param_4);
             if (iVar4 == 0) {
@@ -317,11 +324,13 @@ LAB_140079792:
                     }
                     if ((bVar8 & 1) == 0) {
                         *(int32_t *)((char *)param_1[7] + 0xe0) = *(int32_t *)&local_res8;
-                    } else {
+                    }
+                    else {
                         *(int32_t *)((char *)param_1[7] + 0x5c) = *(int32_t *)&local_res8;
                     }
                 }
-            } else if (*param_4 == L'\0') {
+            }
+            else if (*param_4 == L'\0') {
                 if (*param_3 == L'\0') {
                     return 0x80070057;
                 }
@@ -350,28 +359,37 @@ LAB_140079792:
                     Msg = 0x462;
                     local_78 = param_1;
                     local_68 = pWVar7;
-                } else {
+                }
+                else {
                     local_50 = 0xffffffffffffffffLL;
                     local_78 = (uint64_t *)(int64_t)(iVar4 * 10000000);
                     Msg = 0x45b;
                     local_70 = -0x80000000;
-                    local_68 = (LPCWSTR)(intptr_t)(int64_t)(int32_t)0x80000000; /* 0xffffffff80000000 */
+                    local_68 =
+                        (LPCWSTR)(intptr_t)(int64_t)(int32_t)0x80000000; /* 0xffffffff80000000 */
                     local_60 = (int64_t)(intptr_t)(int64_t)(int32_t)0x80000000;
                     local_58 = pWVar7;
                 }
                 local_48 = 0;
-                (void)local_48; (void)local_50; (void)local_58; (void)local_60;
-                (void)local_68; (void)local_70;
+                (void)local_48;
+                (void)local_50;
+                (void)local_58;
+                (void)local_60;
+                (void)local_68;
+                (void)local_70;
                 SendMessageW(hWnd, Msg, (WPARAM)param_1[7], (LPARAM)&local_78);
             }
         }
-    } else {
+    }
+    else {
         uVar5 = (int64_t)PECMD_AsciiWideICmp("smooth", (const WCHAR *)param_3);
         if ((char)uVar5 == '\0') {
             uVar5 = (int64_t)PECMD_AsciiWideICmp("-smooth", (const WCHAR *)param_3);
-            if ((char)uVar5 == '\0') goto LAB_140079792;
+            if ((char)uVar5 == '\0')
+                goto LAB_140079792;
             bVar8 = bVar8 & 0xfe;
-        } else {
+        }
+        else {
             bVar8 = bVar8 | 1;
         }
         *(uint8_t *)((char *)lVar9 + 0xe4) = bVar8;
@@ -384,8 +402,8 @@ LAB_140079792:
  * signature: int __fastcall PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2,
  *   uint param_3, int param_4, ushort param_5)
  */
-int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
-                  int param_4, unsigned short param_5)
+int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3, int param_4,
+                         unsigned short param_5)
 {
     WCHAR *lpStr2;
     WCHAR *pWVar1;
@@ -420,13 +438,13 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
         while ((pWVar5 = local_res10), *local_res10 != L'\0') {
             if ((param_3 & 0xf) == 0) {
                 iVar4 = StrCmpNIW(local_res10, lpStr2, iVar3);
-            } else {
+            }
+            else {
                 iVar4 = StrCmpNW(local_res10, lpStr2, iVar3);
             }
-            if (((iVar4 == 0) &&
-                 (((WVar2 = pWVar5[iVar3], WVar2 == L'\0') ||
-                   ((8 < (uint16_t)WVar2) && ((uint16_t)WVar2 < 0xe))) ||
-                  (WVar2 == L' ')))) {
+            if (((iVar4 == 0) && (((WVar2 = pWVar5[iVar3], WVar2 == L'\0') ||
+                                   ((8 < (uint16_t)WVar2) && ((uint16_t)WVar2 < 0xe))) ||
+                                  (WVar2 == L' ')))) {
                 param_4 = param_4 + -1;
                 if (param_4 < 1) {
                     return iVar6;
@@ -443,7 +461,8 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
             PECMD_SkipLeadingControlChars(&local_res10);
             iVar6 = iVar6 + 1;
         }
-    } else {
+    }
+    else {
         PECMD_AllocStrSlot(&local_res8);
         pWVar1 = local_res10;
         WVar2 = *local_res10;
@@ -452,12 +471,14 @@ int PECMD_FindTokenIndex(LPCWSTR param_1, LPCWSTR param_2, unsigned int param_3,
             local_res18 = iVar6 + -1;
             *pWVar5 = L'\0';
             PECMD_ExtractTokenByIndex((uint64_t)(uintptr_t)g_Script, &local_res18, pWVar1,
-                          (int64_t *)&local_res8, (uint32_t)param_5, (uint16_t *)0);
+                                      (int64_t *)&local_res8, (uint32_t)param_5, (uint16_t *)0);
             pWVar5 = local_res8;
-            if (*local_res8 == L'\0') break;
+            if (*local_res8 == L'\0')
+                break;
             if ((param_3 & 0xf) == 0) {
                 iVar3 = lstrcmpiW(local_res8, lpStr2);
-            } else {
+            }
+            else {
                 iVar3 = lstrcmpW(local_res8, lpStr2);
             }
             if (iVar3 == 0) {

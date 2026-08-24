@@ -17,8 +17,8 @@
 
 #include "pecmd_defs.h"
 /* ---- 待重构函数原型 (后续批次) ---- */
-void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int a);  /* @0x14001e6bc 变量写入 */
-void FUN_14005D534(void *s, LPCWSTR k, LPCWSTR v);         /* @0x14005d534 无锁写入 */
+void FUN_14001E6BC(void *s, LPCWSTR k, LPCWSTR v, int a);            /* @0x14001e6bc 变量写入 */
+void FUN_14005D534(void *s, LPCWSTR k, LPCWSTR v);                   /* @0x14005d534 无锁写入 */
 WCHAR *PECMD_SprintfRetEnd(WCHAR *buf, uint64_t value, LPCWSTR fmt); /* @0x1400e6d38 格式化 */
 
 /* 全局 */
@@ -33,7 +33,8 @@ void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value)
         EnterCriticalSection(&g_csInit);
         FUN_14001E6BC(script, key, value, -1);
         LeaveCriticalSection(&g_csInit);
-    } else {
+    }
+    else {
         FUN_14005D534(script, key, value);
     }
 }
@@ -56,7 +57,8 @@ void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count)
     if (count >= 0) {
         for (;;) {
             hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, (size_t)count * 2 + 10);
-            if (hdr) break;
+            if (hdr)
+                break;
             FUN_1400630D0(2);
         }
         *(size_t *)hdr = (size_t)count * 2 + 2;
@@ -82,7 +84,7 @@ void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key)
 {
     WCHAR buf[56];
 
-    wsprintfW(buf, WSTR("%lu"), (uint32_t)value);   /* Ghidra 丢参, 已还原 (REVIEW §2) */
+    wsprintfW(buf, WSTR("%lu"), (uint32_t)value); /* Ghidra 丢参, 已还原 (REVIEW §2) */
     FUN_1400629B8(script, key, buf);
 }
 
@@ -91,6 +93,6 @@ void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key)
 {
     WCHAR buf[56];
 
-    wsprintfW(buf, WSTR("%ld"), (int32_t)value);    /* Ghidra 丢参, 已还原 (REVIEW §2) */
+    wsprintfW(buf, WSTR("%ld"), (int32_t)value); /* Ghidra 丢参, 已还原 (REVIEW §2) */
     FUN_1400629B8(script, key, buf);
 }

@@ -47,8 +47,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern int64_t *PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
-                              int64_t *extra);
+extern int64_t *PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text, int64_t *extra);
 extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t mode);
 extern void PECMD_ClearStringItemList(int64_t arr);
 extern void PECMD_GetApiProcCached(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
@@ -57,23 +56,21 @@ extern bool FUN_1400C1194(int64_t *pp, uint64_t *out);
 extern uint64_t PECMD_EvalExpressionTree(int64_t *pp, double *out);
 extern uint64_t *PECMD_AllocSmallObject(uint64_t *arr);
 extern uint64_t *PECMD_GrowByteBuffer(uint64_t *arr, int64_t size);
-extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t srclen,
-                              uint64_t codepage);
-extern void FUN_140063A6C(uint64_t *arr, int64_t *end, uint64_t *flags,
-                          uint32_t esize);
+extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t srclen, uint64_t codepage);
+extern void FUN_140063A6C(uint64_t *arr, int64_t *end, uint64_t *flags, uint32_t esize);
 extern uint64_t PECMD_ParseExpression(int *ctx, LPWSTR path);
 extern int64_t PECMD_EvalExprSkipOneChar(int64_t *pp, uint64_t *out);
 extern HFONT FUN_1400B1F34(int *lf, double *size, LPCWSTR name);
 extern void PECMD_FlushFileThrice(HANDLE hFile);
 extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *err);
-extern void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end,
-                           uint8_t *flags, uint32_t esize);
+extern void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end, uint8_t *flags,
+                                 uint32_t esize);
 
 /* ---- 本批引用的全局数据 ---- */
 extern HMODULE g_hRichEdit;
 extern int64_t g_i64CCB8;
-extern void *g_pSetWindowTheme;          /* SetWindowTheme 函数指针 */
-extern uint8_t g_bD500[];      /* 主题名 */
+extern void *g_pSetWindowTheme; /* SetWindowTheme 函数指针 */
+extern uint8_t g_bD500[];       /* 主题名 */
 extern uint8_t PTR_FUN_1401234f0[];
 extern int (*g_pGetSaveFileNameW)(void);
 extern int64_t g_i64D428;
@@ -85,12 +82,10 @@ extern double g_fontRound;
 /* ========== PECMD_CreateVarWithValue @0x1400402ec ==========
  * 参数解析扩展：特殊标志时写回参数。
  */
-int64_t *PECMD_CreateVarWithValue(int64_t *obj, uint64_t value, LPCWSTR text,
-                            int64_t *extra)
+int64_t *PECMD_CreateVarWithValue(int64_t *obj, uint64_t value, LPCWSTR text, int64_t *extra)
 {
     int64_t *plVar2 = PECMD_CreateVariable(obj, value, text, extra);
-    if (((extra != (int64_t *)0x102) && (extra != (int64_t *)0x101)) &&
-        (plVar2 != NULL)) {
+    if (((extra != (int64_t *)0x102) && (extra != (int64_t *)0x101)) && (plVar2 != NULL)) {
         uint64_t *puVar1 = (uint64_t *)plVar2[1];
         *(uint16_t *)((uint8_t *)puVar1 + 8) = 0;
         *puVar1 = value;
@@ -126,7 +121,8 @@ char PECMD_LoadRichEdit(void)
         if (g_hRichEdit == (HMODULE)0) {
             g_hRichEdit = LoadLibraryA("RICHED32.DLL");
             g_richEditMode = (uint8_t)(g_hRichEdit != (HMODULE)0);
-        } else {
+        }
+        else {
             g_richEditMode = 2;
         }
     }
@@ -175,9 +171,8 @@ DWORD FUN_14005C61C(HKEY root, LPCWSTR sub, LPCWSTR name)
 {
     DWORD DVar1;
     HKEY local_res8[4] = {(HKEY)0, 0, 0, 0};
-    if (((sub == NULL) ||
-         (DVar1 = FUN_14005C394(root, sub, &local_res8[0], 2, 4),
-          root = local_res8[0], DVar1 == 0)) &&
+    if (((sub == NULL) || (DVar1 = FUN_14005C394(root, sub, &local_res8[0], 2, 4),
+                           root = local_res8[0], DVar1 == 0)) &&
         (DVar1 = RegDeleteValueW(root, name), local_res8[0] != (HKEY)0)) {
         RegCloseKey(local_res8[0]);
     }
@@ -191,9 +186,9 @@ void PECMD_LoadComDlgApis(void)
 {
     if (g_pGetSaveFileNameW == 0) {
         PECMD_GetApiProcCached("GetOpenFileNameW", "COMDLG32.DLL", (int64_t *)&g_i64D428,
-                      (int64_t *)&g_i64D438);
-        PECMD_GetApiProcCached("GetSaveFileNameW", "COMDLG32.DLL", (int64_t *)(void **)&g_pGetSaveFileNameW,
-                      (int64_t *)&g_i64D438);
+                               (int64_t *)&g_i64D438);
+        PECMD_GetApiProcCached("GetSaveFileNameW", "COMDLG32.DLL",
+                               (int64_t *)(void **)&g_pGetSaveFileNameW, (int64_t *)&g_i64D438);
     }
 }
 
@@ -240,8 +235,7 @@ uint64_t FUN_14005F158(uint64_t *stream, uint8_t *data)
     *(uint8_t *)(lVar1 + stream[1]) = *data;
     if (0xfff < (int64_t)stream[2]) {
         DWORD local_res8[8];
-        WriteFile((HANDLE)*stream, (LPCVOID)stream[1], *(DWORD *)(stream + 2),
-                  local_res8, NULL);
+        WriteFile((HANDLE)*stream, (LPCVOID)stream[1], *(DWORD *)(stream + 2), local_res8, NULL);
         stream[2] = 0;
     }
     return 1;
@@ -284,7 +278,8 @@ void PECMD_RemoveFirstMatchChar(uint16_t ch, char *s)
         if (cVar1 == '\0') {
             return;
         }
-        if (0x19 < sVar2) break;
+        if (0x19 < sVar2)
+            break;
         if ((uint32_t)ch == (uint32_t)(int)s[sVar2]) {
             memmove(s + sVar2, s + sVar2 + 1, 0x1a - sVar2);
             return;
@@ -312,8 +307,7 @@ void PECMD_SetWindowTheme(uint64_t hwnd)
         FUN_14005C898("SetWindowTheme", "UxTheme.dll", (int64_t *)&g_pSetWindowTheme, NULL);
     }
     if ((int64_t)g_pSetWindowTheme - 1 < (int64_t)-2) {
-        ((void (*)(uint64_t, void *, void *))g_pSetWindowTheme)(hwnd, g_bD500,
-                                                             g_bD500);
+        ((void (*)(uint64_t, void *, void *))g_pSetWindowTheme)(hwnd, g_bD500, g_bD500);
     }
 }
 
@@ -328,7 +322,8 @@ uint64_t PECMD_MatchAssignToken(char *key, int64_t *pp, int len)
     if (((char)uVar2 == '\0') ||
         ((puVar1[uVar3] != 0x3d && (uVar2 = uVar3, puVar1[uVar3] != 0x3a)))) {
         uVar2 &= 0xffffffffffffff00ULL;
-    } else {
+    }
+    else {
         *pp = (int64_t)(puVar1 + ((int)uVar3 + 1));
         uVar2 = 1;
     }
@@ -365,7 +360,8 @@ uint64_t PECMD_ParseIntRound(int64_t *pp, int *out)
     }
     if (local_res10[0] < g_dbl20b28) {
         local_res10[0] -= g_dbl25230;
-    } else {
+    }
+    else {
         local_res10[0] += g_dbl25230;
     }
     *out = (int)local_res10[0];
@@ -385,7 +381,8 @@ uint64_t PECMD_ParseInt64Round(int64_t *pp, int64_t *out)
     }
     if (local_res10[0] < g_dbl20b28) {
         local_res10[0] -= g_dbl25230;
-    } else {
+    }
+    else {
         local_res10[0] += g_dbl25230;
     }
     *out = (int64_t)local_res10[0];
@@ -417,8 +414,7 @@ void FUN_14006849C(uint64_t *stream)
 {
     DWORD local_res8[8];
     if ((*(char *)((uint8_t *)stream + 32) != '\0') && (0 < (int64_t)stream[2])) {
-        WriteFile((HANDLE)*stream, (LPCVOID)stream[1], *(DWORD *)(stream + 2),
-                  local_res8, NULL);
+        WriteFile((HANDLE)*stream, (LPCVOID)stream[1], *(DWORD *)(stream + 2), local_res8, NULL);
     }
     stream[2] = 0;
     PECMD_FreeStrBuf((WCHAR **)(stream + 1));
@@ -437,9 +433,9 @@ void PECMD_WriteEncByte(int64_t stream, uint8_t value)
     uint8_t local_res10[24];
     uint32_t uVar1 = (*(int *)(stream + 0x34) * 2 + 3) * *(int *)(stream + 0x30);
     *(int *)(stream + 0x34) = *(int *)(stream + 0x34) + 1;
-    local_res10[0] = (uint8_t)(value ^ (((uint8_t)(uVar1 >> 0x15) & 0x7e) ^
-                               (uint8_t)(uVar1 >> 0xe) ^ (uint8_t)(uVar1 >> 7) ^
-                               (uint8_t)uVar1));
+    local_res10[0] =
+        (uint8_t)(value ^ (((uint8_t)(uVar1 >> 0x15) & 0x7e) ^ (uint8_t)(uVar1 >> 0xe) ^
+                           (uint8_t)(uVar1 >> 7) ^ (uint8_t)uVar1));
     FUN_14005F158((uint64_t *)(stream + 8), local_res10);
 }
 
@@ -466,8 +462,7 @@ int64_t FUN_14006CA94(int64_t *ps, uint32_t codepage)
 {
     int64_t local_res8[4] = {0, 0, 0, 0};
     if (((codepage != 0x4b0) && (codepage != 0x4b1)) && (-1 < (int)codepage)) {
-        FUN_1400637DC(local_res8, (LPCSTR)*ps, 0xffffffffffffffffULL,
-                      (uint64_t)(uint16_t)codepage);
+        FUN_1400637DC(local_res8, (LPCSTR)*ps, 0xffffffffffffffffULL, (uint64_t)(uint16_t)codepage);
         int64_t lVar1 = *ps;
         *ps = local_res8[0];
         local_res8[0] = lVar1;
@@ -497,13 +492,11 @@ void FUN_1400706B4(uint32_t *ctx)
 {
     *ctx = 0;
     ctx[1] = 0xffffffff;
-    uint16_t *puVar1 = (uint16_t *)PECMD_GrowArrayWrap(0, (int64_t *)(ctx + 4),
-                                                  (int64_t *)(ctx + 6),
-                                                  (uint8_t *)(ctx + 10), 2);
+    uint16_t *puVar1 = (uint16_t *)PECMD_GrowArrayWrap(
+        0, (int64_t *)(ctx + 4), (int64_t *)(ctx + 6), (uint8_t *)(ctx + 10), 2);
     *puVar1 = 0x23;
-    uint64_t *puVar2 = (uint64_t *)PECMD_GrowArrayWrap(0, (int64_t *)(ctx + 0xc),
-                                                  (int64_t *)(ctx + 0xe),
-                                                  (uint8_t *)(ctx + 0x12), 8);
+    uint64_t *puVar2 = (uint64_t *)PECMD_GrowArrayWrap(
+        0, (int64_t *)(ctx + 0xc), (int64_t *)(ctx + 0xe), (uint8_t *)(ctx + 0x12), 8);
     *puVar2 = 0;
     *(uint8_t *)((uint8_t *)ctx + 9) = 0x20;
 }
@@ -516,11 +509,9 @@ uint32_t *FUN_14007E34C(uint32_t *ctx, uint8_t mode)
     *(uint8_t *)((uint8_t *)ctx + 10) = mode;
     *(uint8_t *)((uint8_t *)ctx + 8) = 0;
     *(uint8_t *)((uint8_t *)ctx + 10) = 0;
-    FUN_140063A6C((uint64_t *)(ctx + 4), (int64_t *)(ctx + 6),
-                  (uint64_t *)(ctx + 8), 2);
+    FUN_140063A6C((uint64_t *)(ctx + 4), (int64_t *)(ctx + 6), (uint64_t *)(ctx + 8), 2);
     *(uint8_t *)((uint8_t *)ctx + 0x12) = 0;
-    FUN_140063A6C((uint64_t *)(ctx + 0xc), (int64_t *)(ctx + 0xe),
-                  (uint64_t *)(ctx + 0x10), 8);
+    FUN_140063A6C((uint64_t *)(ctx + 0xc), (int64_t *)(ctx + 0xe), (uint64_t *)(ctx + 0x10), 8);
     FUN_1400706B4(ctx);
     return ctx;
 }
@@ -574,7 +565,8 @@ HFONT PECMD_CreateFontAdjusted(int *lf, int *size, LPCWSTR name)
     HFONT pHVar1 = FUN_1400B1F34(lf, local_res10, name);
     if (local_res10[0] < g_dbl20b28) {
         local_res10[0] -= g_fontRound;
-    } else {
+    }
+    else {
         local_res10[0] += g_fontRound;
     }
     *size = (int)local_res10[0];

@@ -47,54 +47,57 @@
 #include "win32_stub.h"
 
 /* ---- 已实现辅助（core_string.c / core_var*.c / core_exec*.c）---- */
-extern void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src);          /* @0x1400a4020 core_exec4.c */
-extern void PECMD_RefCountRelease(WCHAR **ps);                       /* @0x140028270 core_exec4.c */
-extern void FUN_140017CDC(void *dst, void *src);            /* @0x140017cdc */
-extern void FUN_1400186BC(void *s, void *parent);           /* @0x1400186bc */
-extern void FUN_14004EAA8(void *script, int flag);           /* @0x14004eaa8 */
-extern int64_t PECMD_StrChrOffset(const WCHAR *s, WCHAR c);        /* @0x14001b4f8 */
+extern void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src); /* @0x1400a4020 core_exec4.c */
+extern void PECMD_RefCountRelease(WCHAR **ps);                    /* @0x140028270 core_exec4.c */
+extern void FUN_140017CDC(void *dst, void *src);                  /* @0x140017cdc */
+extern void FUN_1400186BC(void *s, void *parent);                 /* @0x1400186bc */
+extern void FUN_14004EAA8(void *script, int flag);                /* @0x14004eaa8 */
+extern int64_t PECMD_StrChrOffset(const WCHAR *s, WCHAR c);       /* @0x14001b4f8 */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
-                               int64_t len);                   /* @0x14001e69c core_var3.c */
-extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg); /* @0x140073ccc core_exec5.c */
-extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c core_exec3.c */
-extern void PECMD_SetEnvIfChanged(LPCWSTR name, LPCWSTR value);      /* @0x140061508 core_exec3.c */
-extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 core_exec5.c */
-extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);                       /* @0x1400668ec core_var.c */
+                              int64_t len); /* @0x14001e69c core_var3.c */
+extern uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline,
+                              int saveArg); /* @0x140073ccc core_exec5.c */
+extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile,
+                                      uint32_t flag);           /* @0x14002452c core_exec3.c */
+extern void PECMD_SetEnvIfChanged(LPCWSTR name, LPCWSTR value); /* @0x140061508 core_exec3.c */
+extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);    /* @0x14005c7c4 core_exec5.c */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key,
+                                 LPCWSTR fmt);                       /* @0x1400668ec core_var.c */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
-extern void FUN_140053E78(void);                                 /* @0x140053e78 core_sys.c */
+extern void FUN_140053E78(void);                                     /* @0x140053e78 core_sys.c */
 
 /* ---- 全局 ---- */
-extern int32_t g_bInitWin;               /* DAT_14013d059 窗口初始化标志 (core_script2.c static) */
-extern int32_t g_logEnter;               /* g_i64CCB8 ENTER:/LEAVE: 日志开关 */
-extern WCHAR g_szEmpty[];                /* g_szEmpty .rdata 空串 */
+extern int32_t g_bInitWin; /* DAT_14013d059 窗口初始化标志 (core_script2.c static) */
+extern int32_t g_logEnter; /* g_i64CCB8 ENTER:/LEAVE: 日志开关 */
+extern WCHAR g_szEmpty[];  /* g_szEmpty .rdata 空串 */
 
 /* 未实现（TODO(verify) 挂起） */
-extern void PECMD_ResetScriptChain(void *script, void *a2);        /* @0x14001b3a0 脚本重置 */
-extern void PECMD_ShowAboutDialog(void);                          /* @0x1400e67e8 窗口系统准备 */
+extern void PECMD_ResetScriptChain(void *script, void *a2); /* @0x14001b3a0 脚本重置 */
+extern void PECMD_ShowAboutDialog(void);                    /* @0x1400e67e8 窗口系统准备 */
 extern void *PECMD_InitControlObjField(void *obj, HWND parent, uint32_t msg,
-                           void *a4);                     /* @0x1400731d8 窗口对象构造 */
-extern void PECMD_ModalMsgPumpEx(void *win, int a2);             /* @0x1400e95f4 窗口销毁 */
-extern void PECMD_ModalDialogPump(void *win, uint32_t msg);       /* @0x1400e91f0 窗口消息处理 */
-extern void PECMD_DispatchExpressionBlock(void *script, LPCWSTR p);       /* @0x1400b1724 脚本执行循环 */
-extern void FUN_140025f10(void *script, LPCWSTR line, int mode,
-                          void *a4, void *a5, void *a6);  /* @0x140025f10 行执行 */
-extern void PECMD_WaitTickCount(void);                          /* @0x140061470 */
-extern void PECMD_SetCurrentDirIfChanged(WCHAR *buf);                    /* @0x14001a640 恢复当前目录 */
-extern void PECMD_SyncWorkingDirectory(void);                          /* @0x14001e2cc */
-extern void FUN_14009BB28(void *script, int flag);        /* @0x14009bb28 脚本清理 */
+                                       void *a4);                   /* @0x1400731d8 窗口对象构造 */
+extern void PECMD_ModalMsgPumpEx(void *win, int a2);                /* @0x1400e95f4 窗口销毁 */
+extern void PECMD_ModalDialogPump(void *win, uint32_t msg);         /* @0x1400e91f0 窗口消息处理 */
+extern void PECMD_DispatchExpressionBlock(void *script, LPCWSTR p); /* @0x1400b1724 脚本执行循环 */
+extern void FUN_140025f10(void *script, LPCWSTR line, int mode, void *a4, void *a5,
+                          void *a6);                  /* @0x140025f10 行执行 */
+extern void PECMD_WaitTickCount(void);                /* @0x140061470 */
+extern void PECMD_SetCurrentDirIfChanged(WCHAR *buf); /* @0x14001a640 恢复当前目录 */
+extern void PECMD_SyncWorkingDirectory(void);         /* @0x14001e2cc */
+extern void FUN_14009BB28(void *script, int flag);    /* @0x14009bb28 脚本清理 */
 
 /* ========== PECMD_RunScriptText @0x1400b638c ==========
  * 脚本执行主入口。详见文件头注释。
  */
 int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
-                       uint32_t flags, LPCWSTR pFile, void *pPersist)
+                            uint32_t flags, LPCWSTR pFile, void *pPersist)
 {
-    uint8_t cInitFlag;          /* 初始 g_flag16a */
-    uint32_t noWin;             /* flags & 4 */
-    uint32_t persistMode;       /* flags&0x200 时的收尾模式 */
-    int64_t persistVal8;        /* 原 pPersist[8]（+0x40） */
-    void *pPersistSaved;        /* 进入时的 pPersist */
-    void *pWinOld;              /* 原 script+0x40 */
+    uint8_t cInitFlag;    /* 初始 g_flag16a */
+    uint32_t noWin;       /* flags & 4 */
+    uint32_t persistMode; /* flags&0x200 时的收尾模式 */
+    int64_t persistVal8;  /* 原 pPersist[8]（+0x40） */
+    void *pPersistSaved;  /* 进入时的 pPersist */
+    void *pWinOld;        /* 原 script+0x40 */
     bool hasWin;
     void *pWinRef;              /* 引用计数窗口（原窗口，cInitFlag==0 时） */
     void *pWinRef2;             /* 已 +1 计数的窗口 */
@@ -133,8 +136,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
 
     /* script+0x10 高位置 (flags>>1)&1 */
     *(uint8_t *)((char *)pScript + 0x10) &= 0x7f;
-    *(uint8_t *)((char *)pScript + 0x10) |=
-        (uint8_t)((uint16_t)flags >> 1) << 7;
+    *(uint8_t *)((char *)pScript + 0x10) |= (uint8_t)((uint16_t)flags >> 1) << 7;
 
     persistVal8 = (pPersist != NULL) ? *(int64_t *)((char *)pPersist + 0x40) : 0;
 
@@ -172,15 +174,15 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         EnterCriticalSection(&g_csInit);
         node = FUN_14001E69C(pScript, WSTR("&CurDir"), NULL, -1);
         if (node != NULL) {
-            PECMD_StrBldCopyWide(&savedCurDir, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurDir, (LPCWSTR) * (WCHAR **)node);
         }
         node = FUN_14001E69C(pScript, WSTR("&CurDrv"), NULL, -1);
         if (node != NULL) {
-            PECMD_StrBldCopyWide(&savedCurDrv, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurDrv, (LPCWSTR) * (WCHAR **)node);
         }
         node = FUN_14001E69C(pScript, WSTR("&CurFile"), NULL, -1);
         if (node != NULL) {
-            PECMD_StrBldCopyWide(&savedCurFile, (LPCWSTR)*(WCHAR **)node);
+            PECMD_StrBldCopyWide(&savedCurFile, (LPCWSTR) * (WCHAR **)node);
         }
         LeaveCriticalSection(&g_csInit);
     }
@@ -191,10 +193,11 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
     if (hasWin && (flags & 4) == 0) {
         void *obj;
         PECMD_ShowAboutDialog();
-        obj = calloc(1, 0xa98);          /* operator_new(0xa98) 窗口对象 */
+        obj = calloc(1, 0xa98); /* operator_new(0xa98) 窗口对象 */
         if (obj == NULL) {
             pWinNew = NULL;
-        } else {
+        }
+        else {
             pWinNew = PECMD_InitControlObjField(obj, GetDesktopWindow(), 0x271c, NULL);
         }
     }
@@ -206,7 +209,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
     /* 持久化脚本对象：无则新建临时副本（ScriptCopy+ScriptInit） */
     pScriptNew = NULL;
     if (pPersist == NULL) {
-        void *obj = calloc(1, 0xf0);     /* operator_new(0xf0) 脚本对象 */
+        void *obj = calloc(1, 0xf0); /* operator_new(0xf0) 脚本对象 */
         pPersist = NULL;
         if (obj != NULL) {
             FUN_140017CDC(obj, pScript);
@@ -215,7 +218,8 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
             pScriptNew = obj;
             pPersist = obj;
         }
-    } else {
+    }
+    else {
         *(void **)((char *)pPersist + 0x40) = pWin;
     }
     pExec = pScript;
@@ -235,8 +239,8 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
     saved8 = *(int32_t *)((char *)pExec + 8);
     savedDa = *(uint8_t *)((char *)pExec + 0xda);
     LeaveCriticalSection(&g_csInit);
-    *(void **)((char *)pExec + 0x78) = &bufRef;   /* 引用调用方文本缓冲 */
-    textPtr = *(WCHAR **)bufRef;                  /* 容器 [0] = 文本指针 */
+    *(void **)((char *)pExec + 0x78) = &bufRef; /* 引用调用方文本缓冲 */
+    textPtr = *(WCHAR **)bufRef;                /* 容器 [0] = 文本指针 */
     *(void **)((char *)pExec + 0x80) = textPtr;
     FUN_140073CCC(pExec, nameTmp, 1);
     sepPos = PECMD_StrChrOffset(textPtr, *(uint16_t *)((char *)pExec + 0x48));
@@ -286,8 +290,9 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         node = FUN_14001E69C(pScript, WSTR("&__MAIN__"), NULL, -1);
         if (node == NULL) {
             FUN_1400629B8(pExec, WSTR("&&__MAIN__"), WSTR("1"));
-        } else {
-            if ((char)FUN_14005C7C4("0", (LPCWSTR)*(WCHAR **)node) == '\0') {
+        }
+        else {
+            if ((char)FUN_14005C7C4("0", (LPCWSTR) * (WCHAR **)node) == '\0') {
                 FUN_1400629B8(pExec, WSTR("&&__MAIN__"), WSTR("0"));
             }
         }
@@ -299,8 +304,7 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
 
     /* ENTER: 日志（调试开关且 script+0x10 位3 清零/位0 置位/未进入过） */
     bEnterLog = false;
-    if (pWinName[0] != L'\0' &&
-        (*(uint8_t *)((char *)pExec + 0x10) & 8) == 0 &&
+    if (pWinName[0] != L'\0' && (*(uint8_t *)((char *)pExec + 0x10) & 8) == 0 &&
         *(char *)((char *)pExec + 0xd8) != '\0') {
         bEnterLog = ((*(uint8_t *)((char *)pExec + 0x10) & 1) != 0);
     }
@@ -317,15 +321,15 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         if (cInitFlag == '\0') {
             *(uint8_t *)((char *)pWin + 0x120) = 0;
             PECMD_ModalMsgPumpEx(pWin, 0);
-        } else {
+        }
+        else {
             void *vtbl;
             *(uint8_t *)((char *)pWin + 0x121) = 0x81;
             *(uint8_t *)((char *)pWin + 0x120) = 0x10;
             vtbl = *(void **)pWin;
-            (*(void (**)(void *, uint32_t, int))(*(void **)((char *)vtbl + 0x10)))(
-                pWin, 0x271d, 0);
-            PECMD_AppendFmtValue(pExec, *(int64_t *)((char *)pWin + 0x20),
-                            WSTR("&&__WinID"), WSTR("0x%I64X"));
+            (*(void (**)(void *, uint32_t, int))(*(void **)((char *)vtbl + 0x10)))(pWin, 0x271d, 0);
+            PECMD_AppendFmtValue(pExec, *(int64_t *)((char *)pWin + 0x20), WSTR("&&__WinID"),
+                                 WSTR("0x%I64X"));
             *(int64_t *)((char *)pWin + 0x2a0) = 0;
             PECMD_DispatchExpressionBlock(pExec, pFile);
             if ((*(int64_t *)((char *)pWin + 0x1c8) > 0 ||
@@ -337,16 +341,14 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
                 *(uint8_t *)((char *)pWin + 0x121) = 0x81;
             }
         }
-    } else {
+    }
+    else {
         /* 非窗口模式：直接执行 */
         PECMD_DispatchExpressionBlock(pExec, pFile);
         curWin = *(int64_t *)((char *)pExec + 0x40);
-        if (curWin != 0 &&
-            noWin == 0 &&
-            (*(uint8_t *)((char *)pExec + 0xd9) & 1) != 0 &&
+        if (curWin != 0 && noWin == 0 && (*(uint8_t *)((char *)pExec + 0xd9) & 1) != 0 &&
             curWin != *(int64_t *)(*(void **)((char *)pExec + 0x38) + 0x40) &&
-            oldWinSaved != curWin &&
-            (void *)pExec != pScript &&
+            oldWinSaved != curWin && (void *)pExec != pScript &&
             curWin != *(int64_t *)((char *)pScript + 0x40)) {
             PostMessageW(*(HWND *)(curWin + 0x20), 0x10, 0, 0);
             pWinNew = (void *)curWin;
@@ -374,7 +376,8 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
         *(void **)((char *)pExec + 0x78) = saved78;
         *(uint8_t *)((char *)pExec + 0xda) = savedDa;
         LeaveCriticalSection(&g_csInit);
-    } else if (persistMode == 0) {
+    }
+    else if (persistMode == 0) {
         FUN_14004EAA8(pExec, saved8);
     }
     if (*(int64_t *)((char *)pExec + 0x40) != 0) {
@@ -401,7 +404,8 @@ int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR
             goto ref_done;
         }
         EnterCriticalSection(&g_csInit);
-    } else {
+    }
+    else {
         EnterCriticalSection(&g_csInit);
         *(int64_t *)((char *)pRefWin + 0x1c8) -= 1;
         pRefWin2 = pRefWin;

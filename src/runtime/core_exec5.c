@@ -17,7 +17,7 @@
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
-extern int64_t *FUN_14005B154(WCHAR **ps);               /* @0x14005b154 */
+extern int64_t *FUN_14005B154(WCHAR **ps);                 /* @0x14005b154 */
 
 /* ========== FUN_140017CDC @0x140017cdc ==========
  * 脚本结构复制（0xe0 字节字段逐项复制，bit0 强制清除）。
@@ -113,7 +113,7 @@ void FUN_1400186BC(void *s, int64_t parent)
     *(uint32_t *)(d + 0x60) = 0;
     *(int64_t *)(d + 0x68) = 0;
     d[0xf] = 0;
-    *(int64_t *)(d + 0x58) = 0;   /* 修正: 0x58 处父引用 (见下) */
+    *(int64_t *)(d + 0x58) = 0; /* 修正: 0x58 处父引用 (见下) */
     d[0xe] = 0;
     *(uint32_t *)(d + 8) = 0;
     *(int64_t *)d = 0;
@@ -126,7 +126,8 @@ void FUN_1400186BC(void *s, int64_t parent)
     d[0x12] = 0;
     if (parent != 0) {
         templ = *(int64_t *)((char *)parent + 0x50);
-    } else {
+    }
+    else {
         templ = 0;
     }
     *(int64_t *)(d + 0x50) = templ;
@@ -145,7 +146,8 @@ void FUN_1400186BC(void *s, int64_t parent)
 int32_t FUN_14005C7C4(const char *a, const WCHAR *w)
 {
     for (;;) {
-        if (*a == '\0' && *w == 0) return 1;
+        if (*a == '\0' && *w == 0)
+            return 1;
         {
             char c = *a;
             uint32_t v = (uint32_t)(uint8_t)c;
@@ -167,10 +169,12 @@ int64_t *FUN_1400637DC(int64_t *out, const char *src, int64_t len)
 {
     size_t n;
     char *p;
-    if (len < 0) len = lstrlenA(src);
+    if (len < 0)
+        len = lstrlenA(src);
     n = (size_t)len;
     p = (char *)calloc(1, n + 1);
-    if (p && src) memcpy(p, src, n);
+    if (p && src)
+        memcpy(p, src, n);
     p[n] = 0;
     *out = (int64_t)p;
     return out;
@@ -196,10 +200,10 @@ int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len)
 uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
 {
     uint8_t *s = script;
-    WCHAR *buf = NULL;      /* 命令副本 */
+    WCHAR *buf = NULL; /* 命令副本 */
     WCHAR *p;
-    WCHAR *save;            /* 未用参数起点 */
-    WCHAR **argv = NULL;    /* 参数指针表 */
+    WCHAR *save;         /* 未用参数起点 */
+    WCHAR **argv = NULL; /* 参数指针表 */
     uint32_t argc = 0;
     int64_t len, cap;
     char flag = *(char *)(s + 0x4a);
@@ -228,16 +232,22 @@ uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
             WCHAR *tok = q;
             if (*q == 0x22) {
                 q++;
-                while (*q != 0 && (*q != 0x22 || (q[1] != 0 && !((q[1] > 8 && q[1] < 0xe) || q[1] == 0x20)))) q++;
-                if (*q == 0x22) q++;
-            } else {
-                while (*q != 0 && ((*q > 8 && *q < 0xe) || *q == 0x20) == 0) q++;
+                while (*q != 0 &&
+                       (*q != 0x22 || (q[1] != 0 && !((q[1] > 8 && q[1] < 0xe) || q[1] == 0x20))))
+                    q++;
+                if (*q == 0x22)
+                    q++;
+            }
+            else {
+                while (*q != 0 && ((*q > 8 && *q < 0xe) || *q == 0x20) == 0)
+                    q++;
             }
             if (*q != 0) {
                 *q = 0;
                 q++;
             }
-            if (argc == 0) save = q;
+            if (argc == 0)
+                save = q;
             argv = (WCHAR **)PECMD_GrowByteBuffer((void **)&argv, (int64_t)(argc + 3) * 4);
             argv[argc] = tok;
             argc++;
@@ -245,7 +255,9 @@ uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
         }
     }
     if (saveArg != 0 || flag != '\0') {
-        FUN_1400629B8(script, WSTR("&&__arg"), (LPCWSTR)(save - buf + (WCHAR *)(*(WCHAR **)(s + 0x70) ? 0 : (int64_t)buf * 0)));
+        FUN_1400629B8(
+            script, WSTR("&&__arg"),
+            (LPCWSTR)(save - buf + (WCHAR *)(*(WCHAR **)(s + 0x70) ? 0 : (int64_t)buf * 0)));
     }
     *(uint32_t *)(s + 0xc) = argc;
     PECMD_AllocString(&buf, (int64_t)cap * 8 + 0x7a + (int64_t)argc * 4);
@@ -258,7 +270,8 @@ uint32_t FUN_140073CCC(void *script, LPCWSTR cmdline, int saveArg)
                 (int64_t)(argv[i] - buf + base) + 0;
         }
         *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8) = (int64_t)base + (cap + 0) * 2;
-        *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8 + 8) = (int64_t)(base - buf + buf) + 0;
+        *(int64_t *)(*(int64_t *)(s + 0x68) + (int64_t)argc * 8 + 8) =
+            (int64_t)(base - buf + buf) + 0;
     }
     PECMD_FreeStrBuf((WCHAR **)&argv);
     PECMD_FreeStrBuf(&buf);
@@ -274,24 +287,29 @@ bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out)
     uint64_t v = 0;
     bool neg = false;
     bool any = false;
-    if (*p == L'-') { neg = true; p++; }
+    if (*p == L'-') {
+        neg = true;
+        p++;
+    }
     if (p[0] == L'0' && (p[1] == L'x' || p[1] == L'X')) {
         p += 2;
-        while ((*p >= L'0' && *p <= L'9') || (*p >= L'a' && *p <= L'f') || (*p >= L'A' && *p <= L'F')) {
+        while ((*p >= L'0' && *p <= L'9') || (*p >= L'a' && *p <= L'f') ||
+               (*p >= L'A' && *p <= L'F')) {
             WCHAR c = *p++;
-            uint64_t d = (c <= L'9') ? (uint64_t)(c - L'0') :
-                         (uint64_t)((c | 0x20) - L'a' + 10);
+            uint64_t d = (c <= L'9') ? (uint64_t)(c - L'0') : (uint64_t)((c | 0x20) - L'a' + 10);
             v = v * 16 + d;
             any = true;
         }
-    } else {
+    }
+    else {
         while (*p >= L'0' && *p <= L'9') {
             v = v * 10 + (uint64_t)(*p - L'0');
             p++;
             any = true;
         }
     }
-    if (!any) return false;
+    if (!any)
+        return false;
     *out = neg ? (uint64_t)(-(int64_t)v) : v;
     *ps = p;
     return true;

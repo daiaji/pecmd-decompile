@@ -41,19 +41,19 @@ extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam);
 extern void FUN_14005DAF8(int64_t ctx, int *a, int *b, int *c, int *d);
 extern uint64_t *PECMD_TablCreateListCtrl(uint64_t *obj, uint64_t a2, uint64_t a3, uint32_t a4,
-                               uint64_t *a5, int32_t a6, int32_t a7, int32_t a8,
-                               int32_t a9, uint64_t *a10, uint16_t *a11, LPCWSTR a12,
-                               int64_t a13, int16_t *a14, LPCWSTR a15, uint64_t *a16,
-                               uint64_t a17, uint64_t a18);
+                                          uint64_t *a5, int32_t a6, int32_t a7, int32_t a8,
+                                          int32_t a9, uint64_t *a10, uint16_t *a11, LPCWSTR a12,
+                                          int64_t a13, int16_t *a14, LPCWSTR a15, uint64_t *a16,
+                                          uint64_t a17, uint64_t a18);
 extern void FUN_14005D9A8(int64_t ctx, int mode);
 extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC hdc);
 extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color);
-extern int64_t PECMD_ExecuteCommand(int64_t *ctx, LPCWSTR text, uint64_t a3,
-                             LPCWSTR a4, uint32_t a5, int64_t a6, int a7);
+extern int64_t PECMD_ExecuteCommand(int64_t *ctx, LPCWSTR text, uint64_t a3, LPCWSTR a4,
+                                    uint32_t a5, int64_t a6, int a7);
 extern void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3);
 
 /* ---- 本批引用的全局数据 ---- */
-extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
+extern WCHAR g_szEmpty[]; /* g_szEmpty 空串 */
 
 /* ========== PECMD_RegiResolveKeyPath @0x1400c36c8 ==========
  * 按名称路径在控件对象表中查找对象；支持 "name:name:..." 多级路径。
@@ -86,8 +86,8 @@ uint64_t PECMD_RegiResolveKeyPath(LPCWSTR name, int64_t ctx, int filter)
                 int64_t entry = *(int64_t *)(**(int64_t **)(ctx + 0x1a0) + i * 8);
                 LPCWSTR cand = NULL;
                 if ((filter < 1 || *(int *)(entry + 8) == filter) &&
-                    (cand = *(LPCWSTR *)(entry + 0x10), cand != NULL &&
-                     StrCmpNIW(s, cand, (int)len) == 0 && cand[len] == L'\0')) {
+                    (cand = *(LPCWSTR *)(entry + 0x10),
+                     cand != NULL && StrCmpNIW(s, cand, (int)len) == 0 && cand[len] == L'\0')) {
                     break;
                 }
                 i++;
@@ -158,7 +158,8 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
     FUN_14006375C(&res, value);
     PECMD_RegiEditRegistry(script, (HKEY)(uintptr_t)res, '\x01');
 
-    FUN_1400702B0(&res,
+    FUN_1400702B0(
+        &res,
         WSTR("#HKCU\\Software\\Policies\\Microsoft\\Internet Explorer\\Control Panel\\HomePage="));
     LPCWSTR homeValue = g_szEmpty;
     if (disableHomePage != 0) {
@@ -167,8 +168,8 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
     FUN_14006375C(&res, homeValue);
     PECMD_RegiEditRegistry(script, (HKEY)((uintptr_t)res + (disableHomePage == 0) * 2), '\0');
 
-    FUN_1400702B0(&res,
-        WSTR("#HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\DisableRegistryTools="));
+    FUN_1400702B0(&res, WSTR("#HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System"
+                             "\\DisableRegistryTools="));
     LPCWSTR regValue = g_szEmpty;
     if (disableRegTools != 0) {
         regValue = WSTR("1");
@@ -186,8 +187,8 @@ uint64_t PECMD_HomeSetStartPage(HKEY script, LPCWSTR args)
  * 数值/类型、以及分隔符后的文本。
  * 注: mode 在反编译中同时被用作 8 字节暂存槽，这里保留该行为。
  */
-int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
-                        char *mode, uint32_t *value, int16_t sep)
+int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id, char *mode,
+                            uint32_t *value, int16_t sep)
 {
     char *pcVar3 = mode;
     char cVar1 = *mode;
@@ -219,9 +220,11 @@ int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
         WCHAR ch = *(WCHAR *)*pp;
         if (ch == L'=') {
             *(uint32_t *)(item + 4) = (*(uint32_t *)(item + 4) << 8) | 0x32;
-        } else if (ch == L'+') {
+        }
+        else if (ch == L'+') {
             *(uint32_t *)(item + 4) = (*(uint32_t *)(item + 4) << 8) | 0x31;
-        } else if (ch != L'*') {
+        }
+        else if (ch != L'*') {
             if (*(uint32_t *)(item + 4) == 0) {
                 *(uint32_t *)(item + 4) = 0x30;
             }
@@ -247,17 +250,18 @@ int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
             if (cVar1 == '\0') {
                 LPCWSTR text = (LPCWSTR)*pp;
                 FUN_1400F429C((WCHAR **)pp, (WCHAR)sep);
-                PECMD_StrCopyW((WCHAR **)out, text,
-                                 (int64_t)((WCHAR *)*pp - text));
+                PECMD_StrCopyW((WCHAR **)out, text, (int64_t)((WCHAR *)*pp - text));
                 if (*(WCHAR *)*pp != L'\0') {
                     *pp = (int64_t)((WCHAR *)*pp + 1);
                 }
-            } else {
+            }
+            else {
                 PECMD_StrBldCopyWide((WCHAR **)out, (LPCWSTR)*pp);
             }
             *(int64_t *)(item + 0x10) = *out;
             return result;
-        } else {
+        }
+        else {
             *(uint32_t *)(item + 4) = (*(uint32_t *)(item + 4) << 8) | 0x30;
             *pcVar3 = '\x10';
         }
@@ -268,14 +272,11 @@ int PECMD_ParseListItemSpec(int64_t item, int64_t *pp, int64_t *out, int *id,
 /* ========== PECMD_AddDialogControl @0x1400cadec ==========
  * 在控件列表尾部添加一个通用控件对象。
  */
-uint64_t PECMD_AddDialogControl(WPARAM mgr, uint64_t a2, uint64_t a3,
-                          uint64_t *a4, int a5, int a6, int a7,
-                          int a8, uint64_t *a9, uint16_t *a10,
-                          LPCWSTR a11, int64_t a12, int16_t *a13,
-                          LPCWSTR a14, uint64_t a15, uint64_t a16)
+uint64_t PECMD_AddDialogControl(WPARAM mgr, uint64_t a2, uint64_t a3, uint64_t *a4, int a5, int a6,
+                                int a7, int a8, uint64_t *a9, uint16_t *a10, LPCWSTR a11,
+                                int64_t a12, int16_t *a13, LPCWSTR a14, uint64_t a15, uint64_t a16)
 {
-    uint64_t *slot = (uint64_t *)PECMD_SendCtrlMessage_0834(mgr,
-                                               (uint64_t)(uintptr_t)g_szEmpty);
+    uint64_t *slot = (uint64_t *)PECMD_SendCtrlMessage_0834(mgr, (uint64_t)(uintptr_t)g_szEmpty);
     uint64_t *obj = NULL;
     if (slot == NULL) {
         return 0;
@@ -285,12 +286,9 @@ uint64_t PECMD_AddDialogControl(WPARAM mgr, uint64_t a2, uint64_t a3,
     FUN_14005DAF8((int64_t)mgr, &a5, &a6, &a7, &a8);
     uint64_t *mem = (uint64_t *)malloc(0x78);
     if (mem != NULL) {
-        obj = PECMD_TablCreateListCtrl(mem, a2, a3,
-                            (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
-                            a4, (int32_t)a5, (int32_t)a6,
-                            (int32_t)a7, (int32_t)a8, a9, a10,
-                            a11, a12, a13, a14, slot, a15,
-                            a16);
+        obj = PECMD_TablCreateListCtrl(
+            mem, a2, a3, (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000, a4, (int32_t)a5,
+            (int32_t)a6, (int32_t)a7, (int32_t)a8, a9, a10, a11, a12, a13, a14, slot, a15, a16);
     }
     *slot = (uint64_t)obj;
     FUN_14005D9A8((int64_t)mgr, 0);
@@ -324,10 +322,10 @@ void FUN_1400D95F0(int64_t *self, uint64_t wParam, uint64_t lParam)
             }
             if (title != 0) {
                 WCHAR buf[304];
-                wsprintfW(buf, WSTR("%.260s 0x%p %ld  %ld"),
-                          (LPCWSTR)self[0x44], (void *)0, 0L, 0L);
-                PECMD_ExecuteCommand((int64_t *)self[0x52], buf,
-                              (uint64_t)(uintptr_t)self, NULL, 0, 0, 0);
+                wsprintfW(buf, WSTR("%.260s 0x%p %ld  %ld"), (LPCWSTR)self[0x44], (void *)0, 0L,
+                          0L);
+                PECMD_ExecuteCommand((int64_t *)self[0x52], buf, (uint64_t)(uintptr_t)self, NULL, 0,
+                                     0, 0);
             }
             EndPaint((HWND)self[4], &ps);
         }
@@ -346,7 +344,7 @@ void FUN_1400D95F0(int64_t *self, uint64_t wParam, uint64_t lParam)
     rc.right = 0;
     rc.bottom = 0;
     GetClientRect((HWND)self[4], &rc);
-    DrawIcon(hdc, ((rc.right - rc.left) - cx + 1) / 2,
-             ((rc.bottom - rc.top) - cy + 1) / 2, (HICON)self[0x151]);
+    DrawIcon(hdc, ((rc.right - rc.left) - cx + 1) / 2, ((rc.bottom - rc.top) - cy + 1) / 2,
+             (HICON)self[0x151]);
     EndPaint((HWND)self[4], &ps);
 }

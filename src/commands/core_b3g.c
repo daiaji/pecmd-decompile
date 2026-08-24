@@ -51,19 +51,15 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 extern uint64_t PECMD_ReserveVec8(int64_t *a1, uint64_t a2);
 extern uint64_t PECMD_ReserveObjectArray(int64_t *a1, uint64_t a2);
 extern void PECMD_ClearStringItemList(int64_t arr);
-extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3,
-                          int64_t *a4);
+extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3, int64_t *a4);
 extern uint64_t PECMD_ServiceControl(int64_t *a1, LPCWSTR a2);
-extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3,
-                           uint64_t *a4);
+extern DWORD FUN_1400195F0(uint64_t a1, int64_t a2, int a3, uint64_t *a4);
 extern bool FUN_140101E70(LPCWSTR a1);
 extern uint16_t *PECMD_Base64Encode(uint64_t *a1, uint64_t *a2, char a3);
 extern LPCWSTR PECMD_SprintfRetEnd(LPCWSTR a1, uint64_t a2, LPCWSTR a3);
-extern void PECMD_ArrayGrowRaw(uint64_t *a1, int64_t *a2, uint32_t a3,
-                          int64_t a4);
+extern void PECMD_ArrayGrowRaw(uint64_t *a1, int64_t *a2, uint32_t a3, int64_t a4);
 extern void *PECMD_AllocSmallObject(void *a1);
-extern int64_t *PECMD_WideToAnsiStr(int64_t *a1, LPCWSTR a2, int64_t a3,
-                              uint64_t a4);
+extern int64_t *PECMD_WideToAnsiStr(int64_t *a1, LPCWSTR a2, int64_t a3, uint64_t a4);
 extern void AtlThrowImpl(long a1);
 
 /* ---- 本批引用的全局数据 ---- */
@@ -81,11 +77,11 @@ extern uint8_t PTR_FUN_1401294f0[];
 extern uint64_t g_u6453d8;
 extern uint32_t g_u3253e0;
 extern uint8_t g_flagD3EF;
-extern void *g_pCreateSymbolicLinkW;          /* CreateSymbolicLinkW 函数指针 */
+extern void *g_pCreateSymbolicLinkW; /* CreateSymbolicLinkW 函数指针 */
 extern uint8_t g_u8D6F7;
 extern int32_t g_i32D7DC;
-extern int (*g_pGdipDisposeImage)();          /* 函数指针 */
-extern int (*g_pGdipDeleteGraphics)();          /* 函数指针 */
+extern int (*g_pGdipDisposeImage)();   /* 函数指针 */
+extern int (*g_pGdipDeleteGraphics)(); /* 函数指针 */
 
 /* ========== FUN_14004FD6C @0x14004fd6c ==========
  * 调整缓冲容量。
@@ -104,13 +100,15 @@ uint64_t FUN_14004FD6C(int64_t *buf, uint64_t size, int mode)
         }
         buf[1] = 0;
         buf[2] = 0;
-    } else if ((uint64_t)buf[2] < size) {
+    }
+    else if ((uint64_t)buf[2] < size) {
         in_RAX = PECMD_ReserveVec8(buf, size);
         if ((char)in_RAX == '\0') {
             return in_RAX;
         }
         buf[1] = (int64_t)size;
-    } else {
+    }
+    else {
         buf[1] = (int64_t)size;
     }
     return 1;
@@ -133,13 +131,15 @@ uint64_t FUN_14004FDD0(int64_t *buf, uint64_t size, int mode)
         }
         buf[1] = 0;
         buf[2] = 0;
-    } else if ((uint64_t)buf[2] < size) {
+    }
+    else if ((uint64_t)buf[2] < size) {
         in_RAX = PECMD_ReserveObjectArray(buf, size);
         if ((char)in_RAX == '\0') {
             return in_RAX;
         }
         buf[1] = (int64_t)size;
-    } else {
+    }
+    else {
         buf[1] = (int64_t)size;
     }
     return 1;
@@ -152,8 +152,7 @@ uint64_t FUN_14004FEA4(int64_t arr, uint64_t value)
 {
     *(int64_t *)(arr + 0x48) = *(int64_t *)(arr + 0x48) + 1;
     if ((*(uint64_t *)(arr + 0x30) <= (*(uint64_t *)(arr + 0x48) & 0xffffffff)) &&
-        (FUN_14004FD6C((int64_t *)(arr + 0x28),
-                            *(uint64_t *)(arr + 0x48) * 2 + 2, -1) == 0)) {
+        (FUN_14004FD6C((int64_t *)(arr + 0x28), *(uint64_t *)(arr + 0x48) * 2 + 2, -1) == 0)) {
         *(int64_t *)(arr + 0x48) = *(int64_t *)(arr + 0x48) - 1;
         return 0;
     }
@@ -168,16 +167,14 @@ uint64_t FUN_14004FEA4(int64_t arr, uint64_t value)
 /* ========== FUN_1400540A8 @0x1400540a8 ==========
  * 发送 RGB 颜色消息。
  */
-uint64_t FUN_1400540A8(int64_t obj, uint32_t c1, uint32_t c2,
-                              uint32_t c3, uint32_t c4)
+uint64_t FUN_1400540A8(int64_t obj, uint32_t c1, uint32_t c2, uint32_t c3, uint32_t c4)
 {
-    if ((((int)c1 < 0) || ((int)c2 < 0)) || ((int)c3 < 0) ||
-        ((int)c4 < 0)) {
+    if ((((int)c1 < 0) || ((int)c2 < 0)) || ((int)c3 < 0) || ((int)c4 < 0)) {
         return 0x80070057;
     }
     SendMessageW(*(HWND *)(*(int64_t *)(obj + 0x38) + OBJ_HWND), 0x465, 0,
                  (uint64_t)((c4 & 0xff) +
-                 (((c1 & 0xff) * 0x100 + (c2 & 0xff)) * 0x100 + (c3 & 0xff)) * 0x100));
+                            (((c1 & 0xff) * 0x100 + (c2 & 0xff)) * 0x100 + (c3 & 0xff)) * 0x100));
     return 0;
 }
 
@@ -222,8 +219,7 @@ void PECMD_DtorIpadItem(uint64_t *obj)
 /* ========== FUN_14005C898 @0x14005c898 ==========
  * 延迟加载 GetProcAddress。
  */
-void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out,
-                         int64_t *hmod)
+void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *hmod)
 {
     int64_t local_res18[2] = {0, 0};
     if (*out != 0) {
@@ -311,7 +307,8 @@ uint64_t PECMD_FindFirstFreeDrive(LPCWSTR buf)
  */
 uint64_t PECMD_CreateSymbolicLink(uint64_t src, uint64_t dst, uint32_t flags)
 {
-    PECMD_GetApiProcCached("CreateSymbolicLinkW", "KERNEL32.DLL", (int64_t *)(void **)&g_pCreateSymbolicLinkW, NULL);
+    PECMD_GetApiProcCached("CreateSymbolicLinkW", "KERNEL32.DLL",
+                           (int64_t *)(void **)&g_pCreateSymbolicLinkW, NULL);
     if (g_pCreateSymbolicLinkW == NULL) {
         return 0;
     }
@@ -328,8 +325,7 @@ void PECMD_GetTime100ns(int64_t *out)
     uint64_t q = (uint64_t)(counter - g_QPC);
     uint64_t freq = (uint64_t)g_QPFreq;
     uint64_t uVar1 = q / freq;
-    *out = (int64_t)(uVar1 * 10000000ULL + g_StartTime +
-             ((q - uVar1 * freq) * 10000000ULL) / freq);
+    *out = (int64_t)(uVar1 * 10000000ULL + g_StartTime + ((q - uVar1 * freq) * 10000000ULL) / freq);
 }
 
 /* ========== PECMD_DecrementInitRef @0x140061264 ==========
@@ -373,8 +369,7 @@ void PECMD_FreeHandleRecordArray(int64_t *arr)
 /* ========== FUN_140063B00 @0x140063b00 ==========
  * 数组增长并返回新位置。
  */
-int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
-                        uint32_t esize)
+int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize)
 {
     if (idx < 0) {
         idx = 0;
@@ -605,8 +600,7 @@ void FUN_14006FFDC(int64_t *obj)
 /* ========== FUN_1400738D0 @0x1400738d0 ==========
  * 压入字符串 token。
  */
-uint64_t FUN_1400738D0(uint64_t a, uint64_t b, LPCWSTR text,
-                               uint64_t *ctrl)
+uint64_t FUN_1400738D0(uint64_t a, uint64_t b, LPCWSTR text, uint64_t *ctrl)
 {
     (void)a;
     (void)b;
@@ -618,7 +612,8 @@ uint64_t FUN_1400738D0(uint64_t a, uint64_t b, LPCWSTR text,
         if (plVar1 != NULL) {
             if (text < (LPCWSTR)0x10000) {
                 ctrl[2] = (uint64_t)text;
-            } else {
+            }
+            else {
                 PECMD_StrBldCopyWide(plVar1, text);
                 ctrl[2] = (uint64_t)*plVar1;
             }

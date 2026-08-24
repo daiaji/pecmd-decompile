@@ -5,38 +5,39 @@
 
 #include "pecmd_defs.h"
 
-extern int FUN_140067B78(WCHAR **pp, uint64_t *out);   /* @0x140067b78 */
-extern WCHAR **FUN_14005B154(WCHAR **pp);              /* @0x14005b154 */
+extern int FUN_140067B78(WCHAR **pp, uint64_t *out); /* @0x140067b78 */
+extern WCHAR **FUN_14005B154(WCHAR **pp);            /* @0x14005b154 */
 
 /* --- helper symbols referenced by restored bodies below --- */
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 分配清零槽数组 */
-extern bool  PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);                   /* @0x1400c11c0 */
-extern uint64_t PECMD_EvalParenStripped(WCHAR **pp, uint64_t *out);          /* @0x1400745c8 解析数值/括号表达式 */
-extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope,
-                             int namelen, void **found);            /* @0x140018978 */
-extern int64_t *PECMD_AddVarDefault(int64_t *script, LPCWSTR name, LPCWSTR text,
-                              int mode, int64_t flag);              /* @0x14001e5b0 */
-extern void PECMD_VarTruncateUpdate(void *node, const void *src,
-                                    uint64_t len);                   /* @0x14005b708 */
-extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap,
-                                   const void *src, int64_t len);    /* @0x140066224 */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 分配清零槽数组 */
+extern bool PECMD_ParseHexOrDecBool(WCHAR **pp, int *out); /* @0x1400c11c0 */
+extern uint64_t PECMD_EvalParenStripped(WCHAR **pp,
+                                        uint64_t *out); /* @0x1400745c8 解析数值/括号表达式 */
+extern void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen,
+                             void **found); /* @0x140018978 */
+extern int64_t *PECMD_AddVarDefault(int64_t *script, LPCWSTR name, LPCWSTR text, int mode,
+                                    int64_t flag);                              /* @0x14001e5b0 */
+extern void PECMD_VarTruncateUpdate(void *node, const void *src, uint64_t len); /* @0x14005b708 */
+extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap, const void *src,
+                                   int64_t len); /* @0x140066224 */
 
-extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);        /* @0x140063720 串扩容 */
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);         /* @0x140063720 串扩容 */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
-extern WCHAR *PECMD_AllocStrSlot(WCHAR **out);                           /* @0x140063620 分配引用串容器 */
-extern void PECMD_FreeStrBuf(void *ps);                               /* @0x14005b104 释放引用串容器 */
-extern void  PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out,
-                           int mode, int flag);                      /* @0x14007bf44 */
+extern WCHAR *PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 分配引用串容器 */
+extern void PECMD_FreeStrBuf(void *ps);        /* @0x14005b104 释放引用串容器 */
+extern void PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out, int mode,
+                                    int flag); /* @0x14007bf44 */
 
 /* ---- PECMD_DecodeBig5NameTable (BIG5 字符名表解码/重排) 依赖 ---- */
-extern uint32_t PECMD_StrChrOffset(int16_t *s, int16_t ch);              /* @0x14001b4f8 定位字符下标 */
-extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount, int size); /* @0x140063a6c 表初始化 */
-extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount,
-                          void *tmp, int size, int grow);           /* @0x1400639f0 表追加行 */
-extern WCHAR *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);             /* @0x140063694 串扩容 */
-extern uint64_t PECMD_RandSeedAdvance(void);                                /* @0x14005dff4 PRNG */
-extern void *FUN_140063224(void *ps, int64_t len);                  /* @0x140063224 输出串扩容 */
-extern void PECMD_ZeroLenBuf(void *p);                                 /* @0x14005b0b8 临时缓冲复位 */
+extern uint32_t PECMD_StrChrOffset(int16_t *s, int16_t ch); /* @0x14001b4f8 定位字符下标 */
+extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount,
+                                 int size); /* @0x140063a6c 表初始化 */
+extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount, void *tmp, int size,
+                                  int grow);                       /* @0x1400639f0 表追加行 */
+extern WCHAR *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 串扩容 */
+extern uint64_t PECMD_RandSeedAdvance(void);                       /* @0x14005dff4 PRNG */
+extern void *FUN_140063224(void *ps, int64_t len);                 /* @0x140063224 输出串扩容 */
+extern void PECMD_ZeroLenBuf(void *p);                             /* @0x14005b0b8 临时缓冲复位 */
 
 /* @0x14005b374 size=44 — 从 *pp 起跳过字符, 直到撞上 '\0'/ch1/ch2 (行切分定界) */
 void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2)
@@ -45,8 +46,7 @@ void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2)
 
     p = *pp;
     if (p != NULL) {
-        while (*p != L'\0' && (uint16_t)*p != (uint16_t)ch1 &&
-               (uint16_t)*p != (uint16_t)ch2) {
+        while (*p != L'\0' && (uint16_t)*p != (uint16_t)ch1 && (uint16_t)*p != (uint16_t)ch2) {
             *pp = ++p;
         }
     }
@@ -69,7 +69,7 @@ void PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst, int16_t delim)
     int iLen;
     WCHAR wc;
 
-    FUN_14005B154(src);          /* 跳过前导空白 */
+    FUN_14005B154(src); /* 跳过前导空白 */
     pStart = *src;
     p = pStart;
     wc = *p;
@@ -180,7 +180,8 @@ int PECMD_WcharToByteDigits(void *out, LPCWSTR src)
                     break;
                 *dst = (uint8_t)n;
                 dst++;
-            } else {
+            }
+            else {
                 p++;
             }
         }
@@ -211,8 +212,8 @@ uint64_t PECMD_MapStringByLocale(LPCSTR src, void **out, uint32_t isBIG5)
 }
 
 /* @0x140075148 按行写变量 (查表/建新项 + 写值/截断 + 关键段保护) */
-void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
-                   int64_t *pkey, char mode)
+void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len, int64_t *pkey,
+                        char mode)
 {
     int64_t *plVar3;
     int64_t *plVar4;
@@ -237,14 +238,14 @@ void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
             plVar4 = PECMD_AddVarDefault(script, pWVar5, pWVar7, -1, (int64_t)iVar8);
             if (plVar4 == (int64_t *)0)
                 goto LAB_done;
-        } else {
+        }
+        else {
             uint8_t bVar2 = *(uint8_t *)((int64_t)plVar3 + 0x1f) & 0xc0;
             if (bVar2 == 0xc0) {
                 if ((int64_t)(plVar3[3] & 0x3fffffffffffffff) < lVar6) {
                     len = plVar3[3] & 0x3fffffffffffffff;
                 }
-                PECMD_VarTruncateUpdate((void *)plVar3, (const void *)data,
-                                        (uint64_t)(int)len);
+                PECMD_VarTruncateUpdate((void *)plVar3, (const void *)data, (uint64_t)(int)len);
                 goto LAB_done;
             }
             plVar4 = plVar3;
@@ -257,7 +258,8 @@ void PECMD_VarWriteLine(void *script, LPCWSTR key, LPCWSTR data, int64_t len,
                 PECMD_VarWriteValueCap((WCHAR **)(plVar4 + 1), (uint64_t *)(plVar4 + 3),
                                        (const void *)data, lVar6);
             }
-        } else {
+        }
+        else {
             int64_t lVar1 = *pkey;
             *pkey = plVar4[1];
             plVar4[1] = lVar1;
@@ -316,12 +318,13 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
     PECMD_InitTableSlots((void **)&local_90, (void **)&local_88, local_80, 0x28);
     uVar14 = 0x400;
     puVar13 = puVar10;
-    if (param_4 != 0) goto LAB_140075d12;
+    if (param_4 != 0)
+        goto LAB_140075d12;
     while (1) {
         local_68 = (int64_t)(int)uVar17;
         local_70 = (uint8_t *)param_1;
         PECMD_VectorAppendGen((void **)&local_90, (void **)&local_88, (int64_t *)local_80,
-                      (void *)&local_78, 0x28, 0x400);
+                              (void *)&local_78, 0x28, 0x400);
         (void)local_68;
         param_1 = (uint16_t *)puVar13;
         if ((int)uVar14 < (int)uVar17) {
@@ -329,10 +332,12 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
         }
     LAB_140075d12:
         puVar12 = (uint8_t *)param_1;
-        if (puVar10 <= puVar12) break;
+        if (puVar10 <= puVar12)
+            break;
         do {
             puVar13 = puVar12 + 1;
-            if ((uVar19 ^ 10) == *(uint16_t *)puVar12) break;
+            if ((uVar19 ^ 10) == *(uint16_t *)puVar12)
+                break;
             puVar12 = puVar13;
         } while (puVar13 < puVar10);
         uVar17 = ((uint64_t)(puVar13 - (uint8_t *)param_1)) >> 1;
@@ -342,9 +347,10 @@ uint64_t PECMD_DecodeBig5NameTable(uint16_t *param_1, WCHAR **param_2, int param
     iVar21 = 0;
     uVar7 = (uint64_t)local_80[0];
     local_res18 = 0;
-    if (local_80[0] < 1) goto LAB_140075f08;
+    if (local_80[0] < 1)
+        goto LAB_140075f08;
 LAB_140075dbb:
-    uVar8 = PECMD_RandSeedAdvance();                 /* PRNG 选行起点 (SUB168/SUB164=64位取模伪影) */
+    uVar8 = PECMD_RandSeedAdvance(); /* PRNG 选行起点 (SUB168/SUB164=64位取模伪影) */
     uVar8 = uVar8 % uVar7;
     lVar11 = (int64_t)uVar8;
     if (lVar11 < (int64_t)uVar7) {
@@ -362,7 +368,8 @@ LAB_140075dbb:
                 pWVar9 = local_98;
                 lpDestStr = pWVar15;
                 lpSrcStr = local_98;
-                if (local_98 < pWVar1) goto LAB_140075e4c;
+                if (local_98 < pWVar1)
+                    goto LAB_140075e4c;
                 goto LAB_140075e73;
             }
             lVar11++;
@@ -377,7 +384,8 @@ LAB_140075e4c:
         pWVar9++;
     } while (pWVar9 < pWVar1);
     do {
-        if (0x7f < (uint8_t)*lpSrcStr) break;
+        if (0x7f < (uint8_t)*lpSrcStr)
+            break;
         WVar2 = *lpSrcStr;
         lpSrcStr++;
         *lpDestStr = WVar2;
@@ -386,13 +394,10 @@ LAB_140075e4c:
 LAB_140075e73:
     iVar16 = (int)(lpDestStr - pWVar15);
     iVar20 = iVar3 - iVar16;
-    if (0 < iVar20 &&
-        (iVar20 = (int)LCMapStringW(0x20804,
-                                    (uint32_t)(-((uint32_t)(param_3 != 0)) & 0x2000000)
-                                        + 0x2000000,
-                                    (LPCWSTR)lpSrcStr, iVar20, (LPWSTR)lpDestStr,
-                                    iVar3 + iVar20),
-         0 < iVar20)) {
+    if (0 < iVar20 && (iVar20 = (int)LCMapStringW(
+                           0x20804, (uint32_t)(-((uint32_t)(param_3 != 0)) & 0x2000000) + 0x2000000,
+                           (LPCWSTR)lpSrcStr, iVar20, (LPWSTR)lpDestStr, iVar3 + iVar20),
+                       0 < iVar20)) {
         iVar16 += iVar20;
     }
     memset(local_98, 0, (size_t)iVar3 * 2);
@@ -407,11 +412,11 @@ LAB_140075e73:
     }
     uVar17 = (uint64_t)local_res18;
 LAB_140075efd:
-    if (local_80[0] <= (int)uVar17) goto LAB_140075f08;
+    if (local_80[0] <= (int)uVar17)
+        goto LAB_140075f08;
     goto LAB_140075dbb;
 LAB_140075f08:
-    puVar10 = (uint8_t *)FUN_140063224((void *)*param_2,
-                                       (int64_t)(iVar21 + 0x11) * 2 + 2);
+    puVar10 = (uint8_t *)FUN_140063224((void *)*param_2, (int64_t)(iVar21 + 0x11) * 2 + 2);
     *param_2 = (WCHAR *)puVar10;
     if (0 < (int64_t)uVar7) {
         plVar18 = (int64_t *)(local_90 + 0x20);

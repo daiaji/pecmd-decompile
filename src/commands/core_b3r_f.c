@@ -18,52 +18,55 @@
 #include "pecmd_defs.h"
 
 /* ---- 本文件引用的全局/数据 ---- */
-extern uint8_t PTR_FUN_140129040[];            /* 窗口对象虚表 */
-extern uint8_t PTR_FUN_140129060[];            /* 窗口对象虚表 */
-extern WCHAR g_szEmpty[];                /* .rdata 空串/虚表基址 */
+extern uint8_t PTR_FUN_140129040[]; /* 窗口对象虚表 */
+extern uint8_t PTR_FUN_140129060[]; /* 窗口对象虚表 */
+extern WCHAR g_szEmpty[];           /* .rdata 空串/虚表基址 */
 
 /* ---- 本文件引用的辅助函数 (均为 extern, 不在此定义) ---- */
 extern uint64_t *PECMD_ConstructControlObjectB(uint64_t *obj, uint32_t type, uint64_t data,
-                               LPCWSTR text, uint64_t *src, LPCWSTR subText,
-                               uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10);
-extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *param_3,
-                          int param_4, int64_t param_5);
-extern uint64_t *PECMD_InitWebViewObj(uint64_t *obj, uint64_t *arg);   /* @0x1400f0648 */
-extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg);   /* @0x1400ecf18 */
-extern bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent, uint32_t id, DWORD exStyle);
-extern LRESULT PECMD_GetControlFont(int64_t param_1);       /* @0x1400e5890 取对象字体 */
-extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac */
-extern void PECMD_SetCheckVariable(int64_t param_1, int param_2);   /* @0x14007df90 */
-extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);   /* @0x140053c5c */
-extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);        /* @0x140053cec */
-extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);      /* @0x140063694 */
-extern void PECMD_ZeroLenBuf(void *p);                        /* @0x14005b0b8 (缓冲区构造) */
-extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);            /* @0x1400b568c 线程过程 */
+                                               LPCWSTR text, uint64_t *src, LPCWSTR subText,
+                                               uint32_t p7, uint32_t p8, uint32_t p9, uint32_t p10);
+extern void PECMD_ParseKeySizeIconSpec(WCHAR *param_1, int64_t *param_2, int *param_3, int param_4,
+                                       int64_t param_5);
+extern uint64_t *PECMD_InitWebViewObj(uint64_t *obj, uint64_t *arg);    /* @0x1400f0648 */
+extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg); /* @0x1400ecf18 */
+extern bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect,
+                                     HWND parent, uint32_t id, DWORD exStyle);
+extern LRESULT PECMD_GetControlFont(int64_t param_1); /* @0x1400e5890 取对象字体 */
+extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key,
+                                        LPCWSTR value);           /* @0x14007d0ac */
+extern void PECMD_SetCheckVariable(int64_t param_1, int param_2); /* @0x14007df90 */
+extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);  /* @0x140053c5c */
+extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);   /* @0x140053cec */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 */
+extern void PECMD_ZeroLenBuf(void *p);                            /* @0x14005b0b8 (缓冲区构造) */
+extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);        /* @0x1400b568c 线程过程 */
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
-extern void PECMD_FreeStrBuf(void *ps);                    /* @0x14005b104 */
+extern void PECMD_FreeStrBuf(void *ps);                                  /* @0x14005b104 */
 extern uint64_t *PECMD_CreateWindowObject(uint64_t *param_1, uint64_t param_2, uint32_t param_3);
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
-extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);            /* @0x14005b77c */
-extern void FUN_140053e78(void);                           /* @0x140053e78 PECMD_Empty */
-extern void PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2, uint64_t param_3,
-                          uint32_t *param_4);             /* @0x14005e3ac */
+extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);             /* @0x14005b77c */
+extern void FUN_140053e78(void); /* @0x140053e78 PECMD_Empty */
+extern void PECMD_PositionWindowDispatchCommand(int64_t *param_1, uint32_t param_2,
+                                                uint64_t param_3,
+                                                uint32_t *param_4);        /* @0x14005e3ac */
 extern uint32_t PECMD_ModalDialogPump(int64_t *param_1, uint64_t param_2); /* @0x1400e91f0 */
-extern int64_t  PECMD_ModalMsgPumpEx(int64_t *param_1, uint64_t param_2); /* @0x1400e95f4 */
-extern void *operator_new(size_t size);                   /* 全局 new 包装 */
+extern int64_t PECMD_ModalMsgPumpEx(int64_t *param_1, uint64_t param_2);   /* @0x1400e95f4 */
+extern void *operator_new(size_t size);                                    /* 全局 new 包装 */
 
 /* ================================================================
  * @0x1400a9aa8  window/timer 对象初始化
  */
 uint64_t *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_2, uint32_t param_3,
-                        uint64_t *param_4, uint64_t *param_5, int param_6,
-                        uint64_t param_7, uint32_t param_8)
+                                uint64_t *param_4, uint64_t *param_5, int param_6, uint64_t param_7,
+                                uint32_t param_8)
 {
     uint32_t uVar1;
     uint32_t uVar2;
     WCHAR local_48[32];
 
     PECMD_ConstructControlObjectB(param_1, 4, param_2, (LPCWSTR)(uintptr_t)*param_4, param_5,
-                  (LPCWSTR)(uintptr_t)g_szEmpty, 0, 0, 0, 0);
+                                  (LPCWSTR)(uintptr_t)g_szEmpty, 0, 0, 0, 0);
     *(uint32_t *)(param_1 + 0xe) = param_3;
     *param_1 = (uint64_t)(uintptr_t)PTR_FUN_140129040;
     *(int *)((char *)param_1 + 0x74) = param_6;
@@ -92,12 +95,11 @@ uint64_t *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_2, uint32_t pa
     wsprintfW(local_48, WSTR("%ld"));
     if (*(const WCHAR *)(uintptr_t)param_1[2] != 0) {
         PECMD_SetVariableWithPrefix((int64_t *)(uintptr_t)param_1[10],
-                      (LPCWSTR)(uintptr_t)param_1[2], local_48);
+                                    (LPCWSTR)(uintptr_t)param_1[2], local_48);
     }
     if ((((param_8 >> 0x1c) & 6U) != 0) && ((int)uVar2 > 0)) {
         for (; (int)uVar2 > 0; uVar2--) {
-            SendMessageW((HWND)param_1[0xf], 0x113,
-                         (WPARAM)*(int *)(param_1 + 0xe), 0);
+            SendMessageW((HWND)param_1[0xf], 0x113, (WPARAM) * (int *)(param_1 + 0xe), 0);
         }
     }
     LeaveCriticalSection(&g_csInit);
@@ -108,10 +110,10 @@ uint64_t *PECMD_InitTimerObject(uint64_t *param_1, uint64_t param_2, uint32_t pa
  * @0x1400a9ce4  window 对象初始化
  */
 uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t param_3,
-                        uint64_t *param_4, uint32_t param_5, uint32_t param_6,
-                        uint32_t param_7, uint32_t param_8, uint64_t *param_9,
-                        uint64_t *param_10, uint32_t param_11, uint32_t param_12,
-                        int param_13, WCHAR *param_14)
+                                    uint64_t *param_4, uint32_t param_5, uint32_t param_6,
+                                    uint32_t param_7, uint32_t param_8, uint64_t *param_9,
+                                    uint64_t *param_10, uint32_t param_11, uint32_t param_12,
+                                    int param_13, WCHAR *param_14)
 {
     int64_t lVar1;
     uint32_t uVar2;
@@ -130,7 +132,7 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     uint64_t local_38;
 
     PECMD_ConstructControlObjectB(param_1, 6, param_2, (LPCWSTR)(uintptr_t)*param_4, param_10,
-                  (LPCWSTR)(uintptr_t)*param_9, param_5, param_6, param_7, param_8);
+                                  (LPCWSTR)(uintptr_t)*param_9, param_5, param_6, param_7, param_8);
     uVar2 = param_11;
     *(uint32_t *)(param_1 + 0xe) = param_11;
     *(uint32_t *)((char *)param_1 + 0x74) = param_12;
@@ -152,7 +154,8 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         if (((uVar2 >> 0x1d) & 1) != 0) {
             uVar9 = uVar9 | 0x200;
         }
-    } else {
+    }
+    else {
         uVar9 = uVar9 | 0x300;
     }
     if (param_13 != 0) {
@@ -168,9 +171,8 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     local_40 = 0;
     if ((param_14 == NULL) ||
         (PECMD_ParseKeySizeIconSpec(param_14, (int64_t *)&param_9, &local_48,
-                       *(int *)(lVar1 + 0x17c), 0),
-         iVar3 = local_40, puVar6 = param_9,
-         (local_40 < 1) && (param_9 == NULL))) {
+                                    *(int *)(lVar1 + 0x17c), 0),
+         iVar3 = local_40, puVar6 = param_9, (local_40 < 1) && (param_9 == NULL))) {
         puVar6 = (uint64_t *)operator_new(0xe8);
         if (puVar6 != NULL) {
             plVar5 = (int64_t *)PECMD_InitWebViewObj(puVar6, param_1 + 0xb);
@@ -179,8 +181,9 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         *(uint8_t *)((char *)plVar5 + 0xd8) = 4;
         uVar9 = uVar9 | 4;
         PECMD_CreateButtonWindow(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9, (int *)&local_38,
-                      *(HWND *)(lVar1 + 0x20), param_3, 0);
-    } else {
+                                 *(HWND *)(lVar1 + 0x20), param_3, 0);
+    }
+    else {
         bVar10 = 0x80;
         puVar4 = (uint64_t *)operator_new(0x100);
         if (puVar4 != NULL) {
@@ -196,8 +199,8 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
         *(int16_t *)((char *)plVar5 + 0xea) = (int16_t)local_40;
         *(uint16_t *)((char *)plVar5 + 0xfc) = (uint16_t)local_48;
         *(uint16_t *)((char *)plVar5 + 0xfe) = (uint16_t)local_44;
-        PECMD_CreateButtonWindow(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9 | 9, (int *)&local_38,
-                      *(HWND *)(lVar1 + 0x20), param_3, 0);
+        PECMD_CreateButtonWindow(plVar5, (LPCWSTR)(uintptr_t)param_1[4], uVar9 | 9,
+                                 (int *)&local_38, *(HWND *)(lVar1 + 0x20), param_3, 0);
         uVar9 = uVar9 | 0xb;
         SetWindowLongW((HWND)plVar5[4], -0x10, (LONG)uVar9);
         uVar8 = param_12;
@@ -206,13 +209,13 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
     *(uint8_t *)((char *)plVar5 + 0x61) = (uint8_t)(bVar10 | 6);
     LVar7 = PECMD_GetControlFont(lVar1);
     /* 虚调用 FUN_ 0x108 (设置字体/资源) */
-    ((void (*)(int64_t *, LRESULT, int))*(uint64_t *)(*plVar5 + 0x108))(plVar5, LVar7, 0);
+    ((void (*)(int64_t *, LRESULT, int)) * (uint64_t *)(*plVar5 + 0x108))(plVar5, LVar7, 0);
     if (*(const WCHAR *)(uintptr_t)param_1[2] != 0) {
         PECMD_SetVariableWithPrefix((int64_t *)(uintptr_t)param_1[10],
-                      (LPCWSTR)(uintptr_t)param_1[2], (LPCWSTR)(uintptr_t)param_1[4]);
+                                    (LPCWSTR)(uintptr_t)param_1[2], (LPCWSTR)(uintptr_t)param_1[4]);
     }
     /* 虚调用 FUN_ 0x118 */
-    ((void (*)(int64_t *, int))*(uint64_t *)(*plVar5 + 0x118))(plVar5, (int)(int16_t)uVar8);
+    ((void (*)(int64_t *, int)) * (uint64_t *)(*plVar5 + 0x118))(plVar5, (int)(int16_t)uVar8);
     PECMD_SetCheckVariable((int64_t)param_1, (int)(int16_t)uVar8);
     PECMD_SetObjectEnable((int64_t)param_1, (uint32_t)((int16_t)param_11 == 0));
     PECMD_SetObjectVisibleVar((int64_t)param_1, (uVar9 >> 0x1c) & 1);
@@ -225,10 +228,10 @@ uint64_t *PECMD_CreateControlWindow(uint64_t *param_1, int64_t param_2, uint32_t
  * @0x1400b5aa4  创建消息框/窗口
  */
 int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR param_3,
-                       LPCWSTR param_4, uint32_t param_5, uint32_t param_6,
-                       DWORD param_7, uint64_t param_8, uint32_t *param_9,
-                       uint32_t param_10, uint32_t param_11, uint64_t param_12,
-                       HWND param_13, uint64_t *param_14)
+                                LPCWSTR param_4, uint32_t param_5, uint32_t param_6, DWORD param_7,
+                                uint64_t param_8, uint32_t *param_9, uint32_t param_10,
+                                uint32_t param_11, uint64_t param_12, HWND param_13,
+                                uint64_t *param_14)
 {
     uint32_t *puVar1;
     uint64_t *lpParameter;
@@ -250,7 +253,8 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
     puVar1 = param_9;
     if (param_14 == NULL) {
         local_48 = 0;
-    } else {
+    }
+    else {
         local_48 = *param_14;
     }
     bVar11 = (uint8_t)(param_7 & 0xf);
@@ -259,7 +263,8 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
     if (param_13 == 0) {
         if ((param_9[4] == 0) || (param_2 == NULL)) {
             pHVar4 = GetDesktopWindow();
-        } else {
+        }
+        else {
             pHVar4 = (HWND)param_2[4];
         }
         if (pHVar4 == 0) {
@@ -289,8 +294,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         *(uint32_t *)(lpParameter + 0x28) = param_11;
         *(uint8_t *)(lpParameter + 0x61) = bVar11;
         lpParameter[0xd] = local_48;
-        memcpy((uint8_t *)((char *)lpParameter + 0x164),
-                      (const uint8_t *)param_4, DVar2 * 2);
+        memcpy((uint8_t *)((char *)lpParameter + 0x164), (const uint8_t *)param_4, DVar2 * 2);
         *(uint16_t *)((char *)lpParameter + (int64_t)(int)DVar2 * 2 + 0x164) = 0;
         lpParameter[0x7b] = param_12;
         lpParameter[0x7a] = (uint64_t)param_1;
@@ -317,7 +321,8 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         }
         PECMD_VarSetUInt(param_1, (uint64_t)param_7, WSTR("&&__LastTID"));
         PECMD_FreeStrBuf((WCHAR **)&param_14);
-    } else {
+    }
+    else {
         plVar6 = (int64_t *)0x0;
         if ((param_2 != NULL) && ((int)param_2[0x3a] != 0)) {
             param_2 = plVar6;
@@ -345,8 +350,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         *(uint32_t *)(plVar6 + 0x28) = param_11;
         *(uint8_t *)(plVar6 + 0x61) = bVar11;
         plVar6[0xd] = local_48;
-        memcpy((uint8_t *)((char *)plVar6 + 0x164),
-                      (const uint8_t *)param_4, param_7 * 2);
+        memcpy((uint8_t *)((char *)plVar6 + 0x164), (const uint8_t *)param_4, param_7 * 2);
         *(uint16_t *)((char *)plVar6 + lVar8 * 2 + 0x164) = 0;
         pHVar7 = (HWND)PECMD_GetWindowObjectRef((int64_t)param_2);
         FUN_140053e78();
@@ -371,13 +375,15 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
                 *(uint8_t *)(plVar6 + 0x24) = 9;
                 LeaveCriticalSection(&g_csInit);
             }
-        } else {
+        }
+        else {
             *(uint8_t *)(plVar6 + 0x24) = 0x10;
             plVar10 = plVar6;
         }
         if ((param_2 == NULL) || (puVar1[4] == 0)) {
             puVar1[4] = 0;
-        } else {
+        }
+        else {
             plVar6[0x2a] = param_2[4];
         }
         puVar1[5] = puVar1[5] & 0xfffffff3;
@@ -385,9 +391,11 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         PECMD_PositionWindowDispatchCommand(plVar6, 0, (uint64_t)param_13, puVar1);
         if (uVar9 == 0x40) {
             PECMD_ModalDialogPump(plVar6, 0);
-        } else if (uVar9 == 0xc0) {
+        }
+        else if (uVar9 == 0xc0) {
             SendMessageW((HWND)plVar6[4], 0x110, 0, 0);
-        } else {
+        }
+        else {
             PECMD_ModalMsgPumpEx(plVar6, 0);
         }
         if (pHVar7 != 0) {
@@ -395,7 +403,7 @@ int64_t *PECMD_CreateMessageBox(int64_t *param_1, int64_t *param_2, LPCWSTR para
         }
         if (plVar10 != NULL) {
             /* 虚调用 FUN_ 0x18 */
-            ((void (*)(int64_t *, int))*(uint64_t *)(*plVar10 + 0x18))(plVar10, 1);
+            ((void (*)(int64_t *, int)) * (uint64_t *)(*plVar10 + 0x18))(plVar10, 1);
         }
     }
     /* 反编译返回未初始化 unaff_RBX -> 返回 0 */

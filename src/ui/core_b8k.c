@@ -33,17 +33,16 @@
 
 /* ---- 缺失平台声明/类型 (本文件局部) ---- */
 typedef struct {
-    void    *BaseAddress;      /* +0x00 */
-    void    *AllocationBase;   /* +0x08 */
-    uint32_t AllocationProtect;/* +0x10 */
-    uint16_t PartitionId;      /* +0x14 */
-    size_t   RegionSize;       /* +0x18 */
-    uint32_t State;            /* +0x20 */
-    uint32_t Protect;          /* +0x24 */
-    uint32_t Type;             /* +0x28 */
-} PECMD_MBI;   /* x64 MEMORY_BASIC_INFORMATION 布局 (仅用 State/RegionSize) */
-extern size_t VirtualQueryEx(HANDLE hProcess, const void *lpAddress, void *mbi,
-                             size_t length);
+    void *BaseAddress;          /* +0x00 */
+    void *AllocationBase;       /* +0x08 */
+    uint32_t AllocationProtect; /* +0x10 */
+    uint16_t PartitionId;       /* +0x14 */
+    size_t RegionSize;          /* +0x18 */
+    uint32_t State;             /* +0x20 */
+    uint32_t Protect;           /* +0x24 */
+    uint32_t Type;              /* +0x28 */
+} PECMD_MBI;                    /* x64 MEMORY_BASIC_INFORMATION 布局 (仅用 State/RegionSize) */
+extern size_t VirtualQueryEx(HANDLE hProcess, const void *lpAddress, void *mbi, size_t length);
 extern BOOL SetMenuItemBitmaps(HMENU, UINT, UINT, HBITMAP, HBITMAP);
 extern HWND CreateDialogParamW(HINSTANCE, LPCWSTR, HWND, void *dproc, intptr_t);
 extern HRGN CreateEllipticRgn(int, int, int, int);
@@ -52,39 +51,38 @@ extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj); /* @0x1400e429c */
 extern void *GetThreadContext_exref;
 extern void *SetThreadContext_exref;
-extern uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
-                                            LPCWSTR lParam, int flag);
+extern uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam,
+                                          int flag);
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);             /* @0x140067d20 */
-extern uint64_t PECMD_GetPackedSystemVersion(void);                     /* @0x14005ea5c */
-extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out,
-                                int64_t *hmod);               /* @0x14005c898 */
-extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
-extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
-extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);  /* @0x1400629b8 */
-extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
-extern bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect, HWND parent, uint32_t id); /* @0x1400efff8 */
-extern LRESULT FUN_1400E5890(int64_t obj);             /* @0x1400e5890 */
-extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
-                                int64_t script, int64_t cmdCtx, int64_t *varTable); /* @0x1400e5248 */
+extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);                          /* @0x140067d20 */
+extern uint64_t PECMD_GetPackedSystemVersion(void);                              /* @0x14005ea5c */
+extern void FUN_14005C898(LPCSTR name, LPCSTR dll, int64_t *out, int64_t *hmod); /* @0x14005c898 */
+extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w);                     /* @0x14005c7c4 */
+extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);   /* @0x1400669c4 */
+extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);             /* @0x1400629b8 */
+extern WCHAR **FUN_14005B154(WCHAR **pp);                                        /* @0x14005b154 */
+extern bool PECMD_CreateStaticWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect,
+                                     HWND parent, uint32_t id); /* @0x1400efff8 */
+extern LRESULT FUN_1400E5890(int64_t obj);                      /* @0x1400e5890 */
+extern void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu, int64_t script, int64_t cmdCtx,
+                          int64_t *varTable); /* @0x1400e5248 */
 extern void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color,
-                                 int edge);                   /* @0x1400f0df4 */
+                                    int edge);                  /* @0x1400f0df4 */
 extern void PECMD_FillCtlBackground(HWND hwnd, COLORREF color); /* @0x1400f0ca0 */
-extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
+extern HWND FUN_1400E5788(HWND hwnd);                           /* @0x1400e5788 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, void *sa, void *da, BOOL inherit,
-                         uint32_t flags, LPVOID env, LPCWSTR cwd,
-                         STARTUPINFOW *si, PROCESS_INFORMATION *pi);
-extern int PECMD_Wow64MapPeImage(void *p1, uint32_t p2, int64_t *p3, int64_t *p4,
-                                int64_t *p5, size_t *p6);   /* @0x1400e7124 */
-extern int PECMD_RunPeInjectStart(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4,
-                                          uint32_t p5, BOOL p6, uint32_t p7, LPVOID p8,
-                                          LPCWSTR p9, STARTUPINFOW *p10,
-                                          PROCESS_INFORMATION *p11, LPCWSTR p12); /* @0x1400e4480 */
+                                uint32_t flags, LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
+                                PROCESS_INFORMATION *pi);
+extern int PECMD_Wow64MapPeImage(void *p1, uint32_t p2, int64_t *p3, int64_t *p4, int64_t *p5,
+                                 size_t *p6); /* @0x1400e7124 */
+extern int PECMD_RunPeInjectStart(LPWSTR p1, int64_t p2, int64_t p3, LPCVOID p4, uint32_t p5,
+                                  BOOL p6, uint32_t p7, LPVOID p8, LPCWSTR p9, STARTUPINFOW *p10,
+                                  PROCESS_INFORMATION *p11, LPCWSTR p12); /* @0x1400e4480 */
 extern HBITMAP PECMD_LoadImageBitmap(LPCWSTR txt, int64_t *outw, int64_t h, int64_t w,
-                             uint32_t *param5, uint64_t *param6, int param7);
+                                     uint32_t *param5, uint64_t *param6, int param7);
 extern void PECMD_SearchMenuTreeById(int64_t node, uint64_t id, int64_t *out, int64_t *str);
 extern int64_t PECMD_ProcessScriptBlock(int64_t p1, int64_t p2, int64_t *p3, int64_t *p4, void *p5);
 extern void PECMD_FreeInitObjectList(int64_t p1);
@@ -96,7 +94,7 @@ extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
 extern void PECMD_SetControlText(HWND hwnd, int64_t p2, LPCWSTR p3, int p4);
 extern void PECMD_RefreshControlVisibility(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
-extern uint64_t * PECMD_InitImageHolder(uint64_t *obj);
+extern uint64_t *PECMD_InitImageHolder(uint64_t *obj);
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
 extern void PECMD_AllocStrSlot(uint64_t *ps);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
@@ -105,24 +103,24 @@ extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
 extern WCHAR g_szEmpty[];
-extern float g_alphaThreshold;   /* DAT_14012f6bc 透明阈值浮点 */
-extern float g_paintScale2;      /* DAT_14012c0d4 绘制缩放除数 (TODO(verify)) */
+extern float g_alphaThreshold; /* DAT_14012f6bc 透明阈值浮点 */
+extern float g_paintScale2;    /* DAT_14012c0d4 绘制缩放除数 (TODO(verify)) */
 
 /* ---- 全局数据 (core_globals.c 定义) ---- */
-extern uint32_t (*g_pfnVirtualAllocEx)(void);  /* DAT_14013e258 VirtualAllocEx */
-extern uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e248 GetThreadContext */
-extern uint32_t (*g_pfnSetThreadCtx)(HANDLE, int64_t);      /* DAT_14013e250 SetThreadContext */
-extern uint32_t (*g_pfnIsAppThemed)(void);                  /* DAT_14013e238 IsAppThemed */
-extern uint64_t g_remoteTebBase;                            /* DAT_14013e2f9 远程 TEB 基址 */
-extern uint64_t g_ptrA84C;                                  /* DAT_14013a84c 布局指针 */
-extern uint8_t g_objMode;                                   /* DAT_14013a84d */
-extern uint64_t g_savedVtblSlot;                            /* DAT_14013e2c8 保存的虚表槽 */
-extern void *g_pHookData;                                   /* DAT_14013d078 钩子数据 */
-extern HHOOK g_hHook;                                       /* DAT_14013d068 钩子句柄 */
-extern HWND g_hActiveDevWnd;                                /* DAT_14013e400 */
-extern HGDIOBJ g_hStockWhiteBrush;                          /* DAT_14013a858 */
-extern uint8_t g_tooltipThreshold;                          /* DAT_14013a861 */
-extern uint8_t g_tooltipCount0;                             /* DAT_14013a860 */
+extern uint32_t (*g_pfnVirtualAllocEx)(void);          /* DAT_14013e258 VirtualAllocEx */
+extern uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t); /* DAT_14013e248 GetThreadContext */
+extern uint32_t (*g_pfnSetThreadCtx)(HANDLE, int64_t); /* DAT_14013e250 SetThreadContext */
+extern uint32_t (*g_pfnIsAppThemed)(void);             /* DAT_14013e238 IsAppThemed */
+extern uint64_t g_remoteTebBase;                       /* DAT_14013e2f9 远程 TEB 基址 */
+extern uint64_t g_ptrA84C;                             /* DAT_14013a84c 布局指针 */
+extern uint8_t g_objMode;                              /* DAT_14013a84d */
+extern uint64_t g_savedVtblSlot;                       /* DAT_14013e2c8 保存的虚表槽 */
+extern void *g_pHookData;                              /* DAT_14013d078 钩子数据 */
+extern HHOOK g_hHook;                                  /* DAT_14013d068 钩子句柄 */
+extern HWND g_hActiveDevWnd;                           /* DAT_14013e400 */
+extern HGDIOBJ g_hStockWhiteBrush;                     /* DAT_14013a858 */
+extern uint8_t g_tooltipThreshold;                     /* DAT_14013a861 */
+extern uint8_t g_tooltipCount0;                        /* DAT_14013a860 */
 
 /* ========== PECMD_CreateProcReadImageBase @0x1400e4324 ==========
  * 创建进程后读取远程线程上下文指向的内存区域尺寸。
@@ -132,9 +130,9 @@ extern uint8_t g_tooltipCount0;                             /* DAT_14013a860 */
  * TODO(verify): 远程布局细节。
  */
 uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_t *outPtr,
-                                       int64_t *outSize, BOOL inherit, uint32_t flags,
-                                       LPVOID env, LPCWSTR cwd, STARTUPINFOW *si,
-                                       PROCESS_INFORMATION *pi, LPCWSTR param11)
+                                       int64_t *outSize, BOOL inherit, uint32_t flags, LPVOID env,
+                                       LPCWSTR cwd, STARTUPINFOW *si, PROCESS_INFORMATION *pi,
+                                       LPCWSTR param11)
 {
     size_t read;
     LPCVOID addr;
@@ -145,8 +143,7 @@ uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_t *outP
 
     base = (uint64_t)g_remoteTebBase;
     read = 0;
-    ok = PECMD_CreateProcessW(param11, cmd, NULL, NULL, inherit, flags | 4,
-                       env, cwd, si, pi);
+    ok = PECMD_CreateProcessW(param11, cmd, NULL, NULL, inherit, flags | 4, env, cwd, si, pi);
     if (ok != 0) {
         *(uint32_t *)(g_ptrA84C + ctxOff) = 0x10000b;
         r = 1;
@@ -156,8 +153,8 @@ uint32_t PECMD_CreateProcReadImageBase(LPWSTR cmd, int64_t ctxOff, int64_t *outP
             base = *(uint32_t *)(base + ctxOff);
         else
             base = *(uint64_t *)(base + ctxOff);
-        ReadProcessMemory(pi->hProcess, (LPCVOID)(g_objMode * 2 + base),
-                          (LPVOID)outPtr, (size_t)g_objMode, &read);
+        ReadProcessMemory(pi->hProcess, (LPCVOID)(g_objMode * 2 + base), (LPVOID)outPtr,
+                          (size_t)g_objMode, &read);
         addr = (LPCVOID)*outPtr;
         for (;;) {
             size_t n = VirtualQueryEx(pi->hProcess, addr, &mbi, 0x30);
@@ -209,8 +206,7 @@ void FUN_1400E4F14(HMENU menu, UINT flags, uintptr_t id, uint8_t *item)
         ux = (uint32_t)PECMD_GetPackedSystemVersion();
         if (ux >> 0x10 > 0x5ffff) {
             if (g_pfnIsAppThemed == NULL)
-                FUN_14005C898("IsAppThemed", "UxTheme.dll",
-                                    (int64_t *)&g_pfnIsAppThemed, NULL);
+                FUN_14005C898("IsAppThemed", "UxTheme.dll", (int64_t *)&g_pfnIsAppThemed, NULL);
             uint8_t b = 0;
             if ((uint64_t)g_pfnIsAppThemed - 1 < (uint64_t)0xfffffffffffffffe)
                 b = (uint8_t)((-(g_pfnIsAppThemed() != 0) & 0x10U) | 1);
@@ -227,8 +223,7 @@ void FUN_1400E4F14(HMENU menu, UINT flags, uintptr_t id, uint8_t *item)
     }
 build:
     outw[1] = 0;
-    bmp = PECMD_LoadImageBitmap(p, outw, (int64_t)w, (int64_t)h, (uint32_t *)(outw + 1),
-                        NULL, 0);
+    bmp = PECMD_LoadImageBitmap(p, outw, (int64_t)w, (int64_t)h, (uint32_t *)(outw + 1), NULL, 0);
     *(HBITMAP *)(item + 0x38) = bmp;
     if (bmp != 0)
         SetMenuItemBitmaps(menu, (UINT)id, 0, bmp, bmp);
@@ -238,8 +233,7 @@ build:
  * 构建并弹出上下文菜单: 在临界区中建菜单树, TrackPopupMenu 跟踪,
  * 选中项 >0xff 时按 id 查命令, 写 &&__MemuId/&&__MenuInx 变量并执行。
  */
-void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg,
-                            int64_t flags)
+void FUN_1400E54D4(char *node, HWND hwnd, int64_t *info, int64_t msg, int64_t flags)
 {
     POINT pt;
     HMENU menu;
@@ -328,13 +322,11 @@ bool PECMD_CreateDialogWindow(int64_t *obj, uint32_t id, int64_t parent)
         exStyle = 0;
     }
 
-    h = CreateDialogParamW(g_hInstance, (LPCWSTR)(uintptr_t)id, (HWND)obj[0x23],
-                           NULL, 0);
+    h = CreateDialogParamW(g_hInstance, (LPCWSTR)(uintptr_t)id, (HWND)obj[0x23], NULL, 0);
     obj[4] = (int64_t)(uintptr_t)h;
     if (h == 0) {
-        h = CreateWindowExW(exStyle, WSTR("#32770"), (LPCWSTR)g_szEmpty, style,
-                            -0x80000000, 0, -0x80000000, 0, (HWND)obj[0x23],
-                            (HMENU)0, g_hInst, NULL);
+        h = CreateWindowExW(exStyle, WSTR("#32770"), (LPCWSTR)g_szEmpty, style, -0x80000000, 0,
+                            -0x80000000, 0, (HWND)obj[0x23], (HMENU)0, g_hInst, NULL);
         obj[4] = (int64_t)(uintptr_t)h;
     }
     if (obj[0x23] == 0) {
@@ -350,9 +342,9 @@ bool PECMD_CreateDialogWindow(int64_t *obj, uint32_t id, int64_t parent)
  * 在目标进程分配内存写入代码, 然后创建远程线程执行。
  * TODO(verify): 注入细节 (PECMD_Wow64MapPeImage/1400e4480)。
  */
-int PECMD_CreateInjectedProcess(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
-                                uint32_t p5, LPVOID p6, LPCWSTR p7,
-                                STARTUPINFOW *p8, PROCESS_INFORMATION *p9, LPCWSTR p10)
+int PECMD_CreateInjectedProcess(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4, uint32_t p5,
+                                LPVOID p6, LPCWSTR p7, STARTUPINFOW *p8, PROCESS_INFORMATION *p9,
+                                LPCWSTR p10)
 {
     HMODULE hMod;
     int64_t local_28 = 0;
@@ -379,8 +371,8 @@ int PECMD_CreateInjectedProcess(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4,
         if (p10 == NULL)
             p10 = PECMD_GetModulePathAlt((uint64_t *)&local_28);
         dwSize = local_18;
-        rc = PECMD_RunPeInjectStart(p3, saved, local_10, local_20, (uint32_t)local_18, p4,
-                           p5, p6, p7, p8, p9, p10);
+        rc = PECMD_RunPeInjectStart(p3, saved, local_10, local_20, (uint32_t)local_18, p4, p5, p6,
+                                    p7, p8, p9, p10);
         VirtualFree((LPVOID)local_20, dwSize, 0x4000);
         PECMD_FreeStrBuf((WCHAR **)&local_28);
     }
@@ -504,10 +496,8 @@ void PECMD_LayoutTabPageArea(int64_t obj, char track)
     ah = (cli.bottom - smCy2 - smCy) - b;
     ay = b + (wndRc.top - ofs.y);
 
-    if (*(int *)((uint8_t *)obj + 0xf8) != ax ||
-        *(int *)((uint8_t *)obj + 0xfc) != ay ||
-        *(int *)((uint8_t *)obj + 0x100) != aw ||
-        *(int *)((uint8_t *)obj + 0x104) != ah) {
+    if (*(int *)((uint8_t *)obj + 0xf8) != ax || *(int *)((uint8_t *)obj + 0xfc) != ay ||
+        *(int *)((uint8_t *)obj + 0x100) != aw || *(int *)((uint8_t *)obj + 0x104) != ah) {
         child = *(uint64_t **)((uint8_t *)obj + 0x108);
         *(int *)((uint8_t *)obj + 0xf8) = ax;
         *(int *)((uint8_t *)obj + 0xfc) = ay;
@@ -530,8 +520,8 @@ void PECMD_LayoutTabPageArea(int64_t obj, char track)
  * 每个目标像素取块内 RGB 平均后 SetPixel 写出。业务: 缩略图/放大预览。
  * TODO(verify): 边界与整除语义。
  */
-void PECMD_BoxAverageScalePixels(HDC hdcDst, int x0, uint32_t wFor, int x1, int y1,
-                            HDC hdcSrc, int sx, int sy, int scaleX, int scaleY)
+void PECMD_BoxAverageScalePixels(HDC hdcDst, int x0, uint32_t wFor, int x1, int y1, HDC hdcSrc,
+                                 int sx, int sy, int scaleX, int scaleY)
 {
     int64_t step = (int64_t)(scaleX / x1);
     int64_t vstep = step * (int64_t)(scaleY / y1);
@@ -568,8 +558,8 @@ void PECMD_BoxAverageScalePixels(HDC hdcDst, int x0, uint32_t wFor, int x1, int 
                 }
                 SetPixel(hdcDst, (int)cur, i,
                          ((uint32_t)((int64_t)gSum / vstep) & 0xff) << 8 |
-                         ((uint32_t)((int64_t)bSum / vstep) & 0xff) << 0x10 |
-                         ((uint32_t)((int64_t)rSum / vstep) & 0xff));
+                             ((uint32_t)((int64_t)bSum / vstep) & 0xff) << 0x10 |
+                             ((uint32_t)((int64_t)rSum / vstep) & 0xff));
                 cur++;
                 x += (uint64_t)step;
             } while (cur < x0 + x1);
@@ -679,36 +669,35 @@ uint64_t PECMD_BtnHostMsgDispatch(int64_t obj, uint32_t msg, int64_t wParam, LPC
         }
         KillTimer(*(HWND *)((uint8_t *)obj + 8), 0x2715);
     }
-dispatch:
-    {
-        count = *(int *)(*(int64_t *)((uint8_t *)obj + 0x34) + 0x10);
-        if (count < 1)
-            top = 0;
-        else
-            top = FUN_1400E5788(*(HWND *)((uint8_t *)obj + 8));
-        if (top != 0)
-            SendMessageW(top, 0x450, 4, 0x5aa555aa);
-        if (msg == 10 && *(int64_t *)((uint8_t *)obj + 0x44) != 0)
-            PECMD_RefreshControlVisibility((int64_t)obj);
-        if (0 < count) {
-            out = 0;
-            r = FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
-                              (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 1, &out);
-            if ((r & 4) != 0) {
-                if (top == 0)
-                    return out;
-                PostMessageW(top, 0x451, 0x204, -0x55aaa55b);
+dispatch: {
+    count = *(int *)(*(int64_t *)((uint8_t *)obj + 0x34) + 0x10);
+    if (count < 1)
+        top = 0;
+    else
+        top = FUN_1400E5788(*(HWND *)((uint8_t *)obj + 8));
+    if (top != 0)
+        SendMessageW(top, 0x450, 4, 0x5aa555aa);
+    if (msg == 10 && *(int64_t *)((uint8_t *)obj + 0x44) != 0)
+        PECMD_RefreshControlVisibility((int64_t)obj);
+    if (0 < count) {
+        out = 0;
+        r = FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
+                          (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 1, &out);
+        if ((r & 4) != 0) {
+            if (top == 0)
                 return out;
-            }
-        }
-        uint64_t res = PECMD_BtnCommonMsgHandler(obj, msg, wParam, lParam, 0);
-        if (0 < count)
-            FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
-                          (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 2, NULL);
-        if (top != 0)
             PostMessageW(top, 0x451, 0x204, -0x55aaa55b);
-        return res;
+            return out;
+        }
     }
+    uint64_t res = PECMD_BtnCommonMsgHandler(obj, msg, wParam, lParam, 0);
+    if (0 < count)
+        FUN_1400F172C(*(int64_t **)((uint8_t *)obj + 0x34), msg, (uint64_t)wParam,
+                      (uint64_t *)lParam, *(int64_t *)((uint8_t *)obj + 8), 2, NULL);
+    if (top != 0)
+        PostMessageW(top, 0x451, 0x204, -0x55aaa55b);
+    return res;
+}
 }
 
 /* ========== FUN_1400EF91C @0x1400ef91c ==========
@@ -763,9 +752,9 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
     if ((flags & 1) == 0)
         SetWindowTextW(*(HWND *)((uint8_t *)obj + OBJ_HWND), str);
 
-    int rcPack[4] = { rc.left, rc.top, rc.right, rc.bottom };
-    PECMD_CreateStaticWindow((int64_t *)child, (LPCWSTR)local_res8, uVar5 | 0x40000020,
-                               rcPack, *(HWND *)((uint8_t *)obj + OBJ_HWND), 0x7d2);
+    int rcPack[4] = {rc.left, rc.top, rc.right, rc.bottom};
+    PECMD_CreateStaticWindow((int64_t *)child, (LPCWSTR)local_res8, uVar5 | 0x40000020, rcPack,
+                             *(HWND *)((uint8_t *)obj + OBJ_HWND), 0x7d2);
     if ((flags & 2) != 0)
         memcpy((uint8_t *)(child + 0x12), (uint8_t *)((uint8_t *)obj + 0x90), 0x10);
     SetWindowPos((HWND)child[4], 0, 0, 0, 0, 0, 3);
@@ -779,8 +768,8 @@ void FUN_1400EF91C(int64_t obj, uint32_t style, uint64_t flags)
  * 创建 BUTTON 子控件 (含椭圆区域与按下状态), 非普通样式时
  * 生成静态子控件并设置定时器。
  */
-bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
-                                HWND parent, uint32_t id, DWORD exStyle)
+bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc, HWND parent, uint32_t id,
+                   DWORD exStyle)
 {
     int x1, y1, x2, y2;
     bool multiline, special;
@@ -802,8 +791,8 @@ bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
         multiline = true;
     bool anyline = false;
     uVar13 = (uint32_t)(-(uint32_t)(((uint8_t)(style & 0xfffffbbf) & 0xb) != 0xb) & 2);
-    if ((!special) && ((uVar13 != 0 && (anyline = multiline, multiline)) ||
-                       StrStrW(text, WSTR("\r\n")) != 0)) {
+    if ((!special) &&
+        ((uVar13 != 0 && (anyline = multiline, multiline)) || StrStrW(text, WSTR("\r\n")) != 0)) {
         special = true;
     }
     if ((*(int *)((uint8_t *)obj + 0x94) >= 0 || *(int *)((uint8_t *)obj + 0x9c) >= 0) &&
@@ -814,9 +803,9 @@ bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
     if (exStyle == 0)
         exStyle = 0;
 
-    h = CreateWindowExW(exStyle, WSTR("BUTTON"), text, (DWORD)(style & 0xfffffbbf),
-                        rc[0], rc[1], x2 - x1, y2 - y1, parent,
-                        (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)lparent, NULL);
+    h = CreateWindowExW(exStyle, WSTR("BUTTON"), text, (DWORD)(style & 0xfffffbbf), rc[0], rc[1],
+                        x2 - x1, y2 - y1, parent, (HMENU)(uintptr_t)id,
+                        (HINSTANCE)(intptr_t)lparent, NULL);
     obj[4] = (int64_t)(uintptr_t)h;
     PECMD_ContainerAppend((int64_t *)obj);
     if ((*(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) & 1) != 0) {
@@ -826,13 +815,11 @@ bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
     }
     if (special) {
         *(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) &= 0xef;
-        *(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) |=
-            ((uint8_t)(style >> 10) & 1) << 4;
+        *(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) |= ((uint8_t)(style >> 10) & 1) << 4;
         FUN_1400EF91C((int64_t)obj, (style & 0x400) * 2, 0);
         if (anyline && obj[0x22] != 0)
             *(int64_t **)(obj[0x22] + 0xe0) = (int64_t *)obj;
-        if ((*(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) & 8) != 0 &&
-            (style >> 0x1c & 1) != 0) {
+        if ((*(uint8_t *)((uint8_t *)obj + OBJ_FLAGS) & 8) != 0 && (style >> 0x1c & 1) != 0) {
             SetTimer((HWND)obj[4], 0x2715, 10, NULL);
         }
     }
@@ -843,8 +830,8 @@ bool FUN_1400EFB08(int64_t *obj, LPCWSTR text, uint64_t style, int *rc,
  * 通用 GDI/控件消息: 0x45a 专用, 0x2b 走虚表, 0x465 查询切换,
  * 其余 0x233 查映射 + FUN_1400E5B0C 兜底。
  */
-uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
-                                     LPCWSTR lParam, int flag)
+uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam, LPCWSTR lParam,
+                                   int flag)
 {
     int count;
     uint16_t r;
@@ -858,7 +845,8 @@ uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
         return 1;
     }
     if (msg == 0x2b) {
-        res = ((uint64_t (*)(int64_t))((void **)*(int64_t *)obj)[1])(*(int64_t *)((uint8_t *)obj + 8));
+        res = ((uint64_t (*)(int64_t))((void **)*(int64_t *)obj)[1])(
+            *(int64_t *)((uint8_t *)obj + 8));
     }
     else if (msg == 0x465) {
         LRESULT lr = SendMessageW(*(HWND *)((uint8_t *)obj + 8), 0xf0, 0, 0);
@@ -906,8 +894,8 @@ uint64_t PECMD_BtnCommonMsgHandler(int64_t obj, uint32_t msg, int64_t wParam,
 /* ========== PECMD_BltTransparentBits @0x1400f0abc ==========
  * 用 3 个兼容位图做多步 BitBlt ROP 合成 (近似半透明/柔光) 后写出。
  */
-void PECMD_BltTransparentBits(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc,
-                              int sx, int sy, uint64_t p9, uint64_t p10, COLORREF color)
+void PECMD_BltTransparentBits(HDC hdcDst, int x, int y, int w, int h, HDC hdcSrc, int sx, int sy,
+                              uint64_t p9, uint64_t p10, COLORREF color)
 {
     HDC hdcA, hdcB;
     HBITMAP bmp;
@@ -959,7 +947,7 @@ void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3)
         b = *(uint8_t *)((uint8_t *)obj + 0x60);
         if (*(float *)((uint8_t *)obj + 0x50) <= g_paintScale2) {
             PECMD_DrawScaledBarFill((int64_t)obj, hdc, &rc, 0x80000000,
-                                 (int)(int8_t)*(uint8_t *)((uint8_t *)obj + 0x60) & 8);
+                                    (int)(int8_t)*(uint8_t *)((uint8_t *)obj + 0x60) & 8);
         }
         h = (HGDIOBJ)obj[0xe];
         if (h == 0 && (h = (HGDIOBJ)obj[0xd], h == 0))
@@ -989,16 +977,13 @@ void PECMD_PaintLabelText(int64_t *obj, uint64_t p2, uint64_t p3)
         return;
     }
 
-    if (*(int16_t *)((uint8_t *)obj + 0xa2) >= 0 &&
-        *(int8_t *)((uint8_t *)obj + 0xac) == -0x10) {
-        c = *(COLORREF *)((uint8_t *)obj + 0x94 +
-                          (int64_t)*(int16_t *)((uint8_t *)obj + 0xa2) * 8);
+    if (*(int16_t *)((uint8_t *)obj + 0xa2) >= 0 && *(int8_t *)((uint8_t *)obj + 0xac) == -0x10) {
+        c = *(COLORREF *)((uint8_t *)obj + 0x94 + (int64_t)*(int16_t *)((uint8_t *)obj + 0xa2) * 8);
     }
     else {
         c = *(COLORREF *)((uint8_t *)obj + 8);
     }
-    ((uint64_t (*)(int64_t, int, uint64_t, uint64_t))((void **)*obj)[1])(
-        obj[4], 0xf, p2, p3);
+    ((uint64_t (*)(int64_t, int, uint64_t, uint64_t))((void **)*obj)[1])(obj[4], 0xf, p2, p3);
     if ((int)c >= 0)
         PECMD_FillCtlBackground((HWND)obj[4], c);
 }

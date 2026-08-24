@@ -6,8 +6,8 @@
  * 来源: PECMD原始.EXE (x64, ImageBase=0x140000000)
  *   发送控件命令串        PECMD_SendPostMessageSpec    @0x1400f1504
  *   调整控件项度量         PECMD_ListGetItemTextData        @0x1400f2f58
- *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8 (定义在 core_b7c.c, 本文件副本已去重)
- *   初始化列表视窗对象     PECMD_CtorListHostObject            @0x1400f9134
+ *   设置控件项数据         PECMD_ListAddItemEntry             @0x1400f53c8 (定义在 core_b7c.c,
+ * 本文件副本已去重) 初始化列表视窗对象     PECMD_CtorListHostObject            @0x1400f9134
  *   销毁列表视窗对象       PECMD_DestroyCtlResources         @0x1400f9324
  *   控件消息分发(临界区)   PECMD_ProgressHostDispatch       @0x1400fc148
  *   设置控件颜色           FUN_1400FD014           @0x1400fd014
@@ -36,36 +36,35 @@ extern void *operator_new(size_t size);
 extern uint8_t PTR_FUN_14012c670[];
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out);             /* @0x140067d20 */
+extern bool PECMD_ParseUIntValue(WCHAR **pp, int *out); /* @0x140067d20 */
 extern int FUN_140067B78(WCHAR **pp, uint64_t *out);    /* @0x140067b78 */
-extern WCHAR **FUN_14005B154(WCHAR **pp);                   /* @0x14005b154 */
+extern WCHAR **FUN_14005B154(WCHAR **pp);               /* @0x14005b154 */
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap,
-                               uint32_t esize);               /* @0x140063b00 */
-extern int64_t * PECMD_InitPtrTable(int64_t *arr);                /* @0x140063b64 */
-extern void FUN_1400633A8(void **ps, int64_t len);             /* @0x1400633a8 */
-extern void *FUN_1400E57C0(void *obj);                 /* @0x1400e57c0 */
-extern uint64_t * PECMD_InitTableCellModel(uint64_t *obj);        /* @0x1400f5c74 */
-extern void FUN_1400E8940(void *obj);               /* @0x1400e8940 */
-extern void PECMD_ClearPtrArrayItems(uint64_t *arr);               /* @0x1400f425c */
-extern void PECMD_ClearPropArrayItems(uint64_t *arr);            /* @0x1400f4208 */
-extern void PECMD_ClearNamedPropArray(int64_t *array);         /* @0x1400f5c10 */
-extern void PECMD_ListStyleObjDtor(uint64_t *obj);   /* @0x1400f5d50 */
-extern HWND FUN_1400E5788(HWND hwnd);             /* @0x1400e5788 */
+                             uint32_t esize);                   /* @0x140063b00 */
+extern int64_t *PECMD_InitPtrTable(int64_t *arr);               /* @0x140063b64 */
+extern void FUN_1400633A8(void **ps, int64_t len);              /* @0x1400633a8 */
+extern void *FUN_1400E57C0(void *obj);                          /* @0x1400e57c0 */
+extern uint64_t *PECMD_InitTableCellModel(uint64_t *obj);       /* @0x1400f5c74 */
+extern void FUN_1400E8940(void *obj);                           /* @0x1400e8940 */
+extern void PECMD_ClearPtrArrayItems(uint64_t *arr);            /* @0x1400f425c */
+extern void PECMD_ClearPropArrayItems(uint64_t *arr);           /* @0x1400f4208 */
+extern void PECMD_ClearNamedPropArray(int64_t *array);          /* @0x1400f5c10 */
+extern void PECMD_ListStyleObjDtor(uint64_t *obj);              /* @0x1400f5d50 */
+extern HWND FUN_1400E5788(HWND hwnd);                           /* @0x1400e5788 */
 extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
-extern void PECMD_SetHotTrackWindow(HWND hwnd);           /* @0x1400f1448 */
-extern int PECMD_TreeGetItemState(int64_t obj, uint64_t param2, uint64_t *out, uint32_t param4); /* @0x1400feda4 */
-extern int PECMD_TreeGetItemStateEx(int64_t obj, uint64_t param2,
-                                     uint64_t *out);         /* @0x1400fee24 */
-extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first, int64_t *out); /* @0x1400ff2bc */
+extern void PECMD_SetHotTrackWindow(HWND hwnd);                 /* @0x1400f1448 */
+extern int PECMD_TreeGetItemState(int64_t obj, uint64_t param2, uint64_t *out,
+                                  uint32_t param4);                               /* @0x1400feda4 */
+extern int PECMD_TreeGetItemStateEx(int64_t obj, uint64_t param2, uint64_t *out); /* @0x1400fee24 */
+extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first,
+                                           int64_t *out); /* @0x1400ff2bc */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_AllocStrSlot(void *ps);
-extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode,
-                          uint8_t flag);
-extern void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1,
-                          int16_t sep2);
+extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
+extern void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2);
 extern int64_t PECMD_ParseTokenResolve(int64_t *ctx, WCHAR *p, uint64_t *out1, uint64_t *out2,
-                             bool async, uint64_t *out3);
+                                       bool async, uint64_t *out3);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern void PECMD_FreeArray_ddf8(int64_t *arr);
 extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
@@ -75,18 +74,18 @@ extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *
 extern int64_t FUN_1400E5B0C(int64_t obj, uint64_t p2, int64_t p3, int64_t *p4);
 
 /* ---- 全局 (core_globals.c) ---- */
-extern HGDIOBJ g_hStockWhiteBrush;  /* DAT_14013a858 库存白色画刷 */
-extern HWND g_hActiveDevWnd;        /* DAT_14013e400 当前设备窗口 */
-extern uint8_t g_tooltipThreshold;  /* DAT_14013a861 Tooltip 触发阈值 */
-extern uint8_t g_tooltipCount0;     /* DAT_14013a860 Tooltip 计数 0 */
+extern HGDIOBJ g_hStockWhiteBrush; /* DAT_14013a858 库存白色画刷 */
+extern HWND g_hActiveDevWnd;       /* DAT_14013e400 当前设备窗口 */
+extern uint8_t g_tooltipThreshold; /* DAT_14013a861 Tooltip 触发阈值 */
+extern uint8_t g_tooltipCount0;    /* DAT_14013a860 Tooltip 计数 0 */
 
 /* ========== PECMD_SendPostMessageSpec @0x1400f1504 ==========
  * 解析 "[:var;] [#]msg ..." 控件命令串，展开变量后向控件窗口发送
  * PostMessage/SendMessage(Timeout)，并把结果写回命名变量。
  * TODO(verify): PECMD_ParseTokenResolve 参数/返回值语义。
  */
-DWORD PECMD_SendPostMessageSpec(uint64_t unused, WCHAR *cmd, int64_t obj,
-                                     int64_t *script, uint8_t sync, void **ppcs)
+DWORD PECMD_SendPostMessageSpec(uint64_t unused, WCHAR *cmd, int64_t obj, int64_t *script,
+                                uint8_t sync, void **ppcs)
 {
     WCHAR *p = cmd;
     WCHAR *expanded = NULL;
@@ -130,17 +129,20 @@ DWORD PECMD_SendPostMessageSpec(uint64_t unused, WCHAR *cmd, int64_t obj,
                 result = 0;
                 if (postResult[0] != 1 && (result = GetLastError()) == 0)
                     result = 1;
-            } else if (timeout[0] == 0) {
+            }
+            else if (timeout[0] == 0) {
                 postResult[0] = (DWORD)SendMessageW(hwnd, msg, (WPARAM)wParam, (LPARAM)lParam);
                 result = postResult[0];
-            } else {
-                SendMessageTimeoutW(hwnd, msg, (WPARAM)wParam, (LPARAM)lParam, 2,
-                                    (UINT)timeout[0], (DWORD *)postResult);
+            }
+            else {
+                SendMessageTimeoutW(hwnd, msg, (WPARAM)wParam, (LPARAM)lParam, 2, (UINT)timeout[0],
+                                    (DWORD *)postResult);
                 result = postResult[0];
             }
             if (*key != L'\0')
                 PECMD_VarSetUInt(script, postResult[0], key);
-        } else {
+        }
+        else {
             result = 0x80070057;
         }
     }
@@ -195,8 +197,7 @@ uint64_t PECMD_ListGetItemTextData(int64_t obj, int *rect, int msgParam)
             item = ((int *)items)[lVar7];
             metric[0] = 2;
             metric[1] = item;
-            lr = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1038, (WPARAM)msgParam,
-                              (LPARAM)metric);
+            lr = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x1038, (WPARAM)msgParam, (LPARAM)metric);
             if ((int)lr != 0 && item == 0)
                 break;
             lVar7++;
@@ -325,8 +326,7 @@ void PECMD_DestroyCtlResources(uint64_t *obj)
  * 控件消息分发变体：0x462 特殊路径进入临界区调用虚表回调，
  * 其余走 0x233 映射 + FUN_1400E5B0C 兜底。
  */
-int64_t PECMD_ProgressHostDispatch(int64_t obj, uint32_t msg, uint64_t wParam,
-                                   uint64_t *lParam)
+int64_t PECMD_ProgressHostDispatch(int64_t obj, uint32_t msg, uint64_t wParam, uint64_t *lParam)
 {
     int count;
     uint16_t r;
@@ -352,8 +352,8 @@ int64_t PECMD_ProgressHostDispatch(int64_t obj, uint32_t msg, uint64_t wParam,
 
     if (0 < count) {
         out = 0;
-        r = FUN_1400F172C(*(int64_t **)(obj + 0x34), (int)msg, (uint64_t)wParam,
-                          lParam, *(int64_t *)(obj + 8), 1, &out);
+        r = FUN_1400F172C(*(int64_t **)(obj + 0x34), (int)msg, (uint64_t)wParam, lParam,
+                          *(int64_t *)(obj + 8), 1, &out);
         result = (int64_t)out;
         if ((r & 4) != 0) {
             if (top == 0)
@@ -364,8 +364,8 @@ int64_t PECMD_ProgressHostDispatch(int64_t obj, uint32_t msg, uint64_t wParam,
     }
     result = FUN_1400E5B0C(obj, (uint64_t)msg, (int64_t)wParam, (int64_t *)lParam);
     if (0 < count)
-        FUN_1400F172C(*(int64_t **)(obj + 0x34), (int)msg, (uint64_t)wParam,
-                      lParam, *(int64_t *)(obj + 8), 2, NULL);
+        FUN_1400F172C(*(int64_t **)(obj + 0x34), (int)msg, (uint64_t)wParam, lParam,
+                      *(int64_t *)(obj + 8), 2, NULL);
     if (top != 0)
         PostMessageW(top, 0x451, 0x204, -0x55aaa55b);
     return result;
@@ -419,10 +419,8 @@ void FUN_1400FD014(int64_t obj, int *colors)
     }
     if (*(int16_t *)(obj + 0xa2) < 0)
         *(uint16_t *)(obj + 0xa2) = 0;
-    if (*(int *)(obj + 0x9c) >= 0 &&
-        *(int *)(obj + 0x9c) == *(int *)(obj + 0x94) &&
-        *(int *)(obj + 0x98) == *(int *)(obj + 0x90) &&
-        *(int8_t *)(obj + 0xac) > 0) {
+    if (*(int *)(obj + 0x9c) >= 0 && *(int *)(obj + 0x9c) == *(int *)(obj + 0x94) &&
+        *(int *)(obj + 0x98) == *(int *)(obj + 0x90) && *(int8_t *)(obj + 0xac) > 0) {
         *(uint8_t *)(obj + 0xac) |= 0x80;
     }
 }
@@ -549,15 +547,16 @@ void PECMD_ControlHoverTimer(int64_t *obj, uint32_t timerId)
                 goto done;
             }
             *(uint8_t *)((uint8_t *)obj + 0xad) = 0;
-        } else {
-            if (((GetAsyncKeyState(1) & 0x8000) == 0) ||
-                *(int8_t *)((uint8_t *)obj + 0xad) > 0)
+        }
+        else {
+            if (((GetAsyncKeyState(1) & 0x8000) == 0) || *(int8_t *)((uint8_t *)obj + 0xad) > 0)
                 goto done;
             *(uint8_t *)((uint8_t *)obj + 0xad) = 1;
         }
         if (*(int8_t *)((uint8_t *)obj + 0xac) > 0)
             InvalidateRect(hwnd, NULL, 1);
-    } else if (timerId == 0x2711 && *(int8_t *)((uint8_t *)obj + 0xa0) > 0) {
+    }
+    else if (timerId == 0x2711 && *(int8_t *)((uint8_t *)obj + 0xa0) > 0) {
         GetCursorPos(&pt);
         rc.left = rc.top = rc.right = rc.bottom = 0;
         GetWindowRect(hwnd, &rc);
@@ -568,8 +567,7 @@ void PECMD_ControlHoverTimer(int64_t *obj, uint32_t timerId)
             if (*(int16_t *)((uint8_t *)obj + 0xa2) >= 0) {
                 *(uint16_t *)((uint8_t *)obj + 0xa2) = 0;
                 if (*(int8_t *)((uint8_t *)obj + 0xac) > 0)
-                    *(uint8_t *)((uint8_t *)obj + 0xa5) =
-                        *(uint8_t *)((uint8_t *)obj + 0xa4) & 2;
+                    *(uint8_t *)((uint8_t *)obj + 0xa5) = *(uint8_t *)((uint8_t *)obj + 0xa4) & 2;
                 if (*(int8_t *)((uint8_t *)obj + 0xa1) != 0 ||
                     *(int8_t *)((uint8_t *)obj + 0xac) > 0)
                     InvalidateRect(hwnd, NULL, 1);
@@ -578,7 +576,8 @@ void PECMD_ControlHoverTimer(int64_t *obj, uint32_t timerId)
             PostMessageW(hwnd, 0x2a3, 0, 0);
             if ((uint64_t)obj[0x10] == (uint64_t)g_hStockWhiteBrush)
                 PECMD_InvalidateParentRect(hwnd, 1);
-        } else {
+        }
+        else {
             if (g_tooltipThreshold == (int8_t)obj[0x14])
                 PECMD_SetHotTrackWindow(hwnd);
             if ((int8_t)obj[0x14] <= g_tooltipCount0)
@@ -633,13 +632,14 @@ uint64_t FUN_1400FDEDC(int64_t obj, int64_t *msg)
             }
             goto label_1c;
         }
-label_b2:
+    label_b2:
         if ((wParam & 1) == 0) {
-label_bb:
+        label_bb:
             if (*(int8_t *)(obj + OBJ_LINK) == 2) {
                 GetCursorPos(&pt);
                 GetWindowRect(hwnd, &rc);
-            } else {
+            }
+            else {
                 pt.x = x;
                 pt.y = y;
                 GetClientRect(hwnd, &rc);
@@ -648,8 +648,9 @@ label_bb:
                 goto dispatch;
             goto label_1c;
         }
-    } else {
-label_1c:
+    }
+    else {
+    label_1c:
         if (msgId != 0x201)
             goto dispatch;
         if (*(int8_t *)(obj + 0xad) > 0) {
@@ -659,7 +660,8 @@ label_1c:
         if (*(int8_t *)(obj + OBJ_LINK) == 2) {
             GetCursorPos(&pt);
             GetWindowRect(hwnd, &rc);
-        } else {
+        }
+        else {
             pt.x = x;
             pt.y = y;
             GetClientRect(hwnd, &rc);
@@ -672,8 +674,8 @@ label_1c:
     InvalidateRect(hwnd, NULL, 1);
 
 dispatch:
-    FUN_1400F172C(*(int64_t **)(obj + 0xd8), msgId, wParam,
-                  (uint64_t *)lParam, (int64_t)hwnd, 0x80, NULL);
+    FUN_1400F172C(*(int64_t **)(obj + 0xd8), msgId, wParam, (uint64_t *)lParam, (int64_t)hwnd, 0x80,
+                  NULL);
     return 0;
 }
 
@@ -741,8 +743,7 @@ uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *path, uint64_t *out)
 /* ========== PECMD_TreeCollectCheckedText @0x1400ff5d0 ==========
  * 递归把树项路径格式化为 "@0x%p" / 数字范围串，结果追加到 *out。
  */
-int64_t PECMD_TreeCollectCheckedText(int64_t obj, int64_t *out, uint64_t hItem,
-                                  int64_t mode)
+int64_t PECMD_TreeCollectCheckedText(int64_t obj, int64_t *out, uint64_t hItem, int64_t mode)
 {
     uint64_t value = 0;
     int ok;
@@ -756,15 +757,16 @@ int64_t PECMD_TreeCollectCheckedText(int64_t obj, int64_t *out, uint64_t hItem,
         if ((value & 2) != 0) {
             if (mode == 0) {
                 PECMD_BuildTreeIndexPathStr(obj, hItem, out);
-            } else {
+            }
+            else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];
                 if (off != 0) {
                     out[1] = off + 1;
                     *(uint16_t *)(*out + off * 2) = 0x20;
                 }
-                written = wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"),
-                                    (void *)(uintptr_t)hItem);
+                written =
+                    wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"), (void *)(uintptr_t)hItem);
                 out[1] += written;
             }
         }
@@ -780,8 +782,7 @@ int64_t PECMD_TreeCollectCheckedText(int64_t obj, int64_t *out, uint64_t hItem,
 /* ========== PECMD_TreeCollectItems @0x1400ff730 ==========
  * 树路径串构建扩展：用 0x1127 判断项类型，支持 stop 标志。
  */
-int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
-                                    uint64_t flags)
+int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem, uint64_t flags)
 {
     int64_t startLen = out[1];
     uint32_t stopFlag = ~(uint32_t)(flags >> 1) & 1;
@@ -795,15 +796,16 @@ int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
         if ((uint32_t)lr >> 0xc != 1) {
             if ((flags & 0x10) == 0) {
                 PECMD_BuildTreeIndexPathStr(obj, hItem, out);
-            } else {
+            }
+            else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];
                 if (off != 0) {
                     out[1] = off + 1;
                     *(uint16_t *)(*out + off * 2) = 0x20;
                 }
-                written = wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"),
-                                    (void *)(uintptr_t)hItem);
+                written =
+                    wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"), (void *)(uintptr_t)hItem);
                 out[1] += written;
             }
             if (stopFlag != 0)
@@ -824,8 +826,7 @@ int64_t PECMD_TreeCollectItems(int64_t obj, int64_t *out, WPARAM hItem,
 /* ========== PECMD_TreeScanCheckedSiblings @0x1400ff8a8 ==========
  * 树路径串构建扩展 2：用 PECMD_TreeGetItemStateEx 判断项并递归到 Ex。
  */
-int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem,
-                                     uint64_t flags)
+int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem, uint64_t flags)
 {
     int64_t startLen = out[1];
     uint32_t stopFlag = ~(uint32_t)(flags >> 1) & 1;
@@ -841,15 +842,16 @@ int64_t PECMD_TreeScanCheckedSiblings(int64_t obj, int64_t *out, uint64_t hItem,
         if (ok != 0 && (value & 2) != 0) {
             if ((flags & 0x10) == 0) {
                 PECMD_BuildTreeIndexPathStr(obj, hItem, out);
-            } else {
+            }
+            else {
                 PECMD_AllocString(out, out[1] + 0x3f);
                 off = out[1];
                 if (off != 0) {
                     out[1] = off + 1;
                     *(uint16_t *)(*out + off * 2) = 0x20;
                 }
-                written = wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"),
-                                    (void *)(uintptr_t)hItem);
+                written =
+                    wsprintfW((LPWSTR)(*out + out[1] * 2), WSTR("@0x%p"), (void *)(uintptr_t)hItem);
                 out[1] += written;
             }
             if (stopFlag != 0)

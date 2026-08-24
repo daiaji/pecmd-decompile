@@ -47,15 +47,12 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
-extern void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a, uint64_t b,
-                          uint64_t c);
+extern void PECMD_ShellLaunchThread(LARGE_INTEGER script, uint64_t a, uint64_t b, uint64_t c);
 extern void *FUN_1400E57C0(void *obj);
 extern bool PECMD_PrefixMatchNoCase(uint16_t *s, char *key);
 extern int64_t FUN_14005E04C(void);
-extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused,
-                          DWORD *readCount);
-extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b,
-                            uint32_t c, WCHAR *d);
+extern bool FUN_14005F1B0(uint64_t *stream, uint8_t *out, uint64_t unused, DWORD *readCount);
+extern HANDLE PECMD_OpenLockVolume(int mode, uint64_t a, int64_t b, uint32_t c, WCHAR *d);
 extern char FUN_1400660AC(char *key, int64_t *pp, int len);
 extern int64_t PECMD_TokPrefixICmp(char *a, uint16_t *w, int n);
 extern int64_t PECMD_InitComState(void);
@@ -76,14 +73,12 @@ extern uint8_t PTR_FUN_1401250d0[];
 /* ========== PECMD_DebugOutput @0x140045868 ==========
  * 调试输出 + 转发。
  */
-void PECMD_DebugOutput(uint64_t a, uint64_t b, uint64_t c,
-                   uint64_t d)
+void PECMD_DebugOutput(uint64_t a, uint64_t b, uint64_t c, uint64_t d)
 {
     (void)b;
     if (g_u8CCB1 != 0) {
         c = 0x261d;
-        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"),
-                      0x261d, d);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("MAIN_DBG:%d\r\n"), 0x261d, d);
     }
     PECMD_ShellLaunchThread((LARGE_INTEGER)(int64_t)(uintptr_t)g_Script, a, c, d);
 }
@@ -146,8 +141,7 @@ void PECMD_DestroyWindowLocked(void)
 /* ========== PECMD_FrameRegion @0x14005d600 ==========
  * 边框绘制。
  */
-void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn, uint32_t flags,
-                   int thickness)
+void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn, uint32_t flags, int thickness)
 {
     if (thickness == 0) {
         thickness = *(int *)((uint8_t *)obj + 0x34);
@@ -155,8 +149,7 @@ void PECMD_FrameRegion(uint64_t *obj, HDC hdc, HRGN rgn, uint32_t flags,
     if (rgn == (HRGN)0) {
         rgn = (HRGN)obj[3];
     }
-    FrameRgn(hdc, rgn, (HBRUSH)*obj,
-             -(uint32_t)(*(int *)((uint8_t *)obj + 48) != 0) & flags,
+    FrameRgn(hdc, rgn, (HBRUSH)*obj, -(uint32_t)(*(int *)((uint8_t *)obj + 48) != 0) & flags,
              thickness);
 }
 
@@ -259,7 +252,8 @@ uint64_t PECMD_QueryState_f414(int64_t obj)
         EnterCriticalSection(&g_csInit);
         uVar1 = g_hPelogonWnd;
         LeaveCriticalSection(&g_csInit);
-    } else {
+    }
+    else {
         uVar1 = *(uint64_t *)(obj + 0x20);
     }
     return uVar1;
@@ -308,8 +302,8 @@ void *PECMD_SendCtrlMessage_0834(WPARAM wParam, uint64_t lParam)
 {
     (void)lParam;
     uint64_t local_38 = 1;
-    return (void *)SendMessageW(*(HWND *)((uint8_t *)wParam + OBJ_HWND), 0x465,
-                                wParam, (LPARAM)&local_38);
+    return (void *)SendMessageW(*(HWND *)((uint8_t *)wParam + OBJ_HWND), 0x465, wParam,
+                                (LPARAM)&local_38);
 }
 
 /* ========== PECMD_SetFontMessage_090c @0x14006090c ==========
@@ -320,10 +314,10 @@ LRESULT PECMD_SetFontMessage_090c(int64_t obj, WPARAM wParam, int set)
     LRESULT LVar1;
     if ((wParam == 0) || (wParam == (WPARAM)-1)) {
         LVar1 = (LRESULT)(int)wParam;
-    } else {
+    }
+    else {
         *(WPARAM *)(obj + OBJ_WPARAM) = wParam;
-        LVar1 = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x30, wParam,
-                             (uint64_t)(set != 0));
+        LVar1 = SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x30, wParam, (uint64_t)(set != 0));
     }
     return LVar1;
 }
@@ -336,7 +330,8 @@ LRESULT PECMD_SetFontMessage_0948(int64_t obj, HWND hwnd, WPARAM wParam, int set
     LRESULT LVar1;
     if ((wParam == 0) || (wParam == (WPARAM)-1)) {
         LVar1 = (LRESULT)(int)wParam;
-    } else {
+    }
+    else {
         if (hwnd == *(HWND *)(obj + OBJ_HWND)) {
             *(WPARAM *)(obj + OBJ_WPARAM) = wParam;
         }
@@ -350,9 +345,7 @@ LRESULT PECMD_SetFontMessage_0948(int64_t obj, HWND hwnd, WPARAM wParam, int set
  */
 uint64_t PECMD_IsIdentifierChar(uint16_t ch)
 {
-    if (((((ch != 0x5f) && (ch != 0x24)) &&
-          ((ch < 0x61 || (0x7a < ch)))) &&
-         (ch < 0x80)) &&
+    if (((((ch != 0x5f) && (ch != 0x24)) && ((ch < 0x61 || (0x7a < ch)))) && (ch < 0x80)) &&
         ((ch < 0x30 || (0x39 < ch)))) {
         return 0;
     }
@@ -372,7 +365,8 @@ int64_t PECMD_ParseHex_49f4(uint8_t *s)
         int iVar2;
         if ((int)uVar1 < 0x3a) {
             iVar2 = (int)uVar1 - 0x30;
-        } else {
+        }
+        else {
             iVar2 = (int)(uVar1 | 0x20) - 0x57;
         }
         lVar3 = lVar3 * 0x10 + iVar2;
@@ -399,8 +393,7 @@ bool PECMD_MatchPrefixAdvance(char *key, int64_t *pp, int len)
  */
 char PECMD_MatchAndPad(int64_t key, int64_t *pp, int len)
 {
-    int64_t lVar2 = PECMD_TokPrefixICmp((char *)(key + 1),
-                                  (uint16_t *)(*pp + 2), len - 1);
+    int64_t lVar2 = PECMD_TokPrefixICmp((char *)(key + 1), (uint16_t *)(*pp + 2), len - 1);
     char cVar1 = (char)lVar2;
     if (cVar1 != '\0') {
         PECMD_FillSpaces(pp, len);
@@ -431,11 +424,10 @@ void PECMD_WindowAction(int64_t *obj, int action, uint32_t flags, int extra)
 {
     if ((action == 1) && ((*(uint8_t *)((uint8_t *)obj + 0x1a * 8) & 0x10) != 0)) {
         ShowWindow((HWND)obj[4], 1);
-    } else {
-        void (**fn)(void *, int, int, int64_t) =
-            (void (**)(void *, int, int, int64_t))(*obj + 8);
-        (**fn)((void *)obj[4], 5, action,
-               (int64_t)(int)(extra << 0x10 | flags));
+    }
+    else {
+        void (**fn)(void *, int, int, int64_t) = (void (**)(void *, int, int, int64_t))(*obj + 8);
+        (**fn)((void *)obj[4], 5, action, (int64_t)(int)(extra << 0x10 | flags));
     }
 }
 
@@ -503,8 +495,7 @@ bool PECMD_ParseNumber(int64_t *pp, int *out)
 void PECMD_SendMessageAndCallback(int64_t obj)
 {
     if (**(int16_t **)(obj + 0x10) != 0) {
-        LRESULT LVar1 = SendMessageW(*(HWND *)(*(int64_t *)(obj + 0x38) + OBJ_HWND),
-                                     0xf0, 0, 0);
+        LRESULT LVar1 = SendMessageW(*(HWND *)(*(int64_t *)(obj + 0x38) + OBJ_HWND), 0xf0, 0, 0);
         FUN_14007DF90(obj, (int)LVar1);
     }
 }
@@ -518,7 +509,6 @@ void PECMD_FormatOutput(int64_t obj)
     WCHAR local_88[64];
     wsprintfW(local_88, WSTR("%d"), 0);
     if (**((LPCWSTR *)(obj + 0x10)) != L'\0') {
-        FUN_14007D0AC(*(int64_t **)(obj + 0x50),
-                      *(LPCWSTR *)(obj + 0x10), local_88);
+        FUN_14007D0AC(*(int64_t **)(obj + 0x50), *(LPCWSTR *)(obj + 0x10), local_88);
     }
 }

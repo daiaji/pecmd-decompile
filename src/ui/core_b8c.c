@@ -24,7 +24,7 @@
 
 #include "pecmd_defs.h"
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);          /* @0x1400e6d68 */
+extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value); /* @0x1400e6d68 */
 
 /* ---- 全局数据符号 ---- */
 extern uint8_t PTR_FUN_14012cb90[];
@@ -85,9 +85,10 @@ void FUN_1400EF620(uint64_t *obj, uint64_t wParam, uint64_t lParam)
 
     if (((flags & 1) == 0) && ((flags & 6) == 0)) {
         PECMD_PaintLabelText((int64_t *)obj, wParam, lParam);
-    } else {
-        (**(void (**)(uint64_t, uint32_t, uint64_t, uint64_t))(*obj + 8))
-            (obj[4], 0xf, wParam, lParam);
+    }
+    else {
+        (**(void (**)(uint64_t, uint32_t, uint64_t, uint64_t))(*obj + 8))(obj[4], 0xf, wParam,
+                                                                          lParam);
     }
 }
 
@@ -99,9 +100,10 @@ uint64_t PECMD_ListGetNextSelected(int64_t obj, int index)
     uint64_t result;
 
     if ((*(uint8_t *)(obj + 0x3f8) & 0x10) == 0) {
-        result = (uint64_t)SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x100c,
-                                        (WPARAM)(int64_t)index, 2);
-    } else {
+        result =
+            (uint64_t)SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x100c, (WPARAM)(int64_t)index, 2);
+    }
+    else {
         result = (uint64_t)*(uint32_t *)(obj + 0x3d4);
     }
     return result;
@@ -110,8 +112,7 @@ uint64_t PECMD_ListGetNextSelected(int64_t obj, int index)
 /* ========== PECMD_SetCtlLayoutMetrics @0x1400f400c ==========
  * 更新控件布局字段；负数表示不修改对应项。
  */
-void PECMD_SetCtlLayoutMetrics(int64_t obj, int left, int top, int right,
-                            uint32_t flags)
+void PECMD_SetCtlLayoutMetrics(int64_t obj, int left, int top, int right, uint32_t flags)
 {
     if (-1 < left) {
         *(int *)(obj + 0x1f0) = left;
@@ -135,7 +136,8 @@ void PECMD_SetSliderPos(int64_t obj, int pos, uint64_t flags)
     }
     if ((flags >> 0xf & 1) == 0) {
         SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x2001, 0, (LPARAM)(int64_t)pos);
-    } else {
+    }
+    else {
         *(int *)(obj + 0x54) = pos;
     }
 }

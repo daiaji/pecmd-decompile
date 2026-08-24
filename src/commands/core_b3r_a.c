@@ -18,18 +18,23 @@ typedef LONG LSTATUS;
 
 typedef struct _SYSTEM_INFO {
     union {
-        struct { DWORD dwOemId; };
-        struct { WORD wProcessorArchitecture; WORD wReserved; };
+        struct {
+            DWORD dwOemId;
+        };
+        struct {
+            WORD wProcessorArchitecture;
+            WORD wReserved;
+        };
     };
-    DWORD  dwPageSize;
-    void  *lpMinimumApplicationAddress;
-    void  *lpMaximumApplicationAddress;
+    DWORD dwPageSize;
+    void *lpMinimumApplicationAddress;
+    void *lpMaximumApplicationAddress;
     uint64_t dwActiveProcessorMask;
-    DWORD  dwNumberOfProcessors;
-    DWORD  dwProcessorType;
-    DWORD  dwAllocationGranularity;
-    WORD   wProcessorLevel;
-    WORD   wProcessorRevision;
+    DWORD dwNumberOfProcessors;
+    DWORD dwProcessorType;
+    DWORD dwAllocationGranularity;
+    WORD wProcessorLevel;
+    WORD wProcessorRevision;
 } _SYSTEM_INFO;
 
 /* ---- Win32 API 补充声明 (win32_stub.h 未含) ---- */
@@ -38,25 +43,30 @@ extern LONG RegOpenKeyExA(HKEY, LPCSTR, DWORD, DWORD, HKEY *);
 extern char *lstrcpynA(char *, const char *, int);
 
 /* ---- FUN_ helper 声明 ---- */
-extern void  PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
-extern LPCVOID PECMD_MapFileView(HANDLE h, uint64_t size, uint64_t flags, uint64_t offset); /* @0x1400e3f80 映射 */
-extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos, DWORD method); /* @0x14005c674 定位 */
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                 /* @0x140063424 分配槽数组 */
-extern int  PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);        /* @0x14005b184 检索匹配 */
-extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);             /* @0x14006cc70 记录命中位置 */
-extern void PECMD_FreeStrBuf(void *ps);                             /* @0x14005b104 释放字符串槽 */
-extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* @0x140018d8c 日志 */
-extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);   /* @0x1400702f0 取串槽 */
-extern uint64_t *PECMD_AssignAnsiString(uint64_t *out, LPCSTR s);           /* @0x14007026c 串构造 */
-extern void PECMD_AppendAnsiStr(void **ps, LPCSTR s);                    /* @0x14006345c 缀接字符串 */
-extern int  PECMD_PadTrailingSpaces(char *s, int len);                       /* @0x14005cc04 校验/规范化 IP */
-extern int  PECMD_CountSeparators(char *s);                                /* @0x14005cbd8 计数 helper */
-extern uint64_t PECMD_SetDHCPSettings(HKEY *h, LPCSTR p1, BYTE *p5);      /* @0x140071d00 删除注册项 */
+extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path,
+                                 WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
+extern LPCVOID PECMD_MapFileView(HANDLE h, uint64_t size, uint64_t flags,
+                                 uint64_t offset); /* @0x1400e3f80 映射 */
+extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE h, LARGE_INTEGER pos,
+                                          DWORD method);           /* @0x14005c674 定位 */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);         /* @0x140063424 分配槽数组 */
+extern int PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b); /* @0x14005b184 检索匹配 */
+extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);  /* @0x14006cc70 记录命中位置 */
+extern void PECMD_FreeStrBuf(void *ps);                            /* @0x14005b104 释放字符串槽 */
+extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a,
+                              uint64_t b); /* @0x140018d8c 日志 */
+extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src,
+                                     uint64_t len);               /* @0x1400702f0 取串槽 */
+extern uint64_t *PECMD_AssignAnsiString(uint64_t *out, LPCSTR s); /* @0x14007026c 串构造 */
+extern void PECMD_AppendAnsiStr(void **ps, LPCSTR s);             /* @0x14006345c 缀接字符串 */
+extern int PECMD_PadTrailingSpaces(char *s, int len);             /* @0x14005cc04 校验/规范化 IP */
+extern int PECMD_CountSeparators(char *s);                        /* @0x14005cbd8 计数 helper */
+extern uint64_t PECMD_SetDHCPSettings(HKEY *h, LPCSTR p1, BYTE *p5); /* @0x140071d00 删除注册项 */
 
 /* ---- DAT_ 全局声明 ---- */
-extern uint64_t g_u64D7D8;      /* 页掩码缓存 */
-extern uint8_t  g_u8CCB1;      /* MAIN_DBG 日志标志 */
-extern int      (*g_pinet_addr)(char *);  /* atoi-ish inet 解析函数指针 */
+extern uint64_t g_u64D7D8;          /* 页掩码缓存 */
+extern uint8_t g_u8CCB1;            /* MAIN_DBG 日志标志 */
+extern int (*g_pinet_addr)(char *); /* atoi-ish inet 解析函数指针 */
 
 /* =========================================================================
  * PECMD_GetDirectorySize @0x14006b254 — 递归统计目录占用的字节总和
@@ -76,36 +86,31 @@ int64_t PECMD_GetDirectorySize(LPCWSTR param_1)
     if (lpFindFileData == NULL)
         return 0;
     iVar1 = lstrlenW(param_1);
-    if ((0 < iVar1) &&
-        (param_1[iVar1 - 1] == L'\\' || param_1[iVar1 - 1] == L'/')) {
+    if ((0 < iVar1) && (param_1[iVar1 - 1] == L'\\' || param_1[iVar1 - 1] == L'/')) {
         iVar1 = iVar1 - 1;
     }
     if (iVar1 + 4 < 0x212) {
         if (0 < iVar1) {
             memcpy((void *)(lpFindFileData + 1), param_1, iVar1 * 2);
         }
-        memcpy((uint8_t *)lpFindFileData[1].cFileName + (iVar1 * 2 - 0x2c),
-                      WSTR("\\*.*"), 10);
+        memcpy((uint8_t *)lpFindFileData[1].cFileName + (iVar1 * 2 - 0x2c), WSTR("\\*.*"), 10);
         lpFindFileData[2].cFileName[0xd3] = L'\0';
         local_res18 = (HANDLE)0;
         PECMD_FindFirstFileW(&local_res18, (LPCWSTR)(lpFindFileData + 1), lpFindFileData);
         if (local_res18 != (HANDLE)0) {
             do {
                 if ((lpFindFileData->dwFileAttributes & 0x10) == 0) {
-                    lVar5 = lVar5 +
-                        (((int64_t)lpFindFileData->nFileSizeHigh << 32) |
-                         lpFindFileData->nFileSizeLow);
+                    lVar5 = lVar5 + (((int64_t)lpFindFileData->nFileSizeHigh << 32) |
+                                     lpFindFileData->nFileSizeLow);
                 }
                 else {
                     iVar2 = lstrcmpiW(lpFindFileData->cFileName, WSTR("."));
                     if (((iVar2 != 0) &&
-                         (iVar2 = lstrcmpiW(lpFindFileData->cFileName, WSTR("..")),
-                          iVar2 != 0)) &&
+                         (iVar2 = lstrcmpiW(lpFindFileData->cFileName, WSTR("..")), iVar2 != 0)) &&
                         (iVar2 = lstrlenW(lpFindFileData->cFileName),
                          (int64_t)iVar2 + (int64_t)(iVar1 + 4) < 0x211)) {
-                        wsprintfW((LPWSTR)(lpFindFileData[2].cFileName + 0xd4),
-                                  WSTR("%s\\%s"), param_1,
-                                  lpFindFileData->cFileName);
+                        wsprintfW((LPWSTR)(lpFindFileData[2].cFileName + 0xd4), WSTR("%s\\%s"),
+                                  param_1, lpFindFileData->cFileName);
                         lpFindFileData[4].cFileName[0x95] = L'\0';
                         lVar4 = PECMD_GetDirectorySize(lpFindFileData[2].cFileName + 0xd4);
                         lVar5 = lVar5 + lVar4;
@@ -113,8 +118,7 @@ int64_t PECMD_GetDirectorySize(LPCWSTR param_1)
                 }
                 BVar3 = FindNextFileW(local_res18, lpFindFileData);
             } while (BVar3 != 0);
-            if ((local_res18 != (HANDLE)0) &&
-                (local_res18 != (HANDLE)(uintptr_t)-1)) {
+            if ((local_res18 != (HANDLE)0) && (local_res18 != (HANDLE)(uintptr_t)-1)) {
                 FindClose(local_res18);
             }
             local_res18 = (HANDLE)0;
@@ -135,11 +139,10 @@ int64_t PECMD_GetDirectorySize(LPCWSTR param_1)
  *   param_12 的 CONCAT71 / _1_7_ 位域噪音简化为: neg = (param_12<0) 方向标志,
  *   uVar23 = 绝对值; 之后 param_12 作为 ReadFile 字节计数复用 (与反编译一致)。
  * ========================================================================= */
-int64_t PECMD_FindPatternInFile(int64_t *param_1, HANDLE param_2, uint64_t param_3,
-                      int64_t param_4, int param_5, uint64_t param_6,
-                      LARGE_INTEGER param_7, int64_t param_8,
-                      int param_9, int param_10, LPCVOID param_11,
-                      uint64_t param_12)
+int64_t PECMD_FindPatternInFile(int64_t *param_1, HANDLE param_2, uint64_t param_3, int64_t param_4,
+                                int param_5, uint64_t param_6, LARGE_INTEGER param_7,
+                                int64_t param_8, int param_9, int param_10, LPCVOID param_11,
+                                uint64_t param_12)
 {
     (void)param_6;
     int iVar1;
@@ -269,11 +272,12 @@ LAB_14006d_common:
             param_7.QuadPart = 0;
             do {
                 lVar13 = (int64_t)(intptr_t)PECMD_GrowByteBuffer((void **)&param_7,
-                                                          uVar11 + 0x100800 + lVar25 * 4);
+                                                                 uVar11 + 0x100800 + lVar25 * 4);
                 lpBuffer = (uint8_t *)0;
                 if ((lVar13 != 0) &&
                     (lpBuffer = (uint8_t *)((uintptr_t)(lVar13 + 0x20000U) & 0xfffffffffffe0000ULL),
-                     lpBuffer != (uint8_t *)0)) break;
+                     lpBuffer != (uint8_t *)0))
+                    break;
                 if ((int64_t)uVar11 < lVar24) {
                     goto LAB_14006d4ef;
                 }
@@ -295,13 +299,15 @@ LAB_14006d_common:
                         if ((int64_t)uVar28 < (int64_t)uVar7) {
                             uVar7 = uVar28;
                         }
-                        if ((int64_t)uVar7 < 1) break;
+                        if ((int64_t)uVar7 < 1)
+                            break;
                         param_12 = 0;
                         BVar2 = ReadFile(param_2, lpBuffer + uVar27, (DWORD)uVar7,
                                          (DWORD *)&param_12, (LPOVERLAPPED)0);
                         if ((BVar2 == 0) || ((int64_t)param_12 < 1)) {
                             param_11 = (LPCVOID)((int64_t)param_11 - 1);
-                            if ((int64_t)param_11 < 1) break;
+                            if ((int64_t)param_11 < 1)
+                                break;
                             param_12 = 0;
                         }
                         if ((int64_t)uVar28 < (int64_t)param_12) {
@@ -312,18 +318,19 @@ LAB_14006d_common:
                         if (lVar25 <= (int64_t)uVar27) {
                             lVar14 = (int64_t)iVar1;
                             pcVar12 = lpBuffer + (int)local_d8;
-                            lVar24 = ((((lVar14 - lVar10) - (int64_t)(int)local_d8) +
-                                       uVar27) / lVar14);
+                            lVar24 =
+                                ((((lVar14 - lVar10) - (int64_t)(int)local_d8) + uVar27) / lVar14);
                             lVar14 = lVar14 * lVar24;
                             while ((lVar24 = lVar24 - 1, -1 < lVar24)) {
                                 pcVar18 = pcVar12;
                                 iVar3 = PECMD_AnsiStrNCompare((char *)pcVar12, param_4, lVar10);
                                 if (iVar3 == 0) {
-                                    if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
+                                    if (param_1 == (int64_t *)0)
+                                        goto LAB_14006d4dd;
                                     PECMD_AppendFormattedI64(param_1, lVar5 + LVar15.QuadPart);
                                     pcVar18 = pcVar12;
-                                    if ((0 < (int64_t)uVar23) &&
-                                        (uVar23 = uVar23 - 1, uVar23 == 0)) goto LAB_14006d4c3;
+                                    if ((0 < (int64_t)uVar23) && (uVar23 = uVar23 - 1, uVar23 == 0))
+                                        goto LAB_14006d4c3;
                                 }
                                 LVar15.QuadPart = LVar15.QuadPart + iVar1;
                                 pcVar12 = pcVar18 + iVar1;
@@ -333,8 +340,7 @@ LAB_14006d_common:
                             lVar14 = lVar14 + lVar24;
                             uVar27 = uVar27 - lVar14;
                             if (0 < (int64_t)uVar27) {
-                                memmove(lpBuffer, (void *)(lpBuffer + lVar14),
-                                              (int)uVar27);
+                                memmove(lpBuffer, (void *)(lpBuffer + lVar14), (int)uVar27);
                             }
                         }
                     }
@@ -349,9 +355,12 @@ LAB_14006d_common:
                         if ((int64_t)uVar28 < (int64_t)uVar7) {
                             uVar7 = uVar28;
                         }
-                        if ((int64_t)uVar7 < 1) break;
-                        LVar6.QuadPart = ((uVar21 - uVar7) - local_d8 + 0x1ff) & 0xfffffffffffffe00ULL;
-                        uVar9 = ((-local_d8 - LVar6.QuadPart) + 0x1ff + uVar21) & 0xfffffffffffffe00ULL;
+                        if ((int64_t)uVar7 < 1)
+                            break;
+                        LVar6.QuadPart =
+                            ((uVar21 - uVar7) - local_d8 + 0x1ff) & 0xfffffffffffffe00ULL;
+                        uVar9 =
+                            ((-local_d8 - LVar6.QuadPart) + 0x1ff + uVar21) & 0xfffffffffffffe00ULL;
                         if ((int64_t)uVar28 < (int64_t)uVar9) {
                             uVar9 = uVar28;
                         }
@@ -362,19 +371,19 @@ LAB_14006d_common:
                             return 0;
                         }
                         local_b8 = (int64_t)(DWORD)uVar9;
-                        BVar2 = ReadFile(param_2, lpBuffer, (DWORD)local_b8,
-                                         (DWORD *)&param_12, (LPOVERLAPPED)0);
+                        BVar2 = ReadFile(param_2, lpBuffer, (DWORD)local_b8, (DWORD *)&param_12,
+                                         (LPOVERLAPPED)0);
                         if ((BVar2 == 0) || ((int64_t)param_12 < 1)) {
                             param_11 = (LPCVOID)((int64_t)param_11 - 1);
-                            if ((int64_t)param_11 < 1) break;
+                            if ((int64_t)param_11 < 1)
+                                break;
                             param_12 = 0;
                         }
                         if ((int64_t)uVar7 < (int64_t)param_12) {
                             param_12 = uVar7;
                         }
                         if (0 < (int64_t)uVar27) {
-                            memmove(lpBuffer + param_12,
-                                          (void *)(lpBuffer + lVar24), (int)uVar27);
+                            memmove(lpBuffer + param_12, (void *)(lpBuffer + lVar24), (int)uVar27);
                         }
                         local_d8 = local_d8 + param_12;
                         uVar27 = param_12 + uVar27;
@@ -392,15 +401,17 @@ LAB_14006d_common:
                                 lVar22 = lVar10;
                                 do {
                                     iVar4 = PECMD_AnsiStrNCompare((char *)(puVar20 + lVar26),
-                                                          param_4, lVar22);
+                                                                  param_4, lVar22);
                                     if (iVar4 == 0) {
-                                        if (param_1 == (int64_t *)0) goto LAB_14006d4dd;
+                                        if (param_1 == (int64_t *)0)
+                                            goto LAB_14006d4dd;
                                         PECMD_AppendFormattedI64(param_1, lVar16 + lVar26);
                                         puVar20 = puVar19;
                                         lVar16 = lVar5;
                                         lVar22 = lVar10;
                                         if ((0 < (int64_t)uVar23) &&
-                                            (uVar23 = uVar23 - 1, uVar23 == 0)) goto LAB_14006d4c3;
+                                            (uVar23 = uVar23 - 1, uVar23 == 0))
+                                            goto LAB_14006d4c3;
                                     }
                                     lVar26 = lVar26 + iVar3;
                                     local_b8 = local_b8 - 1;
@@ -409,8 +420,7 @@ LAB_14006d_common:
                             uVar27 = uVar27 - lVar13;
                             LVar15.QuadPart = LVar15.QuadPart + lVar13;
                             if (0 < (int64_t)uVar27) {
-                                memmove(lpBuffer + lVar24, (void *)lpBuffer,
-                                              (int)uVar27);
+                                memmove(lpBuffer + lVar24, (void *)lpBuffer, (int)uVar27);
                             }
                         }
                     }
@@ -444,7 +454,8 @@ LAB_14006d_common:
         for (; lVar14 != lVar5; lVar14 = lVar14 + lVar13) {
             iVar1 = PECMD_AnsiStrNCompare((char *)pcVar12, param_4, lVar24);
             if (iVar1 == 0) {
-                if (param_1 == (int64_t *)0) goto LAB_14006d208;
+                if (param_1 == (int64_t *)0)
+                    goto LAB_14006d208;
                 PECMD_AppendFormattedI64(param_1, lVar14 + lVar25);
                 lVar24 = lVar10;
                 if ((0 < (int64_t)uVar23) && (uVar23 = uVar23 - 1, uVar23 == 0))
@@ -482,9 +493,8 @@ LAB_14006d208:
 /* =========================================================================
  * PECMD_SetIpConfig @0x140071e90 — 注册表 TCP/IP 配置 读/写 (RegSetIP 相关)
  * ========================================================================= */
-uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
-                       LPBYTE param_4, BYTE *param_5, LPBYTE param_6,
-                       short *param_7)
+uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3, LPBYTE param_4,
+                           BYTE *param_5, LPBYTE param_6, short *param_7)
 {
     int64_t *plVar8;
     int64_t lVar1;
@@ -513,15 +523,15 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
     int local_4b0[2];
     LPBYTE local_4a8;
     int64_t local_498[2];
-    uint8_t local_488[256];   /* 网关串 */
-    uint8_t local_487[256];   /* NameServer 临时 */
-    uint8_t local_3b8[256];   /* SubnetMask 串 */
+    uint8_t local_488[256]; /* 网关串 */
+    uint8_t local_487[256]; /* NameServer 临时 */
+    uint8_t local_3b8[256]; /* SubnetMask 串 */
     uint8_t *local_3b7 = local_3b8 + 1;
-    uint8_t local_2d8[256];   /* IPAddress 串 */
+    uint8_t local_2d8[256]; /* IPAddress 串 */
     uint8_t *local_2d7 = local_2d8 + 1;
-    uint8_t local_1f8[256];   /* 旧 SubnetMask */
+    uint8_t local_1f8[256]; /* 旧 SubnetMask */
     uint8_t *local_1f7 = local_1f8 + 1;
-    uint8_t local_118[256];   /* 旧 IPAddress */
+    uint8_t local_118[256]; /* 旧 IPAddress */
     uint8_t *local_117 = local_118 + 1;
 
     uVar9 = 0;
@@ -534,9 +544,8 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
         PECMD_StrBldCopyAnsi((int64_t *)local_4c0, (LPCSTR)local_4a8, 0xffffffffffffffffULL);
         PECMD_StrBldCopyAnsi((int64_t *)local_4a0, (LPCSTR)param_3, 0xffffffffffffffffULL);
         plVar8 = PECMD_StrBldCopyAnsi((int64_t *)local_4b0, param_2, 0xffffffffffffffffULL);
-        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
-                      WSTR("\r\nRegSetIP(%s,%s,%s,%s,%s)\r\n"),
-                      (uint64_t)lVar1, (uint64_t)*plVar8);
+        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("\r\nRegSetIP(%s,%s,%s,%s,%s)\r\n"),
+                          (uint64_t)lVar1, (uint64_t)*plVar8);
         PECMD_FreeStrBuf((WCHAR **)&local_4b8);
         PECMD_FreeStrBuf((WCHAR **)local_4b0);
         PECMD_FreeStrBuf((WCHAR **)local_4a0);
@@ -548,11 +557,10 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
         CVar13 = *param_2;
     }
     PECMD_AssignAnsiString((uint64_t *)&local_4b8,
-                  "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\");
+                           "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\");
     PECMD_AppendAnsiStr((void **)&local_4b8, param_1);
     LVar2 = RegOpenKeyExA((HKEY)0xffffffff80000002, local_4b8, 0,
-                          (~-(uint32_t)(CVar13 != '\0') & 0x20006u) | 1,
-                          &local_4d0);
+                          (~-(uint32_t)(CVar13 != '\0') & 0x20006u) | 1, &local_4d0);
     DVar5 = 0;
     if (LVar2 == 0) {
         if (*param_2 == '-') {
@@ -571,14 +579,14 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
             memset(local_1f7, 0, 0xdb);
             local_4d8[0] = 0;
             local_res10[0] = 200;
-            RegQueryValueExA(local_4d0, "IPAddress", (DWORD *)0, local_4d8,
-                             (BYTE *)&local_118, local_res10);
+            RegQueryValueExA(local_4d0, "IPAddress", (DWORD *)0, local_4d8, (BYTE *)&local_118,
+                             local_res10);
             iVar3 = PECMD_PadTrailingSpaces((char *)&local_118, local_res10[0]);
             local_4a0[0] = local_res10[0];
             local_4d8[0] = 0;
             local_res10[0] = 200;
-            RegQueryValueExA(local_4d0, "SubnetMask", (DWORD *)0, local_4d8,
-                             (BYTE *)&local_1f8, local_res10);
+            RegQueryValueExA(local_4d0, "SubnetMask", (DWORD *)0, local_4d8, (BYTE *)&local_1f8,
+                             local_res10);
             iVar4 = PECMD_PadTrailingSpaces((char *)&local_1f8, local_res10[0]);
             local_488[0] = '\0';
             iVar3 = iVar3 * 0x10000 + iVar4 * 0x10000;
@@ -586,8 +594,8 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
             memset(local_487, 0, 199);
             local_4c8[0] = 0;
             local_res10[0] = 4;
-            RegQueryValueExA(local_4d0, "EnableDHCP", (DWORD *)0, local_4d8,
-                             (LPBYTE)local_4c8, local_res10);
+            RegQueryValueExA(local_4d0, "EnableDHCP", (DWORD *)0, local_4d8, (LPBYTE)local_4c8,
+                             local_res10);
             if (0 < (int)local_4c8[0]) {
                 iVar3 = iVar3 + 0x10000;
             }
@@ -647,8 +655,8 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
                 RegSetValueExA(local_4d0, "SubnetMask", 0, 7, (const BYTE *)local_3b8, cbData);
             }
             if (*local_4a8 != '\0') {
-                RegSetValueExA(local_4d0, "DefaultGateway", 0, 7,
-                               (const BYTE *)local_488, iVar4 + 1);
+                RegSetValueExA(local_4d0, "DefaultGateway", 0, 7, (const BYTE *)local_488,
+                               iVar4 + 1);
             }
             if (*param_5 != '\0') {
                 DVar5 = lstrlenA((LPCSTR)lpData_00);
@@ -704,22 +712,21 @@ uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3,
             PECMD_PadTrailingSpaces((char *)(param_2 + 1), local_res10[0]);
             local_4d8[0] = 0;
             local_res10[0] = 800;
-            RegQueryValueExA(local_4d0, "DhcpSubnetMask" + DVar5, (DWORD *)0, local_4d8,
-                             param_3, local_res10);
+            RegQueryValueExA(local_4d0, "DhcpSubnetMask" + DVar5, (DWORD *)0, local_4d8, param_3,
+                             local_res10);
             PECMD_PadTrailingSpaces((char *)param_3, local_res10[0]);
             local_4d8[0] = 0;
             local_res10[0] = 800;
-            RegQueryValueExA(local_4d0, "DhcpDefaultGateway" + DVar5, (DWORD *)0, local_4d8,
-                             lpData, local_res10);
+            RegQueryValueExA(local_4d0, "DhcpDefaultGateway" + DVar5, (DWORD *)0, local_4d8, lpData,
+                             local_res10);
             PECMD_PadTrailingSpaces((char *)lpData, local_res10[0]);
             local_4d8[0] = 0;
             local_res10[0] = 800;
-            RegQueryValueExA(local_4d0, "DhcpNameServer" + DVar5, (DWORD *)0, local_4d8,
-                             param_5, local_res10);
+            RegQueryValueExA(local_4d0, "DhcpNameServer" + DVar5, (DWORD *)0, local_4d8, param_5,
+                             local_res10);
             local_4d8[0] = 0;
             local_res10[0] = 800;
-            RegQueryValueExA(local_4d0, "DhcpServer", (DWORD *)0, local_4d8,
-                             param_6, local_res10);
+            RegQueryValueExA(local_4d0, "DhcpServer", (DWORD *)0, local_4d8, param_6, local_res10);
             if (param_7 != (short *)0) {
                 *param_7 = (short)(char)((local_4c0[0] != 0) + '0');
             }

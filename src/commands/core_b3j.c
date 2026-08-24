@@ -52,12 +52,12 @@ extern LRESULT FUN_1400E5890(int64_t a1);
 extern void FUN_140053C5C(int64_t a1, uint32_t a2);
 extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
-extern uint64_t * PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data, LPCWSTR name1, LPCWSTR name2, LPCWSTR name3, uint32_t flags1, uint32_t flags2, uint32_t flags3, uint32_t flags4);
-extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3,
-                              uint64_t *a4, int64_t a5, uint32_t a6,
-                              int64_t *a7);
-extern int64_t FUN_1400E5B0C(int64_t a1, uint64_t a2, HDC a3,
-                             int64_t *a4);
+extern uint64_t *PECMD_ItemBaseInit(uint64_t *obj, uint32_t id, uint64_t data, LPCWSTR name1,
+                                    LPCWSTR name2, LPCWSTR name3, uint32_t flags1, uint32_t flags2,
+                                    uint32_t flags3, uint32_t flags4);
+extern uint16_t FUN_1400F172C(int64_t *a1, uint32_t a2, uint64_t a3, uint64_t *a4, int64_t a5,
+                              uint32_t a6, int64_t *a7);
+extern int64_t FUN_1400E5B0C(int64_t a1, uint64_t a2, HDC a3, int64_t *a4);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern uint64_t PECMD_EvalParenStripped(int64_t *a1, uint64_t *a2);
 extern uint8_t PECMD_EjectDrive(WCHAR a1, int a2);
@@ -70,18 +70,16 @@ extern void AtlThrowImpl(long a1);
 /* ---- 已实现公共工具 (其他 core_*.c / core_globals.c) ---- */
 extern int32_t FUN_1400630D0(int mode);
 extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
-                           LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
-                           HANDLE tmpl);
+                                 LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 extern int32_t PECMD_LoadOle32Apis(void);
-extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
+extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
 extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len);
-extern uint64_t PECMD_CreateSymbolicLink(uint64_t a1, uint64_t a2,
-                                         uint32_t a3);
+extern uint64_t PECMD_CreateSymbolicLink(uint64_t a1, uint64_t a2, uint32_t a3);
 extern void FUN_14005B7E8(char *nid);
 
 /* ---- 本批引用的全局数据 ---- */
-extern WCHAR g_szEmpty[];            /* g_szEmpty 空串 */
+extern WCHAR g_szEmpty[]; /* g_szEmpty 空串 */
 extern uint8_t PTR_FUN_1401235a8[];
 extern uint8_t PTR_FUN_140128ed0[];
 extern uint8_t g_b24e10[];
@@ -92,8 +90,7 @@ extern uint8_t g_flagD6F6;
 /* ========== FUN_14004F948 @0x14004f948 ==========
  * 按新基址/旧基址整体平移结构中的指针字段。
  */
-void FUN_14004F948(int64_t unused, uint32_t *obj,
-                              int64_t newBase, int64_t oldBase)
+void FUN_14004F948(int64_t unused, uint32_t *obj, int64_t newBase, int64_t oldBase)
 {
     int64_t lVar1;
     int64_t lVar2;
@@ -110,13 +107,12 @@ void FUN_14004F948(int64_t unused, uint32_t *obj,
         lVar2 = 0;
         do {
             lVar1 = *(int64_t *)(obj + 8);
-            if ((*(int64_t *)(lVar2 + lVar1) != 0) &&
-                (*(int64_t *)(lVar2 + 8 + lVar1) != 0)) {
+            if ((*(int64_t *)(lVar2 + lVar1) != 0) && (*(int64_t *)(lVar2 + 8 + lVar1) != 0)) {
                 *(int64_t *)(lVar2 + lVar1) =
                     newBase + ((*(int64_t *)(lVar2 + lVar1) - oldBase) >> 1) * 2;
                 *(int64_t *)(lVar2 + 8 + *(int64_t *)(obj + 8)) =
-                    newBase + ((*(int64_t *)(lVar2 + 8 + *(int64_t *)(obj + 8)) -
-                                oldBase) >> 1) * 2;
+                    newBase +
+                    ((*(int64_t *)(lVar2 + 8 + *(int64_t *)(obj + 8)) - oldBase) >> 1) * 2;
             }
             uVar3++;
             lVar2 += 0x10;
@@ -142,8 +138,7 @@ void FUN_1400549BC(int64_t obj, uint32_t flags, int64_t fontObj)
     PECMD_SetObjectVisibleVar(obj, flags & 0x10000000);
     DragAcceptFiles(*(HWND *)(*(int64_t *)(obj + 0x38) + OBJ_HWND), 1);
     if (**(LPCWSTR *)(obj + 0x10) != L'\0') {
-        FUN_14007D0AC(*(int64_t **)(obj + 0x50),
-                      *(LPCWSTR *)(obj + 0x10),
+        FUN_14007D0AC(*(int64_t **)(obj + 0x50), *(LPCWSTR *)(obj + 0x10),
                       *(LPCWSTR *)(obj + 0x20));
     }
 }
@@ -151,15 +146,12 @@ void FUN_1400549BC(int64_t obj, uint32_t flags, int64_t fontObj)
 /* ========== PECMD_CreateWindowObjectEx @0x140055368 ==========
  * 构造窗口对象并填充扩展字段。
  */
-uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
-                                      uint64_t data2, uint64_t *p4,
-                                      uint64_t data5, uint64_t data6,
-                                      uint32_t flags1, uint32_t flags2,
-                                      uint64_t data9)
+uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1, uint64_t data2, uint64_t *p4,
+                                     uint64_t data5, uint64_t data6, uint32_t flags1,
+                                     uint32_t flags2, uint64_t data9)
 {
     (void)data2;
-    PECMD_ItemBaseInit(obj, 0x14, data1, (LPCWSTR)*p4,
-                  g_szEmpty, g_szEmpty, 0, 0, 0, 0);
+    PECMD_ItemBaseInit(obj, 0x14, data1, (LPCWSTR)*p4, g_szEmpty, g_szEmpty, 0, 0, 0, 0);
     obj[0xe] = data5;
     *obj = (uint64_t)(uintptr_t)PTR_FUN_1401235a8;
     obj[0xf] = data6;
@@ -172,20 +164,17 @@ uint64_t *PECMD_CreateWindowObjectEx(uint64_t *obj, uint64_t data1,
 /* ========== FUN_14005B3E4 @0x14005b3e4 ==========
  * 带主题/后备路径的文本绘制。
  */
-int64_t FUN_14005B3E4(int64_t obj, uint32_t msg, HDC hdc,
-                               uint64_t *lParam)
+int64_t FUN_14005B3E4(int64_t obj, uint32_t msg, HDC hdc, uint64_t *lParam)
 {
     uint16_t uVar1;
     int64_t lVar2;
     int64_t local_res8 = 0;
 
-    uVar1 = FUN_1400F172C(*(int64_t **)(obj + 0x38), msg,
-                          (uint64_t)(uintptr_t)hdc, lParam,
+    uVar1 = FUN_1400F172C(*(int64_t **)(obj + 0x38), msg, (uint64_t)(uintptr_t)hdc, lParam,
                           *(int64_t *)(obj + 8), 1, &local_res8);
     if ((uVar1 & 4) == 0) {
         lVar2 = FUN_1400E5B0C(obj, (uint64_t)msg, hdc, (int64_t *)lParam);
-        FUN_1400F172C(*(int64_t **)(obj + 0x38), msg,
-                      (uint64_t)(uintptr_t)hdc, lParam,
+        FUN_1400F172C(*(int64_t **)(obj + 0x38), msg, (uint64_t)(uintptr_t)hdc, lParam,
                       *(int64_t *)(obj + 8), 2, NULL);
         local_res8 = lVar2;
     }
@@ -195,8 +184,7 @@ int64_t FUN_14005B3E4(int64_t obj, uint32_t msg, HDC hdc,
 /* ========== FUN_14005B900 @0x14005b900 ==========
  * 添加/更新托盘图标。
  */
-void FUN_14005B900(char *data, uint64_t id, LPCWSTR tip,
-                       HICON icon, uint32_t flags)
+void FUN_14005B900(char *data, uint64_t id, LPCWSTR tip, HICON icon, uint32_t flags)
 {
     BOOL BVar1;
 
@@ -207,7 +195,8 @@ void FUN_14005B900(char *data, uint64_t id, LPCWSTR tip,
             if (icon != (HICON)0) {
                 *(HICON *)(data + 0x30) = icon;
             }
-        } else {
+        }
+        else {
             *(HICON *)(data + 0x30) = icon;
         }
         data[0x10] = -0x30;
@@ -232,11 +221,10 @@ void FUN_14005B900(char *data, uint64_t id, LPCWSTR tip,
 HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth)
 {
     if (g_hwndD310 == (HWND)0) {
-        g_hwndD310 = CreateWindowExW(
-            0, WSTR("Tooltips_Class32"), (LPCWSTR)0,
-            (DWORD)(((flags & 3) << 6) | 0x80000003u),
-            (int)0x80000000, (int)0x80000000, (int)0x80000000, (int)0x80000000,
-            (HWND)0, (HMENU)0, (HINSTANCE)0, (LPVOID)0);
+        g_hwndD310 = CreateWindowExW(0, WSTR("Tooltips_Class32"), (LPCWSTR)0,
+                                     (DWORD)(((flags & 3) << 6) | 0x80000003u), (int)0x80000000,
+                                     (int)0x80000000, (int)0x80000000, (int)0x80000000, (HWND)0,
+                                     (HMENU)0, (HINSTANCE)0, (LPVOID)0);
         if (g_hwndD310 != (HWND)0) {
             SendMessageW(g_hwndD310, 0x418, 0, (LPARAM)maxWidth);
             g_msgWndMode = (uint8_t)(flags & 1);
@@ -248,8 +236,7 @@ HWND PECMD_GetTooltipWindow(uint32_t flags, int maxWidth)
 /* ========== FUN_14005DAF8 @0x14005daf8 ==========
  * 按对象中的 0x60 基数缩放四个整数。
  */
-void FUN_14005DAF8(int64_t obj, int *x, int *y,
-                      int *w, int *h)
+void FUN_14005DAF8(int64_t obj, int *x, int *y, int *w, int *h)
 {
     if (0 < *(int *)(obj + 0x17c)) {
         *x = (*x * *(int *)(obj + 0x17c)) / 0x60;
@@ -302,13 +289,13 @@ LONG PECMD_RegCreateKeyRetryWow64(HKEY root, LPCWSTR sub, int isVolatile)
 
     while (1) {
         local_res20 = (HKEY)0;
-        LVar1 = RegCreateKeyExW(root, sub, 0, (LPWSTR)0,
-                                (DWORD)(0 < isVolatile), 0x2001b,
+        LVar1 = RegCreateKeyExW(root, sub, 0, (LPWSTR)0, (DWORD)(0 < isVolatile), 0x2001b,
                                 (LPSECURITY_ATTRIBUTES)0, &local_res20, NULL);
         if (local_res20 != (HKEY)0) {
             RegCloseKey(local_res20);
         }
-        if ((LVar1 != 0x3fd) || (isVolatile != 0)) break;
+        if ((LVar1 != 0x3fd) || (isVolatile != 0))
+            break;
         isVolatile = 1;
     }
     return LVar1;
@@ -317,8 +304,7 @@ LONG PECMD_RegCreateKeyRetryWow64(HKEY root, LPCWSTR sub, int isVolatile)
 /* ========== PECMD_PickFreeDriveLetter @0x14005f868 ==========
  * 在盘符位图中查找未占用的字母。
  */
-int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode,
-                         char *exclude)
+int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode, char *exclude)
 {
     uint64_t in_RAX = 0;
     int16_t sVar1;
@@ -330,7 +316,8 @@ int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode,
         if (start == 0xc) {
             uVar3 = 2;
         }
-    } else {
+    }
+    else {
         uVar3 = (uint64_t)(uint32_t)(int)mode;
     }
     if (exclude == NULL) {
@@ -346,7 +333,8 @@ int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode,
                 uVar3 = (uint64_t)(uint16_t)(sVar1 + 1U);
             } while ((int16_t)(sVar1 + 1U) < 0x1a);
         }
-    } else {
+    }
+    else {
         in_RAX = (uint64_t)(uint8_t)*exclude;
         if (*exclude != '\0') {
             uVar2 = *bitmap;
@@ -373,17 +361,17 @@ void FUN_1400607A4(LPCWSTR src, LPCWSTR dst, int len)
 
     if (2 < len) {
         iVar1 = StrCmpNIW(src, dst, len);
-        if (iVar1 == 0) goto link_or_copy;
+        if (iVar1 == 0)
+            goto link_or_copy;
     }
-    if (((*src == *dst) && (src[1] == dst[1])) &&
-        (dst[1] == L':')) {
+    if (((*src == *dst) && (src[1] == dst[1])) && (dst[1] == L':')) {
         len = 2;
-    } else {
+    }
+    else {
         len = 0;
     }
 link_or_copy:
-    PECMD_CreateSymbolicLink((uint64_t)(uintptr_t)dst,
-                             (uint64_t)(uintptr_t)(src + len), 0);
+    PECMD_CreateSymbolicLink((uint64_t)(uintptr_t)dst, (uint64_t)(uintptr_t)(src + len), 0);
     CreateHardLinkW(dst, src, (LPSECURITY_ATTRIBUTES)0);
     CopyFileW(src, dst, 1);
 }
@@ -391,8 +379,7 @@ link_or_copy:
 /* ========== PECMD_SetWindowProcHook @0x140060870 ==========
  * 安装窗口过程钩子（修改代码页权限并替换窗口过程）。
  */
-void PECMD_SetWindowProcHook(uint64_t *obj, uint64_t value,
-                             LONG_PTR *outOld)
+void PECMD_SetWindowProcHook(uint64_t *obj, uint64_t value, LONG_PTR *outOld)
 {
     LONG_PTR LVar1;
     DWORD local_res8[2];
@@ -403,8 +390,7 @@ void PECMD_SetWindowProcHook(uint64_t *obj, uint64_t value,
     memcpy((void *)(obj + 1), g_b24e10, 0x18);
     *(uint64_t *)((uint8_t *)obj + 0x15) = value;
     if ((HWND)(uintptr_t)obj[4] != (HWND)0) {
-        LVar1 = SetWindowLongPtrW((HWND)(uintptr_t)obj[4], -4,
-                                  (LONG_PTR)(obj + 1));
+        LVar1 = SetWindowLongPtrW((HWND)(uintptr_t)obj[4], -4, (LONG_PTR)(obj + 1));
         if (outOld != NULL) {
             *outOld = LVar1;
         }
@@ -424,7 +410,7 @@ void FUN_140060A94(uint64_t flags)
             return;
         }
         hConsoleOutput = GetStdHandle((DWORD)0xfffffff5);
-        COORD size = { 0x800, 0x2710 };
+        COORD size = {0x800, 0x2710};
         SetConsoleScreenBufferSize(hConsoleOutput, size);
     }
     if (((flags & 0x100) != 0) && (hWnd = GetConsoleWindow(), hWnd != (HWND)0)) {
@@ -450,8 +436,8 @@ uint8_t FUN_140062FC4(LPCWSTR key, int64_t *pp, int len)
     iVar2 = StrCmpNIW(key, lpStr2, len);
     if (iVar2 == 0) {
         WVar1 = lpStr2[len];
-        if ((((8 < (uint16_t)WVar1) && ((uint16_t)WVar1 < 0xe)) ||
-             (WVar1 == L' ')) || (WVar1 == L'\0')) {
+        if ((((8 < (uint16_t)WVar1) && ((uint16_t)WVar1 < 0xe)) || (WVar1 == L' ')) ||
+            (WVar1 == L'\0')) {
             *pp = *pp + (int64_t)len * 2;
             uVar3 = 1;
             FUN_14005B154((WCHAR **)pp);
@@ -463,8 +449,7 @@ uint8_t FUN_140062FC4(LPCWSTR key, int64_t *pp, int len)
 /* ========== FUN_140063A6C @0x140063a6c ==========
  * 分配带头缓冲，内存不足时重试。
  */
-void FUN_140063A6C(uint64_t *out, int64_t *count,
-                                uint64_t *flags, uint32_t esize)
+void FUN_140063A6C(uint64_t *out, int64_t *count, uint64_t *flags, uint32_t esize)
 {
     int iVar1;
     int64_t *plVar2;
@@ -476,7 +461,8 @@ void FUN_140063A6C(uint64_t *out, int64_t *count,
     lVar3 = *count * (uint64_t)esize;
     do {
         plVar2 = (int64_t *)HeapAlloc(g_hHeap, 0, (size_t)lVar3 + 8);
-        if (plVar2 != NULL) break;
+        if (plVar2 != NULL)
+            break;
         iVar1 = FUN_1400630D0(2);
     } while (iVar1 == 4);
     *(uint32_t *)((uint8_t *)plVar2 + 4) = 0xaa55;
@@ -493,14 +479,10 @@ uint64_t FUN_1400641D4(uint16_t *s)
     uint16_t uVar1;
     uint8_t uVar4 = 0;
 
-    if ((((*s | 0x20) == 0x76) &&
-         ((s[1] | 0x20) == 0x69)) &&
-        ((s[2] | 0x20) == 0x73)) {
+    if ((((*s | 0x20) == 0x76) && ((s[1] | 0x20) == 0x69)) && ((s[2] | 0x20) == 0x73)) {
         uVar1 = s[3] | 0x20;
-        if ((((uVar1 == 0x69) || (uVar1 == 0x61)) &&
-             ((s[4] | 0x20) == 0x62) &&
-             ((s[5] | 0x20) == 0x6c) &&
-             ((s[6] | 0x20) == 0x65)) &&
+        if ((((uVar1 == 0x69) || (uVar1 == 0x61)) && ((s[4] | 0x20) == 0x62) &&
+             ((s[5] | 0x20) == 0x6c) && ((s[6] | 0x20) == 0x65)) &&
             (s[7] == 0)) {
             uVar4 = 1;
         }
@@ -534,8 +516,7 @@ uint32_t FUN_14006643C(const GUID *guid, LPCSTR className)
 /* ========== PECMD_CopyTokenTrimmed @0x14006764c ==========
  * 复制到指定分隔符/空白为止的 token。
  */
-void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out,
-                               int16_t sep1, int16_t sep2)
+void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2)
 {
     WCHAR WVar1;
     LPCWSTR pWVar2;
@@ -546,8 +527,7 @@ void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out,
     FUN_14005B154((WCHAR **)pp);
     pWVar2 = (LPCWSTR)(uintptr_t)*pp;
     WVar1 = *pWVar2;
-    while ((WVar1 != L'\0' && (psVar3 = (int16_t *)(uintptr_t)*pp,
-                               *psVar3 != sep1)) &&
+    while ((WVar1 != L'\0' && (psVar3 = (int16_t *)(uintptr_t)*pp, *psVar3 != sep1)) &&
            (*psVar3 != sep2)) {
         *pp = (int64_t)(uintptr_t)(psVar3 + 1);
         WVar1 = psVar3[1];
@@ -555,9 +535,9 @@ void PECMD_CopyTokenTrimmed(int64_t *pp, int64_t *out,
     pWVar5 = (LPCWSTR)(uintptr_t)*pp;
     do {
         pWVar5--;
-        if (pWVar5 < pWVar2) break;
-    } while (((8 < (uint16_t)*pWVar5) && ((uint16_t)*pWVar5 < 0xe)) ||
-             (*pWVar5 == L' '));
+        if (pWVar5 < pWVar2)
+            break;
+    } while (((8 < (uint16_t)*pWVar5) && ((uint16_t)*pWVar5 < 0xe)) || (*pWVar5 == L' '));
     iVar4 = (int)(((int64_t)(uintptr_t)pWVar5 + (2 - (int64_t)(uintptr_t)pWVar2)) >> 1);
     PECMD_StrCopyW((WCHAR **)out, pWVar2, (int64_t)(iVar4 + 1));
     *(uint16_t *)((uint8_t *)(uintptr_t)*out + (int64_t)iVar4 * 2) = 0;
@@ -590,8 +570,8 @@ void PECMD_EscapeLabelAmpersands(int64_t *ps)
                 iVar2++;
                 iVar7++;
                 memmove((void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar5 * 2),
-                              (void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar3 * 2),
-                              ((iVar2 - iVar3) + 1) * 2);
+                        (void *)((uint8_t *)(uintptr_t)*ps + (int64_t)iVar3 * 2),
+                        ((iVar2 - iVar3) + 1) * 2);
                 iVar3++;
                 iVar5 = iVar1 + 2;
                 uVar6 += 2;
@@ -622,8 +602,8 @@ void PECMD_BubbleSortStringArray(uint64_t *arr, int count, int dir)
         puVar3 = arr;
         do {
             for (; lVar4 < count; lVar4++) {
-                iVar2 = lstrcmpiW(*(LPCWSTR *)(uintptr_t)*puVar3,
-                                  *(LPCWSTR *)(uintptr_t)arr[lVar4]);
+                iVar2 =
+                    lstrcmpiW(*(LPCWSTR *)(uintptr_t)*puVar3, *(LPCWSTR *)(uintptr_t)arr[lVar4]);
                 if (0 < iVar2 * dir) {
                     uVar1 = *puVar3;
                     *puVar3 = arr[lVar4];
@@ -647,8 +627,7 @@ uint64_t FUN_14006C4C8(int64_t obj, int index, LPARAM *out)
     uint64_t uVar2;
     int iVar3;
 
-    uVar2 = (uint64_t)SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x149,
-                                   (WPARAM)index, 0);
+    uVar2 = (uint64_t)SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x149, (WPARAM)index, 0);
     iVar1 = (int)uVar2;
     iVar3 = iVar1;
     if (iVar1 == -1) {
@@ -658,9 +637,9 @@ uint64_t FUN_14006C4C8(int64_t obj, int index, LPARAM *out)
     if (iVar1 == -1) {
         uVar2 = 0xffffffff;
         *(uint16_t *)(uintptr_t)*out = 0;
-    } else {
-        SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x148,
-                     (WPARAM)index, (LPARAM)(uintptr_t)*out);
+    }
+    else {
+        SendMessageW(*(HWND *)(obj + OBJ_HWND), 0x148, (WPARAM)index, (LPARAM)(uintptr_t)*out);
         uVar2 = uVar2 & 0xffffffff;
     }
     return uVar2;
@@ -675,10 +654,8 @@ BOOL FUN_14006CAF0(LPCWSTR path)
     DWORD bytesReturned = 0;
     HANDLE hDevice = 0;
 
-    PECMD_OpenFileHandle(&hDevice, path, 0xc0000000, 3,
-                   (LPSECURITY_ATTRIBUTES)0, 4, 0, (HANDLE)0);
-    BVar1 = DeviceIoControl(hDevice, 0x900c4, NULL, 0, NULL, 0,
-                            &bytesReturned, NULL);
+    PECMD_OpenFileHandle(&hDevice, path, 0xc0000000, 3, (LPSECURITY_ATTRIBUTES)0, 4, 0, (HANDLE)0);
+    BVar1 = DeviceIoControl(hDevice, 0x900c4, NULL, 0, NULL, 0, &bytesReturned, NULL);
     if ((hDevice != (HANDLE)0) && (hDevice != (HANDLE)0xffffffffffffffffULL)) {
         CloseHandle(hDevice);
     }
@@ -707,8 +684,7 @@ bool FUN_14006E4F4(LPCWSTR name)
     }
     plVar2 = PECMD_LoadImageFromFile(name);
     if (plVar2 != NULL) {
-        void (**fn)(int64_t *) =
-            (void (**)(int64_t *))(*(int64_t *)((uint8_t *)*plVar2 + 0x10));
+        void (**fn)(int64_t *) = (void (**)(int64_t *))(*(int64_t *)((uint8_t *)*plVar2 + 0x10));
         (*fn)(plVar2);
     }
     if ((g_pOleUninit != NULL) && (iVar1 == 0)) {
@@ -761,16 +737,14 @@ uint16_t *FUN_14007443C(LPCWSTR text, int64_t *out)
 /* ========== PECMD_ParseNumOrVar @0x1400746b0 ==========
  * 解析数字，或以冒号为界解析变量 token。
  */
-uint64_t PECMD_ParseNumOrVar(int64_t *pp, uint64_t *out,
-                                  int64_t *script)
+uint64_t PECMD_ParseNumOrVar(int64_t *pp, uint64_t *out, int64_t *script)
 {
     int16_t sVar1;
     uint64_t uVar2;
     LPCWSTR pWVar3;
 
     pWVar3 = (LPCWSTR)(uintptr_t)*pp;
-    if ((((uint16_t)*pWVar3 < 0x30) || (0x39 < (uint16_t)*pWVar3)) &&
-        (*pWVar3 != L'(')) {
+    if ((((uint16_t)*pWVar3 < 0x30) || (0x39 < (uint16_t)*pWVar3)) && (*pWVar3 != L'(')) {
         FUN_1400F429C((WCHAR **)pp, 0x3a);
         sVar1 = *(int16_t *)(uintptr_t)*pp;
         if (sVar1 != 0) {
@@ -784,7 +758,8 @@ uint64_t PECMD_ParseNumOrVar(int64_t *pp, uint64_t *out,
             *out = uVar2;
         }
         uVar2 = (uint64_t)(uVar2 != 0);
-    } else {
+    }
+    else {
         uVar2 = PECMD_EvalParenStripped(pp, out);
     }
     return uVar2;
@@ -802,15 +777,14 @@ uint64_t FUN_1400799F0(uint64_t src, uint64_t len)
 
     PECMD_AllocWStringBuffer((WCHAR **)&local_res10, (int64_t)(len * 2 + 0x20));
     iVar3 = (int)len + 1;
-    iVar1 = g_pConvFunc(0, 8, (LPCSTR)(uintptr_t)src,
-                        (DWORD)(len & 0xffffffff),
+    iVar1 = g_pConvFunc(0, 8, (LPCSTR)(uintptr_t)src, (DWORD)(len & 0xffffffff),
                         (LPWSTR)(uintptr_t)local_res10, iVar3);
     if (iVar1 < 1) {
         uVar2 = 0xfde9;
-        iVar1 = g_pConvFunc(0xfde9, 8, (LPCSTR)(uintptr_t)src,
-                            (DWORD)(len & 0xffffffff),
+        iVar1 = g_pConvFunc(0xfde9, 8, (LPCSTR)(uintptr_t)src, (DWORD)(len & 0xffffffff),
                             (LPWSTR)(uintptr_t)local_res10, iVar3);
-        if (iVar1 != 0) goto converted;
+        if (iVar1 != 0)
+            goto converted;
     }
     uVar2 = 0;
 converted:
@@ -898,7 +872,8 @@ uint64_t *FUN_1400A4460(LPCWSTR name, char wait, uint32_t *out)
         FUN_14006375C((WCHAR **)&local_res8, pWVar4);
         puVar2 = PECMD_CreateGlobalMutex(local_res8, wait, out);
         PECMD_FreeStrBuf((WCHAR **)&local_res8);
-    } else {
+    }
+    else {
         puVar2 = FUN_1400A43C4(name, wait);
     }
     return puVar2;
@@ -907,8 +882,7 @@ uint64_t *FUN_1400A4460(LPCWSTR name, char wait, uint32_t *out)
 /* ========== FUN_1400A9650 @0x1400a9650 ==========
  * 发送标题消息并同步标题变量。
  */
-void FUN_1400A9650(int64_t obj, HWND hwnd, int id,
-                            LPCWSTR text, uint8_t unused)
+void FUN_1400A9650(int64_t obj, HWND hwnd, int id, LPCWSTR text, uint8_t unused)
 {
     int64_t local_98;
     WCHAR local_78[56];

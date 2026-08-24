@@ -28,7 +28,7 @@
 extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 
 /* ---- 待重构函数原型 (后续批次) ---- */
-void PECMD_VarWrite_impl(void);   /* placeholder, 本文件实现 */
+void PECMD_VarWrite_impl(void); /* placeholder, 本文件实现 */
 
 /* 全局 */
 
@@ -57,7 +57,7 @@ WCHAR *PECMD_StrCopyBytes(WCHAR **ps, const void *src, int64_t len)
     words = ((size_t)len + 1) >> 1;
     PECMD_AllocString(ps, (int64_t)words + 1);
     if (words * 2 != (size_t)len) {
-        ((uint8_t *)*ps)[len] = 0;      /* 奇数长度补 0 */
+        ((uint8_t *)*ps)[len] = 0; /* 奇数长度补 0 */
     }
     memcpy(*ps, src, (size_t)len);
     ((uint8_t *)*ps)[words * 2] = 0;
@@ -111,11 +111,11 @@ void *PECMD_NewVarNode(void *node, LPCWSTR name, LPCWSTR value, int namelen, int
  * found 非空输出命中所在表; 返回节点指针或 NULL */
 void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void **found)
 {
-    void *tbl;          /* 当前表 */
-    void *stop;         /* 停止表 */
+    void *tbl;  /* 当前表 */
+    void *stop; /* 停止表 */
     WCHAR c;
     int amp;
-    int i;            /* & 前缀数 */
+    int i; /* & 前缀数 */
     int guard;
 
     c = *name;
@@ -130,7 +130,7 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
     }
     if (c == L':' && name[1] == L':') {
         name += 2;
-        scope = &g_Script;      /* :: 强制默认表 */
+        scope = &g_Script; /* :: 强制默认表 */
     }
     if (namelen < 0) {
         namelen = lstrlenW(name);
@@ -141,7 +141,7 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
     }
     stop = scope;
     if (amp > 1) {
-        scope = script;         /* 多 & 前缀: 回到脚本根表 */
+        scope = script; /* 多 & 前缀: 回到脚本根表 */
     }
 
     if (namelen < 0) {
@@ -165,12 +165,13 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
             if (tbl == &g_Script) {
                 return NULL;
             }
-            tbl = *(void **)((uint8_t *)tbl + 0x38);   /* 父链 */
+            tbl = *(void **)((uint8_t *)tbl + 0x38); /* 父链 */
             if (tbl == NULL) {
                 return NULL;
             }
         }
-    } else {
+    }
+    else {
         /* ---- 前缀匹配 ---- */
         while (tbl != NULL && (guard = 10000000, 0 < guard)) {
             guard--;
@@ -178,8 +179,7 @@ void *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int namelen, void
                 for (i = 0; i < *(int *)((uint8_t *)tbl + 8); i++) {
                     void *node = *(void **)(*(void **)tbl + (size_t)i * 8);
                     LPCWSTR n = *(LPCWSTR *)node;
-                    if (StrCmpNIW(n, name, namelen) == 0 &&
-                        n[namelen] == L'\0') {
+                    if (StrCmpNIW(n, name, namelen) == 0 && n[namelen] == L'\0') {
                         if (found != NULL) {
                             *found = tbl;
                         }
@@ -240,15 +240,14 @@ void *FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int namelen, int6
     if (*name == L'\0') {
         return NULL;
     }
-    node = calloc(1, 0x20);         /* operator_new(0x20) 库替换 */
+    node = calloc(1, 0x20); /* operator_new(0x20) 库替换 */
     if (node != NULL) {
         node = PECMD_NewVarNode(node, name, value, namelen, -1);
     }
-    PECMD_VarWriteValueCap((WCHAR **)((uint8_t *)node + 8),
-                    (uint64_t *)((uint8_t *)node + 0x18), value, caplen);
+    PECMD_VarWriteValueCap((WCHAR **)((uint8_t *)node + 8), (uint64_t *)((uint8_t *)node + 0x18),
+                           value, caplen);
     *(int *)((uint8_t *)script + 8) = *(int *)((uint8_t *)script + 8) + 1;
-    newtbl = PECMD_HeapRealloc(*(void **)script,
-                               (size_t)*(int *)((uint8_t *)script + 8) * 32);
+    newtbl = PECMD_HeapRealloc(*(void **)script, (size_t)*(int *)((uint8_t *)script + 8) * 32);
     *(void **)script = newtbl;
     ((void **)newtbl)[*(int *)((uint8_t *)script + 8) - 1] = node;
     return node;
@@ -286,15 +285,15 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
         actual = p;
         if (caplen >= -0xf) {
             caplen -= 2;
-        } else {
+        }
+        else {
             caplen = -1;
-            len = (uint64_t)(-caplen - 0x10);   /* 保留: 反编译特殊值, TODO(verify) */
+            len = (uint64_t)(-caplen - 0x10); /* 保留: 反编译特殊值, TODO(verify) */
         }
     }
     namelen = (int)caplen;
-    node = PECMD_VarLookup(script, actual,
-                         (amp > 1) ? script : ((tbl != NULL) ? tbl : NULL),
-                         namelen, NULL);
+    node = PECMD_VarLookup(script, actual, (amp > 1) ? script : ((tbl != NULL) ? tbl : NULL),
+                           namelen, NULL);
 
     if (caplen < 0) {
         len = (uint64_t)lstrlenW(value) * 2;
@@ -302,8 +301,9 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
     if (node == NULL) {
         if (force_default) {
             FUN_14001E5B0(&g_Script, actual, value, namelen, (int64_t)len);
-        } else {
-            node = calloc(1, 0x20);      /* operator_new(0x20) 库替换 */
+        }
+        else {
+            node = calloc(1, 0x20); /* operator_new(0x20) 库替换 */
             if (node != NULL) {
                 node = PECMD_NewVarNode(node, p, value, namelen, (int64_t)len);
             }
@@ -314,11 +314,13 @@ void FUN_14001E6BC(void *script, LPCWSTR key, LPCWSTR value, int64_t caplen)
             ((void **)newarr)[*(int *)((uint8_t *)script + 8)] = node;
             *(int *)((uint8_t *)script + 8) = *(int *)((uint8_t *)script + 8) + 1;
         }
-    } else {
+    }
+    else {
         uint8_t flag = *(uint8_t *)((uint8_t *)node + 0x1f) & 0xc0;
         if (flag == 0xc0) {
             PECMD_VarTruncateUpdate(node, value, len);
-        } else {
+        }
+        else {
             if (flag != 0) {
                 *(uint64_t *)((uint8_t *)node + 8) = 0;
             }

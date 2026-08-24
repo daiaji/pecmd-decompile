@@ -25,16 +25,16 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (其他 core_*.c) ---- */
-extern void PECMD_DtorCtlCoreObj(int64_t obj);            /* @0x1400f06fc */
-extern void FUN_1400F1F18(uint64_t *obj);      /* @0x1400f1f18 */
-extern void PECMD_DtorIpadSubObj(uint64_t *obj);      /* @0x1400f2924 */
-extern void PECMD_DtorListViewObj(uint64_t *obj);      /* @0x1400fba3c */
-extern void FUN_1400FC034(uint64_t *obj); /* @0x1400fc034 */
+extern void PECMD_DtorCtlCoreObj(int64_t obj);    /* @0x1400f06fc */
+extern void FUN_1400F1F18(uint64_t *obj);         /* @0x1400f1f18 */
+extern void PECMD_DtorIpadSubObj(uint64_t *obj);  /* @0x1400f2924 */
+extern void PECMD_DtorListViewObj(uint64_t *obj); /* @0x1400fba3c */
+extern void FUN_1400FC034(uint64_t *obj);         /* @0x1400fc034 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_ListStyleObjDtor(uint64_t *obj);
 extern void PECMD_DestroyCtlResources(uint64_t *obj); /* @0x1400f9324 */
-extern void FUN_1400FC33C(uint64_t *obj); /* @0x1400fc33c core_b8c.c */
+extern void FUN_1400FC33C(uint64_t *obj);             /* @0x1400fc33c core_b8c.c */
 
 /* ========== FUN_1400F0F78 @0x1400f0f78 ==========
  * 销毁 GDI 对象；若 flag 低位置 1 则同时释放对象内存。
@@ -65,9 +65,9 @@ uint64_t *FUN_1400F22AC(uint64_t *obj, uint32_t flags)
  */
 void FUN_1400F22DC(uint64_t *obj, uint32_t flags, uint64_t lParam)
 {
-    (**(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8))
-        (obj[4], 0x202, flags,
-         (int64_t)(int32_t)((int32_t)((uint64_t)lParam >> 0x20) << 0x10 | (uint32_t)lParam));
+    (**(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8))(
+        obj[4], 0x202, flags,
+        (int64_t)(int32_t)((int32_t)((uint64_t)lParam >> 0x20) << 0x10 | (uint32_t)lParam));
 }
 
 /* ========== FUN_1400F2A4C @0x1400f2a4c ==========
@@ -87,9 +87,9 @@ uint64_t *FUN_1400F2A4C(uint64_t *obj, uint32_t flags)
  */
 void FUN_1400F51A8(uint64_t *obj, uint32_t flags, uint64_t lParam)
 {
-    (**(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8))
-        (obj[4], 0x204, flags,
-         (int64_t)(int32_t)((int32_t)((uint64_t)lParam >> 0x20) << 0x10 | (uint32_t)lParam));
+    (**(void (**)(uint64_t, uint32_t, uint32_t, uint64_t))(*obj + 8))(
+        obj[4], 0x204, flags,
+        (int64_t)(int32_t)((int32_t)((uint64_t)lParam >> 0x20) << 0x10 | (uint32_t)lParam));
 }
 
 /* ========== FUN_1400F9104 @0x1400f9104 ==========

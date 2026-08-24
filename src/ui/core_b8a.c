@@ -57,11 +57,10 @@ extern void PECMD_DtorImageHolder(uint64_t *obj);
 extern void FUN_1400E8940(void *obj);
 extern int64_t PECMD_ContainerAppend(uint64_t *obj);
 extern uint64_t PECMD_BtnCommonMsgHandler(HDC, uint32_t, HDC, LPCWSTR, int32_t);
-extern uint64_t PECMD_ScaleMetricByFactor(uint64_t *obj, HDC hdc,
-                              uint64_t *args);
+extern uint64_t PECMD_ScaleMetricByFactor(uint64_t *obj, HDC hdc, uint64_t *args);
 extern int64_t FUN_1400E5B0C(HDC, uint64_t, HDC, uint64_t *);
-extern void PECMD_ListAddItemEntry(int64_t, int32_t, LPCWSTR, uint32_t, int32_t,
-                                        int32_t, int64_t); /* @0x1400f53c8 */
+extern void PECMD_ListAddItemEntry(int64_t, int32_t, LPCWSTR, uint32_t, int32_t, int32_t,
+                                   int64_t); /* @0x1400f53c8 */
 extern void PECMD_SetCtlBgBrush(int64_t, COLORREF, uint64_t);
 extern void PECMD_InvalidateParentRect(HWND child, int margin);
 
@@ -109,7 +108,7 @@ void FUN_1400E56E4(uint64_t *slot)
  */
 void FUN_1400E5708(int64_t obj)
 {
-    int8_t *ref = (int8_t *)(obj + 0x123);   /* dc@140194: '\0' < *(char*) 有符号序 */
+    int8_t *ref = (int8_t *)(obj + 0x123); /* dc@140194: '\0' < *(char*) 有符号序 */
     if (*ref > 0) {
         *ref = (int8_t)(*ref - 1);
         ShowWindow(*(HWND *)(obj + OBJ_HWND), SW_HIDE);
@@ -122,8 +121,7 @@ void FUN_1400E5708(int64_t obj)
 void PECMD_CtlSendEraseBkgnd(uint64_t *obj, uint64_t param2)
 {
     if ((*(uint8_t *)((char *)obj + 0x78) & 1) == 0) {
-        void (*fn)(uint64_t, int, uint64_t) =
-            *(void (**)(uint64_t, int, uint64_t))(*obj + 8);
+        void (*fn)(uint64_t, int, uint64_t) = *(void (**)(uint64_t, int, uint64_t))(*obj + 8);
         fn(obj[4], 0x14, param2);
     }
 }
@@ -296,7 +294,8 @@ void FUN_1400F2B1C(HDC obj, uint64_t msg, HDC param3, uint64_t *param4)
 {
     if ((int32_t)msg == 0x1205) {
         PECMD_ScaleMetricByFactor((uint64_t *)(uintptr_t)obj, param3, param4);
-    } else {
+    }
+    else {
         FUN_1400E5B0C(obj, msg, param3, param4);
     }
 }
@@ -354,16 +353,12 @@ uint64_t FUN_1400F40BC(int64_t obj, uint32_t value)
  * 从 item 结构提取文本/参数，插入控件项。
  * TODO(verify): +0x10 文本、+0x4 类型、+0x8 数值的字段语义。
  */
-void PECMD_ListAddItemFromSpec(int64_t obj, int32_t index, int64_t item,
-                             uint64_t arg4, int32_t param5)
+void PECMD_ListAddItemFromSpec(int64_t obj, int32_t index, int64_t item, uint64_t arg4,
+                               int32_t param5)
 {
     (void)arg4;
-    PECMD_ListAddItemEntry(obj, index,
-                  *(LPCWSTR *)(item + 0x10),
-                  *(uint32_t *)(item + 4),
-                  *(int32_t *)(item + 8),
-                  -1,
-                  param5);
+    PECMD_ListAddItemEntry(obj, index, *(LPCWSTR *)(item + 0x10), *(uint32_t *)(item + 4),
+                           *(int32_t *)(item + 8), -1, param5);
 }
 
 /* ========== PECMD_DtorListViewObj @0x1400fba3c ==========

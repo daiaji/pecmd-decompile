@@ -21,26 +21,29 @@
 
 #include "pecmd_defs.h"
 
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);   /* @0x140063424 */
-extern void PECMD_ZeroLenBuf(void *p);           /* @0x14005b0b8 */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);                        /* @0x140063424 */
+extern void PECMD_ZeroLenBuf(void *p);                                            /* @0x14005b0b8 */
 extern void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain); /* @0x14002487c */
-extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope, int64_t len); /* @0x14001e69c */
+extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
+                              int64_t len);                                    /* @0x14001e69c */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
-extern uint16_t PECMD_GenRandomSeed16(void);                     /* @0x14001b510 */
-extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile, uint32_t flag); /* @0x14002452c */
+extern uint16_t PECMD_GenRandomSeed16(void);                                   /* @0x14001b510 */
+extern void PECMD_SetCurFileVariables(void *script, LPCWSTR curfile,
+                                      uint32_t flag);        /* @0x14002452c */
 extern int32_t FUN_14005C7C4(const char *a, const WCHAR *w); /* @0x14005c7c4 */
-extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out, uint32_t *flags); /* @0x14001ea18 */
+extern uint8_t *FUN_14001EA18(HMODULE mod, LPCWSTR id, LPCWSTR type, void **out,
+                              uint32_t *flags); /* @0x14001ea18 */
 
 /* 待实现（B8c/B9） */
 extern int64_t FUN_140045C90(void *script, void *param, int64_t a3); /* @0x140045c90 */
-extern int64_t PECMD_RunCommand(void *script, LPCWSTR cmdline, void *a3, void *a4,
-                                void *a5, void *a6);   /* @0x140031454 */
+extern int64_t PECMD_RunCommand(void *script, LPCWSTR cmdline, void *a3, void *a4, void *a5,
+                                void *a6); /* @0x140031454 */
 
 /* 数据区标志（待 B9 核对） */
-static int32_t g_scriptInitFlag;   /* DAT_14013d209 */
-static int32_t g_autoAppFlag;      /* g_charTableF */
-static int32_t g_bInitWin;         /* DAT_14013d059 */
-static int32_t g_cmdlineMode;      /* DAT_14013ccb0 */
+static int32_t g_scriptInitFlag; /* DAT_14013d209 */
+static int32_t g_autoAppFlag;    /* g_charTableF */
+static int32_t g_bInitWin;       /* DAT_14013d059 */
+static int32_t g_cmdlineMode;    /* DAT_14013ccb0 */
 
 /* ========== PECMD_RunBootScriptInFiber @0x14004eb34 ==========
  * ExecCmd 主流程（mainW → fiber → ExecLine → ExecCmd）。
@@ -49,7 +52,8 @@ static int32_t g_cmdlineMode;      /* DAT_14013ccb0 */
  */
 int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdline)
 {
-    (void)flag; (void)hinst;
+    (void)flag;
+    (void)hinst;
     LPCWSTR p = cmdline;
     WCHAR *cmd = NULL;
     uint16_t seed;
@@ -66,7 +70,7 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
     /* TODO(verify): 原实现 FUN_140024C48 跳过 & 前缀; hinst/flag 用于资源加载 */
 
     seed = PECMD_GenRandomSeed16();
-    (void)seed;   /* TODO(verify): 用于脚本 XOR 密钥 */
+    (void)seed; /* TODO(verify): 用于脚本 XOR 密钥 */
     g_scriptInitFlag = 0x41;
 
     /* SCRIPTINIT 资源 */
@@ -84,7 +88,7 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
             /* TODO(verify): 执行 init 段脚本 */
             g_autoAppFlag = 0;
             v = FUN_14001E69C(&g_Script, WSTR("__Autoapp"), NULL, -1);
-            if (v != NULL && *(LPCWSTR)*((int64_t *)v) != L'\0') {
+            if (v != NULL && *(LPCWSTR) * ((int64_t *)v) != L'\0') {
                 WCHAR *s = (WCHAR *)*(int64_t *)v;
                 first = *s;
                 FUN_1400702B0(&cmd, s + 1);
@@ -98,7 +102,8 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
     {
         uint32_t f2 = 0;
         bool noScript = false;
-        if (!((first != L'*' && first != L'$') && cmd == NULL)) noScript = true;
+        if (!((first != L'*' && first != L'$') && cmd == NULL))
+            noScript = true;
         if (!noScript) {
             FUN_14001EA18(g_hInst, (LPCWSTR)0x65, WSTR("SCRIPT"), (void **)&scriptBuf, &f2);
             if (f2 < 5) {
@@ -110,10 +115,12 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
     /* 命令行模式判定 */
     if (cmdline == NULL) {
         g_cmdlineMode = 0;
-    } else {
+    }
+    else {
         int64_t r5 = FUN_14005C7C4("PECMD**pecmd-cmd*", cmdline) == 0 ? 0 : 1;
         g_cmdlineMode = 1;
-        if (r5 == 0) g_cmdlineMode = 0;
+        if (r5 == 0)
+            g_cmdlineMode = 0;
     }
 
     if (g_cmdlineMode == 0) {
@@ -124,25 +131,30 @@ int64_t PECMD_RunStartupScript(HINSTANCE hinst, uint64_t flag, const WCHAR *cmdl
         if (first == L'*') {
             g_autoAppFlag = 1;
             r = FUN_140045C90(&g_Script, (void *)((int64_t)cmd + 8), 0);
-        } else if (first == L'$') {
+        }
+        else if (first == L'$') {
             g_autoAppFlag = 1;
             r = PECMD_RunCommand(&g_Script, cmd, NULL, NULL, NULL, NULL);
-        } else if (cmd == NULL || scriptBuf != NULL) {
-            if ((cmd != NULL && *cmd != L'\0') || scriptBuf != NULL) goto run_script;
+        }
+        else if (cmd == NULL || scriptBuf != NULL) {
+            if ((cmd != NULL && *cmd != L'\0') || scriptBuf != NULL)
+                goto run_script;
             /* 无脚本：查找资源 */
             {
                 void *out = NULL;
                 FUN_14001EA18(g_hInstance, (LPCWSTR)0x12e, (LPCWSTR)5, &out, NULL);
                 /* TODO(verify): PECMD_ParseHlpDoc 执行 */
             }
-        } else {
+        }
+        else {
             g_autoAppFlag = 1;
             FUN_14006375C(&cmd, WSTR(" "));
             FUN_14006375C(&cmd, cmdline);
             r = PECMD_RunCommand(&g_Script, cmd, NULL, NULL, NULL, NULL);
         }
-    } else {
-run_script:
+    }
+    else {
+    run_script:
         /* 脚本执行分支 */
         {
             WCHAR *p2 = NULL;

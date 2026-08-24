@@ -23,46 +23,44 @@
 #include "pecmd_defs.h"
 
 /* ---- 本文件引用的数据全局 ---- */
-extern WCHAR g_szEmpty[];              /* .rdata 空串 (g_szEmpty) */
-extern uint8_t DAT_1401210f8[];              /* .rdata 另一前缀串 */
-extern uint8_t DAT_14013d5c0[];              /* 网络接收缓冲 (0x5dc 字节) */
-extern char * g_timeServer;              /* 字符串/默认指针全局 */
+extern WCHAR g_szEmpty[];       /* .rdata 空串 (g_szEmpty) */
+extern uint8_t DAT_1401210f8[]; /* .rdata 另一前缀串 */
+extern uint8_t DAT_14013d5c0[]; /* 网络接收缓冲 (0x5dc 字节) */
+extern char *g_timeServer;      /* 字符串/默认指针全局 */
 
 /* ---- 本文件引用的 WS2 延迟加载函数指针槽 ---- */
-extern uint32_t (*g_pntohl)(uint32_t);              /* ntohl */
-extern uint16_t (*g_phtons)(uint16_t);              /* htons */
+extern uint32_t (*g_pntohl)(uint32_t); /* ntohl */
+extern uint16_t (*g_phtons)(uint16_t); /* htons */
 /* inet_addr 使用 pecmd_defs.h 声明 int (*g_pinet_addr)(char*) */
-extern int      (*g_pclosesocket)(uintptr_t);             /* closesocket */
-extern uintptr_t (*g_psock)(int, int, int);        /* socket */
-extern int      (*g_pconnect)(uintptr_t, void *, int);/* connect */
-extern int      (*g_pselect)(int, void *, void *,
-                                 void *, void *);        /* select */
-extern int      (*g_precvfrom)(uintptr_t, void *, int,
-                                 int, void *, void *);   /* recvfrom */
+extern int (*g_pclosesocket)(uintptr_t);                                /* closesocket */
+extern uintptr_t (*g_psock)(int, int, int);                             /* socket */
+extern int (*g_pconnect)(uintptr_t, void *, int);                       /* connect */
+extern int (*g_pselect)(int, void *, void *, void *, void *);           /* select */
+extern int (*g_precvfrom)(uintptr_t, void *, int, int, void *, void *); /* recvfrom */
 
 /* ---- 本文件引用的辅助函数 (extern, 不在此定义) ---- */
-extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);   /* @0x140063720 字符串扩容 */
-extern void    PECMD_SendPingPacket(int param_1);               /* @0x14005d30c 组发送包 */
-extern void    PECMD_SetSystemTimeFromUnix(int *param_1);              /* @0x14005d390 设置本地时间 */
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count); /* @0x140063720 字符串扩容 */
+extern void PECMD_SendPingPacket(int param_1);              /* @0x14005d30c 组发送包 */
+extern void PECMD_SetSystemTimeFromUnix(int *param_1);      /* @0x14005d390 设置本地时间 */
 
 /* ---- 本文件使用、桩中未声明的 Win32/SetupAPI ---- */
-extern BOOL     SetupDiGetDeviceInfoListDetailW(void *DeviceInfoSet, void *DeviceInfoSetDetailData);
+extern BOOL SetupDiGetDeviceInfoListDetailW(void *DeviceInfoSet, void *DeviceInfoSetDetailData);
 extern uint32_t CM_Get_DevNode_Status_Ex(uint32_t *pulStatus, uint32_t *pulProblemNumber,
                                          uint32_t dnDevInst, uint32_t ulFlags);
 
 /* 本文件局部: _SP_DEVINFO_LIST_DETAIL_DATA_W_pue 结构布局
  * 总大小 0x230: cbSize(4) + ClassGuid(16) + rest(540) */
 typedef struct {
-    DWORD    cbSize;         /* 0x00 */
-    uint8_t  ClassGuid[16];  /* 0x04 */
-    uint8_t  _rest[0x230 - 0x04 - 0x10]; /* 0x14 .. 0x230 */
+    DWORD cbSize;                       /* 0x00 */
+    uint8_t ClassGuid[16];              /* 0x04 */
+    uint8_t _rest[0x230 - 0x04 - 0x10]; /* 0x14 .. 0x230 */
 } SP_DEVINFO_LIST_DETAIL_DATA_W_local;
 
 /* ================================================================
  * @0x1400662a4  设备信息列表细节获取并格式化状态串
  */
-uint64_t PECMD_FormatDeviceStatus(int64_t param_1, void *param_2, int64_t *param_3,
-                       LPCWSTR param_4, LPCWSTR param_5, int param_6)
+uint64_t PECMD_FormatDeviceStatus(int64_t param_1, void *param_2, int64_t *param_3, LPCWSTR param_4,
+                                  LPCWSTR param_5, int param_6)
 {
     BOOL BVar1;
     DWORD DVar2;
@@ -106,22 +104,21 @@ uint64_t PECMD_FormatDeviceStatus(int64_t param_1, void *param_2, int64_t *param
             iVar8 = 2;
             puVar9 = (LPCWSTR)(uintptr_t)DAT_1401210f8;
         }
-    } else {
+    }
+    else {
         iVar3 = 2;
     }
 
     iVar4 = lstrlenW((LPCWSTR)(uintptr_t)*param_3);
     iVar5 = lstrlenW(param_4);
     iVar6 = lstrlenW(param_5);
-    PECMD_AllocString((WCHAR **)param_3,
-                  (int64_t)iVar8 + (int64_t)iVar3 + (int64_t)iVar6 +
-                  (int64_t)iVar5 + 0x3f + (int64_t)iVar4);
+    PECMD_AllocString((WCHAR **)param_3, (int64_t)iVar8 + (int64_t)iVar3 + (int64_t)iVar6 +
+                                             (int64_t)iVar5 + 0x3f + (int64_t)iVar4);
     /* TODO(verify): Ghidra 变参被截断, 仅保留前两组 (puVar9,param_4);
      * 后续按格式串补 status/problem(0x%X) 与 param_5/尾串。 */
     wsprintfW((LPWSTR)((uintptr_t)*param_3 + (int64_t)iVar4 * 2),
-              WSTR("%s\"%s\" status: 0x%X problem: 0x%X \"%s\"%s"),
-              puVar9, param_4, (unsigned int)local_268, (unsigned int)local_264[0],
-              param_5, WSTR(""));
+              WSTR("%s\"%s\" status: 0x%X problem: 0x%X \"%s\"%s"), puVar9, param_4,
+              (unsigned int)local_268, (unsigned int)local_264[0], param_5, WSTR(""));
     return 0;
 }
 
@@ -178,26 +175,29 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
     uint32_t local_23e;
     uint16_t local_23a;
     uint16_t local_238;
-    uint8_t  local_236[8];
+    uint8_t local_236[8];
     uint32_t local_22e;
     uint16_t local_22a;
     uint32_t local_228[2];
     uint64_t local_220;
-    uint16_t local_246;   /* CONCAT42/62 拼接载体 (未用, TODO(verify)) */
+    uint16_t local_246; /* CONCAT42/62 拼接载体 (未用, TODO(verify)) */
 
     uVar5 = 0;
     local_246 = 0;
     local_23e = 0;
     local_23a = 0;
-    (void)local_246; (void)local_23e; (void)local_23a;
+    (void)local_246;
+    (void)local_23e;
+    (void)local_23a;
     if (param_1 == (uint32_t *)0) {
         param_1 = (uint32_t *)g_timeServer;
     }
     local_248 = 2;
     if ((uintptr_t)param_1 == 1) {
         uVar2 = *(uint32_t *)g_timeServer;
-    } else {
-        uVar2 = (*g_pinet_addr)((char*)0);   /* TODO(verify) inet_addr 实参来源 */
+    }
+    else {
+        uVar2 = (*g_pinet_addr)((char *)0); /* TODO(verify) inet_addr 实参来源 */
     }
     /* TODO(verify): 原 CONCAT42(uVar2,local_246) / CONCAT62(...,uVar1)
      * 仅用于构造未使用的 local_246, 归一化丢弃。 */
@@ -225,12 +225,14 @@ void PECMD_NtpSyncLoop(uint32_t *param_1)
                 local_228[0] = 1;
                 local_res10 = 1;
                 local_220 = uVar5;
-                (void)local_220; (void)local_22e; (void)local_22a; (void)local_res14;
+                (void)local_220;
+                (void)local_22e;
+                (void)local_22a;
+                (void)local_res14;
                 iVar4 = (*g_pselect)(iVar3 + 1, local_228, 0, 0, &local_res10);
                 if (iVar4 == 1) {
                     SetLastError(0);
-                    iVar4 = (*g_precvfrom)(uVar5, DAT_14013d5c0, 0x5dc, 0,
-                                             &local_238, local_res8);
+                    iVar4 = (*g_precvfrom)(uVar5, DAT_14013d5c0, 0x5dc, 0, &local_238, local_res8);
                     GetLastError();
                     if (0xb < iVar4) {
                         PECMD_ParseNtpSetSystemTime(uVar5 & 0xffffffff, (uint32_t *)DAT_14013d5c0);

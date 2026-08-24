@@ -8,87 +8,88 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* 堆/实例 */
-HANDLE g_hHeap;             /* DAT_14013d328 进程堆 (mainW 初始化) */
-HINSTANCE g_hInstance;      /* DAT_14013ca68 模块句柄 */
-HINSTANCE g_hInst;          /* DAT_14013cf70 mainW 保存的实例 */
+HANDLE g_hHeap;        /* DAT_14013d328 进程堆 (mainW 初始化) */
+HINSTANCE g_hInstance; /* DAT_14013ca68 模块句柄 */
+HINSTANCE g_hInst;     /* DAT_14013cf70 mainW 保存的实例 */
 
 /* 消息/命令缓冲 */
-WCHAR *g_szMsgBuf;          /* DAT_14013cab8 EXEC 消息缓冲 (26000 WCHAR) */
-WCHAR *g_pNextCmd;          /* DAT_14013cac8 下一命令行 */
+WCHAR *g_szMsgBuf; /* DAT_14013cab8 EXEC 消息缓冲 (26000 WCHAR) */
+WCHAR *g_pNextCmd; /* DAT_14013cac8 下一命令行 */
 
 /* 脚本结构 (mainW 初始化后传给脚本执行器) */
-uint8_t g_Script[0x200];    /* DAT_14013d130 脚本结构 (大小 TODO(verify)) */
+uint8_t g_Script[0x200]; /* DAT_14013d130 脚本结构 (大小 TODO(verify)) */
 
 /* 环境表 */
-uint8_t g_Env[0x100];       /* DAT_14013d1a0 运行环境表 (大小 TODO(verify)) */
+uint8_t g_Env[0x100];          /* DAT_14013d1a0 运行环境表 (大小 TODO(verify)) */
 const uint8_t g_DefEnv[0x100]; /* DAT_14011d308 .rdata 默认环境表 (TODO(verify)) */
 
 /* 状态标志 */
-uint32_t g_runFlag;         /* DAT_140147000 运行状态 */
-uint8_t g_flag169;          /* DAT_14013c969 (低字节) */
-uint8_t g_state138;         /* DAT_14013d138 全局状态 */
-uint32_t g_afterMain;       /* DAT_14013ccc8 收尾钩子标志 */
-int8_t g_flagA24F;          /* DAT_14013a24f 运行标志(dc 写入-1/0xff/0xfe 哨兵, 读侧有符号序比较; 审计#1根因) */
-uint32_t g_state190;        /* DAT_14013d190 */
-uint32_t g_state198;        /* DAT_14013d198 */
+uint32_t g_runFlag;   /* DAT_140147000 运行状态 */
+uint8_t g_flag169;    /* DAT_14013c969 (低字节) */
+uint8_t g_state138;   /* DAT_14013d138 全局状态 */
+uint32_t g_afterMain; /* DAT_14013ccc8 收尾钩子标志 */
+int8_t
+    g_flagA24F; /* DAT_14013a24f 运行标志(dc 写入-1/0xff/0xfe 哨兵, 读侧有符号序比较; 审计#1根因) */
+uint32_t g_state190; /* DAT_14013d190 */
+uint32_t g_state198; /* DAT_14013d198 */
 
 /* 退出码/转换回调 */
-uint32_t g_exitCode;        /* DAT_14013d180 指向的退出码值 */
-uint32_t *g_pExitCode = &g_exitCode;   /* DAT_14013d180 (指针) */
-int (*g_pConvFunc)(uint32_t, DWORD, LPCSTR, int, LPWSTR, int);  /* DAT_14013c970 转换回调 */
-uint32_t g_SysCodePage;     /* DAT_140147004 系统代码页 */
-uint32_t g_ShowWindow;      /* DAT_14013a234 wShowWindow */
-int64_t g_QPC;              /* DAT_14013cb88 QPC 计数 */
-uint64_t g_StartTime;       /* DAT_14013d038 启动 FILETIME */
-uint32_t g_Tid;             /* DAT_14013ccb4 主线程 ID */
-uint32_t g_LastTick;        /* DAT_14013c9fc 上次 GetTickCount */
+uint32_t g_exitCode;                                           /* DAT_14013d180 指向的退出码值 */
+uint32_t *g_pExitCode = &g_exitCode;                           /* DAT_14013d180 (指针) */
+int (*g_pConvFunc)(uint32_t, DWORD, LPCSTR, int, LPWSTR, int); /* DAT_14013c970 转换回调 */
+uint32_t g_SysCodePage;                                        /* DAT_140147004 系统代码页 */
+uint32_t g_ShowWindow;                                         /* DAT_14013a234 wShowWindow */
+int64_t g_QPC;                                                 /* DAT_14013cb88 QPC 计数 */
+uint64_t g_StartTime;                                          /* DAT_14013d038 启动 FILETIME */
+uint32_t g_Tid;                                                /* DAT_14013ccb4 主线程 ID */
+uint32_t g_LastTick;                                           /* DAT_14013c9fc 上次 GetTickCount */
 uint32_t g_WM_TaskbarRestart; /* DAT_14013d3e8 WM_TaskbarRestart 消息值 */
 
 /* 动态导入/模块句柄 */
-int (*g_pNtQueryInfo)(HANDLE, int, void *, uint32_t, void *);  /* DAT_14013ca60 */
-uint8_t g_flag16a;          /* DAT_14013c96a */
-uint8_t g_flag16b;          /* DAT_14013c96b (DEBUGMDG) */
-uint32_t g_WM_TaskbarButtonCreated;  /* DAT_14013c9f8 */
-HMODULE g_hKernel32;        /* DAT_14013cfd0 */
-HMODULE g_hUser32;          /* DAT_14013cfc8 */
-HMODULE g_hGdi32;           /* DAT_14013cfd8 */
-uint32_t g_bX64;            /* DAT_14013a038 */
-int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t);  /* DAT_14013d408 */
-int (*g_pSHDeleteKeyW)(HKEY, LPCWSTR);  /* DAT_14013d400 */
-int (*g_pSHGetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *); /* DAT_14013cd48 */
-void (*g_pSHGetValueA)(void);      /* DAT_14013cd50 */
-void (*g_pStrToIntExW)(void);      /* DAT_14013cd58 */
+int (*g_pNtQueryInfo)(HANDLE, int, void *, uint32_t, void *);     /* DAT_14013ca60 */
+uint8_t g_flag16a;                                                /* DAT_14013c96a */
+uint8_t g_flag16b;                                                /* DAT_14013c96b (DEBUGMDG) */
+uint32_t g_WM_TaskbarButtonCreated;                               /* DAT_14013c9f8 */
+HMODULE g_hKernel32;                                              /* DAT_14013cfd0 */
+HMODULE g_hUser32;                                                /* DAT_14013cfc8 */
+HMODULE g_hGdi32;                                                 /* DAT_14013cfd8 */
+uint32_t g_bX64;                                                  /* DAT_14013a038 */
+int64_t (*g_pRegDeleteKeyExW)(HKEY, LPCWSTR, uint32_t, uint32_t); /* DAT_14013d408 */
+int (*g_pSHDeleteKeyW)(HKEY, LPCWSTR);                            /* DAT_14013d400 */
+int (*g_pSHGetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD *, void *, DWORD *);   /* DAT_14013cd48 */
+void (*g_pSHGetValueA)(void);                                              /* DAT_14013cd50 */
+void (*g_pStrToIntExW)(void);                                              /* DAT_14013cd58 */
 int (*g_pSHSetValueW)(HKEY, LPCWSTR, LPCWSTR, DWORD, const void *, DWORD); /* DAT_14013d3f0 */
-int (*g_pSHDeleteValueW)(HKEY, LPCWSTR, LPCWSTR);  /* DAT_14013d3f8 */
-void (*g_pZwOpenSection)(void);    /* DAT_14013cb10 */
-HMODULE g_hNtdll;           /* DAT_14013ccf8 */
-void (*g_pRtlInitUnicodeString)(void); /* DAT_14013cb48 */
-void (*g_pNtOpenFile)(void);       /* DAT_14013cd18 */
-void (*g_pNtCreateFile)(void);     /* DAT_14013cd20 */
-void (*g_pNtReadFile)(void);       /* DAT_14013cd28 */
-void (*g_pNtClose)(void);          /* DAT_14013cd40 */
-void (*g_pNtCreateDirectoryObject)(void);  /* DAT_14013cd30 */
-void (*g_pNtCreateSymbolicLinkObject)(void); /* DAT_14013cd38 */
-void *g_csInit;             /* DAT_14013e190 关键段 */
-int64_t g_QPFreq;           /* DAT_14013cb80 QPC 频率 */
+int (*g_pSHDeleteValueW)(HKEY, LPCWSTR, LPCWSTR);                          /* DAT_14013d3f8 */
+void (*g_pZwOpenSection)(void);                                            /* DAT_14013cb10 */
+HMODULE g_hNtdll;                                                          /* DAT_14013ccf8 */
+void (*g_pRtlInitUnicodeString)(void);                                     /* DAT_14013cb48 */
+void (*g_pNtOpenFile)(void);                                               /* DAT_14013cd18 */
+void (*g_pNtCreateFile)(void);                                             /* DAT_14013cd20 */
+void (*g_pNtReadFile)(void);                                               /* DAT_14013cd28 */
+void (*g_pNtClose)(void);                                                  /* DAT_14013cd40 */
+void (*g_pNtCreateDirectoryObject)(void);                                  /* DAT_14013cd30 */
+void (*g_pNtCreateSymbolicLinkObject)(void);                               /* DAT_14013cd38 */
+void *g_csInit;   /* DAT_14013e190 关键段 */
+int64_t g_QPFreq; /* DAT_14013cb80 QPC 频率 */
 
 /* 系统状态 */
-WCHAR *g_pLocale;           /* DAT_14013ca70 代码页字符串 */
-void *g_pSharedMap;         /* DAT_14013ca30 共享映射 */
-uint8_t g_flag13f;          /* DAT_14013d13f */
-void *g_pVtblA;             /* DAT_14013d670 = g_szEmpty */
-void *g_pVtblB;             /* DAT_14013d5e0 = g_szEmpty */
-int32_t g_val668;           /* DAT_14013d668 = 0xffffff9c */
-int32_t g_val5d8;           /* DAT_14013d5d8 = 0xffffff9c */
-uint16_t g_privFlags;       /* DAT_14013e20c 权限标志 */
+WCHAR *g_pLocale;     /* DAT_14013ca70 代码页字符串 */
+void *g_pSharedMap;   /* DAT_14013ca30 共享映射 */
+uint8_t g_flag13f;    /* DAT_14013d13f */
+void *g_pVtblA;       /* DAT_14013d670 = g_szEmpty */
+void *g_pVtblB;       /* DAT_14013d5e0 = g_szEmpty */
+int32_t g_val668;     /* DAT_14013d668 = 0xffffff9c */
+int32_t g_val5d8;     /* DAT_14013d5d8 = 0xffffff9c */
+uint16_t g_privFlags; /* DAT_14013e20c 权限标志 */
 
 /* .rdata 常量 */
 const WCHAR *PTR_u_2024_05_12_14013a000 = WSTR("2024.05.12"); /* PTR_u_2024_05_12_14013a000 */
 
 /* 随机数状态 (B8a) */
-int64_t g_randState;    /* DAT_14013a358 随机状态 */
-int64_t g_lcgState;     /* DAT_14013a360 LCG 状态 (PECMD_RandSeedAdvance) */
-int64_t g_randPrev;     /* DAT_14013e1c0 上次随机值 */
+int64_t g_randState; /* DAT_14013a358 随机状态 */
+int64_t g_lcgState;  /* DAT_14013a360 LCG 状态 (PECMD_RandSeedAdvance) */
+int64_t g_randPrev;  /* DAT_14013e1c0 上次随机值 */
 
 /* 执行环境 (B8a) */
 HHOOK g_hHook;              /* DAT_14013d068 键盘钩子 */
@@ -100,124 +101,130 @@ void (*g_pOleUninit)(void); /* DAT_14013d808 OleUninitialize */
 int32_t g_taskCount;        /* DAT_14013d7e8 活动任务计数 */
 
 /* ---- WS2_32 延迟加载函数指针槽 (PECMD_InitWinsock 经 PECMD_GetApiProcCached 填充) ---- */
-int   (*g_pWSAStartup)(int, void *);          /* DAT_14013d4e8 WSAStartup */
-uintptr_t (*g_psock)(int, int, int);          /* DAT_14013d4f0 socket */
-int   (*g_pshutdown)(uintptr_t, int);         /* DAT_14013d4f8 shutdown */
-int   (*g_pclosesocket)(uintptr_t);           /* DAT_14013d500 closesocket */
-int   (*g_pconnect)(uintptr_t, void *, int);  /* DAT_14013d508 connect */
-int   (*g_psend)(uintptr_t, const void *, int); /* DAT_14013d510 send */
-int   (*g_pselect)(int, void *, void *, void *, void *); /* DAT_14013d518 select */
-int   (*g_precvfrom)(uintptr_t, void *, int, int, void *, void *); /* DAT_14013d520 recvfrom */
-int   (*g_psendto)(uintptr_t, const void *, int, int, void *, int); /* DAT_14013d528 sendto */
-int   (*g_pbind)(uintptr_t, const void *, int); /* DAT_14013d530 bind */
-int   (*g_plisten)(uintptr_t, int);           /* DAT_14013d538 listen */
-uintptr_t (*g_paccept)(uintptr_t, void *, void *); /* DAT_14013d540 accept */
-int   (*g_pgetpeername)(uintptr_t, void *, void *); /* DAT_14013d548 getpeername */
-int   (*g_pgetsockname)(uintptr_t, void *, void *); /* DAT_14013d550 getsockname */
-int   (*g_pioctlsocket)(uintptr_t, int, uint32_t *); /* DAT_14013d558 ioctlsocket */
-int   (*g_psetsockopt)(uintptr_t, int, int, const void *, int); /* DAT_14013d560 setsockopt */
-uint32_t (*g_pntohl)(uint32_t);               /* DAT_14013d568 ntohl */
-uint32_t (*g_phtonl)(uint32_t);               /* DAT_14013d570 htonl */
-uint16_t (*g_phtons)(uint16_t);               /* DAT_14013d578 htons */
-int    (*g_pinet_addr)(char *);               /* DAT_14013d580 inet_addr */
-void  *(*g_pgethostbyname)(const char *);     /* DAT_14013d588 gethostbyname */
-LPCSTR (*g_pinet_ntoa)(uint32_t);             /* DAT_14013d590 inet_ntoa */
-int    (*g_pWSAGetLastError)(void);           /* DAT_14013d598 WSAGetLastError */
-int    (*g_pWSAFDIsSet)(void *, void *);      /* DAT_14013d5a0 __WSAFDIsSet */
-void *g_pMapBlk;            /* DAT_14013cf50 映射块 */
-CRITICAL_SECTION g_csCom;   /* DAT_14013e168 COM 关键段 */
-CRITICAL_SECTION g_csHook;  /* DAT_14013e2d0 钩子关键段 */
+int (*g_pWSAStartup)(int, void *);                                /* DAT_14013d4e8 WSAStartup */
+uintptr_t (*g_psock)(int, int, int);                              /* DAT_14013d4f0 socket */
+int (*g_pshutdown)(uintptr_t, int);                               /* DAT_14013d4f8 shutdown */
+int (*g_pclosesocket)(uintptr_t);                                 /* DAT_14013d500 closesocket */
+int (*g_pconnect)(uintptr_t, void *, int);                        /* DAT_14013d508 connect */
+int (*g_psend)(uintptr_t, const void *, int);                     /* DAT_14013d510 send */
+int (*g_pselect)(int, void *, void *, void *, void *);            /* DAT_14013d518 select */
+int (*g_precvfrom)(uintptr_t, void *, int, int, void *, void *);  /* DAT_14013d520 recvfrom */
+int (*g_psendto)(uintptr_t, const void *, int, int, void *, int); /* DAT_14013d528 sendto */
+int (*g_pbind)(uintptr_t, const void *, int);                     /* DAT_14013d530 bind */
+int (*g_plisten)(uintptr_t, int);                                 /* DAT_14013d538 listen */
+uintptr_t (*g_paccept)(uintptr_t, void *, void *);                /* DAT_14013d540 accept */
+int (*g_pgetpeername)(uintptr_t, void *, void *);                 /* DAT_14013d548 getpeername */
+int (*g_pgetsockname)(uintptr_t, void *, void *);                 /* DAT_14013d550 getsockname */
+int (*g_pioctlsocket)(uintptr_t, int, uint32_t *);                /* DAT_14013d558 ioctlsocket */
+int (*g_psetsockopt)(uintptr_t, int, int, const void *, int);     /* DAT_14013d560 setsockopt */
+uint32_t (*g_pntohl)(uint32_t);                                   /* DAT_14013d568 ntohl */
+uint32_t (*g_phtonl)(uint32_t);                                   /* DAT_14013d570 htonl */
+uint16_t (*g_phtons)(uint16_t);                                   /* DAT_14013d578 htons */
+int (*g_pinet_addr)(char *);                                      /* DAT_14013d580 inet_addr */
+void *(*g_pgethostbyname)(const char *);                          /* DAT_14013d588 gethostbyname */
+LPCSTR (*g_pinet_ntoa)(uint32_t);                                 /* DAT_14013d590 inet_ntoa */
+int (*g_pWSAGetLastError)(void);      /* DAT_14013d598 WSAGetLastError */
+int (*g_pWSAFDIsSet)(void *, void *); /* DAT_14013d5a0 __WSAFDIsSet */
+void *g_pMapBlk;                      /* DAT_14013cf50 映射块 */
+CRITICAL_SECTION g_csCom;             /* DAT_14013e168 COM 关键段 */
+CRITICAL_SECTION g_csHook;            /* DAT_14013e2d0 钩子关键段 */
 
 /* B8h 批 (core_b8h.c) */
 uint32_t (*g_pfnVirtualAllocEx)(void) = NULL; /* DAT_14013e258 VirtualAllocEx */
-uint32_t *g_pCrcTable = NULL;   /* DAT_14013e260 CRC32 查表指针 */
-uint32_t (*g_pfnRasDial)(void);    /* DAT_14013e268 RasDialW (RAS API) */
-HANDLE g_hSyncEvtA;             /* DAT_14013e1f8 同步事件 A */
-HANDLE g_hSyncEvtB;             /* DAT_14013e200 同步事件 B */
-uint32_t g_syncEvtVal;          /* DAT_14013e208 同步事件记录值 */
-uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *, uint32_t *) = NULL; /* DAT_14013e270 RasEnumEntriesW */
-uint32_t (*g_pfnRasGetConnectStatus)(uint64_t, uint32_t *) = NULL; /* DAT_14013e278 RasGetConnectStatusW */
-uint32_t (*g_pfnRasGetErrorString)(void);           /* DAT_14013e280 RasGetErrorStringW (B8i 定义) */
-uint32_t (*g_pfnRasHangUp)(uint64_t) = NULL;        /* DAT_14013e288 RasHangUpW */
-uint32_t (*g_pfnRasEnumConnections)(void *, uint32_t *, uint32_t *) = NULL; /* DAT_14013e290 RasEnumConnectionsW */
-void *g_syncState;            /* DAT_14013e298 同步状态 */
-HWND g_hActiveDevWnd;           /* DAT_14013e400 当前设备窗口 */
-HCURSOR g_hArrowCursor;         /* DAT_14013e4d8 箭头光标 (IDC_ARROW) */
-uint8_t g_objMode;              /* DAT_14013a84d 对象布局/指针模式 (TODO(verify)) */
+uint32_t *g_pCrcTable = NULL;                 /* DAT_14013e260 CRC32 查表指针 */
+uint32_t (*g_pfnRasDial)(void);               /* DAT_14013e268 RasDialW (RAS API) */
+HANDLE g_hSyncEvtA;                           /* DAT_14013e1f8 同步事件 A */
+HANDLE g_hSyncEvtB;                           /* DAT_14013e200 同步事件 B */
+uint32_t g_syncEvtVal;                        /* DAT_14013e208 同步事件记录值 */
+uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *,
+                                uint32_t *) = NULL; /* DAT_14013e270 RasEnumEntriesW */
+uint32_t (*g_pfnRasGetConnectStatus)(uint64_t,
+                                     uint32_t *) = NULL; /* DAT_14013e278 RasGetConnectStatusW */
+uint32_t (*g_pfnRasGetErrorString)(void);    /* DAT_14013e280 RasGetErrorStringW (B8i 定义) */
+uint32_t (*g_pfnRasHangUp)(uint64_t) = NULL; /* DAT_14013e288 RasHangUpW */
+uint32_t (*g_pfnRasEnumConnections)(void *, uint32_t *,
+                                    uint32_t *) = NULL; /* DAT_14013e290 RasEnumConnectionsW */
+void *g_syncState;                                      /* DAT_14013e298 同步状态 */
+HWND g_hActiveDevWnd;                                   /* DAT_14013e400 当前设备窗口 */
+HCURSOR g_hArrowCursor;                                 /* DAT_14013e4d8 箭头光标 (IDC_ARROW) */
+uint8_t g_objMode;                              /* DAT_14013a84d 对象布局/指针模式 (TODO(verify)) */
 uint32_t (*g_pfnGetThreadCtx)(HANDLE, int64_t); /* DAT_14013e248 GetThreadContext */
 uint32_t (*g_pfnSetThreadCtx)(HANDLE, int64_t); /* DAT_14013e250 SetThreadContext */
-uint64_t g_remoteTebBase;       /* DAT_14013e2f9 远程 TEB 基址 (TODO(verify)) */
-uint64_t g_ptrA84C;             /* DAT_14013a84c 布局指针 (TODO(verify)) */
-uint64_t g_peCtxSize;           /* DAT_14013a850 上下文大小 */
-uint64_t g_peCtxOffB;           /* DAT_14013e2f8 上下文偏移 B */
-uint8_t g_peByteA84E;           /* DAT_14013a84e 布局字节 E */
-uint16_t g_peWordA852;          /* DAT_14013a852 布局字 852 */
-uint8_t g_peByteA84F;           /* DAT_14013a84f 布局字节 F */
-uint16_t g_peWordA853;          /* DAT_14013a853 布局字 853 */
-HGDIOBJ g_hStockWhiteBrush;     /* DAT_14013a858 库存白色画刷 */
-float g_barScaleDiv;            /* DAT_14012c0d0 条比例除数 (TODO(verify)) */
-double g_scrollLimit;           /* DAT_140129ee8 滚动上限常量 (TODO(verify)) */
-void (*g_pFnCleanup)(void) = NULL;  /* DAT_14013d398 组合对象清理回调 */
-void *(*g_pImageListCreate)(int, int, unsigned, int, int) = NULL;  /* DAT_14013d390 ImageList_Create */
-int (*g_pImageListReplaceIcon)(void *, int, void *) = NULL;        /* DAT_14013d3a0 ImageList_ReplaceIcon */
-int (*g_pImageListAdd)(void *, void *) = NULL;                     /* DAT_14013d3a8 ImageList_Add */
-int64_t g_cacheTableA[3] = {0, 0, 0};   /* DAT_14013dc80 cache table A {data, cap, cnt} */
-int64_t g_cacheTableB[3] = {0, 0, 0};   /* DAT_14013dce8 cache table B {data, cap, cnt} */
+uint64_t g_remoteTebBase;                       /* DAT_14013e2f9 远程 TEB 基址 (TODO(verify)) */
+uint64_t g_ptrA84C;                             /* DAT_14013a84c 布局指针 (TODO(verify)) */
+uint64_t g_peCtxSize;                           /* DAT_14013a850 上下文大小 */
+uint64_t g_peCtxOffB;                           /* DAT_14013e2f8 上下文偏移 B */
+uint8_t g_peByteA84E;                           /* DAT_14013a84e 布局字节 E */
+uint16_t g_peWordA852;                          /* DAT_14013a852 布局字 852 */
+uint8_t g_peByteA84F;                           /* DAT_14013a84f 布局字节 F */
+uint16_t g_peWordA853;                          /* DAT_14013a853 布局字 853 */
+HGDIOBJ g_hStockWhiteBrush;                     /* DAT_14013a858 库存白色画刷 */
+float g_barScaleDiv;                            /* DAT_14012c0d0 条比例除数 (TODO(verify)) */
+double g_scrollLimit;                           /* DAT_140129ee8 滚动上限常量 (TODO(verify)) */
+void (*g_pFnCleanup)(void) = NULL;              /* DAT_14013d398 组合对象清理回调 */
+void *(*g_pImageListCreate)(int, int, unsigned, int,
+                            int) = NULL; /* DAT_14013d390 ImageList_Create */
+int (*g_pImageListReplaceIcon)(void *, int,
+                               void *) = NULL; /* DAT_14013d3a0 ImageList_ReplaceIcon */
+int (*g_pImageListAdd)(void *, void *) = NULL; /* DAT_14013d3a8 ImageList_Add */
+int64_t g_cacheTableA[3] = {0, 0, 0};          /* DAT_14013dc80 cache table A {data, cap, cnt} */
+int64_t g_cacheTableB[3] = {0, 0, 0};          /* DAT_14013dce8 cache table B {data, cap, cnt} */
 /* VirtDisk/vhdmount 动态导入槽 (PECMD_LoadVhdApi 延迟装载) */
-int (*g_pCreateVirtualDisk)(void *, uint64_t, uint32_t, int, uint32_t, int, uint32_t *, int, HANDLE *) = NULL; /* DAT_14013d730 */
-void *g_pAttachVirtualDisk = NULL;    /* DAT_14013d740 AttachVirtualDisk (只装载) */
-void *g_pDetachVirtualDisk = NULL;    /* DAT_14013d748 DetachVirtualDisk */
-void *g_pGetVirtDiskPhysPath = NULL;  /* DAT_14013d750 GetVirtualDiskPhysicalPath (只装载) */
-void *g_pGetVirtDiskInfo = NULL;      /* DAT_14013d758 GetVirtualDiskInformation (只装载) */
-void *g_pMountVHD = NULL;             /* DAT_14013d760 MountVHD */
-void *g_pUnmountVHD = NULL;           /* DAT_14013d768 UnmountVHD */
+int (*g_pCreateVirtualDisk)(void *, uint64_t, uint32_t, int, uint32_t, int, uint32_t *, int,
+                            HANDLE *) = NULL; /* DAT_14013d730 */
+void *g_pAttachVirtualDisk = NULL;            /* DAT_14013d740 AttachVirtualDisk (只装载) */
+void *g_pDetachVirtualDisk = NULL;            /* DAT_14013d748 DetachVirtualDisk */
+void *g_pGetVirtDiskPhysPath = NULL; /* DAT_14013d750 GetVirtualDiskPhysicalPath (只装载) */
+void *g_pGetVirtDiskInfo = NULL;     /* DAT_14013d758 GetVirtualDiskInformation (只装载) */
+void *g_pMountVHD = NULL;            /* DAT_14013d760 MountVHD */
+void *g_pUnmountVHD = NULL;          /* DAT_14013d768 UnmountVHD */
 /* ImDisk.cpl 动态导入槽 (延迟装载; void* 槽, 调用处强转) */
-void *g_pImDiskGetVersion = NULL;        /* DAT_14013d0e8 ImDiskGetVersion */
-void *g_pImDiskFindFreeLetter = NULL;    /* DAT_14013d088 ImDiskFindFreeDriveLetter */
-void *g_pImDiskForceRemove = NULL;       /* DAT_14013d090 ImDiskForceRemoveDevice */
-void *g_pImDiskGetOffsetByExt = NULL;    /* DAT_14013d0a8 ImDiskGetOffsetByFileExt */
-void *g_pImDiskGetPartInfo = NULL;       /* DAT_14013d0b0 ImDiskGetPartitionInformation */
-void *g_pImDiskOpenDevice = NULL;        /* DAT_14013d0b8 ImDiskOpenDeviceByName */
-void *g_pImDiskRemoveMountPoint = NULL;  /* DAT_14013d0d0 ImDiskRemoveMountPoint */
-void *g_pImDiskStartService = NULL;      /* DAT_14013d0d8 ImDiskStartService */
-void *g_pImDiskCreateMountPoint = NULL;  /* DAT_14013d0e0 ImDiskCreateMountPoint */
+void *g_pImDiskGetVersion = NULL;       /* DAT_14013d0e8 ImDiskGetVersion */
+void *g_pImDiskFindFreeLetter = NULL;   /* DAT_14013d088 ImDiskFindFreeDriveLetter */
+void *g_pImDiskForceRemove = NULL;      /* DAT_14013d090 ImDiskForceRemoveDevice */
+void *g_pImDiskGetOffsetByExt = NULL;   /* DAT_14013d0a8 ImDiskGetOffsetByFileExt */
+void *g_pImDiskGetPartInfo = NULL;      /* DAT_14013d0b0 ImDiskGetPartitionInformation */
+void *g_pImDiskOpenDevice = NULL;       /* DAT_14013d0b8 ImDiskOpenDeviceByName */
+void *g_pImDiskRemoveMountPoint = NULL; /* DAT_14013d0d0 ImDiskRemoveMountPoint */
+void *g_pImDiskStartService = NULL;     /* DAT_14013d0d8 ImDiskStartService */
+void *g_pImDiskCreateMountPoint = NULL; /* DAT_14013d0e0 ImDiskCreateMountPoint */
 
 /* B8i 批 (core_b8i.c) */
-uint64_t g_rasState;            /* DAT_14013e2a0 RAS 等待状态 */
-uint64_t *g_pRasEntryBuf = NULL;/* DAT_14013e300 RAS 条目缓冲指针 */
-uint8_t g_richEditMode;         /* DAT_14013d300 富文本类选择 (2=RichEdit20W) */
-uint8_t g_tooltipThreshold = 1; /* DAT_14013a861 Tooltip 触发阈值 (PE .data 初值 0x01, 审计#B6) */
-uint8_t g_tooltipCount0 = 10;   /* DAT_14013a860 Tooltip 计数 (PE .data 初值 0x0A, 审计#B7) */
+uint64_t g_rasState;             /* DAT_14013e2a0 RAS 等待状态 */
+uint64_t *g_pRasEntryBuf = NULL; /* DAT_14013e300 RAS 条目缓冲指针 */
+uint8_t g_richEditMode;          /* DAT_14013d300 富文本类选择 (2=RichEdit20W) */
+uint8_t g_tooltipThreshold = 1;  /* DAT_14013a861 Tooltip 触发阈值 (PE .data 初值 0x01, 审计#B6) */
+uint8_t g_tooltipCount0 = 10;    /* DAT_14013a860 Tooltip 计数 (PE .data 初值 0x0A, 审计#B7) */
 
 /* DAT_14013a058 @0x14013a058 */
 int g_cmdTable3Count;
 
 /* DAT_14013a060 @0x14013a060 */
-void * g_cmdTable3;
+void *g_cmdTable3;
 
 /* DAT_14013a078 @0x14013a078 */
 int g_cmdTable2Count;
 
 /* DAT_14013a080 @0x14013a080 */
-void * g_cmdTable2;
+void *g_cmdTable2;
 
 /* DAT_14013a098 @0x14013a098 */
 int g_cmdTable4Count;
 
 /* DAT_14013a0a0 @0x14013a0a0 */
-void * g_cmdTable4;
+void *g_cmdTable4;
 
 /* DAT_14013a0c8 @0x14013a0c8 */
 int g_cmdTable5Len;
 
 /* DAT_14013a0c0 @0x14013a0c0 */
-void * g_cmdTable5;
+void *g_cmdTable5;
 
 /* DAT_14013ca98 @0x14013ca98 */
 int g_cmdTable1Count;
 
 /* DAT_14013caa0 @0x14013caa0 */
-void * g_cmdTable1;
+void *g_cmdTable1;
 
 /* DAT_14013a330 @0x14013a330 */
 HANDLE g_hStdIn;
@@ -238,52 +245,52 @@ uint32_t g_exitCodeCache;
 uint8_t g_wallpaperMode;
 
 /* DAT_14013a048 @0x14013a048 */
-void * g_pMemQuery;
+void *g_pMemQuery;
 
 /* DAT_14013ca58 @0x14013ca58 */
-void * g_pProcMemRead;
+void *g_pProcMemRead;
 
 /* DAT_14013ca08 @0x14013ca08 */
-void * g_pShutdownFlag;
+void *g_pShutdownFlag;
 
 /* DAT_14013cac0 @0x14013cac0 */
-void * g_pPendingObj;
+void *g_pPendingObj;
 
 /* DAT_14013ca40 @0x14013ca40 */
-void * g_pGetFileVersionInfoExW;
+void *g_pGetFileVersionInfoExW;
 
 /* DAT_14013ca38 @0x14013ca38 */
-void * g_pGetFileVersionInfoSizeExW;
+void *g_pGetFileVersionInfoSizeExW;
 
 /* DAT_14013caa8 @0x14013caa8 */
-int64_t * g_pVolHandles;
+int64_t *g_pVolHandles;
 
 /* DAT_14013c978 @0x14013c978 */
-void * g_pSysAllocString;
+void *g_pSysAllocString;
 
 /* DAT_14013c980 @0x14013c980 */
-void * g_pSysFreeString;
+void *g_pSysFreeString;
 
 /* DAT_14013c9b0 @0x14013c9b0 */
 HMODULE g_hOleaut32;
 
 /* DAT_14013d0a0 @0x14013d0a0 */
-void * g_pImDiskCtrl;
+void *g_pImDiskCtrl;
 
 /* DAT_14013d098 @0x14013d098 */
-void * g_pImDiskMask;
+void *g_pImDiskMask;
 
 /* DAT_14013d0c0 @0x14013d0c0 */
-void * g_pDevOpen;
+void *g_pDevOpen;
 
 /* DAT_14013d0c8 @0x14013d0c8 */
-void * g_pDevOpen2;
+void *g_pDevOpen2;
 
 /* DAT_14013d0f8 @0x14013d0f8 */
-void * g_pNtOpenSymLink;
+void *g_pNtOpenSymLink;
 
 /* DAT_14013d100 @0x14013d100 */
-void * g_pNtQuerySymLink;
+void *g_pNtQuerySymLink;
 
 /* DAT_14013d830 @0x14013d830 */
 int (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **);
@@ -292,7 +299,7 @@ int (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **);
 HMODULE g_hGdiPlus;
 
 /* DAT_14013cfc0 @0x14013cfc0 */
-void * g_gdiplusToken;
+void *g_gdiplusToken;
 
 /* 阶段4b: DAT_->g_ 迁入 core_globals (批2) */
 
@@ -303,7 +310,7 @@ uint8_t g_lowVerFlag;
 uint32_t g_sysColor8;
 
 /* DAT_14013a258 @0x14013a258 */
-int g_tooltipTimeout = 3000;    /* DAT_14013a258 (PE .data 初值 3000, 审计#B9) */
+int g_tooltipTimeout = 3000; /* DAT_14013a258 (PE .data 初值 3000, 审计#B9) */
 
 /* DAT_14013caf9 @0x14013caf9 */
 uint8_t g_runMode;
@@ -369,7 +376,7 @@ uint8_t g_fgWndLock;
 int g_dblClickFlag;
 
 /* DAT_14013a320 @0x14013a320 */
-char g_scrollOff = -8;          /* DAT_14013a320 (PE .data 初值 0xF8=-8, 惰性加载哨兵, 审计#B5) */
+char g_scrollOff = -8; /* DAT_14013a320 (PE .data 初值 0xF8=-8, 惰性加载哨兵, 审计#B5) */
 
 /* DAT_14013d2f8 @0x14013d2f8 */
 HMODULE g_hRichEdit;
@@ -416,7 +423,7 @@ int g_ramdrivFlag;
 int16_t g_transState;
 
 /* DAT_14013a348 @0x14013a348 */
-int8_t g_popmenuFlag = -1;      /* DAT_14013a348 (PE .data 初值 0xFF=-1, 非零守卫, 审计#B8) */
+int8_t g_popmenuFlag = -1; /* DAT_14013a348 (PE .data 初值 0xFF=-1, 非零守卫, 审计#B8) */
 
 /* DAT_14013c91c @0x14013c91c */
 uint32_t g_msgRetCode;
@@ -511,10 +518,10 @@ int g_intA238;
 int g_intA23C;
 
 /* DAT_14013a240 @0x14013a240 */
-int g_intA240 = (-0x80000000);  /* DAT_14013a240 (PE .data 初值 INT_MIN 哨兵, 审计#B10) */
+int g_intA240 = (-0x80000000); /* DAT_14013a240 (PE .data 初值 INT_MIN 哨兵, 审计#B10) */
 
 /* DAT_14013a244 @0x14013a244 */
-int g_intA244 = (-0x80000000);  /* DAT_14013a244 (同上, 审计#B10) */
+int g_intA244 = (-0x80000000); /* DAT_14013a244 (同上, 审计#B10) */
 
 /* DAT_14013a24a @0x14013a24a */
 uint8_t g_u8A24A;
@@ -1073,11 +1080,11 @@ void *g_pCreateSymbolicLinkW;
 void *g_pFreeLibrary;
 
 /* ---------------- 空串 ---------------- */
-WCHAR g_szEmpty[2] = {0};   /* g_szEmpty .rdata 空串 L"" */
-HWND g_hPelogonWnd;   /* g_hPelogonWnd */
-HWND g_hTooltipParent;   /* g_hTooltipParent */
-char * g_timeServer;   /* g_timeServer */
-uint32_t g_dpi;   /* g_dpi */
+WCHAR g_szEmpty[2] = {0}; /* g_szEmpty .rdata 空串 L"" */
+HWND g_hPelogonWnd;       /* g_hPelogonWnd */
+HWND g_hTooltipParent;    /* g_hTooltipParent */
+char *g_timeServer;       /* g_timeServer */
+uint32_t g_dpi;           /* g_dpi */
 
 /* ---- 阶段5a-1 DAT_→g_ 定义 ---- */
 int64_t g_pCacheBlock;
@@ -1089,99 +1096,102 @@ int (*g_pGdipDeleteGraphics)();
 int (*g_pGdipCreateFromHDC)();
 uint32_t g_msgWndState[2];
 /* ---- 阶段5a-2 DAT_→g_ (干净子集) ---- */
-DWORD g_imgBufLen;   /* DAT_14013d870 位图数据大小 */
-COLORREF g_dwTipsTextColor;   /* DAT_14014700c 提示文本颜色 */
-COLORREF g_dwTipBkColor;   /* DAT_140147008 提示背景色 */
-HWND g_hwndTray;   /* DAT_14013dd00 托盘窗口句柄 */
+DWORD g_imgBufLen;          /* DAT_14013d870 位图数据大小 */
+COLORREF g_dwTipsTextColor; /* DAT_14014700c 提示文本颜色 */
+COLORREF g_dwTipBkColor;    /* DAT_140147008 提示背景色 */
+HWND g_hwndTray;            /* DAT_14013dd00 托盘窗口句柄 */
 /* ---- 阶段5b GUID 迁移 ---- */
-GUID g_guidDevInstance;   /* DAT_14011e890 */
+GUID g_guidDevInstance; /* DAT_14011e890 */
 GUID g_clsidCoCreate;   /* DAT_14012d1e8 */
-GUID g_iidCoCreate;   /* DAT_14012d1f8 */
+GUID g_iidCoCreate;     /* DAT_14012d1f8 */
 
 /* ---- 阶段5c WLAN 槽迁移 ---- */
-DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);   /* DAT_14013d788 */
-DWORD (*g_pWlanGetAvailableNetworkList)(HANDLE, LPCWSTR, LPCWSTR, void *);   /* DAT_14013d7b8 */
-DWORD (*g_pWlanCloseHandle)(HANDLE, void *);   /* DAT_14013d7a0 */
-DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);   /* DAT_14013d7d0 */
-DWORD (*g_pWlanScan)(HANDLE, LPCWSTR);   /* DAT_14013d7b0 */
-DWORD (*g_pWlanRegisterNotification)(void);   /* DAT_14013d7a8 */
-DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);   /* DAT_14013d790 */
-DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);   /* DAT_14013d7c0 */
-DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);   /* DAT_14013d798 */
-void (*g_pWlanFreeMemory)(void);   /* DAT_14013d7c8 */
+DWORD (*g_pWlanOpenHandle)(DWORD, void *, DWORD *);                        /* DAT_14013d788 */
+DWORD (*g_pWlanGetAvailableNetworkList)(HANDLE, LPCWSTR, LPCWSTR, void *); /* DAT_14013d7b8 */
+DWORD (*g_pWlanCloseHandle)(HANDLE, void *);                               /* DAT_14013d7a0 */
+DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *);                  /* DAT_14013d7d0 */
+DWORD (*g_pWlanScan)(HANDLE, LPCWSTR);                                     /* DAT_14013d7b0 */
+DWORD (*g_pWlanRegisterNotification)(void);                                /* DAT_14013d7a8 */
+DWORD (*g_pWlanEnumInterfaces)(HANDLE, void *, void **);                   /* DAT_14013d790 */
+DWORD (*g_pWlanDisconnect)(HANDLE, LPCWSTR, LPCWSTR);                      /* DAT_14013d7c0 */
+DWORD (*g_pWlanSetProfile)(HANDLE, LPCWSTR, LPCWSTR, LPCWSTR);             /* DAT_14013d798 */
+void (*g_pWlanFreeMemory)(void);                                           /* DAT_14013d7c8 */
 
 /* ---- 阶段5d fn-ptr 槽迁移 ---- */
-BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *);   /* DAT_14013c988 */
-int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD,
-                            DWORD, DWORD *, BOOL);   /* DAT_14013c990 */
-int (*g_pWTSGetActiveConsoleSessionId)(void);   /* DAT_14013c998 */
-BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);   /* DAT_14013c9a0 */
-void (*g_pDestroyEnvironmentBlock)(void);   /* DAT_14013c9a8 */
-int (*g_pSetDisplayConfig)(UINT, UINT, UINT);   /* DAT_14013cfe8 */
-int (*g_pSetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff0 */
-int (*g_pGetDeviceGammaRamp)(HDC, void *);   /* DAT_14013cff8 */
-DWORD (*g_pGetVolumeInformationByHandleW)(HANDLE, LPWSTR, DWORD, LPDWORD);   /* DAT_14013d358 */
-int (*g_pWIMCloseHandle)();   /* DAT_14013d490 */
-int (*g_pWIMGetMountedImageHandle)();   /* DAT_14013d498 */
-int (*g_pWIMGetMountedImageNum)();   /* DAT_14013d4a0 */
-int (*g_pWIMCommitImageHandle)();   /* DAT_14013d4a8 */
-int (*g_pWIMCommitImageNum)();   /* DAT_14013d4b0 */
-int (*g_pWIMUnmountImageHandle)();   /* DAT_14013d4b8 */
-int (*g_pWIMUnmountImageNum)();   /* DAT_14013d4c0 */
-void (*g_pCoTaskMemFree)(LPVOID);   /* DAT_14013d728 */
-DWORD (*g_pGetFinalPathNameByHandleW)(HANDLE, LPWSTR, DWORD, DWORD);   /* DAT_14013d780 */
-int (*g_pUiCallback)(int, int);   /* DAT_14013d810 */
-int (*g_pOle32Slot828)(int,int,int,int,int,int,int,int,int);   /* DAT_14013d828 */
-int (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm);   /* DAT_14013d838 */
-int (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv);   /* DAT_14013d860 */
+BOOL (*g_pWTSQueryUserToken)(DWORD, HANDLE *); /* DAT_14013c988 */
+int (*g_pWTSSendMessageW)(HANDLE, DWORD, LPCWSTR, DWORD, LPCWSTR, DWORD, DWORD, DWORD, DWORD *,
+                          BOOL);                                           /* DAT_14013c990 */
+int (*g_pWTSGetActiveConsoleSessionId)(void);                              /* DAT_14013c998 */
+BOOL (*g_pCreateEnvironmentBlock)(void **, HANDLE, BOOL);                  /* DAT_14013c9a0 */
+void (*g_pDestroyEnvironmentBlock)(void);                                  /* DAT_14013c9a8 */
+int (*g_pSetDisplayConfig)(UINT, UINT, UINT);                              /* DAT_14013cfe8 */
+int (*g_pSetDeviceGammaRamp)(HDC, void *);                                 /* DAT_14013cff0 */
+int (*g_pGetDeviceGammaRamp)(HDC, void *);                                 /* DAT_14013cff8 */
+DWORD (*g_pGetVolumeInformationByHandleW)(HANDLE, LPWSTR, DWORD, LPDWORD); /* DAT_14013d358 */
+int (*g_pWIMCloseHandle)();                                                /* DAT_14013d490 */
+int (*g_pWIMGetMountedImageHandle)();                                      /* DAT_14013d498 */
+int (*g_pWIMGetMountedImageNum)();                                         /* DAT_14013d4a0 */
+int (*g_pWIMCommitImageHandle)();                                          /* DAT_14013d4a8 */
+int (*g_pWIMCommitImageNum)();                                             /* DAT_14013d4b0 */
+int (*g_pWIMUnmountImageHandle)();                                         /* DAT_14013d4b8 */
+int (*g_pWIMUnmountImageNum)();                                            /* DAT_14013d4c0 */
+void (*g_pCoTaskMemFree)(LPVOID);                                          /* DAT_14013d728 */
+DWORD (*g_pGetFinalPathNameByHandleW)(HANDLE, LPWSTR, DWORD, DWORD);       /* DAT_14013d780 */
+int (*g_pUiCallback)(int, int);                                            /* DAT_14013d810 */
+int (*g_pOle32Slot828)(int, int, int, int, int, int, int, int, int);       /* DAT_14013d828 */
+int (*g_pCreateStreamOnHGlobal)(void *hGlobal, int fDel, void **ppstm);    /* DAT_14013d838 */
+int (*g_pComLoad)(void *punk, int a, int b, void *riid, void **ppv);       /* DAT_14013d860 */
 
 /* ---- 阶段5e 剩余干净DAT_ ---- */
-uint64_t g_u64_124e40;   /* DAT_140124e40 */
-uint64_t g_u64_124e48;   /* DAT_140124e48 */
-uint64_t g_u64_12d058;   /* DAT_14012d058 */
-uint64_t g_u64_12d060;   /* DAT_14012d060 */
-void * g_pGdipNewPrivateFontCollection;   /* DAT_14013ced0 */
-void * g_pGdipDeletePrivateFontCollection;   /* DAT_14013ced8 */
-void * g_pGdipPrivateAddMemoryFont;   /* DAT_14013cee0 */
-void * g_pGdipGetFontCollectionFamilyList;   /* DAT_14013cee8 */
-void * g_pGdipGetFamilyName;   /* DAT_14013cef0 */
+uint64_t g_u64_124e40;                    /* DAT_140124e40 */
+uint64_t g_u64_124e48;                    /* DAT_140124e48 */
+uint64_t g_u64_12d058;                    /* DAT_14012d058 */
+uint64_t g_u64_12d060;                    /* DAT_14012d060 */
+void *g_pGdipNewPrivateFontCollection;    /* DAT_14013ced0 */
+void *g_pGdipDeletePrivateFontCollection; /* DAT_14013ced8 */
+void *g_pGdipPrivateAddMemoryFont;        /* DAT_14013cee0 */
+void *g_pGdipGetFontCollectionFamilyList; /* DAT_14013cee8 */
+void *g_pGdipGetFamilyName;               /* DAT_14013cef0 */
 
 /* ---- 阶段5f void*24+typed 槽 ---- */
-int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);   /* DAT_14013d458 */
-int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags);   /* DAT_14013d460 */
+int (*g_pWIMGetMountedImages)(void *buf, uint32_t *flags);     /* DAT_14013d458 */
+int (*g_pWIMGetMountedImageCount)(void *buf, uint32_t *flags); /* DAT_14013d460 */
 BOOL (*g_pSetupDiCallClassInstaller)(DWORD, void *, void *);   /* DAT_14013cf20 */
-void * (*g_pSetupDiGetClassDevsW)(const void *);   /* DAT_14013cf00 */
-BOOL (*g_pSetupDiDestroyDeviceInfoList)(void *);   /* DAT_14013cf08 */
-int (*g_pSetupDiEnumDeviceInfo)(void *, DWORD);   /* DAT_14013cf28 */
-void (*g_pGdipCreateBitmapFromHBITMAP)();   /* DAT_14013cde8 */
-void (*g_pGdipCreateHBITMAPFromBitmap)();   /* DAT_14013cdf0 */
-void (*g_pGdipCloneBitmapAreaI)();   /* DAT_14013cea0 */
-void (*g_pGdipCreateBitmapFromScan0)();   /* DAT_14013ce90 */
-void (*g_pGdipGetImageGraphicsContext)();   /* DAT_14013cea8 */
-void (*g_pGdipCreateHICONFromBitmap)();   /* DAT_14013ce60 */
-void (*g_pGdipCreateBitmapFromHICON)();   /* DAT_14013ce70 */
-int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);   /* DAT_14013d4d8 */
+void *(*g_pSetupDiGetClassDevsW)(const void *);                /* DAT_14013cf00 */
+BOOL (*g_pSetupDiDestroyDeviceInfoList)(void *);               /* DAT_14013cf08 */
+int (*g_pSetupDiEnumDeviceInfo)(void *, DWORD);                /* DAT_14013cf28 */
+void (*g_pGdipCreateBitmapFromHBITMAP)();                      /* DAT_14013cde8 */
+void (*g_pGdipCreateHBITMAPFromBitmap)();                      /* DAT_14013cdf0 */
+void (*g_pGdipCloneBitmapAreaI)();                             /* DAT_14013cea0 */
+void (*g_pGdipCreateBitmapFromScan0)();                        /* DAT_14013ce90 */
+void (*g_pGdipGetImageGraphicsContext)();                      /* DAT_14013cea8 */
+void (*g_pGdipCreateHICONFromBitmap)();                        /* DAT_14013ce60 */
+void (*g_pGdipCreateBitmapFromHICON)();                        /* DAT_14013ce70 */
+int (*g_pGetAdaptersInfo)(int64_t, uint32_t *);                /* DAT_14013d4d8 */
 void (*g_pGdipGetImageEncodersSize)(uint32_t *, uint32_t *);   /* DAT_14013cdb8 */
-void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);   /* DAT_14013cdc0 */
-int64_t (*g_pSetupIterateCabinetW)(void *, int);   /* DAT_14013cf30 */
-void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);   /* DAT_14013cf48 */
+void (*g_pGdipGetImageEncoders)(uint32_t, uint32_t, int64_t);  /* DAT_14013cdc0 */
+int64_t (*g_pSetupIterateCabinetW)(void *, int);               /* DAT_14013cf30 */
+void (*g_pCmGetDevNodeStatus)(void *, void *, DWORD);          /* DAT_14013cf48 */
 /* ---- 阶段5g 多形式fn-ptr深挖 ---- */
-int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int);   /* DAT_14013cd98 */
+int (*g_pGdipDrawImageRectI)(void *, void *, int, int, int64_t, int); /* DAT_14013cd98 */
 /* ---- 阶段5h 深挖II ---- */
-int (*g_pGdipSetInterpolationMode)(void *, int);   /* DAT_14013ce38 */
-int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD);   /* DAT_14013cef8 */
-BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);   /* DAT_14013cf10 */
-void (*g_pMciSendStringW)(LPCWSTR, int);   /* DAT_14013d050 */
-int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t, uint8_t);   /* DAT_14013d4d0 */
-void *g_pConfigStr;   /* DAT_14013e110 */
+int (*g_pGdipSetInterpolationMode)(void *, int);                      /* DAT_14013ce38 */
+int (*g_pSetupDiGetINFClassW)(LPCWSTR, GUID *, LPWSTR, DWORD, DWORD); /* DAT_14013cef8 */
+BOOL (*g_pSetupDiDestroyDeviceInfoListRev)(HDEVINFO);                 /* DAT_14013cf10 */
+void (*g_pMciSendStringW)(LPCWSTR, int);                              /* DAT_14013d050 */
+int (*g_pDhcpNotifyConfigChange)(uint64_t, int64_t, int, uint32_t, int, uint32_t,
+                                 uint8_t); /* DAT_14013d4d0 */
+void *g_pConfigStr;                        /* DAT_14013e110 */
 /* ---- 阶段5i FN_ 槽 ---- */
-uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);   /* DAT_14013d468 */
-int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);   /* DAT_14013d470 */
-uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);   /* DAT_14013d478 */
-int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);   /* DAT_14013d480 */
-void (*g_pWIMCloseHandleSlot)();   /* DAT_14013d488 */
-int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);   /* DAT_14013d3b0 */
-int (*g_pGetSaveFileNameW)(void);   /* DAT_14013d430 */
+uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5,
+                             uint32_t *out);                        /* DAT_14013d468 */
+int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);           /* DAT_14013d470 */
+uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);      /* DAT_14013d478 */
+int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode); /* DAT_14013d480 */
+void (*g_pWIMCloseHandleSlot)();                                    /* DAT_14013d488 */
+int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4,
+                                          uint64_t *a5); /* DAT_14013d3b0 */
+int (*g_pGetSaveFileNameW)(void);                        /* DAT_14013d430 */
 /* ---- 阶段6 深挖 ---- */
-OSVERSIONINFOW g_osVersionInfo;   /* DAT_14013cb90 */
-int32_t g_aiDiskType[2];          /* DAT_14013d770 磁盘类型缓存 */
+OSVERSIONINFOW g_osVersionInfo; /* DAT_14013cb90 */
+int32_t g_aiDiskType[2];        /* DAT_14013d770 磁盘类型缓存 */

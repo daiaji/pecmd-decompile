@@ -23,13 +23,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "pecmd_defs.h"   /* win32_stub.h: HeapAlloc/HeapFree/MessageBoxW 等 */
+#include "pecmd_defs.h" /* win32_stub.h: HeapAlloc/HeapFree/MessageBoxW 等 */
 
 /* 全局堆 (mainW 初始化, g_hHeap) */
 extern HANDLE g_hHeap;
 
-void FUN_1400630D0(int mode);      /* @0x1400630d0 */
-void PECMD_ExitProcessCall(int code);    /* @0x14005b21c (TODO: 待重构确认) */
+void FUN_1400630D0(int mode);         /* @0x1400630d0 */
+void PECMD_ExitProcessCall(int code); /* @0x14005b21c (TODO: 待重构确认) */
 
 /* ========== 内存分配器 @0x140063118 ========== */
 /* 分配/重分配带 8 字节头 (size+magic) 的内存块, 返回数据指针
@@ -37,11 +37,11 @@ void PECMD_ExitProcessCall(int code);    /* @0x14005b21c (TODO: 待重构确认)
 void *PECMD_HeapRealloc(void *ptr, size_t size)
 {
     /* @0x140063118 — 已还原真体 (B4/P8: 原"UNIMPLEMENTED"标记过期移除) */
-if (ptr == NULL) {
+    if (ptr == NULL) {
         for (;;) {
             uint8_t *hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);
             if (hdr) {
-                *(size_t *)hdr = size;          /* [-8] 容量 */
+                *(size_t *)hdr = size;           /* [-8] 容量 */
                 *(uint32_t *)(hdr + 4) = 0xaa55; /* [-4] 魔数 */
                 return hdr + 8;
             }
@@ -55,13 +55,14 @@ if (ptr == NULL) {
             /* ReAlloc 失败: 新分配 + 拷贝 min(old,size) + 释放旧块 */
             for (;;) {
                 nh = (uint8_t *)HeapAlloc(g_hHeap, 0, size + 8);
-                if (nh) break;
+                if (nh)
+                    break;
                 FUN_1400630D0(2);
             }
             *(size_t *)nh = size;
             *(uint32_t *)(nh + 4) = 0xaa55;
             size_t copy_len = (size < old) ? size : old;
-            memcpy(nh + 8, ptr, copy_len);  /* 反编译冗余空检查已删除 (恒真) */
+            memcpy(nh + 8, ptr, copy_len); /* 反编译冗余空检查已删除 (恒真) */
             HeapFree(g_hHeap, 0, (uint8_t *)ptr - 8);
             return nh + 8;
         }
@@ -111,7 +112,8 @@ WCHAR *PECMD_StrDupAlloc(LPCWSTR src)
     uint8_t *hdr;
     for (;;) {
         hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, len * 2 + 12);
-        if (hdr) break;
+        if (hdr)
+            break;
         FUN_1400630D0(2);
     }
     *(size_t *)hdr = len * 2 + 4;
@@ -146,7 +148,8 @@ WCHAR **FUN_14005B154(WCHAR **pp)
     if (*pp != NULL) {
         while ((**pp > 8 && **pp < 0xe) || **pp == 0x20) {
             (*pp)++;
-        }    }
+        }
+    }
     return pp;
 }
 
@@ -159,8 +162,7 @@ int FUN_14005C788(const char *s, const WCHAR *w, int n)
     while (n-- > 0) {
         char c = *s;
         WCHAR u = *w;
-        if (!((c > 0x40 || u == (WCHAR)(short)c) &&
-              ((WCHAR)(short)c | 0x20) == (u | 0x20))) {
+        if (!((c > 0x40 || u == (WCHAR)(short)c) && ((WCHAR)(short)c | 0x20) == (u | 0x20))) {
             return 0;
         }
         s++;

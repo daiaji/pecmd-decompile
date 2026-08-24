@@ -46,15 +46,15 @@
 
 #include "pecmd_defs.h"
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key, LPCWSTR fmt);                        /* @0x1400668ec */
-extern LPCWSTR FUN_14005B6AC(HINSTANCE inst, UINT id, LPWSTR buf,
-                             int buflen);                        /* @0x14005b6ac */
-extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name); /* @0x1400b89dc */
-extern void PECMD_GetDpiCached(HWND hwnd);                             /* @0x140062950 */
-extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color); /* @0x1400e68e0 */
-extern void *FUN_1400E57C0(void *obj);                    /* @0x1400e57c0 */
-extern void FUN_1400E8940(void *obj);                  /* @0x1400e8940 */
-extern int32_t FUN_1400630D0(int mode);                          /* @0x1400630d0 分配失败提示 */
+extern void PECMD_AppendFmtValue(void *script, uint64_t value, LPCWSTR key,
+                                 LPCWSTR fmt);                                 /* @0x1400668ec */
+extern LPCWSTR FUN_14005B6AC(HINSTANCE inst, UINT id, LPWSTR buf, int buflen); /* @0x14005b6ac */
+extern HFONT FUN_1400B89DC(HANDLE obj, double *size, LPCWSTR name);            /* @0x1400b89dc */
+extern void PECMD_GetDpiCached(HWND hwnd);                                     /* @0x140062950 */
+extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color);        /* @0x1400e68e0 */
+extern void *FUN_1400E57C0(void *obj);                                         /* @0x1400e57c0 */
+extern void FUN_1400E8940(void *obj);                                          /* @0x1400e8940 */
+extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 分配失败提示 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL FUN_140101E70(LPCWSTR path);
@@ -73,27 +73,28 @@ extern uint8_t PTR_FUN_14012cf00[];
 
 /* ---- 全局数据 (core_globals.c 定义) ---- */
 extern uint32_t (*g_pfnVirtualAllocEx)(void); /* DAT_14013e258 VirtualAllocEx */
-extern uint32_t *g_pCrcTable;           /* DAT_14013e260 */
-extern HANDLE g_hSyncEvtA;              /* DAT_14013e1f8 */
-extern HANDLE g_hSyncEvtB;              /* DAT_14013e200 */
-extern uint32_t g_syncEvtVal;           /* DAT_14013e208 */
-extern uint32_t (*g_pfnRasDial)(void);                    /* DAT_14013e268 RasDialW */
-extern uint32_t (*g_pfnRasGetConnectStatus)(uint64_t, uint32_t *); /* DAT_14013e278 RasGetConnectStatusW */
-extern uint32_t (*g_pfnRasHangUp)(uint64_t);                       /* DAT_14013e288 RasHangUpW */
-extern void *g_syncState;             /* DAT_14013e298 同步状态 */
-extern HWND g_hActiveDevWnd;            /* DAT_14013e400 当前设备窗口 */
-extern HCURSOR g_hArrowCursor;          /* DAT_14013e4d8 箭头光标句柄 */
-extern uint8_t g_objMode;               /* DAT_14013a84d 对象布局/指针模式 */
-extern HGDIOBJ g_hStockWhiteBrush;      /* DAT_14013a858 库存白色画刷 */
-extern float g_barScaleDiv;             /* DAT_14012c0d0 条比例除数 */
-extern double g_scrollLimit;            /* DAT_140129ee8 滚动上限常量 */
+extern uint32_t *g_pCrcTable;                 /* DAT_14013e260 */
+extern HANDLE g_hSyncEvtA;                    /* DAT_14013e1f8 */
+extern HANDLE g_hSyncEvtB;                    /* DAT_14013e200 */
+extern uint32_t g_syncEvtVal;                 /* DAT_14013e208 */
+extern uint32_t (*g_pfnRasDial)(void);        /* DAT_14013e268 RasDialW */
+extern uint32_t (*g_pfnRasGetConnectStatus)(uint64_t,
+                                            uint32_t *); /* DAT_14013e278 RasGetConnectStatusW */
+extern uint32_t (*g_pfnRasHangUp)(uint64_t);             /* DAT_14013e288 RasHangUpW */
+extern void *g_syncState;                                /* DAT_14013e298 同步状态 */
+extern HWND g_hActiveDevWnd;                             /* DAT_14013e400 当前设备窗口 */
+extern HCURSOR g_hArrowCursor;                           /* DAT_14013e4d8 箭头光标句柄 */
+extern uint8_t g_objMode;                                /* DAT_14013a84d 对象布局/指针模式 */
+extern HGDIOBJ g_hStockWhiteBrush;                       /* DAT_14013a858 库存白色画刷 */
+extern float g_barScaleDiv;                              /* DAT_14012c0d0 条比例除数 */
+extern double g_scrollLimit;                             /* DAT_140129ee8 滚动上限常量 */
 
 /* ---- 其他文件已使用的语义全局 ---- */
-extern uint32_t g_dpi;                  /* g_dpi */
-extern HANDLE g_pFontBase;              /* DAT_14013e2a8 字体基对象 */
-extern double g_fontSizeDef;            /* DAT_1401293c0 = -0x80000000.0 */
-extern double g_fontMinus0;             /* DAT_140125238 = -0.0 */
-extern double g_dbl25230;            /* 0.5 四舍五入常量 */
+extern uint32_t g_dpi;       /* g_dpi */
+extern HANDLE g_pFontBase;   /* DAT_14013e2a8 字体基对象 */
+extern double g_fontSizeDef; /* DAT_1401293c0 = -0x80000000.0 */
+extern double g_fontMinus0;  /* DAT_140125238 = -0.0 */
+extern double g_dbl25230;    /* 0.5 四舍五入常量 */
 
 /* ========== PECMD_HasVirtualAllocEx @0x1400e411c ==========
  * 查询进程注入 API (VirtualAllocEx) 是否已加载。
@@ -134,8 +135,8 @@ uint64_t PECMD_PeApplyRelocations(int64_t obj, int64_t base, int64_t delta)
 {
     uint64_t objSize;
     uint32_t head;
-    uint32_t *rec;   /* 当前记录头 (两项: 头偏移 + 项数) */
-    uint32_t *p;     /* 记录内的项指针 */
+    uint32_t *rec; /* 当前记录头 (两项: 头偏移 + 项数) */
+    uint32_t *p;   /* 记录内的项指针 */
     uint64_t n;
     uint32_t id;
     int64_t *target;
@@ -161,8 +162,8 @@ uint64_t PECMD_PeApplyRelocations(int64_t obj, int64_t base, int64_t delta)
             do {
                 id = *p & 0xf000;
                 if (id != 0) {
-                    target = (int64_t *)((uint64_t)rec[0] +
-                                         (uint64_t)((uint16_t)*p & 0xfff) + base);
+                    target =
+                        (int64_t *)((uint64_t)rec[0] + (uint64_t)((uint16_t)*p & 0xfff) + base);
                     if (id == 0x3000)
                         *(int32_t *)target += (int32_t)(delta - objSize);
                     else
@@ -191,7 +192,7 @@ LPCWSTR PECMD_GetModulePathAlt(uint64_t *obj)
     int i;
 
     PECMD_AllocString((WCHAR **)obj, 0x218);
-    lpFilename = (LPWSTR)((uint64_t *)*obj + 2);   /* 跳过头部 16 字节 */
+    lpFilename = (LPWSTR)((uint64_t *)*obj + 2); /* 跳过头部 16 字节 */
     memset((uint64_t *)*obj, 0, 0x430);
     lpFilename[0] = L'\0';
     GetModuleFileNameW((HMODULE)0, lpFilename, 0x208);
@@ -223,7 +224,7 @@ void PECMD_InitCrc32Table(void)
             break;
     } while (1);
 
-    tbl = (uint32_t *)((uint8_t *)blk + 8);   /* 头部 0x400 容量 + 0xaa55 魔数 */
+    tbl = (uint32_t *)((uint8_t *)blk + 8); /* 头部 0x400 容量 + 0xaa55 魔数 */
     *(uint32_t *)((uint8_t *)blk + 4) = 0xaa55;
     blk[0] = 0x400;
     g_pCrcTable = tbl;
@@ -273,7 +274,7 @@ uint32_t PECMD_Crc32HexOfBytes(const uint8_t *data, int64_t len, char *out)
     if (((uintptr_t)out & 2) == 0) {
         crc = ~crc;
         if (base != NULL)
-            wsprintfA(base, "%08X", crc);   /* 反编译缺实参, 按值补齐 (TODO(verify)) */
+            wsprintfA(base, "%08X", crc); /* 反编译缺实参, 按值补齐 (TODO(verify)) */
     }
     else {
         hdr[0] = 1;
@@ -331,8 +332,7 @@ void PECMD_RasDialStatusCallback(uint64_t unused, int mode, int value)
 
     (void)unused;
     if (value != 0 ||
-        (evt = g_hSyncEvtA, val = (int)g_syncEvtVal,
-         mode == 0x2000 || mode == 0x2001)) {
+        (evt = g_hSyncEvtA, val = (int)g_syncEvtVal, mode == 0x2000 || mode == 0x2001)) {
         g_syncEvtVal = (uint32_t)val;
         SetEvent(evt);
     }
@@ -345,7 +345,7 @@ LRESULT FUN_1400E5890(int64_t obj)
 {
     LRESULT r;
 
-    r = SendMessageW(*(HWND *)((uint8_t *)obj + OBJ_HWND), 0x31, 0, 0);   /* WM_GETFONT */
+    r = SendMessageW(*(HWND *)((uint8_t *)obj + OBJ_HWND), 0x31, 0, 0); /* WM_GETFONT */
     if (r == (LRESULT)-1 || r == 0)
         r = (LRESULT)g_pFontBase;
     return r;
@@ -547,12 +547,12 @@ void FUN_1400E9138(uint64_t *obj)
     if (hwnd != 0) {
         obj[4] = 0;
         if (IsWindow(hwnd)) {
-            *(uint32_t *)((uint8_t *)obj + OBJ_FLAGS) = 0;          /* obj+0x1d */
+            *(uint32_t *)((uint8_t *)obj + OBJ_FLAGS) = 0; /* obj+0x1d */
             if (obj[0x1c] != 0) {
                 HeapFree(g_hHeap, 0, (void *)(obj[0x1c] - 8)); /* 带头部分配块 */
                 obj[0x1c] = 0;
             }
-            SetWindowLongPtrW(hwnd, -4, 0x140001188);          /* 恢复默认 WndProc */
+            SetWindowLongPtrW(hwnd, -4, 0x140001188); /* 恢复默认 WndProc */
             DestroyWindow(hwnd);
         }
     }
@@ -586,12 +586,13 @@ void PECMD_DrawScaledBarFill(int64_t obj, HDC hdc, RECT *rc, COLORREF color, int
     PECMD_FillRectColor(hdc, rc, c);
 
     w = rc->right - rc->left;
-    rc->right = rc->left - (int)(((float)(int64_t)w * *(float *)((uint8_t *)obj + 0x50)) / g_barScaleDiv);
+    rc->right =
+        rc->left - (int)(((float)(int64_t)w * *(float *)((uint8_t *)obj + 0x50)) / g_barScaleDiv);
     PECMD_FillRectColor(hdc, rc, *(COLORREF *)((uint8_t *)obj + 0x58));
     rc->right = w + rc->left;
 
     if (edge != 0)
-        DrawEdge(hdc, rc, 9, 0x200f);     /* EDGE_ETCHED */
+        DrawEdge(hdc, rc, 9, 0x200f); /* EDGE_ETCHED */
 }
 
 /* ========== PECMD_SetCtlBgBrush @0x1400f0eb0 ==========
@@ -616,7 +617,7 @@ void PECMD_SetCtlBgBrush(int64_t obj, COLORREF color, uint64_t flags)
             br = CreateSolidBrush(color);
         *(HBRUSH *)((uint8_t *)obj + OBJ_BRUSH) = br;
         if (g_hStockWhiteBrush == (HGDIOBJ)-1)
-            g_hStockWhiteBrush = GetStockObject(5);   /* WHITE_BRUSH */
+            g_hStockWhiteBrush = GetStockObject(5); /* WHITE_BRUSH */
         if (color == 0xffffffff)
             *(HGDIOBJ *)((uint8_t *)obj + OBJ_BRUSH) = g_hStockWhiteBrush;
         if (old != 0 && g_hStockWhiteBrush != old)
@@ -650,20 +651,20 @@ void PECMD_SetHotTrackWindow(HWND hwnd)
 uint64_t *FUN_1400F1BE4(uint64_t *obj, uint64_t data1, uint64_t data2)
 {
     FUN_1400E57C0(obj);
-    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) &= 0xfc;          /* obj+0x1a */
+    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) &= 0xfc; /* obj+0x1a */
     obj[0x1b] = data1;
     *(uint16_t *)((uint8_t *)obj + 0xa2) = 0xffff;
     obj[0x1c] = data2;
     obj[0] = (uint64_t)&PTR_FUN_14012c2e0;
     *(uint8_t *)((uint8_t *)obj + 0xac) = 0;
-    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0;              /* obj+0x14 */
+    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0; /* obj+0x14 */
     *(uint32_t *)((uint8_t *)obj + 0x94) = 0x80000000;
-    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000;    /* obj+0x12 */
+    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000; /* obj+0x12 */
     obj[0x11] = 0;
     obj[0x10] = 0;
     *(uint8_t *)((uint8_t *)obj + 0x61) = 3;
     if (g_hArrowCursor == 0)
-        g_hArrowCursor = LoadCursorW((HINSTANCE)0, (LPCWSTR)0x7f89);   /* IDC_ARROW */
+        g_hArrowCursor = LoadCursorW((HINSTANCE)0, (LPCWSTR)0x7f89); /* IDC_ARROW */
     return obj;
 }
 
@@ -696,7 +697,7 @@ uint64_t PECMD_ScaleMetricByFactor(uint64_t *obj, uint64_t wParam, uint64_t *scr
         scale = *(int32_t *)(obj[0x27] + 0x218);
     }
 calc:
-    v = (double)scale * v + g_dbl25230;               /* 四舍五入 +0.5 */
+    v = (double)scale * v + g_dbl25230; /* 四舍五入 +0.5 */
     *(int32_t *)(scroll[1] + 0x1c) = (int32_t)v;
     *(int32_t *)(base + 4) = (int32_t)v;
     return r;
@@ -729,17 +730,17 @@ uint64_t *FUN_1400FB588(uint64_t *obj, uint64_t data1, uint64_t data2)
     obj[0x10] = 0;
     obj[0x1c] = data2;
     obj[0] = (uint64_t)&PTR_FUN_14012c7b0;
-    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) = 0;              /* obj+0x1a */
+    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) = 0; /* obj+0x1a */
     obj[0x1b] = data1;
-    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0;              /* obj+0x14 */
+    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0; /* obj+0x14 */
     *(uint8_t *)((uint8_t *)obj + 0xac) = 0;
-    *(uint8_t *)((uint8_t *)obj + 0xb8) = 0;              /* obj+0x17 */
-    memset(obj + 0x1d, 0, 0x74);                   /* 清 0x74 字节表块 */
-    *(uint32_t *)((uint8_t *)obj + OBJ_FLAGS) = 0x74;          /* obj+0x1d 容量 */
+    *(uint8_t *)((uint8_t *)obj + 0xb8) = 0;          /* obj+0x17 */
+    memset(obj + 0x1d, 0, 0x74);                      /* 清 0x74 字节表块 */
+    *(uint32_t *)((uint8_t *)obj + OBJ_FLAGS) = 0x74; /* obj+0x1d 容量 */
     *(uint32_t *)((uint8_t *)obj + 0x9c) = 0x80000000;
-    *(uint32_t *)((uint8_t *)obj + 0x98) = 0x80000000;    /* obj+0x13 */
+    *(uint32_t *)((uint8_t *)obj + 0x98) = 0x80000000; /* obj+0x13 */
     *(uint32_t *)((uint8_t *)obj + 0x94) = 0x80000000;
-    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000;    /* obj+0x12 */
+    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000; /* obj+0x12 */
     if (g_hArrowCursor == 0)
         g_hArrowCursor = LoadCursorW((HINSTANCE)0, (LPCWSTR)0x7f89);
     return obj;
@@ -758,17 +759,17 @@ uint64_t *FUN_1400FCF44(uint64_t *obj, uint64_t data)
     obj[0x11] = 0;
     obj[0x10] = 0;
     obj[0] = (uint64_t)&PTR_FUN_14012ccc0;
-    *(uint32_t *)((uint8_t *)obj + 0xa8) = 0x80000000;    /* obj+0x15 */
-    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0;              /* obj+0x14 */
+    *(uint32_t *)((uint8_t *)obj + 0xa8) = 0x80000000; /* obj+0x15 */
+    *(uint8_t *)((uint8_t *)obj + 0xa0) = 0;           /* obj+0x14 */
     *(uint16_t *)((uint8_t *)obj + 0xa2) = 0xffff;
     *(uint8_t *)((uint8_t *)obj + 0xac) = 0;
     *(uint8_t *)((uint8_t *)obj + 0xa4) = 0;
     *(uint32_t *)((uint8_t *)obj + 0x9c) = 0x80000000;
-    *(uint32_t *)((uint8_t *)obj + 0x98) = 0x80000000;    /* obj+0x13 */
+    *(uint32_t *)((uint8_t *)obj + 0x98) = 0x80000000; /* obj+0x13 */
     *(uint32_t *)((uint8_t *)obj + 0x94) = 0x80000000;
-    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000;    /* obj+0x12 */
+    *(uint32_t *)((uint8_t *)obj + 0x90) = 0x80000000; /* obj+0x12 */
     *(uint8_t *)((uint8_t *)obj + 0xa5) = 0;
-    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) = 0;              /* obj+0x1a */
+    *(uint8_t *)((uint8_t *)obj + OBJ_LINK) = 0; /* obj+0x1a */
     *(uint8_t *)((uint8_t *)obj + 0xad) = 0;
     *(uint8_t *)((uint8_t *)obj + 0xd1) = 0;
     obj[0x1c] = 0;

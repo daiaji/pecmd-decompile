@@ -23,26 +23,27 @@ extern DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
 /* ------------------------------------------------------------------
  * 本文件引用的辅助函数 (均为 extern, 正文不在此定义)
  * ------------------------------------------------------------------ */
-extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);                /* @0x140063694 分配 */
-extern void PECMD_FreeStrBuf(void *ps);                                 /* @0x14005b104 释放字符串槽 */
-extern void    PECMD_AllocStrSlot(WCHAR **out);                              /* @0x140063620 初始化串缓冲 */
-extern WCHAR  *PECMD_AllocString(WCHAR **ps, int64_t count);                /* @0x140063720 分配串 */
-extern void    PECMD_AllocStringSlot2(void **ps, int64_t len);                   /* @0x1400633a8 分配 */
-extern void PECMD_ZeroLenBuf(void *p);                                  /* @0x14005b0b8 缓冲区构造 */
-extern void    PECMD_GetApiProcCached(const char *func, const char *dll,
-                             void **out, uintptr_t *hmod);              /* @0x14005c828 GetProcAddress 包装 */
-extern uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2);     /* @0x14006a7f4 尺寸换算 */
-extern void    PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access,
-                             DWORD share, LPSECURITY_ATTRIBUTES sa,
-                             DWORD disp, DWORD flags, HANDLE tmpl);     /* @0x140003864 CreateFileW 包装 */
-extern WCHAR  *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2,
-                             uint64_t param_3, LPCWSTR param_4);        /* @0x140006aa0 卷对象/挂载点解析 */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 分配 */
+extern void PECMD_FreeStrBuf(void *ps);                          /* @0x14005b104 释放字符串槽 */
+extern void PECMD_AllocStrSlot(WCHAR **out);                     /* @0x140063620 初始化串缓冲 */
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);      /* @0x140063720 分配串 */
+extern void PECMD_AllocStringSlot2(void **ps, int64_t len);      /* @0x1400633a8 分配 */
+extern void PECMD_ZeroLenBuf(void *p);                           /* @0x14005b0b8 缓冲区构造 */
+extern void PECMD_GetApiProcCached(const char *func, const char *dll, void **out,
+                                   uintptr_t *hmod); /* @0x14005c828 GetProcAddress 包装 */
+extern uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1,
+                                         uint64_t *param_2); /* @0x14006a7f4 尺寸换算 */
+extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                                 LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                 HANDLE tmpl); /* @0x140003864 CreateFileW 包装 */
+extern WCHAR *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2, uint64_t param_3,
+                                    LPCWSTR param_4); /* @0x140006aa0 卷对象/挂载点解析 */
 
 /* ------------------------------------------------------------------
  * 本文件引用的全局
  * ------------------------------------------------------------------ */
-extern uint64_t g_u642d1c8;             /* 16 字节 GUID 前 8 字节 (.rdata) */
-extern uint64_t _UNK_14012d1d0;             /* 16 字节 GUID 后 8 字节 (.rdata) */
+extern uint64_t g_u642d1c8;     /* 16 字节 GUID 前 8 字节 (.rdata) */
+extern uint64_t _UNK_14012d1d0; /* 16 字节 GUID 后 8 字节 (.rdata) */
 
 /* ------------------------------------------------------------------
  * 本文件引用的函数指针槽 (Wimgapi / VirtDisk 延迟加载)
@@ -53,24 +54,24 @@ extern uint64_t _UNK_14012d1d0;             /* 16 字节 GUID 后 8 字节 (.rda
  *   g_pWIMHandleOp480 = 应用映像 (WIMApplyImage)
  *   g_pWIMCloseHandleSlot = 关闭句柄 (WIMCloseHandle)
  * ------------------------------------------------------------------ */
-typedef uint64_t (*FN_14013d468)(uint64_t wim, uint32_t mode, int f3,
-                                 int f4, int f5, uint32_t *out);
-typedef int      (*FN_14013d470)(uint64_t wim, WCHAR *path);
+typedef uint64_t (*FN_14013d468)(uint64_t wim, uint32_t mode, int f3, int f4, int f5,
+                                 uint32_t *out);
+typedef int (*FN_14013d470)(uint64_t wim, WCHAR *path);
 typedef uint64_t (*FN_14013d478)(uint64_t wim, unsigned int index);
-typedef int      (*FN_14013d480)(uint64_t h, uint64_t data, uint32_t mode);
-typedef void     (*FN_14013d488)(uint64_t h);
-typedef int      (*FN_14013d730)(void *guid, uint64_t a2, uint32_t a3,
-                                 int a4, uint32_t a5, int a6,
-                                 uint32_t *a7, int a8, HANDLE *a9);
-typedef int      (*FN_14013d3b0)(HANDLE h, int a2, uint32_t a3,
-                                 void *a4, uint64_t *a5);
+typedef int (*FN_14013d480)(uint64_t h, uint64_t data, uint32_t mode);
+typedef void (*FN_14013d488)(uint64_t h);
+typedef int (*FN_14013d730)(void *guid, uint64_t a2, uint32_t a3, int a4, uint32_t a5, int a6,
+                            uint32_t *a7, int a8, HANDLE *a9);
+typedef int (*FN_14013d3b0)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);
 
-extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5,
+                                    uint32_t *out);
 extern int (*g_pWIMSetTemporaryPath)(uint64_t wim, WCHAR *path);
 extern uint64_t (*g_pWimLoadImage)(uint64_t wim, unsigned int index);
 extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);
 extern void (*g_pWIMCloseHandleSlot)();
-extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4, uint64_t *a5);
+extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, void *a4,
+                                                 uint64_t *a5);
 
 /* ================================================================
  * @0x1400752a0  清洗文本 (去注释/空白/CRLF)
@@ -79,9 +80,9 @@ extern int (*g_pGetStorageDependencyInformation)(HANDLE h, int a2, uint32_t a3, 
  */
 uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3)
 {
-    bool   bVar1;
-    bool   bVar2;
-    short  sVar3;
+    bool bVar1;
+    bool bVar2;
+    short sVar3;
     short *psVar4;
     short *psVar5;
     short *psVar6;
@@ -90,7 +91,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
     psVar7 = param_1 + param_2;
     *psVar7 = 0;
     psVar4 = param_1;
-    if (*param_1 == (short)-0x101) {          /* 0xFEFF BOM */
+    if (*param_1 == (short)-0x101) { /* 0xFEFF BOM */
         psVar4 = param_1 + 1;
     }
     bVar1 = true;
@@ -99,24 +100,25 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
             psVar6 = psVar5;
             if ((*psVar5 == 10) || (*psVar5 == 0xd)) {
                 bVar1 = true;
-            } else {
+            }
+            else {
                 bVar2 = false;
                 if ((((bVar1) || (*psVar5 == 9)) || (*psVar5 == 0xb)) ||
                     ((*psVar5 == 0xc || (bVar1 = bVar2, *psVar5 == 0x20)))) {
-                    for (; (((*psVar6 == 9 ||
-                              ((*psVar6 == 0xb || (*psVar6 == 0xc)))) ||
-                             (*psVar6 == 0x20))); psVar6 = psVar6 + 1) {
+                    for (; (((*psVar6 == 9 || ((*psVar6 == 0xb || (*psVar6 == 0xc)))) ||
+                             (*psVar6 == 0x20)));
+                         psVar6 = psVar6 + 1) {
                     }
                     sVar3 = *psVar6;
-                    if ((sVar3 == 0x60) || ((bVar1 = bVar2,
-                                             sVar3 == 0x2f && (psVar6[1] == 0x2f)))) {
+                    if ((sVar3 == 0x60) ||
+                        ((bVar1 = bVar2, sVar3 == 0x2f && (psVar6[1] == 0x2f)))) {
                         while ((sVar3 != 0 && (sVar3 != 0xd && (sVar3 != 10)))) {
                             psVar6 = psVar6 + 1;
                             sVar3 = *psVar6;
                         }
                         /* 折叠整行注释: 搬移尾部 */
                         memmove((void *)psVar5, (const void *)psVar6,
-                                      ((char *)psVar7 - (char *)psVar6) + 2);
+                                ((char *)psVar7 - (char *)psVar6) + 2);
                         psVar7 -= (psVar6 - psVar5);
                         psVar6 = psVar5;
                         bVar1 = bVar2;
@@ -127,12 +129,10 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
         } while (psVar5 < psVar7);
     }
 
-    if (((param_3 & 1) != 0) && (psVar5 = psVar4, psVar6 = psVar4,
-                                 psVar4 < psVar7)) {
+    if (((param_3 & 1) != 0) && (psVar5 = psVar4, psVar6 = psVar4, psVar4 < psVar7)) {
         do {
-            for (; (*psVar5 == 9 ||
-                    (((*psVar5 == 0xb || (*psVar5 == 0xc)) ||
-                      (*psVar5 == 0x20)))); psVar5 = psVar5 + 1) {
+            for (; (*psVar5 == 9 || (((*psVar5 == 0xb || (*psVar5 == 0xc)) || (*psVar5 == 0x20))));
+                 psVar5 = psVar5 + 1) {
             }
             sVar3 = *psVar5;
             if (((((sVar3 == 0x60) || (sVar3 == 0x7e)) ||
@@ -142,8 +142,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                 bVar1 = true;
             }
             if (((bVar1) && (sVar3 == 0x23)) &&
-                ((psVar5[1] == 0x21 ||
-                  ((unsigned short)(psVar5[1] | 0x20U) == 99)))) {
+                ((psVar5[1] == 0x21 || ((unsigned short)(psVar5[1] | 0x20U) == 99)))) {
                 bVar1 = false;
             }
             while (((sVar3 != 0 && (sVar3 != 0xd)) && (sVar3 != 10))) {
@@ -152,7 +151,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
             }
             if (bVar1) {
                 memmove((void *)psVar6, (const void *)psVar5,
-                              ((char *)psVar7 - (char *)psVar5) + 2);
+                        ((char *)psVar7 - (char *)psVar5) + 2);
                 psVar7 -= (psVar5 - psVar6);
                 psVar5 = psVar6;
             }
@@ -176,16 +175,17 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                 psVar5 = psVar4 + 1;
                 if ((*psVar4 == 0xd) && (*psVar4 = 10, *psVar5 == 10)) {
                     memmove((void *)psVar4, (const void *)psVar5,
-                                  ((char *)psVar7 - (char *)psVar5) + 2);
+                            ((char *)psVar7 - (char *)psVar5) + 2);
                     psVar7 = psVar7 - 1;
                 }
-                for (; ((sVar3 = *psVar5, psVar4 = psVar5,
-                         sVar3 != 0 && (sVar3 != 0xd)) && (sVar3 != 10));
+                for (; ((sVar3 = *psVar5, psVar4 = psVar5, sVar3 != 0 && (sVar3 != 0xd)) &&
+                        (sVar3 != 10));
                      psVar5 = psVar5 + 1) {
                 }
             }
         }
-    } else {
+    }
+    else {
         while (psVar4 < psVar7) {
             *psVar4 = 10;
             psVar5 = psVar4 + 1;
@@ -195,7 +195,7 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
                 }
                 if (psVar5 != psVar4) {
                     memmove((void *)psVar5, (const void *)psVar4,
-                                  ((char *)psVar7 - (char *)psVar4) + 2);
+                            ((char *)psVar7 - (char *)psVar4) + 2);
                     psVar7 -= (psVar4 - psVar5);
                     psVar4 = psVar5;
                 }
@@ -215,19 +215,18 @@ uint64_t PECMD_CleanScriptText(short *param_1, int param_2, unsigned int param_3
  * signature: int __fastcall PECMD_ApplyWimImage(undefined8 param_1,
  *               undefined8 param_2, undefined4 param_3, WCHAR * param_4)
  */
-int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3,
-                  WCHAR *param_4)
+int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3, WCHAR *param_4)
 {
-    DWORD     DVar1;
-    int       iVar2;
-    int       iVar3;
-    uint64_t  lVar4;
-    uint64_t  lVar5;
-    uint32_t  uVar6;
-    DWORD     DVar7;
-    uint32_t  local_res20[2];
-    int64_t   local_248[2];
-    WCHAR     local_238[264];
+    DWORD DVar1;
+    int iVar2;
+    int iVar3;
+    uint64_t lVar4;
+    uint64_t lVar5;
+    uint32_t uVar6;
+    DWORD DVar7;
+    uint32_t local_res20[2];
+    int64_t local_248[2];
+    WCHAR local_238[264];
 
     DVar1 = 1;
     local_238[0] = L'\0';
@@ -293,8 +292,7 @@ int PECMD_ApplyWimImage(uint64_t param_1, uint64_t param_2, unsigned int param_3
                 } while (iVar3 == 0);
                 if ((iVar3 == 0) &&
                     ((DVar7 != 2 ||
-                      (iVar3 = (*g_pWIMHandleOp480)(lVar5, param_1,
-                                                uVar6 | 0x200), iVar3 == 0)))) {
+                      (iVar3 = (*g_pWIMHandleOp480)(lVar5, param_1, uVar6 | 0x200), iVar3 == 0)))) {
                     GetLastError();
                 }
             }
@@ -318,32 +316,33 @@ LAB_14007581a:
  *               uint param_5)
  */
 int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_3,
-                  unsigned int param_4, unsigned int param_5)
+                          unsigned int param_4, unsigned int param_5)
 {
     FN_14013d730 pcVar1;
-    int       iVar2;
-    int64_t   local_res10;
-    uint32_t  local_b8;              /* 结构第 1 个 DWORD (来自 param_4) */
-    uint32_t  local_b4;
-    uint16_t  local_b0;
-    uint16_t  local_ae;
-    uint8_t   local_ac, local_ab, local_aa, local_a9;
-    uint8_t   local_a8, local_a7, local_a6, local_a5;
-    HANDLE    local_a0;
-    uint64_t  local_98[2];
-    uint32_t  local_88[2];
-    uint64_t  local_80;              /* GUID 前 8 字节 */
-    uint64_t  uStack_78;             /* GUID 后 8 字节 */
-    int64_t   local_70;
-    uint32_t  local_68;
-    uint32_t  local_64;
-    int64_t   local_60;
-    uint64_t  local_58;
+    int iVar2;
+    int64_t local_res10;
+    uint32_t local_b8; /* 结构第 1 个 DWORD (来自 param_4) */
+    uint32_t local_b4;
+    uint16_t local_b0;
+    uint16_t local_ae;
+    uint8_t local_ac, local_ab, local_aa, local_a9;
+    uint8_t local_a8, local_a7, local_a6, local_a5;
+    HANDLE local_a0;
+    uint64_t local_98[2];
+    uint32_t local_88[2];
+    uint64_t local_80;  /* GUID 前 8 字节 */
+    uint64_t uStack_78; /* GUID 后 8 字节 */
+    int64_t local_70;
+    uint32_t local_68;
+    uint32_t local_64;
+    int64_t local_60;
+    uint64_t local_58;
 
     pcVar1 = g_pCreateVirtualDisk;
     if (g_pCreateVirtualDisk == (FN_14013d730)0x0) {
         iVar2 = (int)-0x7fffbfff;
-    } else {
+    }
+    else {
         local_98[0] = 0;
         local_res10 = param_2;
         PECMD_ParseSizeAndSkipWs(&local_res10, local_98);
@@ -366,21 +365,32 @@ int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_
         local_a6 = 0x34;
         local_a5 = 0x5b;
         local_88[0] = 1;
-        local_70 = ((int64_t)local_98[0] / (int64_t)(uint64_t)param_5) *
-                   (uint64_t)param_5;
+        local_70 = ((int64_t)local_98[0] / (int64_t)(uint64_t)param_5) * (uint64_t)param_5;
         local_60 = 0;
         if (local_98[0] == 0) {
             local_60 = local_res10;
         }
         local_b8 = param_4;
         /* silence unused-but-set (decompiled dead stack slots) */
-        (void)local_58; (void)local_60; (void)local_64; (void)local_68;
-        (void)local_70; (void)local_80; (void)uStack_78;
-        (void)local_b4; (void)local_b0; (void)local_ae;
-        (void)local_ac; (void)local_ab; (void)local_aa; (void)local_a9;
-        (void)local_a8; (void)local_a7; (void)local_a6; (void)local_a5;
-        iVar2 = (*pcVar1)(&local_b8, param_1, 0x100000, 0, param_3, 0,
-                          local_88, 0, &local_a0);
+        (void)local_58;
+        (void)local_60;
+        (void)local_64;
+        (void)local_68;
+        (void)local_70;
+        (void)local_80;
+        (void)uStack_78;
+        (void)local_b4;
+        (void)local_b0;
+        (void)local_ae;
+        (void)local_ac;
+        (void)local_ab;
+        (void)local_aa;
+        (void)local_a9;
+        (void)local_a8;
+        (void)local_a7;
+        (void)local_a6;
+        (void)local_a5;
+        iVar2 = (*pcVar1)(&local_b8, param_1, 0x100000, 0, param_3, 0, local_88, 0, &local_a0);
         if ((iVar2 == 0) && (local_a0 != (HANDLE)0xffffffffffffffff)) {
             CloseHandle(local_a0);
         }
@@ -393,31 +403,31 @@ int PECMD_CaptureWimImage(uint64_t param_1, int64_t param_2, unsigned int param_
  * signature: int __fastcall PECMD_GetStorageDependency(undefined8 param_1,
  *               undefined8 * param_2, WCHAR * param_3, int param_4)
  */
-int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param_3,
-                  int param_4)
+int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param_3, int param_4)
 {
     (void)param_1;
     LPCWSTR lpString;
-    HANDLE  hObject;
-    int     iVar1;
-    int     iVar2;
-    int     iVar3;
-    WCHAR  *pWVar4;
+    HANDLE hObject;
+    int iVar1;
+    int iVar2;
+    int iVar3;
+    WCHAR *pWVar4;
     LPCWSTR pwVar5;
     LPCWSTR lpString_00;
-    HANDLE  local_108;
+    HANDLE local_108;
     uint64_t *local_100;
     uint64_t local_f8[2];
-    WCHAR   local_e8[104];
+    WCHAR local_e8[104];
 
     EnterCriticalSection((void *)&g_csInit);
     PECMD_GetApiProcCached("GetStorageDependencyInformation", "VirtDisk.DLL",
-                  (void **)&g_pGetStorageDependencyInformation, (uintptr_t *)0x0);
+                           (void **)&g_pGetStorageDependencyInformation, (uintptr_t *)0x0);
     iVar1 = 0;
     if (g_pGetStorageDependencyInformation == (FN_14013d3b0)0x0) {
         LeaveCriticalSection((void *)&g_csInit);
         iVar1 = 0;
-    } else {
+    }
+    else {
         local_108 = (HANDLE)0x0;
         if ((uintptr_t)param_3 < 0x10000) {
             pwVar5 = WSTR("\\\\.\\PhysicalDrive%d");
@@ -427,8 +437,8 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
             wsprintfW(local_e8, pwVar5, (int)(intptr_t)param_3); /* TODO(verify) vararg */
             param_3 = local_e8;
         }
-        PECMD_OpenFileHandle(&local_108, param_3, 0x80000000, 3,
-                      (LPSECURITY_ATTRIBUTES)0x0, 3, 0x22000000, (HANDLE)0x0);
+        PECMD_OpenFileHandle(&local_108, param_3, 0x80000000, 3, (LPSECURITY_ATTRIBUTES)0x0, 3,
+                             0x22000000, (HANDLE)0x0);
         hObject = local_108;
         if (local_108 != (HANDLE)0x0) {
             PECMD_AllocStringSlot2((void **)&local_100, 0x7ff0);
@@ -438,21 +448,19 @@ int PECMD_GetStorageDependency(uint64_t param_1, uint64_t *param_2, WCHAR *param
             iVar1 = (*g_pGetStorageDependencyInformation)(hObject, 3, 0x7ff0, local_100, local_f8);
             lpString_00 = (LPCWSTR)local_100[6];
             lpString = (LPCWSTR)local_100[8];
-            if (((iVar1 == 0) && (lpString_00 != (LPCWSTR)0x0)) &&
-                (lpString != (LPCWSTR)0x0)) {
+            if (((iVar1 == 0) && (lpString_00 != (LPCWSTR)0x0)) && (lpString != (LPCWSTR)0x0)) {
                 PECMD_AllocStrSlot((WCHAR **)&local_108);
-                pWVar4 = PECMD_EnumerateVolume((int64_t *)&local_108, -5,
-                                       0xfffffffff008fffb, lpString_00);
-                if (((pWVar4 != (WCHAR *)0x0) && (*pWVar4 != L'\0')) &&
-                    (pWVar4[1] == L':')) {
+                pWVar4 = PECMD_EnumerateVolume((int64_t *)&local_108, -5, 0xfffffffff008fffb,
+                                               lpString_00);
+                if (((pWVar4 != (WCHAR *)0x0) && (*pWVar4 != L'\0')) && (pWVar4[1] == L':')) {
                     pWVar4[2] = L'\0';
                     lpString_00 = pWVar4;
                 }
                 iVar2 = lstrlenW(lpString_00);
                 iVar3 = lstrlenW(lpString);
                 PECMD_AllocString((WCHAR **)param_2, (int64_t)(iVar3 + iVar2 + 8));
-                wsprintfW((LPWSTR)*param_2, WSTR("%s%s"),
-                          lpString_00, lpString);   /* TODO(verify) varargs */
+                wsprintfW((LPWSTR)*param_2, WSTR("%s%s"), lpString_00,
+                          lpString); /* TODO(verify) varargs */
                 PECMD_FreeStrBuf((void *)&local_108);
             }
             PECMD_FreeStrBuf((void *)&local_100);

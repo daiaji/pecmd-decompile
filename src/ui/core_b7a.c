@@ -34,8 +34,10 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern uint64_t PECMD_CalcExpression(int64_t *obj, WCHAR *a2, double *a3);
-    /* TODO(verify) 表达式求值器: 声明(uint64_t,int64_t*,WCHAR*,double*)与真实定义(LPWSTR,int64_t*,WCHAR*,uint64_t*)不符；
-       本文件调用点传 double* 且将 LPWSTR 返回值强转 uint64_t。属复杂近似依赖，保持原声明以免破坏调用点。 */
+/* TODO(verify) 表达式求值器:
+   声明(uint64_t,int64_t*,WCHAR*,double*)与真实定义(LPWSTR,int64_t*,WCHAR*,uint64_t*)不符；
+   本文件调用点传 double* 且将 LPWSTR 返回值强转
+   uint64_t。属复杂近似依赖，保持原声明以免破坏调用点。 */
 extern uint64_t PECMD_ParseNumberToDouble(int64_t *obj, double *a2);
 extern uint64_t FUN_14006A7F4(int64_t *obj, uint64_t *a2);
 extern uint64_t FUN_14006A7F4(int64_t *obj, uint64_t *a2);
@@ -45,31 +47,27 @@ extern uint64_t *PECMD_GrowByteBuffer(uint64_t *obj, int64_t a2);
 extern void PECMD_ZeroLenBuf(void *p);
 extern uint64_t PECMD_ScanHexNumber(int64_t *obj, int64_t *a2, int *a3);
 extern void *PECMD_SendCtrlMessage_0834(WPARAM obj, uint64_t a2);
-extern void FUN_14005DAF8(int64_t obj, int *a2, int *a3,
-                          int *a4, int *a5);
+extern void FUN_14005DAF8(int64_t obj, int *a2, int *a3, int *a4, int *a5);
 extern void FUN_14005D9A8(int64_t obj, int a2);
-extern uint64_t *PECMD_CreateUpDownCtrl(uint64_t *obj, int64_t a2, uint32_t a3,
-                               uint64_t *a4, uint32_t a5, uint32_t a6,
-                               uint32_t a7, uint32_t a8, uint64_t *a9,
-                               uint64_t *a10, uint64_t *a11, uint32_t a12);
-extern uint64_t *PECMD_CreateScrollBarObj(uint64_t *obj, int64_t a2, uint32_t a3,
-                               uint64_t *a4, uint32_t a5, uint32_t a6,
-                               uint32_t a7, uint32_t a8, uint16_t *a9,
-                               uint64_t *a10, uint32_t a11, LPCWSTR a12);
+extern uint64_t *PECMD_CreateUpDownCtrl(uint64_t *obj, int64_t a2, uint32_t a3, uint64_t *a4,
+                                        uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8,
+                                        uint64_t *a9, uint64_t *a10, uint64_t *a11, uint32_t a12);
+extern uint64_t *PECMD_CreateScrollBarObj(uint64_t *obj, int64_t a2, uint32_t a3, uint64_t *a4,
+                                          uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8,
+                                          uint16_t *a9, uint64_t *a10, uint32_t a11, LPCWSTR a12);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern void PECMD_CopyTokenTrimmed(int64_t *obj, int64_t *a2, int16_t a3,
-                          int16_t a4);
+extern void PECMD_CopyTokenTrimmed(int64_t *obj, int64_t *a2, int16_t a3, int16_t a4);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC a2);
 extern uint32_t PECMD_IsIconResource(uint16_t *obj);
 extern uint32_t PECMD_IsBitmapResource(uint16_t *obj);
 
 /* ---- 已实现依赖 ---- */
-extern void PECMD_DtorTrackbarControl(uint64_t *obj);   /* @0x14006bf8c core_b3g.c */
-extern uint32_t FUN_14005D7E8(uint16_t *obj); /* @0x14005d7e8 core_b3f.c */
+extern void PECMD_DtorTrackbarControl(uint64_t *obj); /* @0x14006bf8c core_b3g.c */
+extern uint32_t FUN_14005D7E8(uint16_t *obj);         /* @0x14005d7e8 core_b3f.c */
 
 /* ---- 本批引用的全局数据 ---- */
-extern double g_dbl25230;         /* 四舍五入 0.5 */
+extern double g_dbl25230; /* 四舍五入 0.5 */
 
 /* ========== PECMD_CalcEvalParenAtom @0x1400c1000 ==========
  * 解析 double；若遇到 '(' 则把括号内表达式交给求值器。
@@ -101,7 +99,7 @@ uint64_t PECMD_CalcEvalParenAtom(int64_t *pp, double *out)
         close = (WCHAR *)*pp;
         *pp = (int64_t)(close + 1);
         *close = L'\0';
-evaluate:
+    evaluate:
         double value = 0.0;
         PECMD_CalcExpression((int64_t *)g_Script, expr, &value);
         *out = value;
@@ -129,7 +127,8 @@ uint64_t PECMD_EvalParenthesizedExpr(int64_t *pp, uint64_t *out)
         while (*q != L'\0') {
             if (*q == L'(') {
                 depth++;
-            } else if (*q == L')') {
+            }
+            else if (*q == L')') {
                 depth--;
                 if (depth < 1) {
                     close = (WCHAR *)*pp;
@@ -183,7 +182,7 @@ uint64_t PECMD_EvalParenExprRounded(int64_t *pp, uint64_t *out)
         close = (WCHAR *)*pp;
         *pp = (int64_t)(close + 1);
         *close = L'\0';
-evaluate:
+    evaluate:
         double value = (double)(int64_t)*out;
         PECMD_CalcExpression((int64_t *)g_Script, expr, &value);
         if (close != NULL) {
@@ -194,7 +193,8 @@ evaluate:
             if (0.0 < value) {
                 value += g_dbl25230;
             }
-        } else {
+        }
+        else {
             value -= g_dbl25230;
         }
         *out = (uint64_t)(int64_t)value;
@@ -225,7 +225,8 @@ uint64_t PECMD_ParseHexByteList(LPCWSTR str, int64_t *outBuf, int mode)
             uint64_t value = 0;
             if (mode == 0) {
                 FUN_1400C1194((int64_t *)&s, &value);
-            } else {
+            }
+            else {
                 if ((*p == L'0') && ((WCHAR)(p[1] | 0x20) == 0x78)) {
                     s = p + 2;
                 }
@@ -308,10 +309,8 @@ void PECMD_ParseIntStepNext(int64_t *a, int *b)
 /* ========== PECMD_AddUpDownControl @0x1400c45a4 ==========
  * 在控件数组中加入一个新的 UpDown 控件。
  */
-void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3,
-                            int x, int y, int w, int h,
-                            uint64_t *p8, uint64_t *p9, uint64_t *p10,
-                            uint32_t flags)
+void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3, int x, int y, int w, int h,
+                            uint64_t *p8, uint64_t *p9, uint64_t *p10, uint32_t flags)
 {
     int rc[2] = {x, 0};
     uint64_t *slot = (uint64_t *)PECMD_SendCtrlMessage_0834(mgr, *v3);
@@ -321,11 +320,9 @@ void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3,
         FUN_14005DAF8((int64_t)mgr, rc, &y, &w, &h);
         uint64_t *mem = (uint64_t *)malloc(0x90);
         if (mem != NULL) {
-            obj = PECMD_CreateUpDownCtrl(mem, v2,
-                                (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
-                                v3, (uint32_t)rc[0], (uint32_t)y,
-                                (uint32_t)w, (uint32_t)h, p8, p9,
-                                p10, flags);
+            obj = PECMD_CreateUpDownCtrl(mem, v2, (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
+                                         v3, (uint32_t)rc[0], (uint32_t)y, (uint32_t)w, (uint32_t)h,
+                                         p8, p9, p10, flags);
         }
         *slot = (uint64_t)obj;
         FUN_14005D9A8((int64_t)mgr, 0);
@@ -335,10 +332,8 @@ void PECMD_AddUpDownControl(WPARAM mgr, int64_t v2, uint64_t *v3,
 /* ========== PECMD_AddScrollBarObject @0x1400c46cc ==========
  * 在控件数组中加入一个新的滚动条控件。
  */
-void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3,
-                               int x, int y, int w, int h,
-                               uint16_t *p8, uint64_t *p9, uint32_t p10,
-                               LPCWSTR text)
+void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3, int x, int y, int w, int h,
+                              uint16_t *p8, uint64_t *p9, uint32_t p10, LPCWSTR text)
 {
     int rc[2] = {x, 0};
     uint64_t *slot = (uint64_t *)PECMD_SendCtrlMessage_0834(mgr, *v3);
@@ -348,11 +343,9 @@ void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3,
         FUN_14005DAF8((int64_t)mgr, rc, &y, &w, &h);
         uint64_t *mem = (uint64_t *)malloc(0x70);
         if (mem != NULL) {
-            obj = PECMD_CreateScrollBarObj(mem, v2,
-                                (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000,
-                                v3, (uint32_t)rc[0], (uint32_t)y,
-                                (uint32_t)w, (uint32_t)h, p8, p9,
-                                p10, text);
+            obj = PECMD_CreateScrollBarObj(
+                mem, v2, (uint32_t)(((int64_t)slot - base) >> 3) + 0x1000, v3, (uint32_t)rc[0],
+                (uint32_t)y, (uint32_t)w, (uint32_t)h, p8, p9, p10, text);
         }
         *slot = (uint64_t)obj;
         FUN_14005D9A8((int64_t)mgr, 0);
@@ -362,8 +355,8 @@ void PECMD_AddScrollBarObject(WPARAM mgr, int64_t v2, uint64_t *v3,
 /* ========== FUN_1400C47F4 @0x1400c47f4 ==========
  * 控件 Enable 命令：'?' 查询 IsWindowEnabled 并写变量，否则发送/投递 0x462。
  */
-uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
-                             LPCWSTR spec, WPARAM wParam, uint64_t lParam)
+uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target, LPCWSTR spec, WPARAM wParam,
+                       uint64_t lParam)
 {
     if (*spec == L'\0') {
         return 0xf8000009;
@@ -376,7 +369,8 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
         uint32_t enabled = (uint32_t)IsWindowEnabled(target);
         PECMD_VarSetUInt(ctx, (uint64_t)enabled, s);
         PECMD_FreeStrBuf((WCHAR **)&s);
-    } else {
+    }
+    else {
         WCHAR first = *spec;
         if (first == L'#') {
             s = spec + 1;
@@ -398,7 +392,8 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target,
         msg.zero = 0;
         if (first != L'#') {
             SendMessageW(hwnd, 0x462, wParam, (LPARAM)&msg);
-        } else {
+        }
+        else {
             PostMessageW(hwnd, 0x462, wParam, (LPARAM)&msg);
         }
     }
@@ -430,7 +425,8 @@ uint16_t *PECMD_ParseItemImageSpec(int64_t *pp, int64_t *out, uint16_t *token)
     *id_start = L'#';
     if (9 < (uint16_t)(*p - L'0')) {
         *out = (int64_t)p;
-    } else {
+    }
+    else {
         *out = (int64_t)id_start;
     }
     WCHAR *q = p;

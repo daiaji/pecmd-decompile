@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#include "pecmd_defs.h"   /* PECMD_AllocStrSlot / FUN_14005C788 / wsprintfW 等 */
+#include "pecmd_defs.h" /* PECMD_AllocStrSlot / FUN_14005C788 / wsprintfW 等 */
 
 extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out); /* @0x1400c1194 */
 
@@ -34,8 +34,8 @@ extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out); /* @0x1400c1194 */
  * 初始化 6 槽字符串构建器. count < 0x400 时提升到 0x400 并分配缓冲.
  * end = out 字节地址 - 2 + count*2; limit = end - 0x7e4; cur 初始 = base.
  */
-void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur,
-                     WCHAR **end, WCHAR **base, WCHAR **limit)
+void PECMD_StrBldInitWide(void *s[6], WCHAR **out, int *count, WCHAR **cur, WCHAR **end,
+                          WCHAR **base, WCHAR **limit)
 {
     s[0] = (void *)out;
     s[1] = (void *)count;
@@ -66,8 +66,7 @@ void PECMD_TextBufReserve(void *s[6], int need)
     WCHAR **pBase = (WCHAR **)s[4];
     WCHAR **pLimit = (WCHAR **)s[5];
     WCHAR *cur = *pCur;
-    int64_t avail = ((int64_t)need * 2 - (int64_t)(uintptr_t)*pEnd)
-                    + (int64_t)(uintptr_t)cur;
+    int64_t avail = ((int64_t)need * 2 - (int64_t)(uintptr_t)*pEnd) + (int64_t)(uintptr_t)cur;
     if ((int)(avail >> 1) >= 0) {
         WCHAR *oldBase = *pBase;
         *count += need + 0xe;
@@ -75,9 +74,8 @@ void PECMD_TextBufReserve(void *s[6], int need)
         *pBase = *pOut;
         *pEnd = (WCHAR *)((char *)*pBase - 2 + (size_t)*count * 2);
         *pLimit = (WCHAR *)((char *)*pEnd - 0x7e4);
-        *pCur = (WCHAR *)((char *)*pBase
-                          + (int)(((int64_t)(uintptr_t)cur
-                                   - (int64_t)(uintptr_t)oldBase) >> 1) * 2);
+        *pCur = (WCHAR *)((char *)*pBase +
+                          (int)(((int64_t)(uintptr_t)cur - (int64_t)(uintptr_t)oldBase) >> 1) * 2);
     }
 }
 
@@ -101,9 +99,8 @@ void PECMD_StrBldGrowWide(void *s[6])
         *pBase = *pOut;
         *pEnd = (WCHAR *)((char *)*pBase - 2 + (size_t)*count * 2);
         *pLimit = (WCHAR *)((char *)*pEnd - 0x7e4);
-        *pCur = (WCHAR *)((char *)*pBase
-                          + (int)(((int64_t)(uintptr_t)cur
-                                   - (int64_t)(uintptr_t)oldBase) >> 1) * 2);
+        *pCur = (WCHAR *)((char *)*pBase +
+                          (int)(((int64_t)(uintptr_t)cur - (int64_t)(uintptr_t)oldBase) >> 1) * 2);
     }
 }
 
@@ -133,8 +130,7 @@ void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v)
  */
 WCHAR *PECMD_FormatDblRetEnd(WCHAR *dst, float v, LPCWSTR fmt)
 {
-    (void)swprintf((wchar_t *)(void *)dst, 0x3e,
-                   (const wchar_t *)(const void *)fmt, (double)v);
+    (void)swprintf((wchar_t *)(void *)dst, 0x3e, (const wchar_t *)(const void *)fmt, (double)v);
     return dst + lstrlenW(dst);
 }
 
@@ -145,8 +141,7 @@ WCHAR *PECMD_FormatDblRetEnd(WCHAR *dst, float v, LPCWSTR fmt)
  */
 WCHAR *PECMD_FormatU64RetEnd(WCHAR *dst, uint64_t v, LPCWSTR fmt)
 {
-    (void)swprintf((wchar_t *)(void *)dst, 0x3e,
-                   (const wchar_t *)(const void *)fmt, v);
+    (void)swprintf((wchar_t *)(void *)dst, 0x3e, (const wchar_t *)(const void *)fmt, v);
     return dst + lstrlenW(dst);
 }
 
@@ -159,7 +154,7 @@ WCHAR *PECMD_FormatU64RetEnd(WCHAR *dst, uint64_t v, LPCWSTR fmt)
  * 复制到 8 字节局部后按格式输出并回填 *lenOut = lstrlenW(dst).
  */
 WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WCHAR *dst,
-                    WCHAR *width)
+                                 WCHAR *width)
 {
     WCHAR *value = *(WCHAR **)(node + 8);
     uint64_t dataLen = *(uint64_t *)(node + 0x18) & 0x3fffffffffffffffULL;
@@ -167,45 +162,52 @@ WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WC
     if (spec == NULL) {
         return value;
     }
-    uint8_t elmW = 1;          /* 元素宽 (字节) */
-    bool isFloat = false;      /* float 标志 */
-    bool isLDouble = false;    /* ldouble 标志 */
-    uint8_t dblFlag = 0;       /* double/ldouble → 8 */
+    uint8_t elmW = 1;       /* 元素宽 (字节) */
+    bool isFloat = false;   /* float 标志 */
+    bool isLDouble = false; /* ldouble 标志 */
+    uint8_t dblFlag = 0;    /* double/ldouble → 8 */
     LPCWSTR fmt = WSTR("0x%I64X");
-    uint64_t off = 0;          /* 偏移 (元素) */
-    uint64_t sflag = 0;        /* 's' 修饰时 = 元素宽 */
-    uint8_t mulW = 0;          /* '~' 宽度乘数 */
-    uint64_t val = 0;          /* 8 字节值缓冲 (local_58) */
+    uint64_t off = 0;   /* 偏移 (元素) */
+    uint64_t sflag = 0; /* 's' 修饰时 = 元素宽 */
+    uint8_t mulW = 0;   /* '~' 宽度乘数 */
+    uint64_t val = 0;   /* 8 字节值缓冲 (local_58) */
 
     if (FUN_14005C788("char", spec, 4)) {
         spec += 4;
-    } else if (FUN_14005C788("wchar", spec, 5) ||
-               FUN_14005C788("short", spec, 5)) {
+    }
+    else if (FUN_14005C788("wchar", spec, 5) || FUN_14005C788("short", spec, 5)) {
         spec += 5;
         elmW = 2;
-    } else if (FUN_14005C788("long", spec, 4)) {
+    }
+    else if (FUN_14005C788("long", spec, 4)) {
         spec += 4;
         elmW = 4;
-    } else if (FUN_14005C788("int64", spec, 5)) {
+    }
+    else if (FUN_14005C788("int64", spec, 5)) {
         spec += 5;
         elmW = 8;
-    } else if (FUN_14005C788("ptr", spec, 3)) {
+    }
+    else if (FUN_14005C788("ptr", spec, 3)) {
         spec += 3;
         elmW = 8;
-    } else if (FUN_14005C788("float", spec, 5)) {
+    }
+    else if (FUN_14005C788("float", spec, 5)) {
         spec += 5;
         elmW = 4;
         isFloat = true;
-    } else if (FUN_14005C788("double", spec, 6)) {
+    }
+    else if (FUN_14005C788("double", spec, 6)) {
         spec += 6;
         elmW = 8;
         dblFlag = 8;
-    } else if (FUN_14005C788("ldouble", spec, 7)) {
+    }
+    else if (FUN_14005C788("ldouble", spec, 7)) {
         spec += 7;
         elmW = 8;
         dblFlag = 8;
         isLDouble = true;
-    } else if (FUN_14005C788("int", spec, 3)) {
+    }
+    else if (FUN_14005C788("int", spec, 3)) {
         /* 第 4 字符是大写字母 (非 'S') → 非 int 类型, 保持默认宽 1 */
         WCHAR c4 = (WCHAR)(spec[3] & 0xffdf);
         if (c4 == 0x53 || c4 <= 0x40 || c4 >= 0x5b) {
@@ -245,18 +247,22 @@ WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WC
     dst[0] = L'\0';
     if (isLDouble) {
         PECMD_FormatU64RetEnd(dst, val, WSTR("%Lf"));
-    } else if (dblFlag == 0) {
+    }
+    else if (dblFlag == 0) {
         if (isFloat) {
             /* TODO(verify): (float)val 为整数→浮点转换, 与位模式重解释
              * (*(float *)&val) 语义不同, 原反编译显示 (float) 转换 */
             PECMD_FormatDblRetEnd(dst, (float)val, WSTR("%f"));
-        } else if (sflag == 1 || sflag == 2 || sflag == 4) {
+        }
+        else if (sflag == 1 || sflag == 2 || sflag == 4) {
             /* Ghidra 丢参, 已补第 3 参 */
             wsprintfW(dst, WSTR("%d"), (int)val);
-        } else {
+        }
+        else {
             PECMD_SprintfRetEnd(dst, val, fmt);
         }
-    } else {
+    }
+    else {
         PECMD_FormatU64RetEnd(dst, val, WSTR("%lf"));
     }
     *lenOut = (uint64_t)lstrlenW(dst);

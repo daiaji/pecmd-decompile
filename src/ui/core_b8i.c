@@ -32,23 +32,24 @@
 #include "pecmd_defs.h"
 
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
-extern void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out, HMODULE *hmod); /* @0x14005c828 */
+extern void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out,
+                                   HMODULE *hmod);                             /* @0x14005c828 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* @0x1400669c4 */
-extern void FUN_1400633A8(void **ps, int64_t len);               /* @0x1400633a8 */
-extern int64_t * PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* @0x1400702f0 */
-extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);       /* @0x1400e75cc */
-extern void PECMD_SetHotTrackWindow(HWND hwnd);              /* @0x1400f1448 */
-extern void *FUN_1400E57C0(void *obj);                   /* @0x1400e57c0 */
-extern int64_t * PECMD_InitPtrTable(int64_t *arr);                  /* @0x140063b64 */
+extern void FUN_1400633A8(void **ps, int64_t len);                             /* @0x1400633a8 */
+extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src,
+                                     uint64_t len);             /* @0x1400702f0 */
+extern uint64_t PECMD_HangUpRasConnection(uint64_t *state);     /* @0x1400e75cc */
+extern void PECMD_SetHotTrackWindow(HWND hwnd);                 /* @0x1400f1448 */
+extern void *FUN_1400E57C0(void *obj);                          /* @0x1400e57c0 */
+extern int64_t *PECMD_InitPtrTable(int64_t *arr);               /* @0x140063b64 */
 extern void PECMD_InvalidateParentRect(HWND child, int margin); /* @0x1400fd538 */
-extern void PECMD_InitControlFlags(int64_t obj, uint32_t *buf, int a3,
-                                   LPCWSTR text, int a5, int a6,
+extern void PECMD_InitControlFlags(int64_t obj, uint32_t *buf, int a3, LPCWSTR text, int a5, int a6,
                                    int a7, uint32_t flags); /* @0x140054380 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_1400E4F14(HMENU menu, UINT flags, uintptr_t id, uint8_t *item);
-extern int FUN_1400F2384(int64_t obj, LPCWSTR cmd, int64_t *out,
-                         int64_t script, int flag, uint16_t mode);
+extern int FUN_1400F2384(int64_t obj, LPCWSTR cmd, int64_t *out, int64_t script, int flag,
+                         uint16_t mode);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out);
 extern void PECMD_AllocStrSlot(WCHAR **ps);
@@ -59,25 +60,26 @@ extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 
 /* ---- 本批引用的虚表/数据符号 (.rdata) ---- */
 extern uint8_t PTR_FUN_14012c550[];
-extern WCHAR g_szEmpty[];   /* .rdata 公共表/虚表基址 */
+extern WCHAR g_szEmpty[]; /* .rdata 公共表/虚表基址 */
 
 /* ---- 全局数据 (core_globals.c 定义) ---- */
-extern uint32_t (*g_pfnRasDial)(void);                    /* DAT_14013e268 RasDialW */
-extern uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *, uint32_t *); /* DAT_14013e270 */
+extern uint32_t (*g_pfnRasDial)(void); /* DAT_14013e268 RasDialW */
+extern uint32_t (*g_pfnRasEnumEntries)(void *, void *, void *, uint32_t *,
+                                       uint32_t *);                /* DAT_14013e270 */
 extern uint32_t (*g_pfnRasGetConnectStatus)(uint64_t, uint32_t *); /* DAT_14013e278 */
-extern uint32_t (*g_pfnRasGetErrorString)(void);          /* DAT_14013e280 RasGetErrorStringW */
-extern uint32_t (*g_pfnRasHangUp)(uint64_t);              /* DAT_14013e288 RasHangUpW */
+extern uint32_t (*g_pfnRasGetErrorString)(void); /* DAT_14013e280 RasGetErrorStringW */
+extern uint32_t (*g_pfnRasHangUp)(uint64_t);     /* DAT_14013e288 RasHangUpW */
 extern uint32_t (*g_pfnRasEnumConnections)(void *, uint32_t *, uint32_t *); /* DAT_14013e290 */
-extern uint32_t g_dpi;                                    /* g_dpi */
-extern HCURSOR g_hArrowCursor;                            /* DAT_14013e4d8 */
-extern HGDIOBJ g_hStockWhiteBrush;                        /* DAT_14013a858 */
-extern HWND g_hActiveDevWnd;                                     /* DAT_14013e400 */
-extern uint64_t g_rasState;                               /* DAT_14013e2a0 RAS 等待状态 (B8i 新增) */
-extern uint64_t *g_pRasEntryBuf;                          /* DAT_14013e300 条目缓冲指针 (B8i 新增) */
+extern uint32_t g_dpi;                                                      /* g_dpi */
+extern HCURSOR g_hArrowCursor;                                              /* DAT_14013e4d8 */
+extern HGDIOBJ g_hStockWhiteBrush;                                          /* DAT_14013a858 */
+extern HWND g_hActiveDevWnd;                                                /* DAT_14013e400 */
+extern uint64_t g_rasState;      /* DAT_14013e2a0 RAS 等待状态 (B8i 新增) */
+extern uint64_t *g_pRasEntryBuf; /* DAT_14013e300 条目缓冲指针 (B8i 新增) */
 
 /* ---- 其他文件已实现名称不一致的全局 (本地声明) ---- */
-extern uint8_t g_tooltipThreshold;  /* DAT_14013a861 托盘/Tooltip 阈值 */
-extern uint8_t g_tooltipCount0;     /* DAT_14013a860 计数器 0 */
+extern uint8_t g_tooltipThreshold; /* DAT_14013a861 托盘/Tooltip 阈值 */
+extern uint8_t g_tooltipCount0;    /* DAT_14013a860 计数器 0 */
 
 /* ========== FUN_1400E4D94 @0x1400e4d94 ==========
  * 延迟加载 RASAPI32.DLL 的 6 个函数指针 (表 E268/E270/E278/E280/E288/E290)。
@@ -87,16 +89,18 @@ uint64_t FUN_1400E4D94(uint64_t this_)
     int64_t hmod = 0;
 
     if (g_pfnRasDial == NULL) {
-        PECMD_GetApiProcCached("RasDialW", "RASAPI32.DLL", (void **)&g_pfnRasDial, (HMODULE *)&hmod);
+        PECMD_GetApiProcCached("RasDialW", "RASAPI32.DLL", (void **)&g_pfnRasDial,
+                               (HMODULE *)&hmod);
         PECMD_GetApiProcCached("RasEnumEntriesW", "RASAPI32.DLL", (void **)&g_pfnRasEnumEntries,
-                          (HMODULE *)&hmod);
+                               (HMODULE *)&hmod);
         PECMD_GetApiProcCached("RasGetConnectStatusW", "RASAPI32.DLL",
-                          (void **)&g_pfnRasGetConnectStatus, (HMODULE *)&hmod);
-        PECMD_GetApiProcCached("RasGetErrorStringW", "RASAPI32.DLL", (void **)&g_pfnRasGetErrorString,
-                          (HMODULE *)&hmod);
-        PECMD_GetApiProcCached("RasHangUpW", "RASAPI32.DLL", (void **)&g_pfnRasHangUp, (HMODULE *)&hmod);
+                               (void **)&g_pfnRasGetConnectStatus, (HMODULE *)&hmod);
+        PECMD_GetApiProcCached("RasGetErrorStringW", "RASAPI32.DLL",
+                               (void **)&g_pfnRasGetErrorString, (HMODULE *)&hmod);
+        PECMD_GetApiProcCached("RasHangUpW", "RASAPI32.DLL", (void **)&g_pfnRasHangUp,
+                               (HMODULE *)&hmod);
         PECMD_GetApiProcCached("RasEnumConnectionsW", "RASAPI32.DLL",
-                          (void **)&g_pfnRasEnumConnections, (HMODULE *)&hmod);
+                               (void **)&g_pfnRasEnumConnections, (HMODULE *)&hmod);
     }
     return this_;
 }
@@ -106,8 +110,8 @@ uint64_t FUN_1400E4D94(uint64_t this_)
  * 并把 id 写入 "&%s.id" 变量; 若命令文本非空再注册 "_COMMAND#%d:" 命令。
  * TODO(verify): wsprintfW 缺实参 (原始反编译) — 补 "",0 占位。
  */
-void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
-                             int64_t script, int64_t cmdCtx, int64_t *varTable)
+void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu, int64_t script, int64_t cmdCtx,
+                   int64_t *varTable)
 {
     uint32_t flags;
     uint16_t id;
@@ -132,12 +136,12 @@ void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
     (*pId)++;
 
     PECMD_AllocWStringBuffer((WCHAR **)&tmp, 100);
-    wsprintfW(tmp, WSTR("&%s.id"), WSTR(""));            /* TODO(verify) 缺实参 */
+    wsprintfW(tmp, WSTR("&%s.id"), WSTR("")); /* TODO(verify) 缺实参 */
     if (varTable != NULL)
         PECMD_AppendLongDecimal(varTable, *(uint16_t *)(item + 2), tmp);
 
     if ((script != 0) && (**(int16_t **)(item + 0x10) != 0)) {
-        wsprintfW(tmp, WSTR("_COMMAND#%d:"), 0);         /* TODO(verify) 缺实参 */
+        wsprintfW(tmp, WSTR("_COMMAND#%d:"), 0); /* TODO(verify) 缺实参 */
         FUN_14006375C(&tmp, *(LPCWSTR *)(item + 0x10));
         FUN_1400F2384(cmdCtx, tmp, varTable, script, 0, 1);
     }
@@ -147,8 +151,8 @@ void FUN_1400E5120(uint8_t *item, uint16_t *pId, HMENU menu,
 /* ========== FUN_1400E5248 @0x1400e5248 ==========
  * 递归构建菜单树: 0x80 类型为子菜单 (AppendMenuW MF_POPUP), 否则为命令项。
  */
-void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu,
-                         int64_t script, int64_t cmdCtx, int64_t *varTable)
+void FUN_1400E5248(int64_t node, uint16_t *pId, HMENU menu, int64_t script, int64_t cmdCtx,
+                   int64_t *varTable)
 {
     uint64_t i = 0;
     uint64_t seq = 0;
@@ -240,7 +244,8 @@ loop:
     b2 = src[2];
     src += 3;
     if (((b1 & 0xc0) == 0x80) && ((b2 & 0xc0) == 0x80)) {
-        *(uint8_t *)((uint8_t *)out + 1) = (uint8_t)(((int8_t)b1 >> 2 & 0x0fU) + (uint8_t)(lead * 0x10));
+        *(uint8_t *)((uint8_t *)out + 1) =
+            (uint8_t)(((int8_t)b1 >> 2 & 0x0fU) + (uint8_t)(lead * 0x10));
         *(uint8_t *)out = (uint8_t)((b2 & 0x3f) + (uint8_t)(b1 * 0x40));
         goto written;
     }
@@ -268,7 +273,7 @@ two:
  */
 uint64_t FUN_1400E7664(LPCWSTR name)
 {
-    uint32_t *blk;       /* local_res18 缓冲块 */
+    uint32_t *blk; /* local_res18 缓冲块 */
     uint32_t count;
     uint32_t cb;
     uint64_t result = 0;
@@ -294,14 +299,14 @@ uint64_t FUN_1400E7664(LPCWSTR name)
         if (0 < (int)count) {
             do {
                 if (*name == L'*') {
-                    result = PECMD_HangUpRasConnection((uint64_t *)((uint8_t *)blk +
-                                                                  (int64_t)i * 0x15b + 1));
+                    result = PECMD_HangUpRasConnection(
+                        (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x15b + 1));
                     result &= 0xffffffffU;
                 }
                 else {
                     if (lstrcmpiW(name, (LPCWSTR)(blk + i * 0x15b + 3)) == 0) {
-                        result = PECMD_HangUpRasConnection((uint64_t *)((uint8_t *)blk +
-                                                                      (int64_t)i * 0x15b + 1));
+                        result = PECMD_HangUpRasConnection(
+                            (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x15b + 1));
                         result &= 0xffffffffU;
                     }
                 }
@@ -319,7 +324,7 @@ uint64_t FUN_1400E7664(LPCWSTR name)
  */
 int64_t FUN_1400E7758(int64_t *out)
 {
-    uint32_t *blk;      /* undefined4* 缓冲块 */
+    uint32_t *blk; /* undefined4* 缓冲块 */
     uint32_t count;
     uint32_t cb;
     uint16_t *dst;
@@ -342,9 +347,7 @@ int64_t FUN_1400E7758(int64_t *out)
             pos += 2;
             dst += 2;
         }
-        memcpy((uint8_t *)dst,
-                      (uint8_t *)(blk + i * 0x15b + 3),
-                      (len + 1) * 2);
+        memcpy((uint8_t *)dst, (uint8_t *)(blk + i * 0x15b + 3), (len + 1) * 2);
         pos += len;
     }
     int64_t r = *out;
@@ -449,8 +452,7 @@ void PECMD_HoverTrackTimerProc(int64_t obj, int64_t msg)
             if (g_tooltipThreshold == *(int8_t *)((uint8_t *)obj + 0xa0))
                 PECMD_SetHotTrackWindow(*(HWND *)((uint8_t *)obj + OBJ_HWND));
             if (*(int8_t *)((uint8_t *)obj + 0xa0) <= g_tooltipCount0)
-                *(int8_t *)((uint8_t *)obj + 0xa0) =
-                    *(int8_t *)((uint8_t *)obj + 0xa0) + 1;
+                *(int8_t *)((uint8_t *)obj + 0xa0) = *(int8_t *)((uint8_t *)obj + 0xa0) + 1;
             if (g_tooltipCount0 != *(int8_t *)((uint8_t *)obj + 0xa0))
                 return;
             outMsg = 0x2a1;
@@ -470,9 +472,9 @@ uint64_t *PECMD_InitTableCellModel(uint64_t *obj)
 
     FUN_1400E57C0(obj);
     obj[0] = (uint64_t)&PTR_FUN_14012c550;
-    PECMD_InitPtrTable((int64_t *)(obj + 0x1a));        /* 0xd0 */
-    PECMD_InitPtrTable((int64_t *)(obj + 0x1d));        /* 0xe8 */
-    PECMD_AllocStrSlot((WCHAR **)(obj + 0x20));     /* 0x100 引用串容器 */
+    PECMD_InitPtrTable((int64_t *)(obj + 0x1a)); /* 0xd0 */
+    PECMD_InitPtrTable((int64_t *)(obj + 0x1d)); /* 0xe8 */
+    PECMD_AllocStrSlot((WCHAR **)(obj + 0x20));  /* 0x100 引用串容器 */
     *(uint32_t *)((uint8_t *)obj + 0x124) = 0;
     *(uint32_t *)((uint8_t *)obj + 0x118) = 0xab;
     *(uint32_t *)((uint8_t *)obj + 0x11c) = 199;
@@ -485,7 +487,7 @@ uint64_t *PECMD_InitTableCellModel(uint64_t *obj)
     obj[0x22] = 0;
     obj[0x21] = 0;
     obj[0x27] = 0;
-    obj[0x25] = 0x3ff0000000000000;                  /* 1.0 */
+    obj[0x25] = 0x3ff0000000000000; /* 1.0 */
     return obj;
 }
 
@@ -518,8 +520,8 @@ int64_t PECMD_ApplyFontToControl(int64_t obj, HANDLE font, int flag)
             lh = -lh;
         if (g_dpi > 0)
             lh = (int)((g_dpi / 2 + (uint32_t)lh * 0x48) / g_dpi);
-        PECMD_InitControlFlags((int64_t)((uint8_t *)obj + OBJ_FLAGS), (uint32_t *)&lh, lh,
-                               local_4c, -1, -1, 0, 0);
+        PECMD_InitControlFlags((int64_t)((uint8_t *)obj + OBJ_FLAGS), (uint32_t *)&lh, lh, local_4c,
+                               -1, -1, 0, 0);
         res = SendMessageW(*(HWND *)((uint8_t *)obj + OBJ_HWND), 0x444, 0,
                            (LPARAM)((uint8_t *)obj + OBJ_FLAGS));
         r = (int)res;
@@ -569,8 +571,7 @@ uint64_t PECMD_SetCtlStateBrush2(int64_t obj, HDC hdc)
  * 创建 RichEdit 控件窗口 (RICHEDIT / RichEdit20W), 存入 obj[4],
  * 追加容器并注册 0x1400f21a8 回调 (当 EDITSTREAM 标志开启)。
  */
-bool PECMD_CreateRichEditCtrl(int64_t *obj, uint32_t style, int *rc,
-                              HWND parent, uint32_t id)
+bool PECMD_CreateRichEditCtrl(int64_t *obj, uint32_t style, int *rc, HWND parent, uint32_t id)
 {
     int iVar1, iVar2, iVar3, iVar4;
     LONG lparent;
@@ -585,9 +586,9 @@ bool PECMD_CreateRichEditCtrl(int64_t *obj, uint32_t style, int *rc,
     cls = WSTR("RICHEDIT");
     if (g_richEditMode == 2)
         cls = WSTR("RichEdit20W");
-    h = CreateWindowExW(0, cls, NULL, style & 0xffffbfff, rc[0], rc[1],
-                        iVar2 - iVar4, iVar1 - iVar3, parent,
-                        (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)lparent, NULL);
+    h = CreateWindowExW(0, cls, NULL, style & 0xffffbfff, rc[0], rc[1], iVar2 - iVar4,
+                        iVar1 - iVar3, parent, (HMENU)(uintptr_t)id, (HINSTANCE)(intptr_t)lparent,
+                        NULL);
     obj[4] = (int64_t)(uintptr_t)h;
     PECMD_ContainerAppend(obj);
     if ((style >> 0xe & 1) != 0)
@@ -606,14 +607,13 @@ void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
     uint32_t hi;
 
     if (*(uint8_t *)((uint8_t *)obj + 0xa0) == 0) {
-        *(uint8_t *)((uint8_t *)obj + 0xa0) = 1;         /* obj+0x14 */
+        *(uint8_t *)((uint8_t *)obj + 0xa0) = 1; /* obj+0x14 */
         SetTimer((HWND)obj[4], 0x2711, 50, NULL);
         if (*(int16_t *)((uint8_t *)obj + 0xa2) >= 0) {
             *(uint16_t *)((uint8_t *)obj + 0xa2) = 1;
             if (*(int8_t *)((uint8_t *)obj + 0xac) > 0)
                 *(uint8_t *)((uint8_t *)obj + 0xa5) = *(uint8_t *)((uint8_t *)obj + 0xa4) & 2;
-            if (*(int8_t *)((uint8_t *)obj + 0xa1) != 0 ||
-                *(int8_t *)((uint8_t *)obj + 0xac) > 0)
+            if (*(int8_t *)((uint8_t *)obj + 0xa1) != 0 || *(int8_t *)((uint8_t *)obj + 0xac) > 0)
                 InvalidateRect((HWND)obj[4], NULL, 1);
         }
         if ((int8_t)g_tooltipThreshold < 1)
@@ -623,8 +623,7 @@ void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
     }
     hi = (uint32_t)(lParam >> 0x20);
     lo = (uint32_t)lParam;
-    ((ObjMsgFn)((void **)*obj)[1])(obj[4], 0x200, wParam,
-                                   (int64_t)(int)(hi << 0x10 | lo));
+    ((ObjMsgFn)((void **)*obj)[1])(obj[4], 0x200, wParam, (int64_t)(int)(hi << 0x10 | lo));
     if ((*(uint8_t *)((uint8_t *)obj + 0xac) & 7) != 0)
         SetCursor(g_hArrowCursor);
 }
@@ -634,8 +633,7 @@ void PECMD_ControlOnMouseMove(int64_t *obj, uint32_t wParam, uint64_t lParam)
  *   '@' -> bit4, '*' -> bit1, ':' 停止; 数字标记 bit5 并记录尾部@
  * TODO(verify): 标志位精确含义。
  */
-void PECMD_ParseTreeItemRefSpec(int64_t obj, int64_t *cursor, uint8_t *flags,
-                            int64_t *tailPtr)
+void PECMD_ParseTreeItemRefSpec(int64_t obj, int64_t *cursor, uint8_t *flags, int64_t *tailPtr)
 {
     int16_t *p;
     uint16_t *tail;
@@ -656,8 +654,7 @@ void PECMD_ParseTreeItemRefSpec(int64_t obj, int64_t *cursor, uint8_t *flags,
             *flags |= 2;
         }
         else if (*p != 0x3a) {
-            if (((uint16_t)(*p - 0x30U) < 10) ||
-                (*p == 0x40 && ((uint16_t)(p[1] - 0x30U) < 10))) {
+            if (((uint16_t)(*p - 0x30U) < 10) || (*p == 0x40 && ((uint16_t)(p[1] - 0x30U) < 10))) {
                 *flags |= 0x20;
                 tail = (uint16_t *)(intptr_t)*cursor;
             }

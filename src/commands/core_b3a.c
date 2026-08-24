@@ -45,8 +45,7 @@
 #include "pecmd_defs.h"
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text,
-                          int64_t *out);
+extern void PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text, int64_t *out);
 extern void PECMD_ZeroLenBuf(void *p);
 extern WCHAR **FUN_14005B154(WCHAR **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
@@ -57,7 +56,8 @@ extern void *PECMD_AllocMagicString(LPCWSTR src);
 extern void FUN_14007DF90(int64_t ctx, int mode);
 
 /* ---- 本批引用的全局数据 ---- */
-extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5, uint32_t *out);
+extern uint64_t (*g_pWIMCreateFile)(uint64_t wim, uint32_t mode, int f3, int f4, int f5,
+                                    uint32_t *out);
 extern int (*g_pWIMHandleOp480)(uint64_t h, uint64_t data, uint32_t mode);
 
 /* ========== PECMD_WrapParamCall_02d8 @0x1400402d8 ==========
@@ -84,7 +84,8 @@ int64_t PECMD_CompareStringWrap(LPCWSTR a, LPCWSTR b, int n, int caseSensitive)
     int iVar1;
     if (caseSensitive == 0) {
         iVar1 = StrCmpNIW(a, b, n);
-    } else {
+    }
+    else {
         iVar1 = StrCmpNW(a, b, n);
     }
     return (int64_t)iVar1;
@@ -129,8 +130,7 @@ void PECMD_ClampInt(int *value, int min, int max)
 /* ========== PECMD_SetThreeSlots @0x14005b01c ==========
  * 三槽赋值: [2]=a [0]=b [1]=c。
  */
-void PECMD_SetThreeSlots(uint64_t *slot, uint64_t a, uint64_t b,
-                   uint64_t c)
+void PECMD_SetThreeSlots(uint64_t *slot, uint64_t a, uint64_t b, uint64_t c)
 {
     slot[2] = a;
     slot[0] = b;
@@ -318,8 +318,7 @@ void PECMD_SendCtrlMessage_3d64(int64_t obj, LPARAM lParam)
 /* ========== PECMD_GrowArrayWrap @0x140065864 ==========
  * 数组增长包装: 负数索引归零并置标志。
  */
-void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end,
-                   uint8_t *flags, uint32_t esize)
+void *PECMD_GrowArrayWrap(int64_t idx, int64_t *arr, int64_t *end, uint8_t *flags, uint32_t esize)
 {
     if (idx < 0) {
         idx = 0;
@@ -347,8 +346,7 @@ void PECMD_ForwardCall_6838(int64_t obj, int64_t key)
 /* ========== PECMD_InitStrContainer @0x140070294 ==========
  * 串容器初始化并调用 PECMD_WideToAnsiStr。
  */
-int64_t *PECMD_InitStrContainer(int64_t *ps, LPCWSTR src, int64_t len,
-                       uint64_t cap)
+int64_t *PECMD_InitStrContainer(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap)
 {
     *ps = 0;
     PECMD_WideToAnsiStr(ps, src, len, cap);
