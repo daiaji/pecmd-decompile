@@ -4927,7 +4927,7 @@ uint64_t FUN_1400f2b84(longlong *vec, longlong found, int width, uint32_t col, i
         }
         return (uint64_t)(uintptr_t)node & 0xffffffffffffff00ULL;
     }
-    hit_out:
+/* removed unused label */
     return (uint64_t)(uintptr_t)0;
 }
 

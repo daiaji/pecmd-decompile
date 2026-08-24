@@ -107,7 +107,7 @@ long long PECMD_Dialog2727Proc(void *a, unsigned int b, uint64_t c, uint64_t d)
                 PECMD_AllocStrSlot((uint16_t **)&local_918.p);
                 pHVar4 = GetDlgItem(hwnd, 0x757d);
                 GetWindowTextW(pHVar4, local_838, 0x400);
-                local_38 = 0;
+
                 PECMD_EncodeStringId(local_838, (uint64_t *)&local_918.p, '\0');
                 FUN_140102a90((ulonglong *)local_838, 0, 0x802);
                 pWVar5 = StrChrW(local_838, L',');
@@ -276,6 +276,7 @@ uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, u
   uint64_t uVar23;
   LPWSTR pWVar24;
   uint64_t extraout_var;
+    (void)extraout_var;   /* B1 sweep */
   ulonglong uVar25;
   HANDLE *ppvVar26;
   uint64_t *puVar27;
@@ -283,10 +284,21 @@ uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, u
   int64_t *plVar29;
   LPCWSTR pWVar30;
   uint64_t extraout_var_00;
+    (void)extraout_var_00;   /* B1 sweep */
   LPWSTR pWVar31;
   LPCWSTR lpCurrentDirectory;
   uint64_t extraout_var_01, extraout_var_02, extraout_var_03, extraout_var_04,
            extraout_var_05, extraout_var_06, extraout_var_07, extraout_var_08;
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
+    (void)extraout_var_08;   /* B1 sweep */
   HANDLE pvVar32;
   short *psVar33;
   ushort uVar34;
@@ -407,9 +419,8 @@ uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, u
   FTU64 local_b20, local_b18;
   longlong local_b10;
   FTU64 local_b08;
-  uint64_t local_b00;
   PROCESS_INFORMATION local_af8;
-  uint64_t local_ae0, local_ad8, local_ad0;
+  uint64_t local_ae0, local_ad8;
   HANDLE local_ac8;
   LPWSTR local_ac0;
   FTU64 local_ab8, local_ab0;
@@ -420,7 +431,7 @@ uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, u
   LPCWSTR local_a88;
   longlong local_a80, local_a78;
   short *local_a68;
-  uint64_t local_a60, local_a58;
+  uint64_t local_a60;   /* B1 sweep: trailing var removed */
   FTU64 local_a50, local_a48, local_a40, local_a38, local_a30;
   longlong local_a28;
   FTU64 local_a20, local_a18;
@@ -623,7 +634,7 @@ uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, u
   local_af8.dwThreadId = 0;
   local_ae0 = 0;
   local_ad8 = 0;
-  local_ad0 = 0;
+
   PECMD_ResetSlots((uint64_t *)&local_a80);
   local_c40.ft.dwLowDateTime = 0;
   local_c40.ft.dwHighDateTime = 0;
@@ -1701,7 +1712,7 @@ LAB_140010994:
   }
   local_a68 = (short *)0x0;
   local_a60 = 0;
-  local_a58 = 0;
+
   local_c00 = (HANDLE *)0x0;
   if (((local_d68.v == 0) || (*(WCHAR *)(uintptr_t)local_d68.v == L'\0')) || (uVar17 != 0)) {
     _Var47.ft.dwLowDateTime = 0;
@@ -3728,7 +3739,7 @@ LAB_14001512a:
       local_b10 = 0;
       local_b08.ft.dwLowDateTime = 0;
       local_b08.ft.dwHighDateTime = 0;
-      local_b00 = 0;
+
       local_9b0 = local_d58;
       param_5 = param_5 & 0xffffff00u;           /* 原 param_5._0_1_='\0' */
       if (*local_d58 == L'@') {
@@ -4291,6 +4302,9 @@ void PECMD_TlsLogWrite(uint64_t ctx, const uint16_t *fmt, uint64_t a, uint64_t b
 {
   (void)ctx;
   uint64_t local_res18 = a, local_res20 = b;
+    (void)local_res18;   /* B1 sweep */
+    (void)local_res18;   /* B1 sweep */
+    (void)local_res18;   /* B1 sweep */
   longlong *plVar2 = (longlong *)(uintptr_t)TlsGetValue((uint64_t)DAT_14013c934);
   longlong *plVar3 = (longlong *)&DAT_14013cb18;
   if ((uintptr_t)plVar2 != 0 && *plVar2 != 0) plVar3 = plVar2;
@@ -4433,6 +4447,10 @@ uint8_t *PECMD_LoadEncodedResource(void *a, uint16_t *b, uint16_t *c, int64_t *d
     PECMD_AssignAnsiString((uint64_t *)&local_38[0],0);
     uint64_t local_30 = (uint64_t)(uintptr_t)hResData;
     uint64_t local_28 = uVar8, local_20 = uVar8;
+    (void)local_28;   /* B1 sweep */
+    (void)local_28;   /* B1 sweep */
+    (void)local_28;   /* B1 sweep */
+    (void)local_28;   /* B1 sweep */
     FUN_140068984((long long *)&local_30,d,(char)uVar1);
     local_30 = 0;
     PECMD_FreeStrBuf((WCHAR **)&local_30);
@@ -4507,18 +4525,18 @@ void PECMD_FixKnownDlls32(void)
                 (*DAT_14013cb48)(local_48, (void *)L"\\KnownDlls32");
                 (*DAT_14013cb48)(local_58, (void *)L"\\KnownDlls32\\KnownDllPath");
                 (*DAT_14013cb48)(local_68, local_38);
-                local_90 = 0;
-                local_78 = 0;
-                local_70 = 0;
-                local_c0 = 0;
-                local_a8 = 0;
-                local_a0 = 0;
+
+
+
+
+
+
                 local_res8 = 0;
                 local_res10[0] = 0;
-                local_88 = local_48;
+
                 local_b8 = local_58;
-                local_80 = 0x50;
-                local_b0 = 0x50;
+
+
                 local_98[0] = 0x30;
                 local_c8[0] = 0x30;
                 iVar2 = (*DAT_14013cd30)(&local_res8, 0xf000f, local_98);
@@ -4794,8 +4812,6 @@ uint64_t PECMD_ScriptInitParse(uint64_t a, uint64_t b, uint64_t c)
   longlong *local_d0;
   uint local_c8;
   undefined4 local_c0;
-  undefined2 local_bc;
-  undefined2 local_ba;
   WCHAR local_b8;
   LPCWSTR local_b0;
   ulonglong local_a8;
@@ -5272,8 +5288,8 @@ LAB_14002716f:
             plVar15 = local_d0;
             if ((*pWVar1 != L'\0') && (pWVar1[1] == L':')) {
               local_c0 = (undefined4)((0x3aU << 16) | (uint16_t)*pWVar1);
-              local_bc = 0x5c;
-              local_ba = 0;
+
+
               local_res10 = pWVar1;
               if (((local_res20 & 1) == 0) ||
                  ((BVar13 = GetVolumeNameForVolumeMountPointW((LPCWSTR)&local_c0,lpszVolumeName,DVar23),
@@ -7917,6 +7933,7 @@ static char PECMD_NormalizeDiskDevicePath(longlong *p) { (void)p; return '\0'; }
   HANDLE pvVar12;
   WCHAR *pWVar13;
   undefined7 extraout_var;
+    (void)extraout_var;   /* B1 sweep */
   LPCWSTR pWVar14;
   longlong lVar15;
   LPCWSTR pWVar16;
@@ -7924,8 +7941,11 @@ static char PECMD_NormalizeDiskDevicePath(longlong *p) { (void)p; return '\0'; }
   LARGE_INTEGER LVar18;
   ulonglong uVar19;
   undefined7 extraout_var_00;
+    (void)extraout_var_00;   /* B1 sweep */
   undefined7 extraout_var_01;
+    (void)extraout_var_01;   /* B1 sweep */
   undefined7 extraout_var_02;
+    (void)extraout_var_02;   /* B1 sweep */
   undefined1 uVar20;
   LARGE_INTEGER *pLVar21;
   uint uVar22;
@@ -11125,7 +11145,6 @@ uint64_t PECMD_EnumProcessInfo(uint16_t *s, int a, int64_t *p, int b, unsigned l
     undefined1 local_374[28];
     FILETIME local_358[2];
     undefined4 local_348;
-    undefined4 local_344;
     ulonglong local_340[15];
     undefined1 local_2c8[8];
     ulonglong local_190[42];
@@ -11347,7 +11366,7 @@ LAB_14002dcd5:
                             PECMD_GetApiProcCached("GetProcessMemoryInfo", "PSAPI.DLL",
                                           (longlong *)&g_pGetProcessMemoryInfo, (longlong *)0);
                             local_348 = 0x48;
-                            local_344 = 0;
+
                             FUN_140102a90(local_340, 0, 0x40);
                             if (g_pGetProcessMemoryInfo != (void *)0) {
                                 ((void (*)(HANDLE, void *, DWORD))(uintptr_t)g_pGetProcessMemoryInfo)(
@@ -12585,6 +12604,7 @@ uint64_t PECMD_DecodeBase64ToWideStr(uint8_t *param_1, uint64_t *param_2)
   uint8_t *pCVar5;
   uint8_t *local_res8;
   LPCSTR pstr;
+    (void)pstr;   /* B1 sweep */
 
   iVar2 = lstrlenA((LPCSTR)param_1);
   PECMD_AllocStringSlot2((void **)&local_res8,(int64_t)((iVar2 + 1) * 3));
@@ -13134,21 +13154,18 @@ BOOL FUN_14006f908(char param_1,int param_2)
   HANDLE local_res18;
   WCHAR local_28 [4];
   short local_20;
-  undefined2 local_1e;
-  undefined2 local_1c;
-  undefined2 local_1a;
   undefined2 local_18;
   undefined2 local_16;
 
   memcpy(local_28,L"\\\\.\\",8);
   local_20 = (short)param_1;
-  local_1e = 0x3a;
+
   local_res18 = (HANDLE)0x0;
   local_res8[0] = 0;
-  local_1c = 0;
-  local_1a = 0;
-  local_18 = 0;
-  local_16 = 0;
+
+
+
+
   FUN_140003864(&local_res18,local_28,0xc0000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
   if (local_res18 == (HANDLE)0x0) {
     FUN_140003864(&local_res18,local_28,0x80000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
@@ -17374,8 +17391,6 @@ void FUN_1400f6db0(longlong param_1,longlong param_2)
     ulonglong local_1b8;
     double local_1b0;
     ulonglong local_1a8;
-    undefined8 local_1a0;
-    undefined8 local_198;
     ulonglong local_190 [5];
     RECT local_168;
     undefined4 local_158;
@@ -17844,8 +17859,8 @@ LAB_1400f7cb1:
                                 }
                                 if (*pWVar42 != (WCHAR)lVar46) {
                                     local_1a8 = *(ulonglong *)((longlong)local_348 + uVar14 + 0x10);
-                                    local_1a0 = *(undefined8 *)((longlong)local_328 + uVar14);
-                                    local_198 = *(undefined8 *)((longlong)local_348 + uVar14);
+
+
                                     pHVar19 = FUN_14001f1d4(pWVar42,&local_1a8);
                                     *(HICON *)((longlong)local_370 + uVar14) = pHVar19;
                                     lVar46 = 0;
