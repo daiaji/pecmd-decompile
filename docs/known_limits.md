@@ -1,5 +1,8 @@
 # known_limits.md — KNOWN-LIMIT 登记簿（场景 B 交付物）
 
+> v4 定位注记：本登记簿在 v4（参考库）路线下继续有效；P10/P11 与 B 剩余登记将随验证驱动补全逐条消化或转入 docs/divergences.md。
+
+
 > 格式：id / 地址 / 现象 / 影响面 / triage（PRODUCTION_ROADMAP §3.B.5-5b）
 > 本文件是场景 B 的"诚实标注"汇总；行为类警告逐条账目另见 tools/warning_census_b0.json。
 

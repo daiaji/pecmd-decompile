@@ -1,5 +1,8 @@
 # triage_map.md — TODO(verify) 全量分诊地图（B5a 提前件 / S-B 交付物）
 
+> v4 定位注记：分诊结果在 v4 下继续有效——STATIC 287 条为可读性/补全的 dc 定位线索；BLACKBOX 46 条为验证探针用例来源（P2 阶段转化）。
+
+
 > 基线：tag B0 后实测 423 条 TODO(verify)。原始数据 tools/triage/triage_out_batch{1-4}.jsonl
 > 规则：PRODUCTION_ROADMAP §3.B.5-5a。signedness_audit.json FAITHFUL 45 条已销号（见 §3）。
 

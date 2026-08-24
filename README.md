@@ -4,8 +4,9 @@ PECMD.EXE（WinPE 脚本工具）的 Ghidra 反编译忠实还原工程：把 `F
 移植为语义命名的 C 真体。命名底账 1,594 符号（tools/rename_map.json），全部 FourCC 命令
 真体落地（EXEC/ENVI/SHOW/REGI/RAMD/TABL/DISK/HASH/ListCtrl/PicRgn 等）。
 
-> **定位声明**：本库风格达生产规范，但行为未经系统对拍验证（见 PRODUCTION_ROADMAP 场景B边界）。
-> Wine 冒烟仅为开发参考，金标准录自真 Windows。
+> **定位声明**：本库为 PECMD 反编译**参考库**（v4 路线）——还原/命名/构建全战线清零，
+> 待 WIN 端完成 MSVC 化 + 双二进制对拍验证后，交付"人类可读、行为验证过的参考源码"
+> （PRODUCTION_ROADMAP v4）。金标准只录自真 Windows（原版 EXE）。
 
 ## 构建
 
@@ -36,8 +37,9 @@ gcc -std=c99 -w -Wno-implicit-function-declaration -Iinclude \
 
 ## 关键文档
 
-- `PRODUCTION_ROADMAP.md` — 场景 B/C 总方案书（v3）
+- `PRODUCTION_ROADMAP.md` — 参考库总方案书（v4：验证驱动补全 / WIN+MSVC）
 - `docs/triage_map.md` — TODO(verify) 423 条分诊地图（STATIC 287 / BLACKBOX 46 / UNK 90）
 - `docs/known_limits.md` — KNOWN-LIMIT 登记簿
 - `docs/provenance.map` — 新符号 ↔ 原 Ghidra 地址对照（1,594 条）
-- `harness/README.md` — C-P0 闭环用法（WIN 端三步 + Linux 判读 + 裁决纪律）
+- `docs/B1_pipeline_status.md` — 可读性推进（B1 语义化）配方
+- `harness/README.md` — 验证闭环用法（双跑 + 判读 + 裁决纪律）
