@@ -1,0 +1,105 @@
+{"file":"core_b2f.c","line":23,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释（extern 挂起策略说明），非具体验证点，KNOWN-LIMIT"}
+{"file":"core_b2f.c","line":26,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释（缺参/寄存器残留处理策略），非单点验证项"}
+{"file":"core_b2f.c","line":39,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（未实现依赖批量声明），验证依赖后续波次整批还原"}
+{"file":"core_b2f.c","line":144,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:19189 unaff_RBP; 调用方 dc:1651/1696 弃返回值","rationale":"dc 确认返回值为未初始化寄存器且所有调用方忽略返回值，按 0 处理可直接定案"}
+{"file":"core_b2f.c","line":548,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140021a4c","rationale":"COM vtable 偏移可与 IShellLinkW 标准接口及 dc 原伪码逐一对照定案"}
+{"file":"core_b2f.c","line":987,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140028a00","rationale":"HWND 被 Ghidra 复用为缓冲的类型混淆可通过 dc 原伪码数据流对照修正"}
+{"file":"core_b2f.c","line":1855,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2f.c","line":1973,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:16242 Process32FirstW(hObject) 单参截断","rationale":"Win32 API 签名固定为 Process32FirstW(hSnapshot, LPPROCESSENTRY32W)，补参无需黑盒"}
+{"file":"core_b2f.c","line":2081,"triage":"RESOLVABLE-STATIC","dc_hint":"NtQuerySystemInformation 标准 4 参签名","rationale":"参数个数类问题，按公开 API 签名补 SystemInformationLength/ReturnLength 即可定案"}
+{"file":"core_b2f.c","line":2276,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc:27464 wsprintfW 6 spec 仅 0 vararg","rationale":"Ghidra 截断全部 vararg 实参，精确实参列表需运行原版观察 LIST 进程输出格式"}
+{"file":"core_b2f.c","line":2329,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释（类型误标重写说明），非具体验证点"}
+{"file":"core_b2f.c","line":2647,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2f.c","line":3210,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x140033xxx FindFileOrDir 调用点","rationale":"extraout_EAX 为 Ghidra 寄存器残留，返回值高位真实性需运行观察盘符枚举结果"}
+{"file":"core_b2f.c","line":3679,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2f.c","line":3806,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x1400369d0","rationale":"CONCAT44/CONCAT71/extraout 残留值已被 Ghidra 丢弃，近似值需 RAM 盘命令黑盒比对"}
+{"file":"core_b2f.c","line":3851,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400369d0 栈帧布局","rationale":"union 别名的真实字段含义可由 dc 原伪码偏移访问模式静态对照定案"}
+{"file":"core_b2f.c","line":3853,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400369d0 栈槽引用范围","rationale":"栈槽表项数可由 dc 中 local_138 系列最大引用偏移静态推算"}
+{"file":"core_b2f.c","line":4490,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x140037ba8","rationale":"in_stack_fffffffffffffe98>>32 为不可静态复原的入口栈残留，需 LOGO 对话框行为黑盒验证"}
+{"file":"core_b2f.c","line":4522,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x140037ba8","rationale":"in_stack 高 32 位残留值静态无解，需运行观察绘制结果"}
+{"file":"core_b2f.c","line":4523,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x140037ba8","rationale":"in_stack 高 32 位残留值静态无解，需运行观察绘制结果"}
+{"file":"core_b2d.c","line":24,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2d.c","line":27,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2d.c","line":57,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b2d.c","line":202,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:19827 FUN_140021144","rationale":"非 UTF-16 分支字节读取语义可由 dc 原伪码逐指令对照定案"}
+{"file":"core_b2d.c","line":457,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:22474 FUN_140025474 签名","rationale":"threadInfo 实为 CRT threadlocinfo 的判断可由 dc 参数来源与传递链静态确认"}
+{"file":"core_b2d.c","line":644,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:23880 _snwprintf(...,L\"\\\\Device\\\\ImDisk%u\") 实参截断","rationale":"格式串唯一数值 spec 与 unit 参数一一对应（ImDisk 设备命名惯例），静态强推断可定案"}
+{"file":"core_b2d.c","line":1024,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:26281 FUN_14002c048","rationale":"0x14e/0x29 偏移的字段语义可由 dc 写读点静态对照"}
+{"file":"core_b2d.c","line":1205,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x14002e3d4","rationale":"in_stack 入口残留值静态不可复原，需 PELOGON -dummy 流程黑盒验证；0x140120784 为 .rdata 地址可静态核"}
+{"file":"core_b2d.c","line":1588,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14003aad0","rationale":"ctx[4] 双重角色可由 dc 各读写点的比较/递减指令静态分辨"}
+{"file":"core_b2d.c","line":1780,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14003b010 栈布局","rationale":"任务槽数与线程参数布局可由 dc 栈帧分配大小静态核算"}
+{"file":"core_b2d.c","line":2101,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc @0x14003d608","rationale":"wsprintfA/W vararg 被 Ghidra 截断，关机提示文案实参需运行原版观察"}
+{"file":"core_b2e.c","line":23,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b2e.c","line":47,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b2e.c","line":192,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140023640","rationale":"两函数间返回类型交互可由 dc 数据流静态对照"}
+{"file":"core_b2e.c","line":402,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140023c48","rationale":"分隔符配置偏移 0x48/0x88..0x94 可由 dc 加载/比较点静态确认"}
+{"file":"core_b2e.c","line":795,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14002a910","rationale":"pthreadlocinfo 误标实为 WCHAR 游标可由 dc 使用方式（解引/步进）静态证明"}
+{"file":"core_b2e.c","line":1000,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14002b2ec","rationale":"goto 布局的等价语义（逐行扫描 INF）可由 dc 控制流图静态还原"}
+{"file":"core_b2e.c","line":1372,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14002d33c","rationale":"FILETIME 容器实为字符串指针可由 dc 拆分访问模式静态证明"}
+{"file":"core_b2e.c","line":1724,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14002fd88","rationale":"stateFlags 来源 local_res8 属参数区指针低位，dc 可静态对照"}
+{"file":"core_b2e.c","line":1892,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140035cec","rationale":"函数指针全局符号存储形式可由 dc 初始化/调用点静态对照"}
+{"file":"core_b2e.c","line":2106,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14003634c 常量串","rationale":"设备路径模板常量可由 dc .rdata 字符串引用静态核对"}
+{"file":"core_b8_remaining.c","line":17,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400e1228 完整原体约 8K","rationale":"dc 存在完整原函数体，属可静态还原的大型工作项而非信息缺失"}
+{"file":"core_b8_remaining.c","line":580,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"magic 0xA3D70A3D70A3D70B, add-correct shift=26, d≈40920039","rationale":"魔法除数按 roadmap 归黑盒语料；可先 python 解码 magic number 再以 MEM 命令样本验证"}
+{"file":"core_b8_remaining.c","line":841,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"wsprintfW(L\"%s#%s#%s$%u\") 4 spec vs 2 可见实参","rationale":"栈上 vararg 实参 Ghidra 不可见，需 IPC 连接串实际输出生成黑盒观察"}
+{"file":"core_b8_remaining.c","line":919,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"EXEC --pid 串 12 spec","rationale":"EXEC 命令行规格多于可见寄存器实参，栈参需运行原版抓取最终命令行"}
+{"file":"core_b8_remaining.c","line":926,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"imdisk -a -t proxy 串","rationale":"proxy imdisk 规格/实参不齐，需运行观察生成的 imdisk 命令行"}
+{"file":"core_b8_remaining.c","line":973,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"imdisk -a -b/-s/-f 串","rationale":"-b/-s/-f 数值实参被截断，需运行观察 imdisk 最终参数"}
+{"file":"core_b8_remaining.c","line":1151,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400f36ec 原体","rationale":"列宽/滚动映射逻辑在 dc 中完整存在，可静态照抄还原"}
+{"file":"core_b8_remaining.c","line":1162,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400f6db0 原体","rationale":"绘制逻辑在 dc 中完整存在，可静态还原"}
+{"file":"core_b8_remaining.c","line":1172,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400f94a0 原体","rationale":"命中测试逻辑在 dc 中完整存在，可静态还原"}
+{"file":"core_script2.c","line":47,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释（简化范围声明），非具体验证点"}
+{"file":"core_script2.c","line":66,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:22130 FUN_140024c48(longlong*,longlong*,uint)","rationale":"& 前缀跳过与 flag(0x40 时 0x27 引号)语义可由 dc 原体静态确认"}
+{"file":"core_script2.c","line":69,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 主初始化函数 seed 消费点","rationale":"GenRandomSeed16 返回值的消费位置可在 dc 中 grep 定案是否用于 XOR 密钥"}
+{"file":"core_script2.c","line":78,"triage":"RESOLVABLE-STATIC","dc_hint":"dc MaskScriptEndFileTail 调用点上下文","rationale":"原版行分割后执行 init 的流程在 dc 中完整可读，可静态照抄"}
+{"file":"core_script2.c","line":84,"triage":"RESOLVABLE-STATIC","dc_hint":"dc SCRIPTINIT 资源加载后执行序列","rationale":"init 段执行调用的目标函数在 dc 中可见，可静态接线"}
+{"file":"core_script2.c","line":122,"triage":"RESOLVABLE-STATIC","dc_hint":"dc first=='-' 分支原体","rationale":"单命令模式的原分支逻辑在 dc 中完整可读"}
+{"file":"core_script2.c","line":136,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 资源 0x12e 后的 ParseHlpDoc 调用","rationale":"帮助文档解析执行的原调用在 dc 中可静态恢复"}
+{"file":"core_script2.c","line":150,"triage":"RESOLVABLE-STATIC","dc_hint":"dc run_script 分支原体","rationale":"完整参数解析序列在 dc 中可静态照抄"}
+{"file":"core_b3r_g2.c","line":12,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释（归一化说明），非具体验证点"}
+{"file":"core_b3r_g2.c","line":15,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b3r_g2.c","line":119,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:62985 wsprintfW 截断; dc:62965 CM_Get_DevNode_Status_Ex(local_264,&local_268)","rationale":"CM API 出参序固定（第1=status 第2=problem），可静态核对补齐实参；疑 refactored 将 status/problem 顺序对调"}
+{"file":"core_b3r_g2.c","line":186,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:63140-63146 CONCAT42/CONCAT62 构造 sockaddr_in","rationale":"local_246 并非未使用：与 local_248 组成 16 字节 sockaddr_in 供 dc:63151 connect 使用，静态可证归一化有误"}
+{"file":"core_b3r_g2.c","line":200,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:63137 (*DAT_14013d580)() 即 inet_addr 无可见实参","rationale":"inet_addr 单字符串参数的唯一候选是 param_1(g_timeServer)，静态强推断可定案"}
+{"file":"core_b3r_g2.c","line":202,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:63140-63146 + dc:63151 connect(&local_248,0x10)","rationale":"CONCAT 序列实为填充 connect 目标地址，非死代码，读 dc 原伪码即可定案"}
+{"file":"core_exec3.c","line":89,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:21890-21896 引号闭合后 FUN_14006375c(local_48,pWVar7) 并入残留","rationale":"原伪码直接展示引号后残留并入 &&CurFile.File，静态可定案并补实现"}
+{"file":"core_exec3.c","line":192,"triage":"RESOLVABLE-STATIC","dc_hint":"NOTIFYICONDATAW sizeof=976=0x3D0 (Win32 结构定义)","rationale":"cbSize=0x3D0 与 memset 长度一致，属公开结构大小，静态定案"}
+{"file":"core_exec3.c","line":204,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x140061c44 GetProcAddress 序列","rationale":"原实现的 OLE32 导出加载列表在 dc 中可静态对照"}
+{"file":"core_exec3.c","line":305,"triage":"RESOLVABLE-STATIC","dc_hint":"dc **..^^ 递归分支原体","rationale":"递归执行的目标与条件在 dc 中完整可读，可静态补全"}
+{"file":"core_exec3.c","line":318,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 原体 FUN_140045C90(table,buf) 调用点","rationale":"缺失的执行调用在 dc 中可直接照抄恢复"}
+{"file":"core_b8d.c","line":39,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b8d.c","line":53,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b8d.c","line":112,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400e5aac 全部调用点实参","rationale":"7 参回调各槽位语义可由 dc 中该 vtable 槽的其他调用点交叉对照"}
+{"file":"core_b8d.c","line":134,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400e6960 StringVPrintfWorkerW 封装","rationale":"va_list 参数个数可由 dc 内部格式串消费静态确认"}
+{"file":"core_b8d.c","line":167,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400ec9c0 打包指令序列","rationale":"高低字打包为 lParam 的原始位运算在 dc 中可直接对照"}
+{"file":"core_b8a.c","line":39,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b8a.c","line":51,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b8a.c","line":108,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400e5708 字段读写点","rationale":"+0x123 字段的增减/比较指令可静态证明其引用计数语义"}
+{"file":"core_b8a.c","line":355,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400f5558 item 字段消费点","rationale":"+0x10/+0x4/+0x8 字段语义可由 dc 下游使用方式静态对照"}
+{"file":"core_b3r_g7.c","line":189,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14007c9xx CONCAT62 原始指令","rationale":"盘符替换仅改低位 WCHAR 的拼接语义在 dc 中可直接逐位对照"}
+{"file":"core_b3r_g7.c","line":223,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数 CONCAT62 原始指令","rationale":"同上，GetLogicalDrives 枚举分支的拼接可静态对照"}
+{"file":"core_b3r_g7.c","line":263,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数 CONCAT62 原始指令","rationale":"'C' 标记分支的低位替换可静态对照"}
+{"file":"core_b3r_g7.c","line":414,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14007xxxx PECMD_ExecCmdDispatch 原型与其他调用点","rationale":"成对残留为 Ghidra 32/64 拆分伪影，参数个数可由被调函数原型与同类调用点静态定案"}
+{"file":"core_b3b.c","line":37,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b3b.c","line":48,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b3b.c","line":151,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:55031 return CONCAT71((int7)(in_RAX>>8),1)","rationale":"dc 明确返回 (末次宽字符高字节<<8)|1，按 1 近似损失了差异高位编码，可静态修正"}
+{"file":"core_exec4.c","line":48,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:17397-17430 DAT_14013cd18=NtCreateFile, CreateOptions=0x20","rationale":"NtCreateFile 参数(含 FILE_SYNCHRONOUS_IO_NONALERT)与 CreateFileW 映射关系可静态对照定案"}
+{"file":"core_exec4.c","line":316,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_140003A20 调用点原体","rationale":"变量解析后再写 *out 的原序列在 dc 中可静态照抄"}
+{"file":"core_exec4.c","line":338,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400E7D58 原体","rationale":"解码依赖函数在 dc 中完整存在，可静态评估并还原"}
+{"file":"core_b3d.c","line":37,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b3d.c","line":48,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_b3d.c","line":514,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_14009c6dc 内 wsprintfW(local_88,L\"%d\") 零实参","rationale":"%d 实参被 Ghidra 截断且上下文无候选值，需运行原版观察控件显示数字"}
+{"file":"core_b3r_i28e.c","line":476,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc 图标装载分支大量寄存器拼接","rationale":"简化是否无损取决于寄存器拼接的真实语义，静态难复原，需图标加载行为黑盒比对"}
+{"file":"core_b3r_i28e.c","line":988,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"extraout 寄存器残留","rationale":"寄存器低 32 位真实值已被 Ghidra 丢弃，需运行观察控件初始化结果"}
+{"file":"core_b3r_i28e.c","line":989,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"extraout 寄存器残留","rationale":"寄存器低 32 位真实值已被 Ghidra 丢弃，需运行观察控件初始化结果"}
+{"file":"core_b3a.c","line":37,"triage":"UNK","dc_hint":"N/A","rationale":"文件头描述性样板注释，非具体验证点"}
+{"file":"core_b3a.c","line":47,"triage":"UNK","dc_hint":"N/A","rationale":"区块头样板注释（extern 批量挂起），验证依赖后续波次还原"}
+{"file":"core_init.c","line":88,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc:23758 wsprintfW(local_e8,L\"%06lu%06lu\") 零实参","rationale":"两个 %06lu 实参与 QPC/启动时间的组合方式被截断，需运行原版读取 PECMDVER 值反推"}
+{"file":"core_init.c","line":90,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc:23758 同一调用","rationale":"同上，参数丢失需黑盒观察 PECMDVER 输出定案"}
+{"file":"core_b3r_d.c","line":920,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:88523 截断处; 循环计数器 uVar12 同时喂 EnumDevices","rationale":"PhysicalDrive%d 的实参即枚举循环变量 uVar12，由循环结构与下游复用可静态高置信定案"}
+{"file":"core_b3r_d.c","line":1012,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc:88596-88605 12 spec 仅 (uVar12,local_c8)","rationale":"其余 10 个 vararg 被 Ghidra 截断，PARTINFO 磁盘列表列序需运行原版观察"}
+{"file":"core_b3r_i28d.c","line":415,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:113038 签名 LARGE_INTEGER param_1; dc:113058+ 以 QuadPart+0x78/0x80 访问","rationale":"按值传入按基址使用的 Ghidra 大指针伪影可由 dc 字段访问模式静态确认，现实现已一致"}
+{"file":"core_b3r_i28d.c","line":477,"triage":"RESOLVABLE-STATIC","dc_hint":"dc:115114-115121 (uVar13&0xff)/(uVar1==0x2a)/CONCAT44(local_b0)","rationale":"'*' 标记低字节入槽的原始位运算在 dc 中可见，bool 化等价性可静态核对"}
+{"file":"unimplemented_stubs.c","line":380,"triage":"UNK","dc_hint":"dc d9818 依赖集原体","rationale":"wave-INDIR 最小桩为计划内后续波次工作项（真体还原），非单点验证，KNOWN-LIMIT"}
+{"file":"unimplemented_stubs.c","line":398,"triage":"UNK","dc_hint":"dc f6db0 依赖集原体","rationale":"wave-INDIR 最小桩为计划内后续波次工作项（真体还原），非单点验证，KNOWN-LIMIT"}
+{"file":"core_b3r_h3.c","line":913,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x14009da54 栈槽访问模式","rationale":"多态栈槽(_FILETIME 误标)的位运算布局可由 dc 原伪码各访问点静态对照定案"}

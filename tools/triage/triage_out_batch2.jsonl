@@ -1,0 +1,106 @@
+{"file":"core_b8m.c","line":10,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明(未实现依赖挂起策略)，非具体待验证断言，无可定案内容"}
+{"file":"core_b8m.c","line":48,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指下方全部 extern 桩；具体定案需逐函数进行，标题本身无单一可验证命题"}
+{"file":"core_b8m.c","line":483,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L147809 FUN_1400f172c 签名 ushort+内部 LARGE_INTEGER LVar4/LVar9；被调方 FUN_14004c0bc dc L43816 签名为 LARGE_INTEGER","rationale":"脚本块执行器实际返回位宽由 dc 签名与调用点消费方式(RAX/RDX 是否都被读)静态可证"}
+{"file":"core_b8m.c","line":779,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L144377 FUN_1400ebd30 体: (*DAT_14013e268)(0,0,param_1+8,0,FUN_1400e4edc,param_1+0xa78), DAT_14013e2a0=*(param_1+0xa78)","rationale":"RasDialW 六参调用序(ext,book,params,notifierType,notifier,&hRasConn)与 0xa78 句柄槽语义在 dc 函数体内完整可见"}
+{"file":"core_b8m.c","line":865,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400E3288 @0x1400e3288 函数体全文","rationale":"驱动签名策略分支(注册表读/写、CryptoAPI 哈希、各返回码)在反编译体中逐行可见，对照即可定案"}
+{"file":"core_b8m.c","line":1049,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L154348 区外: FUN_1400f00f4 签名仅 4 参, 隐藏栈实参未出现在反编译体","rationale":"Ghidra 未把 '@' 图像分支的隐藏栈参数建模进签名，dc 无该值线索；需运行原版构造图像对象观察绘制行为差异"}
+{"file":"core_b8m.c","line":1178,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_Wow64MapPeImage @0x1400e7124 函数体","rationale":"32 位 ImageBase 重定位与节区展开逻辑在 dc 中逐行完整，含 machine 分支与节表步进"}
+{"file":"core_b8m.c","line":1310,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_RunPeInjectStart @0x1400e4480 函数体(ctx[0x4d0] 各偏移读写)","rationale":"上下文布局偏移为公开 CONTEXT 结构且 dc 体含全部偏移访问与 fail 路径(TerminateProcess/CloseHandle 序列)"}
+{"file":"core_b8m.c","line":1447,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ListInsertRowItems @0x1400f4e5c 函数体","rationale":"0x380/0x388/0x368/0x370 四数组的读写点均在 dc 函数体内，按消息(LVM_* 0x102b/0x1000)用法可定案各自语义"}
+{"file":"core_b8m.c","line":1549,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400E89FC @0x1400e89fc 函数体","rationale":"0x44d/0x466 数组槽位的读写与标志判断全在 dc 体内，交叉引用其消费方即可定案"}
+{"file":"core_b8m.c","line":1795,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_RescaleDcPixelsWeighted @0x1400ecf90 函数体(整数累加器 srcXAcc/weightY 与除法表达式)","rationale":"权重边界公式为纯整数算术，精确表达式完整保留在 dc，可直接抄录定案"}
+{"file":"core_b8m.c","line":1872,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L148011-148059 (FUN_1400f1c8c 内): HWND unaff_R15; 多处 return unaff_R15","rationale":"unaff_R15 为调用方寄存器残留值，dc 无法给出实际值；需运行观察返回值消费或反汇编调用点寄存器状态"}
+{"file":"core_b8m.c","line":1956,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L154348 FUN_1400fb654 签名: LPCWSTR * * * * * __fastcall(...)","rationale":"Ghidra 推断的多重指针返回类型原文在 dc 签名中，对照全部调用点对返回值的消费宽度即可定案真实类型"}
+{"file":"core_b8m.c","line":2052,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_FormatDoubleToStr @0x1400e69ac 函数体(尾零修剪/指数补零循环)","rationale":"原始格式化算法完整存在于 dc，重构版边界行为可通过逐段比对 dc 源码静态定案，无需运行"}
+{"file":"core_b8m.c","line":2182,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DownscaleDibBlockAvg @0x1400eda04 函数体(bmiSrc/bmiDst 与 stride 计算)","rationale":"缓冲布局(GetDIBits 行序、bpp 分支、stride 对齐)在 dc 体中完整可见"}
+{"file":"core_b8m.c","line":2264,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_TrackbarHostDispatch @0x1400fc4a4 函数体 0x462 分支","rationale":"0x462 查询/设置所用的入参数组布局与回写偏移在 dc 体内可见"}
+{"file":"core_b8m.c","line":2353,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DrawWrappedText @0x1400fe168 函数体(fmt=flags&0xffffffda、行高测量循环)","rationale":"该函数本身是原 exe 自带实现，换行/居中边界的'原始行为'即 dc 中的代码，比对可静态定案"}
+{"file":"core_b8m.c","line":2454,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ResampleDibBoxFilter @0x1400ed278 函数体(整数定点插值)","rationale":"原整数定点权重实现的取整/截断表达式完整在 dc，与浮点版逐像素对照即可定案边界差异"}
+{"file":"core_b8m.c","line":2539,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ScrollHostMsgDispatch @0x1400fc8ec 函数体","rationale":"0x462 参数数组与滚动范围(min/max/page)的字段偏移和读写顺序在 dc 体内可见"}
+{"file":"core_b8m.c","line":2722,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DrawRadioButtonFace @0x1400ef14c 函数体","rationale":"图形样式位组合与 0x110 内嵌对象分支条件在 dc 体内完整可见"}
+{"file":"core_b8m.c","line":2846,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ListMouseDownGroupSelect @0x1400f69b8 函数体(local_b4 数据流)","rationale":"该栈槽是否先写后读可由 dc 的 def-use 链直接确认，未初始化疑点是 Ghidra 变量重建伪影"}
+{"file":"core_b8m.c","line":2986,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DrawIconScaled @0x1400ede48 完整函数体(GDI+ Graphics 分支)","rationale":"原始 GDI+ 路径代码完整保留在 dc，按 dc 还原即可定案，近似版与原版的差异属源码级比对问题"}
+{"file":"core_b8m.c","line":3038,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400F2384 @0x1400f2384 size=1378 函数体","rationale":"消息映射串解析的全部边界分支(:变量前缀/,-附加/-抑制/<临界区)在 dc 体内逐行可见"}
+{"file":"core_b8m.c","line":3206,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ControlPaint @0x1400fe610 函数体","rationale":"绘制标志(a4 位组合)与各绘制阶段的边界条件在 dc 体中完整可见"}
+{"file":"core_b8m.c","line":3387,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_TreeDumpItemsText @0x1400ffb64 函数体(0x400 标志、0xc 分隔符写入)","rationale":"flags 各位含义、分隔符常量与文本槽 out[] 布局均可在 dc 体内及消费方静态定案"}
+{"file":"core_b8m.c","line":3463,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ParseCtlLayoutFontSpec @0x1400f61dc 函数体(^N*size:margins 解析循环)","rationale":"完整解析器的字符级边界处理在 dc 体内可见，简化处逐一比对即可"}
+{"file":"core_b8m.c","line":3513,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DrawCheckboxControl @0x1400ee3d0 完整函数体","rationale":"原实现的复杂图形/图标分支代码完整保留在 dc，照抄还原即为定案"}
+{"file":"core_b8m.c","line":3549,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_PaintGradientHeader @0x1400f42fc 完整函数体","rationale":"原逐行渐变/文本/图标绘制逻辑完整存在于 dc，静态还原即可定案"}
+{"file":"core_b8m.c","line":3572,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L138910 LoadEnvi 体: PTR_u__Favorites_14011e6f8 表遍历 + PTR_u_SYSTEM_...14012af50 根路径表 + Quick Launch 特判","rationale":"多根路径表与 Favorites 特殊处理(含 CSIDL 0x1a 分支)完整保留在 dc 函数体内"}
+{"file":"core_b3_remaining.c","line":3102,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数(含 LAB_14004a587)驱动记录遍历体: 步进 *(ushort*)&p_Var44[-1].SectionName[64]","rationale":"field_0x62c 作为记录内 WCHAR 计偏移的含义由 dc 游标算术((p-p)>>1 步进)的数据流唯一确定"}
+{"file":"core_b3_remaining.c","line":3123,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: *(short *)&p_Var46[-1].SectionName[64] = ((int64_t)p_Var44-(int64_t)p_Var46)>>1","rationale":"存储值为字节差>>1(WCHAR 计数)的表达式原文在 dc，类型语义可直接定案"}
+{"file":"core_b3_remaining.c","line":5413,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 对应函数(param_5==NULL && param_1[2]==0x3f 分支, LAB_1400518ab 附近)","rationale":"低字节标志清零与置 1 的对偶分支在 dc 体内成对出现，操作语义可静态确认"}
+{"file":"core_b3_remaining.c","line":5454,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: local_res20 = (local_res20 & ~0xFF) | (*param_3 != 0)","rationale":"位打包表达式为 dc 原文直译，低字节布尔标记的写入语义由后续读取点静态可证"}
+{"file":"core_b3_remaining.c","line":5800,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数(LAB_140052bde 前): lVar34 = lVar27/local_b50 + 1 为标量 longlong 除法","rationale":"auVar7 128 位除法是 Ghidra 向量化伪影，dc 中对应运算为标量除法，读 dc 即可还原真实位宽"}
+{"file":"core_b3_remaining.c","line":6693,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L49284 FUN_140053f3c size=16 签名与全部调用点","rationale":"ClampInt 返回类型(eax 残留是否被消费)由 dc 签名+调用点消费方式静态可查"}
+{"file":"core_b3_remaining.c","line":7037,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数(*param_13==L'*' 时 *(WCHAR*)param_13=0 后接 PECMD_EvalExpressionTree)","rationale":"LPCWSTR 类型标注为 Ghidra 类型噪声，写零操作本身在 dc 体中原文可见，指针推进语义明确"}
+{"file":"core_b3_remaining.c","line":8628,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_WaitHandlesOrMessages 调用点(CONCAT44(extraout,DVar2)) 及其原型","rationale":"extraout_var 是 Ghidra extra-out 槽(RDX 残留)；被调方返回类型与消费方式在 dc 中静态可查"}
+{"file":"core_b3_remaining.c","line":8634,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: *param_5!=0 时 wsprintfW 后 *(WCHAR*)param_5=0","rationale":"同 7037：LPCWSTR 标注为类型噪声，写零与变量回写顺序在 dc 体中原文可见"}
+{"file":"core_b3_remaining.c","line":12893,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_FindPhysicalDrive @0x140068f3c 体: do 循环 iVar1 递增 + local_48 模板尾部覆写","rationale":"缺失的 wsprintfW %d 实参在循环上下文中唯一合理解释为盘号 iVar1，模板串 '\\\\.\\PhysicalDriveN' 用法佐证，语义推断充分"}
+{"file":"core_b3_remaining.c","line":16868,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数引用 u_____C__140126e88/ram0x000140126e90/g_u6426e70 (.rdata 符号)","rationale":"模板字节内容为 .rdata 静态数据(PE 文件可直接读出)，且 '\\\\??\\' + 盘符 + ':' 结构由 ObjectAttributes 用法约束，静态可定案"}
+{"file":"core_b8i.c","line":24,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b8i.c","line":48,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明无单一可验证命题"}
+{"file":"core_b8i.c","line":107,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_1400e5120 体: wsprintfW(local_res8,L\"&%s.id\") 无实参且签名无未用形参","rationale":"%s 实参被 Ghidra 丢弃且 dc 内无候选值线索；需运行原版注册菜单命令后观察生成的 '<X>.id' 变量名"}
+{"file":"core_b8i.c","line":135,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_1400e5120 @0x1400e5120 同一调用点","rationale":"同 107 行疑点的代码位置：&%s.id 的 %s 实际值只能运行观察变量表定案"}
+{"file":"core_b8i.c","line":140,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_1400e5120 体: wsprintfW(local_res8,L\"_COMMAND#%d:\") 无实参","rationale":"%d 是菜单 id 还是子项序号无法从 dc 判定(Ghidra 丢弃实参)；需运行观察 _COMMAND#N: 注册串"}
+{"file":"core_b8i.c","line":186,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_DecodeUtf8ToWide @0x1400e6de8 体(首字节 0xf8/0xfc 分支与续字节数)","rationale":"超长序列消耗多少续字节、非法续字节的跳过路径均在 dc 体内逐行可见"}
+{"file":"core_b8i.c","line":267,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400E7664 @0x1400e7664 体(RasEnumConnectionsW 缓冲步进 0x56c 与等待分支)","rationale":"条目 stride 由 dc 缓冲算术原文给出，空名称等待语义(g_rasState 门控)亦在体内"}
+{"file":"core_b8i.c","line":465,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_InitTableCellModel @0x1400f5c74 体 + 字段消费方(0xab/199/0xeb 默认值)","rationale":"各字段含义通过 dc 全部读写点交叉引用可静态推断，工作量大但无黑盒必要"}
+{"file":"core_b8i.c","line":635,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ParseTreeItemRefSpec @0x1400ffa38 体('@'->bit4, '*'->bit1, 数字->bit5)","rationale":"标志位精确含义由解析分支与 flags 消费方(树转储/绘制路径)联合静态可证"}
+{"file":"core_globals.c","line":20,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 中 DAT_14013d130+off 全部引用的最大偏移；相邻符号 DAT_14013d190/14013d1a0 界定上界","rationale":"脚本结构大小由 dc 引用偏移极值+相邻全局地址距离静态界定(注意 d130 与 d1a0 仅距 0x70，需核实重叠关系)"}
+{"file":"core_globals.c","line":23,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 中 DAT_14013d1a0 引用偏移极值与相邻 .data 符号地址","rationale":"环境表大小同样由引用偏移与相邻符号间距静态界定"}
+{"file":"core_globals.c","line":24,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 只读引用 DAT_14011d308；内容为 .rdata 初始数据(PE 静态可读)","rationale":"默认环境表内容不在代码中生成，属 .rdata 静态数据，读 PE 文件即可定案无需运行"}
+{"file":"core_globals.c","line":146,"triage":"RESOLVABLE-STATIC","dc_hint":"dc g_objMode(DAT_14013a84d) 读写点: PECMD_CreateProcReadImageBase 按 mode 选 PEB 数组等","rationale":"对象布局模式的取值集合与分支效果由 dc 读侧 switch/if 静态可证"}
+{"file":"core_globals.c","line":149,"triage":"RESOLVABLE-STATIC","dc_hint":"dc g_remoteTebBase(DAT_14013e2f9) 写入点(远程 TEB 槽 0x10000b 相关)与读取点","rationale":"远程 TEB 基址的赋值来源与消费方式均在 dc 中，语义可静态定案"}
+{"file":"core_globals.c","line":150,"triage":"RESOLVABLE-STATIC","dc_hint":"dc DAT_14013a84c 引用点(与 a84d/a850/a84e 等布局族联动)","rationale":"布局指针的写入初始化与读取解引用模式在 dc 中可见"}
+{"file":"core_globals.c","line":158,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 仅读取 DAT_14012c0d0(dc L147424 除法用)；初值在 .data RVA 0x14012c0d0","rationale":"dc 无写入点→初值为 PE .data 段静态字节，读原 EXE 该 4 字节 float 即定案，无需运行"}
+{"file":"core_globals.c","line":159,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 仅读取 DAT_140129ee8(dc L124898/L148633/L151345)；初值在 .data RVA 0x140129ee8","rationale":"滚动上限常量为 .data 段初始 double，PE 静态读取 8 字节即可定案"}
+{"file":"core_b8k.c","line":24,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b8k.c","line":76,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b8k.c","line":109,"triage":"RESOLVABLE-STATIC","dc_hint":"DAT_14012c0d4 在 dc 的读取点；初值为 .data 段静态字节","rationale":"绘制缩放除数的值与用法(除法分母)均可由 dc 引用点+PE .data 静态读取定案"}
+{"file":"core_b8k.c","line":132,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_CreateProcReadImageBase @0x1400e4324 完整函数体","rationale":"TEB 槽写入、GetThreadContext、按 g_objMode 取 PEB 数组、VirtualQueryEx 回扫的区域布局流程在 dc 体内逐步可见"}
+{"file":"core_b8k.c","line":351,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_CreateInjectedProcess @0x1400e7414 体及 Wow64MapPeImage/FUN_1400e4480 调用链","rationale":"注入细节(分配、写映像、SetThreadContext、远线程)在 dc 调用链内完整可读"}
+{"file":"core_b8k.c","line":531,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_BoxAverageScalePixels @0x1400ed7a0 体(scaleX/x1 整除与边界比较表达式)","rationale":"整除取舍与循环边界为精确整数算术，dc 原文可逐条对照"}
+{"file":"core_b8k.c","line":717,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400EF91C @0x1400ef91c 体(ES_* 样式组合与字段写入)","rationale":"样式位映射与 0xe8/0x90 字段初始化值在 dc 体内可见"}
+{"file":"core_b8l.c","line":24,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b8l.c","line":61,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b8l.c","line":86,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 中 ParseTokenResolve 定义体(@0x1400xxxx)+本函数调用点实参","rationale":"内部函数必有 dc 定义体，参数/返回值语义由定义体+调用点双向静态可证"}
+{"file":"core_b8l.c","line":154,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ListGetItemTextData @0x1400f2f58 体(0x1038/0x1200/0x1211 消息序列与虚表)","rationale":"控件类别由对象虚表与自定义消息的处理方(handler)交叉引用静态判定"}
+{"file":"core_b8l.c","line":220,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_CtorListHostObject @0x1400f9134 体(PTR_FUN_14012c670 虚表+InitPtrTable 组)","rationale":"字段默认值与含义由构造体初始化序列+后续消费方静态可证"}
+{"file":"core_b8l.c","line":376,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400FD014 @0x1400fd014 do-while 体(四色槽交错+CreateSolidBrush)","rationale":"颜色交错写入顺序与画刷重建时机在 dc 循环体内逐句可见"}
+{"file":"core_b2b.c","line":29,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b2b.c","line":40,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b2b.c","line":97,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ParseSize @0x140020b6c 体 P 分支魔数乘法常量(mulhi+shift)","rationale":"整数魔数除法可从常量数学上精确逆推除数(如 /100)，读 dc 常量即可定案，无需运行"}
+{"file":"core_b2b.c","line":228,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_140020fd4 体: wsprintfW(local_78,L\"%d\") 无实参、签名无未用形参、无候选局部量","rationale":"被 Ghidra 丢弃的 %d 实参在 dc 内零线索(非 param 复用型)；需运行原版观察参数记录缓冲中该数值"}
+{"file":"core_b2b.c","line":879,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_RunProcessCommand @0x14002afa4 体(引号/空格扫描循环)","rationale":"命令行拼接的偏移与空格处理为字符级逻辑，dc 原文逐条可对照"}
+{"file":"core_b8f.c","line":44,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b8f.c","line":84,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b8f.c","line":108,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_CalcPeImageSize @0x1400e4078 体: sectionTable+0x10+i*40 步进","rationale":"40 字节/项既与 IMAGE_SECTION_HEADER 公开尺寸一致又与 dc 步进算术吻合，双重印证"}
+{"file":"core_b8f.c","line":443,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 中 0x1022 消息全部发送/处理点(控件 handler 与其它发送方共享 buf 布局)","rationale":"输出缓冲布局由消息处理方填充逻辑与多个发送方的缓冲声明交叉引用静态定案"}
+{"file":"core_b3r_i28b.c","line":446,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FOR 命令解析 @0x1400acd90 完整函数体(NL/delims/*/v/**/L/*bf/*ab/*qu/*off//s//O:N 等选项展开)","rationale":"化简掉的完整选项扫描逻辑全部保留在 dc，按 dc 还原即为定案"}
+{"file":"core_b3r_i28b.c","line":583,"triage":"RESOLVABLE-STATIC","dc_hint":"dc @0x1400acd90 尾部 FOR 循环/分区枚举主体","rationale":"被化简为单次 SetVar 的主体逻辑在 dc 中完整存在，属源码级还原工作"}
+{"file":"core_b3r_i28b.c","line":631,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 盘符扫描 @0x1400ae6f4 完整函数体(\\\\.\\PhysicalDriveN 逐盘查询循环+CONCAT 拼接)","rationale":"被化简的分区枚举/盘符分配循环在 dc 中完整存在，照抄还原即可"}
+{"file":"core_b3r_i28b.c","line":683,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数对 puVar11 分区数组逐项扫描的原始循环","rationale":"只处理首项的化简版 vs dc 逐项遍历的差异可由 dc 循环体直接还原定案"}
+{"file":"core_b3e.c","line":37,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b3e.c","line":48,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b3e.c","line":461,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_140066930 @0x140066930: 形参 param_2 未在体内使用；调用点 dc(FUN_1400F172C 内) FUN_140066930(*param_1,param_3&0xffff,L\"&&__wParam.wID\",L\"0x%X\")","rationale":"缺失的 wsprintfW 实参即被弃用的形参 param_2(调用点传 wParam 值)；当前按 0 补齐可静态修正，无需黑盒"}
+{"file":"core_execline.c","line":309,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L68872/L77965/L78342 三处一致: uVar=(longlong)param_1+0x75bd036 后经 FormatU64Dec 输出","rationale":"script 指针+超大常量的语义合理性存疑(疑似 Ghidra 寄存器传播伪影)；%__THIS% 实际输出值需运行原版观察定案"}
+{"file":"core_execline.c","line":609,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L78234 FUN_14007af60 体: local_258/uVar12 = unaff_R13D & 0xffffff00","rationale":"envHit 初值源自调用方 R13 寄存器残留(unaff)，dc 无法给值；需运行对比置位/清零两种行为路径"}
+{"file":"core_execline.c","line":775,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L78342 同 L68872 表达式","rationale":"同 309 行疑点：__THIS 展开值的真实性需运行原版以脚本输出验证"}
+{"file":"core_b3i.c","line":39,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b3i.c","line":50,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b3i.c","line":265,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_14005d30c @0x14005d30c 体: local_30=(*DAT_14013d570)() 无实参无候选形参","rationale":"htonl 缺失实参在 dc 内零线索；需运行原版抓取 0x30 字节 UDP 探测包观察第三字段实际值"}
+{"file":"core_b3r_i28f.c","line":381,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_ImageCommand @0x1400be64c 体: WVar1=*local_110 存低16位，后续仅作分隔符读取","rationale":"CONCAT22 高位从未被消费的数据流在 dc 中闭合，仅低 16 位有效的结论可静态证明"}
+{"file":"core_b3r_i28f.c","line":521,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: GdipGetImageWidth/Height 写 local_res18/local_res8 紧邻 wsprintfW(L\"%d %d\")","rationale":"被丢弃实参与紧邻前序调用的输出变量的数据流衔接在 dc 中可见，当前重构已正确填充，可关闭"}
+{"file":"core_b3r_i28f.c","line":588,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: EnumResourceNamesW(hModule,pWVar15,PECMD_PushStringToken,&local_108) 计数回调","rationale":"wsprintfW 两实参来自枚举回调维护的计数槽(local_108/local_f8)，dc 数据流可静态定案"}
+{"file":"core_b3r_f.c","line":91,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc FUN_1400a9aa8 @0x1400a9aa8 体: wsprintfW(local_48,L\"%ld\") 无实参、无未用形参","rationale":"定时器场景下写入命名变量的数值(interval? tick?)被 Ghidra 丢弃且 dc 无候选；需运行原版观察变量值"}
+{"file":"core_b3r_f.c","line":142,"triage":"RESOLVABLE-STATIC","dc_hint":"dc PECMD_CreateControlWindow @0x1400a9ce4 体: iStack_30 无有效读取","rationale":"合成栈槽为 Ghidra 栈布局伪影(dead store)，省略不影响行为，读 dc def-use 即可确认"}
+{"file":"core_b3g.c","line":39,"triage":"UNK","dc_hint":"文件头注释","rationale":"文件头风格约定说明，非具体待验证断言"}
+{"file":"core_b3g.c","line":50,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现依赖 extern+TODO' 段落标题，泛指性说明"}
+{"file":"core_b3r_g5.c","line":427,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: pwVar5 在 \"\\\\.\\PhysicalDrive%d\"/\"\\\\.\\CDROM%d\" 二选一，实参 (int)param_3 且 param_3<0x10000","rationale":"vararg 实参为盘号 param_3 与所选格式串自洽，dc 上下文完整无歧义"}
+{"file":"core_b3r_g5.c","line":455,"triage":"RESOLVABLE-STATIC","dc_hint":"dc 同函数: lpString_00=local_100[6], lpString=local_100[8] 来自 GetStorageDependencyInformation 输出","rationale":"\"%s%s\" 两实参来源与顺序在 dc 中直接可见，vararg 调用可静态定案"}
+{"file":"core_execmain.c","line":71,"triage":"UNK","dc_hint":"段落标题注释","rationale":"'未实现(TODO(verify) 挂起)' 段落标题，泛指下方 extern 桩，无单一可验证命题"}
+{"file":"core_execmain.c","line":283,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400b638c(PECMD_RunScriptText) L205 起: node==NULL→\"1\"; FUN_14005C7C4(\"0\",val)!=0→写\"0\"","rationale":"&__MAIN__ 三态初始化逻辑在 dc 中原文完整，与当前重构逐分支一致，疑点可关闭"}
+{"file":"core_sys.c","line":49,"triage":"RESOLVABLE-STATIC","dc_hint":"dc L26642: FUN_140027eac(&DAT_14013d130,...,0x140121020,5000,1,1,0) 直接引用表基址","rationale":"特殊目录表为 .rdata 静态数据(基址已被 dc 引用证实)，内容可 PE 静态读取，用途由消费函数定案"}
+{"file":"core_script.c","line":174,"triage":"RESOLVABLE-STATIC","dc_hint":"dc FUN_1400307c8 @0x1400307c8 体第48行: local_90 = *(short *)(*param_4 + 2) != 0","rationale":"设备路径标志读取为 dc 原文直译，与重构完全一致，语义(路径串第2字符非零)由 import 格式用法佐证"}
+{"file":"core_main.c","line":193,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"dc L12092 main@140017034 size=10: mainB(0,(LPCWSTR)CONCAT44(in_register_0000000c,_Argc))","rationale":"argc 经寄存器复用作 cmdLine 属 CRT 启动伪影，10 字节函数体的真实意图无法从 dc 判定；需运行原版带/不带参数对比行为"}

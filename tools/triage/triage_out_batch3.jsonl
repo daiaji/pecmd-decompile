@@ -1,0 +1,106 @@
+{"file":"core_scriptdep.c","line":23,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述(extern挂起风格声明), 非具体待验项"}
+{"file":"core_scriptdep.c","line":37,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:15812,29432 DAT_14013a248 读写点","rationale":"g_flagA248=DAT_14013a248, 原文 if(<0)置1 模式与 refactored 一致, 读全部读写点可定案语义"}
+{"file":"core_scriptdep.c","line":48,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_scriptdep.c","line":167,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_14001b660 函数体(4处引用)","rationale":"extern 目标在案有体, 读体即可定案 sysinit 前置语义"}
+{"file":"core_scriptdep.c","line":168,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400250f0 函数体(4处引用)","rationale":"extern 目标在案有体, 读体即可定案 AutoMount 语义"}
+{"file":"core_scriptdep.c","line":211,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:12767 FUN_140017cdc 体","rationale":"复制函数最大访问 offset 0xE8..0xEF 故结构>=0xF0, 反编译栈槽 128B 系 Ghidra 截断, 0xF0 放大静态定案正确"}
+{"file":"core_scriptdep.c","line":226,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:29259 FUN_140030dcc 原文","rationale":"调用形态与原文逐参一致(FUN_140030420 六参), 读原文即可定案"}
+{"file":"core_scriptdep.c","line":228,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:53632 FUN_14005b104 体","rationale":"FreeStrBuf 仅读 *p([0]), local_98[1]=0 确为死写, 静态可定案"}
+{"file":"core_scriptdep.c","line":230,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:45411 FUN_14004eaa8 体(size=139)","rationale":"清理函数在案有体, 语义可直接读定"}
+{"file":"core_scriptdep.c","line":296,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:12767 FUN_140017CDC 体","rationale":"同 L211: 复制覆盖至 0xEF, 64B 栈槽系显示截断, 0x100 放大静态合理"}
+{"file":"core_scriptdep.c","line":307,"triage":"UNK","dc_hint":"decompiled.c:29349 FUN_140031068 局部 local_c8/local_d0","rationale":"local_c8/local_68/local_d0 初值 Ghidra 未显示伪代码无解; 黑盒需构造 flags&0x200 且 &9 调用代价高 -> KNOWN-LIMIT"}
+{"file":"core_scriptdep.c","line":325,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400e3cd4 函数体(14处引用)","rationale":"目标在案有体, 目录分隔定位语义可读定"}
+{"file":"core_scriptdep.c","line":333,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400307c8 函数体(5处引用)","rationale":"LoadScriptFileSegment 在案, 参数/返回语义读原文可定案"}
+{"file":"core_scriptdep.c","line":355,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:29432 附近 lVar2=param_1[9]","rationale":"+0x48 字段读(lVar2)与 bVar13==9 恢复写原文可见, 字段含义 grep 读写点可定案"}
+{"file":"core_scriptdep.c","line":389,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:45411 FUN_14004eaa8 体","rationale":"同 L230, 清理语义静态可定案"}
+{"file":"core_scriptdep.c","line":404,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400679b0 函数体(30处引用)","rationale":"解析到分隔符语义读原文即可定案"}
+{"file":"core_scriptdep.c","line":438,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_140070154 函数体(7处引用)","rationale":"带头串复制(-8头 HeapAlloc)实现可读定"}
+{"file":"core_scriptdep.c","line":452,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400745c8 函数体(83处引用)","rationale":"数字解析返回值/回写约定读原文可定案"}
+{"file":"core_scriptdep.c","line":473,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_14009bb28 对应段","rationale":"+0x40 主窗口字段用法原文佐证(PostMessageW(win+0x20)), grep 偏移使用点可定案"}
+{"file":"core_scriptdep.c","line":479,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_140082520 函数体(6处引用)","rationale":"CloseRestartByName 在案有体, 签名与语义读原文可定案"}
+{"file":"core_b8h.c","line":39,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b8h.c","line":59,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b8h.c","line":108,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e412c 函数体+调用点","rationale":"字段含义类: 读原文及 g_objMode 双布局使用点可定案语义"}
+{"file":"core_b8h.c","line":131,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e4160 FUN_1400e4160 体","rationale":"重定位记录布局/算法对照原文循环即可定案(0x3000 类型位已在注释直译)"}
+{"file":"core_b8h.c","line":186,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e429c 原文+缓冲消费点","rationale":"头部 16B 用途可从该缓冲后续访问(obj+0/obj+1)静态定案"}
+{"file":"core_b8h.c","line":247,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e4cc0 体+调用点","rationale":"arena 头解析与 out&2 分支读原文及全部调用方可定案"}
+{"file":"core_b8h.c","line":276,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c wsprintfA(base,%08X) 上下文","rationale":"%08X 单格式符唯一候选=crc 计算值, 数据流闭环, 补参静态定案正确"}
+{"file":"core_b8h.c","line":325,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:144444 RasDialW 注册处 FUN_1400e4edc","rationale":"mode=rasconnstate: 0x2000=RASCS_Connected 0x2001=RASCS_Disconnected(WinAPI 常量), 静态定案"}
+{"file":"core_b8h.c","line":388,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400E6790 原文","rationale":"0x30=WM_SETFONT(wParam=字体句柄作base) 0x110=WM_INITDIALOG, 标准消息静态定案"}
+{"file":"core_b8h.c","line":456,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_1400e75cc 对应段 pollBlk","rationale":"返回码6=ERROR_INVALID_HANDLE(连接已断视为完成), 0x234=RASCONNSTATUS 缓冲尺寸(dwSize), API 结构知识静态定案"}
+{"file":"core_b8h.c","line":515,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:140746,142572 0xbc2b 使用点","rationale":"0xbc2b 为自定义寄存器消息(多处使用可交叉验证), 控件表 obj[0x34]/[0x35] 布局 grep 定案"}
+{"file":"core_b8h.c","line":602,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400f0eb0 体+调用点 flags 实参","rationale":"flags 位段含义从调用点实参集合归纳可定案"}
+{"file":"core_b8h.c","line":648,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400f1be4 及同型初始化函数","rationale":"各字段含义逐偏移 grep decompiled.c 使用点可逐一静态定案"}
+{"file":"core_b8h.c","line":673,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400f2a7c scroll 结构使用点","rationale":"滚动参数含义(scroll[1]+0x1c 与 *scroll+4 双写)从结构使用点静态定案"}
+{"file":"core_b8h.c","line":723,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400fb588 + obj+0xE8 表块使用点","rationale":"0x74 数据块用途 grep 该区域访问点(容量字段=0x74 已吻合)静态可定案"}
+{"file":"core_b8h.c","line":750,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400fcf44 编辑对象字段使用点","rationale":"同 L648, 字段含义逐偏移交叉引用可静态定案"}
+{"file":"core_b2c.c","line":24,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b2c.c","line":104,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b2c.c","line":191,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400229f8 FUN_1400229f8 体","rationale":"写入补丁码的导入表地址常量(DAT_/__imp_ 符号)读原文即可核对统一"}
+{"file":"core_b2c.c","line":282,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c g_hookBusyFlag 对应 DAT 全部读写点","rationale":"标志与 KeyboardHookProc 交互语义 grep 全部读写点静态可定案"}
+{"file":"core_b2c.c","line":356,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x140025ce0 trans: 分支原文","rationale":"transBuf 写法按原文逐句对照即可定案(现按局部32位暂存是否忠实)"}
+{"file":"core_b2c.c","line":444,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c PECMD_ValidatePeHeader 等辅助体","rationale":"PE 解析辅助返回类型/行为读原文可定案"}
+{"file":"core_b2c.c","line":694,"triage":"UNK","dc_hint":"decompiled.c:26580 FUN_14002c8a4 尾部 return unaff_RBX; 调用点仅 decompiled.c:43740","rationale":"unaff_RBX 寄存器残留伪代码无源; 唯一调用点消费 RAX 而非 RBX; 黑盒需构造无冒号设备参数代价高 -> KNOWN-LIMIT"}
+{"file":"core_b2c.c","line":751,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x14002ca80 体+全局变量声明宽度","rationale":"数组容量/计数布局对照原文全局声明(DAT_14013d288/28c CONCAT44)可定案"}
+{"file":"core_b2c.c","line":1098,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:31520 FUN_140035b40 体","rationale":"原文 *(ushort*)(&DAT_140121728+lVar2*6) 证实 ushort 数组 6字节/项, 静态已定案"}
+{"file":"restored_bodies.c","line":3803,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:14320-14400 MsgWaitForMultipleObjects 数据流段","rationale":"原包装返回值消费(local_res10<nCount return)原文可见, 内联展开保数据流的决策可对照定案"}
+{"file":"restored_bodies.c","line":4006,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:14320-14400 同段","rationale":"同 L3803, 对照原文即可定案"}
+{"file":"restored_bodies.c","line":11573,"triage":"UNK","dc_hint":"decompiled.c:40691 仅 atexit(&LAB_14011ab90) 注册处, 无函数体","rationale":"atexit 回调体未反编译, 静态无解; 黑盒需观察进程退出清理行为代价高 -> KNOWN-LIMIT"}
+{"file":"restored_bodies.c","line":11587,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x140045c90 主入口 local_6a 声明与写入点","rationale":"Ghidra 是否真丢初始化对照原文该局部声明/首写即可定案"}
+{"file":"restored_bodies.c","line":11588,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x140045c90 local_70 声明与写入点","rationale":"同 L11587, 读原文可定案"}
+{"file":"restored_bodies.c","line":15170,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:157744,157809 两调用点均 if(返回值!=0)","rationale":"返回值=PECMD_FindTreeItemByPath 结果, 与两调用点非零判断吻合, 已静态定案"}
+{"file":"restored_bodies.c","line":15237,"triage":"UNK","dc_hint":"decompiled.c:157595 FUN_140100ac4 无直接调用点(虚表间接引用)","rationale":"unaff_RDI 返回残留且无可见调用方, 伪代码无源; 黑盒需挂虚表消息链观察代价高 -> KNOWN-LIMIT"}
+{"file":"restored_bodies.c","line":15360,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c 对应段 uVar8=FindTreeItemByPath 返回值","rationale":"%I64X 单格式符唯一候选=项句柄 uVar8, 数据流闭环静态可定案"}
+{"file":"restored_bodies.c","line":17071,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c 原 CONCAT71((int7)(pHVar14>>8),cVar21) 表达式","rationale":"位合并按原式直译的忠实性逐位对照原文即可定案"}
+{"file":"core_b8g.c","line":44,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b8g.c","line":71,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b8g.c","line":109,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e3d60 体+EnumWindowCallback 回调体","rationale":"回调写 local_50 的含义读回调实现与后续消费点静态可定案"}
+{"file":"core_b8g.c","line":179,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x1400e537c wsprintfW 调用上下文","rationale":"%d 单格式符唯一候选=searchKey 匹配键, 数据流闭环静态定案"}
+{"file":"core_b8g.c","line":595,"triage":"RESOLVABLE-STATIC","dc_hint":"WinAPI 常量: LVM_FIRST=0x1000","rationale":"0x1038=LVM_GETSUBITEMRECT(LVM_FIRST+56) 0x100E=LVM_GETITEMRECT(LVM_FIRST+14), 标准消息静态定案"}
+{"file":"core_b8g.c","line":1142,"triage":"RESOLVABLE-STATIC","dc_hint":"TVM_FIRST=0x1100; TVINSERTSTRUCTW x64 布局","rationale":"0x1132=TVM_INSERTITEMW(TVM_FIRST+50); msg+0=a9(hParent)+8=a10(hInsertAfter)+0x10起TVITEMEX(mask@0x10=lParam@0x40)偏移全吻合, 静态定案"}
+{"file":"core_b8g.c","line":1166,"triage":"RESOLVABLE-STATIC","dc_hint":"TVM_FIRST=0x1100; TVITEMEX 布局","rationale":"0x113F=TVM_SETITEMW(TVM_FIRST+63), 0x50字节块=TVINSERTSTRUCT去父句柄或 TVITEMEX 变体, 字段语义静态可定案"}
+{"file":"core_resdecode.c","line":14,"triage":"RESOLVABLE-STATIC","dc_hint":"PECMD原始.EXE @RVA 0x12412c/128/130 已提取","rationale":"三常量已从数据段定案: FF FE/FE FF/EF BB BF 即 UTF-16LE/BE/UTF-8 BOM(decompiled.c:100178 WriteFile 处 1200/1201/fde9 分支吻合)"}
+{"file":"core_resdecode.c","line":36,"triage":"UNK","dc_hint":"-","rationale":"未实现辅助段落标题, 惯例描述非待验项"}
+{"file":"core_resdecode.c","line":46,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_140075c7c 函数体(在案有体)","rationale":"按代码页二次转换语义读原文即可定案"}
+{"file":"core_resdecode.c","line":87,"triage":"RESOLVABLE-STATIC","dc_hint":"EXE RVA 0x12412c = FE FF 00 00","rationale":"已定案: @14012412c=UTF-16BE BOM(FE FF) 非 '::', 现还原 \\x3a\\x3a 有误应改 \\xfe\\xff"}
+{"file":"core_resdecode.c","line":97,"triage":"RESOLVABLE-STATIC","dc_hint":"EXE RVA 0x124128 = FF FE 00 00","rationale":"已定案: @140124128=UTF-16LE BOM(FF FE) 非 '::', 现还原有误应改 \\xff\\xfe"}
+{"file":"core_resdecode.c","line":107,"triage":"RESOLVABLE-STATIC","dc_hint":"EXE RVA 0x124130 = EF BB BF 00","rationale":"已定案: @140124130=UTF-8 BOM(EF BB BF) 非 '@::', 现还原有误应改 \\xef\\xbb\\xbf"}
+{"file":"core_scriptrun.c","line":48,"triage":"UNK","dc_hint":"-","rationale":"未实现挂起段落标题, 惯例描述非待验项"}
+{"file":"core_scriptrun.c","line":110,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:29642-29653 .#分支原文","rationale":"原文 local_180=DAT_14013ca68 预设模块实例句柄(g_hInstance 模式), 版本串检测旧注释可静态否决"}
+{"file":"core_scriptrun.c","line":213,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c 主入口映射段(FUN_140102a90/PECMD_DecodeEncTextToUtf16 调用链)","rationale":"映射数据拷贝与解码在 decompiled.c 有完整对应段可逐行对照定案"}
+{"file":"core_scriptrun.c","line":240,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:30130+ FUN_14001ea18 调用链(local_160 构造)","rationale":"资源名=token '#'后部分可从 local_160 的构造原文对照定案"}
+{"file":"core_scriptrun.c","line":254,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:30230 uVar35<<0x10|(uVar31|uVar24)&0xffff|local_290|0x40","rationale":"flags 组合式原文可见, 逐位对照即可定案简化是否等价"}
+{"file":"core_srparse.c","line":50,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_14001b3a0/FUN_14005dec4(56131)/FUN_14005ded4 三体均在案","rationale":"三 extern 目标皆有函数体, 读体即可定案语义"}
+{"file":"core_srparse.c","line":135,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_14001b3a0 体 + 2sysinit 分支原文","rationale":"ResetScriptChain(script,NULL) 调用形态与原文对照可定案"}
+{"file":"core_srparse.c","line":137,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:56131 FUN_14005dec4 体(size=16)","rationale":"取窗口句柄字段语义读 16 字节小函数体即定案"}
+{"file":"core_srparse.c","line":138,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c FUN_14005ded4 体","rationale":"BringWindowToFront 语义读体即可定案"}
+{"file":"core_b3r_g.c","line":12,"triage":"UNK","dc_hint":"-","rationale":"文件头描述性说明(标注约定总述), 非具体待验项"}
+{"file":"core_b3r_g.c","line":315,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:81079 sscanf(%2lX) vararg 丢失处+local_a0 后续消费点","rationale":"解析值写入 MAC 数组数据流唯一(local_a0 被 AdapterMacIpLookup 消费), 静态推理闭环可定案"}
+{"file":"core_b3r_g.c","line":502,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:81220 wsprintfA(%02X) 循环上下文","rationale":"实参=刚填充的 MAC 字节数组元素 bi, 输出步进+2 与 %02X 宽度闭环, 静态定案正确"}
+{"file":"core_b3r_g.c","line":516,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"decompiled.c:81230 wsprintfW(param_6,L%d) 无实参; param_7/param_9 同型","rationale":"%d 实参寄存器被 Ghidra 连同同型两处一并丢弃, 候选(适配器记录数值字段)不唯一, 需运行 EXE 观察格式化输出定案(C-P0 语料候选)"}
+{"file":"core_b2a.c","line":17,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b2a.c","line":27,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b2a.c","line":185,"triage":"UNK","dc_hint":"decompiled.c:19706 extraout_EAX; 调用点 decompiled.c:44522 存入 local_180 被结果链消费","rationale":"eax 残留无源(末调 FUN_14001995c 为 void), 调用方确在消费返回值; 黑盒需 PE 环境执行 FBWF 命令代价极高 -> KNOWN-LIMIT"}
+{"file":"core_b3r_g1.c","line":12,"triage":"UNK","dc_hint":"-","rationale":"文件头描述性总述(布局以字节缓冲重建的说明), 具体验证项在 L134/L138"}
+{"file":"core_b3r_g1.c","line":134,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c:61898 局部声明 local_88/84/80(HWND)/78/58 + :61940 写入序列","rationale":"Ghidra 栈命名连续性可恢复布局: local_78 应在 buf+0x10(HWND 槽 -0x80..-0x79 占 8B), 现 offset 12 与之矛盾可静态裁决"}
+{"file":"core_b3r_g1.c","line":138,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c 同上声明区","rationale":"offset 12 疑应为 0x10(local_78=-0x78 相对 -0x88 基址差 0x10), 读栈变量命名即可定案; memset(&local_84,,0x44) 起点亦需同步核对"}
+{"file":"core_strbld.c","line":132,"triage":"UNK","dc_hint":"-","rationale":"移植层 ABI 决策(Linux wchar_t=4B vs Win 2B)属已知限制, 非语义待验项 -> KNOWN-LIMIT"}
+{"file":"core_strbld.c","line":143,"triage":"UNK","dc_hint":"-","rationale":"%Lf long double 大小 ABI 差异(Win 8B vs Linux 16B)属移植层已知限制 -> KNOWN-LIMIT"}
+{"file":"core_strbld.c","line":250,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"decompiled.c:68747 (float)local_58 强转显示处","rationale":"Ghidra 显示整数转浮点但真实汇编 movss(位解释)/cvtsi2ss(转换)伪代码不可辨, 需运行 EXE 构造 %f 用例观察输出定案(C-P0 语料候选)"}
+{"file":"core_b3k.c","line":19,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b3k.c","line":29,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b3k.c","line":139,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"decompiled.c FUN_14005eefc 体(仅 dst/src 两参, 体内无数值源)","rationale":"展开 %d 的实参来自未跟踪寄存器且函数内无候选变量, 按 0 补齐需运行 EXE 观察实际展开输出定案(C-P0 语料候选)"}
+{"file":"core_b8b.c","line":19,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b8b.c","line":34,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b3r_g4.c","line":9,"triage":"UNK","dc_hint":"-","rationale":"文件头 byte 指针归一化约定总述, 具体验证项在 L200"}
+{"file":"core_b3r_g4.c","line":200,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c @0x140072e94 SNTP 解析段 WideToAnsi 后扫描原文","rationale":"WideToAnsiStr 转换后按字节扫描与原文 gethostbyname 字节语义对照即可定案"}
+{"file":"core_b8c.c","line":19,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b8c.c","line":32,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b3m.c","line":39,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b3m.c","line":52,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b3r_i28a.c","line":129,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"decompiled.c:100287 同型 wsprintfW(local,L%ld) 无实参","rationale":"vararg 被 Ghidra 丢弃; 候选=刚解析的序号 iVar3 可推测但不唯一(可能为计数), 需运行 EXE 观察 &&xxx.Select 变量值定案(C-P0 语料候选)"}
+{"file":"core_b3r_i28a.c","line":198,"triage":"RESOLVABLE-STATIC","dc_hint":"decompiled.c 对应列表条目查找循环原文","rationale":"寄存器拼接索引简化为整数循环的等价性对照原文循环边界/步长即可定案"}
+{"file":"core_b3l.c","line":39,"triage":"UNK","dc_hint":"-","rationale":"文件头约定描述, 非具体待验项"}
+{"file":"core_b3l.c","line":68,"triage":"UNK","dc_hint":"-","rationale":"extern 挂起段落标题, 惯例描述非待验项"}
+{"file":"core_b3r_h2.c","line":20,"triage":"UNK","dc_hint":"-","rationale":"文件头指引性描述(待核实项见函数内 TODO), 非独立待验项"}
+{"file":"core_b9_remaining.c","line":274,"triage":"RESOLVABLE-BLACKBOX","dc_hint":"decompiled.c:158432+ 三处 return unaff_EDI; 调用点 :30938/:130381 均以 extraout_EAX 消费","rationale":"callee 返回 unaff_EDI 与 caller 读 extraout_EAX 双侧丢失真实值, 还原为 local_res10 目录标志属语义推断, 需黑盒观察路径判定行为定案(C-P0 语料候选)"}

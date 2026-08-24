@@ -1,0 +1,106 @@
+{"file": "core_b7c.c", "line": 5, "triage": "UNK", "dc_hint": "", "rationale": "文件头说明文字(约定保留@0x与TODO标记), 非具体待验证断言"}
+{"file": "core_b7c.c", "line": 128, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119159", "rationale": "FUN_1400c0ad8 原文可见 cVar12<0x01 才进分块循环(list=-1进/CRC32=1不进), 读 dc 即可核对该断言并修正注释"}
+{"file": "core_b7c.c", "line": 362, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:120985", "rationale": "控件创建/样式计算完整原文在 FUN_1400c3820 size=1153, 可静态移植定案"}
+{"file": "core_b7c.c", "line": 385, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:121146", "rationale": "滚动条创建/范围设置原文在 FUN_1400c3cf8 size=1460"}
+{"file": "core_b7c.c", "line": 408, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:121959", "rationale": "参数解析/控件消息原文在 FUN_1400c5300 size=1020"}
+{"file": "core_b7c.c", "line": 422, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:122086", "rationale": "参数解析/颜色处理原文在 FUN_1400c56fc size=1194"}
+{"file": "core_b7c.c", "line": 436, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:122254", "rationale": "属性/时间解析原文在 FUN_1400c5ba8 size=1915"}
+{"file": "core_b7c.c", "line": 452, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:124387", "rationale": "绘制/命中逻辑原文在 FUN_1400c94f0 size=1220"}
+{"file": "core_b7c.c", "line": 468, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:128223", "rationale": "时间转换原文在 FUN_1400d0468 size=1731"}
+{"file": "core_b7c.c", "line": 483, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:134768", "rationale": "命令分发原文在 FUN_1400dc410 size=1516"}
+{"file": "core_b7c.c", "line": 501, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:136418", "rationale": "下载/缓存逻辑原文在 FUN_1400df464 size=1709"}
+{"file": "core_b7c.c", "line": 694, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "t:选项解析(+1 wchar 落于':'后)原文在 FUN_1400c13f8, 可对照定案"}
+{"file": "core_b7c.c", "line": 1373, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "枚举名字写点(标签前后)的原始指针运算在 dc 原文中可见"}
+{"file": "core_b7c.c", "line": 1530, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "REG_DWORD 分支 wsprintfW 的原始变参个数/值在 dc 调用点可见"}
+{"file": "core_b7c.c", "line": 1628, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "未知类型以类型号格式化输出的原始变参在 dc 可见"}
+{"file": "core_b7c.c", "line": 1652, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "二进制转储步进用 wsprintfW 返回宽度的写法在 dc 原文可对照"}
+{"file": "core_b7c.c", "line": 1795, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "SHSetValueW 六参调用形态在 dc 中有对应调用序列可核对"}
+{"file": "core_b7c.c", "line": 1899, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:121599", "rationale": "树节点添加完整原文在 FUN_1400c493c size=2499"}
+{"file": "core_b7c.c", "line": 1932, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x1400c6324", "rationale": "TODO 本身断言 decompiled 文本与二进制 else 配对存在错位嫌疑, dc 无法自证, 须对原 EXE 反汇编逐项复核 dash 开关族"}
+{"file": "core_b7c.c", "line": 3011, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "'0x%p' 格式化的原始变参缺省形态在 dc 调用点可见"}
+{"file": "core_b7c.c", "line": 3100, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "比较返回值经寄存器直入格式化的流向在 dc 原文(extraout 变量)可见"}
+{"file": "core_b7c.c", "line": 3306, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119655", "rationale": "LAB_1400c9415 处变参缺省补全可对照 dc 原始调用"}
+{"file": "core_b7c.c", "line": 3760, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x14012c550/0x14012c670", "rationale": "虚表槽位内容属 .rdata 数据段, dc 未导出数据定义, 需读原 EXE 数据段核实其余槽是否为 0"}
+{"file": "core_b7c.c", "line": 5148, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x14012c670", "rationale": "虚表+0x108 槽真实目标函数地址存于 .rdata(dc 仅见 &PTR_FUN_14012c670 引用), 需查原 EXE 定位真实方法体"}
+{"file": "core_b7c.c", "line": 5168, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:64192,118317", "rationale": "两叶子解析器 FUN_140067b54/FUN_1400bf358 在 dc 均有完整体(size=34/6015), 移植即可撤桩"}
+{"file": "core_b7c.c", "line": 6276, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:125620", "rationale": "命中测试完整原文在 FUN_1400cb820 size=7047"}
+{"file": "core_b7c.c", "line": 6357, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x1400cd3a8", "rationale": "返回值为 unaff_RBX(Ghidra 未定), dc 无法给出语义, 需反汇编追踪或运行观察返回值"}
+{"file": "core_b7c.c", "line": 6572, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "读未初始化高位后掩码的原语句在 FUN_1400cd3a8 原文可见"}
+{"file": "core_b7c.c", "line": 6654, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:119446", "rationale": "PECMD_EvalParenthesizedExpr 原体 FUN_1400c10c0 size=210 完整在 dc, 近似体可直接替换为忠实移植"}
+{"file": "core_b7c.c", "line": 6757, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "高半保留低半清零的原始位运算语句在 dc 可见"}
+{"file": "core_b7c.c", "line": 7480, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "TlsLogWrite 'Unshow pt' 第3参盘符的栈变参在 dc 调用点可见"}
+{"file": "core_b7c.c", "line": 7681, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "'Show pt' 缺失的盘符/状态两个栈变参在 dc 原文可见"}
+{"file": "core_b7c.c", "line": 7804, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "高位取自指针位仅低位有语义的截断方式在 dc 原句可见"}
+{"file": "core_b7c.c", "line": 7988, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:126543", "rationale": "'unshow pt' 第3参盘符的栈变参在 dc 调用点可见"}
+{"file": "core_b7c.c", "line": 8287, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x1400ce400", "rationale": "movsxd rbx,[rsp+0xa0] 的栈槽语义 dc 以 unaff_RBX 呈现无法自证, 需反汇编确认 [rsp+0xa0] 写入点"}
+{"file": "core_b7c.c", "line": 8309, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:132299", "rationale": "执行逻辑完整原文在 FUN_1400d0c6c size=2281"}
+{"file": "core_b7c.c", "line": 8322, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:129675", "rationale": "执行逻辑完整原文在 FUN_1400d2e90 size=11447"}
+{"file": "core_b7c.c", "line": 8357, "triage": "RESOLVABLE-STATIC", "dc_hint": "0x14005ceec", "rationale": "纯 win32_stub 缺口: 接真实 CreateRectRgn/CombineRgn/SetWindowRgn API 即可静态定案, 无需黑盒亦无需 dc"}
+{"file": "core_b7c.c", "line": 8608, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:81289,79124,18703,18327,69407", "rationale": "五个未移植叶子(FUN_14007f764/14007c730/14001f1d4/14001ea18/14006eaac)在 dc 均有完整体可移植"}
+{"file": "core_b7c.c", "line": 8665, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x1400d5b48", "rationale": "第3/4栈参身份与色键像素偏移(&pHVar13->unused)是 Ghidra 类型推断缺口, dc 同样缺失, 需汇编核验"}
+{"file": "core_b7c.c", "line": 9781, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:132299", "rationale": "消息处理完整原文在 FUN_1400d7ce4 size=2281"}
+{"file": "core_b7c.c", "line": 9797, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:132631", "rationale": "消息主循环完整原文在 FUN_1400d85d0 size=4125"}
+{"file": "core_b7c.c", "line": 9807, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:133142", "rationale": "窗口过程完整原文在 FUN_1400d9818 size=7726"}
+{"file": "core_b7c.c", "line": 9820, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:134242", "rationale": "绘制逻辑完整原文在 FUN_1400db648 size=3525"}
+{"file": "core_b7c.c", "line": 9838, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:134956", "rationale": "执行逻辑完整原文在 FUN_1400dc9fc size=10854"}
+{"file": "core_b7c.c", "line": 9854, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:136693", "rationale": "时间命令完整原文在 FUN_1400dfb14 size=5907"}
+{"file": "core_b8j.c", "line": 24, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明(extern 挂起惯例), 非具体待验证断言"}
+{"file": "core_b8j.c", "line": 50, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:147809,140450", "rationale": "extern 区段所列依赖(FUN_1400f172c/FUN_1400e5b0c 等)在 dc 均有完整体可移植定案"}
+{"file": "core_b8j.c", "line": 81, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:139138", "rationale": "标志位组合(bit29/30/31 与 0xb7 错误码)的原始判断链在 FUN_1400e3e38 size=325 可见"}
+{"file": "core_b8j.c", "line": 140, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:141957", "rationale": "RAS 条目 stride 0x418/名称偏移+4 的结构访问原文在 FUN_1400e7840 可见"}
+{"file": "core_b8j.c", "line": 343, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:147356", "rationale": "BltTransparentBits 两个 CONCAT44 参数的调用点原文在 FUN_1400f0ca0 可见"}
+{"file": "core_b8j.c", "line": 520, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:149077", "rationale": "命中测试结构与 WM_0x1038 用途原文在 FUN_1400f3308 可见"}
+{"file": "core_b8j.c", "line": 751, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:156721", "rationale": "wsprintfW 缺实参处的原始变参在 FUN_1400ff2bc 原文可见, 补占位是否等价可静态判定"}
+{"file": "core_b8j.c", "line": 772, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:156721", "rationale": "'%d.' 缺实参的原始值在 dc 调用点可见"}
+{"file": "core_b8e.c", "line": 39, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b8e.c", "line": 58, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:140791,144499", "rationale": "extern 区段所列依赖在 dc 均有完整体(FUN_1400e6314/FUN_1400ec084 等)"}
+{"file": "core_b8e.c", "line": 117, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:140791,140810", "rationale": "FUN_1400E6314 命中语义与 ctx[3] 用法在 dc 两函数原文中可见"}
+{"file": "core_b8e.c", "line": 150, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:144499", "rationale": "首参未使用与 0x432/0x113e 消息字段访问原文在 FUN_1400ec084 可见"}
+{"file": "core_b8e.c", "line": 259, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:148698", "rationale": "返回值低字节清零形式及 AL 消费方式在 FUN_1400f2b84 及其调用方原文可见"}
+{"file": "core_b8e.c", "line": 288, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:149183", "rationale": "WM_0x104d/0x102b 消息的字段布局原文在 FUN_1400f3554 可见"}
+{"file": "core_b8e.c", "line": 305, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:149637", "rationale": "+0x218 字段的读写上下文原文在 FUN_1400f4064 可见"}
+{"file": "core_cmd4.c", "line": 4, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:86627", "rationale": "CODE 命令完整原文在 FUN_140088300 size=10567, 文件头语义描述可逐条对照定案"}
+{"file": "core_cmd4.c", "line": 18, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:81271", "rationale": "extern 未实现函数(如 PECMD_SplitTokenAssignVar @0x14007f6e4)在 dc 有完整体可移植"}
+{"file": "core_cmd4.c", "line": 48, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:81271", "rationale": "同上 extern 区段, 各依赖均有 dc 原体"}
+{"file": "core_cmd4.c", "line": 829, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:86627", "rationale": "被简化的块置换/交错循环原文就在 dc 中, 可静态直移定案(仅工作量大, 无需黑盒)"}
+{"file": "core_cmd4.c", "line": 839, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:86627", "rationale": "无第二变量时立即数来源(flags 低字节)的原始取值路径在 dc 可见"}
+{"file": "core_cmd4.c", "line": 844, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:86627", "rationale": "循环右移操作的原始表达式(opMode 0x3e 分支)在 dc 可对照"}
+{"file": "core_execscript.c", "line": 81, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x14011ab90", "rationale": "atexit 回调 LAB_14011ab90 在 dc 仅见引用(dc:40691)无函数体, 需反汇编原 EXE 还原其行为"}
+{"file": "core_execscript.c", "line": 84, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x14011ab90", "rationale": "同上: 清理函数体未反编译, dc 无解, 黑盒/反汇编定案"}
+{"file": "core_execscript.c", "line": 87, "triage": "RESOLVABLE-BLACKBOX", "dc_hint": "0x140040864", "rationale": "线程回调原体仅为 LAB 标签(dc:40914 CreateThread 引用处), 函数体未反编译需反汇编还原"}
+{"file": "core_execscript.c", "line": 106, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:40510", "rationale": "local_70 的初始化/使用原文在 FUN_140045c90 size=2989 中可见"}
+{"file": "core_execscript.c", "line": 107, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:40510", "rationale": "local_6a(path[14]) 的初始化/使用原文在同函数 dc 中可见"}
+{"file": "core_b3r_g6.c", "line": 12, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:76800", "rationale": "文件头预告的 CONCAT26 splice 折叠, 原始解构在 FUN_140078f00 原文可对照"}
+{"file": "core_b3r_g6.c", "line": 221, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:76800", "rationale": "'/Y /X ' 串的 CONCAT26(0x2000000000) 原始拼接在 dc 可见, 折叠等价性可静态判定"}
+{"file": "core_b3r_g6.c", "line": 225, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:76800", "rationale": "bVar2 分支 local_50._2_2_=0x20 尾字节扰动的原语句在 dc 可见"}
+{"file": "core_b3r_g6.c", "line": 310, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:77118", "rationale": "local_res8 的 double/int32 CONCAT44 双解释原句在 FUN_1400796e4 可见"}
+{"file": "core_b3h.c", "line": 39, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b3h.c", "line": 50, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:57893,59071", "rationale": "extern 区段所列依赖在 dc 均有完整体"}
+{"file": "core_b3h.c", "line": 342, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:57893", "rationale": "DosDevices 路径模板与盘符替换的原文在 FUN_140060000 size=106 可见"}
+{"file": "core_b3h.c", "line": 375, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:59071", "rationale": "按键索引的具体 VK 数组布局在 FUN_1400613fc size=116 原文可见, 无需近似推断"}
+{"file": "core_b1_remaining.c", "line": 1239, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:1732", "rationale": "wsprintfW 变参('WAIT *%lu -del %s')的原始实参在 FUN_14000481c 原文可见"}
+{"file": "core_b1_remaining.c", "line": 4122, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:5301", "rationale": "PBI(local_120)/PEB 参数区(local_118)的栈布局与读取长度在 FUN_1400098dc 原文可见"}
+{"file": "core_b1_remaining.c", "line": 4557, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:6761", "rationale": "COM 方法调用的 5×8B 栈参数布局原文在 FUN_14000c430 可见"}
+{"file": "core_b1_remaining.c", "line": 7729, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:15650", "rationale": "返回值残基的原语句(返回 void 但 rbx 残留)在 FUN_14001afe4 原文可见"}
+{"file": "core_b7a.c", "line": 24, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b7a.c", "line": 35, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:118317", "rationale": "extern 区段各依赖(FUN_1400C1194 已实现于 core_exec5.c 等)均有原体可定案"}
+{"file": "core_b7a.c", "line": 37, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:118317", "rationale": "真实签名 LPWSTR(int64_t*,WCHAR*,uint64_t*) 见原体 @0x1400bf358 及项目内定义 core_b3_remaining.c:26585, 读即可统一声明"}
+{"file": "core_b3c.c", "line": 37, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b3c.c", "line": 46, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:58176,59071", "rationale": "extern 区段所列依赖在 dc 均有完整体"}
+{"file": "core_b3c.c", "line": 187, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:58176", "rationale": "CONCAT62 返回构造原文在 FUN_14006042c size=47 全文可见, 近似是否成立一目了然"}
+{"file": "core_b3r_i28c.c", "line": 131, "triage": "UNK", "dc_hint": "", "rationale": "文件头说明(预告深层驱动布局以下方 TODO 标注), 自身非具体断言"}
+{"file": "core_b3r_i28c.c", "line": 541, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:108812,80996", "rationale": "调用点传参与被调者 FUN_14007f078 param_5(undefined8) 原文均在 dc, 寄存器拼接标志可静态核对"}
+{"file": "core_b3r_i28c.c", "line": 1358, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:112025", "rationale": "原函数返回字段计数的返回语句原文在 FUN_1400b4600 可见, void 归一是否丢值可判定"}
+{"file": "core_b3n.c", "line": 12, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b3n.c", "line": 22, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:64192", "rationale": "唯一 extern PECMD_GrowByteBuffer(@0x140063424 族)已有项目内实现与 dc 原体, 可直接落定"}
+{"file": "core_b3j.c", "line": 39, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b3j.c", "line": 50, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:140288,49149,79619", "rationale": "extern 区段所列依赖(FUN_1400E5890/FUN_140053C5C/FUN_14007D0AC 等)在 dc 均有完整体"}
+{"file": "core_b3f.c", "line": 39, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b3f.c", "line": 49, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:35103", "rationale": "extern 区段所列依赖(FUN_14003C06C size=2427 等)在 dc 均有完整体可移植"}
+{"file": "core_b3r_g3.c", "line": 267, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:67204", "rationale": "param_1+0x13(uint64_t* 下标即 +0x98 字节)的原始寻址在 FUN_14006b9f0 原文可见"}
+{"file": "core_b3r_g3.c", "line": 356, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:70192", "rationale": "param_1+0x10 下标寻址原文在 FUN_14006fef0 可见"}
+{"file": "core_b7b.c", "line": 14, "triage": "UNK", "dc_hint": "", "rationale": "文件头约定说明, 非具体待验证断言"}
+{"file": "core_b7b.c", "line": 30, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:35103", "rationale": "extern 区段各依赖(FUN_1400C1194 已实现于 core_exec5.c:271 等)均有原体可定案"}
+{"file": "core_exec5.c", "line": 70, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:70437", "rationale": "FUN_1400702b0 即 PECMD_CopyStrToSlot 本体(经 FUN_1400700c4 复制), 深/浅拷贝语义读 35 字节全文即可定案"}
+{"file": "core_var2.c", "line": 291, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:18134", "rationale": "(-caplen-0x10) 特殊值的原始算术与分支条件在 FUN_14001e6bc size=435 原文可见"}
+{"file": "core_exec2.c", "line": 358, "triage": "RESOLVABLE-STATIC", "dc_hint": "dc:18327", "rationale": "原解码填充 *out 的完整流程(PECMD_ReadFile 路径)在 FUN_14001ea18 size=449 原文可见"}
