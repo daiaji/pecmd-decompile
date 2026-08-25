@@ -248,3 +248,13 @@ M10: git ls-files | grep -vcE '^src/|^include/|^tools/|^docs/|^attic/|^harness/|
 
 ### 存量盘点
 见 build\msvc\s13_smell_inventory.md（待产出）。
+
+### S12 时序修订 v2（2026-08-25 自查修正）
+- ~~S12-b 触发=T4 首轮 PASS~~ → **改为：T4 收敛 + docs/divergences.md 定稿后**
+  （理由：分诊中途做全树头文件统一会让 FAIL 无法归因——bug vs 迁移副作用）。
+- ~~S12-a 触发=门A 全通~~ → **改为：幻影行崩类清零且 T4 出现首批 PASS 后**。
+- 新增收敛定义：PASS 数达标 ∧ 每个 FAIL 在 divergences.md 有根因条目（含 SKIP 依据）。
+- 新增并行流：**原版 golden 录制不依赖 msvc 侧**——动词矩阵首批 15 条(031-045)
+  的 orig 录制即刻可做，与 msvc 侧修复解耦。
+- 新增批次纪律：行为修正类修改（varargs 补参/注入桩删桩/ScriptInit 转发等同族项）
+  打包为单一批次，在两次 T4 全量之间一次落地+一次回归，禁止散落混入分诊。
