@@ -1,0 +1,2 @@
+ENVI S=abc
+LSTR R=%S%,1,99

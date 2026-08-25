@@ -1,0 +1,10 @@
+{
+  "id": "034_ifex_andor",
+  "slug": "ifex_and_or_combo",
+  "cmds": ["IFEX", "ENVI"],
+  "vars": ["A", "B", "R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "IFEX 组合条件 && 探针 (015 仅单条件)"
+}

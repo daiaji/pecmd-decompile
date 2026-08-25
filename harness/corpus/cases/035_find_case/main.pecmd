@@ -1,0 +1,2 @@
+ENVI S=Hello World
+FIND $%S%=world, ENVI R=ci_hit! ELSE ENVI R=ci_miss

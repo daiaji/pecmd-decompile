@@ -1,0 +1,10 @@
+{
+  "id": "041_mdir_file_combo",
+  "slug": "mdir_file_copy_combo",
+  "cmds": ["MDIR", "WRITE", "FILE"],
+  "vars": ["F"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "MDIR 新动词首案 + 建目录→复制联动 (fs 产物在 C:\\pectest\\out, runner 回捞以 stdout/exit 为准)"
+}

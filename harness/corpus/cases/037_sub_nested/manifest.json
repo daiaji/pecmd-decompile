@@ -1,0 +1,10 @@
+{
+  "id": "037_sub_nested",
+  "slug": "sub_nested_call_chain",
+  "cmds": ["SUB", "CALL"],
+  "vars": ["R1", "R2"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "子例程嵌套调用链 OUTER→INNER (021-023 仅平铺)"
+}

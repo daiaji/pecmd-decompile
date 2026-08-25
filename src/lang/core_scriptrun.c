@@ -40,6 +40,7 @@ extern void FUN_14007BF44(void *script, WCHAR *line, WCHAR **out, int mode,
 /* 核心辅助 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 */
 extern void *PECMD_HeapRealloc(void *ptr, size_t size);             /* @0x140063118 */
+extern void PECMD_SwapBytePairs(uint8_t *p, int n); /* @0x140060a74 restored_bodies.c:12197 (WORD 内两字节互换) */
 extern uint16_t PECMD_GenRandomSeed16(void);                        /* @0x14001b510 */
 extern int64_t FUN_14001B5AC(void *buf, uint32_t key, int64_t len); /* @0x14001b5ac */
 extern uint8_t *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len,
@@ -117,6 +118,7 @@ static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint
     WCHAR *text = NULL;
     int64_t ret;
     int bomSkip = 0;
+    WCHAR *convText = NULL; /* S11(方案B): MBCS→宽转换产物 */
 
     (void)extra;
     (void)logs;
@@ -144,27 +146,77 @@ static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint
     }
     CloseHandle(h);
     h = NULL;
-    wchars = (int64_t)(rd >> 1); /* 脚本文件按 UTF-16LE 处理 (与原文 WCHAR 视角一致) */
-    if (wchars > 0 && ((WCHAR *)buf)[0] == 0xfeff) {
-        bomSkip = 1; /* 跳 UTF-16LE BOM */
-        wchars--;
-    }
+    /* ==== S11 编码嗅探 + ANSI→宽转换 (方案B, 见 build/msvc/s11_encoding_sniff_patch.md) ====
+     * 语义源: FUN_1400685f4 PECMD_ReadFileToWideString (dc:64780-64866);
+     * BOM 判定 dc:100148-100165; CP 字面量 dc:64837(CP_UTF8,8)/64848(CP_ACP,0)。
+     * 注: 原版 LOAD 锚点(dc:29161-29190)明文路径无 ANSI→宽, 属工程前移(§1.4 登记差异)。 */
     {
-        int64_t n = wchars + 1;
-        /* S11(T4 分诊): 原分配恰好 wchars+1, 终止符后无冗余; PSB 行游标在末行后
-         * 会越过终止符构成"幽灵空行", 光标落在堆页尾未映射处 → SkipLeadingControlChars
-         * AV(001_envi 手工复现实锤)。补 0x10 槽零填充冗余模拟原版缓冲松弛。 */
-        n += 0x10;
-        PECMD_AllocWStringBuffer(&text, n); /* 带计数头的副本 (Adopt 兼容, 同变量路径先例) */
-        if (text == NULL) {
-            ret = (int64_t)GetLastError();
-            goto done;
+        int      isWide = 0;  /* 缓冲可按 UTF-16LE 直取 */
+        int      mbOff  = 0;  /* MBCS 数据起始偏移 (UTF-8 BOM=3, dc:64834 uVar7) */
+        uint8_t *cpsrc  = buf;
+
+        if (rd >= 2 && buf[0] == 0xFE && buf[1] == 0xFF) {
+            /* dc:64811-64815 UTF-16BE BOM -> 整块换序转 LE 视角 */
+            PECMD_SwapBytePairs(buf, (int)rd);
+            isWide = 1; bomSkip = 1;
+        } else if (rd >= 2 && buf[0] == 0xFF && buf[1] == 0xFE) {
+            isWide = 1; bomSkip = 1;           /* dc:64816-64827 LE BOM */
+        } else if (rd >= 3 && buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF) {
+            mbOff = 3;                         /* dc:100162-100165 UTF-8 BOM */
         }
-        memcpy(text, (uint8_t *)buf + bomSkip * 2, (size_t)wchars * 2);
-        text[wchars] = 0;
+
+        if (isWide) {
+            wchars = (int64_t)((rd - (DWORD)(bomSkip * 2)) >> 1);
+        } else {
+            /* MBCS(UTF-8/ANSI)->宽: 先试 CP_UTF8|MB_ERR_INVALID_CHARS (dc:64837),
+             * 失败回退 CP_ACP 字面量 0 (dc:64848)。g_SysCodePage 取舍见补丁稿 §4.3。 */
+            unsigned int cp  = 65001u; /* 0xfde9 CP_UTF8 */
+            int  off = mbOff;
+            int  n;
+            n = MultiByteToWideChar(cp, 8 /*MB_ERR_INVALID_CHARS*/, (LPCSTR)(buf + off),
+                                    (int)(rd - (DWORD)off), NULL, 0);
+            if (n <= 0) {
+                /* dc:64848 原文回退从偏移0全长转(含 BOM 三字节怪癖); 本稿保留
+                 * 跳过 BOM (一处有意偏离 §5.1, 防 BOM 变首行乱码) */
+                cp = 0u; /* CP_ACP */
+                n  = MultiByteToWideChar(cp, 8, (LPCSTR)(buf + off),
+                                         (int)(rd - (DWORD)off), NULL, 0);
+            }
+            if (n <= 0) {
+                ret = (int64_t)GetLastError();
+                goto done;
+            }
+            PECMD_AllocWStringBuffer(&convText, (int64_t)n + 1 + 0x10);
+            if (convText == NULL ||
+                MultiByteToWideChar(cp, 8, (LPCSTR)(buf + off),
+                                    (int)(rd - (DWORD)off), convText, n) <= 0) {
+                ret = (int64_t)GetLastError();
+                goto done;
+            }
+            convText[n] = L'\0';
+            cpsrc  = (uint8_t *)convText;
+            wchars = (int64_t)n;
+        }
+
         {
-            int64_t z;
-            for (z = wchars + 1; z < n; z++) text[z] = 0;
+            int64_t nn = wchars + 1 + 0x10;
+            /* S10 幽灵行松弛保留: PSB 行游标越过终止符时落在零填充冗余内 */
+            PECMD_AllocWStringBuffer(&text, nn); /* 带计数头的副本 (Adopt 兼容) */
+            if (text == NULL) {
+                ret = (int64_t)GetLastError();
+                goto done;
+            }
+            memcpy(text, cpsrc + (size_t)(isWide ? bomSkip * 2 : 0),
+                   (size_t)wchars * 2);
+            text[wchars] = 0;
+            {
+                int64_t z;
+                for (z = wchars + 1; z < nn; z++) text[z] = 0;
+            }
+        }
+        if (convText != NULL) {
+            PECMD_FreeStrBuf(&convText);      /* 已复制进 text, 立即回收 */
+            convText = NULL;
         }
     }
     { /* TEMP PROBE [S10] (诊断 LOAD 装载, T5 随探针网拆除) */
@@ -186,7 +238,14 @@ done:
         CloseHandle(h);
     }
     if (buf != NULL) {
-        PECMD_FreeStrBuf((WCHAR **)&buf);
+        /* S11(T4 缺陷丙): buf 由 GrowByteBuffer(裸块, 无 8 字节头)分配, 不能经
+         * FreeStrBuf(*ps-8) 释放 —— 主链此前总在到达 done: 前 C0000005, 修复甲
+         * 打通后首次暴露为 0xC0000374 堆损坏(case001 复现)。 */
+        HeapFree(g_hHeap, 0, buf);
+        buf = NULL;
+    }
+    if (convText != NULL) { /* MBCS 分支中途 goto done 的兜底回收 */
+        PECMD_FreeStrBuf(&convText);
     }
     return ret;
 }

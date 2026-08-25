@@ -1,0 +1,6 @@
+ENVI a=global
+_SUB F,a
+ TEAM ENVI G=%a%
+_END
+CALL F,param
+ENVI H=%a%

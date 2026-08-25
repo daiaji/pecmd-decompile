@@ -1,0 +1,10 @@
+{
+  "id": "044_write_blank_line",
+  "slug": "write_blank_line_boundary",
+  "cmds": ["WRITE"],
+  "vars": ["F"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "WRITE 空参数边界: 空行写出格式 (对照 006 CRLF 追加)"
+}

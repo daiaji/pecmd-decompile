@@ -1,0 +1,2 @@
+SET A=pecmd
+FIND $%A%=pecmd, ENVI R=setok! ELSE ENVI R=setbad

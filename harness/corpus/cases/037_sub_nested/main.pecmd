@@ -1,0 +1,8 @@
+_SUB INNER
+ ENVI R2=inner_done
+_END
+_SUB OUTER
+ CALL INNER
+ ENVI R1=outer_done
+_END
+CALL OUTER

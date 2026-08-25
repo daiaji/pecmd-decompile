@@ -1,0 +1,2 @@
+ENVI S=hello world again
+FIND $%S%=world again, ENVI R=sp_ok! ELSE ENVI R=sp_bad

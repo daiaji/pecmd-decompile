@@ -6295,6 +6295,11 @@ LAB_14004df3c:
           FUN_140024c48((longlong *)&local_e8.QuadPart,(longlong *)&local_e0,0);
           PECMD_StrBldCopyWideN((uint16_t **)&local_f8,(LPCWSTR)(uintptr_t)local_e8.QuadPart,(int64_t)local_e0);
           local_150[0] = 0;
+          /* S11(T4 缺陷甲, dc:44284 意图为 8 字节清零): 仅清 [0] 时 [1..3]
+           * 陈旧栈垃圾被打包进 ECD 第 4 参 → 入口门误判 → 解引用野指针 AV */
+          local_150[1] = 0;
+          local_150[2] = 0;
+          local_150[3] = 0;
           uVar14 = PECMD_IsPecmdScriptFile((uint64_t)(uintptr_t)&local_f8);
           if ((int)uVar14 == 1) {
             local_180.QuadPart = (longlong)PECMD_RunCommand((void *)(uintptr_t)param_1.QuadPart,(WCHAR *)(uintptr_t)LVar15.QuadPart);

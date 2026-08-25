@@ -1,0 +1,10 @@
+{
+  "id": "039_team_chain",
+  "slug": "team_calc_find_chain",
+  "cmds": ["TEAM", "CALC", "FIND"],
+  "vars": ["X", "R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "TEAM 三段链中 CALC 结果 X 的即时可见性"
+}

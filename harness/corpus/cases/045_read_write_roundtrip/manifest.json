@@ -1,0 +1,10 @@
+{
+  "id": "045_read_write_roundtrip",
+  "slug": "read_write_roundtrip",
+  "cmds": ["WRITE", "READ"],
+  "vars": ["F", "V"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "同案内 WRITE→READ 闭环 (008 依赖外部文件状态)"
+}

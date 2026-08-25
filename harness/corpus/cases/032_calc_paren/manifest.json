@@ -1,0 +1,10 @@
+{
+  "id": "032_calc_paren",
+  "slug": "calc_paren_priority",
+  "cmds": ["CALC"],
+  "vars": ["R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "CALC 括号优先级探针: (1+2)*(3+4)"
+}

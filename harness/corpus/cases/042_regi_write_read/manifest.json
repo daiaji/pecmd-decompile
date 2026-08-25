@@ -1,0 +1,10 @@
+{
+  "id": "042_regi_write_read",
+  "slug": "regi_write_read_roundtrip",
+  "cmds": ["REGI"],
+  "vars": ["V"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "REGI HKCU 写+读 roundtrip; 真机残留测试键 HKCU\\SOFTWARE\\PECMD_S12_Test, 录制后由 harness 侧清理约定删除"
+}

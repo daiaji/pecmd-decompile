@@ -1,0 +1,1 @@
+TEAM CALC X=2*3|FIND $%X%=6, ENVI R=chain_ok! ELSE ENVI R=chain_bad

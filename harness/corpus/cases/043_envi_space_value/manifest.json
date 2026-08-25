@@ -1,0 +1,10 @@
+{
+  "id": "043_envi_space_value",
+  "slug": "envi_space_value",
+  "cmds": ["ENVI", "FIND"],
+  "vars": ["S", "R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "含空格值不被截断 (001-003 全是无空格短值)"
+}

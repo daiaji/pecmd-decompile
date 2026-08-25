@@ -1,0 +1,10 @@
+{
+  "id": "038_sub_param_shadow",
+  "slug": "sub_param_shadow_global",
+  "cmds": ["SUB", "CALL", "TEAM"],
+  "vars": ["a", "G", "H"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "_SUB 形参 a 遮蔽全局同名变量 + 调用后全局复原性 (H 应为 global)"
+}

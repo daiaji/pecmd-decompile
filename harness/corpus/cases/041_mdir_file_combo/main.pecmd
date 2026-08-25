@@ -1,0 +1,4 @@
+ENVI F=C:\pectest\out\src41.txt
+WRITE %F%,data41
+MDIR C:\pectest\out\sub41
+FILE %F%=>C:\pectest\out\sub41\dst41.txt

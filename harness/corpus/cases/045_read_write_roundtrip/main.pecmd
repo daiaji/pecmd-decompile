@@ -1,0 +1,4 @@
+ENVI F=C:\pectest\out\r45.txt
+WRITE %F%,lineA
+WRITE %F%,lineB
+READ %F%,V

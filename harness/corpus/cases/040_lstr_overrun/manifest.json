@@ -1,0 +1,10 @@
+{
+  "id": "040_lstr_overrun",
+  "slug": "lstr_overrun_truncate",
+  "cmds": ["LSTR", "ENVI"],
+  "vars": ["S", "R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "LSTR 越界截断: start=1 len=99 源串仅3字符 (029 正常域); msvc 侧待 R1 写回链修复后才有意义, 先录 orig golden"
+}

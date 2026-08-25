@@ -1,0 +1,4 @@
+ENVI F=C:\pectest\out\w44.txt
+WRITE %F%,first
+WRITE %F%,
+WRITE %F%,last

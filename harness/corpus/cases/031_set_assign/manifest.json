@@ -1,0 +1,10 @@
+{
+  "id": "031_set_assign",
+  "slug": "set_assign_readback",
+  "cmds": ["SET", "FIND"],
+  "vars": ["A", "R"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "SET 正例: 赋值后 FIND 校验读回 (SET 与 ENVI 同走 EvalSpecialToken, mode=1 分支尚无语料)"
+}

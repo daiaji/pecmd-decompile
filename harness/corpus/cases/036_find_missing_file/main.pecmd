@@ -1,0 +1,1 @@
+FIND --s C:\pectest\nosuch.txt, ENVI R=fnd! ELSE ENVI R=nf
