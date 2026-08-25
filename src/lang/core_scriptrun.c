@@ -238,10 +238,14 @@ done:
         CloseHandle(h);
     }
     if (buf != NULL) {
-        /* S11(T4 缺陷丙): buf 由 GrowByteBuffer(裸块, 无 8 字节头)分配, 不能经
-         * FreeStrBuf(*ps-8) 释放 —— 主链此前总在到达 done: 前 C0000005, 修复甲
-         * 打通后首次暴露为 0xC0000374 堆损坏(case001 复现)。 */
-        HeapFree(g_hHeap, 0, buf);
+        /* T4 缺陷丙·v3 归正(2026-08-25 Round14): buf 经 GrowByteBuffer→
+         * PECMD_HeapRealloc(=FUN_140063118) 分配 —— 带 8 字节头{size,magic},
+         * 返回 hdr+8 (dc:60560-60566); 原文对该家族的释放即 ptr-8 回拨
+         * (dc:60586/dc:60773)。v2 改 HeapFree(g_hHeap,0,buf) 实为释放块内
+         * 指针 → RtlFreeHeap 判堆损坏 c0000374(dump pecmd_msvc.exe.15364
+         * 栈帧 srx+0x671=call HeapFree 返回址 +0x11de71 反汇编实锤, 全仓
+         * 31 处 HeapFree 唯一缺 -8 处)。恢复原文 -8 契约: */
+        PECMD_FreeStrBuf((WCHAR **)&buf);
         buf = NULL;
     }
     if (convText != NULL) { /* MBCS 分支中途 goto done 的兜底回收 */

@@ -249,7 +249,10 @@ static int64_t PECMD_CreateInjectedProcess(void *p1, uint32_t p2, WCHAR *p3, DWO
     (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6;(void)p7;(void)p8;(void)p9;(void)p10;
     return 0;                                                                /* 新增桩 @0x1400e7414 (未还原 helper, 失败保守) */
 }                                                   /* @0x14013cb09 标志 (运行时置位) */
-static void PECMD_PatchRemoteWinExec(void *h) { (void)h; }   /* DAT_14013a330/340/338 (core_globals.c) */
+/* S14 批次2: 删除原静态空注入桩(no-op), 改经 extern 声明绑定真体 ——
+ * @0x1400229f8 (dc:20765) 真体 src/commands/core_b2c.c:189 (WriteProcessMemory 远程 WinExec 补丁);
+ * 调用点 rb:3738 (EXEC 补丁路径 ↔ dc:11205)。见 docs/divergences.md D-02。 */
+extern void PECMD_PatchRemoteWinExec(HANDLE hProcess);
 static uint16_t *PECMD_StrBldCopyWideN(void *out, const uint16_t *src, int64_t len);                                                   /* core 真实体 */
 static int64_t *PECMD_StrBldCopyAnsi(int64_t *out, char *src, uint64_t len);  /* def @3580/6508 */
 
@@ -6316,7 +6319,11 @@ LAB_14004df3c:
         }
         ppWVar17 = &local_f0;
 LAB_14004c51b:
-        PECMD_FreeStrBuf((WCHAR **)&ppWVar17);
+        /* T4 缺陷丁(Round14): 原文 dc:44300 = FUN_14005b104(ppWVar17) —— 传
+         * ppWVar17 的值(槽地址); v0 误写 &ppWVar17(二级地址) → HeapFree(栈
+         * 地址-8) → c0000374(dump pecmd_msvc.exe.15192 栈帧 PSB+0x1819 实锤,
+         * LOAD 不存在文件走 ECD 回退路径触发; 三入口: :6317/:6067/:7002)。 */
+        PECMD_FreeStrBuf((WCHAR **)ppWVar17);
         LVar33 = local_188;
         goto LAB_14004c525;
       }

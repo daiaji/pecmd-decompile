@@ -1275,6 +1275,7 @@ void PECMD_ScheduleSelfDelete(LARGE_INTEGER param_1, int param_2)
     /* @0x14000481c size=166 自删除/等待命令构造 */
     int iVar1;
     uint64_t uVar2;
+    uint32_t uVar3;   /* WAIT 变参: asm@140004855-4866 实证 (s14 批次1) */
     WCHAR *local_res18[2];
 
     if (param_2 != 0) {
@@ -1282,13 +1283,20 @@ void PECMD_ScheduleSelfDelete(LARGE_INTEGER param_1, int param_2)
     }
     uVar2 = PECMD_CheckFileAttr((LPCWSTR)param_1.QuadPart);
     if (0 < (int64_t)uVar2) {
+        /* asm@140004855-4866: param_2==0 → GetCurrentProcessId(); param_2==-1 → 0;
+         * 其余取 param_2 原值 (dc:1747-1749 未显示 -1 钳位分支, 汇编补全)。 */
         if (param_2 == 0) {
-            GetCurrentProcessId();
+            uVar3 = GetCurrentProcessId();
+        }
+        else {
+            uVar3 = (param_2 == -1) ? 0u : (uint32_t)param_2;
         }
         iVar1 = lstrlenW((LPCWSTR)param_1.QuadPart);
         PECMD_AllocWStringBuffer(local_res18, (int64_t)iVar1 + 200);
-        /* TODO(verify): Ghidra 未显示 wsprintfW 的变参 */
-        wsprintfW(local_res18[0], WSTR("PECMD**pecmd-cmd* WAIT *%lu -del \"%s\""));
+        /* asm@140004886-4898 实证变参: R8D=uVar3(%lu), R9=param_1 路径指针(%s);
+         * fmt 字节级确认 @0x14011c930。Ghidra 吞可变参, 已还原 (先例 rb:10545/rb:7161)。 */
+        wsprintfW(local_res18[0], WSTR("PECMD**pecmd-cmd* WAIT *%lu -del \"%s\""),
+                  uVar3, (LPCWSTR)param_1.QuadPart);
         PECMD_RestartSelf(local_res18[0]);
         PECMD_FreeStrBuf((WCHAR **)local_res18);
     }
@@ -3934,7 +3942,11 @@ uint64_t PECMD_LoadFileMappingExec(LPCWSTR param_1, int64_t *param_2, int64_t *p
         memcpy((uint8_t *)(lpBaseAddress + 1), (const uint8_t *)param_1, iVar2 * 2 + 2);
         memset((uint64_t *)((uint8_t *)lpBaseAddress + (int64_t)iVar2 * 2 + 10), 0, 0x48);
         UnmapViewOfFile(lpBaseAddress);
-        wsprintfW(local_168, WSTR(" *map:0x%p:%lu "));
+        /* asm@140009389-939e 实证变参: %p=hFileMappingObject(可继承句柄, 取自
+         * [param_4 ? param_4 : &local_res20]), %lu=R15D=载荷长度(lstrlenW*2+2);
+         * fmt 字节级确认 @0x14011d2e8。Ghidra 吞可变参, 已还原。 */
+        wsprintfW(local_168, WSTR(" *map:0x%p:%lu "),
+                  (void *)hFileMappingObject, (uint32_t)(iVar2 * 2 + 2));
         PECMD_StrBldCopyAnsi((int64_t *)&local_res10, "PECMD LOAD ", 0xffffffffffffffff);
         uVar6 = 0;
         if (*param_5 != L'\0') {

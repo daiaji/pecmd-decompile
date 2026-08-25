@@ -2812,7 +2812,7 @@ void PECMD_ServiceMainEntry(undefined8 param_1, undefined8 *param_2);
 void PECMD_GrantCurrentUserAccess(int64_t a);
 void PECMD_SwitchToDefaultDesktop(void);
 void PECMD_ReleaseCallbackObj(int *param_1);
-uint64_t PECMD_ScriptInit(void);
+void PECMD_ScriptInit(void *s, int64_t parent);   /* S14 批次3 归正(dc:13336 FUN_1400186bc), 真体 core_exec5.c */
 void PECMD_NtShutdownSystemCall(int param_1);
 void PECMD_SetCurrentDirIfChanged(LPCWSTR param_1);
 undefined4 PECMD_LineIsTeamExecLoad(const WCHAR *param_1);
@@ -3110,7 +3110,7 @@ uint64_t SetupDiDestroyDeviceInfoList(void);
 uint64_t SetupDiEnumDeviceInterfaces(void);
 uint64_t SetupDiGetDeviceInstanceIdW(void);
 uint64_t SetupDiGetDeviceInterfaceDetailW(void);
-uint64_t PECMD_ScriptCopy(void);
+void *PECMD_ScriptCopy(void *dst, void *src);     /* S14 批次3 归正(dc:12765 FUN_140017cdc), 真体 core_exec5.c */
 uint64_t FUN_140061E98(void);
 uint64_t FUN_1400688E0(void);
 uint64_t FUN_14006A81C(void);

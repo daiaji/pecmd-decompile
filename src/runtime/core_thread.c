@@ -202,6 +202,7 @@ uint64_t PECMD_ThreadMainLoop(void *task)
     int64_t n;
     int64_t i;
     uint64_t r;
+    uint64_t cbref;
 
     if (task == NULL) {
         refs = NULL;
@@ -209,7 +210,7 @@ uint64_t PECMD_ThreadMainLoop(void *task)
     else {
         refs = (void *)((uint8_t *)task + 8);
     }
-    n = (int64_t)((uint64_t *)refs)[9];     /* 回调引用 */
+    cbref = ((uint64_t *)refs)[9];          /* dc:19130 local_res8=puVar4[9] 回调引用(尾部减计数用) */
     handles = *(HANDLE **)refs;             /* 句柄数组 */
     timeout = (DWORD)((uint64_t *)refs)[7]; /* 超时 */
     r = (uint64_t)task;
@@ -227,8 +228,16 @@ uint64_t PECMD_ThreadMainLoop(void *task)
     for (i = 0; i < n; i++) {
         CloseHandle(handles[i]);
     }
-    PECMD_ReleaseRefCount((void **)&refs);
-    PECMD_FreeStrBuf((WCHAR **)&refs);
+    /* 尾部清理 — dc:19158-163 直移(T4 缺陷戊, Round14): 每路 ReleaseRefCount
+     * (计数归零者负责 free) 之后必须置 NULL, 其后 FreeStrBuf 仅保形=no-op。
+     * v0 漏置 NULL 且第二路直接 FreeStrBuf(&task) → 与归零释放构成 double-free
+     * → 退出期堆校验 c0000374(dump pecmd_msvc.exe.10492 栈帧
+     * SendMsgThreadProc/ThreadMainLoop 链实锤; 批次3 激活 TEAM 广播链后首暴露)。 */
+    PECMD_ReleaseRefCount((void **)&cbref);
+    cbref = 0;
+    PECMD_FreeStrBuf((WCHAR **)&cbref);
+    PECMD_ReleaseRefCount((void **)&r);
+    r = 0;
     PECMD_FreeStrBuf((WCHAR **)&r);
     return 0;
 }

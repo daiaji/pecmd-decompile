@@ -57,7 +57,14 @@ uint64_t PECMD_RunCommandLine(void *script, WCHAR **str, int mode)
 const uint8_t DAT_14011dcb0[16] = {0x2a,0,0,0,'p','p','i','d',':',0,0,0,'h','p','i','d'}; /* 新增桩 */
 const uint16_t DAT_14011d108[] = {'.','t','m','p',0};   /* argv 表末端字节偏移 (初 0) */
 void FUN_1400166b4(void) { /* 初始化 argv 表 (缺失 helper, no-op 桩) */ }
-uint64_t PECMD_ScriptInit(void) { return 0; }
+/* S14 批次3: 同址别名归一 —— rename_map.json: FUN_1400186bc ≡ PECMD_ScriptInit
+ * (dc:13335 size=161, 签名 void(undefined8*,longlong); 真体 src/runtime/core_exec5.c FUN_1400186BC)。
+ * 原零参空桩 arity 与全部调用点(2参)不符且恒返 0 → 改为转发真体。 */
+extern void FUN_1400186BC(void *s, int64_t parent);
+void PECMD_ScriptInit(void *s, int64_t parent)
+{
+    FUN_1400186BC(s, parent);
+}
 uint64_t PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int param_3, uint64_t *param_4) { (void)param_1;(void)param_2;(void)param_3;(void)param_4; return 0; }
 
 /* S8: 同址别名归一 —— rename_map.json: FUN_14001b5ac ≡ PECMD_XorEncode（真体 core_var3.c）。 */
@@ -188,7 +195,14 @@ int32_t PECMD_DecodeEncTextToUtf16(uint32_t spec, const uint8_t *src, int srclen
                       uint16_t *dst, int dstcap, uint32_t key)
 { (void)spec; (void)src; (void)srclen; (void)dst; (void)dstcap; (void)key; return 0; }
 
-uint64_t PECMD_ScriptCopy(void) { return 0; }
+/* S14 批次3: 同址别名归一 —— rename_map.json: FUN_140017cdc ≡ PECMD_ScriptCopy
+ * (dc:12764 size=597, 签名 ptr(undefined8*,undefined8*) 返回 dst; 真体
+ * src/runtime/core_exec5.c FUN_140017CDC)。原零参空桩 arity 不符且恒返 0 → 转发真体。 */
+extern void *FUN_140017CDC(void *dst, void *src);
+void *PECMD_ScriptCopy(void *dst, void *src)
+{
+    return FUN_140017CDC(dst, src);
+}
 /* S8: 同址别名归一 —— FUN_14002fd88 ≡ PECMD_ParseCommandPath（真体 core_b2e.c）。 */
 uint64_t PECMD_ParseCommandPath(uint64_t a, uint64_t b, uint32_t *c, int64_t *d)
     { return (uint64_t)(uintptr_t)FUN_14002FD88((int64_t *)(uintptr_t)a,(WCHAR *)(uintptr_t)b,c,d); }   /* arity 修正 0->4 (core 调用方 + PECMD_ProcessScriptBlock 移入) */

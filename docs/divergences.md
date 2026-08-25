@@ -41,13 +41,16 @@
 | ID | 标题 | 一句话根因 | 状态 |
 |----|------|-----------|------|
 | D-01 | 注入式 EXEC 三路径静默失败（static 桩遮蔽真实现） | rb:247 桩编译期抢绑两处调用，core_b8k 真体零调用方 | 未修 |
-| D-02 | 同族第二实例：PECMD_PatchRemoteWinExec 空桩 no-op | rb:252 空桩被 rb:3738 调用，core_b2c 真体未绑定 | 未修 |
-| D-03 | wsprintfW 缺变参 ×2（Ghidra 变参丢弃被忠实直移） | dc 原文即缺参，移植忠实继承；x64 下读寄存器/栈残留 | 未修 |
-| D-04 | 零参占位桩族（签名归正但体待移植） | unimplemented_stubs.c 大量 `(void){return 0;}` 占位 | 进行中 |
-| D-05 | PSB「幻影行」崩溃（机制已更名，双缺陷叠加） | ECD 第 4 参高 48 位栈垃圾 AV × ANSI 按 UTF-16LE 误读触发链 | 在修 |
+| D-02 | 同族第二实例：PECMD_PatchRemoteWinExec 空桩 no-op | rb:252 空桩被 rb:3738 调用，core_b2c 真体未绑定 | **已修(S14批2)** |
+| D-03 | wsprintfW 缺变参 ×2（Ghidra 变参丢弃被忠实直移） | dc 原文即缺参，移植忠实继承；x64 下读寄存器/栈残留 | **已修(S14批1)** |
+| D-04 | 零参占位桩族（签名归正但体待移植） | unimplemented_stubs.c 大量 `(void){return 0;}` 占位 | 进行中(S14批3修2) |
+| D-05 | PSB「幻影行」崩溃（机制已更名，双缺陷叠加） | ECD 第 4 参高 48 位栈垃圾 AV × ANSI 按 UTF-16LE 误读触发链 | **已修(甲乙丙丁)** |
 | D-06 | FUN_140101e04 双体疑点（契约+归属残留） | dc void 契约 vs 调用方消费 RAX；归属注释冲突 | 已归一(残留) |
 | D-07 | 字符串家族双体返回值契约分歧（FUN_140063888 族） | 同址双体并存致 dc=槽/stubs=void/var2=*ps 三方不一 | 低风险挂账 |
 | D-08 | EXEC 启动活体观测矛盾（未决） | 静态实参表与调试观测不可调和；读槽偏移/间接调用面假设 | 待复证 |
+| D-09 | 缺陷丙v2：GrowByteBuffer 头契约误判致块内指针释放 | HeapRealloc(=FUN_140063118) 带8字节头返回 hdr+8(dc:60560)，v2 改 HeapFree(buf) 释内指针 | **已修(v3归正)** |
+| D-10 | 缺陷丁：PSB LAB_14004c51b 二级地址释放 | dc:44300 传 ppWVar17 的值(槽地址)，rb:6319 写成 &ppWVar17 → HeapFree(栈地址-8) | **已修** |
+| D-11 | 缺陷戊：ThreadMainLoop 尾部漏置 NULL 致 double-free | dc:19158-163 两路 ReleaseRefCount 后置 NULL；rb 版直接 FreeStrBuf(&task) 与归零释放相撞 | **已修** |
 
 ---
 
@@ -63,14 +66,14 @@
 - **根因**：`restored_bodies.c:252` `static void PECMD_PatchRemoteWinExec(void *h){(void)h;}` 被 rb:3738（EXEC 补丁路径 ↔ dc big_funcs:3480）调用；真体 `src/device/core_b2c.c:189`（dc `FUN_1400229f8 @0x1400229f8`，size=118）未被绑定——与 D-01 相同的「桩未随真体落地回收」模式。
 - **证据链**：`build/msvc/s11_inject_shadow_audit.md` §0-F4、§5-R3（triage_out_batch3.jsonl:39 RESOLVABLE-STATIC；map L146/L10643 双符号）。本轮复核 rb:252/3738 与现源一致。
 - **影响面**：EXEC 远程补丁路径恒 no-op；普通 EXEC 不经此路径。
-- **状态**：未修（inject 报告 §5-R3 登记待办，建议与 D-01 同批删桩）。
+- **状态**：已修（2026-08-26 S14 批次2：删桩+extern 绑定 core_b2c.c:189 真体；补丁稿 build/msvc/s14_behavior_batches_patchdraft.md。残留：exref 占位符号与绝对地址码体未统一，注入内容待校准——见补丁稿风险节）。
 
 ### D-03 wsprintfW 缺变参 ×2（Ghidra 变参丢弃被忠实直移）｜未修
 
 - **根因**：dc 原文即缺变参（Ghidra 未显示），移植体忠实直移。**站点 A**：`src/misc/core_b1_remaining.c:3937`（`PECMD_LoadFileMappingExec` ↔ dc:5065 `FUN_1400091e0 @0x1400091e0`），格式串 `L" *map:0x%p:%lu "` 缺 2 参——汇编实证 %p=CreateFileMappingW 句柄（INVALID→NULL 归一后）、%lu=`lstrlenW(param_1)*2+2`。**站点 B**：`core_b1_remaining.c:1291`（`PECMD_ScheduleSelfDelete` ↔ dc:1752 `FUN_14000481c @0x14000481c`），格式串 `L"PECMD**pecmd-cmd* WAIT *%lu -del \"%s\""` 缺 2 参——%lu=目标 PID（param_2==0 时本进程 PID）、%s=param_1；汇编另有 `-1→0` 钳制（@0x140004863-66 CMOVZ）dc 未呈现。x64 下 wsprintfW 将 R8/R9 及栈残留当变参读取 → `%s` 解引用任意寄存器内容可 AV，`%p/%lu` 打印垃圾。
 - **证据链**：`build/msvc/s11_varargs_recovery.md` §0/§2/§3（IAT 槽位→导入名、格式串 UTF-16LE 字节流双重验证；恢复形态见 §2.4/§3.4）；`build/msvc/s11_exec_launch_audit.md` §0-C6、§7-B。本轮复核 :1291/:3937 现文仍缺参（:1290 有 TODO(verify) 标记）。
 - **影响面**：站点 A 污染 LOAD 映射链拼出的 `PECMD LOAD …` 命令行（格式化寄存器垃圾）；站点 B 影响 self-delete/WAIT 重启链命令串。波及面提示：varargs 报告 §4-5 列出同类缺参多处（core_b1_remaining.c:1192/2667/2689/3620、app/core_init.c:103 等，部分有 TODO(verify)），尚未逐处取证，不在本条计数内。
-- **状态**：未修（最小补参处方 varargs 报告 §2.5/§3.5；是否顺带还原 -1 钳制由实现侧决定——不还原则 param_2==-1 时第 3 参打 `-1` 而原版打 `0`）。
+- **状态**：已修（2026-08-26 S14 批次1：两站点各补 2 参 + 还原 -1→0 钳位分支（汇编 @140004863 CMOVZ 补全 dc 所缺）；证据与 hunk 见 s14_behavior_batches_patchdraft.md §批次1；stubs_common.h:2119 旧"缺参保持原样"注记已被本批以汇编一级证据偏离，建议追加交叉引用防回退）。
 
 ### D-04 零参占位桩族（签名归正但体待移植）｜进行中
 
@@ -87,7 +90,7 @@
   - 机制更名：崩溃指针来自 PSB 栈帧打包参数而非文本缓冲；core_scriptrun.c:152-168 已加的 0x10 槽补零缓解对该崩溃无效（psb_loop 报告 §3 统一解释表）。
 - **证据链**：`build/msvc/s11_psb_loop_audit.md` §0/§3/§5（复现日志）/§6 处方甲乙；触发定位另见 `build/msvc/s11_psb_launch_audit.md` §0-K1/K2（返回地址 0x1A2068 属 PSB→ECD 正常分发，非 CreateProcessW）。
 - **影响面**：LOAD 非 UTF-16LE（ANSI/无 BOM）脚本必崩（001_envi_smoke 语料稳定复现）；UTF-16LE+BOM 语料不受影响。现有 harness golden 以原版录制，此缺口使 msvc 后端在该类输入上必然 FAIL。
-- **状态**：在修（任务简报口径；修复甲＝rb:6297 四段清零、修复乙＝嗅探+MultiByteToWideChar(CP_ACP)，处方 psb_loop §6；截至本轮取证两处方均未写入工作树）。
+- **状态**：已修（甲=rb:6297 四槽清零 / 乙=编码嗅探方案B / 丙=释放契约 v3 归正见 D-09 / 丁=ECD 回退清理二级地址见 D-10。case001 内容全 PASS 且干净退出 exit=0；后续衍生缺陷戊=D-11）。
 
 ### D-06 FUN_140101e04（≡PECMD_CreateProcessW）双体疑点｜已归一(残留)
 
@@ -117,9 +120,9 @@
 
 | ID | 登记日期 | 标题 | 根因（一句话） | 证据链（报告§/文件:行） | 影响面 | 状态 | 备注/SKIP |
 |----|----------|------|----------------|--------------------------|--------|------|-----------|
-|    |          |      |                |                          |        |      |           |
-|    |          |      |                |                          |        |      |           |
-|    |          |      |                |                          |        |      |           |
+| D-09 | 2026-08-26 | 缺陷丙v2：GrowByteBuffer 头契约误判致块内指针释放 | FUN_140063118 带 8 字节头{size,magic}返回 hdr+8（dc:60560-60566），家族释放=ptr-8（dc:60586/60773）；3e8536a v2 误判"裸块无头"改 HeapFree(g_hHeap,0,buf) 释块内指针 | dump pecmd_msvc.exe.15364 栈帧 srx+0x671 反汇编 call HeapFree 返回址 +0x11de71；全仓 31 处 HeapFree 唯一缺 -8 处 | case001 内容 PASS 但退出必 c0000374；LOAD 链每次触发 | 已修(v3归正 core_scriptrun.c:240 FreeStrBuf) | v1(-8) 本是对的被误改；历史#1 c0000374 归因存疑不追溯 |
+| D-10 | 2026-08-26 | 缺陷丁：PSB LAB_14004c51b 二级地址释放 | dc:44300 `FUN_14005b104(ppWVar17)` 传值(槽地址)；rb:6319 写成 `(WCHAR**)&ppWVar17` → HeapFree(栈地址-8) | dump pecmd_msvc.exe.15192 帧 PSB+0x1819；三入口 rb:6317/:6067/:7002 汇聚同一 label | LOAD 不存在文件(PSB→ECD 回退路径)即崩 c0000374；missing-file 类语料前置崩溃 | 已修(rb:6319 改传 ppWVar17 值) | 手测 LOAD case.pecmd 不存在文件复现 |
+| D-11 | 2026-08-26 | 缺陷戊：ThreadMainLoop 尾部漏置 NULL 致 double-free | dc:19158-163 两路 ReleaseRefCount 后各置 NULL 再保形 FreeStrBuf(no-op)；rb 版 :230-232 漏置 NULL 且第二路直接 FreeStrBuf(&task) 与引用计数归零释放相撞 | dump pecmd_msvc.exe.10492 帧 SendMsgThreadProc+0x172←FreeStrBuf(BaseThreadInitThunk 直入线程)；dc 对照逐语句 | S14批3(ScriptInit/Copy 转发)激活 TEAM 广播链(BroadcastEnvChange→EnumWindows→SendMsgThreadProc)后退出期必现 c0000374；024_team_multi 回归载体 | 已修(core_thread.c ThreadMainLoop 尾部直移+cbref 槽) | 批次3 前 TEAM 空桩使广播链从未真实运行故基线不炸 |
 
 <!-- 单行示例（复制后去注释填写）：
 | D-09 | 2026-08-26 | 示例标题 | 机制一句话（文件:行号） | 报告名 §n + 一手物证行号 | 触发条件/受影响语料/验收门影响 | 未修 | 口径注记或 SKIP 原因 |
