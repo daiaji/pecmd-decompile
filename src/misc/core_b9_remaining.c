@@ -5,6 +5,11 @@
 
 #include "pecmd_defs.h"
 
+/* TEMP PROBE 用最小 CRT 原型 (禁 stdio.h: 撞 win32_api_stubs 内联) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
+extern int __cdecl fclose(void *_Stream);
+
 /* CRT/内部数据符号（link_stubs.c 提供桩定义） */
 extern uint64_t g_u64E598;
 extern uint64_t g_u64E600;
@@ -191,7 +196,36 @@ int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa,
                          LPCWSTR cwd, LPSTARTUPINFOW si, LPPROCESS_INFORMATION pi)
 {
     /* @0x140101e04 size=103 CreateProcessW 业务包装(返回成功标志) */
-    return CreateProcessW(cmd, buf, sa, da, inherit, flags, env, cwd, si, pi) != 0;
+    { /* TEMP PROBE(S11): 十参现场落盘 — 定位 EXEC 启动 AV 后拆除 */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[CPW] cmd=%p buf=%p sa=%p da=%p inh=%d flg=%x env=%p cwd=%p si=%p pi=%p\n",
+                    (void *)cmd, (void *)buf, (void *)sa, (void *)da,
+                    inherit, flags, env, (void *)cwd, (void *)si, (void *)pi);
+            if (cmd) fprintf(pf_, "[CPW]   cmd.str=%ls\n", cmd);
+            if (buf) fprintf(pf_, "[CPW]   buf.str=%ls\n", buf);
+            if (cwd) fprintf(pf_, "[CPW]   cwd.str=%ls\n", cwd);
+            if (si) {
+                unsigned *u = (unsigned *)(void *)si;
+                fprintf(pf_, "[CPW]   si.dump:");
+                for (int i = 0; i < 26; i++) fprintf(pf_, " %08x", u[i]);
+                fprintf(pf_, "\n");
+            }
+            fclose(pf_);
+        }
+    }
+    {
+        int r = CreateProcessW(cmd, buf, sa, da, inherit, flags, env, cwd, si, pi);
+        DWORD gle = GetLastError();
+        { /* TEMP PROBE(S11): 返回现场 */
+            void *pf2_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf2_) {
+                fprintf(pf2_, "[CPW] ret=%d gle=%lu\n", r, (unsigned long)gle);
+                fclose(pf2_);
+            }
+        }
+        return r != 0;
+    }
 }
 
 uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)

@@ -264,7 +264,14 @@ void PECMD_CleanupParser(int64_t p){ (void)p; }
 void *PECMD_FreeResourceObject(void *a, unsigned int b){ (void)a;(void)b; return a; }
 
 /* ---- 新增辅助桩 (core_b3 12 函数依赖; 签名与 decompiled 一致, 基类型等价) ---- */
-void FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n){ (void)dst;(void)v;(void)n; }	/* CRT 标准库内联 */
+/* S11(R11 门A 终局根因): 原 no-op 桩导致 STARTUPINFO.lpDesktop/lpTitle 等区域
+ * 不被清零, 陈旧栈垃圾(lpTitle=0xe)直入内核 → CreateProcessInternalW
+ * wcslen(0xe) AV(si.dump 探针实锤)。dc 原文 = CRT memset 内联
+ * (@0x140102a90 零填充, attic/outA.txt 物证)。 */
+void FUN_140102a90(uint64_t *dst, uint64_t v, uint64_t n)
+{
+    memset((void *)dst, (int)v, (size_t)n);
+}
 uint16_t *PECMD_DriveTypeName(int i, uint16_t *out, int max){ (void)i;(void)max; return out; }
 uint64_t PECMD_ParseControlMessage(int64_t *a, uintptr_t b, uintptr_t c, const uint16_t *d, uintptr_t e, int64_t f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
 uint64_t PECMD_ControlEnableCommand(int64_t *a, uintptr_t b, uintptr_t c, const uint16_t *d, uintptr_t e, int64_t f){ (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; return 0; }
