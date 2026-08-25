@@ -151,6 +151,10 @@ static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint
     }
     {
         int64_t n = wchars + 1;
+        /* S11(T4 分诊): 原分配恰好 wchars+1, 终止符后无冗余; PSB 行游标在末行后
+         * 会越过终止符构成"幽灵空行", 光标落在堆页尾未映射处 → SkipLeadingControlChars
+         * AV(001_envi 手工复现实锤)。补 0x10 槽零填充冗余模拟原版缓冲松弛。 */
+        n += 0x10;
         PECMD_AllocWStringBuffer(&text, n); /* 带计数头的副本 (Adopt 兼容, 同变量路径先例) */
         if (text == NULL) {
             ret = (int64_t)GetLastError();
@@ -158,6 +162,10 @@ static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint
         }
         memcpy(text, (uint8_t *)buf + bomSkip * 2, (size_t)wchars * 2);
         text[wchars] = 0;
+        {
+            int64_t z;
+            for (z = wchars + 1; z < n; z++) text[z] = 0;
+        }
     }
     { /* TEMP PROBE [S10] (诊断 LOAD 装载, T5 随探针网拆除) */
         FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
