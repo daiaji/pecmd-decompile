@@ -56,9 +56,9 @@ extern undefined8 *PECMD_AllocSmallObject(undefined8 *arr);     /* @0x140063344 
 extern undefined8 PECMD_EncodeBuffer(longlong *in, longlong *out, undefined1 cp); /* @0x140068984 */
 extern HANDLE PECMD_LoadImageFromMemory(undefined8 *param_1, longlong *param_2);  /* @0x14006eaac */
 extern void PECMD_FreeStrBuf(void *ps);                     /* @0x14005b104 释放字符串槽 */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **ps);    /* @0x14005b154 跳过空白 */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 串追加 */
-extern void PECMD_AllocStrSlot(WCHAR **out);                /* @0x140063620 初始化串缓冲 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **ps); /* @0x14005b154 跳过空白 * /) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 串追加 * /) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 初始化串缓冲 * /) */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count); /* @0x140063720 串分配(计数) */
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a,
                             int64_t b);                          /* @0x1400637dc 串复制分配 */

@@ -22,7 +22,6 @@
 #include <string.h>
 
 #include "pecmd_defs.h"
-static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src);         /* 前置(首用先于定义) */
 extern WCHAR **FUN_14005B154(WCHAR **pp);                            /* @0x14005b154 */
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
@@ -324,8 +323,9 @@ int64_t FUN_14001C2CC(LPCWSTR priv, DWORD attr, uint32_t flag)
     return ret;
 }
 
-/* ========== StrCpyW 自动长度 @0x1400703e4 ========== */
-static WCHAR *PECMD_StrBldCopyWide(WCHAR **ps, LPCWSTR src)
-{
-    return PECMD_StrCopyW(ps, src, -1);
-}
+/* ========== StrCpyW 自动长度 @0x1400703e4 ==========
+ * S11(R11): 本文件的 static 副本已删除 —— 与 restored_bodies.c:7595 的全局
+ * PECMD_StrBldCopyWide 双定义(HANDOFF §11 疑点)。两体语义等价(均=
+ * StrCopyW(slot,src,-1): 全局版走 FUN_140063888, 本文件旧版走
+ * PECMD_StrCopyW, 同为 0x140063888 直移真体), 统一绑定全局单一定义,
+ * 原型由 xproto.h 提供。 */

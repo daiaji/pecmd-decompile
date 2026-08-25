@@ -48,29 +48,29 @@ extern void PECMD_PositionMessageWindow(HWND h, LPCWSTR a, LPARAM b, uint32_t c,
                                         uint32_t f, uint32_t g, uint64_t h2); /* 工具提示显示 */
 
 /* ---- string / var helpers ---- */
-extern void PECMD_AllocStrSlot(void *out);                               /* release/init slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);              /* assign string slot */
-extern void PECMD_FreeStrBuf(void *ps);                                  /* free string slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void PECMD_RunCommandLine(void *script, void *str, int mode);     /* expand */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* release/init slot * / extern WCHAR *PECMD_SkipLeadingControlChars) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);) */
+
+
+
+
+
+
 extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern void PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern uint64_t PECMD_ParseSignedNumber(short *);
 extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* delimiter scan */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int PECMD_ParseHashNumbers(int64_t *, int64_t);            /* 数值写, 返回写入个数 */
-extern WCHAR *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
-extern void PECMD_ExpandBackslashNewline(const WCHAR *p, char c); /* 清空串 */
-extern int64_t PECMD_ExpandVarsRecursive(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
-                                         uint8_t flag);
-extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
-                                       uint8_t flag);
-extern char PECMD_MatchTokPrefixAdv(LPCWSTR param_1, void *param_2, int param_3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern char PECMD_MatchTokPrefixAdv(LPCWSTR param_1, void *param_2, int param_3);) */
+
+
+
+
+
 extern void PECMD_DestroyTrayIcon(char *param_1);
 extern void PECMD_DestroyWindowLocked(void);
 extern void PECMD_ShakeTrayCursor(void);

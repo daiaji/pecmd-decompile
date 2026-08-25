@@ -43,8 +43,8 @@ extern int64_t PECMD_GetPhysicalMemoryMb(void);
 extern int FUN_1400690C0(HKEY root, LPCWSTR sub, LPCWSTR name, int64_t *out, DWORD *type,
                          LONG *status);
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);
-extern BOOL FUN_140101E70(LPCWSTR s);
-extern uint64_t PECMD_IsDirectory(LPCWSTR s);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern BOOL FUN_140101E70(LPCWSTR s); * / extern uint64_t PECMD_Is) */
+
 extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path, WIN32_FIND_DATAW *fd);
 extern LARGE_INTEGER PECMD_ExecDashCommand(LPCWSTR path);
 extern uint32_t PECMD_ParseVirtualKeyCode(LPCWSTR s, int len);
@@ -69,10 +69,10 @@ extern uint64_t PECMD_RamdMountImDisk(LPCWSTR cmd, int64_t *ctx);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern uint64_t PECMD_SetRamdrivDiskSize(int size, LPCWSTR name);
 extern void PECMD_QueryDiskSpace(LPCWSTR name);
-extern void PECMD_AllocStrSlot(void *ps);
-extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
-extern void PECMD_RunCommand(void *script, WCHAR *cmd);
-extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / /* S11: 本地声明与定义冲突, 已) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExecIndataCommand(LPCWSTR name, LPCWSTR value);) */
+
+
 extern uint16_t *FUN_140024C48(int64_t *pp, int64_t *len, uint32_t flags);
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_IsVkPrefix(WCHAR *s);

@@ -17,10 +17,10 @@
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
-extern int64_t *FUN_14005B154(WCHAR **ps);                 /* @0x14005b154 */
-extern void *PECMD_StrBldCopyWide(void *ps, const WCHAR *src);            /* @0x1400703e4 */
-extern uint8_t *PECMD_MemMoveForward(uint8_t *dst, uint8_t *src, int n);  /* @0x14001d78c */
-extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t *FUN_14005B154(WCHAR **ps); /* @0x14005b154 * / extern void *PECMD_StrBldCopyWide(void *ps, cons) */
+
+
+
 
 /* 原版 DAT_1401206f4: L"[]" 字面量 ([] 空参数的 argv[0]) */
 static const WCHAR s_EmptyBracket[] = L"[]";

@@ -84,7 +84,7 @@ extern bool FUN_140101E70(LPCWSTR path);           /* @0x140101e70 文件存在 
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 core_var.c */
 extern void PECMD_FreeStrBuf(WCHAR **ps);                         /* @0x14005b104 core_string.c */
 extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);             /* @0x14006375c core_string.c */
-extern int64_t FUN_14005C788(const char *s, WCHAR *p, int n);     /* @0x14005c788 词比较 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t FUN_14005C788(const char *s, WCHAR *p, int n); /* @0x14005c788 词比较 * /) */
 extern void FUN_1400702B0(WCHAR **ps, LPCWSTR src);               /* @0x1400702b0 core_string.c (stubs_common.h 同声明) */
 
 /* ========== srx_ExecuteScriptFile — LOAD 脚本文件装载执行 ==========

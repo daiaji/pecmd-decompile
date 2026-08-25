@@ -175,13 +175,13 @@ extern int SetupDiClassNameFromGuidA(const void *guid, char *buf, uint32_t bufle
 extern DWORD PECMD_QueryDeviceInfo(LPCWSTR path, DWORD *out1, int64_t *out2);
 extern void PECMD_AllocStringSlot2(void **ps, int64_t len);      /* 分配 */
 extern void PECMD_GetDeviceParent(DWORD a, uint32_t b, void *c); /* 设备属性设置 */
-extern void PECMD_AllocStrSlot(void *ps);                        /* 初始化容器 */
-extern void CM_Get_Device_IDW(uint32_t DevInst, WCHAR *Buffer, DWORD BufferLen);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); /* 初始化容器 * / extern void CM_Get_Device_IDW(uint32_t DevInst, WCHAR *B) */
+
 extern void PECMD_ZeroLenBuf(void *p); /* 清零/初始化 */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
-extern void FUN_14006375C(WCHAR **ps, LPCWSTR src);         /* 追加字符串 */
 extern void PECMD_RunCommand(int64_t *script, WCHAR *line); /* 执行脚本行 */
-extern void FUN_14007A224(int64_t *script, WCHAR *var, WCHAR **out, int a, int b);
+
+
 
 /* ---- B3 业务函数 (WndProc/线程/析构) 还原所需的辅助 extern ---- */
 extern uint16_t PECMD_DispatchMessageMap(int64_t *param_1, int param_2, uint64_t param_3,
@@ -210,8 +210,8 @@ extern void PECMD_ProcessScriptBlock(uint64_t param_1, uint64_t param_2, void *p
                                      void *param_4, void *param_5); /* @0x14004c0bc 主脚本执行器 */
 extern void PECMD_ReleaseSlotObject(int64_t *param_1);              /* @0x1400e56e4 */
 /* ---- 本批次(12函数)还原新增 extern 声明 ---- */
-extern WCHAR *PECMD_SkipLeadingControls(WCHAR **pp); /* @0x1400170b0 */
-extern void PECMD_ParseScopeKeywords(int64_t *a, char *b, uint8_t *c, char *d, char *e, char *f);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControls(WCHAR **pp); /* @0x1400170b0 * / extern void PECMD_ParseScopeKeywords(i) */
+
 extern void PECMD_ReportPelogonStatus(int64_t *a, int b,
                                       int c); /* 等待/刷新 (TODO: 与核心b1签名核对) */
 extern HWND g_hPelogonWnd;                    /* 镜像/加载完成指针 */
@@ -28302,7 +28302,7 @@ uint64_t *PECMD_InitControl(uint64_t *param_1, uint64_t param_2, int64_t param_3
         (int64_t)(*g_pImageListCreate)((uint64_t)(uintptr_t)puVar15, (uint64_t)(uintptr_t)puVar14,
                                        local_c8, param_16, local_res18);
     plVar6[0x1b] = lVar8;
-    PECMD_AddImagesToImageList();
+    PECMD_AddImagesToImageList((int64_t)(intptr_t)plVar6, param_5); /* S11 dc:117244 补参 */
     SendMessageW((HWND)plVar6[4], 0x1109, 0, plVar6[0x1b]);
     param_5 = (LPCWSTR)(uintptr_t)*param_11;
     FUN_1401001c0((int64_t)plVar6, (int64_t *)&param_5, 0, 0);

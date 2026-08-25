@@ -51,8 +51,8 @@ extern WCHAR **FUN_14005B154(WCHAR **pp);
 extern int64_t FUN_140063B00(int64_t idx, int64_t *arr, int64_t *end, uint32_t esize);
 extern void PECMD_TruncateObjectArray(int64_t *arr, int *count, int value);
 extern void PECMD_RemoveObjectByKey(int64_t *arr, int *count, int64_t key);
-extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void *PECMD_AllocMagicString(LPCWSTR src);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t) */
+
 extern void FUN_14007DF90(int64_t ctx, int mode);
 
 /* ---- 本批引用的全局数据 ---- */

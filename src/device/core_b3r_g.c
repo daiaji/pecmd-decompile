@@ -69,8 +69,8 @@ extern int (*g_pCoCreateInstance)(void *, void *, uint32_t, void *, void **); /*
 /* ================================================================
  * Helper-function externs (bodies provided elsewhere; NOT defined here)
  * ================================================================ */
-extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t) */
+
 extern void PECMD_FreeStrBuf(void *ps);
 extern int PECMD_AdapterMacIpLookup(void *a, int64_t *b, int c);
 extern int64_t PECMD_ParseVolumeGuid(int64_t *param_1, uint32_t *param_2, int param_3);
@@ -80,13 +80,13 @@ extern int PECMD_AnsiStrNCompare(char *buf, int64_t a, int64_t b);
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);
 extern LPWSTR PECMD_GuidToString(LPWSTR dst, uint32_t *guid, int mode);
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
-extern int64_t PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
-extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);
-extern void PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *s, const WCHAR *) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp); * / exter) */
+
 extern WCHAR *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
-extern void PECMD_AllocStrSlot(void *out);
-extern int PECMD_ParseUIntValue(LPCWSTR *, int *);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); * / extern int PECMD_Pa) */
+
 extern void PECMD_ShowWindowMode(HWND, uint32_t *, int);
 extern void PECMD_CopyTokenTrimmed(int64_t *, int64_t *, short, short);
 extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key);
@@ -103,10 +103,10 @@ extern void PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t 
 extern void PECMD_ExtractTokenByDelim(int64_t *, int64_t *, int);
 extern void PECMD_CopyUpToChar(int64_t *, int64_t *, uint32_t);
 extern uint64_t PECMD_ParseSignedNumber(short *);
-extern void PECMD_ParseHashNumbers(int64_t *, int64_t);
-extern void PECMD_SplitTokenTrimWs(int64_t *, int64_t *, short);
-extern void PECMD_ExpandBackslashNewline(const WCHAR *, char);
-extern void PECMD_ReadFileToWide(WCHAR *, int64_t *);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ParseHashNumbers(int64_t *, int64_t); * / extern) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExpandBackslashNewline(const WCHAR *, char); * /) */
+
 extern void PECMD_DispatchCreateControl(uint64_t, int64_t, WCHAR **, int, int, int, int, WCHAR **,
                                         WCHAR **, uint32_t, int *, LPCWSTR, uint64_t);
 

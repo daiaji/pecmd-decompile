@@ -25,10 +25,10 @@ extern char PECMD_MatchTokenAdvance(char *tok, int64_t *pp, int n);
 extern int PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n);
 
 /* skip leading whitespace in the wide string at *ps; returns pointer past it. */
-extern uint16_t *PECMD_SkipLeadingControlChars(uint16_t **ps);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern uint16_t *PECMD_SkipLeadingControlChars(uint16_t **ps); * /) */
 
-/* parse integer at *pp with rounding, write into *out; returns bool flag. */
-extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
+
+
 
 /* read LogPixels / AppliedDPI; return the cached DPI value, or -1 if absent.
  * NOTE: project restores these two as void — used as int here (see TODO). */
@@ -45,10 +45,10 @@ extern void PECMD_AllocStringSlot2(void **ps, int64_t len);
 extern void PECMD_FreeStrBuf(void *ps);
 
 /* string append: *ps keeps old content and appends src; returns *ps. */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); * / /*) */
 
-/* ASCII / wide case-insensitive equality: non-zero = equal. */
-extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
+
+
 
 /* packed system version: (major<<32 | minor<<16 | build). */
 extern uint64_t PECMD_GetPackedSystemVersion(void);

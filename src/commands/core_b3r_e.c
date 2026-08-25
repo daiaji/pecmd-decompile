@@ -20,7 +20,7 @@ extern int PECMD_OnDeleteCommand(void *, LPCWSTR, HWND);  /* list-control accept
 extern int PECMD_DispatchControlCommand(void *, LPCWSTR, WPARAM, HWND, LPCWSTR, void *, int64_t *,
                                         HWND, int64_t);
 extern int PECMD_ParseUIntValue(LPCWSTR *, int *);       /* scan list token */
-extern void PECMD_AllocStrSlot(void *);                  /* string release/cleanup */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *); /* string release/cleanup * /) */
 extern void PECMD_SplitTokenTrimWs(void *, void *, int); /* split list string on delim */
 
 #ifndef SE_REGISTRY_KEY

@@ -48,7 +48,7 @@ extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen,
                             uint32_t flags); /* @0x140024c48 core_token.c */
 
 /* ---- 未实现依赖 (extern + TODO(verify), 不编造) ---- */
-extern void PECMD_AllocStrSlot(void *ps);                 /* @0x140063620 分配引用串容器 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); /* @0x140063620 分配引用串容器 * /) */
 extern void *PECMD_ReallocBuffer(void *ptr, int64_t len); /* @0x140063224 重分配(带 OOM 处理) */
 extern void *PECMD_AllocMagicString(LPCWSTR src);         /* @0x140070154 带 -8 头的串复制 */
 extern void PECMD_RunClearTmpMbrosOnce(void *script);     /* @0x14001b660 sysinit 前置 */
@@ -57,8 +57,8 @@ extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep); /* @0x140067
 extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *val);   /* @0x1400745c8 数字解析 */
 extern void PECMD_CloseRestartByName(void *script, LPCWSTR path, void *win,
                                      int mode); /* @0x140082520 */
-extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out,
-                                   int64_t *pos);  /* @0x1400e3cd4 路径分隔符定位 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos); /* @0x1400e3cd4 路径分隔符定位 * /) */
+
 extern void FUN_14004EAA8(void *script, int mode); /* @0x14004eaa8 脚本结构清理 */
 extern uint32_t PECMD_ParseScriptSegments(void *script, int a, int b, WCHAR **pc, void *sub,
                                           uint32_t flags); /* @0x140030420 */

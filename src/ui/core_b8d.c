@@ -51,8 +51,8 @@ extern BOOL Polyline(HDC, const POINT *, int);
 extern void PECMD_DeleteEntryGdiHandle(int64_t obj); /* @0x1400f2b6c */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void PECMD_AllocStrSlot(void *ps);
-extern void *FUN_1400E57C0(uint64_t *obj);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern void *FUN_140) */
+
 extern void FUN_1400E8940(uint64_t *obj);
 extern void PECMD_OnTabSelChange(int64_t obj);
 extern void *FUN_1400F0648(uint64_t *obj, uint64_t value);

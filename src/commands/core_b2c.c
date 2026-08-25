@@ -148,9 +148,9 @@ extern void PECMD_AdvanceTokenPointer(int64_t ctx, int64_t *a4, int mode, int64_
 extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4,
                                         uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
 extern void PECMD_ReleaseRefCount(int64_t *p);
-extern BOOL FUN_140101E70(LPCWSTR s);
-extern uint32_t PECMD_RunProcessCommand(int64_t a1, LPCWSTR a2, uint64_t a3, uint64_t a4,
-                                        uint64_t a5);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern BOOL FUN_140101E70(LPCWSTR s); * / extern uint32_t PECMD_Ru) */
+
+
 extern DWORD FUN_14002B9EC(int64_t ctx, LPCWSTR path, uint32_t flags);
 extern uint32_t PECMD_DevconUpdate(int64_t ctx, LPCWSTR path, LPCWSTR name, int mode);
 extern uint32_t PECMD_ReadPelogonFlag(LPCWSTR name);

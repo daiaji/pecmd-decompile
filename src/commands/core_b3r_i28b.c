@@ -32,22 +32,22 @@ extern CRITICAL_SECTION g_csDisk; /* global critical section (disk) */
 extern void *operator_new(size_t size); /* global new wrapper */
 
 /* string/var helpers */
-extern void PECMD_AllocStrSlot(void *out);                       /* @0x140063620 release slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);         /* @0x14005b154 skip spaces */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);      /* @0x1400702b0 assign */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
-extern void PECMD_FreeStrBuf(void *ps);                          /* @0x14005b104 free slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void PECMD_RunCommandLine(void *script, void *str, int mode);     /* expand */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
-extern uint64_t PECMD_ParseSignedNumber(short *);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* @0x140063620 release slot * / extern WCHAR *PECMD_SkipLeadingCont) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_ParseSignedNumber(short *);) */
+
+
+
+
+
+
 extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* delimiter scan */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 alloc */
 extern int64_t *PECMD_InitPtrTable(int64_t *arr);                 /* @0x140063b64 array init */
 extern WCHAR *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 */

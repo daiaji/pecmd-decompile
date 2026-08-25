@@ -45,9 +45,9 @@ void PECMD_EnsureCallbackWindow(void);   /* @0x14003e1f0 */
 DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWORD type, BYTE *data,
                                 DWORD size);             /* @0x14005c5a0 注册表值写入 */
 void PECMD_GetOrCreateHiddenWnd(void *script, int flag); /* @0x1400e8574 */
-void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 分配引用串容器 (16B 0xaa55 头) */
-void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c,
-                               int64_t d); /* @0x1400545f8 路径解析 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 分配引用串容器 (16B 0xaa55 头) * /) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* @0x1400545f8 路) */
+
 int PECMD_LineIsTeamExecLoad(LPCWSTR s);   /* @0x14001ab84 命令行类型检测 */
 void PECMD_InstallKeyboardHook(void);      /* @0x14001b850 */
 void PECMD_LoadResourceLines(void);        /* @0x14002e30c */

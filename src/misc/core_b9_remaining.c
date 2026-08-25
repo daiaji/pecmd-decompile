@@ -26,7 +26,7 @@ extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src); /* @0x1400
 extern void PECMD_FreeStrBuf(void *ps);                               /* @0x14005b104 */
 extern void PECMD_FreeStrBuf(void *ps); /* @0x14005b104 (本批构造函数调用用小写) */
 extern uint64_t *PECMD_InitScrollObj(uint64_t *param_1, uint64_t param_2); /* @0x1400fcf44 */
-extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 初始化串容器 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 初始化串容器 * /) */
 extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src,
                                      uint64_t len);                       /* @0x1400702f0 */
 extern uint64_t PTR_FUN_140124e50;                                        /* 虚表指针槽 */

@@ -25,7 +25,7 @@ extern DWORD GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer);
  * ------------------------------------------------------------------ */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 分配 */
 extern void PECMD_FreeStrBuf(void *ps);                          /* @0x14005b104 释放字符串槽 */
-extern void PECMD_AllocStrSlot(WCHAR **out);                     /* @0x140063620 初始化串缓冲 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 初始化串缓冲 * /) */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);      /* @0x140063720 分配串 */
 extern void PECMD_AllocStringSlot2(void **ps, int64_t len);      /* @0x1400633a8 分配 */
 extern void PECMD_ZeroLenBuf(void *p);                           /* @0x14005b0b8 缓冲区构造 */

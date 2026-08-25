@@ -4576,7 +4576,88 @@ void PECMD_TruncateDebugLog(void)
     if ((uintptr_t)h[0] != (uintptr_t)-1) CloseHandle((void *)(uintptr_t)h[0]);
   }
 }
-uint16_t *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c) { (void)a;(void)b;(void)c; return (uint16_t *)0; }
+/* @0x140024c48 size=727 — token 扫描(直移 dc:22133-22210)。
+ * S11(R11): 原为 return NULL 空壳桩 → EXEC "/c" 路径 local_cd0=NULL,
+ * StrCmpNIW(local_cd0-8,...) AV(活体断点 pecmd_msvc+0x1b3373 实锤 cd0=0)。
+ * FUN_1400170b0 ≡ PECMD_SkipLeadingControls。 */
+uint16_t *PECMD_NextToken(int64_t *param_1, int64_t *param_2, uint32_t param_3)
+{
+  uint16_t *puVar1;
+  uint16_t *puVar2;
+  uint16_t uVar3;
+  uint16_t uVar4;
+  int64_t *plVar5;
+  bool bVar6;
+  uint16_t *local_res20;
+  int64_t local_58[3];
+
+  PECMD_SkipLeadingControls(param_1);
+  local_58[0] = 0;
+  plVar5 = local_58;
+  if ((uintptr_t)param_2 != 0) {
+    plVar5 = param_2;
+  }
+  *plVar5 = 0;
+  local_res20 = (uint16_t *)(uintptr_t)*param_1;
+  uVar3 = *local_res20;
+  if ((uVar3 == 0x22) || ((puVar1 = local_res20, (param_3 & 0x40) != 0 && (uVar3 == 0x27)))) {
+    bVar6 = true;
+    do {
+      local_res20 = local_res20 + 1;
+      uVar4 = *local_res20;
+      while ((uVar4 != 0 && (uVar3 != uVar4))) {
+        local_res20 = local_res20 + 1;
+        uVar4 = *local_res20;
+      }
+    } while ((((((param_3 & 0x400) != 0) && (*local_res20 != 0)) &&
+              (uVar4 = local_res20[1], uVar4 != 0)) &&
+             (((uVar4 < 9 || (0xd < uVar4)) && (uVar4 != 0x20)))) ||
+            ((((param_3 & 0x200) != 0 && (*local_res20 != 0)) &&
+             ((uVar4 = local_res20[1], uVar4 != 0 &&
+              ((bVar6 = (bool)(bVar6 ^ 1), bVar6 ||
+               (((uVar4 < 9 || (0xd < uVar4)) && (uVar4 != 0x20))))))))));
+    if (((*local_res20 == uVar3) && ((param_3 & 0x80) == 0)) &&
+       (((param_3 & 0x10) == 0 &&
+        (((puVar1 = local_res20 + 1, *puVar1 != 0 && ((*puVar1 < 9 || (0xd < *puVar1)))) &&
+         (*puVar1 != 0x20)))))) {
+      uVar4 = *puVar1;
+      local_res20 = puVar1;
+      while ((uVar4 != 0 && (((uVar4 < 9 || (0xd < uVar4)) && (uVar4 != 0x20))))) {
+        local_res20 = local_res20 + 1;
+        uVar4 = *local_res20;
+      }
+    }
+    if ((param_3 & 0x20) == 0) {
+      *param_1 = *param_1 + 2;
+    }
+    *plVar5 = (longlong)((intptr_t)local_res20 - (intptr_t)*param_1) >> 1;
+    if (((param_3 & 1) != 0) && (uVar3 == *local_res20)) {
+      local_res20 = local_res20 + 1;
+    }
+  }
+  else {
+    puVar1 = local_res20;
+    while (((uVar3 != 0 && ((uVar3 < 9 || (0xd < uVar3)))) && (uVar3 != 0x20))) {
+      uVar3 = puVar1[1];
+      puVar1 = puVar1 + 1;
+    }
+    *plVar5 = (longlong)((intptr_t)puVar1 - (intptr_t)local_res20) >> 1;
+    local_res20 = puVar1;
+  }
+  puVar1 = local_res20;
+  if ((((param_3 & 8) != 0) && (puVar2 = (uint16_t *)(uintptr_t)(*param_1 + *plVar5 * 2), *puVar2 != 0)) &&
+     (*puVar2 = 0, puVar2 == local_res20)) {
+    local_res20 = local_res20 + 1;
+  }
+  if ((((param_3 & 0x100) != 0) && (local_res20 == puVar1)) && (*local_res20 != 0)) {
+    *local_res20 = 0;
+    local_res20 = local_res20 + 1;
+  }
+  if ((param_3 & 4) != 0) {
+    PECMD_SkipLeadingControls((long long *)&local_res20);
+  }
+  return local_res20;
+}
 /* @0x1400250f0 size=— 启动注册表检查+自动挂载行(直移) */
 void PECMD_AutoMountStartup(long long *param_1, LPCWSTR param_2)
 {
@@ -6141,7 +6222,7 @@ LAB_14004c81e:
       LVar33 = local_188;
     }
     else if (local_158 == 0x524944) {
-      local_180.QuadPart = (LONGLONG)PECMD_DirWildcardExpand((uintptr_t)param_1.QuadPart,LVar25.QuadPart + 6);
+      local_180.QuadPart = S11_FTToU64(PECMD_DirWildcardExpand((longlong *)(uintptr_t)param_1.QuadPart,S11_U64ToFT((uint64_t)(LVar25.QuadPart + 6)))); /* S11 ABI桥 dc:44218 */
       LVar33 = local_188;
     }
     else {
@@ -6178,7 +6259,7 @@ LAB_14004c9cc:
 LAB_14004df3c:
       local_180.QuadPart = 0;
       if (*(short *)(uintptr_t)LVar11.QuadPart == 0x24) {
-        PECMD_ParseDateTimeSpec((longlong *)(uintptr_t)param_1.QuadPart,(uint64_t)(uintptr_t)(LVar11.QuadPart + 2),0,0);
+        PECMD_ParseDateTimeSpec((longlong *)(uintptr_t)param_1.QuadPart,S11_U64ToFT((uint64_t)(uintptr_t)(LVar11.QuadPart + 2)),0,S11_U64ToFT(0)); /* S11 ABI桥 */
         LVar33 = local_188;
         goto LAB_14004c525;
       }
@@ -6240,7 +6321,7 @@ LAB_14004e164:
         FUN_140025f10(param_1.QuadPart,(LPCWSTR)(uintptr_t)local_188.QuadPart,0,(pthreadmbcinfo)&DAT_00000011,param_5,
                       (void *)0);
       }
-      local_180.QuadPart = (longlong)PECMD_DispatchCommand((uintptr_t)param_1.QuadPart,LVar11.s,param_3);
+      local_180.QuadPart = PECMD_DispatchCommand((int64_t *)(uintptr_t)param_1.QuadPart,(LPCWSTR)(uintptr_t)LVar11.QuadPart,param_3); /* S11: dc:44310 */
       goto LAB_14004c53b;
     }
     if (local_158 < 0x4d45544a) {
@@ -6254,7 +6335,7 @@ LAB_14004e164:
       }
       else if (local_158 < 0x455a4954) {
         if (local_158 == 0x455a4953) {
-          local_180.QuadPart = PECMD_GetPathSizeToVar((uintptr_t)param_1.QuadPart,LVar11.QuadPart + 8);
+          local_180.QuadPart = PECMD_GetPathSizeToVar((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToLI((uint64_t)(LVar11.QuadPart + 8))); /* S11 ABI桥 dc:44324 */
           LVar33 = local_188;
         }
         else if (local_158 < 0x45444949) {
@@ -6296,7 +6377,7 @@ LAB_14004e164:
                 LVar33 = local_188;
                 if (((char)uVar14 != '\0') &&
                    (((int)(lVar32 >> 1) == 4 || (*(short *)(LVar11.QuadPart + 8) == 0x2d)))) {
-                  local_180.QuadPart = (longlong)PECMD_ReadTextLine((uintptr_t)param_1.QuadPart,LVar25.QuadPart + 8);
+                  local_180.QuadPart = S11_LIToU64(PECMD_ReadTextLine((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToFT((uint64_t)(LVar25.QuadPart + 8)))); /* S11 ABI桥 dc:44367 */
                   LVar33 = local_188;
                 }
               }
@@ -6341,9 +6422,8 @@ LAB_14004e164:
             if (*(short *)(LVar25.QuadPart + 8U) == 0x7c) {
               plVar10 = (void *)0;
             }
-            local_180.QuadPart = (longlong)
-                          PECMD_FindCmdHandler((uintptr_t)param_1.QuadPart,(uint64_t)(uintptr_t)(LVar25.QuadPart + 8U),plVar10,
-                                        param_5);
+            local_180.QuadPart = PECMD_FindCmdHandler((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToULI((uint64_t)(uintptr_t)(LVar25.QuadPart + 8U)),plVar10,
+                                        param_5); /* S11 ABI桥 */
           }
           else {
             if (local_158 == 0x44524854) {
@@ -6451,7 +6531,7 @@ LAB_14004ce16:
             LVar33 = local_188;
           }
           else if (local_158 == 0x46574246) {
-            local_180.QuadPart = (longlong)PECMD_SetFbwfThreshold(param_1,(uintptr_t)local_res8.QuadPart);
+            local_180.QuadPart = PECMD_SetFbwfThreshold((uint64_t)(uintptr_t)param_1.QuadPart,(LPWSTR)(uintptr_t)local_res8.QuadPart); /* S11 dc:FUN_140020e40 */
             LVar33 = local_188;
           }
           else if (local_158 == 0x47414d49) {
@@ -6521,7 +6601,7 @@ LAB_14004ce16:
         if (local_158 == 0x4c4c4143) {
           LVar11 = local_res8;
           if (*(short *)(uintptr_t)local_res8.QuadPart != 0x24) goto LAB_14004e164;
-          local_180.QuadPart = (longlong)PECMD_ParseDateTimeSpec((uintptr_t)param_1.QuadPart,local_res8.QuadPart + 2,0,LVar25.s);
+          local_180.QuadPart = S11_FTToU64(PECMD_ParseDateTimeSpec((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToFT((uint64_t)(local_res8.QuadPart + 2)),0,S11_U64ToFT(LVar25.QuadPart))); /* S11 ABI桥 */
           LVar33 = local_188;
         }
         else if (local_158 == 0x4b4e494c) {
@@ -6704,7 +6784,7 @@ LAB_14004d479:
             pHVar13 = (HRSRC)(uintptr_t)FindResourceW(DAT_14013ca68,(LPCWSTR)(uintptr_t)0x12e,(LPCWSTR)(uintptr_t)5);
             LVar15.QuadPart = 0;
             if (pHVar13 != (HRSRC)0x0) {
-              uVar14 = PECMD_ParseHlpDoc(param_1,(LPCWSTR)(LVar11.QuadPart + 8));
+              uVar14 = PECMD_ParseHlpDoc((uint64_t)(uintptr_t)param_1.QuadPart,(LPCWSTR)(LVar11.QuadPart + 8)); /* S11 参数取槽 */
               iVar8 = (int)uVar14;
               goto LAB_14004cb4c;
             }
@@ -6712,7 +6792,7 @@ LAB_14004d479:
           }
           if (local_158 == 0x504d4554) {
             local_180.QuadPart =
-                 (LONGLONG)PECMD_TempPathCommand((uintptr_t)param_1.QuadPart,LVar11.QuadPart + 8,(longlong)param_3);
+                 (LONGLONG)PECMD_TempPathCommand((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToLI((uint64_t)(LVar11.QuadPart + 8)),(longlong)param_3); /* S11 ABI桥 */
             LVar33 = local_188;
           }
           else {
@@ -6759,8 +6839,8 @@ LAB_14004cb4c:
           }
           else {
             if (local_158 != 0x5249444d) goto LAB_14004df3c;
-            local_180.s.LowPart = PECMD_CreateDirectory(param_1,(short *)(uintptr_t)local_res8.QuadPart);
-            local_180.s.HighPart = extraout_var_01;
+            /* S11: 原 extraout_var_01 双寄存器写法为 Ghidra 伪影, 按单 RAX 返回归并 */
+            local_180.QuadPart = PECMD_CreateDirectory((uint64_t)(uintptr_t)param_1.QuadPart,(WCHAR *)(uintptr_t)local_res8.QuadPart);
             LVar33 = local_188;
           }
         }
@@ -6844,7 +6924,7 @@ LAB_14004cb4c:
         }
       }
       else if (local_158 == 0x54495257) {
-        local_180.QuadPart = (longlong)PECMD_WriteFileEncoded((uintptr_t)param_1.QuadPart,LVar25.QuadPart + 8);
+        local_180.QuadPart = S11_LIToU64(PECMD_WriteFileEncoded((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToLI((uint64_t)(LVar25.QuadPart + 8)))); /* S11 ABI桥 */
         LVar33 = local_188;
       }
       else {
@@ -6984,7 +7064,7 @@ LAB_14004cb4c:
         }
         else {
           if (local_158 != 0x54524150) goto LAB_14004df3c;
-          local_180.QuadPart = (longlong)PECMD_ExecCommandLine((uintptr_t)param_1.QuadPart,(LPCWSTR)(LVar11.QuadPart + 8));
+          local_180.QuadPart = S11_LIToU64(PECMD_ExecCommandLine((int64_t *)(uintptr_t)param_1.QuadPart,(LPCWSTR)(LVar11.QuadPart + 8))); /* S11 ABI桥 */
           LVar33 = local_188;
         }
       }
@@ -7044,8 +7124,7 @@ LAB_14004cb4c:
       if (*(short *)(LVar25.QuadPart + 8U) == 0x7c) {
         plVar10 = (void *)0;
       }
-      local_180.QuadPart = (longlong)
-                    PECMD_IfexCmdHandler((uintptr_t)param_1.QuadPart,(uint64_t)(uintptr_t)(LVar25.QuadPart + 8U),plVar10,param_5);
+      local_180.QuadPart = PECMD_IfexCmdHandler((int64_t *)(uintptr_t)param_1.QuadPart,S11_U64ToULI((uint64_t)(uintptr_t)(LVar25.QuadPart + 8U)),plVar10,param_5); /* S11 ABI桥 */
     }
     else if (local_158 == 0x58524f46) {
       if ((char)local_170 != '\0') {
@@ -7351,7 +7430,9 @@ uint16_t *PECMD_AllocStrSlot(uint16_t **out)
   *p = 2;
   *out = (uint16_t *)pu;
   if ((uintptr_t)pu != 0) *(uint16_t *)pu = 0;
-  return *out;
+  /* S11(dc:60843 忠实归正): 原文 `return param_1` 返回的是槽变量地址,
+   * 非串指针; 旧移植体误写 return *out。 */
+  return (uint16_t *)out;
 }
 /* @0x14006375c size=— 宽串追加(直移) */
 longlong *PECMD_AppendWideStr(void *param_1p,LPCWSTR param_2)

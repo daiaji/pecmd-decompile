@@ -29,7 +29,7 @@
 /* 全局堆 (mainW 初始化, g_hHeap) */
 extern HANDLE g_hHeap;
 
-void FUN_1400630D0(int mode);         /* @0x1400630d0 */
+int FUN_1400630D0(int mode);          /* @0x1400630d0 (S11 返回型归正 dc:60834) */
 void PECMD_ExitProcessCall(int code); /* @0x14005b21c (TODO: 待重构确认) */
 
 /* ========== 内存分配器 @0x140063118 ========== */
@@ -203,8 +203,10 @@ int FUN_14005C788(const char *s, const WCHAR *w, int n)
 }
 
 /* ========== 内存不足提示 @0x1400630d0 ========== */
-/* mode: 0=内存错误, 其他=内存不足!; 返回 4(Retry)/5(Ignore) 继续, 否则退出 */
-void FUN_1400630D0(int mode)
+/* mode: 0=内存错误, 其他=内存不足!; 返回 4(Retry)/5(Ignore) 继续, 否则退出.
+ * S11(dc:60834 调用方 `iVar2 = FUN_1400630d0(2); while(iVar2==4)` 实证返回 int,
+ * 旧移植体误写 void → 全部 OOM 重试环编译失真). */
+int FUN_1400630D0(int mode)
 {
     /* TEMP PROBE (P2 分诊): 记录 OOM 弹窗触发, 定位后移除 */
     {
@@ -222,4 +224,5 @@ void FUN_1400630D0(int mode)
         /* int3 (swi(3)) */
         __debugbreak();
     }
+    return r;
 }

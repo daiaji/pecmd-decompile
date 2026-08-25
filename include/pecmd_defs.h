@@ -162,4 +162,10 @@ extern int32_t g_aiDiskType[2];        /* DAT_14013d770 */
  * inside this guard so the whole header stays self-contained). */
 #include "pecmd_globals.h"
 
+/* S11: 跨 TU 原型闭环 — 消灭 C4013 隐式 int 返回(64位指针在调用点被截断)。
+ * 注意: 上面 :79-88 的 PECMD_StrAlloc/StrCat 等是"改名计划"别名, 与调用点
+ * 实际使用的 FUN_14006375C/PECMD_AllocString 等原始名并存; xproto.h 按
+ * 定义处真实签名声明这些原始名。 */
+#include "xproto.h"
+
 #endif /* PECMD_DEFS_H */

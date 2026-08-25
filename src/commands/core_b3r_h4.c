@@ -71,22 +71,22 @@ extern int (*g_pOle32Slot828)(int, int, int, int, int, int, int, int, int); /* �
 /* ---- 本文件引用的辅助函数 (定义于其它文件, 仅 extern) ---- */
 extern void *operator_new(size_t size);
 extern void PECMD_FreeStrBuf(void *ps);
-extern WCHAR *PECMD_SkipLeadingControlChars(void *pp);
-extern char PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const void *w, int n);
-extern int64_t PECMD_TokPrefixICmp(const char *a, const void *w, int n);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(void *pp); * / extern ) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const void *w) */
+
 extern int32_t PECMD_AsciiWideICmp(const char *a, const void *w);
 extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);
 extern void PECMD_RunCommandLine(void *script, void *str, int mode);
-extern void PECMD_AllocStrSlot(void *out);
-extern WCHAR *PECMD_AppendWideStr(void *ps, const WCHAR *src);
-extern WCHAR *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len);
-extern void PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); * / /* S11: 本地声明与定义冲突, ) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);) */
+
+
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key);
 extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim);
 extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);
-extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d);
-extern WCHAR *PECMD_SkipWCharUntil(void *pp, uint16_t ch);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, ) */
+
 extern void PECMD_ExpandVarDispatch(void *, LPCWSTR, void *, int, int);
 extern uint64_t PECMD_EvalParenStripped(void *pp, uint64_t *out);
 extern bool PECMD_ParseUIntValue(void *pp, int *out);
@@ -131,19 +131,19 @@ extern int64_t PECMD_GetTimeMs(void);
 extern int64_t PECMD_GetTimeNs(void);
 extern void PECMD_FormatI64Dec(LPWSTR dst, int64_t value);
 extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v);
-extern FILETIME PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
-                                      void *p6, void *s7, void *p8);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern FILETIME PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag, void *p6, vo) */
+
 extern void PECMD_ScriptCopy(uint64_t *obj, uint64_t *p);
 extern void PECMD_ScriptInit(uint64_t *obj, int64_t p);
 extern uint64_t PECMD_ParseAndExecuteLine(int64_t param_1, LPCWSTR param_2, uint64_t param_3,
                                           uint64_t param_4);
 extern void PECMD_ClearTaskTable(int64_t script, int mode);
-extern LPCWSTR PECMD_ParseCommandPath(int64_t *script, WCHAR *key, uint32_t *mode, int64_t *out);
-extern void PECMD_NotifyMainWindowRefresh(int64_t *param_1, int flag);
-extern void PECMD_BuildPopMenuRecursive(int64_t a, uint16_t *b, HMENU c, int64_t d, int64_t e,
-                                        int64_t *f);
-extern void PECMD_MenuRegisterCommand(void *a, uint16_t *b, HMENU c, int64_t d, int64_t e,
-                                      int64_t *f);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern LPCWSTR PECMD_ParseCommandPath(int64_t *script, WCHAR *key) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_MenuRegisterCommand(void *a, uint16_t *b, HMENU c, int64_t d, int64_t e, int64_t *f);) */
+
+
+
+
 extern void PECMD_MenuItemWithIcon(HMENU menu, UINT flags, uintptr_t item, void *data);
 extern void *PECMD_CreateNamedLock(LPCWSTR s, char c, uint32_t *mode);
 extern void PECMD_ArrayAppend(int64_t script, int64_t obj);
@@ -706,9 +706,9 @@ FILETIME PECMD_DirWildcardExpand(longlong *param_1, FILETIME param_2)
             PECMD_AppendWideStr(local_res10, local_res20);
             PECMD_AppendWideStr(local_res10, WSTR("=*cmd.exe /c dir /B "));
             PECMD_AppendWideStr(local_res10, (LPCWSTR)(uintptr_t)_Var1);
-            _Var3 = PECMD_ExecCmdDispatch(param_1, (void *)0, param_1,
+            _Var3 = S11_U64ToFT(PECMD_ExecCmdDispatch(param_1, (void *)0, param_1,
                                           (void *)(uintptr_t)local_res10[0], 0, (void *)0,
-                                          (void *)0, (void *)0);
+                                          (void *)0, (void *)0)); /* S11 ABI桥 */
             PECMD_FreeStrBuf(local_res10);
         }
     }

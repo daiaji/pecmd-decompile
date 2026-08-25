@@ -42,14 +42,14 @@ extern int (*DAT_14013c970)(uint32_t, uint32_t, char *, int, char *, int);
 /* ---- PECMD_GetPathSizeToVar 的 helper ---- */
 extern uint8_t PECMD_MatchTokPrefixAdv(LPCWSTR param_1, int64_t *param_2,
                                        int param_3); /* "-link" 等前缀比较 */
-extern void PECMD_AllocStrSlot(WCHAR **out);         /* @0x140063620 串容器初始化 */
-extern WCHAR *PECMD_SplitNextToken(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1,
-                                   int16_t c2); /* @0x1400547bc */
-extern WCHAR *PECMD_UnquoteString(WCHAR *s);    /* 串标签/前缀查找 */
-extern void PECMD_FindFirstFileW(HANDLE *ph, LPCWSTR path,
-                                 WIN32_FIND_DATAW *fd); /* @0x140101db8 查找入口 */
-extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
-                                 LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 串容器初始化 * / extern WCHAR *PECMD_SplitNextToken(int6) */
+
+
+
+
+
+
+
 extern int64_t PECMD_GetDirectorySize(LPCWSTR param_1); /* @0x14006b254 递归统计目录大小 */
 extern void PECMD_FormatU64Dec(WCHAR *dst, uint64_t v); /* %I64u 格式化 */
 extern void PECMD_SetVariable(int64_t *script, LPCWSTR key,

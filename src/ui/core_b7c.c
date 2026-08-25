@@ -82,7 +82,7 @@ extern void PECMD_EnableBackupPrivileges(void);             /* @0x140060698 (cor
 extern void PECMD_InitRamdataRegistry(int n);               /* @0x14001b888 (core_execscript.c) */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count); /* @0x140063720 (core_string.c) */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 (link_stubs.c) */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);      /* @0x14006375c (core_string.c) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c (core_string.c) * /) */
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCSTR src, int64_t len,
                             int64_t cp); /* @0x1400637dc (core_exec5.c) */
 extern void FUN_1400629B8(void *script, LPCWSTR key,

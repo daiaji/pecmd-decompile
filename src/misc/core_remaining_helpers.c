@@ -35,7 +35,7 @@ extern void PECMD_InitTableSlots(void **pdata, void **pend, int *pcount,
 extern void PECMD_VectorAppendGen(void **pdata, void **pend, int64_t *pcount, void *tmp, int size,
                                   int grow);                       /* @0x1400639f0 表追加行 */
 extern WCHAR *PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 串扩容 */
-extern uint64_t PECMD_RandSeedAdvance(void);                       /* @0x14005dff4 PRNG */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_RandSeedAdvance(void); /* @0x14005dff4 PRNG * /) */
 extern void *FUN_140063224(void *ps, int64_t len);                 /* @0x140063224 输出串扩容 */
 extern void PECMD_ZeroLenBuf(void *p);                             /* @0x14005b0b8 临时缓冲复位 */
 

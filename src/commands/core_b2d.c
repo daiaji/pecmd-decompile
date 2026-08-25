@@ -53,16 +53,16 @@ extern void FUN_1400633A8(void **ps, int64_t len); /* @0x1400633a8 */
 extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src,
                                      uint64_t len); /* @0x1400702f0 */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
-extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, int16_t a3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, in) */
 
-/* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void PECMD_ParseIntThenSkip(int64_t *a1, int *a2);
+
+
 extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
                                      void *p6, void *s7, void *p8);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern void PECMD_CrtShim(WCHAR *out, uint64_t a2, LPCWSTR a3, void *a4);
-extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
-extern int64_t *PECMD_SkipWsByte(int64_t *a1);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp); * / extern i) */
+
 extern void *PECMD_CreateMutexToSlot(void *out, LPCWSTR name);
 extern void PECMD_ReleaseMutex(void *out);
 extern void PECMD_AppendDebugLog(LPCSTR msg);
@@ -134,8 +134,8 @@ extern uint64_t PECMD_TokenizeExpression(int64_t a1, int64_t a2, WCHAR **a3, uin
 extern HFONT FUN_1400B1F34(int *a1, double *a2, LPCWSTR a3);
 extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
                                    uint32_t flags, LPCWSTR pFile, void *pPersist);
-extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int64_t *pos);
-extern void PECMD_GetUiFontById(void **pfont, UINT id);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExpandPathAlloc2(LPCWSTR src, WCHAR **out, int6) */
+
 extern DWORD FUN_1400E693C(HANDLE a1);
 extern void *FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern bool FUN_140101E70(LPCWSTR a1);

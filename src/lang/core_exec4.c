@@ -24,9 +24,9 @@
 
 #include "pecmd_defs.h"
 
-extern int32_t FUN_1400630D0(int mode);                          /* @0x1400630d0 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 * /) */
 extern void *PECMD_AllocAnsiString(const char *src);             /* @0x140070044 */
-extern int64_t *FUN_14005B154(WCHAR **ps);                       /* @0x14005b154 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t *FUN_14005B154(WCHAR **ps); /* @0x14005b154 * /) */
 extern int64_t PECMD_ParseUIntValue(LPCWSTR *ps, uint64_t *out); /* @0x140067d20 */
 extern uint32_t FUN_14006A7F4(LPCWSTR *ps, uint64_t *out);       /* @0x14006a7f4 */
 extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,

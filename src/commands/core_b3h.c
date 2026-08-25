@@ -59,8 +59,8 @@ extern void PECMD_ReleaseWindowHooks(int64_t a1);
 extern void PECMD_ReleaseObjectListTail(int64_t a1, int a2);
 extern int64_t *FUN_14007034C(int64_t *a1, LPCWSTR a2);
 extern bool PECMD_ParseUIntValue(int64_t *a1, int *a2);
-extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern int16_t *PECMD_SplitNextToken(int64_t *a1, int64_t *a2, int64_t *a3, int16_t a4, int16_t a5);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); * / extern int16_t *PE) */
+
 extern WCHAR *PECMD_ResolveVariable(int64_t *a1, LPCWSTR a2, uint64_t *a3, uint32_t a4);
 extern uint64_t PECMD_ComboBoxControl(int64_t a1, uint64_t a2, LPCWSTR a3, int16_t a4, LPCWSTR a5,
                                       int a6);
@@ -73,8 +73,8 @@ extern void PECMD_FillSpaces(int64_t *a1, int a2);
 extern uint64_t FUN_14004FDD0(int64_t *a1, uint64_t a2, int a3);
 extern void AtlThrowImpl(long a1);
 extern void PECMD_ClearStringItemList(int64_t arr);
-extern int FUN_1400630D0(int a1);
-extern void FUN_14007E34C(uint32_t *a1, uint8_t a2);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int FUN_1400630D0(int a1); * / extern void FUN_14007E34C(ui) */
+
 extern uint64_t PECMD_ParseExpression(int *a1, LPWSTR a2);
 
 /* ---- 本批引用的全局数据 ---- */

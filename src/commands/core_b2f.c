@@ -105,12 +105,12 @@ void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 /* ---- 未实现依赖 (extern) ---- */
 extern void PECMD_GetApiProcCached(LPCSTR a2, LPCSTR dll, void *slot, void *err);
-extern void PECMD_SkipLeadingControls(void *pp);
-extern WCHAR *FUN_14001BE14(const WCHAR *s);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SkipLeadingControls(void *pp); * / extern WCHAR ) */
+
 extern char FUN_1400660AC(char *a1, int64_t *a2, int a3);
 extern void PECMD_ParseSkipSeparator(int64_t *a1, int64_t *a2, int16_t a3, int16_t a4);
-extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, int16_t a3);
-extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *a1, int *a2, in) */
+
 extern void PECMD_ExtractTokenByDelim(int64_t *src, WCHAR **dst, int mode);
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *a2, void *out, int mode, uint8_t flag);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *a1, uint32_t *a2, int64_t *a3, char a4);
@@ -123,11 +123,11 @@ extern int32_t PECMD_LoadOle32Apis(void);
 extern void FUN_14007034C(void *ps, LPCWSTR src);
 extern void PECMD_QueryServiceStatus(SC_HANDLE, int);
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
-extern void PECMD_CreateDirectoryTree(LPCWSTR path);
-extern short PECMD_NextNonDelimChar(WCHAR **pp);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_CreateDirectoryTree(LPCWSTR path); * / extern sh) */
+
 extern void PECMD_GrowByteBuffer(void *pp, int64_t size);
-extern void PECMD_AllocStrSlot(void *ps);
-extern uint64_t PECMD_ComparePrefixNoCaseLen(LPCWSTR a, LPCWSTR b);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern uint64_t PECM) */
+
 extern uint64_t *PECMD_NewFormattedI64Str(uint64_t *a1, int a2, int64_t a3);
 extern LPCWSTR FUN_1400169BC(int id, void **pp);
 extern LPCWSTR FUN_14005B6AC(HINSTANCE, UINT, LPWSTR, int);
@@ -516,10 +516,11 @@ uint64_t PECMD_ServiceControl(int64_t *script, LPCWSTR name)
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_240, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_248, 0x2c, 0);
             PECMD_ParseSkipSeparator((int64_t *)&local_res10, (int64_t *)&local_210, 0x2c, 0);
-            iVar6 = (int)(intptr_t)PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10,
+            /* S11(dc FUN_1400679dc 三参语句型, 返回'undefined'; dc 调用方以 out 值判零) */
+            PECMD_ParseIntSkipSepChar((uint64_t *)&local_res10,
                                                              (int *)&local_res18, 0x2c);
             lpdwTagId = (DWORD *)&local_res18;
-            if (iVar6 == 0) {
+            if (*(int *)(uintptr_t)&local_res18 == 0) {
                 lpdwTagId = NULL;
             }
             iVar6 = lstrlenW((LPCWSTR)(uintptr_t)local_258);
@@ -1939,12 +1940,12 @@ extern uint64_t PECMD_QueryPhysicalMemory(int mode);
 extern uint64_t PECMD_WriteNumberToScriptVar(LPCWSTR s, ULARGE_INTEGER v, int64_t *a1);
 extern uint32_t PECMD_ParseVkKeyName(LPCWSTR s, char c);
 extern ULARGE_INTEGER PECMD_GetDiskSpaceInfo(WCHAR *s, int a2, int a3);
-extern uint64_t PECMD_CalcExpression(int64_t *a1, WCHAR *s, void *a3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_CalcExpression(int64_t *a1, WCHAR *s, void ) */
 
-/* ---- 本批引用的全局数据 ---- */
-extern WCHAR g_szEmpty[]; /* g_szEmpty */
-extern uint8_t g_u8CA49;  /* 版本/标志字节 */
-extern double g_dbl1178;
+
+
+
+
 extern double g_dbl1668;
 extern double g_dbl21630;
 extern void *g_pNtQuerySystemInformation;     /* NtQuerySystemInformation */
@@ -5213,9 +5214,9 @@ extern int64_t PECMD_RunPecmdMain();
 extern int64_t PECMD_IsSysStartuped();
 extern int64_t PECMD_RunSysInit();
 extern int64_t PECMD_WaitKeyPressHooked();
-extern int64_t FUN_140025f10();
-extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, uint64_t a4,
-                                        uint64_t a5, uint32_t a6, uint64_t a7, int64_t a8, int a9);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t FUN_140025f10(); * / extern uint64_t PECMD_StartWor) */
+
+
 extern int64_t PECMD_StartOnlyApp();
 extern int64_t PECMD_RunCommand();
 extern uint64_t PECMD_DeviSubPackageWorkerProc(uint64_t *task);
@@ -5241,7 +5242,7 @@ extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, 
 extern LARGE_INTEGER FUN_1400D2E90();
 extern void *PECMD_MapFileView();
 extern int64_t FUN_1400E693C();
-extern int64_t PECMD_FindFirstFileW();
+/* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_FindFirstFileW(); */
 
 #endif /* B2F_PART4_LOCAL */
 

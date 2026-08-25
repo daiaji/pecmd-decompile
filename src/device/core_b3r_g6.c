@@ -24,12 +24,12 @@ extern double g_dbl27190;            /* clamp 上界 */
 extern double g_dbl27188;            /* clamp 下界 */
 
 /* ---- 本文件引用的内部辅助函数 (extern, 不在此定义) ---- */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **ps);    /* @0x14005b154 trim 空白 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **ps); /* @0x14005b154 trim 空白 * /) */
 extern void PECMD_FreeStrBuf(void *ps);                     /* @0x14005b104 释放字符串槽 */
 extern uint64_t PECMD_GetPackedSystemVersion(void);         /* @0x14005ea5c 版本号 */
 extern WCHAR *PECMD_AssignString(WCHAR **ps, LPCWSTR src);  /* @0x14007034c 字符串赋值 */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 字符串追加 */
-extern void PECMD_AllocStrSlot(WCHAR **out);                /* @0x140063620 字符串清理 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 字符串追加 * /) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 字符串清理 * /) */
 extern void PECMD_SplitTokenTrimWs(WCHAR **src, WCHAR **dst,
                                    short delim);                    /* @0x1400675b8 按分隔切分 */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */

@@ -47,11 +47,13 @@ static int32_t FUN_14005D534(const char *name, LPCWSTR value)
 }
 
 /* ========== PECMD_RandSeedAdvance @0x14005dff4 ==========
- * 48 位 LCG 单步。
+ * 48 位 LCG 单步。S11(dc:74802 调用方捕获返回值; dc:56199 体=赋值表达式,
+ * RAX=新种子) → 返回值归正 void→uint64_t。
  */
-void PECMD_RandSeedAdvance(void)
+uint64_t PECMD_RandSeedAdvance(void)
 {
     g_lcgState = (g_lcgState * 0x5deece66d + 0xb) & 0xffffffffffff;
+    return g_lcgState;
 }
 
 /* ========== FUN_14005E04C @0x14005e04c ==========

@@ -33,12 +33,12 @@
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern uint64_t PECMD_CalcExpression(int64_t *obj, WCHAR *a2, double *a3);
-/* TODO(verify) 表达式求值器:
-   声明(uint64_t,int64_t*,WCHAR*,double*)与真实定义(LPWSTR,int64_t*,WCHAR*,uint64_t*)不符；
-   本文件调用点传 double* 且将 LPWSTR 返回值强转
-   uint64_t。属复杂近似依赖，保持原声明以免破坏调用点。 */
-extern uint64_t PECMD_ParseNumberToDouble(int64_t *obj, double *a2);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_CalcExpression(int64_t *obj, WCHAR *a2, dou) */
+
+
+
+
+
 extern uint64_t FUN_14006A7F4(int64_t *obj, uint64_t *a2);
 extern uint64_t FUN_14006A7F4(int64_t *obj, uint64_t *a2);
 extern bool FUN_1400C1194(int64_t *obj, uint64_t *a2);
@@ -55,8 +55,8 @@ extern uint64_t *PECMD_CreateUpDownCtrl(uint64_t *obj, int64_t a2, uint32_t a3, 
 extern uint64_t *PECMD_CreateScrollBarObj(uint64_t *obj, int64_t a2, uint32_t a3, uint64_t *a4,
                                           uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8,
                                           uint16_t *a9, uint64_t *a10, uint32_t a11, LPCWSTR a12);
-extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern void PECMD_CopyTokenTrimmed(int64_t *obj, int64_t *a2, int16_t a3, int16_t a4);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); * / extern void PECMD_) */
+
 extern void PECMD_VarSetUInt(void *s, uint64_t v, LPCWSTR k);
 extern char PECMD_CtlLoadPictureRgn(int64_t obj, HDC a2);
 extern uint32_t PECMD_IsIconResource(uint16_t *obj);
@@ -403,7 +403,7 @@ uint64_t FUN_1400C47F4(int64_t *ctx, HWND hwnd, HWND target, LPCWSTR spec, WPARA
 /* ========== PECMD_ParseNumberToken @0x1400cada0 ==========
  * 解析 Int64，成功后写回 int，再前进一步。
  */
-void PECMD_ParseNumberToken(int64_t *pp, int *out)
+int PECMD_ParseNumberToken(int64_t *pp, int *out)
 {
     uint64_t local = (uint64_t)*out;
     uint64_t r = PECMD_EvalParenExprRounded(pp, &local);
@@ -413,6 +413,9 @@ void PECMD_ParseNumberToken(int64_t *pp, int *out)
     if (*(WCHAR *)*pp != L'\0') {
         *pp = (int64_t)((WCHAR *)*pp + 1);
     }
+
+    /* S11(dc 调用方 dc-region 捕获返回计数; 原 void 系 Ghidra undefined 伪影) */
+    return out ? *out : 0;
 }
 
 /* ========== PECMD_ParseItemImageSpec @0x1400d0b2c ==========

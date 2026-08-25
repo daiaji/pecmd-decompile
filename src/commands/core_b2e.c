@@ -45,10 +45,10 @@ extern uint64_t PECMD_EnumDisplayModes(void **arr, int max, uint32_t flags,
 extern void PECMD_PatchInfDirectives(LPCWSTR path);      /* @0x140021144 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void PECMD_AllocStrSlot(void *ps);
-extern WCHAR **PECMD_SkipLeadingControls(WCHAR **pp);
-extern int PECMD_CrtShim(WCHAR *out, uint64_t fmt, void *ctx, void *name);
-extern void PECMD_CreateMutexSlot(void *out, LPCWSTR name);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / /* S11: 本地声明与定义冲突, 已) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_CreateMutexSlot(void *out, LPCWSTR name);) */
+
+
 extern void PECMD_ReleaseMutex(void *out);
 extern void PECMD_InitRamdataRegistry(uint32_t mode);
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *a, int64_t *b, char c);
@@ -56,8 +56,8 @@ extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_
 extern int64_t PECMD_TokPrefixICmp(char *s, uint16_t *w, int len);
 extern uint64_t FUN_14005C7C4(char *s, uint16_t *w);
 extern HWND PECMD_RegisterCallbackWnd(int mode);
-extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *out, int *src, int16_t mode);
-extern int64_t PECMD_RunPecmdMain(void *script, uint32_t mode);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_ParseIntSkipSepChar(uint64_t *out, int *src, ) */
+
 extern void FUN_1400629B8(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern int64_t *FUN_1400637DC(int64_t *ps, LPCSTR src, uint64_t len, uint64_t mode);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4, void *p5, int64_t *p6);

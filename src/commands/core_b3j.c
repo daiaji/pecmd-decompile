@@ -61,16 +61,16 @@ extern int64_t FUN_1400E5B0C(int64_t a1, uint64_t a2, HDC a3, int64_t *a4);
 extern void FUN_1400F429C(WCHAR **pp, WCHAR ch);
 extern uint64_t PECMD_EvalParenStripped(int64_t *a1, uint64_t *a2);
 extern uint8_t PECMD_EjectDrive(WCHAR a1, int a2);
-extern void PECMD_DefineDosDevice(uint8_t *a1, WCHAR *a2);
-extern uint64_t *PECMD_CreateGlobalMutex(LPCWSTR a1, char a2, uint32_t *a3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_DefineDosDevice(uint8_t *a1, WCHAR *a2); * / ext) */
+
 extern uint64_t *FUN_1400A41FC(LPCWSTR a1);
 extern int64_t *PECMD_LoadImageFromFile(LPCWSTR a1);
 extern void AtlThrowImpl(long a1);
 
 /* ---- 已实现公共工具 (其他 core_*.c / core_globals.c) ---- */
-extern int32_t FUN_1400630D0(int mode);
-extern void PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
-                                 LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int32_t FUN_1400630D0(int mode); * / extern void PECMD_Open) */
+
+
 extern int32_t PECMD_LoadOle32Apis(void);
 extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len);
 extern WCHAR **FUN_14007034C(WCHAR **ps, LPCWSTR src);

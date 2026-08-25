@@ -61,8 +61,8 @@ extern LPCWSTR PECMD_ExtractTableSegment(int64_t a1, int64_t *a2, uint16_t *a3, 
 extern int32_t PECMD_LoadOle32Apis(void);
 extern int64_t *PECMD_LoadImageFromFile(LPCWSTR a1);
 extern void PECMD_GetApiProcCached(LPCSTR a1, LPCSTR a2, int64_t *a3, int64_t *a4);
-extern void PECMD_AllocStrSlot(void *ps);
-extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern int64_t *PECM) */
+
 extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2, DWORD a3);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);

@@ -54,12 +54,12 @@ extern void PECMD_GetDpiCached(HWND hwnd);                                     /
 extern COLORREF PECMD_FillRectColor(HDC hdc, RECT *rc, COLORREF color);        /* @0x1400e68e0 */
 extern void *FUN_1400E57C0(void *obj);                                         /* @0x1400e57c0 */
 extern void FUN_1400E8940(void *obj);                                          /* @0x1400e8940 */
-extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 分配失败提示 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 分配失败提示 * / /* ---- 未实现依赖 (extern + TODO(verify)) ---- *) */
 
-/* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern BOOL FUN_140101E70(LPCWSTR path);
-extern LPCWSTR FUN_1400169BC(int id, void **pp);
-extern HWND PECMD_GetOrCreateHiddenWnd(void *script, int64_t flag);
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern HWND PECMD_GetOrCreateHiddenWnd(void *script, int64_t flag);) */
+
+
 extern int wsprintfA(LPSTR buf, LPCSTR fmt, ...);
 extern BOOL EndDialog(HWND hwnd, intptr_t result);
 

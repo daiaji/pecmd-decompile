@@ -52,8 +52,8 @@ extern int FUN_1400F2384(int64_t obj, LPCWSTR cmd, int64_t *out, int64_t script,
                          uint16_t mode);
 extern uint16_t FUN_1400F172C(int64_t *map, int msg, uint64_t wParam, uint64_t *lParam,
                               int64_t hwnd, uint8_t mode, uint64_t *out);
-extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern int64_t *PECMD_ReplaceStringSlot(int64_t *dst, uint64_t *src);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); * / extern int64_t *PE) */
+
 extern int64_t PECMD_ContainerAppend(int64_t *container);
 extern uint64_t PECMD_FindTreeItemByPath(int64_t obj, WCHAR *p, uint64_t *out); /* @0x1400ff414 */
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);

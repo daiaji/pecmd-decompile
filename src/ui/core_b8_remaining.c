@@ -13,6 +13,9 @@
 
 #include "pecmd_defs.h"
 
+/* S11 复位: DAT_14013e240 @0x14013e240 RAMD 安装互斥计数(纯运行时槽) */
+long long DAT_14013e240 = 0;
+
 /* MSVC C lacks __int128: portable signed 64x64 -> high 64 of 128-bit product
  * (Hacker's Delight mulhs, replaces the GCC (__int128) form). */
 static long long PECMD_MulHi64(long long a, long long b)
@@ -57,7 +60,7 @@ extern void PECMD_LoadUnloadImdisk(uint64_t p1, int p2);                        
 extern int PECMD_IsImDiskMountPointAvailable(void);                              /* @0x14001c44c */
 extern char PECMD_MatchTokenAdvance(char *tok, void *pp, int n);                 /* @0x1400660ac */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);                 /* @0x140063694 */
-extern void PECMD_AllocStrSlot(WCHAR **ps);                                      /* @0x140063620 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 * /) */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len);              /* @0x140063888 */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);                      /* @0x140063720 */
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b);      /* @0x1400637dc */
@@ -93,16 +96,16 @@ extern uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64
                                       uint64_t f, uint64_t g, uint64_t h); /* @0x14000e26c */
 extern int64_t PECMD_CreateWindow(int64_t *script, WCHAR *name, int64_t a3, LPCWSTR a4,
                                   int a5);                    /* @0x140081fa0 */
-extern void PECMD_StrBldCopyWide(void *ps, const WCHAR *src); /* @0x1400703e4 */
-extern void PECMD_TlsLogWrite(uint64_t ctx, const uint16_t *fmt, uint64_t a,
-                              uint64_t b);     /* @0x140018d8c */
-extern uint64_t FUN_140063060(uint64_t value); /* 恒等函数 (core_b3_remaining.c) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_StrBldCopyWide(void *ps, const WCHAR *src); /* @0x1400703e4 * / extern void PECMD_TlsLogWrite) */
 
-/* ---- 本文件新增全局槽 (此前全库无定义) ----
- * DAT_14013e240 @0x14013e240: RAMD 安装互斥计数; 纯运行时槽 → 初值 0。
- * DAT_14013a854 @0x14013a854: ImDisk 版本状态; .data 初值 0xFFFFFFC0(-64),
- *   pe_registry.json 真值 "c0 ff ff ff ..." 与体内 0xffffffc0 写回一致。 */
-long long DAT_14013e240 = 0;
+
+
+
+
+
+
+
+
 int DAT_14013a854 = -64;
 
 /* ---- .rdata 宽字面量真值 (tools/pe_data_extract.py 提取) ---- */

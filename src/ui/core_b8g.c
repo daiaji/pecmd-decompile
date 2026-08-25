@@ -76,8 +76,8 @@ extern DWORD GetVersion(void);
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern BOOL PECMD_EnumWindowCallback(HWND hwnd, LPARAM lParam);
 extern BOOL PECMD_IsAdminGroupMember(void);
-extern void PECMD_AllocStrSlot(void *ps);
-extern void PECMD_LayoutTabPageArea(int64_t a1, char a2);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern void PECMD_La) */
+
 extern int64_t PECMD_ContainerAppend(uint64_t *a1);
 extern LRESULT FUN_1400E5890(int64_t a1);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, int64_t esize,

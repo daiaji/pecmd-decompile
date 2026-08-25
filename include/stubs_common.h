@@ -387,7 +387,7 @@ extern void *DAT_14013cfb0;
 
 uint64_t VirtualFree(void *a, uint64_t b, uint64_t c);
 
-uint64_t lstrcatW(void *a, uint64_t b);
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
 
 int64_t FUN_140065864(int64_t a, int64_t *b, int64_t *c, uint8_t *d, uint32_t e);
 extern void *DAT_14013cf50;
@@ -878,7 +878,7 @@ void PECMD_InitTableSlots(uint64_t *, int64_t *, uint64_t *, uint);
 /* @0x140063a6c 表初始化 */
 extern long long DAT_14013d130;
 
-uint64_t SetEntriesInAclW(int c, void *ea, void *old, void **newa);
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
 
 uint64_t GetSecurityInfo(void *h, int t, uint32_t i, void **a, void **b, void **c, void **d,
                          void **e);
@@ -999,7 +999,7 @@ extern uint64_t PECMD_NextRandomSeed(void);
 /* @0x14005e04c */
 extern void PECMD_GetApiProcCached(LPCSTR p1, LPCSTR p2, longlong *slot, longlong *hmod);
 /* 桩 本文件后部 */
-extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+/* S11 已删(void 旧签名与定义 int64_t* 不符), 统一走 xproto.h */
 /* core_b3a.c */
 extern uint64_t GetEnvironmentStringsW(void);
 /* 桩 本文件后部 */
@@ -2226,7 +2226,8 @@ typedef struct {
 
 /* PECMD_RunCommand/PECMD_SkipLeadingControls 在本TU已被更早的隐式 int() 声明(1635/1245行),
    此处继续隐式调用, 不再重复 extern 以避免 conflicting types。 */
-extern void PECMD_AllocString();
+/* S11: 旧式 `extern void PECMD_AllocString();` 与 xproto.h 定义派生原型冲突
+   (真实体 core_string.c:96 返回 WCHAR*), 删除, 统一走 xproto.h。 */
 
 extern void PECMD_AppendParamToken(long long *list, LPCWSTR token, char filter);
 
@@ -2817,7 +2818,7 @@ void PECMD_RunClearTmpMbrosOnce(void *script);
 uint64_t PECMD_InstallKeyboardHook(void);
 uint64_t PECMD_ExpandDrivePathAlloc(void);
 void PECMD_SyncWorkingDirectory(void);
-uint64_t PECMD_SetVarCore(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 void PECMD_FixKnownDlls32(void);
 void PECMD_TruncateDebugLog(void);
 void PECMD_AutoMountStartup(long long *param_1, LPCWSTR param_2);
@@ -2860,9 +2861,9 @@ void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2);
 longlong *PECMD_AllocMagicString(LPCWSTR param_1);
 uint64_t PECMD_ParsePrefixColon(void);
 void PECMD_RelaunchLoadFirstUsb(void);
-uint64_t PECMD_SetVariableWithPrefix(void);
+/* S11 已删(零参旧签名与 dc 原文/调用点不符), 统一走 xproto.h */
 uint64_t *PECMD_StrSetOrConcat(uint64_t *param_1, uint64_t *param_2, LPCWSTR param_3);
-uint64_t PECMD_SetCheckVariable(void);
+/* S11 已删(零参旧签名与 dc 原文/调用点不符), 统一走 xproto.h */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c);
 uint64_t PECMD_CreateFont(void *a, void *b, void *c);
 static HANDLE PECMD_HandleDuplicateValid(HANDLE h, LARGE_INTEGER *out);
@@ -2897,7 +2898,7 @@ uint64_t GetDlgCtrlID(void *h);
 uint64_t GetDlgItemTextW(void);
 uint64_t GetDriveTypeW(void);
 uint64_t GetEnvironmentVariableA(void);
-uint64_t GetDiskFreeSpaceExW(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t GetFileAttributesExW(void);
 uint64_t GetFileSize(void);
 uint64_t GetFileSizeEx(void);
@@ -2990,7 +2991,7 @@ uint64_t QueryPerformanceFrequency(void);
 uint64_t RaiseException(void);
 uint64_t ReadProcessMemory(void);
 uint64_t RedrawWindow(void);
-uint64_t RegDeleteKeyW(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 int RegDeleteValueW(void *k, const WCHAR *nm);
 uint64_t RegEnumValueW(void);
 int RegOpenKeyExW(void *k, const unsigned short *s, unsigned long o, unsigned long a, void **out);
@@ -3031,7 +3032,7 @@ uint64_t SetScrollRange(void);
 uint64_t SetSystemPowerState(void);
 COLORREF SetTextColor(void *hdc, COLORREF c);
 uint64_t SetThreadContext_exref(void);
-uint64_t SetThreadPriority(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t SetTimer(HWND h, uint64_t id, UINT ms, TIMERPROC proc);
 uint64_t SetWindowLongW(void);
 uint64_t SetWindowsHookExW(void);
@@ -3101,7 +3102,7 @@ uint64_t FindNextVolumeW(void);
 uint64_t FindVolumeClose(void);
 uint64_t LoadBitmapW(void);
 uint64_t LoadImageW(void);
-uint64_t lstrcmpA(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t CM_Get_Device_IDW(void);
 uint64_t SetupDiDestroyDeviceInfoList(void);
 uint64_t SetupDiEnumDeviceInterfaces(void);
@@ -3117,19 +3118,19 @@ uint64_t LookupAccountSidW(void);
 uint64_t StrCmpNA(void);
 uint64_t StrPBrkW(void);
 uint64_t FUN_140001188(void);
-uint64_t FUN_14000C764(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 uint64_t PECMD_ResizeBuffer(void);
 uint64_t PECMD_GetWindowObjectRef(void);
-uint64_t PECMD_ParseHashNumbers(void);
+/* S11 已删(零参旧签名与 dc 原文/调用点不符), 统一走 xproto.h */
 uint64_t PECMD_GetComboItemText(void);
 uint32_t *PECMD_InitFieldContainer(uint32_t *param_1, uint8_t param_2);
 uint64_t PECMD_SaveSelectionToVar(void);
 uint64_t PECMD_SendColorMsg(long long param_1, uint param_2, uint param_3, uint param_4,
                             uint param_5);
-uint64_t PECMD_InitDragDrop(void);
-uint64_t PECMD_IsSetupClass(void);
-uint64_t PECMD_SetControlState(void);
-uint64_t PECMD_ShowContextMenu(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
+/* S11 已删(零参旧签名), 统一走 xproto.h */
+/* S11 已删(零参旧签名), 统一走 xproto.h */
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 uint64_t *PECMD_InitWinObjBase(uint64_t *param_1);
 LRESULT PECMD_GetControlFont(int64_t param_1);
 int PECMD_UpdateWindowStyleBits(int64_t a, unsigned int b, uint64_t c);
@@ -3142,10 +3143,10 @@ undefined8 PECMD_AppendValueNode(longlong param_1, const WCHAR *param_2, undefin
 void PECMD_LayoutChildWindows(int64_t a, unsigned char b);
 uint64_t PECMD_InitWindowObjectF(void);
 uint64_t *PECMD_InitWebViewObj(uint64_t *param_1, uint64_t param_2);
-uint64_t PECMD_CreateDateTimePickCtl(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 bool PECMD_CreateIpAddressCtl(longlong *param_1, DWORD param_2, int *param_3, void *param_4,
                               uint param_5);
-uint64_t PECMD_InitControlObjC(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 bool PECMD_CreateCustomChildControl(longlong *param_1, uint param_2, int *param_3, HWND param_4,
                                     uint param_5, LPCWSTR param_6);
 uint64_t *PECMD_InitControlObjO(uint64_t *param_1, uint64_t param_2);
@@ -3156,8 +3157,8 @@ bool PECMD_InitStaticControl(longlong *param_1, DWORD param_2, LPCWSTR param_3, 
 void PECMD_CreateStaticControlFromRect(int64_t *a, const void *b, unsigned int c, uint64_t *d,
                                        int64_t e, unsigned int f);
 uint64_t *PECMD_InitStaticCtl(uint64_t *a, uint64_t b);
-uint64_t PECMD_CreateProgressCtl(void);
-uint64_t thunk_FUN_140064b78(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 void PECMD_EndDialogDeferred(uint64_t param_1, int param_2);
 uint64_t PECMD_ProcessWindowObjMessage(void);
 undefined8 PECMD_PumpMessagesTimeout(int param_1, longlong param_2);
@@ -3203,8 +3204,8 @@ uint64_t DuplicateTokenEx(void);
 uint64_t SetTokenInformation(void);
 uint64_t FileTimeToSystemTime(void);
 int IsRectEmpty(const void *r);
-uint64_t CreateDCW(void);
-uint64_t ReleaseSemaphore(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 void *PECMD_InitSimpleWindow(void *a, uint64_t *b, uint64_t *c);
 void *PECMD_InitListViewObject(void *a, uint64_t *b, uint64_t *c);
 int PECMD_CountNewlines(ulonglong *param_1, int param_2, int param_3, int param_4);
@@ -3217,11 +3218,11 @@ void PECMD_AllocExpandPath(void *a, int64_t *b);
 void *PECMD_CheckInfDriver(int64_t *a, uint64_t b, char *c);
 uint64_t PECMD_DrvLoadInstall(int64_t a, void *b, void *c, int d);
 DWORD PECMD_ToSysCopyFiles(longlong param_1, LPCWSTR param_2, uint param_3);
-uint64_t SetupDiSetDeviceInstallParamsW(void);
-uint64_t SetupDiBuildDriverInfoList(void);
-uint64_t SetupDiEnumDriverInfoW(void);
-uint64_t SetupDiGetDriverInfoDetailW(void);
-uint64_t SetupDiClassNameFromGuidW(void);
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
+/* S11 已删(与真实签名冲突), 统一走 xproto.h */
 void PECMD_ScanDeviDirInfFiles(void *a, uint64_t b, uint64_t c, int d, void *e);
 uint64_t SetupDiGetDeviceInstallParamsW(void);
 uint64_t PECMD_UpdateDriverSigning(int a, int b);
@@ -3236,7 +3237,7 @@ uint64_t SetErrorMode(void);
 uint64_t TlsAlloc(void);
 int PECMD_DispatchSystemCommandLine();
 uint64_t PECMD_ManualMapPeImage(int *a, int16_t *b, uint64_t c);
-uint64_t FUN_14001ebdc(void);
+/* S11 已删(零参旧签名), 统一走 xproto.h */
 uint64_t GlobalAddAtomA(void);
 uint64_t lstrcpyA(void);
 int RegisterHotKey(void *w, unsigned int id, unsigned int mods, unsigned int vk);
@@ -3273,15 +3274,15 @@ int PECMD_CreateTreeViewControl(int64_t *a, unsigned long b, int *c, void *d, ui
 bool PECMD_FindAndReleaseComObject(const WCHAR *param_1);
 uint64_t *PECMD_InitDcObject(uint64_t *a, uint64_t b);
 undefined4 PECMD_IsIconGroupName(ushort *param_1);
-uint64_t DestroyCursor(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t EnumResourceNamesW(void);
-uint64_t CreateIconFromResource(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t PECMD_ParseAngleNumbers(uint64_t *a, int64_t *b, int64_t *c, int64_t *d, int64_t *e);
 int64_t PECMD_DispatchGlobalMessage(int64_t *a, const uint16_t *b, uint32_t c, uint64_t d,
                                     uint64_t e, uint32_t f, uint32_t g, uint64_t h);
 uint64_t PECMD_EnumProcessInfo(uint16_t *s, int a, int64_t *p, int b, unsigned long d);
 uint64_t GetLastInputInfo(void);
-uint64_t GetDiskFreeSpaceW(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t GetVolumeInformationW(void);
 uint64_t PECMD_HandleServiceCommandLine(short *param_1);
 uint64_t PECMD_ShowIdDialog(LPCWSTR param_1);
@@ -3304,12 +3305,12 @@ void PECMD_SwapBytePairs(uint8_t *param_1, int param_2);
 uint64_t PECMD_ShowWindowMode(void);
 uint64_t PECMD_SendPingPacket(void);
 uint64_t PECMD_InitWinsockOnce(void);
-uint64_t CreateMenu(void);
-uint64_t FileTimeToLocalFileTime(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t GetLongPathNameW(void);
 uint64_t GetMenu(void);
 uint64_t GetTimeZoneInformation(void);
-uint64_t LocalFileTimeToFileTime(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t SetMenu(void);
 uint64_t SHAppBarMessage(void);
 LARGE_INTEGER PECMD_IndataCopyDirs(longlong *param_1, LARGE_INTEGER param_2, uint param_3);
@@ -3349,8 +3350,8 @@ void PECMD_AddControlA(WPARAM param_1, longlong param_2, undefined8 *param_3, in
                        int param_5, int param_6, int param_7, undefined8 *param_8,
                        undefined8 *param_9, uint param_10, WCHAR *param_11);
 uint64_t PECMD_ClipboardCommand(void);
-uint64_t RegLoadKeyW(void);
-uint64_t RegUnLoadKeyW(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 int FUN_14006156c(const uint16_t *a, const uint16_t *b);
 uint64_t FUN_1400a53e4(int64_t a, void *b, void *c, int d, const uint16_t *e);
 const uint16_t *FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, char e);
@@ -3370,16 +3371,16 @@ uint64_t PECMD_FindTokenInList(const uint16_t *src, const uint16_t *devid, int l
 uint64_t FUN_1400662a4(int64_t *p1, void *p2, int64_t *p3, const uint16_t *p4, const uint16_t *p5,
                        uint p6);
 int SetupDiClassNameFromGuidA(const void *guid, char *buf, uint32_t buflen, uint32_t *req);
-uint64_t CreateIconFromResourceEx(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 uint64_t LCMapStringW(void);
 void FUN_1400675b8(int64_t *param_1, int64_t *param_2, int16_t param_3);
 void FUN_1400676e4(int64_t *param_1, int64_t *param_2, int16_t param_3);
 void FUN_140067748(int64_t *param_1, int64_t *param_2, int16_t param_3);
 uint32_t FUN_1400734e4(int64_t param_1, void *param_2, int64_t *param_3);
-uint64_t GetNamedSecurityInfoW(void);
-uint64_t BuildExplicitAccessWithNameW(void);
-uint64_t GetUserNameW(void);
-uint64_t LookupAccountNameW(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 LSTATUS FUN_140096f84(void *param_1, void *param_2, void *param_3);
 uint64_t FUN_140063424(void *param_1, int64_t param_2);
 void FUN_140101db8(void *param_1, const void *param_2, void *param_3);
@@ -3393,7 +3394,7 @@ void PECMD_HardlinkOrCopy(LPCWSTR param_1, LPCWSTR param_2, int param_3);
 void *FUN_140017770(void *a, const char *b);
 void FUN_1400177b8(void *a);
 uint32_t FUN_14000bfcc(uint64_t a, uint64_t b, const uint16_t *c);
-uint64_t LoadStringA(void);
+/* S11 已删(零参旧签名与真实 Windows 导出不符), 统一走 xproto.h */
 int atexit(void (*fn)(void));
 void FUN_14005b540(uint16_t *a, int b);
 void *PECMD_NamedObjLookupOrCreate(const uint16_t *a);
@@ -3470,5 +3471,8 @@ extern longlong DAT_14013cb18[8];
 extern uint8_t DAT_14011d308[8];
 extern uint8_t DAT_14013e300[512];
 extern uint8_t DAT_1401206f4[8];
+
+/* S11: 跨 TU 原型闭环 — 消灭 C4013 隐式 int 返回(64位指针在调用点被截断) */
+#include "xproto.h"
 
 #endif /* STUBS_COMMON_H */

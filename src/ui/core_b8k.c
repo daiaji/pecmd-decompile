@@ -96,8 +96,8 @@ extern void PECMD_RefreshControlVisibility(int64_t p1);
 extern void PECMD_RestoreForegroundWindow(void);
 extern uint64_t *PECMD_InitImageHolder(uint64_t *obj);
 extern void FUN_1400E5730(HWND hwnd, int64_t *out);
-extern void PECMD_AllocStrSlot(uint64_t *ps);
-extern void PECMD_SelectObjectSlot_b028(uint64_t *slot, HDC hdc, HGDIOBJ obj);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(uint64_t *ps); * / extern void PECM) */
+
 extern void PECMD_RestoreAndDeleteObject(uint64_t *slot);
 extern int wsprintfW(LPWSTR buf, LPCWSTR fmt, ...);
 

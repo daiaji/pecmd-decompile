@@ -17,6 +17,8 @@
 
 #include "pecmd_defs.h"
 
+extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1); /* @0x1400b568c (S11 复位) */
+
 /* ---- 本文件引用的全局/数据 ---- */
 extern uint8_t PTR_FUN_140129040[]; /* 窗口对象虚表 */
 extern uint8_t PTR_FUN_140129060[]; /* 窗口对象虚表 */
@@ -33,17 +35,17 @@ extern uint64_t *PECMD_InitWindowObjectF(uint64_t *obj, uint64_t *arg); /* @0x14
 extern bool PECMD_CreateButtonWindow(int64_t *obj, LPCWSTR text, DWORD style, int *rect,
                                      HWND parent, uint32_t id, DWORD exStyle);
 extern LRESULT PECMD_GetControlFont(int64_t param_1); /* @0x1400e5890 取对象字体 */
-extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key,
-                                        LPCWSTR value);           /* @0x14007d0ac */
-extern void PECMD_SetCheckVariable(int64_t param_1, int param_2); /* @0x14007df90 */
-extern void PECMD_SetObjectEnable(int64_t param_1, int param_2);  /* @0x140053c5c */
-extern void PECMD_SetObjectVisibleVar(int64_t a1, uint32_t a2);   /* @0x140053cec */
-extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 */
-extern void PECMD_ZeroLenBuf(void *p);                            /* @0x14005b0b8 (缓冲区构造) */
-extern uint64_t PECMD_TrayIconLoadThread(int64_t param_1);        /* @0x1400b568c 线程过程 */
-extern void PECMD_VarSetUInt(void *script, uint64_t value, LPCWSTR key); /* @0x140066978 */
-extern void PECMD_FreeStrBuf(void *ps);                                  /* @0x14005b104 */
-extern uint64_t *PECMD_CreateWindowObject(uint64_t *param_1, uint64_t param_2, uint32_t param_3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value); /* @0x14007d0ac * / extern v) */
+
+
+
+
+
+
+
+
+
+
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2); /* @0x14007034c */
 extern uint64_t PECMD_GetWindowObjectRef(int64_t param_1);             /* @0x14005b77c */
 extern void FUN_140053e78(void); /* @0x140053e78 PECMD_Empty */

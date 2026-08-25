@@ -42,26 +42,26 @@ extern int PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2,
 extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, uint64_t f,
                                         int64_t *g, HWND h, int64_t i);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
-extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value);
-extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);       /* 前缀比较 */
-extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);              /* 后缀/封装比较 */
-extern uint64_t PECMD_AsciiPrefixICmp(const char *a, const uint16_t *w, int n); /* 固定长度比较 */
-extern uint32_t PECMD_ParseStringToken(int64_t *a, int64_t *b, int64_t *c);     /* 分隔符选项解析 */
-extern int64_t PECMD_WideStrToInt64(const WCHAR *p);                            /* WtoI */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);                        /* 跳空白 */
-extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);        /* 前缀匹配 */
-extern void PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);                   /* 串赋值 */
-extern int64_t PECMD_TokenizeQuotedField(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1,
-                                         int16_t c2);
-extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
-                                       uint8_t flag);
-extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 */
-extern uint64_t PECMD_EvalParenStripped(WCHAR **pp, uint64_t *out);
-extern void PECMD_FreeStrBuf(void *ps);                                   /* 释放字符串槽 */
-extern void PECMD_AllocStringSlot2(void **ps, int64_t len);               /* 分配槽 */
-extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);               /* 分配串 (StrAlloc) */
-extern void PECMD_ParseSignedNumberStr(void *pp, void *out, int16_t sep); /* 数值解析 */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **src, WCHAR **pp, uint16_t sep, int mode);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
+
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);) */
+
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 * / extern uint64_t PE) */
+
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_FreeStrBuf(void *ps); /* 释放字符串槽 * / extern void PECMD_AllocStringSlot2(void **ps, int64_t len) */
+
+
+
+
+
+
+
+
+
+
 extern void PECMD_AllocSmallObject(void *pp);                /* 小对象分配 */
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* 分隔符扫描 */
 extern void PECMD_GenerateTimeText(LPCWSTR a, int64_t *out, LPCWSTR b, int64_t c, FILETIME d);
@@ -73,18 +73,18 @@ extern int64_t PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t 
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);    /* 分配 */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
-extern void PECMD_AllocStrSlot(WCHAR **out);                                /* 串容器初始化 */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);                 /* 字符串追加 */
-extern void PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value); /* SetVar */
-extern char PECMD_ReadFileLine(void *a, int64_t *b, DWORD c, uint8_t d,
-                               uint32_t *e);                                       /* 读一行字符 */
-extern LPCWSTR PECMD_ConvertStringEncoding(void *a, DWORD b);                      /* 取串槽内容 */
-extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* 取串槽 */
-extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2); /* 大小写转换 */
-extern int64_t PECMD_WideToAnsiConvert(void *a);                /* UTF8 长度 */
-extern uint32_t PECMD_IsDevicePathPrefix(LPCWSTR param_1);      /* 路径/句柄检查 */
-extern int64_t PECMD_OpenFileExisting(uint64_t param_1, uint64_t param_2, uint64_t param_3);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* 串容器初始化 * / extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWST) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2); /* 大小写转换 * / extern int64_t PECMD_WideToAnsiCon) */
+
+
+
+
+
+
+
+
+
+
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos,
@@ -102,8 +102,8 @@ extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);              /
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* SetVarD */
 extern void PECMD_JoinTokensAndResolve(int64_t *ctx, int64_t *pp, int64_t *out);
 extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
-extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d); /* 位置计算 */
-extern void PECMD_SetEndOfFileWrap(void *a, LARGE_INTEGER b);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d); /* 位置计算 * / extern void PECMD_SetEndOf) */
+
 extern int64_t PECMD_AllocConsoleBuffers(int64_t a); /* __chkstk/刷新 */
 extern WCHAR *PECMD_UnquoteString(WCHAR *s);         /* 串标签查找 */
 extern void PECMD_DeviceCheckReady(LPCWSTR s);

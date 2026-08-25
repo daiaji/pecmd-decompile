@@ -34,11 +34,11 @@ extern LPWSTR lstrcatW(LPWSTR, LPCWSTR);
 extern void PECMD_InitWinsock(void *p);     /* 懒加载 WS2_32 指针 */
 extern int32_t PECMD_QueryState_cfc0(void); /* 初始化成功? */
 extern void PECMD_InitWinsockOnce(void *p); /* 附加初始化 */
-extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len,
-                                uint64_t cap);                                 /* 复制/解析串 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap); /* 复制/解析串 * /) */
+
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 切分 */
 extern void PECMD_AllocStringSlot2(void **ps, int64_t len);                    /* 分配缓冲 */
-extern void PECMD_AllocStrSlot(void *ps);                                      /* 初始化串容器 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); /* 初始化串容器 * /) */
 extern void PECMD_NtpSyncLoop(uint32_t *addr);                                 /* IP 地址 → 串 */
 extern void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2);            /* 行切分 */
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,

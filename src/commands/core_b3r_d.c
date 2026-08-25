@@ -68,16 +68,16 @@ extern int PECMD_UpdateWindowStyleBits(int64_t a, uint32_t b, uint64_t c);
 extern int PECMD_UpdateWindowExStyle(HWND a, uint32_t b, uint64_t c);
 /* PECMD_ParseQuotedArg helpers */
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);
-extern WCHAR *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp); * / exter) */
+
 extern int64_t PECMD_ExpandVarsRecursive(void *script, WCHAR *line, WCHAR **out, int mode,
                                          uint8_t opt);
 extern int64_t PECMD_ExpandCommandLine(void *script, WCHAR *line, WCHAR **out, int mode,
                                        uint8_t opt);
 /* PECMD_ShowBrowseFolder string/var helpers */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);
-extern void PECMD_AllocStrSlot(WCHAR **out);
-extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); * / extern char PECMD) */
+
 extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, WCHAR **dst, short delim);
 extern void PECMD_RunCommandLine(void *script, WCHAR **str, int mode);
@@ -88,8 +88,8 @@ extern void PECMD_ParseSignedNumberStr(void **in, void *out, short delim);
 extern void PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
 extern WCHAR *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src);
-extern uint8_t *PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len, void **out);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); ) */
+
 extern void PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
 extern void PECMD_FreeStrBuf(void *ps);
 extern HWND PECMD_QueryState_f414(int64_t a);

@@ -70,8 +70,8 @@ extern WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140
 extern void FUN_1400702B0(WCHAR **ps, LPCWSTR src);                    /* @0x1400702b0 core_string.c */
 extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);                  /* @0x14006375c core_string.c */
 extern void PECMD_FreeStrBuf(WCHAR **ps);                              /* @0x14005b104 core_string.c */
-extern void PECMD_AllocStrSlot(WCHAR **ps);                            /* @0x140063620 restored_bodies.c */
-extern void PECMD_AllocString(WCHAR **ps, int64_t count);              /* @0x140063720 core_string.c */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 restored_bodies.c * /) */
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);         /* @0x140063720 core_string.c (S11 归正返回型) */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);       /* @0x140063694 core_var.c */
 extern void PECMD_ZeroLenBuf(void *p);                                 /* @0x14005b0b8 core_thread.c */
 extern bool FUN_140101E70(LPCWSTR path);                               /* @0x140101e70 core_exec2.c */

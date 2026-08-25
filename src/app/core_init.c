@@ -41,7 +41,7 @@ extern uint64_t PECMD_StartWorkerThread(void *script, void **pref, uint32_t a3, 
 void FUN_14004E2CC(void *s, void *item);           /* @0x14004e2cc 释放单项 */
 void FUN_14006E8F4(void *s);                       /* @0x14006e8f4 清理结构 */
 void PECMD_CheckDebugMsg(void);                    /* @0x140005344 */
-void PECMD_AllocString(WCHAR **ps, int64_t count); /* @0x140063620 = PECMD_AllocStrSlot 别名 */
+WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count); /* @0x140063720 串扩容(S11 归正返回型, 原误标 void/063620) */
 void FUN_14007A224(void *s, LPCWSTR a, LPCWSTR *b, int c, int d); /* @0x14007a224 */
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);       /* @0x1400703e4 */
 WCHAR *FUN_14000531C(WCHAR *p);                      /* @0x14000531c 跳空白(返回指针) */

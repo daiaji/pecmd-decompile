@@ -60,8 +60,8 @@ extern int64_t PECMD_BuildTreeIndexPathStr(int64_t obj, LRESULT first,
                                            int64_t *out); /* @0x1400ff2bc */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern void PECMD_AllocStrSlot(void *ps);
-extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern void FUN_1400) */
+
 extern void PECMD_ParseSkipSeparator(int64_t *pp, int64_t *out, int16_t sep1, int16_t sep2);
 extern int64_t PECMD_ParseTokenResolve(int64_t *ctx, WCHAR *p, uint64_t *out1, uint64_t *out2,
                                        bool async, uint64_t *out3);

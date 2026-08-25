@@ -26,33 +26,33 @@ extern WCHAR g_szEmpty[]; /* empty string (g_szEmpty) */
 extern void *operator_new(size_t size); /* global new wrapper */
 
 /* string/var helpers */
-extern void PECMD_AllocStrSlot(void *out);                       /* @0x140063620 release slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);         /* @0x14005b154 skip spaces */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);      /* @0x1400702b0 assign */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* @0x14006375c cat */
-extern void PECMD_FreeStrBuf(void *ps);                          /* @0x14005b104 free slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void PECMD_RunCommandLine(void *script, void *str, int mode);     /* expand */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
-extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* @0x140063620 release slot * / extern WCHAR *PECMD_SkipLeadingCont) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);) */
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);) */
+
+
+
+
+
+
 extern void PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern uint64_t PECMD_ParseSignedNumber(short *);
 extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern char PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* delimiter scan */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+
 
 /* list-control / dialog helpers */
 extern int PECMD_OnDeleteCommand(void *p, LPCWSTR w, HWND hwnd); /* accept check */
 extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, void *f,
                                         int64_t *g, HWND h, int64_t i);
 extern int PECMD_ParseUIntValue(LPCWSTR *pp, int *out); /* scan int token */
-extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value);
-extern void PECMD_SetControlTooltip(int64_t param_1, HWND param_2, int param_3, LPCWSTR param_4,
-                                    char param_5);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
+
+
 extern void PECMD_SendTitleMessage(int64_t param_1, HWND param_2, int param_3, LPCWSTR param_4,
                                    int param_5);
 extern void PECMD_ResetScriptChain(int64_t *script, int64_t *a2); /* default params */

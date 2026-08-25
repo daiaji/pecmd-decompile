@@ -87,7 +87,7 @@ extern DWORD (*g_pWlanConnect)(HANDLE, LPCWSTR, void *, void *); /* WlanConnect 
 extern void PECMD_FreeStrBuf(void *ps);                  /* @0x14005b104 释放串槽     */
 extern void PECMD_FreeContainer(void *ps);               /* @0x14005b134 释放串资源   */
 extern void PECMD_ZeroLenBuf(void *p);                   /* @0x14005b0b8 对象初始化   */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp); /* @0x14005b154 跳过空白     */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp); /* @0x14005b154 跳过空白 * /) */
 extern undefined8 PECMD_MatchPrefixN(ushort *a, undefined8 *b, int c); /* @0x14005b1a8 */
 extern undefined8 PECMD_OnDeleteCommand(void *a, LPCWSTR b, HWND c); /* @0x14005b2c0              */
 extern LPCWSTR PECMD_LoadLocalizedString(HINSTANCE, UINT, LPWSTR,
@@ -105,28 +105,28 @@ extern void PECMD_OpenFileHandle(void *pH, LPCWSTR path, DWORD access, DWORD sha
 extern void PECMD_RunCommandLine(void *script, WCHAR **str, int mode);  /* @0x140003a20  */
 extern WCHAR *PECMD_EnumerateVolume(longlong *a, longlong b, ulonglong c,
                                     LPCWSTR d);                                   /* @0x140006aa0 */
-extern void PECMD_CreateTempMutexDir(void *a, void *b, undefined8 *c, LPCWSTR d); /* @0x140008110 */
-extern void PECMD_ScheduleSelfDelete(void *a, int b); /* @0x14000481c             */
-extern WCHAR *PECMD_UnquoteString(WCHAR *s);          /* @0x14001be14 前缀/标签查询 */
-extern longlong PECMD_EnumNtSymbolicLink(LPWSTR a, longlong *b, longlong *c,
-                                         longlong *d);               /* @0x14001d8c8 */
-extern WCHAR *PECMD_NextToken(longlong *a, longlong *b, uint32_t c); /* @0x140024c48           */
-extern longlong PECMD_RunCommand(longlong *a, pthreadmbcinfo b);     /* @0x140031454 执行命令    */
-extern void PECMD_IndataCopyDirs(void *a, void *b, uint c);          /* @0x14003c06c             */
-extern WCHAR *PECMD_TokenizeQuotedField(longlong *a, longlong *b, longlong *c, WCHAR d,
-                                        ushort e); /* @0x1400545f8 切分        */
-extern void PECMD_ParseSkipSeparator(longlong *a, longlong *b, int c, int d); /* @0x140054840 */
-extern DWORD PECMD_ExpandDrivePath(LPCWSTR path, uint32_t a, LPWSTR buf, LPWSTR *out);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_CreateTempMutexDir(void *a, void *b, undefined8 *c, LPCWSTR d); /* @0x140008110 * / extern vo) */
+
+
+
+
+
+
+
+
+
+
+
 extern undefined8 PECMD_MountVolumeToDir(LPCWSTR a, LPCWSTR b); /* @0x1400604b0             */
 extern undefined8 PECMD_CreateSymbolicLink(undefined8 a, undefined8 b,
                                            undefined4 c);            /* @0x140060600    */
 extern short *PECMD_LastPathSeparator(short *s);                     /* @0x14006045c             */
 extern undefined8 FUN_140063060(undefined8 a);                       /* @0x140063060             */
 extern undefined8 *PECMD_AllocSmallObject(undefined8 *a);            /* @0x140063344 小对象分配  */
-extern void PECMD_AllocStrSlot(void *out);                           /* @0x140063620 串容器初始化 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* @0x140063620 串容器初始化 * /) */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);     /* @0x140063694 串分配      */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, longlong count);         /* @0x140063720 串扩容      */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src);          /* @0x14006375c 串追加      */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWSTR src); /* @0x14006375c 串追加 * /) */
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, longlong len); /* @0x140063888       */
 extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n); /* @0x1400660ac 词比较 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value,
@@ -147,7 +147,7 @@ extern void PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);   /* @0x1400702b0 
 extern WCHAR *PECMD_AssignString(WCHAR **ps, const WCHAR *src); /* @0x14007034c             */
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);     /* @0x1400703e4             */
 extern int PECMD_ParseUIntValue(LPCWSTR *pp, int *out);         /* @0x140074838 数值解析    */
-extern void PECMD_SetVariableWithPrefix(longlong *a, LPCWSTR b, LPCWSTR c); /* @0x14007d0ac */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(longlong *a, LPCWSTR b, LPCWSTR c); /* @0x14007d0ac * /) */
 extern undefined8 PECMD_ListDrives(undefined8 *a, WCHAR b, int c, int d, uint e,
                                    LPCWSTR f); /* @0x1400787b4             */
 extern undefined8 *PECMD_SplitTokenAssignVar(undefined8 *a, longlong *b, short c,
@@ -164,15 +164,15 @@ extern undefined8 PECMD_RasDialEntry(longlong a, LPCWSTR b, LPCWSTR c, LPCWSTR d
 extern void PECMD_SetVariable(longlong *a, LPCWSTR b, LPCWSTR c); /* @0x1400629b8 SetVar      */
 extern undefined8 PECMD_ShowBrowseFolder(longlong *a, ushort *b, longlong c,
                                          longlong *d);     /* @0x140087690 */
-extern void PECMD_NotifyMainWindowRefresh(void *a, int b); /* @0x14009bb28             */
-extern void PECMD_ExpandCommandLine(void *a, WCHAR *b, WCHAR **c, int d, int e); /* @0x14007a224  */
-extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* @0x1400f429c 查找字符   */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_NotifyMainWindowRefresh(void *a, int b); /* @0x14009bb28 * / extern void PECMD_ExpandCommandL) */
 
-extern DWORD PECMD_SaveImageToFile(RECT *param_1, LPCWSTR param_2, LPCWSTR param_3,
-                                   LPCWSTR param_4); /* @0x14007d8d4 保存图像 */
 
-/* 外部扩展 API (stub 未声明) */
-extern HDC CreateDCW(LPCWSTR, LPCWSTR, LPCWSTR, const void *);
+
+
+
+
+
+
 extern int SHAppBarMessage(DWORD, APPBARDATA *);
 
 /* ================================================================

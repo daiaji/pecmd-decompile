@@ -26,22 +26,22 @@ extern WCHAR g_szEmpty[];  /* empty string (g_szEmpty) */
 extern int g_dblClickFlag; /* 双击/触发标记 */
 
 /* ---- string/var/parse helpers (bodies live in other core_*.c files) ---- */
-extern void PECMD_AllocStrSlot(void *out);                               /* release/init slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);              /* assign string slot */
-extern void PECMD_FreeStrBuf(void *ps);                                  /* free string slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void PECMD_RunCommandLine(void *script, void *str, int mode);     /* expand */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* release/init slot * / extern WCHAR *PECMD_SkipLeadingControlChars) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExtractTokenByDelim(void *src, void *dst, int mode);) */
+
+
+
+
+
+
 extern void PECMD_CopyUpToChar(void *pp, void *out, uint32_t sep);
 extern int16_t FUN_1400677B0(int64_t *pp, int64_t out); /* 解析最多4个 # 分隔值 */
 extern uint64_t PECMD_ParseSignedNumber(short *);
 extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* delimiter scan (thunk) */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+
 extern uint64_t PECMD_ParseHotkeyCode(int64_t *pp, uint32_t *flags, uint64_t p3, char p4);
 extern int PECMD_ParseUIntValue(LPCWSTR *pp, int *out); /* 扫描整数 token */
 
@@ -51,9 +51,9 @@ extern void PECMD_DispatchExpressionBlock(void *script, LPCWSTR p); /* 脚本执
 extern void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src);   /* 引用计数字符串设置 */
 extern uint32_t PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void PECMD_RefCountRelease(WCHAR **ps);                    /* 引用计数释放 */
-extern void PECMD_ExpandBackslashNewline(const WCHAR *p, char c); /* 清空串 */
-extern void PECMD_EscapeLabelAmpersands(int64_t *ps);             /* '&' -> '&&' 转义 */
-extern void PECMD_ExpandVarDispatch(int64_t *script, LPCWSTR src, int64_t *out, int a4, int a5);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExpandBackslashNewline(const WCHAR *p, char c); /* 清空串 * / extern void PECMD_EscapeLabelAmper) */
+
+
 
 /* ---- 控件对象分派 helpers（已还原，见 core_b3l.c / core_b3m.c） ---- */
 extern void PECMD_CreateTabsItem(WPARAM mgr, LPCWSTR text, uint64_t *p3, int x, int y, int w, int h,

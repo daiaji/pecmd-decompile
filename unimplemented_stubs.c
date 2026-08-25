@@ -67,7 +67,9 @@ uint64_t PECMD_InstallKeyboardHook(void) { return 0; }
 uint64_t PECMD_ExpandDrivePathAlloc(void) { return 0; }
 uint64_t PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag) { (void)script;(void)name;(void)val;(void)len;(void)flag; return 0; }   /* arity 修正 0->5 (PECMD_ExecCmdDispatch 恢复体) */
 int64_t PECMD_FindVarValue(int64_t *a, LPCWSTR b, int64_t *c, int d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (PECMD_ExecCmdDispatch 恢复体) */
-uint64_t PECMD_SetVarCore(void) { return 0; }
+/* S11(dc FUN_14001e6bc(longlong*,LPCWSTR,LPCWSTR,longlong)->void) */
+void PECMD_SetVarCore(int64_t *script, LPCWSTR key, LPCWSTR val, int64_t n)
+    { (void)script;(void)key;(void)val;(void)n; }
 /* PECMD_FixKnownDlls32 — KnownDlls32 环境修复: 首个调用时读取系统模式标志, 在 64 位
    系统中注册 \\KnownDlls32 路径(经 ntdll 函数指针槽), 仅执行一次. */
 uint FUN_14000e0bc(void) { return 0; }           /* 操作系统位宽探测 (no-op) */
@@ -124,8 +126,14 @@ long long PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_
 long long PECMD_ExpandVarsRecursive(long long *a, WCHAR *b, void *c, int d, uint8_t e)
     { P8_Probe("ExpandVR", (longlong)(uintptr_t)b, (longlong)d);
       return (long long)FUN_14007BDA8((void *)a,(WCHAR *)b,(WCHAR **)c,d,e); }
-uint64_t PECMD_SetVariableWithPrefix(void) { return 0; }
-uint64_t PECMD_SetCheckVariable(void) { return 0; }
+/* S11(dc 签名归正): 原为 uint64_t f(void) 零参占位 —— 与全部调用点(2-3 参)
+ * ABI 不符。按 decompiled.c 原文签名改为占位真体(函数体仍待移植, 见 T4 分诊):
+ *   FUN_14007d0ac(longlong*,LPCWSTR,LPCWSTR)->void  (变量前缀赋值)
+ *   FUN_14007df90(longlong,int)->void               (CHECK 变量写) */
+void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key, LPCWSTR value)
+    { (void)ctx; (void)key; (void)value; }
+void PECMD_SetCheckVariable(int64_t param_1, int param_2)
+    { (void)param_1; (void)param_2; }
 /* S8: 同址别名归一 —— FUN_14009bb28 ≡ PECMD_NotifyMainWindowRefresh（真体 restored_bodies.c）。 */
 uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { FUN_14009BB28((void *)(uintptr_t)a,b); return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
@@ -192,18 +200,29 @@ uint64_t PECMD_CopyPathToken(longlong a, longlong *b, longlong *c, longlong d)
 
 /* FUN_ helper 无操作桩 */
 uint64_t FUN_140001188(void) { return 0; }
-uint64_t FUN_14000C764(void) { return 0; }
+/* S11(dc 无此函数, 调用点 b1_remaining:5291 传1参取返回) 占位签名归正 */
+uint64_t FUN_14000C764(LPCWSTR p) { (void)p; return 0; }
 uint64_t PECMD_ResizeBuffer(void) { return 0; }
 uint64_t PECMD_GetWindowObjectRef(void) { return 0; }
 uint64_t PECMD_EncodeDet(long long a, uint64_t b) { (void)a;(void)b; return 1; }
-uint64_t PECMD_ParseHashNumbers(void) { return 0; }
+/* S11(dc 签名归正): FUN_1400677b0(longlong*,longlong)->short, 原零参占位与
+ * 调用点(2 参) ABI 不符; 函数体仍待移植(T4 分诊)。 */
+short PECMD_ParseHashNumbers(int64_t *pp, int64_t val) { (void)pp; (void)val; return 0; }
 uint64_t PECMD_GetComboItemText(void) { return 0; }
 uint64_t PECMD_SaveSelectionToVar(void) { return 0; }
 uint64_t PECMD_SkipWCharUntil(void *pp, uint16_t ch) { (void)pp;(void)ch; return 0; }
-uint64_t PECMD_InitDragDrop(void) { return 0; }
-uint64_t PECMD_IsSetupClass(void) { return 0; }
-uint64_t PECMD_SetControlState(void) { return 0; }
-uint64_t PECMD_ShowContextMenu(void) { return 0; }
+/* S11(dc FUN_1400549bc(longlong,uint,longlong)->void) */
+void PECMD_InitDragDrop(int64_t a, uint32_t b, int64_t c)
+    { (void)a;(void)b;(void)c; }
+/* S11(dc FUN_14006643c(GUID*,LPCSTR)->undefined4) */
+int PECMD_IsSetupClass(const void *pguid, const char *name)
+    { (void)pguid;(void)name; return 0; }
+/* S11(dc FUN_14007e01c(longlong,uint,LPWSTR)->void) */
+void PECMD_SetControlState(int64_t a, uint32_t b, LPWSTR c)
+    { (void)a;(void)b;(void)c; }
+/* S11(dc FUN_1400e54d4(char*,HWND,longlong*,longlong,longlong)->void) */
+void PECMD_ShowContextMenu(char *a, HWND h, int64_t *c, int64_t d, int64_t e)
+    { (void)a;(void)h;(void)c;(void)d;(void)e; }
 LRESULT PECMD_GetControlFont(int64_t param_1) { (void)param_1; return 0; }
 int PECMD_UpdateWindowStyleBits(int64_t a, unsigned int b, uint64_t c) { (void)a;(void)b;(void)c; return 0; }
 uint64_t FUN_1400ec698(int64_t a, uint64_t b) { (void)a;(void)b; return 0; }
@@ -213,13 +232,19 @@ uint64_t PECMD_InitWindowObjectF(void) { return 0; }
 
 
 
-uint64_t PECMD_CreateDateTimePickCtl(void) { return 0; }
-uint64_t PECMD_InitControlObjC(void) { return 0; }
+/* S11(dc FUN_1400f1378(longlong*,uint,int*,HWND,uint)->bool) */
+bool PECMD_CreateDateTimePickCtl(int64_t *a, uint32_t b, int *c, HWND h, uint32_t e)
+    { (void)a;(void)b;(void)c;(void)h;(void)e; return false; }
+/* S11(dc 未含此函数(自建助手), 按调用点2参归正占位) */
+void PECMD_InitControlObjC(void *a, void *b) { (void)a;(void)b; }
 
 void PECMD_CreateStaticControlFromRect(int64_t *a, const void *b, unsigned int c, uint64_t *d, int64_t e, unsigned int f) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f; }
 uint64_t *PECMD_InitStaticCtl(uint64_t *a, uint64_t b) { (void)a;(void)b; return a; }
-uint64_t PECMD_CreateProgressCtl(void) { return 0; }
-uint64_t thunk_FUN_140064b78(void) { return 0; }
+/* S11(dc FUN_1400fc060(longlong*,DWORD,int*,HWND,uint)->bool) */
+bool PECMD_CreateProgressCtl(int64_t *a, uint32_t b, int *c, HWND h, uint32_t e)
+    { (void)a;(void)b;(void)c;(void)h;(void)e; return false; }
+/* S11(dc FUN_140064b78(char*)->void) */
+void thunk_FUN_140064b78(char *a) { (void)a; }
 uint64_t PECMD_ProcessWindowObjMessage(void) { return 0; }
 
 /* ---- B3 业务还原 (core_b3_remaining.c) 引用的未定义 helper 桩 ---- */
@@ -268,7 +293,8 @@ int PECMD_DispatchSystemCommandLine(int64_t *script, LPCWSTR cmd)
 uint64_t PECMD_ManualMapPeImage(int *a, int16_t *b, uint64_t c){ (void)a;(void)b; return c; }
 /* ---- P0 补缺失符号桩 ---- */
 /* ---- 批1-01ed5c 依赖桩 ---- */
-uint64_t FUN_14001ebdc(void){ return 0; }
+/* S11: 旧零参体已删, 真签名版见上 (dc FUN_14001ebdc(LPCWSTR,longlong*)) */
+uint32_t FUN_14001ebdc(LPCWSTR a, int64_t *b) { (void)a; (void)b; return 0; }
 uint64_t FUN_140063344(void *p){ (void)p; return 0; }   /* 磁盘类型/分区对照表(未实现) */
 uint64_t PECMD_OomPrompt(int a) { (void)a; return 0; }
 

@@ -49,8 +49,8 @@ extern DWORD PECMD_RegSetValueWithOpen(HKEY root, LPCWSTR sub, LPCWSTR name, DWO
                                        DWORD size); /* @0x14005c5a0 */
 extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b);
 extern void FUN_140025f10(int64_t ctx, LPCWSTR msg, uint32_t code, void *p4, void *p5, int64_t *p6);
-extern void PECMD_AllocStrSlot(void *ps);
-extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *ps); * / extern void PECMD_Sp) */
+
 extern void FUN_14007BF44(int64_t *ctx, WCHAR *name, void *out, int mode, uint8_t flag);
 extern void PECMD_FormatSetVar(int64_t *script, uint64_t value, LPCWSTR key,
                                LPCWSTR fmt); /* @0x140066930 */

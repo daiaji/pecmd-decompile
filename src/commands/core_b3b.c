@@ -47,7 +47,7 @@ extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void FUN_14005D558(void *obj, HWND hwnd);
-extern void PECMD_RandSeedAdvance(void);
+extern uint64_t PECMD_RandSeedAdvance(void); /* S11 返回型归正 dc:74802 */
 extern uint64_t FUN_14005F158(uint64_t *obj, uint8_t *data);
 extern uint64_t PECMD_ParseNumberToDouble(int64_t *pp, double *out);
 extern uint32_t PECMD_EnumDeviceInterfaces(int dev, uint32_t flags, void *ctx);

@@ -31,7 +31,7 @@
 
 extern WCHAR **FUN_14005B154(WCHAR **pp);            /* @0x14005b154 见 core_string.c */
 extern char *PECMD_AllocAnsiString(const char *src); /* @0x140070044 */
-extern int32_t FUN_1400630D0(int mode);              /* @0x1400630d0 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 * /) */
 extern void PECMD_ExitProcessCall(UINT code);        /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
 

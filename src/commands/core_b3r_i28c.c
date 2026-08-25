@@ -66,23 +66,23 @@ extern void PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2);
 extern uint64_t PECMD_ScriptThreadProc(int64_t *param_1); /* 线程入口 (CreateThread 目标) */
 
 /* ---- string / var helpers ---- */
-extern void PECMD_AllocStrSlot(void *out);                       /* release slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);         /* skip spaces */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* cat */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);      /* assign */
-extern void PECMD_FreeStrBuf(void *ps);                          /* free slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim);
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* release slot * / extern WCHAR *PECMD_SkipLeadingControlChars(WCHA) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);) */
+
+
+
+
+
 extern char PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* delimiter scan */
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern WCHAR *PECMD_AssignString(WCHAR **ps, const WCHAR *src);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+
 extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
-extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
-extern void PECMD_AllocStringSlot2(void **ps, int64_t len); /* alloc */
-extern WCHAR *PECMD_CopyStrToSlot(WCHAR **a1, WCHAR **a2);  /* token 扫描 */
-extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t) */
+
+
+
 extern int64_t *PECMD_StrBldCopyAnsi(int64_t *out, const char *src, uint64_t len); /* 取串槽 */
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCSTR src, ulonglong a, ulonglong b);
 extern uint64_t PECMD_GetPackedSystemVersion(void); /* 版本号 */
@@ -99,8 +99,8 @@ extern uint64_t PECMD_SetIpConfig(LPCSTR param_1, LPCSTR param_2, LPBYTE param_3
 extern uint64_t PECMD_ProcessCommandLine(LPCSTR a, int b, LPCSTR c, char *d, LPBYTE e, LPBYTE f,
                                          int g);
 extern int64_t PECMD_EnumNetworkDevices(LPCSTR s, int64_t a, uint64_t b);
-extern void PECMD_NotifyMainWindowRefresh(int64_t *param_1, int flag);
-extern void PECMD_SetVariable(int64_t *script, LPCWSTR key, LPCWSTR value);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_NotifyMainWindowRefresh(int64_t *param_1, int f) */
+
 extern uint32_t *PECMD_ResolveMacAddress(int param_1, uint64_t *param_2, uint64_t *param_3,
                                          int64_t *param_4, uint64_t param_5, LPWSTR param_6,
                                          LPWSTR param_7, int64_t *param_8, LPWSTR param_9);

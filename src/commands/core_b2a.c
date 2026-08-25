@@ -49,8 +49,8 @@ extern uint64_t PECMD_GetPELogonWindowValue(LPCWSTR name);
 extern int64_t PECMD_ExecCmdDispatch(void *script, void *cmd, void *s3, void *s4, uint32_t flag,
                                      void *p6, void *s7, void *p8);
 extern int64_t PECMD_RegisterCallbackWnd(uint32_t mode);
-extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern WCHAR *FUN_14001BE14(WCHAR *s);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); * / extern WCHAR *FUN_) */
+
 extern WCHAR *FUN_14001C270(LPCWSTR src, WCHAR **out);
 extern int64_t PECMD_WideStrLen(void *p);
 extern uint64_t PECMD_SetDesktopWallpaper(void *p, int mode);
@@ -87,11 +87,14 @@ int64_t PECMD_IsVkPrefix(WCHAR *s)
 /* ========== PECMD_ParseValueCommand @0x140025980 ==========
  * 参数表包装: 构造 3 槽 arr[0]=value, 调 PECMD_ParseCommandBlock(...,2,...)。
  */
-void PECMD_ParseValueCommand(void *script, void *value, uint64_t flags)
+uint64_t PECMD_ParseValueCommand(void *script, void *value, uint64_t flags)
 {
     void *arr[3];
     arr[0] = value;
     PECMD_ParseCommandBlock(script, arr, 2, flags);
+
+    /* S11(dc undefined=RAX 伪影): 归正 uint64_t, return 0 (T4 分诊候选) */
+    return 0;
 }
 
 /* ========== PECMD_EnsureOneTimeInit @0x140027e88 ==========
@@ -134,18 +137,22 @@ void PECMD_InitIfOldSystem(void)
  * @0x140035b08 size=25 — 文件大小/位置包装(asm→C): 纯尾调用包装,
  *   将第4参(r8)移入第4槽(r9)、置第3参 r8b=1, call PECMD_BuildImDiskMenu。
  */
-void PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
+uint64_t PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
+    /* S11(dc 签名 undefined=RAX 残留伪影): 返回型归正, 显式 return 0 (T4 分诊候选) */
     PECMD_BuildImDiskMenu(obj, pos, 1, out, flags);
+    return 0;
 }
 
 /* ========== PECMD_FindCmdHandler @0x140035b24 ==========
  * @0x140035b24 size=25 — 文件大小/位置包装(asm→C): 同 b08, 第3参 xor r8d=0,
  *   call PECMD_BuildImDiskMenu。
  */
-void PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
+uint64_t PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
+    /* S11(dc 签名 undefined=RAX 残留伪影): 返回型归正, 显式 return 0 (T4 分诊候选) */
     PECMD_BuildImDiskMenu(obj, pos, 0, out, flags);
+    return 0;
 }
 
 /* ========== PECMD_HelpDialogProc @0x140037b84 ==========

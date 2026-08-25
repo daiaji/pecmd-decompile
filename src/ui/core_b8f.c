@@ -83,8 +83,8 @@ extern BOOL GetIconInfo(HICON hIcon, PECMD_ICONINFO *pIconInfo);
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern int64_t PECMD_AlignUpSize(int64_t value, uint32_t align);
 extern void *FUN_1400E57C0(void *obj);
-extern void PECMD_AllocStrSlot(WCHAR **ps);
-extern int64_t *PECMD_InitPtrTable(int64_t *arr);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); * / extern int64_t *PE) */
+
 extern void *FUN_140063B00(int64_t idx, int64_t *arr, int64_t *cap, uint32_t esize);
 extern void FUN_1400639F0(int64_t *arr, int64_t *cap, int64_t *cnt, void *data, int64_t esize,
                           int32_t mode);

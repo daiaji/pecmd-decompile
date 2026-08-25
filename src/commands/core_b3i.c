@@ -45,6 +45,9 @@
 #include <stdint.h>
 
 #include "pecmd_defs.h"
+
+extern uint8_t DAT_14013d660; /* 数组释放哨兵 (S11 复位) */
+extern uint8_t PTR_FUN_1401234f0[]; /* S11 复位 */
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
@@ -76,11 +79,11 @@ extern BOOL UnregisterHotKey(HWND, int);
 extern ATOM GlobalDeleteAtom(ATOM);
 typedef int64_t __time64_t;
 extern __time64_t _time64(__time64_t *);
-extern int FUN_1400630D0(int a1);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int FUN_1400630D0(int a1); * / /* ---- 本批引用的全局数据 ---- * / ex) */
 
-/* ---- 本批引用的全局数据 ---- */
-extern uint8_t DAT_14013d660; /* 数组释放哨兵 */
-extern uint8_t PTR_FUN_1401234f0[];
+
+
+
 extern uint8_t PTR_FUN_140126740[];
 extern uint8_t PTR_FUN_1401290a8[];
 extern uint8_t PTR_FUN_1401296e8[];

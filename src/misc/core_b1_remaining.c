@@ -49,7 +49,7 @@ extern LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd,
                                    uint32_t flags);       /* @0x14003c06c */
 extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);     /* @0x14006375c */
 extern LPCWSTR PECMD_StripTrailingSpaces(LPCWSTR s);      /* @0x140018b70 */
-extern void thunk_FUN_1400f429c(WCHAR **pp, WCHAR delim); /* @0x1400f429c 分隔符扫描 thunk */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void thunk_FUN_1400f429c(WCHAR **pp, WCHAR delim); /* @0x1400f429c 分隔符扫描 thunk * /) */
 extern LARGE_INTEGER PECMD_ProcessScriptBlock(uint64_t script, LARGE_INTEGER cmd, void *p3,
                                               void *p4, void *p5); /* @0x14004c0bc */
 extern void *g_pQueryServiceStatusEx;                              /* QueryServiceStatusEx 槽 */
@@ -144,11 +144,11 @@ extern HMODULE g_hOleaut32;     /* Oleaut32 模块槽 */
 extern void *Ordinal_418_exref; /* OleLoadPicture 槽 (exref) */
 
 /* ---- PECMD_SetDesktopWallpaper / PECMD_ParseEnvSwitches 还原所需: 额外 helper extern ---- */
-extern WCHAR *FUN_14005B154(WCHAR **ps);       /* @0x14005b154 跳过空白 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *FUN_14005B154(WCHAR **ps); /* @0x14005b154 跳过空白 * /) */
 extern WCHAR *PECMD_AllocStrSlot(WCHAR **out); /* @0x140063620 初始化串缓冲 */
 extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode,
                                        uint8_t flag);                    /* @0x14007a224 */
-extern short PECMD_ParseHashNumbers(WCHAR **pp, int64_t val);            /* @0x1400677b0 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern short PECMD_ParseHashNumbers(WCHAR **pp, int64_t val); /* @0x1400677b0 * /) */
 extern uint32_t PECMD_TokenizeList(int64_t *ctx, short *src, int mode);  /* @0x14007403c */
 extern void PECMD_SetClipboardUnicode(LPCWSTR s);                        /* @0x140060718 */
 extern WCHAR *PECMD_AssignClipboardText(WCHAR **ps);                     /* @0x140078e90 */
@@ -178,11 +178,11 @@ extern int64_t PECMD_EnableTokenPrivilege(LPCWSTR priv, DWORD attr,
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b); /* @0x1400637dc */
 extern void PECMD_DispatchSystemCommandLine(void *script, LPCWSTR cmd);     /* @0x14003ed4c */
 extern void PECMD_CmdKill(void *script, void *p2);                          /* @0x14003cd0c */
-extern uint64_t *PECMD_ServiceControl(void *script, LPCWSTR cmd);           /* @0x140020018 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t *PECMD_ServiceControl(void *script, LPCWSTR cmd); /* @0x140020018 * /) */
 extern void PECMD_ParseIntegerString(int64_t *ps, uint64_t *out); /* @0x140067b78 数字解析 */
 extern uint64_t PECMD_GetParentProcessId(DWORD pid);              /* @0x140006988 */
 extern uint64_t PECMD_RunCommand(void *p1, void *p2);             /* @0x140031454 */
-extern uint64_t PECMD_ParseDateTimeSpec(void *p1, void *p2, int p3, void *p4); /* @0x1400408d0 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_ParseDateTimeSpec(void *p1, void *p2, int p3, void *p4); /* @0x1400408d0 * /) */
 extern void *PECMD_StrSetOrConcat(void *a, void *b, LPCWSTR c);                /* @0x14007de70 */
 extern void PECMD_ExpandVarDispatch(int64_t *param_1, WCHAR *param_2, void *param_3, int param_4,
                                     uint8_t param_5); /* @0x14007bf44 命令串解析 */
@@ -399,7 +399,7 @@ extern BOOL Process32FirstW(HANDLE, PROCESSENTRY32W *);
 extern BOOL Process32NextW(HANDLE, PROCESSENTRY32W *);
 
 /* helper extern */
-extern int FUN_1400630D0(int mode); /* @0x1400630d0 分配失败提示 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int FUN_1400630D0(int mode); /* @0x1400630d0 分配失败提示 * /) */
 extern uint64_t *FUN_1400E9048(uint64_t *obj, uint32_t hwnd,
                                uint64_t data); /* @0x1400e9048 窗口对象 G 初始化 */
 extern void
@@ -482,7 +482,7 @@ extern void PECMD_InitEnvironmentVars(HINSTANCE hInst, int show);   /* @0x140027
 extern void PECMD_HandleServiceCommandLine(short *param_1);         /* @0x1400084d0 */
 extern int64_t PECMD_TokPrefixICmp(char *a, const WCHAR *w, int n); /* @0x14005c72c 前缀比较 */
 extern int64_t PECMD_ScriptMainEntry(int64_t *param_1, void *param_2); /* @0x140045c90 */
-extern uint64_t PECMD_BroadcastEnvChange(void);                        /* @0x14002ca30 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_BroadcastEnvChange(void); /* @0x14002ca30 * /) */
 extern uint64_t PECMD_GetExitCodeGlobal(void);                         /* @0x14005b7dc */
 extern void PECMD_ExitProcessCall(UINT code);                          /* @0x14005b21c 退出进程 */
 extern void PECMD_ClearTaskTable(int64_t script, int mode);            /* @0x14004eaa8 */
@@ -641,7 +641,7 @@ extern char g_minintFlag;                           /* MININT 检测标志 */
 extern uint64_t g_u64d188;                          /* COM CLSID 槽 */
 extern uint64_t g_u64d198;                          /* COM IID 槽 */
 extern uint64_t PECMD_GetPackedSystemVersion(void); /* @0x14005ea5c 系统版本探测 */
-extern uint16_t *PECMD_SkipLeadingControlChars(uint16_t **ps); /* @0x14005b154 跳空白 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint16_t *PECMD_SkipLeadingControlChars(uint16_t **ps); /* @0x14005b154 跳空白 * /) */
 
 void PECMD_ObjectTimerProc(int64_t param_1, uintptr_t param_2)
 {
@@ -5038,8 +5038,8 @@ void PECMD_RegisterTableItem(WCHAR *param_1, int64_t *param_2)
                 FUN_14005B154(&local_c8);
                 if (*local_c8 != 0x3f) {
                     PECMD_StrBldCopyWide(&local_res20, (LPCWSTR)local_c8);
-                    _Var9 = (int64_t)PECMD_ParseDateTimeSpec((void *)param_2, (void *)local_res20,
-                                                             0x10, (void *)0);
+                    _Var9 = (int64_t)S11_FTToU64(PECMD_ParseDateTimeSpec((void *)param_2, S11_U64ToFT((uint64_t)(uintptr_t)local_res20),
+                                                             0x10, S11_U64ToFT(0))); /* S11 ABI桥 */
                     if (_Var9 != 0) {
                         local_res8 = local_c8;
                         if ((*local_c8 == L'-') || (*local_c8 == L'*')) {
@@ -5717,7 +5717,7 @@ int PECMD_DispatchBuiltin(int64_t *param_1, uintptr_t param_2, LPCWSTR param_3, 
                                                        (long long)(int)uVar12 * 0x10)));
             FUN_14006375C(&local_res18, WSTR(" "));
             FUN_14006375C(&local_res18, param_4);
-            tmp = PECMD_ParseDateTimeSpec((void *)param_1, (void *)local_res18, 0, NULL);
+            tmp = S11_FTToU64(PECMD_ParseDateTimeSpec((void *)param_1, S11_U64ToFT((uint64_t)(uintptr_t)local_res18), 0, S11_U64ToFT(0))); /* S11 ABI桥 */
             memcpy(&_Var5, &tmp, 8);
         LAB_140016e53:
             memcpy(param_5, &_Var5, 8);

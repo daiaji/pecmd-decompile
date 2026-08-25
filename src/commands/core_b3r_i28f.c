@@ -24,22 +24,22 @@ extern int (*g_pGdipGetImageWidth)();  /* GdipGetImageWidth  (function ptr) */
 extern int (*g_pGdipGetImageHeight)(); /* GdipGetImageHeight (function ptr) */
 
 /* ---- string / var helpers ---- */
-extern void PECMD_AllocStrSlot(void *out);                               /* init/release slot */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);                 /* skip spaces */
-extern void PECMD_StrDupAssign(void *ps, const WCHAR *src);              /* assign string slot */
-extern void PECMD_FreeStrBuf(void *ps);                                  /* free string slot */
-extern void PECMD_SplitTokenTrimWs(void *src, void *dst, int16_t delim); /* split list */
-extern void PECMD_RunCommandLine(void *script, void *str, int mode);     /* expand */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* init/release slot * / extern WCHAR *PECMD_SkipLeadingControlChars) */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ParseLtwhParams(int64_t *a, uint32_t *b, int *c, int *d, uint32_t *e);) */
+
+
+
+
+
+
 extern void PECMD_CopyUpToChar(int64_t *pp, int64_t *out, uint32_t sep);
 extern void PECMD_ParseShortStore(void *pp, int *out, WCHAR sep);
 extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch);     /* delimiter scan */
-extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* string append */
-extern int64_t *PECMD_WideToAnsiStr(int64_t *ps, LPCWSTR src, int64_t len, uint64_t cap);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, const WCHAR *src); /* string append * / extern int64_t *PECMD_Wid) */
+
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);
-extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *w, int n);
-extern char PECMD_MatchTokenAdvance(const char *tok, void *pp, int n);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *a, const WCHAR *) */
+
 extern bool PECMD_ParseHexOrDec(WCHAR **pp, uint64_t *size);         /* parse numeric/expr */
 extern void PECMD_ParseHexOrDecBool(LPWSTR *pp, int *out);           /* parse integer */
 extern uint64_t PECMD_EvalParenStripped(int64_t *pp, uint64_t *out); /* parse integer */

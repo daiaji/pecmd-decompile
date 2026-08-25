@@ -47,7 +47,7 @@ extern int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode,
                              uint8_t opt); /* @0x14007a224 core_execline.c */
 extern DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg,
                            void *param4);   /* @0x1400195f0 core_thread.c */
-extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 分配引用串容器 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **ps); /* @0x140063620 分配引用串容器 * /) */
 extern int32_t g_sysinitState;              /* DAT_14013d058 sysinit 状态 */
 
 /* 2sysinit 窗口隐藏链（未实现, 仅声明 + TODO(verify)） */

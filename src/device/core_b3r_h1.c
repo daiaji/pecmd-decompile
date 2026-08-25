@@ -41,12 +41,12 @@ extern BOOL GetDiskFreeSpaceExW(LPCWSTR, ULARGE_INTEGER *, ULARGE_INTEGER *, ULA
 extern DWORD GetLongPathNameW(LPCWSTR, LPWSTR, DWORD);
 
 /* ---- 字符串容器辅助 ---- */
-extern void PECMD_AllocStrSlot(void *out);                        /* @0x140063620 串容器初始化 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(void *out); /* @0x140063620 串容器初始化 * /) */
 extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);  /* @0x140063694 分配串槽 */
 extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);       /* @0x140063720 PECMD_StrAlloc */
 extern WCHAR *PECMD_StrCopyW(void *ps, LPCWSTR src, int64_t len); /* @0x140063888 定长拷贝 */
 extern void PECMD_FreeStrBuf(void *ps);                           /* @0x14005b104 释放串槽 */
-extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp);          /* @0x14005b154 跳过空白 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern WCHAR *PECMD_SkipLeadingControlChars(WCHAR **pp); /* @0x14005b154 跳过空白 * /) */
 extern void PECMD_StrDupAssign(WCHAR **ps, const WCHAR *src);     /* @0x1400702b0 赋值串 */
 extern WCHAR *PECMD_AssignString(WCHAR **ps, const WCHAR *src);   /* @0x14007034c 追加串 */
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);       /* @0x1400703e4 拷贝串 */
@@ -56,7 +56,7 @@ extern void PECMD_ParseNumSkipWs(int64_t *, uint64_t *);          /* 数字写�
 
 /* ---- 字符串比较/解析 ---- */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n);   /* icmp 前缀 */
-extern int64_t PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n); /* 前缀比较 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_AsciiPrefixICmp(const char *s, const WCHAR *w, int n); /* 前缀比较 * /) */
 extern int32_t PECMD_AsciiWideICmp(const char *a, const WCHAR *w);          /* 后缀比较 */
 extern char PECMD_MatchTokenAdvance(const char *tok, WCHAR **pp, int n);    /* token 消费 */
 extern int64_t PECMD_MatchPrefixN(uint16_t *a, WCHAR **pp, int n);          /* 前缀匹配 */
@@ -76,24 +76,24 @@ extern int64_t PECMD_ExpandCommandLine(void *ctx, WCHAR *src, WCHAR **out, int m
 /* ---- 参数拆分/数值 ---- */
 extern WCHAR *PECMD_SplitNextToken(void *ctx, int64_t *pp, int64_t *out, int c1,
                                    int c2); /* 拆分到串 */
-extern void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c,
-                                      int64_t d);                        /* 路由解析 */
-extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, short c); /* 按字符切分 */
-extern void PECMD_ExtractTokenByDelim(int64_t *, int64_t *, int);        /* 数值转串 */
-extern void PECMD_CopyUpToChar(int64_t *, int64_t *, uint32_t);          /* 字节转串 */
-extern void PECMD_ParseHashNumbers(int64_t *, int64_t);                  /* 数值写 */
-extern int64_t *PECMD_SplitTokenAssignVar(WCHAR **out, WCHAR **pp, uint32_t sep, int flag);
-extern void PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_TokenizeQuotedField(void *script, WCHAR **p1, WCHAR **p2, uint64_t c, int64_t d); /* 路由解析 * /) */
+
+
+
+
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ParseLtwhParams(int64_t *, uint32_t *, int *, int *, uint32_t *);) */
+
+
 extern uint64_t PECMD_ParseSignedNumber(short *);                     /* 解析数字 */
 extern int64_t PECMD_EvalParenStripped(WCHAR **pp, int64_t *out);     /* 解析整数 */
 extern uint64_t PECMD_EvalExprSkipOneChar(WCHAR **pp, uint64_t *out); /* 解析长度 */
 extern uint16_t *PECMD_NextToken(int64_t *a, int64_t *b, uint32_t c); /* 路径扩展 */
-extern void PECMD_ExpandBackslashNewline(const WCHAR *, char);        /* 清空串 */
-extern void PECMD_ReadFileToWide(WCHAR *, int64_t *);                 /* 变量到串 */
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_ExpandBackslashNewline(const WCHAR *, char); /* 清空串 * / extern void PECMD_ReadFileToWide(WCHA) */
 
-/* ---- 写控件分发 (对话框) ---- */
-extern void PECMD_DispatchCreateControl(uint64_t, int64_t, WCHAR **, int, int, int, int, WCHAR **,
-                                        WCHAR **, uint32_t, int *, LPCWSTR, uint64_t);
+
+
+
+
 extern void PECMD_CreateDtimItem(WPARAM mgr, int64_t v2, uint64_t *p3, int x, int y, int w, int h,
                                  uint64_t *p8, uint64_t *p9, uint32_t flags);
 extern void PECMD_InsertControlObject(WPARAM, int64_t, int64_t *, int, int, int, int, int64_t *,

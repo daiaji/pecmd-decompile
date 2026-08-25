@@ -46,8 +46,8 @@
 extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value); /* @0x1400629b8 */
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
-extern uint64_t PECMD_ParseDateTimeSpec(int64_t *script, uint64_t cmd, uint32_t flags,
-                                        uint64_t extra);
+/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_ParseDateTimeSpec(int64_t *script, uint64_t cmd, uint32_t flags, uint64_t extra);) */
+
 extern int64_t PECMD_ExecSubCommand(int64_t *script, WCHAR *cmd, int64_t *out, LPCWSTR extra,
                                     uint32_t flags);
 extern int64_t PECMD_ExecuteCommand(int64_t *script, LPCWSTR cmd, uint64_t ctx, LPCWSTR extra,
@@ -86,16 +86,22 @@ extern uint8_t PTR__purecall_140126050[];
 /* ========== PECMD_DispatchCommand @0x140045c44 ==========
  * 按首字符分发命令。
  */
-void PECMD_DispatchCommand(int64_t *script, LPCWSTR cmd, int64_t *out)
+/* S11(dc:44310 调用方捕获返回值→local_180; dc:40493 签名'void'系 Ghidra 伪影)
+ * 返回型归正 void→uint64_t, 各出口显式 return 0 (原体 RAX 残留值不可静态复现,
+ * 已登记 T4 分诊候选)。 */
+uint64_t PECMD_DispatchCommand(int64_t *script, LPCWSTR cmd, int64_t *out)
 {
     if (*cmd == L'$') {
-        PECMD_ParseDateTimeSpec(script, (uint64_t)(uintptr_t)(cmd + 1), 0, 0);
+        PECMD_ParseDateTimeSpec(script, S11_U64ToFT((uint64_t)(uintptr_t)(cmd + 1)), 0, S11_U64ToFT(0));
+        return 0;
     }
     else if (*cmd == L'@') {
         PECMD_ExecSubCommand(script, (WCHAR *)(cmd + 1), out, NULL, 0);
+        return 0;
     }
     else {
         PECMD_ExecuteCommand(script, cmd, (uint64_t)(uintptr_t)out, NULL, 0, 0, 0);
+        return 0;
     }
 }
 
