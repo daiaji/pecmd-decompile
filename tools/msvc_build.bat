@@ -20,6 +20,8 @@ rem   - Until P0-1/P0-2 land (33 compound literals + crt_shims trim),
 rem     the full build is EXPECTED to fail; syntax gate shows them all.
 rem ============================================================
 setlocal enabledelayedexpansion
+rem S11: 确定性码页 - 防止外部控制台码页污染 sources.rsp 路径字节(曾致 C1083 全灭)
+chcp 936 >nul
 
 where cl >nul 2>nul
 if errorlevel 1 (

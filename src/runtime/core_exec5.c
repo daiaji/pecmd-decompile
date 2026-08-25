@@ -134,7 +134,11 @@ void FUN_1400186BC(void *s, int64_t parent)
         templ = *(int64_t *)((char *)parent + 0x50);
     }
     else {
-        templ = 0;
+        /* S11(dc:13328/汇编@1400186cc 实证): 原版在条件前 LEA RAX,[RCX+0x58]
+         * 预载自锚默认值, parent==0 时跳过父读取、无条件写 this+0x50=RAX
+         * ⇒ 根对象自锚(+0x50→&this+0x58)。旧移植体写 0 ⇒ g_Script+0x50
+         * 恒 NULL → PSB 尾解引用 AV(门A 残余崩点)。 */
+        templ = (int64_t)(intptr_t)((char *)d + 0x58);
     }
     *(int64_t *)(d + 0x50) = templ;
     d[0xd9] = 0;
