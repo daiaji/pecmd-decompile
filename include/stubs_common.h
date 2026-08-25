@@ -78,9 +78,11 @@ typedef WCHAR *LPWSTR;
 
 typedef WCHAR *PWSTR;
 
-typedef UINT WPARAM;
+/* S11(census): 旧 32 位消息模型与 win32_stub.h 的 uintptr_t 版冲突,
+   曾致 restored_bodies.c 内 43 处 C4311/C4312 指针截断(SendMessageW 簇) */
+typedef uintptr_t WPARAM;
 
-typedef LONG LPARAM;
+typedef uintptr_t LPARAM;
 
 typedef const WCHAR *PCWSTR;
 
