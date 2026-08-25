@@ -7071,7 +7071,7 @@ LAB_14004c525:
   }
 LAB_14004c53b:
   if (local_180.QuadPart < 0) {
-    wsprintfW(local_c8,(const unsigned short *)L"0x%p");
+    wsprintfW(local_c8,(const unsigned short *)L"0x%p",(void *)(uintptr_t)local_180.QuadPart); /* B5 约定: 还原被 Ghidra 丢弃的 value 实参(ERROR/&&ERROR 显示值) */
   }
   else {
     PECMD_FormatI64Dec(local_c8,(uint64_t)local_180.QuadPart);
@@ -7713,6 +7713,17 @@ uint64_t PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b)
   LARGE_INTEGER param_1;
   ulonglong param_2 = b;
   param_1.QuadPart = (long long)a;
+  { /* TEMP PROBE [DEB] (S9' 诊断: 行循环入口) */
+      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+      if (pf_) {
+          fprintf(pf_, "[DEB] ent a=%llx b=%llx head=%ls end88=%04x sep48=%04x f200=%04x\n",
+                  (unsigned long long)(uintptr_t)a,(unsigned long long)(uintptr_t)b,
+                  (const wchar_t *)(uintptr_t)(b & 0xfffffffffffffffeULL),
+                  *(uint16_t *)(a + 0x88), *(uint16_t *)(a + 0x48),
+                  *(uint16_t *)(a + 200));
+          fclose(pf_);
+      }
+  }
   uVar1 = *(ushort *)(param_1.QuadPart + 0x48);
   iVar10 = 0;
   pWVar11 = (WCHAR *)(param_2 & 0xfffffffffffffffe);
@@ -7875,6 +7886,13 @@ LAB_1400b17e7:
                 (((uVar2 = *(ushort *)(lpStr1.QuadPart + 6), uVar2 < 9 || (0xd < uVar2)) &&
                  ((uVar2 != 0x20 && (uVar2 != 0)))))))) {
               PECMD_CheckFirstStartupFlag(param_1.QuadPart);
+            }
+            { /* TEMP PROBE [DEB] (S9' 诊断: 行分发到 PSB) */
+                void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                if (pf_) {
+                    fprintf(pf_, "[DEB] line=%ls\n", (const wchar_t *)(uintptr_t)lpStr1.QuadPart);
+                    fclose(pf_);
+                }
             }
             PECMD_ProcessScriptBlock(param_1,lpStr1,(longlong *)0x0,(longlong *)&local_res10,
                                      (pthreadmbcinfo)*ppWVar13);
