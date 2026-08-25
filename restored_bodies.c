@@ -1,6 +1,11 @@
 /* restored_bodies.c - B0/P3: real bodies from P4 waves, mechanically split out of link_stubs.c. */
 #include "stubs_common.h"
 
+/* TEMP PROBE 用最小 CRT 原型 (禁 stdio.h: 会与 win32_api_stubs 的 _vsnwprintf 撞内联) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
+extern int __cdecl fclose(void *_Stream);
+
 
 static void PECMD_AppendLongDecimal(int64_t *a, uint64_t b, const uint16_t *c);
 static void PECMD_FormatI64Dec(const uint16_t *dst, uint64_t v);
@@ -247,6 +252,13 @@ static int64_t *PECMD_StrBldCopyAnsi(int64_t *out, char *src, uint64_t len);  /*
 
 uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f, uint64_t g, uint64_t h)
 {
+  { /* TEMP PROBE */
+      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+      if (pf_ != NULL) {
+          fprintf(pf_, "[ECD] line=%ls\n", (const wchar_t *)(uintptr_t)b);
+          fclose(pf_);
+      }
+  }
   longlong *param_1 = (longlong *)(uintptr_t)a;
   uint64_t param_2 = b;
   longlong *param_3 = (longlong *)(uintptr_t)c;
@@ -5798,6 +5810,13 @@ PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *p
   WCHAR local_c8 [68];
   
   LVar15.QuadPart = 0;
+  { /* TEMP PROBE (手写 CRT extern, 禁 stdio.h: 与 win32_api_stubs 的 _vsnwprintf 撞内联) */
+      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+      if (pf_ != NULL) {
+          fprintf(pf_, "[PSB] line=%ls\n", (const wchar_t *)(uintptr_t)param_2.QuadPart);
+          fclose(pf_);
+      }
+  }
   if (param_3 == (void *)0) {
     param_3 = *(longlong **)(param_1.QuadPart + 0x40);
   }

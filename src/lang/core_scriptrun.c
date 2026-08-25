@@ -312,7 +312,14 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                 FUN_14006F884(varName, &local_210);
             }
             if (local_210 != NULL) {
-                FUN_1400E7D58((int64_t *)&local_210, 1);
+                /* 原文 dc:30309-30316: 调 ResDecode 前把字节长度写在槽变量相邻
+                 * (local_208 = lstrlenW*2), ResDecode 经 param_1[1] 读取。
+                 * 曾漏写导致长度=栈上垃圾 → memmove 巨长度 AV (windbg 活体+dump 实锤)。 */
+                int64_t resSlot[2];
+                resSlot[0] = (int64_t)(intptr_t)local_210;
+                resSlot[1] = (int64_t)lstrlenW(local_210) * 2;
+                FUN_1400E7D58(resSlot, 1);
+                local_210 = (WCHAR *)(intptr_t)resSlot[0]; /* 取回可能被重分配的指针 */
                 {
                     uint16_t seed = PECMD_GenRandomSeed16();
                     FUN_14001B5AC(local_210, 0, 0);
