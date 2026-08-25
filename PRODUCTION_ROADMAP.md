@@ -233,3 +233,18 @@ M10: git ls-files | grep -vcE '^src/|^include/|^tools/|^docs/|^attic/|^harness/|
 1. win32_api_stubs 的 _vsnwprintf 内联 vs <stdio.h> 冲突（HANDOFF §6 老纪律的根）。
 2. stubs_common.h 与 win32_stub.h 的 typedef 双定义（WPARAM/LPARAM 已对齐 4d577d1，
    其余待盘点——见 build\msvc\s12_crt_migration_checklist.md）。
+
+## S13 里程碑：反编译坏味道清零 —— FUN_/DAT_/Ghidra类型/local变量 四层治理（2026-08-25 立项）
+
+> 前提链：T5 拆探针 → S12-b 头文件统一(T2 类型层顺产) → T4 PASS 收敛。
+> 铁律：纯机械改名=行为中性，每批必过 [msvc_build] OK + 28 语料回归全 PASS。
+
+### 波次
+| 波次 | 内容 | 度量 |
+|---|---|---|
+| S13-a | 残余 FUN_/DAT_/PTR_ 语义命名（证据驱动批次，管线=FUNC_NAMES+name_proposals+apply_rename.py） | M1/M4 趋零 |
+| S13-b | local_xx/param_N/extraout 机械清扫（按 TU 分批外包；作用域内正则+编译门） | M2/M3 趋零 |
+| S13-c | 伪码伪影清剿（CONCAT71/SUB164/extraout 双寄存器写法）——与语义修复同源，随 T4 分诊顺产 | 普查 P0/P2 清单归零 |
+
+### 存量盘点
+见 build\msvc\s13_smell_inventory.md（待产出）。
