@@ -11,7 +11,7 @@
  *   FUN_14007DE70/ByteRealloc/AllocAA
  * 待实现（extern 声明）：
  *   FUN_1400E7D58  @0x1400e7d58   资源解码（B9）
- *   FUN_140003A20   @0x140003a20   脚本行执行（B8c）
+ *   FUN_140003a20   @0x140003a20   脚本行执行（B8c）
  */
 #include <stdlib.h>
 #include <string.h>

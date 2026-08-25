@@ -67,7 +67,7 @@ extern void FUN_1400633A8(WCHAR **pp, int64_t len);
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE a1, LARGE_INTEGER a2, DWORD a3);
 extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim);
 extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3, int16_t a4);
-extern void FUN_140003A20(void *script, WCHAR **out, int mode);
+extern void FUN_140003a20(void *script, WCHAR **out, int mode); /* @0x140003a20 展开包装(真体 unimplemented_stubs.c) */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
 extern void FUN_14001E5B0(void *script, LPCWSTR name, LPCWSTR value, int64_t a, int64_t b);
 extern void PECMD_VarSetUInt(int64_t *a1, uint64_t a2, LPCWSTR a3);
@@ -1343,7 +1343,7 @@ int64_t PECMD_SetFileNameExtension(int64_t *script, uint16_t *spec)
     PECMD_AllocWStringBuffer((WCHAR **)&local_18, 0x14);
     PECMD_AllocStrSlot(&local_10);
     PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_res20, 0x3d);
-    FUN_140003A20(script, &local_res20, 0);
+    FUN_140003a20(script, &local_res20, 0);
     if (*local_res10 == 0x3d) {
         local_res10 = local_res10 + 1;
         PECMD_SplitTokenTrimWs((int64_t *)&local_res10, (int64_t *)&local_18, 0);

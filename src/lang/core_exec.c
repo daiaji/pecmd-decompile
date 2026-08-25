@@ -5,7 +5,7 @@
  *   PECMD_SubclassEnterControl   @0x1400011d4   (控件子类化: Enter→WM_COMMAND)
  *   PECMD_CreateControlSubclass   @0x140001258   (创建控件+子类化)
  *   PECMD_MoveBtnTextToID9  @0x1400012fc   (按钮文字移到 ID9 静态框)
- *   FUN_140003A20     @0x140004fd4   (命令行入口: 调 PECMD_RunStartupScript)
+ *   FUN_140004FD4     @0x14004fd4   (命令行入口: 调 PECMD_RunStartupScript)
  *   PECMD_LoadLanguageFile     @0x1400166b4   (加载 .lang 语言文件)
  *   FUN_1400169BC    @0x1400169bc   (消息表按 ID 查文本)
  *   FUN_14005B6AC      @0x14005b6ac   (取字符串: lang 优先, 回退资源)
@@ -110,7 +110,7 @@ void PECMD_MoveBtnTextToID9(void *mbox, int btnId)
 }
 
 /* ========== 命令行入口 @0x140004fd4 ========== */
-void FUN_140003A20(const WCHAR *cmd)
+void FUN_140004FD4(const WCHAR *cmd)
 {
     SetProcessWorkingSetSize(GetCurrentProcess(), (uint64_t)-1, (uint64_t)-1);
     PECMD_RunStartupScript(g_hInst, 0, cmd);

@@ -55,7 +55,7 @@ extern LARGE_INTEGER FUN_14003C06C(int64_t *a1, LARGE_INTEGER a2, uint32_t a3);
 extern uint64_t PECMD_ProcessScriptBlock(uint64_t a1, uint64_t a2, void *p3, void *p4, void *p5);
 extern int PECMD_ParseCharClassRanges(int *a1, int64_t *a2, uint32_t a3);
 extern void PECMD_CopyTokenTrimmed(int64_t *a1, int64_t *a2, int16_t a3, int16_t a4);
-extern void FUN_140003A20(void *script, WCHAR **out, int mode);
+extern void FUN_140003a20(void *script, WCHAR **out, int mode); /* @0x140003a20 展开包装(真体 unimplemented_stubs.c) */
 extern void FUN_14007D0AC(int64_t *a1, LPCWSTR a2, LPCWSTR a3);
 extern int PECMD_CalcDayOfYear(uint16_t *a1);
 extern void PECMD_ReleaseImageHandle(int64_t a1);
@@ -221,7 +221,7 @@ int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out, int16_
     if ((*psVar1 != 0) && ((*psVar1 == sep1 || (*psVar1 == sep2)))) {
         *pp = (int64_t)(psVar1 + 1);
     }
-    FUN_140003A20(script, (WCHAR **)out, 1);
+    FUN_140003a20(script, (WCHAR **)out, 1);
     return psVar1;
 }
 

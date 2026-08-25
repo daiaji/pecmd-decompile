@@ -369,7 +369,7 @@ void PECMD_AbsPathFromCurDir(LPCWSTR in, WCHAR **out, void *script)
         PECMD_AllocString(&tmp, (int64_t)(end - start) + 1);
         memcpy(tmp, start, (size_t)(end - start) * 2);
         tmp[end - start] = 0;
-        /* TODO(verify): 原实现调用 FUN_140003A20 解析变量后写 *out；
+        /* TODO(verify): 原实现调用 FUN_140003a20 解析变量后写 *out；
          * 此处简化为直接赋值（需注册脚本上下文） */
         FUN_1400702B0(out, tmp);
         /* 非绝对路径 → 前置 &CurDir */

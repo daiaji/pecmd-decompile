@@ -53,7 +53,7 @@ extern void PECMD_SplitTokenTrimWs(int64_t *src, WCHAR **dst, int mode);
 /* @0x1400675b8 串拷入容器 */
 extern void PECMD_ExtractTokenByDelim(int64_t *src, WCHAR **dst, int mode);
 /* @0x1400676e4 串拷入容器 (变体) */
-extern void FUN_140003A20(void *script, WCHAR **out, int mode);
+extern void FUN_140003a20(void *script, WCHAR **out, int mode); /* @0x140003a20 展开包装(真体 unimplemented_stubs.c) */
 /* @0x140003a20 取脚本当前命令串 */
 extern void PECMD_SkipUntilDelim(WCHAR **pp, WCHAR ch1, WCHAR ch2);
 /* @0x14005b374 查找两字符之一, *pp 停在字符或串尾 */
@@ -769,7 +769,7 @@ int64_t PECMD_CodeConvertCommand(void *script, WCHAR *args)
         uint64_t a, b, r;
         int64_t sa, sb;
 
-        FUN_140003A20(script, &sLine, 0);
+        FUN_140003a20(script, &sLine, 0);
         n1 = -1;
         pSep = sLine;
         PECMD_SkipUntilDelim(&pSep, 0x7c, 0x2a); /* 找 '|' 或 '*' */
