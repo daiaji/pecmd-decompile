@@ -105,7 +105,14 @@ int64_t PECMD_EnableTokenPrivilege(LPCWSTR a, DWORD b, uint32_t c) { (void)a;(vo
 
 void PECMD_DialogBeepNotify(int64_t a, int b) { (void)a;(void)b; }
 uint64_t PECMD_NextRandomSeed(void) { return 0; }
-void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c) { (void)a;(void)b;(void)c; }
+/* S11(R1 双体分裂修正): 本名与真体 FUN_1400629B8(core_var.c) 同对应原版
+ * @0x1400629b8(pecmd_defs.h:93 PECMD_SetVar 别名注记)。原 no-op 空桩致
+ * b3r 家族 87 处调用静默丢变量写回(LSTR 结果恒空实锤) → 转发真体。 */
+extern void FUN_1400629B8(void *script, LPCWSTR key, LPCWSTR value);
+void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c)
+{
+    FUN_1400629B8(a, b, c);
+}
 
 
 uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d) { (void)a;(void)b;(void)c;(void)d; return 0; }
