@@ -14162,20 +14162,17 @@ LAB_140054760:
 /* @0x14001d744 size=— 双向安全串移动(直移) */
 uint8_t *PECMD_MemMoveSafe(void *a, longlong b, longlong c)
 {
+  /* memmove(dst=a, src=b, n=c) 库替换真体。
+   * 旧版用 (int)d-(int)b 判方向——64位指针截断成32位后方向误判,
+   * 重叠拷贝越界 (Round10: AppendWideStr 追加 cmd.exe 路径时 AV 实锤)。 */
   uint8_t *d = (uint8_t *)a;
-  int diff = (int)d - (int)b;
-  if (diff < 0) {
-    int n = (int)c - 1;
-    if (n >= 0) {
-      uint8_t *p = d;
-      do { *p = p[b - (long long)d]; p++; n--; } while (n >= 0);
-    }
-  } else if (diff > 0) {
-    int n = (int)c - 1;
-    uint8_t *p = d + c;
-    if (n >= 0) {
-      do { p--; *p = p[b - (long long)d]; n--; } while (n >= 0);
-    }
+  const uint8_t *s = (const uint8_t *)(uintptr_t)b;
+  size_t n = (size_t)c;
+  if (n == 0 || d == s) return d;
+  if (d < s) {
+    for (size_t i = 0; i < n; i++) d[i] = s[i];
+  } else {
+    for (size_t i = n; i > 0; i--) d[i-1] = s[i-1];
   }
   return d;
 }   /* 0x14013ca10 服务名槽 */
