@@ -3459,7 +3459,7 @@ undefined8 FUN_140067e88(longlong *param_1, longlong *param_2);
 void FUN_1400f6db0(longlong param_1, longlong param_2);
 int FUN_1400633a8();
 extern uint64_t DAT_14013e168[8];
-extern uint64_t DAT_14013e190[8];
+/* T1d2: DAT_14013e190 extern 已删 — 统一用 g_csInit (pecmd_defs.h:75 同一性注释) */
 extern uint64_t PTR_u_a__a_zA_Z0_9___14013a2d0[];
 extern const uint8_t DAT_14011dcb0[16];
 extern const uint16_t DAT_14011d108[];

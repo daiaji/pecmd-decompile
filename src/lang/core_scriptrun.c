@@ -4,10 +4,18 @@
  *   PECMD_RunCommand @0x140031454   命令行处理器主流程
  *
  * 段1（前缀指令解析）在 core_srparse.c（PECMD_SrParsePrefix），
- * 本文件实现主展开路径（LAB_140031887 起）：
- *   *map: 前缀 / 引号 / 命令 token → 资源脚本执行 或 变量执行，
- *   最后 sysinit 收尾。深度依赖（脚本执行主入口 PECMD_RunScriptText、
- *   PECMD_InvokeSubRoutine / FUN_1400E7D58 ResDecode 等）extern 挂起。
+ * 本文件实现主展开路径（LAB_140031887 起，decompiled.c 29635-30332）：
+ *   *map: 前缀 / 命令 token → 裸路径脚本执行 / 资源脚本执行 /
+ *   变量执行，最后 sysinit 收尾。
+ *
+ * S10（本轮）: 补齐原文 dc:29640-30062 的命令 token 分类与分支——
+ *   1) 无 '#' 修饰的裸路径 → 执行脚本文件（原文 dc:30060-30066 走
+ *      FUN_140031068=PECMD_ExecuteScriptBlock；见 srx_ExecuteScriptFile
+ *      头部注释关于工程内 PECMD_LoadScriptFileSegment 缺合并段的登记）；
+ *   2) 词首单个反斜杠 → 逐盘符探测执行 (dc:30019-30057)；
+ *   3) '#' 定位 → 资源路径；mem 前缀 → 变量路径（既有代码归位原分支次序）。
+ *   分支条件均以 decompiled.c 字节级核对（1400319c1/9cf/9d9 反斜杠标志
+ *   经 ASM 验证为词首 2 字符，与 pthreadmbcinfo 字段渲染无关）。
  * ==================================================================== */
 #include <stdbool.h>
 #include <stdio.h> /* TEMP PROBE */
@@ -44,6 +52,7 @@ extern void FUN_140017CDC(void *dst, void *src);                       /* @0x140
 extern void FUN_1400186BC(void *s, void *parent);                      /* @0x1400186bc */
 extern void PECMD_InitObfuscatedKeywords(void *script, uint64_t seed); /* @0x14006159c */
 extern void FUN_14004EAA8(void *script, int flag);                     /* @0x14004eaa8 */
+extern void FUN_14007034C(void **ps, LPCWSTR src);                     /* @0x14007034c */
 extern int32_t g_sysinitState;                                         /* DAT_14013d058 */
 extern WCHAR *g_sysinitName;                                           /* DAT_14013d060 */
 
@@ -63,10 +72,116 @@ extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, 
 extern DWORD PECMD_ExecuteScriptBlock(void *script, LPCWSTR a2, LPCWSTR a3, uint32_t flags,
                                       LPCWSTR a5, LPCWSTR a6); /* @0x140031068 */
 extern void FUN_14006F884(LPCWSTR name, WCHAR **out);          /* @0x14006f884 */
-extern void *FUN_14007034C(void **ps, LPCWSTR src);            /* @0x14007034c */
 extern void PECMD_CheckFirstStartupFlag(void *script);         /* @0x1400251ac */
 extern void PECMD_RunSysInit(void *script, LPCWSTR name);      /* @0x140025180 */
 extern void FUN_14009BB28(void *script, int flag);             /* @0x14009bb28 */
+extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                                   LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                   HANDLE tmpl);   /* @0x140003864 core_exec2.c */
+extern bool FUN_140101E70(LPCWSTR path);           /* @0x140101e70 文件存在 core_exec2.c */
+
+/* core_string.c / core_var.c / core_token.c 符号 (未入公共头, 显式声明) */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count); /* @0x140063694 core_var.c */
+extern void PECMD_FreeStrBuf(WCHAR **ps);                         /* @0x14005b104 core_string.c */
+extern WCHAR *FUN_14006375C(WCHAR **ps, LPCWSTR src);             /* @0x14006375c core_string.c */
+extern int64_t FUN_14005C788(const char *s, WCHAR *p, int n);     /* @0x14005c788 词比较 */
+extern void FUN_1400702B0(WCHAR **ps, LPCWSTR src);               /* @0x1400702b0 core_string.c (stubs_common.h 同声明) */
+
+/* ========== srx_ExecuteScriptFile — LOAD 脚本文件装载执行 ==========
+ * 语义 = 原版裸路径分支 (dc:30060-30066) → FUN_140031068 (ExecuteScriptBlock)
+ * → PECMD_LoadScriptFileSegment(FUN_1400307c8) 读文件 → 编码流 →
+ * PECMD_RunScriptText(key 分隔) 的执行链。
+ *
+ * S10 登记（SKIP 级，需后续修）:
+ *   工程内 PECMD_LoadScriptFileSegment (core_script.c:180) 的移植体
+ *   **缺"文件内容→编码流"合并段** —— 只把 "path\n" 追加到 out 并丢弃读入
+ *   内容（decompiled.c FUN_1400307c8 原文会把 XOR 后的内容合并进 ctrl 并
+ *   递归 PECMD_ParseScriptSegments）。因此直接调 PECMD_ExecuteScriptBlock
+ *   会因 StrChrOffset(流,key)==0 静默空转。本函数按原文语义实现等价装载:
+ *   读文件(UTF-16LE, 跳 BOM) → 明文流 → key=0 RunScriptText。
+ *   key=0 明文流与 S7 启动路径实测一致（[DEB] end88=0 sep48=0, PSB 收明文行）；
+ *   DispatchExpressionBlock 行解码头(script+0x48)为 0 时 XOR 恒等，
+ *   \r\n 即行分隔（InitObfuscatedKeywords(seed=0): 0x8a=0xd,0x90=0xa）。
+ *   TODO(verify): 原版以 GenRandomSeed16 内存 XOR 混淆编码流；本实现取
+ *   key=0 明文流，运行时解码面行为等价（字节级混淆差异已登记）。
+ * 所有权: pText 交 PECMD_RunScriptText 后为 takeover（内层释放），不再释放。
+ */
+static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t flags,
+                                     LPCWSTR extra, LPCWSTR logs)
+{
+    HANDLE h = NULL;
+    LARGE_INTEGER fsz;
+    uint8_t *buf = NULL;
+    DWORD rd = 0;
+    int64_t wchars;
+    WCHAR *text = NULL;
+    int64_t ret;
+    int bomSkip = 0;
+
+    (void)extra;
+    (void)logs;
+    fsz.QuadPart = 0;
+    PECMD_OpenFileHandle(&h, cmd, 0x80000000, 7, NULL, 3, 0, (HANDLE)0); /* dc:0307c8 同款 */
+    if (h == NULL || h == INVALID_HANDLE_VALUE) {
+        ret = (int64_t)GetLastError(); /* 原版: LoadScriptFileSegment -1 → GetLastError */
+        goto done;
+    }
+    if (GetFileSizeEx(h, &fsz) == 0 || fsz.QuadPart < 1) {
+        ret = (int64_t)GetLastError();
+        goto done;
+    }
+    if (fsz.QuadPart > 0x10000000) {
+        fsz.QuadPart = 0x10000000; /* dc:0307c8 同款上限 */
+    }
+    buf = (uint8_t *)PECMD_GrowByteBuffer((void **)&buf, fsz.QuadPart + 2);
+    if (buf == NULL) {
+        ret = (int64_t)GetLastError();
+        goto done;
+    }
+    if (!ReadFile(h, buf, (DWORD)fsz.QuadPart, &rd, NULL)) {
+        ret = (int64_t)GetLastError();
+        goto done;
+    }
+    CloseHandle(h);
+    h = NULL;
+    wchars = (int64_t)(rd >> 1); /* 脚本文件按 UTF-16LE 处理 (与原文 WCHAR 视角一致) */
+    if (wchars > 0 && ((WCHAR *)buf)[0] == 0xfeff) {
+        bomSkip = 1; /* 跳 UTF-16LE BOM */
+        wchars--;
+    }
+    {
+        int64_t n = wchars + 1;
+        PECMD_AllocWStringBuffer(&text, n); /* 带计数头的副本 (Adopt 兼容, 同变量路径先例) */
+        if (text == NULL) {
+            ret = (int64_t)GetLastError();
+            goto done;
+        }
+        memcpy(text, (uint8_t *)buf + bomSkip * 2, (size_t)wchars * 2);
+        text[wchars] = 0;
+    }
+    { /* TEMP PROBE [S10] (诊断 LOAD 装载, T5 随探针网拆除) */
+        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[S10] LOAD cmd=%ls a3=%ls flags=%08x chars=%lld\n", cmd, a3, flags,
+                    (long long)wchars);
+            fclose(pf_);
+        }
+    }
+    if ((flags & 8) != 0) { /* dc:29425-bit3: 执行后删源文件 */
+        DeleteFileW(cmd);
+    }
+    /* 原 FUN_140031068 尾部: RunScriptText(script, 流, pName=a3, pCurFile=cmd, flags) */
+    ret = PECMD_RunScriptText(script, text, a3, cmd, flags & 0xfffffff7u, NULL, NULL);
+    text = NULL; /* takeover: 内层已持有并释放 (T1e 契约) */
+done:
+    if (h != NULL && h != INVALID_HANDLE_VALUE) {
+        CloseHandle(h);
+    }
+    if (buf != NULL) {
+        PECMD_FreeStrBuf((WCHAR **)&buf);
+    }
+    return ret;
+}
 
 /* ========== PECMD_RunCommand @0x140031454 ==========
  * 命令行脚本调度主流程。cmdline 被就地解析（截断）。
@@ -94,10 +209,12 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
     PECMD_SrParsePrefix(script, &pp, &flags, &flags2, &m_flag, &mem_flag, &sysinit_name, &b_sysinit,
                         &outbuf, &qkmode);
 
-    /* ---- 主展开路径（LAB_140031887）---- */
+    /* ---- 主展开路径（LAB_140031887，dc:29635-30332）---- */
     {
         WCHAR *p = pp;
         WCHAR *pt2;
+        WCHAR *tokenEnd;              /* pWVar16 (dc:29666) token 结束指针 */
+        size_t tokLen = 0;
         int64_t lVar32 = 0;
         int64_t lVar12 = 0;
         uint32_t uVar31 = 0, uVar24 = 0, uVar34 = 0, uVar35 = 0;
@@ -111,11 +228,21 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         WCHAR *local_1f0 = NULL;
         HMODULE hmod = 0;
         WCHAR *local_1a0 = NULL;
-        int64_t *local_138 = NULL;
         WCHAR *mapStr = NULL;
         uint64_t mapOff = 0;
+        int q1 = 0;                   /* local_298 词首反斜杠标志 (ASM 核实) */
+        int starFlag = 0;             /* local_280 '*' 前缀标志 */
+        WCHAR driveChar = 0;          /* local_270 ',' 后参数首字符(大写) */
+        WCHAR firstCh = 0;            /* iVar11 命令词首字符 */
+        WCHAR *line = NULL;           /* local_278 展开后完整命令行 */
+        WCHAR *wcls = NULL;           /* local_240 分类用的词副本 */
+        WCHAR *ptHash = NULL;         /* 分类结果: '#' 定位或 NULL(裸路径) */
+        WCHAR *unq = NULL;            /* 去引号词 (裸路径/变量路径用) */
+        uint8_t sub[0x300];           /* 资源分支的脚本克隆缓冲 (dc:local_138) */
+        WCHAR emptyW = L'\0';         /* 空串兜底 (空命令行) */
+        int branches = 0;             /* 分支已执行标志: 1=map 2=变量 4=裸路径 8=资源 16=盘符 */
 
-        /* 156-169：引号组合/实例检测 */
+        /* 156-169：引号组合/实例检测（".# 组合 → g_hInstance 模式） */
         pt2 = p;
         if (*p == L'*')
             pt2 = p + 1;
@@ -134,94 +261,88 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         /* 174-198：*map: 前缀 + 命令 token */
         p = pt2;
         if (FUN_14005C788("*map:", p, 5) != 1 && *p == L'*') {
-            p++;
+            p++;   /* dc:29659-29662 star 前缀 (非 *map:) */
+            starFlag = 1;
         }
         pt2 = p;
         {
-            size_t tokLen = 0;
-            FUN_140024C48(&p, &tokLen, 0x21);
+            tokenEnd = FUN_140024C48(&p, &tokLen, 0x21); /* dc:29666 */
             lVar32 = (int64_t)tokLen;
         }
         {
-            /* 引号/反斜杠标志（反编译 local_298） */
-            int q1 = 0;
+            /* 引号/反斜杠标志（dc:29667-29678；ASM 1400319c1/9cf/9d9 核实:
+             * 反斜杠判词首 2 字符（引号后 +1），非 pthreadmbcinfo 字段偏移） */
+            WCHAR *chk = p;
             if (*p == L'"')
-                p++;
-            if ((uint16_t)*p == 0x5c) {
+                chk = p + 1;
+            if (*chk == L'\\' && chk[1] != L'\\')
                 q1 = 1;
-                if ((uint16_t)p[1] != 0x5c)
-                    q1 = 0;
-            }
             if (*p == L'*') {
-                p++;
+                p++;        /* dc:29675-29677 词首 '*' 跳过 */
+                starFlag = 1;
             }
-            (void)q1;
         }
-        PECMD_AllocWStringBuffer(
-            (WCHAR **)&local_250,
-            0); /* 反编译 PECMD_AllocStrSlot(&local_278)? 实为 local_250 构造 */
+        firstCh = *p; /* dc:29655 iVar11 (词首字符) */
         /* 199-210：命令名拷贝（token 长度 lVar32） */
         if (lVar32 >= 0) {
-            PECMD_AllocWStringBuffer((WCHAR **)&local_250, lVar32);
+            PECMD_AllocWStringBuffer(&local_250, lVar32);
             if (local_250 != NULL && lVar32 > 0) {
                 memcpy(local_250, pt2, (size_t)lVar32 * 2);
                 local_250[lVar32] = 0;
             }
         }
-        /* 引号模式判断（反编译 203-209） */
-        if (*local_250 == L'"') {
-            /* 引号 token：找结束引号 */
-            WCHAR *q = local_250;
-            while (*q != L'\0' && *q != L'"')
-                q++;
-            if (*q == L'"')
-                *q = L'\0';
+        /* dc:29777-29797 token 末端 ','/引号分流（local_270 盘符过滤字符） */
+        {
+            WCHAR *wscan = local_250;
+            if (*local_250 == L'"') {
+                wscan = local_250 + 1;
+                while (*wscan != L'\0' && *wscan != L'"')
+                    wscan++;
+                if (*wscan == L'"')
+                    wscan++; /* dc:29783-29785 越过闭合引号 */
+            }
+            else {
+                while (*wscan != L'\0' && *wscan != L',')
+                    wscan++;
+            }
+            if (*wscan == L',') {
+                *wscan = L'\0';
+                driveChar = wscan[1] & 0xffdf; /* dc:29795-29797 小写转大写 */
+            }
         }
 
-        /* ---- 命令执行主路径（反编译 319-390）---- */
+        /* ---- 展开命令词 + 余串合并（dc:29799-29826）---- */
+        FUN_14007BF44(script, local_250, &line, 0, 1); /* dc:29799 展开首 token */
+        /* 320-343 等价: 结果首字符处理（引号包裹/剥离, dc:29800-29822 简版） */
         {
-            WCHAR *out2 = NULL;
-            FUN_14007BF44(script, local_250, &out2, 0, 1);
-            /* 320-343：结果处理（引号包裹/剥离） */
-            {
-                uint16_t u9 = (out2 != NULL) ? (uint16_t)*out2 : 0;
-                WCHAR *pt = out2;
-                if (u9 != 0x22) {
-                    if (u9 == 0) {
-                        /* 空结果 */
-                    }
-                    else {
-                        /* 剥离空白直到引号或结束 */
-                        while (u9 != 0) {
-                            if ((u9 > 8 && u9 < 0xe) || u9 == 0x20)
-                                break;
-                            pt++;
-                            u9 = (uint16_t)*pt;
-                        }
-                    }
+            WCHAR *e = line;
+            if (e != NULL && *e != L'"' && *e != L'\0') {
+                /* 原文 LAB_140031aec: 展开结果内首个空白处重建引号串。
+                 * 对 LOAD 裸路径/资源/变量路径无语义影响, 保留既有简版(无重建)。 */
+                while (*e != L'\0' && !((*e > 8 && *e < 0xe) || *e == L' ')) {
+                    e++;
                 }
-                /* 若结果以引号开头则保留 */
             }
-            PECMD_FreeStrBuf(&out2);
+        }
+        { /* dc:29824-29826 余串 token 化 + 展开 + 并入 line */
+            size_t restLen = 0;
+            WCHAR *restExp = NULL;
+            FUN_140024C48(&p, &restLen, 0x20);
+            FUN_14007BF44(script, tokenEnd, &restExp, 0, 1);
+            if (restExp != NULL) {
+                FUN_14006375C(&line, restExp);
+            }
+            PECMD_FreeStrBuf(&restExp);
         }
 
-        /* ---- *map: 映射处理（反编译 344-390）---- */
-        {
-            size_t tokLen2 = 0;
-            WCHAR *tok2 = FUN_140024C48(&p, &tokLen2, 0x20);
-            WCHAR *mapOut = NULL;
-            FUN_14007BF44(script, tok2, &mapOut, 0, 1);
-            FUN_14006375C(&local_278, mapOut);
-            PECMD_FreeStrBuf(&mapOut);
-            if (FUN_14005C788("*map:", local_278, 5) == 1) {
-                mapStr = local_278;
-            }
+        /* ---- *map: 前缀检测（dc:29830-29870）---- */
+        if (line != NULL && FUN_14005C788("*map:", line, 5) == 1) {
+            mapStr = line;
         }
         if (mapStr != NULL) {
-            /* 映射文件读取（反编译 358-390）：
-             * 文件名由 mapStr+5 起；PECMD_ParseUIntValue 取设备大小（未实现）
-             */
-            if (PECMD_ParseUIntValue(&mapStr, (int64_t *)&mapOff) > 0) {
+            /* 映射文件读取（dc:344-390 简版, 既有无改动） */
+            WCHAR *ms = mapStr + 5;
+            if (PECMD_ParseUIntValue(&ms, (int64_t *)&mapOff) > 0) {
                 void *mv = MapViewOfFile((HANDLE)(intptr_t)mapOff, 6, 0, 0, 8);
                 if (mv != NULL) {
                     int64_t sz = *(int64_t *)mv;
@@ -236,72 +357,95 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                     }
                 }
             }
+            branches |= 1;
+            goto srx_tail;
         }
 
-        /* ---- 资源脚本执行路径（反编译 391-752）---- */
-        {
-            size_t tokLen3 = 0;
-            WCHAR *resTok = FUN_140024C48(&p, &tokLen3, 0x20);
-            WCHAR *resName = NULL;
-            uint32_t resFlags = 0;
-
-            PECMD_AllocWStringBuffer((WCHAR **)&local_260, 0);
-            FUN_1400702B0(&resName, resTok);
-            /* 引号剥离 */
-            if (*resName == L'"')
-                resName++;
-            if (resName[0] != L'\0' && resName[1] == L'"')
-                resName[1] = 0;
-
-            hmod = LoadLibraryExW(resName, 0, 2);
-            if (hmod != 0) {
-                uVar42 = PECMD_GenRandomSeed16();
-                PECMD_AllocWStringBuffer((WCHAR **)&local_1e8, 0);
-                {
-                    WCHAR *rname = NULL;
-                    FUN_1400702B0(&rname, resTok);
-                    /* 资源名 = token 中 '#' 后的部分（TODO(verify)） */
-                    FUN_14001EA18(hmod, rname, WSTR("PECMD"), (void **)&local_1e8, &resFlags);
-                    PECMD_FreeStrBuf(&rname);
+        /* ---- token 分类（dc:29871-30002，本 S10 补齐）----
+         * 在展开行副本上做 引号/星号/'#' 定位:
+         *   裸路径: 无引号修饰且无 '#' → ptHash=NULL
+         *   资源:   词首/'#'(-含星号后末反斜杠处数字资源) → ptHash 指向 '#'
+         * 注: 原文转录起点含词前 1 字符并以 +1 定位(local_240), 对本分类无语义。
+         */
+        if (line != NULL) {
+            FUN_1400702B0(&wcls, line);
+        }
+        if (wcls != NULL) {
+            WCHAR *cp = wcls;
+            if (*cp == L'"') {
+                /* dc:29939-29956 引号词: 找闭合引号并截断 */
+                WCHAR *qq = cp + 1;
+                while (*qq != L'\0' && *qq != L'"')
+                    qq++;
+                if (*qq == L'"') {
+                    *qq = L'\0';
+                    qq++;
+                    cp = qq; /* u24 = star|0x10 != 0 → 越过引号 */
                 }
-                if (local_1e8 != NULL && *local_1e8 != L'\0') {
-                    /* XOR 解码 + 脚本对象构造 */
-                    int64_t len = (int64_t)lstrlenW(local_1e8);
-                    uint64_t k = (uint64_t)(uint16_t)uVar42;
-                    uint64_t kf = (k << 16) | (k & 0xff);
-                    FUN_14001B5AC(local_1e8, (uint32_t)((uint16_t)uVar42 ^ (uint16_t)uVar42), len);
-                    FUN_140017CDC(local_138, script);
-                    FUN_1400186BC(local_138, script);
-                    PECMD_InitObfuscatedKeywords(local_138, (uint64_t)uVar42);
-                    if (PECMD_InvokeSubRoutine(&local_1e8, local_138, kf) == 0) {
-                        /* TODO(verify): 反编译 707-721 的详细 flags 组合 */
-                        DVar13 = PECMD_RunScriptText(script, local_1e8, local_278, local_1f8,
-                                                     ((uint64_t)uVar42 << 16) | kf | 0x40,
-                                                     local_240, NULL);
-                        local_1e8 = NULL; /* 所有权已移交内层(其退出时释放), 防外层重复释放 */
-                    }
-                    PECMD_FreeStrBuf(&local_1e8);
+                /* else: 未闭合(u24=star=0) → cp 保持词起点, 交由去引号处理 */
+                if (*cp == L'#') {
+                    ptHash = cp;
                 }
-                FreeLibrary(hmod);
             }
-            PECMD_FreeStrBuf(&local_260);
+            else if (starFlag != 0) {
+                /* dc:29961-29989 '*' 前缀词: 末反斜杠后的 '#' 定位 (数字资源) */
+                WCHAR *bsl = StrRChrW(cp, NULL, L'\\');
+                WCHAR *hh;
+                if (bsl == NULL)
+                    bsl = cp;
+                hh = StrRChrW(bsl, NULL, L'#');
+                if (hh != NULL) {
+                    WCHAR *dig = hh;
+                    WCHAR *resAt = NULL;
+                    while (*dig == L'#')
+                        dig++;
+                    if ((uint16_t)(*dig - 0x30) < 10)
+                        resAt = hh; /* '#' 后为数字 → 资源 id */
+                    while ((uint16_t)(*dig - 0x30) < 10)
+                        dig++;
+                    if (*dig == L':')
+                        resAt = hh; /* 数字后 ':' → 资源 id */
+                    if (resAt != NULL && *resAt == L'#')
+                        ptHash = resAt;
+                }
+            }
+            else {
+                /* dc:29958-29960 无前缀: 词首 '#' 即资源 */
+                if (*cp == L'#')
+                    ptHash = cp;
+            }
         }
 
-        /* ---- 变量执行路径（反编译 753-852）---- */
-        {
-            WCHAR *varName = NULL;
-            size_t tokLen4 = 0;
-            WCHAR *vTok = FUN_140024C48(&p, &tokLen4, 0x20);
-            PECMD_AllocWStringBuffer((WCHAR **)&local_1b8, 0);
-            FUN_1400702B0(&varName, vTok);
-            if (*varName == L'&' || *(char *)((char *)script + 0xd) != '\0') {
+        /* ---- 分支分派（dc:30016-30332; mem 优先于 map, map 优先于裸/资源）---- */
+        if (mem_flag != 0) {
+            /* ---- 变量执行路径（dc:30273-30332, 既有代码归位）---- */
+            WCHAR *vp = wcls;
+            int64_t resSlot[2];
+            uint16_t seed;
+            if (vp != NULL)
+                vp = PECMD_UnquoteTokenInPlace(vp); /* dc:30274 去引号 */
+            unq = vp;
+            {
+                WCHAR *ve = vp;
+                while (ve != NULL && *ve != L'\0' && !((*ve > 8 && *ve < 0xe) || *ve == L' ')) {
+                    ve++;
+                }
+                if (ve != NULL && *ve != L'\0')
+                    *ve = L'\0';
+            }
+            PECMD_AllocWStringBuffer(&local_1b8, 0);
+            if (vp != NULL) {
+                FUN_1400702B0(&local_1b8, vp); /* dc:30284 变量名副本 */
+            }
+            if (local_1b8 != NULL &&
+                (*local_1b8 == L'&' || *(char *)((char *)script + 0xd) != '\0')) {
                 /* 变量表查找 */
                 EnterCriticalSection(&g_csInit);
                 {
-                    uint8_t *node = PECMD_VarLookup(script, varName, NULL, -1, NULL);
+                    uint8_t *node = PECMD_VarLookup(script, local_1b8, NULL, -1, NULL);
                     if (node != NULL) {
                         int64_t vlen = *(int64_t *)((char *)node + 0x18);
-                        PECMD_AllocWStringBuffer((WCHAR **)&local_210, vlen);
+                        PECMD_AllocWStringBuffer(&local_210, vlen);
                         memcpy(local_210, *(void **)((char *)node + 8), (size_t)vlen);
                         local_210[vlen] = 0;
                     }
@@ -309,19 +453,18 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                 LeaveCriticalSection(&g_csInit);
             }
             else {
-                FUN_14006F884(varName, &local_210);
+                FUN_14006F884(local_1b8, &local_210);
             }
             if (local_210 != NULL) {
                 /* 原文 dc:30309-30316: 调 ResDecode 前把字节长度写在槽变量相邻
                  * (local_208 = lstrlenW*2), ResDecode 经 param_1[1] 读取。
                  * 曾漏写导致长度=栈上垃圾 → memmove 巨长度 AV (windbg 活体+dump 实锤)。 */
-                int64_t resSlot[2];
                 resSlot[0] = (int64_t)(intptr_t)local_210;
                 resSlot[1] = (int64_t)lstrlenW(local_210) * 2;
                 FUN_1400E7D58(resSlot, 1);
                 local_210 = (WCHAR *)(intptr_t)resSlot[0]; /* 取回可能被重分配的指针 */
                 {
-                    uint16_t seed = PECMD_GenRandomSeed16();
+                    seed = PECMD_GenRandomSeed16();
                     FUN_14001B5AC(local_210, 0, 0);
                     PECMD_InvokeSubRoutine(&local_210, script, 0);
                     {
@@ -329,17 +472,146 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                         FUN_14001B5AC(local_210, (uint32_t)seed, pos + 2);
                     }
                     FUN_1400702B0(&local_150, WSTR("**mem"));
-                    DVar13 = PECMD_RunScriptText(script, local_210, local_278, local_150,
-                                                 ((uint64_t)seed << 16) | 0x40, NULL, NULL);
+                    DVar13 = PECMD_RunScriptText(script, local_210, line, local_150,
+                                                 ((uint64_t)seed << 16) | (uint32_t)flags | 0x40,
+                                                 NULL, NULL);
                     local_210 = NULL; /* 所有权已移交内层(其退出时释放), 防外层重复释放 (T1e) */
                     PECMD_FreeStrBuf(&local_150);
                 }
                 PECMD_FreeStrBuf(&local_210);
             }
             PECMD_FreeStrBuf(&local_1b8);
+            branches |= 2;
+            goto srx_tail;
         }
 
-        /* ---- 收尾（反编译 853-871）---- */
+        if (q1 != 0) {
+            /* ---- 裸路径逐盘符探测（dc:30019-30057）----
+             * 词首单个反斜杠: 对每个存在的盘符执行 drive+词。
+             * 原文经 PECMD_CrtShim(FUN_14001708c, SKIP(CRT) 空桩, fmt "%s%s"
+             * @0x140121598) 拼接; 此处以直接拼接达成同义结果。
+             * cmd = drive + 词全文; a3 = drive + 词去首字符(去引号已先行)。 */
+            WCHAR drvList[512];
+            DWORD nDrv = 0;
+            WCHAR *drv;
+            WCHAR *cand = NULL;
+            WCHAR *argLine = NULL;
+            int64_t drvIdx = 0;
+            WCHAR *wsrc;
+            if (wcls != NULL) {
+                unq = PECMD_UnquoteTokenInPlace(wcls); /* dc:30063 去引号 (词首 '\') */
+                wsrc = unq;
+            }
+            else {
+                wsrc = NULL;
+            }
+            nDrv = GetLogicalDriveStringsW(512, drvList);
+            drv = drvList;
+            while (wsrc != NULL && nDrv >= 2 && *drv != L'\0') {
+                if (driveChar <= *drv && drvIdx < 0x5dc - lVar32) { /* dc:30040 过滤+上限 */
+                    cand = NULL;
+                    argLine = NULL;
+                    FUN_14006375C(&cand, drv);
+                    FUN_14006375C(&cand, wsrc);
+                    if (FUN_140101E70(cand)) { /* dc:30044 文件存在 */
+                        FUN_14006375C(&argLine, drv);
+                        FUN_14006375C(&argLine, wsrc + 1); /* dc:30046 词去首字符 */
+                        DVar13 = (int64_t)srx_ExecuteScriptFile(script, cand, argLine,
+                                                                (uint32_t)(flags | flags2),
+                                                                NULL, outbuf);
+                        argLine = NULL;
+                        { /* TEMP PROBE [S10] */
+                            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                            if (pf_) {
+                                fprintf(pf_, "[S10] drive-hit %ls r=%lld\n", cand,
+                                        (long long)DVar13);
+                                fclose(pf_);
+                            }
+                        }
+                        if (m_flag == 0) /* dc:30049 m 前缀置位才继续遍历 */ {
+                            PECMD_FreeStrBuf(&cand);
+                            break;
+                        }
+                    }
+                    PECMD_FreeStrBuf(&cand);
+                    PECMD_FreeStrBuf(&argLine);
+                }
+                drvIdx += (int64_t)lstrlenW(drv) + 1;
+                drv += lstrlenW(drv) + 1;
+            }
+            branches |= 16;
+            goto srx_tail;
+        }
+
+        if (ptHash == NULL) {
+            /* ---- 裸路径 → 执行脚本文件（dc:30060-30066, S10 补齐）---- */
+            if (wcls != NULL) {
+                unq = PECMD_UnquoteTokenInPlace(wcls); /* dc:30063 */
+            }
+            if (unq == NULL) {
+                unq = &emptyW; /* 空命令行兜底: 打开失败路径, 不崩溃 */
+            }
+            DVar13 = srx_ExecuteScriptFile(script, unq, line, (uint32_t)(flags | flags2), NULL,
+                                           outbuf);
+            branches |= 4;
+            goto srx_tail;
+        }
+
+        /* ---- 资源脚本执行路径（dc:30068-30233, 既有代码按 '#' 分流适配）---- */
+        {
+            /* 资源引用形如 [Dll|路径]#[资源名|#id]: 在 '#' 处截断得 DLL 名 */
+            uint32_t resFlags = 0;
+            memset(sub, 0, sizeof(sub));
+            *ptHash = L'\0';                         /* dc:30123-30124 (执行后恢复) */
+            hmod = NULL;
+            if (*wcls != L'\0') {
+                hmod = LoadLibraryExW(wcls, (HANDLE)0, 2); /* dc:30126-30129 DLL 名=词首部 */
+                if (hmod == INVALID_HANDLE_VALUE)
+                    hmod = NULL;
+            }
+            /* else TODO(verify): 原文以 g_hInstance(DAT_14013cf70) 装载当前 EXE
+             * 内 SCRIPT 资源; 工程未还原该全局, 此处置 NULL 跳资源块。 */
+            *ptHash = L'#';                        /* dc:30131 恢复 */
+            {
+                WCHAR *rname = NULL;
+                uint16_t uSeed = 0;
+                uint64_t kf = 0;
+                int64_t len = 0;
+                FUN_1400702B0(&rname, ptHash + 1); /* 资源名 = '#' 后 */
+                if (hmod != 0) {
+                    uSeed = PECMD_GenRandomSeed16();
+                    PECMD_AllocWStringBuffer(&local_1e8, 0);
+                    FUN_14001EA18(hmod, rname, WSTR("PECMD"), (void **)&local_1e8, &resFlags);
+                    if (local_1e8 != NULL && *local_1e8 != L'\0') {
+                        /* XOR 解码 + 脚本对象构造 */
+                        len = (int64_t)lstrlenW(local_1e8);
+                        kf = (uint64_t)(uint16_t)uSeed;
+                        kf = (kf << 16) | (kf & 0xff);
+                        FUN_14001B5AC(local_1e8, (uint32_t)((uint16_t)uSeed ^ (uint16_t)uSeed),
+                                     len);
+                        FUN_140017CDC(sub, script);
+                        FUN_1400186BC(sub, script);
+                        PECMD_InitObfuscatedKeywords(sub, (uint64_t)uSeed);
+                        if (PECMD_InvokeSubRoutine(&local_1e8, sub, kf) == 0) {
+                            /* TODO(verify): 反编译 707-721 的详细 flags 组合 */
+                            DVar13 = PECMD_RunScriptText(script, local_1e8, line, local_1f8,
+                                                         ((uint64_t)uSeed << 16) | kf | 0x40,
+                                                         local_240, NULL);
+                            local_1e8 = NULL; /* 所有权已移交内层(其退出时释放) */
+                        }
+                        PECMD_FreeStrBuf(&local_1e8);
+                    }
+                    FreeLibrary(hmod);
+                }
+                PECMD_FreeStrBuf(&rname);
+            }
+            branches |= 8;
+            goto srx_tail;
+        }
+
+    srx_tail:
+        /* ---- 收尾（dc:30235-30349 等价物）---- */
+        (void)branches;
         if (g_sysinitState == 3) {
             PECMD_CheckFirstStartupFlag(script);
         }
@@ -361,15 +633,18 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         PECMD_FreeStrBuf(&local_240);
         PECMD_FreeStrBuf(&local_260);
         PECMD_FreeStrBuf(&local_278);
+        PECMD_FreeStrBuf(&local_250);
         PECMD_FreeStrBuf(&outbuf);
+        PECMD_FreeStrBuf(&wcls);
+        PECMD_FreeStrBuf(&line);
         (void)flags;
         (void)flags2;
         (void)m_flag;
-        (void)mem_flag;
         (void)uVar24;
         (void)uVar31;
         (void)uVar34;
         (void)uVar35;
+        (void)uVar42;
         (void)local_1a0;
         (void)local_1d0;
         (void)local_160;
@@ -378,6 +653,8 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         (void)local_234;
         (void)local_26c;
         (void)lVar12;
+        (void)firstCh;
+        (void)driveChar;
         return (int)DVar13;
     }
 }

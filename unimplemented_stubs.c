@@ -43,7 +43,7 @@ void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
 void FUN_140062950(void *a) { (void)a; }
 void FUN_14001b888(uint64_t a) { (void)a; }    /* CoUninitialize 槽 (PECMD_GetApiProcCached("CoUninitialize",...) 装载) */
 uint64_t DAT_14013e168[8] = {0}; /* CRITICAL_SECTION COM */
-uint64_t DAT_14013e190[8] = {0};  /* g_runFlag 0x140147000: 00 01 00 00 */
+/* T1d2: DAT_14013e190 独立定义已删除 — 与 core_globals.c 已初始化的 g_csInit 是同一原版关键段(双符号分裂曾致 restored_bodies 约50处锁零置桩 → EnterCriticalSection AV)。经 stubs_common.h 引用处直接改用 &g_csInit。 */
 /* PTR_u 标识符字符短串指针表 (.rdata, NULL 结尾): pe_data_extract 14013a2d0 */
 uint64_t PTR_u_a__a_zA_Z0_9___14013a2d0[] = {
     0x1401233c0, 0x1401233e0, 0x1401233f8, 0x140123410, 0x140123428,

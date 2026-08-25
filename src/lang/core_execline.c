@@ -814,7 +814,10 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
                 p13 = p11;
                 ch = *p13;
                 while (ch != L'\0' && ch != L'%' && ch != L'=')
+                {
                     p13++;
+                    ch = *p13; /* 原文每次重读(曾漏→%VAR% 行死循环, windbg 实锤) */
+                }
                 local_230 = (int64_t)(int)(char)xflag;
                 local_268 = '\0';
                 iVar10 = (int64_t)(p13 - p) >> 1;
