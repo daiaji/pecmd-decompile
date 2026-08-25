@@ -7356,6 +7356,10 @@ uint16_t *PECMD_AllocStrSlot(uint16_t **out)
 /* @0x14006375c size=— 宽串追加(直移) */
 longlong *PECMD_AppendWideStr(void *param_1p,LPCWSTR param_2)
 {
+  { /* TEMP PROBE */
+    void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+    if (pf_) { fprintf(pf_, "[AWS] slot=%p old=%llx src=%ls", param_1p, (unsigned long long)*(longlong *)param_1p, param_2); fclose(pf_); }
+  }
   longlong *param_1 = (longlong *)param_1p;
   int n1 = 0;
   if ((uintptr_t)param_2 != 0) {

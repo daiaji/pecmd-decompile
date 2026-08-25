@@ -403,6 +403,7 @@ void     FUN_14006355c(void *a, const WCHAR *b, int c, uint64_t d) { (void)a;(vo
  * C0000005(dumpbt 0x12dddb 实锤)。FUN_14001d78c=内联 memcpy。 */
 void FUN_140063888(void *a, const WCHAR *b, int64_t c)
 {
+  P8_Probe("SCWin", (longlong)(uintptr_t)a, (longlong)(uintptr_t)b);
   longlong *slot = (longlong *)(uintptr_t)a;
   if (c < 0) {
     c = lstrlenW(b);
