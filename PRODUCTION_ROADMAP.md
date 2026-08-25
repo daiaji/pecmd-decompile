@@ -216,3 +216,20 @@ M10: git ls-files | grep -vcE '^src/|^include/|^tools/|^docs/|^attic/|^harness/|
 - **v4（2026-08-24）**：参考库 + 验证驱动补全 + WIN/MSVC 全包。
 - **v4.1（2026-08-24）**：管线纯 WIN 化——run_case.sh→run_case.py、tools\msvc_build.bat
   交付、弃 WSL2/git-bash/coreutils（§4.1 决策记录）。
+## S12 里程碑：脚手架层清除 —— 内嵌 CRT/弱声明 → 真 CRT/真头文件（2026-08-25 立项）
+
+> 背景：S11 三层连环崩点（隐式 int 原型截断 / NextToken 空壳桩 / memset no-op 桩）
+> 全部源自"手写声明层"历史包袱。本里程碑把 A 类脚手架替换为真 CRT/真声明，
+> B 类行为本体（MemMoveSafe、0xaa55 分配器等对拍对象）永留不动。
+
+### 分阶段验收门
+| 阶段 | 触发条件 | 内容 | 验收 |
+|---|---|---|---|
+| S12-a | 门A 全通 | 低风险单点：LPSTARTUPINFOW/LPPROCESS_INFORMATION 等 void* 弱类型→真结构指针；fopen/fprintf 手写 extern→#include <stdio.h>（先解 win32_api_stubs _vsnwprintf 冲突）；FUN_140102a90 已完成(0eb37ab) | 双绿门 + t1/t2probe 回归 |
+| S12-b | T4 首轮全量 PASS 落账 | umbrella header 统一头文件；逐类去重 typedef（UINT/WPARAM/LPARAM/FILETIME/HANDLE…约 20 个）；删除 crt_shims.c 中已有真 CRT 的条目 | C4013=0、C4311/12≈0、28 语料回归全 PASS |
+| S12-c | T4 收敛后 | 清除 win32_api_stubs 与 win32_stub 的重复声明层；仅保留 B 类本体与确需的导入槽 | 全量回归 + divergences 无新增 |
+
+### 已知阻塞清单（S12-b 前必须解）
+1. win32_api_stubs 的 _vsnwprintf 内联 vs <stdio.h> 冲突（HANDOFF §6 老纪律的根）。
+2. stubs_common.h 与 win32_stub.h 的 typedef 双定义（WPARAM/LPARAM 已对齐 4d577d1，
+   其余待盘点——见 build\msvc\s12_crt_migration_checklist.md）。
