@@ -27,3 +27,14 @@
 - C89 隐式 int 声明: 返回 EAX 低 32 位, 调用点如赋 64 位指针 → CDQE 符号扩展
   (≥0x80000000 的堆地址 → 0xffffffffxxxxxxxx) → 下一条指针解引用 AV。
 - 与 StrPBrkW (win32_stub.h BOOL) / 013-BE14 (b2f) 同族 — R24f 五连虫 #2 的家族。
+
+## 终版复核 (R24f-a, 全体 90 名)
+
+- 指针/HANDLE 返回型 C4013 全数处置状态:
+  - 已修 extern: FUN_14001BE14 (b2a) / PECMD_AllocMagicString (b3a) / PECMD_GrowByteBuffer
+    (3r_g) / PECMD_NextToken (3r_d) / PECMD_ReplaceStringSlot (b8i) / PECMD_UnquoteString
+    (3r_g3) / PECMD_SplitNextToken (3r_g3, R24e-b 051 翻转) — 7 处。
+  - 良态豁免: PECMD_AssignString (restored_bodies 桩, 返 0) / PECMD_OpenFileHandle
+    (b3j 返回未用, OUT 参传递) / PECMD_VarLookup (void*-实际, uint64-声明同宽)。
+- 机制: C89 隐式 int → 调用点 CDQE 符号扩展 (≥0x80000000 堆址 → 0xffffffffxxxxxxxx)
+  → 指针解引用 AV; 家族已 4 次命中 (StrPBrkW/1BE14×2/SplitNextToken)。
