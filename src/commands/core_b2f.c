@@ -7238,12 +7238,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
     uint32_t local_b8;
     _SHFILEOPSTRUCTW local_b0;
     WCHAR *local_78;
-    LARGE_INTEGER local_70;
-    int64_t local_68;
-    uint64_t local_60;
-    LARGE_INTEGER local_58;
-    int64_t local_50;
-    uint64_t local_48;
+    struct { WCHAR *data; int64_t len; uint64_t cap; } strb1 = {0,0,0}, strb2 = {0,0,0};
     LARGE_INTEGER LVar23;
 
     LVar23.QuadPart = 0;
@@ -7373,17 +7368,11 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
     local_b0.pFrom = (LPCWSTR)(uintptr_t)local_res10.QuadPart;
     local_b8 = 0;
     bVar2 = false;
-    PECMD_AllocStrSlot(&local_70);
-    local_68 = 0;
-    local_60 = 0;
-    (void)local_60;
-    PECMD_AllocStrSlot(&local_58);
-    local_50 = 0;
-    local_48 = 0;
-    (void)local_48;
-    pLVar16 = &local_70;
-    PECMD_AllocString(&local_70, 10);
-    PECMD_AllocString(&local_58, 10);
+    PECMD_AllocStrSlot(&strb1.data);
+    PECMD_AllocStrSlot(&strb2.data);
+    pLVar16 = (int64_t *)&strb1.data;
+    PECMD_AllocString(&strb1.data, 10);
+    PECMD_AllocString(&strb2.data, 10);
     WVar24 = *(WCHAR *)(uintptr_t)LVar17.QuadPart;
     LVar21 = LVar17;
     bVar3 = false;
@@ -7423,11 +7412,11 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                     LVar17 = local_c0;
                     local_b0.pTo = (LPCWSTR)(uintptr_t)local_c0.QuadPart;
                     if (*(WCHAR *)(uintptr_t)LVar21.QuadPart != L'\0') {
-                        PECMD_AppendParamToken(&pLVar16->QuadPart,
+                        PECMD_AppendParamToken(pLVar16,
                                                (LPCWSTR)(uintptr_t)LVar21.QuadPart, '\0');
                     }
                     bVar2 = true;
-                    pLVar16 = &local_58;
+                    pLVar16 = (int64_t *)&strb2.data;
                     LVar21 = LVar17;
                     uVar8 = B2F_LO8(local_res20.LowPart);
                 }
@@ -7439,7 +7428,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                     if ((bVar2) || (cVar7 = '\x01', bVar25 == 0)) {
                         cVar7 = '\0';
                     }
-                    PECMD_AppendParamToken(&pLVar16->QuadPart, (LPCWSTR)(uintptr_t)LVar21.QuadPart,
+                    PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)LVar21.QuadPart,
                                            cVar7);
                 }
                 PECMD_SkipLeadingControls((WCHAR **)&local_c0.QuadPart);
@@ -7459,22 +7448,22 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
         } while (WVar24 != L'\0');
     }
     if ((*(WCHAR *)(uintptr_t)LVar21.QuadPart != L'\0') &&
-        (PECMD_AppendParamToken(&pLVar16->QuadPart, (LPCWSTR)(uintptr_t)LVar21.QuadPart, '\0'),
+        (PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)LVar21.QuadPart, '\0'),
          bVar3)) {
         iVar18 = iVar18 + 1;
     }
-    *(WCHAR *)(local_70.QuadPart + local_68 * 2) = L'\0';
-    *(short *)(local_58.QuadPart + local_50 * 2) = 0;
-    local_b0.pFrom = (LPCWSTR)local_70.QuadPart;
+    *(WCHAR *)(strb1.data + strb1.len * 2) = L'\0';
+    *(short *)(strb2.data + strb2.len * 2) = 0;
+    local_b0.pFrom = strb1.data;
     if (0 < iVar18) {
-        local_b0.pTo = (LPCWSTR)local_58.QuadPart;
+        local_b0.pTo = strb2.data;
     }
     SetLastError(0);
     if ((uVar10 != 0) && (local_b0.wFunc == 3)) {
         if (((uVar10 & 2) == 0) || (iVar18 = SHFileOperationW(&local_b0),
                                     LVar22.QuadPart = LVar23.QuadPart, iVar18 != 0)) {
             LVar22.QuadPart =
-                PECMD_DeleteDirectoryTree((LPCWSTR)local_70.QuadPart, (uint32_t)(uint8_t)local_c5);
+                PECMD_DeleteDirectoryTree(strb1.data, (uint32_t)(uint8_t)local_c5);
         }
         goto LAB_14003c9a2;
     }
@@ -7598,8 +7587,8 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
         LVar22.LowPart = uVar10;
     }
 LAB_14003c9a2:
-    PECMD_FreeStrBuf(&local_58.QuadPart);
-    PECMD_FreeStrBuf(&local_70.QuadPart);
+    PECMD_FreeStrBuf(&strb2.data);
+    PECMD_FreeStrBuf(&strb1.data);
     PECMD_FreeStrBuf((WCHAR **)&local_78);
     return LVar22;
 }

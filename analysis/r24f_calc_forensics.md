@@ -175,3 +175,16 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   失败弹窗双重; 已回滚 2cb7fca 干净基线 (md5 a8b828ac, 011=0/010=87); 下轮方向:
   bp PECMD_AppendParamToken 入口读 list[1]/list[2] 实值 (或先修 HeapRealloc 失败弹窗
   为静默返回以暴露真实计数)。
+
+## 11. B 簇收官 (R24e): StrBld 对象结构体化 — 010/011/012 + 041 全翻转, 49→53/63
+
+- 根因最终定谳: dc 的 FUN_14003c06c 用 local_70/68/60 (及 58/50/48) 三邻接局部充当
+  StrBld 对象 {data,len,cap} — 1400216c4-append 经 &local_70 以 list[1]/list[2] 写 len/cap。
+  该邻接依赖编译器布局: MSVC 优化下 C 变量被单独放置 → len 槽 (对象区+8) 读栈残留
+  → (a) 终止符 data[local_68=0]=0 清空 pFrom/pTo → SHFO 87; (b) 残留巨大时 append 的
+  AllocString 巨量 count → HeapRealloc 失败 → MessageBoxW 弹窗挂起 (124) — 三态同根。
+- 修复: 将两组三局部替换为单块结构体 `struct { WCHAR *data; int64_t len; uint64_t cap; }
+  strb1/strb2` — 24B 连续布局由类型系统保证, 别名依赖彻底消除 (dc 语义等价)。
+- 验收: 010=2 ✓ 011=2 ✓ 012=2 ✓ (55 天内 B 簇 ×3 首翻); 041 (MDIR+FILE 组合) 连带
+  2 ✓; 全量 63 案 53/10 零回归 (10 FAIL = 已知队列 E×3/J×2/G×2/H×2/I×1)。
+- 部署 md5 60e5b054; 下一步登记: 同款"三邻接局部拟 StrBld 对象"模式全库排查。
