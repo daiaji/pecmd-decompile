@@ -187,12 +187,14 @@ HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share
         h = 0;
     *out = h;
     { /* TEMP PROBE R15(文件打开序列取证) */
+        DWORD le_restore__ = GetLastError(); /* R20 探针透明化: 保护下游 GetLastError 消费者 */
         void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
         if (pf_) {
             fprintf(pf_, "[OFH] h=%p disp=%u fl=%08x path=%ls\n", (void *)h,
                     (unsigned)disp, (unsigned)flags, path ? path : L"(null)");
             fclose(pf_);
         }
+        SetLastError(le_restore__);
     }
     return h;
 }

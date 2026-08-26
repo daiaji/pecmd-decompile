@@ -1,6 +1,27 @@
 # WINDBG-MCP 上游缺陷复现报告：断点命中不停止（bp/ba hit → no stop）
 
-> 编纂：2026-08-26 | 用途：直接提交 windbg-mcp 上游 | 配套病理档案：`docs/WINDBG_MCP_ISSUES.md`
+> **⚠ 撤回声明（R19 裁定，2026-08-26）：本文档结论不成立，请勿提交上游。**
+>
+> 经独立复核（windbg-mcp 侧实测 + 本会话日志取证），"断点命中不停止"系**断点地址与
+> 被测二进制版本不符**所致，并非 windbg-mcp 缺陷：
+>
+> 1. 复现所用断点地址 `pecmd_msvc+0x1a09a0` 取自旧构建（8-25 S13-S17 时期，当时确为
+>    PSB 入口）；8-26 白天 PECMD 被连续重建（R14→R19 六轮，45c7793→…→997ff7a），
+>    函数重排后该 RVA 已漂移（当前构建指向 `PECMD_ParseResourceStringRef+0x1e0` 函数
+>    内部；13:09 构建 `pecmd_old.exe` 中该地址已是非指令边界的填充垃圾字节）。
+> 2. 对照实验（同一 windbg-mcp 二进制、同一 pecmd_msvc.exe、同一脚本）：断点设在
+>    `kernel32!ExitProcess` → `execute("g")`/`go` 均正常回传 `Breakpoint 0 hit` 并停止；
+>    断点设在 pecmd 模块内必经入口（`pecmd_msvc+0xf2b0`=main、`+0xebc0`=PECMD_MainW）
+>    → 同样正常命中、rip 精确落点。**断点命中→停止→事件分发全链路正常，无回归。**
+> 3. 原始症状（进程跑完自然退出、`execute("g")` 只回显、go 报 0x8000FFFF、随后
+>    registers 报 0x80040205）全部可用"断点设在从不执行的代码上 + 进程退出后无
+>    debuggee 上下文"解释；0x8000FFFF 系上游已记录的"等待期间目标退出"行为
+>    （windbg-mcp FOLLOWUPS item 48），非本次引入。
+>
+> 本文档原始内容保留作**误诊档案**（鉴别诊断参考），结论部分请以
+> `docs/WINDBG_MCP_ISSUES.md` 的 R19 裁定附录为准。
+
+> 编纂：2026-08-26 | 用途：~~直接提交 windbg-mcp 上游~~（已撤回，见上） | 配套病理档案：`docs/WINDBG_MCP_ISSUES.md`
 
 ## EN Quick Summary (for upstream paste)
 

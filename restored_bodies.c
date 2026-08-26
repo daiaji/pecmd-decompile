@@ -5859,7 +5859,10 @@ PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *p
   short sVar26;
   DWORD DVar27;
   FILETIME _Var28;
-  undefined4 unaff_R13D;
+  undefined4 unaff_R13D = 0; /* FIX(R19D S-TEAM-1): dc:43921 语义为入口 R13 寄存器残留,
+                              * C 直移不得读未初始化自动变量(MSVC 栈垃圾), 每条命令均经此。
+                              * TODO(verify): 如需精确保真, 反汇编各 caller 进入 0x14004c0bc
+                              * 时的 r13 取值再定常量。 */
   uint uVar29;
   LPCWSTR pWVar30;
   LARGE_INTEGER LVar31;

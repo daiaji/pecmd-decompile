@@ -619,7 +619,11 @@ void FUN_14005d9a8(int64_t a, int b) { (void)a;(void)b; }
 uint64_t FUN_1400630d0(int a) { (void)a; return 0; }
 
 /* ---- P4 wave-4 helper 补定义 (2) ---- */
-uint64_t FUN_14005c7c4(const char *a, const uint16_t *b) { (void)a;(void)b; return 0; }
+/* FIX(R19D S-HASH-1): 小写 FUN_14005c7c4 与真体 FUN_14005C7C4(core_exec5.c:156) 同对应
+ * @0x14005c7c4。原恒 0 桩令 HASH 的 SHA 家族与 CRC32、list 选择全部失配(恒落 MD5 缺省)。
+ * 转发真体归一; 返回语义(相等=1)以 REVIEW.md §132 "标志倒置"复核结论为准后再终裁。 */
+uint64_t FUN_14005c7c4(const char *a, const uint16_t *b)
+    { return (uint64_t)FUN_14005C7C4(a, b); }
 void FUN_1400702b0(uint16_t **ps, const uint16_t *src) { (void)ps;(void)src; } /* @0x14005b6ac 资源串 */
 /* ==== S8 直移: FUN_140003a20 @0x140003a20 size=139 (decompiled.c:1236-1264) ====
  * 变量展开包装（PECMD_RunCommandLine 同体）: 备份 *param_2 旧串→置空输出槽→

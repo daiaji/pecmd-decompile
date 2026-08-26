@@ -217,6 +217,10 @@ int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa,
     {
         int r = CreateProcessW(cmd, buf, sa, da, inherit, flags, env, cwd, si, pi);
         DWORD gle = GetLastError();
+        DWORD gle_restore = gle; /* R20 探针透明化: fopen("a") 成功路径置 LastError=183
+                                    (ERROR_ALREADY_EXISTS), 曾污染调用方
+                                    ExecCmdDispatch@LAB_140014c72 的 GetLastError 捕获,
+                                    WRITE 族/061/065 退出码 183(原版=2)。返回前恢复。 */
         { /* TEMP PROBE(S11): 返回现场 */
             void *pf2_ = fopen("C:\\pectest\\memfail.log", "a");
             if (pf2_) {
@@ -224,6 +228,7 @@ int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa,
                 fclose(pf2_);
             }
         }
+        SetLastError(gle_restore); /* 保持 LastError 对调用方透明 */
         return r != 0;
     }
 }
