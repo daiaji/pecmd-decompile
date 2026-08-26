@@ -200,3 +200,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   pWVar10 必为 local_f8 — 待下轮 bp f8 赋值点定位流向 (FORM V,C: 路径)。
 - 同族提示: b3r_h1 C4013 ×3 (SplitTokenAssignVar/ParseLtwhParams/ExtractTokenByDelim);
   "S11 删本地声明"模式 = 全库潜伏雷区已在 minefield 清单。
+
+## 13. G 簇续 2 (R24f-a): 057 FORM NULL 对照 — Ghidra 编译形态全流程
+
+- 当前构建 FORM 处理器 Ghidra 反编译 (FUN_140101b40/0x140101b70): 参数解析
+  ('='-split→RunCommandLine; ','-split→var2) ✓; 两主分支 (cache-scan 常规盘 / '\\?\'
+  前缀 LAB_140102220) 终点均 'local_148 = local_58' + wsprintfW("%d") — 编译形态
+  *local_148 读必非空 ⟹ msVC C 的 pWVar10=NULL 来自 C 流与编译形式的另类错位
+  (疑: local_187=-1 路径 → 'else' 下支的 wsprintfW("%d") 无参 UB 或 C 的 else-块
+  goto 结构与编译分歧)。windbg bp 定向受阻于通道故障 (0x80040205, 三次), 057 待
+  通道恢复续追 — 已登记 (G 簇 1 例剩)。
+- 本日通道统计: windbg 会话 10+ 次, T2/T3 故障 4 次 (bp-跟踪 2、r;k 1、复合 1) —
+  均按 FAULTS_REPRO 处置, 无越权绕过。
