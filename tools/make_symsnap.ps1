@@ -4,7 +4,7 @@
 # from this file, never from stale notes (discipline V1).
 # NOTE: ASCII-only on purpose - Windows PowerShell 5.1 misparses UTF-8
 # scripts without BOM (Chinese comments broke the parser once already).
-param([string]$RepoRoot = "D:\repo\PECMD反编译\refactored")
+param([string]$RepoRoot = "D:\repo\PECMD反编译")
 Set-Location $RepoRoot
 $map = Join-Path $RepoRoot 'build\msvc\pecmd_msvc.map'
 $exe = Join-Path $RepoRoot 'build\msvc\pecmd_msvc.exe'

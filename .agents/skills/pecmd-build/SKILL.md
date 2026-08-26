@@ -8,7 +8,7 @@ whenToUse: 需要编译 pecmd_msvc.exe、跑 syntax 门、或部署到 C:\pectes
 
 ## 前置事实
 
-- 仓库: `D:\repo\PECMD反编译\refactored` (git root 即项目根, 纯英文路径要求已破例为中文目录名, cl 可处理)
+- 仓库: `D:\repo\PECMD反编译` (R21 起 git 根=项目根; 原 refactored 子层已上提; 语义真值在 reference\decompiled.c)
 - VS 2022 Community; vcvarsall: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat`
 - 本机 8GB 内存, 编译峰值 ~2GB — **不要并行多份构建**; 构建产物用完即删
 - 门禁口径 (双绿门): `syntax` 全绿 + 完整构建 exit 0, 缺一不可
@@ -18,6 +18,17 @@ whenToUse: 需要编译 pecmd_msvc.exe、跑 syntax 门、或部署到 C:\pectes
 ```bat
 cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"" x64 && tools\msvc_build.bat syntax"   :: 语法门 (cl /Zs)
 cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"" x64 && tools\msvc_build.bat"          :: 完整构建 -> build\msvc\pecmd_msvc.exe (+ .map)
+```
+
+**构建前三查(R20/V6)**: ① 无在途 windbg 会话(含子代理取证会话, worker 持 PDB → LNK1201);
+② 磁盘余量; ③ 注意 `cmd /c` 内的 cd 不影响外层 cwd, 收尾步骤用绝对路径。
+绿门判定: exit 0 且输出含 `[msvc_build] OK`。
+
+构建成功后必跑:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\make_symsnap.ps1 -RepoRoot <repo根>   # 刷新 symsnap.txt(断点选址唯一来源)
+Copy-Item build\msvc\pecmd_msvc.exe C:\pectest\ -Force
+Set-Content C:\pectest\DEPLOYED_BUILD.txt "hash=$((git rev-parse --short HEAD)) md5=$((Get-FileHash C:\pectest\pecmd_msvc.exe -Algorithm MD5).Hash) time=$((Get-Date))"
 ```
 
 构建日志是 GBK 编码: 用 `python -c "open(r'%TEMP%\log','rb').read().decode('gbk')"` 或

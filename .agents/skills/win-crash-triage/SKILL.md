@@ -6,6 +6,10 @@ whenToUse: 被测进程 0xC0000005 崩溃、消息泵挂起、或弹窗循环时
 
 # WIN 崩溃/挂起分诊手册
 
+> **R20 更新**：本机现已装配 windbg MCP 且实测全链可用（attach 抓栈/断点/dump 解析）。
+> 活体调试一律走 `vgate-live-debug` 技能的五道门；本文保留为"无调试器兜底路径"
+> （LocalDumps 自解析 + GetThreadContext 直读 + 探针法），MCP 不可用时的完整替代。
+
 环境无 cdb/windbg/procdump。以下方法全部实战验证过。
 
 ## 0. 通用准备
@@ -50,10 +54,16 @@ GUI 子系统无 stdout。fopen 追加写 `C:\pectest\memfail.log` 逐段插桩�
 
 ```c
 { /* TEMP PROBE */
+    DWORD le__ = GetLastError();          /* V4 透明化: 必做! fopen("a") 成功置 LastError=183,
+                                             曾污染退出码链(见 analysis/r19b_exit183_chain.md) */
     FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
     if (pf_) { fprintf(pf_, "PROBE step-name\n"); fclose(pf_); }
+    SetLastError(le__);
 }
 ```
+
+其余探针纪律: 手写 CRT extern 禁 `<stdio.h>`; 多进程禁共写同一日志;
+定位完成后必须移除 (T5)。完整契约见仓库根 AGENTS.md「探针」。
 
 现有探针网分布在 core_main/core_init/core_script2/core_scriptrun/core_string/core_var 六文件
 (全局搜 `TEMP PROBE`)。**定位完成后必须移除** (纪律)。

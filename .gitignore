@@ -4,3 +4,12 @@ build/
 *.pdb
 *.obj
 vc140.*
+
+# R21 reference subtree: heavy/binary RE artifacts stay on disk, text anchors tracked
+reference/archive/
+reference/*.exe
+reference/ghidra_out/
+reference/big_funcs/
+reference/split/
+reference/*.bundle
+reference/*.tar.gz
