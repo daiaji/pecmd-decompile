@@ -1828,6 +1828,10 @@ LAB_14009f024:
  * ========================================================================== */
 LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
 {
+    { /* TEMP PROBE entry */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) { fprintf(pf_, "[WIN] entered\n"); fclose(pf_); }
+    }
     bool bVar1;
     bool bVar2;
     bool bVar3;
@@ -2641,6 +2645,13 @@ LAB_14009f52b:
     PECMD_FreeStrBuf((void *)&local_98);
     PECMD_FreeStrBuf((void *)&local_90);
 LAB_1400a037e:
+    { /* TEMP PROBE R14b(WRITE exit capture, all paths) */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[WRET2] LVar31=%lld LVar30=%lld\n", (long long)LVar31.QuadPart, (long long)LVar30.QuadPart);
+            fclose(pf_);
+        }
+    }
     PECMD_FreeStrBuf((void *)&local_58);
     return LVar31;
 }

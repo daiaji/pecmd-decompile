@@ -7163,8 +7163,9 @@ LAB_14004c525:
     { /* TEMP PROBE R14b: 每行动词返回值序列(退出码链取证, T5 拆) */
         void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
         if (pf_) {
-            fprintf(pf_, "[WB] verb=%08x l180=%lld\n", (unsigned)local_158,
-                    (long long)local_180.QuadPart);
+            fprintf(pf_, "[WB] verb=%08x l180=%lld line=[%.28ls]\n", (unsigned)local_158,
+                    (long long)local_180.QuadPart,
+                    (const wchar_t *)(uintptr_t)LVar11.QuadPart);
             fclose(pf_);
         }
     }
