@@ -233,3 +233,10 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   PECMD_IsVkPrefix 边界内) — 该区源码无 vsprintf ⟹ 与 053 (WRITE+HASH) 的关联待
   bp __stdio_common_vsprintf_s 读格式串+va 槽确认 (下轮: bp + 格式串 %S 打印)。
 - 处置: PageHeap 已撤 (公约); 053 保持登记 (0xC0000374/0xC0000005 双态)。
+
+## 16. T5 探针拆除 (R24f-d) + 053 阴性结果
+
+- core_main.c ×3 + core_init.c PROBE_STEP 系（memfail.log 探针, 含 #include <stdio.h>
+  违 AGENTS.md 禁 stdio 红线）— 依据 T5 台账全数拆除; 重建 md5 85f92a27。
+- 阴性: 拆除后 053/056 仍 0xC0000374 ⟹ 探针非病因（此前 bp vsprintf 首击 = 探针的
+  干扰已被剔除）— 下轮 053 在干净构建上 bp 0xEB60 将直达真实格式串调用。

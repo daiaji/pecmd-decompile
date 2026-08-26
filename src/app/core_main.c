@@ -29,7 +29,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include <stdio.h> /* TEMP PROBE: memfail.log */
 
 #include "pecmd_defs.h"
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
@@ -73,10 +72,6 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         return 0;
     }
     g_hHeap = GetProcessHeap();
-    { /* TEMP PROBE */
-        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) { fprintf(pf_, "PROBE MainW heap-init\n"); fclose(pf_); }
-    }
     if (!hInstance) {
         hInstance = g_hInstance;
     }
@@ -86,10 +81,6 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         memset(&si.lpDesktop, 0, 0x58); /* 清零剩余字段 (FUN_140102a90 即 memset 内联) */
         GetStartupInfoW(&si);
         g_hInst = hInstance;
-        { /* TEMP PROBE */
-            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf_) { fprintf(pf_, "PROBE before InitEnvVars\n"); fclose(pf_); }
-        }
         PECMD_InitEnvironmentVars(hInstance, si.wShowWindow);
     }
     /* 复制命令行 */
@@ -169,14 +160,6 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
         g_state190 = 0;
         g_state198 = 0;
         g_runFlag = 0;
-        { /* TEMP PROBE */
-            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf_) {
-                fprintf(pf_, "[MAINLOOP] next=%p start=%ls\n", (void *)g_pNextCmd,
-                        pStart ? (const wchar_t *)pStart : L"(null)");
-                fclose(pf_);
-            }
-        }
         if (!g_pNextCmd) {
             goto after_main;
         }
