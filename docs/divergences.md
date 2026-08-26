@@ -131,3 +131,12 @@
 <!-- 单行示例（复制后去注释填写）：
 | D-09 | 2026-08-26 | 示例标题 | 机制一句话（文件:行号） | 报告名 §n + 一手物证行号 | 触发条件/受影响语料/验收门影响 | 未修 | 口径注记或 SKIP 原因 |
 -->
+
+
+### D-16 g_cmdTable1/2 命令注册表恒空 → DispatchBuiltin 全动词拦截失效｜工单已开
+
+- **根因**：msvc 侧 `PECMD_RegisterFileAssociations`(core_b1_remaining.c:4811 ↔ dc:6897 FUN_14000c764)**零调用者**(死代码)，原版由 LoadPlugin= 配置行(dc:7412)与初始化链触发；g_cmdTable1(静态扩展名模式)/g_cmdTable2(INDATA 资源 LOAD: 扫描)恒空 → DispatchBuiltin 对全部内置动词匹配失败。
+- **证据链**：活体 dd 实锤 g_cmdTable1Count/g_cmdTable2Count=0(map <common> 段 1402c7af0/1402c7b20)；[WB]/[BP] 探针序列实锤 WRITE 行掉 bare-path→ECD 兜底(s20 §16-§17)。
+- **影响面**：所有依赖内置表分发的动词行(WRITE/FIND 等)掉 ECD 被当外部程序执行失败；错误码污染退出码缓存(EXEC=259 同家族)。
+- **状态**：工单已开 —— ① 补初始化调用(需先核对 dc 触发时机: LoadPlugin= 行 vs 启动序列) ② INDATA 资源加载链(FUN_14001ea18+ResDecode)在 msvc 的对应执行验证。
+
