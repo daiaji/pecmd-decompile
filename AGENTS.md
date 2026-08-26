@@ -51,6 +51,9 @@ C:\pectest\                   # 部署与运行现场：pecmd_msvc.exe、DEPLOYE
 - 下点三验证（bl 地址 / u 指令边界 / 首命中 rip 落 map 区间）；"从未命中"结论须 V1+V2 满足后才成立。
 - 挂死进程优先 `attach_process` 抓栈（零地址依赖），其次才是 bp。
 - 否定性高影响结论归档/上报前过三关：当期构建复现、阳性对照（bp kernel32!ExitProcess）、第二代理证伪。
+- ⚠ **故障浮现**：执行控制命令报 0x80040205/0x8000FFFF/worker gone → 该会话已死，
+  立即 end_session 换路（速查卡见 `docs\WINDBG_MCP_ISSUES.md` 末节「故障浮现速查卡」）；
+  规避三律：execute 每条只放行一次 / 禁 bp 内嵌串 / 必达热点直接上 fprintf 探针。
 
 ### 探针（V4）
 - 手写 CRT extern（`fopen/fprintf/fclose`），**禁 `#include <stdio.h>`**（撞 win32_api_stubs 内联）。
@@ -95,7 +98,7 @@ mcp attach_process <pid> → ~* k 30 → read_memory → end_session
 
 | 主题 | 权威位置 |
 |---|---|
-| windbg MCP 病理 A–H + SOP + R20 版本锁定纪律 | `docs\WINDBG_MCP_ISSUES.md` |
+| windbg MCP 病理 A–H + SOP + R20 版本锁定纪律 + **R24d 触发面 T1-T4 与故障浮现速查卡** | `docs\WINDBG_MCP_ISSUES.md`（末节速查卡：症状→判定→处置三列） |
 | R18 断点误诊撤回档案 | `docs\WINDBG_MCP_REPRO_UPSTREAM.md`（勿发上游） |
 | 技能库 | `.agents\skills\`：pecmd-build / vgate-live-debug / win-crash-triage / pecmd-semantics / msvc-compat |
 | 文档总索引 | `docs\README.md` |
