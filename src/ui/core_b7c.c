@@ -575,7 +575,11 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
     int64_t script;  /* local_res8: 脚本对象; 写路径复用作字节缓冲槽 */
     WCHAR *cursor;   /* local_res10 命令行游标 */
     char delim_keep; /* local_res10 低字节保存的分隔符 ('!' 判定) */
-    int64_t s_70;    /* SplitTokenAssignVar 槽 */
+    int64_t s_70ctx[3]; /* R14: dc:119737-119759 隐式栈三元组显式化 —— [0]=串槽
+                         * (local_70) [1]=script(local_68=param_1, dc:119759)
+                         * [2]=0(local_60)。v0 用孤立单槽 s_70, SplitTokenAssignVar
+                         * 读 cursor[1] 踩相邻栈垃圾/NULL → ExpandVarDispatch
+                         * NULL+0xDA AV(dump 7600 实锤, REGI 族崩点)。 */
     int64_t s_78;    /* local_78: 原始行→子键路径; 枚举分支复用为缓冲 */
     int64_t s_f0;    /* 根键名展开槽 */
     int64_t s_c0;    /* 空闲槽 (真体分配后释放) */
@@ -634,7 +638,9 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
     delim_keep = '\0';
     prefix = 0;
     s_78 = (int64_t)(uintptr_t)a2; /* local_78 = param_2 */
-    PECMD_AllocStrSlot((WCHAR **)&s_70);
+    PECMD_AllocStrSlot((WCHAR **)&s_70ctx[0]);
+    s_70ctx[1] = (int64_t)(intptr_t)a1; /* dc:119759 local_68 = param_1 */
+    s_70ctx[2] = 0;                     /* dc:119752 local_60 = 0 */
     retv = (HKEY)0; /* pHVar27 */
     bVar8 = false;
     pass_cnt = -1;
@@ -864,7 +870,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
             s_b8 = 0;
             if ((pWVar16 == NULL) && ((pWVar16 = StrRChrW(subp, NULL, L'\\')) == NULL)) {
                 /* 原文无 '\\': 首逗号字段展开后再查 '\\' */
-                plVar17 = PECMD_SplitTokenAssignVar(&s_70, (WCHAR **)&root_slot, 0x2c, 1);
+                plVar17 = PECMD_SplitTokenAssignVar(s_70ctx, (WCHAR **)&root_slot, 0x2c, 1);
                 PECMD_SplitTokenTrimWs((WCHAR **)plVar17, (WCHAR **)&s_f0, 0);
                 root_slot = s_f0;
                 pWVar16 = StrChrW((LPCWSTR)(uintptr_t)s_f0, L'\\');
@@ -916,19 +922,20 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
             a0 = valname; /* local_a0 ← local_80 */
             s_a8 = 0;
             if (optname != '\0') {
-                FUN_140079C80((int64_t *)(intptr_t)&script, (int64_t *)&a0, (int64_t *)&s_a8);
+                FUN_140079C80((int64_t *)(intptr_t)script, (int64_t *)&a0,
+                              (int64_t *)&s_a8); /* S16-R1: 传脚本对象本体(dc:120070) */
                 a0 = (WCHAR *)(uintptr_t)s_a8;
             }
             /* ---- 按分隔符处理 Data 区 ---- */
             if (cVar6 == ',') {
-                plVar17 = PECMD_SplitTokenAssignVar(&s_70, &a0, 0x2c, 1);
+                plVar17 = PECMD_SplitTokenAssignVar(s_70ctx, &a0, 0x2c, 1);
                 PECMD_SplitTokenTrimWs((WCHAR **)plVar17, (WCHAR **)&s_108, 0);
-                b7c_003a20(&script, (WCHAR **)&s_108, 0);
+                b7c_003a20((longlong *)(intptr_t)script, (WCHAR **)&s_108, 0); /* S16-R1(dc:120077) */
                 if ((prefix == 0x2e) && (*a0 == L',')) {
                     a0 = a0 + 1;
-                    plVar17 = PECMD_SplitTokenAssignVar(&s_70, &a0, 0x2c, 1);
+                    plVar17 = PECMD_SplitTokenAssignVar(s_70ctx, &a0, 0x2c, 1);
                     PECMD_SplitTokenTrimWs((WCHAR **)plVar17, (WCHAR **)&s_e0, 0);
-                    b7c_003a20(&script, (WCHAR **)&s_e0, 0);
+                    b7c_003a20((longlong *)(intptr_t)script, (WCHAR **)&s_e0, 0); /* S16-R1(dc:120082) */
                 }
                 if (*(WCHAR *)(uintptr_t)s_108 == L'\0') {
                     PECMD_AssignString(&s_108, WSTR("RegDat"));
@@ -1093,7 +1100,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                         PECMD_FreeStrBuf((WCHAR **)&s_c0);
                         PECMD_FreeStrBuf((WCHAR **)&s_f0);
                         PECMD_FreeStrBuf((WCHAR **)&s_98);
-                        PECMD_FreeStrBuf((WCHAR **)&s_70);
+                        PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
                         return (HKEY)(longlong)LVar12;
                     }
                 }
@@ -1438,7 +1445,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                             PECMD_FreeStrBuf((WCHAR **)&s_c0);
                             PECMD_FreeStrBuf((WCHAR **)&s_f0);
                             PECMD_FreeStrBuf((WCHAR **)&s_98);
-                            PECMD_FreeStrBuf((WCHAR **)&s_70);
+                            PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
                             return (HKEY)(longlong)(int)status_q;
                         }
                         goto LAB_1400c2d88;
@@ -1480,7 +1487,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                     PECMD_FreeStrBuf((WCHAR **)&s_c0);
                     PECMD_FreeStrBuf((WCHAR **)&s_f0);
                     PECMD_FreeStrBuf((WCHAR **)&s_98);
-                    PECMD_FreeStrBuf((WCHAR **)&s_70);
+                    PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
                     return (HKEY)(uintptr_t)0xffffffff80070057ULL;
                 }
             }
@@ -1707,7 +1714,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                 else if ((*cp_src == L'\\') && (cp_src[1] == L'0')) {
                     *cp_dst = L'\0';
                     cp_src = cp_src + 1;
-                    goto b7c_c32c5;
+                        goto b7c_esc; /* S16-R2 */
                 }
                 else {
                     *cp_dst = *cp_src;
@@ -1719,7 +1726,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                     if ((*cp_src == L'\\') && (cp_src[1] == L'0')) {
                         *cp_dst = L'\0';
                         cp_src = cp_src + 1;
-                        goto b7c_c32c5;
+                        goto b7c_esc; /* S16-R2 */
                     }
                     *cp_dst = *cp_src;
                     cp_src = cp_src + 1;
@@ -1733,19 +1740,22 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
                         if ((*cp_src == L'\\') && (cp_src[1] == L'0')) {
                             *cp_dst = L'\0';
                             cp_src = cp_src + 1;
-                            goto b7c_c32c5;
+                            goto b7c_esc; /* S16-R2 */
                         }
                         *cp_dst = *cp_src;
                         cp_src = cp_src + 1;
-                        goto b7c_copy_adv;
+                        goto b7c_c32c9; /* S16-R2: '$' 普通字符亦须复位计数 */
                     }
                     cp_src = cp_src + 1;
                     *cp_dst = L'\0';
-                    goto b7c_c32c5;
+                        goto b7c_esc; /* S16-R2 */
                 }
             }
-        b7c_c32c5:
+        b7c_esc: /* S16-R2: 仅转义字符(嵌 NUL / CRLF→NUL)计数+1 (dc:120784-787,120804-805) */
             cp_sep = cp_sep + 1;
+            goto b7c_copy_adv;
+        b7c_c32c9: /* S16-R2: 普通字符每轮复位, 直移 dc:120793 pHVar30=pHVar27(不变量0) */
+            cp_sep = 0;
         b7c_copy_adv:
             cp_dst = cp_dst + 1;
             if (cp_end <= cp_src)
@@ -1801,7 +1811,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
             PECMD_FreeStrBuf((WCHAR **)&s_c0);
             PECMD_FreeStrBuf((WCHAR **)&s_f0);
             PECMD_FreeStrBuf((WCHAR **)&s_98);
-            PECMD_FreeStrBuf((WCHAR **)&s_70);
+            PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
             return (HKEY)(longlong)(int)DVar13;
 
         LAB_1400c1dd0:
@@ -1845,7 +1855,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
             PECMD_FreeStrBuf((WCHAR **)&s_c0);
             PECMD_FreeStrBuf((WCHAR **)&s_f0);
             PECMD_FreeStrBuf((WCHAR **)&s_98);
-            PECMD_FreeStrBuf((WCHAR **)&s_70);
+            PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
             return (HKEY)(longlong)(int)status_q;
 
         LAB_1400c1c02:
@@ -1876,7 +1886,7 @@ HKEY PECMD_RegiEditRegistry(HKEY a1, HKEY a2, char a3)
     PECMD_InitRamdataRegistry(3);
 LAB_1400c1cd1:
     PECMD_FreeStrBuf((WCHAR **)&s_98);
-    PECMD_FreeStrBuf((WCHAR **)&s_70);
+    PECMD_FreeStrBuf((WCHAR **)&s_70ctx[0]);
     return retv;
 }
 
@@ -2104,7 +2114,10 @@ void *PECMD_EnviMemReadWrite(WCHAR *a1, void *a2, uint64_t a3, WCHAR *a4, char a
         uint64_t u64;
         uint8_t b[16];
     } local_170_u; /* 值位型缓冲 (原 &local_170 栈区) */
-    WCHAR **param_2 = (WCHAR **)a2;
+    /* R14(SUB 族 dump 2200 定案): dc:122671 local_288 = param_2 —— 值拷贝,
+     * param_2 本身即串游标(调用方 dc:27134 传 local_res10[0] 串指针)。
+     * v0 多解一层(*param_2) → 游标变成串首 8 字节文本 → SkipLeading 解引用
+     * 文本 "A=pe" 当指针 AV。 */
     WCHAR *const param_1 = a1;
     WCHAR *const param_4 = a4;
 
@@ -2128,7 +2141,7 @@ void *PECMD_EnviMemReadWrite(WCHAR *a1, void *a2, uint64_t a3, WCHAR *a4, char a
     local_1e0 = -1;
     local_1d8 = 1;
     local_278 = -1;
-    local_288 = *param_2;
+    local_288 = (WCHAR *)a2; /* dc:122671 值拷贝(见上注) */
     FUN_140063b64(&local_200); /* 向量 {data,capa=1,count=0} */
     FUN_14005B154(&local_288); /* 跳过前导空白/控制符 */
     local_317 = a5;

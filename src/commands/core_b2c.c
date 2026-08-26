@@ -1142,9 +1142,9 @@ init_done:
         if (mode != 0) {
             *(uint16_t *)(puVar1 + 2) = 1;
         }
-        if (*(uint16_t *)(g_b21728 + lVar2 * 6 + 4) != 0) {
+        if (*(uint16_t *)(g_b21728 + lVar2 * 6 + 2) != 0) { /* R14(batch-A #011): dc:31553 &DAT_14012172a=基+2; v0 误 +4 与第三槽重复 */
             PECMD_StartWorkerThread((void *)(uintptr_t)g_Script, (void **)local_res20, 0x219,
-                                    (uint64_t)*(uint16_t *)(g_b21728 + lVar2 * 6 + 4),
+                                    (uint64_t)*(uint16_t *)(g_b21728 + lVar2 * 6 + 2),
                                     (uint64_t)(uintptr_t)puVar1, 3, uVar4, 1, 0);
         }
         if (*(uint16_t *)(g_b21728 + lVar2 * 6 + 4) != 0) {

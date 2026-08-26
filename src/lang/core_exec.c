@@ -299,7 +299,12 @@ void FUN_14005D9A8(void *mbox, int mode)
             uint8_t *base = *(uint8_t **)((uint8_t *)mbox + 0x1a0);
             for (i = 0; i < n; i++) {
                 uint8_t *p = *(uint8_t **)(base + (size_t)i * 8);
-                if (p && (wnd = *(HWND *)(p + 0x38)) != 0) {
+                /* R14(batch-A #018): dc:55989-92 两级解引用 obj2=*(p+0x38); hwnd=*(obj2+0x20);
+                 * v0 把中间对象指针当 HWND 用。 */
+                uint8_t *o2 = p ? *(uint8_t **)(p + 0x38) : NULL;
+                HWND hw2 = o2 ? *(HWND *)(o2 + 0x20) : NULL;
+                if (hw2 != 0) {
+                    wnd = hw2;
                     LONG_PTR st = GetWindowLongW(wnd, -0x10);
                     if ((st & 0x18010000) == 0x10010000) {
                         if (!wnd) {

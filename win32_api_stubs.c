@@ -38,7 +38,20 @@ int _snwprintf(uint16_t *buf, size_t cnt, const uint16_t *fmt, ...)
     return r;
 }
 uint64_t _UNK_140121ff6(void) { return 0; }
-void *operator_new(uint64_t n) { (void)n; return 0; }
+/* R14(SUB 族 dump 568 定案): C++ operator new 真语义 —— v0 返0桩致全部 new
+ * 分配路径静默失败(12+ 文件控件/对象创建; SUB 克隆块 _Memory=NULL → 写
+ * NULL+0xD9 AV)。失败走工程 OOM 重试环(≡HeapAlloc 家族惯例 FUN_1400630D0)。 */
+extern HANDLE g_hHeap;
+extern int FUN_1400630D0(int mode);
+void *operator_new(uint64_t n) {
+    for (;;) {
+        void *p = HeapAlloc(g_hHeap, 0, (size_t)n);
+        if (p != NULL) {
+            return p;
+        }
+        FUN_1400630D0(2);
+    }
+}
 uint64_t ram0x000140120a48(void) { return 0; }
 uint64_t u__26_INDATA_140121fe0(void) { return 0; }
 uint64_t u_____D__140120a40(void) { return 0; }

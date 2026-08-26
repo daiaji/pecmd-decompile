@@ -177,7 +177,13 @@ skip_prefix:
     ((uint8_t *)(intptr_t)ps[0])[len] = keyLo;
     data = (uint8_t *)(intptr_t)ps[0];
     mode = flags & 0xff01;
-    goto postproc;
+    /* R14(batch-A #027): dc:142286 裁剪段尾按 bVar20 分流 —— 宽字符(bSkip=true)
+     * 去 postproc; UTF-8 BOM(spec=0xfde9, bVar20=false) fallthrough 落入主解码
+     * (DecodeEncTextToUtf16 转换)。v0 无条件 goto postproc → UTF-8 资源按宽字符误读。 */
+    if (bSkip) {
+        goto postproc;
+    }
+    goto main_decode;
 
 no_precheck:
     /* bit0 清 0：不做 "#code=" 预检，直接处理 */

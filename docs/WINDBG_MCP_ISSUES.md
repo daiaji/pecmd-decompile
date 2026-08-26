@@ -39,6 +39,11 @@ SOP 对照组结论：纯净流程（launch → bp 工具单断点 → go 工具
 
 ## A. 执行控制失效连锁：0x8000FFFF 灾难错误 → worker 半死（后续命令全 0x80040205）
 
+> **R14 补充触发面（2026-08-26 实战）**：dump 会话中对深栈执行 `s -dq <range> <pattern>`
+> 栈模式搜索亦报 `0x80040205`——大范围栈扫描类读取命令同样可能引爆/伴随引擎异常态。
+> 处置同本条：弃会话改源码级推理（该案即因此放弃内存级取证转 dc 对照破案，
+> 见 DEBUGGER_HANDOFF §14 缺陷戊）。范围搜索命令慎用；确需内存取证优先小窗口 read_memory。
+
 - **严重度：高**
 - **症状**：一次 go 放行返回 `灾难性故障 (0x8000FFFF)`；此后该会话一切命令
   （registers/bl/batch/execute）统一报 `提出了一个意外的意外现象 (0x80040205)`，
@@ -87,11 +92,13 @@ SOP 对照组结论：纯净流程（launch → bp 工具单断点 → go 工具
 - **严重度：高**（直接卡死构建回归环）
 - **症状**：windbg 会话存活期间执行 MSVC 构建，link 阶段报 LNK1201"无法写入程序数据库文件"
   （pecmd_msvc.pdb 被占用）。交接记录称上一会话累计发生 3+ 次。
-- **复现配方**：本轮**未复现（SKIP）**——原因：任务纪律禁止运行构建；且机理明确无需构建验证：
-  engine worker 进程加载模块时打开 PDB 并持有句柄，直至 end_session 杀掉 worker 才释放。
+- **复现配方**：~~本轮未复现（SKIP）~~ → **R14 实战复现（2026-08-26）**：dump 会话
+  （pecmd_msvc.exe.10492.dmp 分析，sess-…fc9-5）未 end_session 即发起完整构建 →
+  `LINK : fatal error LNK1201: 写入程序数据库 pecmd_msvc.pdb 时出错`；end_session 后
+  原样重跑构建立即通过。机理与处方不变。
 - **根因**：dbgeng 加载 pecmd_msvc.exe 符号后 worker 进程持有 `.pdb` 文件句柄；
   MSVC link 需要独占写该 PDB，冲突即 LNK1201。
-- **对策（end_session 释放已验证；LNK1201 消除属历史经验）**：
+- **对策（end_session 释放已验证；LNK1201 消除属历史经验+R14 实战闭环）**：
   - **构建前强制清点并 end_session 所有 windbg 会话**（HANDOVER_PROGRESS §8 已立规；
     本轮 5 个实验会话全部即时关闭，server_log 显示每个 worker pid 都随 end_session shutdown）；
   - server_log 可审计当日会话生命周期（本轮实录：一天内 14+ 个 worker 全部及时回收）；

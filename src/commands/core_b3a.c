@@ -159,14 +159,21 @@ uint64_t PECMD_ReadPtr20(int64_t obj)
 }
 
 /* ========== PECMD_IsAlphaNumeric @0x14005bc28 ==========
- * 字母/数字判定: a-z/A-Z/0-9 返回 1。
+ * 字母/数字判定: a-z/0-9 返回 1 (R14 注记: dc:54316 语义**不含 A-Z**,
+ * 与甲体 @140061204/dc:58965 相区分 —— rename_map 撞名, 仲裁裁定合法共存;
+ * 导出独占名 PECMD_IsAlnumLowerDigit 供 stubs 转发, 禁止借用甲体语义)。
  */
-static uint64_t PECMD_IsAlphaNumeric(uint16_t ch)
+uint64_t PECMD_IsAlnumLowerDigit(uint16_t ch)
 {
     if (((ch < 0x61) || (0x7a < ch)) && (9 < (uint16_t)(ch - 0x30))) {
         return 0;
     }
     return 1;
+}
+
+static uint64_t PECMD_IsAlphaNumeric(uint16_t ch)
+{
+    return PECMD_IsAlnumLowerDigit(ch);
 }
 
 /* ========== PECMD_StoreDouble_bc48 @0x14005bc48 ==========

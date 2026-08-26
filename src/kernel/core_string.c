@@ -186,6 +186,10 @@ WCHAR **FUN_14005B154(WCHAR **pp)
  * 调用方只检查低字节 (char), 高字节为寄存器残留 */
 int FUN_14005C788(const char *s, const WCHAR *w, int n)
 {
+    /* R14(batch-A #016): dc:54955-54976 纯 n 字符前缀比较, 全配无条件返 1
+     * (dc:54963-65)。v0 尾部混入的分隔符校验实为姊妹函数 FUN_14005c72c 语义
+     * (dc:54922-54947), 该语义真体已存在 = PECMD_TokPrefixICmp
+     * (restored_bodies.c:7307 ≡ dc:54922), 需要它的调用方应走那个入口。 */
     while (n-- > 0) {
         char c = *s;
         WCHAR u = *w;
@@ -195,11 +199,7 @@ int FUN_14005C788(const char *s, const WCHAR *w, int n)
         s++;
         w++;
     }
-    /* n 个字符全匹配: 要求 w[n] 是分隔符 (空白/结束) */
-    if ((*w > 8 && *w < 0xe) || *w == 0x20 || *w == 0) {
-        return 1;
-    }
-    return 0;
+    return 1;
 }
 
 /* ========== 内存不足提示 @0x1400630d0 ========== */

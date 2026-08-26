@@ -1589,7 +1589,7 @@ uint64_t PECMD_ShowScreenText(int64_t *param_1, WCHAR *param_2)
         }
     }
     PECMD_AllocStrSlot(&local_1d0);
-    PECMD_CreateMutexSlot(&local_1c0, WSTR("Global\\PECMD:text:lock"));
+    PECMD_CreateMutexSlot(&local_1c0, "Global\\PECMD:text:lock"); /* R14: 去 WSTR(dc:41082 窄字面量; LPCSTR 传宽串截断) */
     if (*param_2 != L'\0') {
         lpStart = (LPCWSTR)0;
         if (pWVar8 != (WCHAR *)0) {

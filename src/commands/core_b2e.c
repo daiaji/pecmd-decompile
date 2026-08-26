@@ -196,6 +196,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
     uint32_t valueLen;
     uint32_t valueId;
     uint32_t scanIdx;
+    int hitFound; /* R14(#028②): dc uVar19 查询结果(未命中1/命中0) */
     uint32_t emptyCount;
     int32_t bestIdx;
     LPCWSTR bestValue;
@@ -228,6 +229,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
 
     scanIdx = 1;
     result = 1;
+    hitFound = 1; /* R14(batch-A #028②): dc:21297 uVar19=1, 命中置 0(dc:21356); v0 误用循环计数 scanIdx 作查询结果 */
     keyName = p;
     if (*p == L'?') {
         local_res10 = p + 1;
@@ -250,7 +252,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
         keyName = local_res10;
     }
 
-    PECMD_CreateMutexSlot(&lockObj, WSTR("Global\\PECMD:main:lock"));
+    PECMD_CreateMutexSlot(&lockObj, "Global\\PECMD:main:lock"); /* R14: 去宽宏(batch-A #028①); dc:21320 窄字面量, 真体=CreateMutexA(LPCSTR), v0 宽串被按 char* 截断成 "G" */
     PECMD_InitRamdataRegistry(2);
     idHigh = (uint32_t)PECMD_ParseHotkeyCode((int64_t *)&keyName, idLow, script, '\0');
     PECMD_AllocStrSlot(&expanded);
@@ -289,6 +291,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
                 if ((PECMD_LO32(local_res10) == idLow[0]) && (valueId == idHigh)) {
                     bestValue = valueEnd - (intptr_t)dotMode;
                     bestIdx = (int32_t)scanIdx;
+                    hitFound = 0; /* dc:21356 */
                     scanIdx = 0;
                     break;
                 }
@@ -368,7 +371,7 @@ uint64_t PECMD_HotkeyControl(int64_t *script, WCHAR *cmdline, int msgParam)
         }
         else {
             FUN_1400629B8(script, queryPath, (WCHAR *)bestValue);
-            result = (uint64_t)(int)(int32_t)scanIdx;
+            result = (uint64_t)(int)hitFound; /* R14: dc uVar19 语义(未命中1/命中0) */
             PECMD_FreeStrBuf(&expanded);
             PECMD_ReleaseMutex(&lockObj);
         }

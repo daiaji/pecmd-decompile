@@ -34,6 +34,7 @@ extern char *PECMD_AllocAnsiString(const char *src); /* @0x140070044 */
 /* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int32_t FUN_1400630D0(int mode); /* @0x1400630d0 * /) */
 extern void PECMD_ExitProcessCall(UINT code);        /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
+extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c72c (S18 Patch#3/#4) */
 
 /* FUN_14005B154 实现见 core_string.c (@0x14005b154)。 */
 
@@ -59,20 +60,41 @@ int32_t FUN_14005B1A8(const WCHAR *s, const WCHAR **pw, int n)
 }
 
 /* ========== FUN_14005F33C @0x14005f33c ==========
- * 检测数据编码（前 12 字节）：
- *   return: bit0=非ASCII/UTF8, bit1=文本; 4=x(UTF16), 8=A(UTF16BE), 0x14=a(UTF8)
- *   魔数 (12 字节): 0x140124d00 处 "x...A...a...S" 变体。
+ * 自定义容器编码检测（R14 batch-A #031 按 dc:57228-57264 重写）：
+ *   len>12 时校验 data[4..6]=="CMP"（魔数表 @0x140124d00 = 00 00 00 00 'C''M''P' 'x'…,
+ *   pe_registry.json:94 字节级实证），再按 data[7] 分派：
+ *   'a'→0x14 / 'A'→8 / 'x'→4；code!=0 或 =='S' 时 *(int*)(data+8)!=0 加 bit1，
+ *   返回 code|1。不匹配返 0。v0 误写为 BOM 嗅探(FF FE/FE FF/EF BB BF)，结构错位。
  */
 uint64_t FUN_14005F33C(const uint8_t *data, int len)
 {
-    /* 简化：UTF-16 LE BOM FF FE / UTF-16 BE FE FF / UTF-8 BOM EF BB BF */
     if (len > 12) {
-        if (data[0] == 0xff && data[1] == 0xfe)
-            return 4 | 1;
-        if (data[0] == 0xfe && data[1] == 0xff)
-            return 8 | 1;
-        if (data[0] == 0xef && data[1] == 0xbb && data[2] == 0xbf)
-            return 0x14 | 1;
+        static const uint8_t magic[8] = {0x00, 0x00, 0x00, 0x00, 'C', 'M', 'P', 'x'};
+        int i;
+        for (i = 4; i < 7; i++) {
+            if (data[i] != magic[i]) {
+                return 0;
+            }
+        }
+        {
+            uint8_t code = 0;
+            char c = (char)data[7];
+            if (c == 'a') {
+                code = 0x14;
+            }
+            if (c == 'A') {
+                code = 8;
+            }
+            if (c == 'x') {
+                code = 4;
+            }
+            if (code != 0 || c == 'S') {
+                if (*(const int *)(const void *)(data + 8) != 0) {
+                    code = (uint8_t)(code | 2);
+                }
+                return (uint64_t)((int)(char)code | 1);
+            }
+        }
     }
     return 0;
 }
@@ -178,7 +200,7 @@ bool FUN_140101E70(LPCWSTR path)
  */
 DWORD FUN_14006459C(LPCWSTR src, uint32_t buflen, LPWSTR buf, LPWSTR *last)
 {
-    WCHAR cwd[0x104];
+    WCHAR cwd[0x110]; /* R14(batch-A #019): dc:61522 缓冲 264 元素; v0 0x104=256 在长 CWD 时栈越界 */
     if (!((uint16_t)src[0] < 0x7b && src[1] == L':' && src[2] == L'\0')) {
         return GetFullPathNameW(src, buflen, buf, last);
     }
@@ -326,12 +348,12 @@ void PECMD_MaskScriptEndFileTail(void *script, WCHAR *buf, bool stopMain)
             for (int64_t i = 0; i < n; i++)
                 tmp[i] = tmp[i] ^ xor;
         }
-        if (FUN_14005C788("_ENDFILE", tmp, 8) != 0)
+        if (PECMD_TokPrefixICmp("_ENDFILE", tmp, 8) != 0) /* dc:22012 原体 c72c(S18 Patch#3) */
             break;
         /* 原文 @22019-22030 极性: 仅 "_ENDFILE-IMPORT" 匹配行被空格掩码
          * (!stopMain 时); 普通行不掩码。曾写反导致交给 RunScriptText 的
          * 脚本文本被整体抹空、动词永不执行 (REVIEW §133)。 */
-        if (FUN_14005C788("_ENDFILE-IMPORT", start, 0xf) != 0) {
+        if (PECMD_TokPrefixICmp("_ENDFILE-IMPORT", start, 0xf) != 0) { /* dc:22019 原体 c72c(S18 Patch#4; 与 :350 成对替换否则 IMPORT 分支不可达) */
             if (stopMain)
                 break;
             for (; start < p; start++)

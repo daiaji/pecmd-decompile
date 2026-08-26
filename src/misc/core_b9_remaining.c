@@ -628,12 +628,14 @@ void FUN_140103014(wchar_t *param_1, size_t param_2, void *param_3, uint64_t par
 
 int64_t PECMD_WideStrLen(const uint16_t *s)
 {
-    /* @0x140103020 宽字符串长度 */
+    /* @0x140103020 宽字符串长度。R14(batch-A #001): dc:159144-159148 do-while
+     * 越 NUL 后 (差>>1)-1 = 真实长度; v0 while 停在 NUL 却仍 -1 → 全部长度少 1
+     * (35 个调用点连带写值截断, 如 #028 SHSetValueW 少写末字符)。 */
     const uint16_t *p = s;
     while (*p != 0) {
         p++;
     }
-    return (int64_t)(p - s) - 1;
+    return (int64_t)(p - s);
 }
 
 WCHAR *FUN_140103068(WCHAR *param_1, const WCHAR *param_2)

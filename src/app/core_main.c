@@ -33,6 +33,7 @@
 
 #include "pecmd_defs.h"
 extern WCHAR **FUN_14005B154(WCHAR **pp); /* @0x14005b154 */
+extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c72c (S18 Patch#2) */
 
 /* ---- 已实现 (core_string/core_init/core_token) 与待重构原型 ---- */
 WCHAR *FUN_140024C48(WCHAR **pp, size_t *plen, uint32_t flags); /* @0x140024c48 core_token.c */
@@ -152,7 +153,7 @@ static int PECMD_MainW(HINSTANCE hInstance, WCHAR *cmdline)
             int hasParam = (*pMain > 8 && *pMain < 0xe) || *pMain == L' ';
             g_flag169 = 0;
             FUN_14005B154(&pMain);
-            if (!hasParam || FUN_14005C788("**u", pMain, 3) == 0) {
+            if (!hasParam || PECMD_TokPrefixICmp("**u", pMain, 3) == 0) { /* dc:5537 原体 c72c(S18 Patch#2) */
                 /* 无参数或 **u 前缀: 直接执行脚本 */
                 FUN_1400702B0(&pMain2, pToken + 4);
                 FUN_140045C90(&g_Script, pMain2);

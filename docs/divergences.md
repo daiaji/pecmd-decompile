@@ -51,6 +51,10 @@
 | D-09 | 缺陷丙v2：GrowByteBuffer 头契约误判致块内指针释放 | HeapRealloc(=FUN_140063118) 带8字节头返回 hdr+8(dc:60560)，v2 改 HeapFree(buf) 释内指针 | **已修(v3归正)** |
 | D-10 | 缺陷丁：PSB LAB_14004c51b 二级地址释放 | dc:44300 传 ppWVar17 的值(槽地址)，rb:6319 写成 &ppWVar17 → HeapFree(栈地址-8) | **已修** |
 | D-11 | 缺陷戊：ThreadMainLoop 尾部漏置 NULL 致 double-free | dc:19158-163 两路 ReleaseRefCount 后置 NULL；rb 版直接 FreeStrBuf(&task) 与归零释放相撞 | **已修** |
+| D-12 | operator_new 返 0 桩 → 全局对象创建静默失败 | win32_api_stubs.c:41 `void*operator_new{ return 0; }`；12+ 文件控件/对象 new 全 NULL | **已修(真体化)** |
+| D-13 | 比较族三别名落返 0 桩 → 前缀/全串匹配面整体失效 | PECMD_AsciiPrefixICmp(rb 115处)/小写 FUN_14005c788(rb 17处)/PECMD_AsciiWideICmp 无真体定义, 链接到 stubs 返0桩 | **已修(转发真体)** |
+| D-14 | EnviMemReadWrite param_2 多解一层 → 串文本当游标 | dc:122671 local_288=param_2 值拷贝；v0 写 *param_2 → "A=pe" 文本被当指针(SUB dump 2200) | **已修** |
+| D-15 | FUN_14005C788 混装 c72c 词边界语义(R14 恢复纯前缀后暴露) | 4 个调用点原文实为 c72c(core_thread.c:111 包装器内核/core_main.c:155/exec2.c:350+355), 纯语义下穿透或 IMPORT 分支不可达 | **已修(S18 四补丁)** |
 
 ---
 

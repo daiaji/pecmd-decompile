@@ -200,7 +200,7 @@ void FUN_140053C5C(int64_t obj, int mode)
 {
     if (**(int16_t **)(obj + 0x10) != 0) {
         uint64_t *local_res8 = NULL;
-        PECMD_CopyStrToSlot(local_res8, (uint64_t *)(obj + 0x10));
+        PECMD_CopyStrToSlot(&local_res8, (uint64_t *)(obj + 0x10)); /* R14: 补 &(dc:49159); v0 漏 & = NULL 写 AV(batch-A #012) */
         FUN_14006375C((WCHAR **)&local_res8, WSTR(".Enable"));
         if (**(int16_t **)(obj + 0x10) != 0) {
             LPCWSTR pWVar1 = WSTR("0");
@@ -687,7 +687,7 @@ void FUN_14007DF90(int64_t ctx, int mode)
         int64_t local_res18[2] = {0, 0};
         uint64_t *local_res8 = NULL;
         uint64_t *puVar1 = FUN_14007DE70((uint64_t *)(ctx + 0x10), local_res18, WSTR(".Check"));
-        PECMD_CopyStrToSlot(local_res8, puVar1);
+        PECMD_CopyStrToSlot(&local_res8, puVar1); /* R14: 补 &(batch-A #023) */
         PECMD_FreeStrBuf((WCHAR **)local_res18);
         if (**(int16_t **)(ctx + 0x10) != 0) {
             LPCWSTR pWVar2 = WSTR("0");
@@ -747,9 +747,17 @@ void PECMD_DtorHotkeyItem(uint64_t *obj)
  */
 void FUN_1400B8960(HANDLE hFont, int *size, LPCWSTR name)
 {
-    int local_68 = 0;
-    GetObjectW((HGDIOBJ)hFont, 0x5c, &local_68);
-    PECMD_CreateFontAdjusted(&local_68, size, name);
+    /* R14(batch-A #024): 按 dc:114488-114500 补齐五步预处理 —— v0 缺
+     * memset 尾部/weight 预置/调用后 width 清零/quality 字节置 1,
+     * 源字体字段非默认时产出不同字体。 */
+    uint8_t lf[0x5c];
+    *(int32_t *)(void *)lf = 0;                       /* dc:114493 local_68=0 (lfHeight) */
+    memset(lf + 4, 0, 0x58);                          /* dc:114494 尾部 0x58 字节清零 */
+    *(int32_t *)(void *)(lf + 0x10) = 400;            /* dc:114495 lfWeight=400(GetObjectW 失败时兜底) */
+    GetObjectW((HGDIOBJ)hFont, 0x5c, lf);             /* dc:114496 */
+    *(int32_t *)(void *)(lf + 4) = 0;                 /* dc:114497 lfWidth=0 */
+    lf[0x17] = 1;                                     /* dc:114498 local_51=1 (+0x17) */
+    PECMD_CreateFontAdjusted((int *)lf, size, name);
 }
 
 /* ========== PECMD_DtorBitmapControl @0x1400bcbe0 ==========

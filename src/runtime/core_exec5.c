@@ -164,8 +164,10 @@ int32_t FUN_14005C7C4(const char *a, const WCHAR *w)
             WCHAR u = *w;
             a++;
             w++;
-            if (!((0x40 < (uint16_t)(int16_t)c) || (u == (int16_t)c)) &&
+            if (!((0x40 < (uint16_t)(int16_t)c) || (u == (int16_t)c)) ||
                 !(((uint16_t)(int16_t)c | 0x20) == (u | 0x20))) {
+                /* R14(batch-A #017): 失配条件 dc:54999-5001 = !(A&&B)=!A||!B;
+                 * v0 写成 !A&&!B → 字母位恒使 A 真 → 任何失配都被跳过("AB"=="AC")。 */
                 return (int32_t)(v & 0xffffff00);
             }
         }

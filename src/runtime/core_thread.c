@@ -21,6 +21,7 @@
 #include "domain/pecmd_domain.h"
 extern void *PECMD_HeapRealloc(void *ptr, size_t size); /* @0x140063118 */
 extern WCHAR **FUN_14005B154(WCHAR **pp);               /* @0x14005b154 */
+extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c72c (S18 Patch#1) */
 
 /* 全局 */
 extern uint32_t g_threadId; /* g_dwC96C 线程 ID 输出 */
@@ -108,7 +109,7 @@ char FUN_1400660AC(const char *word, WCHAR **pp, int n)
         n = (int)lstrlenA(word);
     }
     p = *pp;
-    r = FUN_14005C788(word, p, n); /* PECMD_TokPrefixICmp 等价实现 */
+    r = (int)PECMD_TokPrefixICmp(word, p, n); /* dc:62811 原体经 FUN_14005c72c(词边界); 纯前缀是 R14 前混装语义残留(S18 Patch#1, 惠及 ~200 下游动词位点) */
     if (r != 0) {
         *pp = p + n;
         FUN_14005B154(pp);
@@ -302,7 +303,10 @@ DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg, void *param4)
                                           0x4ff);
             if (r == 0xffffffff) {
                 if (nCount != 0) {
-                    return GetLastError();
+                    /* R14(batch-A #007): dc:14349-54+14393-95 err==0 映射返 1,
+                     * 否则调用方误读 0 为"句柄0已触发"。 */
+                    DWORD e = GetLastError();
+                    return e ? e : 1;
                 }
                 Sleep(1);
             }
