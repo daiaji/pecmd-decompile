@@ -174,3 +174,11 @@ ExpandVarDispatch(展开变量) → FUN_140024C48 提取首 token="WRITE" → lo
 - process exit = 259 directly caused by EXEC handler return value
 - original golden exit=0: EXEC success returns 0 (after wait) or no write-back
 - fix direction: locate EXEC handler in rb ECD (0x43455845 branch), add dc-matching wait logic before exit-code read
+
+
+## 17. R16 认知边界登记(Round13 末)
+- 干净复现: WRITE 单行脚本 exit=0xb7(183), out.txt 未产出(与既往一致)
+- 探针网现状: [WIN]入口/[WRET2]出口均未打印 => WriteFileEncoded 主体未执行或早退点在其第一条语句前
+- [BP]/[WB] 确认行到达 PSB 尾部且 local_158=WRIT/local_180=183
+- 矛盾点: 分支体首探针未打印但尾部有返回值 => 需核对 rb:6939 编译后的实际调用目标(ILT thunk 解析), 排除同名双体/链接错位
+- 下轮首动作: windbg 反汇编 rb:6939 调用点的实际 call 目标地址, 与 map PECMD_WriteFileEncoded(1400700b0) 比对
