@@ -182,3 +182,10 @@ ExpandVarDispatch(展开变量) → FUN_140024C48 提取首 token="WRITE" → lo
 - [BP]/[WB] 确认行到达 PSB 尾部且 local_158=WRIT/local_180=183
 - 矛盾点: 分支体首探针未打印但尾部有返回值 => 需核对 rb:6939 编译后的实际调用目标(ILT thunk 解析), 排除同名双体/链接错位
 - 下轮首动作: windbg 反汇编 rb:6939 调用点的实际 call 目标地址, 与 map PECMD_WriteFileEncoded(1400700b0) 比对
+
+
+## 18. R17 认知边界终登记(Round13 末)
+- Ghidra 导入 msvc exe 分析: WriteFileEncoded(1400700b0) 唯一引用=DATA(函数指针表条目 1402ca7f4), 无直接 CALL
+- 全指令扫描: 无任何 cmp 0x54495257 直比指令 => PSB 级联对 WRITE 的分发经函数指针表间接进行, [WB] 的 verb 槽读数为残留值不可信
+- 可靠事实链保持: exit=0xb7(183)/out.txt 未产出/WriteFileEncoded 未被调([WIN] 探针+bp 双证)
+- 下轮首动作: 定位函数指针表 1402ca7f4 所在数组结构与其填充者(RegisterFileAssociations 静态模式段?), 从表内容反推 WRITE 行的真实处理器; 或在 DispatchBuiltin 内部加免解引用探针打印每次比较的表项名
