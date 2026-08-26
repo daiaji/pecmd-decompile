@@ -35,6 +35,11 @@ extern char *PECMD_AllocAnsiString(const char *src); /* @0x140070044 */
 extern void PECMD_ExitProcessCall(UINT code);        /* @0x14005b21c */
 extern int32_t FUN_14001B5AC(LPCWSTR buf, uint32_t key, int64_t n); /* @0x14001b5ac */
 extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c72c (S18 Patch#3/#4) */
+/* TEMP PROBE 最小 CRT 原型 (禁 stdio.h) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
+extern int __cdecl fclose(void *_Stream);
+extern int64_t PECMD_TokPrefixICmp(const char *a, const WCHAR *w, int n); /* @0x14005c72c (S18 Patch#3/#4) */
 
 /* FUN_14005B154 实现见 core_string.c (@0x14005b154)。 */
 
@@ -181,6 +186,14 @@ HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share
     if (h == (HANDLE)-1)
         h = 0;
     *out = h;
+    { /* TEMP PROBE R15(文件打开序列取证) */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[OFH] h=%p disp=%u fl=%08x path=%ls\n", (void *)h,
+                    (unsigned)disp, (unsigned)flags, path ? path : L"(null)");
+            fclose(pf_);
+        }
+    }
     return h;
 }
 

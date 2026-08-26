@@ -92,7 +92,35 @@ uint64_t FUN_14006042c(void) { return 0; }
 void PECMD_SendHotkeyKeyMessage(uint32_t a, int b, int c) { (void)a;(void)b;(void)c; }   /* 签名修正: uint32_t,int,int */
 uint64_t PECMD_EnsureCallbackWindow(void) { return 0; }
 /* ---- PECMD_ProcessScriptBlock 移植新增最小桩 (原未定义符号, 按调用点签名) ---- */
-uint64_t PECMD_IsPecmdScriptFile(uint64_t a) { (void)a; return 0; }
+/* R15(退出码/WRITE 族终极根因): dc:12709-12733 直移 —— 文件存在且扩展名为
+ * .WC/.IN/.TX 前缀 → 1; 存在但扩展名不符 → 0; 不存在 → -1(有符号!)。
+ * v0 恒返 0 桩 → PSB bare-path 判定恒假, 脚本行全部掉进 ECD 兜底被当外部
+ * 程序执行(WRITE/READ/FILE 族失败的直接机制, CreateFileW 序列+bp 实锤)。 */
+extern bool FUN_140101E70(LPCWSTR path); /* 真体 core_exec2.c:201 (存在性=打开测试) */
+uint64_t PECMD_IsPecmdScriptFile(uint64_t a)
+{
+    LPCWSTR path = (LPCWSTR)(uintptr_t)a;
+    int cmp;
+    LPCWSTR dot;
+    if (!FUN_140101E70(path)) {
+        return (uint64_t)(int64_t)-1; /* dc:12732 */
+    }
+    dot = StrRChrW(path, NULL, L'.');
+    if (dot == NULL) {
+        return 0;
+    }
+    cmp = StrCmpNIW(dot, L".WC", 3);
+    if (cmp != 0) {
+        cmp = StrCmpNIW(dot, L".IN", 3);
+        if (cmp != 0) {
+            cmp = StrCmpNIW(dot, L".TX", 3);
+            if (cmp != 0) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
 uint64_t PECMD_UserCmdHandler(uint64_t a) { (void)a; return 0; }
 
 
