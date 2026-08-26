@@ -1,0 +1,899 @@
+# semantic diff dc(FUN_140032dc4) vs msvc(PECMD_EvalLoopCondition)
+===== replace dc[0:1] msvc[0:2]
+  dc | U FUN_140032dc4(longlong *param_1,U param_2,uint param_3,LPCWSTR param_4)
+  ms | U PECMD_EvalLoopCondition(int64_t *script, U value, uint32_t flags,
+  ms | LPCWSTR text)
+===== replace dc[2:97] msvc[3:56]
+  dc | byte bVar1;
+  dc | WCHAR WVar2;
+  dc | uint uVar3;
+  dc | uint uVar4;
+  dc | uint uVar5;
+  dc | int iVar6;
+  ms | uint8_t bVar1 = 0, bVar16 = 0, bVar20 = 0, bVar21 = 0, bVar33 = 0, bVar36 = 0;
+  ms | WCHAR WVar2 = 0, WVar29 = 0;
+  ms | uint32_t uVar3 = 0, uVar4 = 0, uVar5 = 0, uVar22 = 0, uVar26 = 0, uVar37 = 0;
+  ms | uint32_t uVar39 = 0;
+  ms | int iVar6 = 0, iVar7 = 0, iVar23 = 0;
+  ms | DWORD DVar8 = 0, DVar9 = 0, DVar10 = 0, DVar38 = 0;
+   ...(+89)
+===== replace dc[98:100] msvc[57:59]
+  dc | local_128 = param_3 & 0x40000;
+  dc | uVar26 = param_3 & 0x10000;
+  ms | local_128 = flags & 0x40000;
+  ms | uVar26 = flags & 0x10000;
+===== replace dc[101:102] msvc[60:61]
+  dc | uVar3 = param_3 & 0xff;
+  ms | uVar3 = flags & 0xff;
+===== replace dc[103:107] msvc[62:67]
+  dc | local_188 = CONCAT44(local_188.HighPart,param_3) & 0xffffffff00020000;
+  dc | uVar39 = (uVar3 == 1);
+  dc | uVar22 = (uVar3 == 0);
+  dc | if ((uVar22 != 0) || (local_198 = 0, uVar39 != 0)) {
+  ms | local_188 = (uint64_t)(flags & 0x20000);
+  ms | uVar39 = (uVar3 == 1);
+  ms | uVar22 = (uVar3 == 0);
+  ms | local_198 = 0;
+  ms | if ((uVar22 != 0) || (uVar39 != 0)) {
+===== replace dc[114:115] msvc[74:75]
+  dc | bVar1 = FUN_1400660ac("!",(longlong *)&local_res10,1);
+  ms | bVar1 = FUN_1400660AC("!", (int64_t *)&local_res10, 1);
+===== replace dc[143:145] msvc[103:105]
+  dc | if (*(ushort *)local_res10 == 0x2a) {
+  dc | local_1a7 = uVar5;
+  ms | if (*(uint16_t *)local_res10 == 0x2a) {
+  ms | local_1a7 = uVar5;
+===== replace dc[149:153] msvc[109:116]
+  dc | if (((*(ushort *)local_res10 != 0x24) && (*(ushort *)local_res10 != 0x23)) &&
+  dc | (*(ushort *)local_res10 != 0x7c)) goto LAB_140032f6a;
+  dc | local_158 = *(ushort *)local_res10;
+  dc | local_1a7 = *(ushort *)local_res10;
+  ms | if ((*(uint16_t *)local_res10 != 0x24) &&
+  ms | (*(uint16_t *)local_res10 != 0x23) &&
+  ms | (*(uint16_t *)local_res10 != 0x7c)) {
+  ms | goto LAB_140032f6a;
+  ms | }
+  ms | local_158 = *(uint16_t *)local_res10;
+   ...(+1)
+===== replace dc[157:159] msvc[120:122]
+  dc | bVar43 = *(short *)local_res10 == 0x5b;
+  dc | uVar37 = param_3 & 0x20000;
+  ms | bVar43 = *(int16_t *)local_res10 == 0x5b;
+  ms | uVar37 = flags & 0x20000;
+===== replace dc[161:164] msvc[124:127]
+  dc | iVar6 = lstrlenW((LPCWSTR)local_res10);
+  dc | for (puVar24 = (ushort *)(UVar15 + (iVar6 + -1) * 2);
+  dc | ((8 < *puVar24 && (*puVar24 < 0xe)) || (*puVar24 == 0x20)); puVar24 = puVar24 + -1) {
+  ms | iVar6 = lstrlenW((LPCWSTR)local_res10);
+  ms | for (puVar24 = (uint16_t *)(UVar15 + (int64_t)(iVar6 + -1) * 2);
+  ms | ((8 < *puVar24 && (*puVar24 < 0xe)) || (*puVar24 == 0x20)); puVar24 = puVar24 - 1) {
+===== replace dc[173:175] msvc[136:139]
+  dc | if (((WVar2 < 9) || (0xd < WVar2)) && (WVar2 != L' ')) {
+  dc | if ((WVar2 != L'[') && (WVar2 != L'(')) break;
+  ms | if (((WVar2 < 9) || (0xd < WVar2)) && (WVar2 != L' ')) {
+  ms | if ((WVar2 != L'[') && (WVar2 != L'('))
+  ms | break;
+===== replace dc[186:188] msvc[150:151]
+  dc | if ((*(char *)(param_1 + 0xda) != '\0') || (*(char *)(param_1 + 0xd) != '\0'))
+  dc | {
+  ms | if ((*(char *)((char *)script + 0xda) != '\0') || (*(char *)((char *)script + 0xd) != '\0')) {
+===== replace dc[202:203] msvc[165:166]
+  dc | bVar1 = FUN_1400660ac("!",(longlong *)&local_res10,1);
+  ms | bVar1 = FUN_1400660AC("!", (int64_t *)&local_res10, 1);
+===== replace dc[204:212] msvc[167:175]
+  dc | pWVar41 = (WCHAR *)local_158;
+  dc | local_150 = local_res10;
+  dc | local_104 = bVar1;
+  dc | bVar16 = UVar30.LowPart;
+  dc | local_res18 = CONCAT31(local_res18._1_3_,bVar16);
+  dc | local_188.LowPart = local_158;
+  ms | pWVar41 = (WCHAR *)local_158;
+  ms | local_150 = local_res10;
+  ms | local_104 = bVar1;
+  ms | bVar16 = UVar30.LowPart;
+  ms | local_res18 = bVar16;
+  ms | local_188.LowPart = local_158;
+   ...(+2)
+===== replace dc[213:220] msvc[176:183]
+  dc | UVar15 = UVar30;
+  dc | local_190 = UVar30;
+  dc | local_178 = UVar30;
+  dc | local_160 = UVar30;
+  dc | local_140 = UVar30;
+  dc | local_138 = UVar30;
+  ms | UVar15 = 0;
+  ms | local_190 = 0;
+  ms | local_178 = 0;
+  ms | local_160 = 0;
+  ms | local_140 = 0;
+  ms | local_138 = 0;
+   ...(+1)
+===== replace dc[228:229] msvc[191:193]
+  dc | if ((((WVar29 == L'>') || (WVar29 == L'<')) || (WVar29 == L'=')) || (WVar29 == L'!')) {
+  ms | if ((((WVar29 == L'>') || (WVar29 == L'<')) || (WVar29 == L'=')) ||
+  ms | (WVar29 == L'!')) {
+===== replace dc[230:234] msvc[194:198]
+  dc | local_res18 = CONCAT31(local_res18._1_3_,1);
+  dc | FUN_1400703e4((longlong *)&local_130,(LPCWSTR)UVar19);
+  dc | local_160 = local_130;
+  dc | *(WCHAR *)UVar19 = WVar2;
+  ms | local_res18 = 1;
+  ms | PECMD_StrBldCopyWide((WCHAR **)&local_130, (LPCWSTR)UVar19);
+  ms | local_160 = local_130;
+  ms | *(WCHAR *)UVar19 = WVar2;
+===== replace dc[248:250] msvc[212:215]
+  dc | if (WVar29 == L'\"') break;
+  dc | WVar29 = *(WCHAR *)UVar19;
+  ms | if (WVar29 == L'\"')
+  ms | break;
+  ms | WVar29 = *(WCHAR *)UVar19;
+===== replace dc[263:264] msvc[228:229]
+  dc | if (9 < (*(WCHAR *)(local_res10 + 2) + L'￐')) {
+  ms | if (9 < (*(WCHAR *)(local_res10 + 2) + 0xfff0)) {
+===== replace dc[266:268] msvc[231:232]
+  dc | local_170 = (U)
+  dc | FUN_140024c48((longlong *)&local_1a0,(longlong *)0x0,0xc1);
+  ms | local_170 = FUN_140024C48((int64_t *)&local_1a0, NULL, 0xc1);
+===== replace dc[273:274] msvc[237:238]
+  dc | (local_150 = local_res10 + 2, 9 < (WVar29 + L'￐'))) {
+  ms | (local_150 = local_res10 + 2, 9 < (WVar29 + 0xfff0))) {
+===== replace dc[278:279] msvc[242:243]
+  dc | FUN_1400170b0(&local_150);
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_150);
+===== replace dc[280:285] msvc[244:252]
+  dc | bVar33 = uVar34;
+  dc | pWVar32 = (WCHAR *)DVar9;
+  dc | WVar29 = *(WCHAR *)local_150;
+  dc | while (UVar35 = local_150, WVar29 != WVar2) {
+  dc | bVar33 = uVar34;
+  ms | bVar33 = uVar34;
+  ms | pWVar32 = (WCHAR *)DVar9;
+  ms | WVar29 = *(WCHAR *)local_150;
+  ms | while (1) {
+  ms | UVar35 = local_150;
+  ms | if (WVar29 == WVar2)
+   ...(+2)
+===== replace dc[292:293] msvc[259:260]
+  dc | if (((((pWVar32 == (WCHAR *)UVar30) || (DVar38 == DVar8)) ||
+  ms | if (((((pWVar32 == (WCHAR *)(uintptr_t)UVar30) || (DVar38 == DVar8)) ||
+===== replace dc[298:302] msvc[265:272]
+  dc | ((((WVar29 = *(WCHAR *)(local_150 - 2), WVar29 < 9 ||
+  dc | (0xd < WVar29)) && (WVar29 != L' ')) ||
+  dc | (((WVar29 < 9 || (0xd < WVar29)) && (WVar29 != L' ')))))) {
+  dc | if (cVar31 <= (char)bVar16) goto LAB_1400332df;
+  ms | ((((WVar29 = *(WCHAR *)(local_150 - 2),
+  ms | WVar29 < 9 || (0xd < WVar29)) &&
+  ms | (WVar29 != L' ')) ||
+  ms | (((WVar29 < 9 || (0xd < WVar29)) &&
+  ms | (WVar29 != L' ')))))) {
+  ms | if (cVar31 <= (char)bVar16)
+   ...(+1)
+===== replace dc[315:318] msvc[285:287]
+  dc | local_res18._1_3_ = (undefined3)(local_res18 >> 8);
+  dc | local_res18 = CONCAT31(local_res18._1_3_,bVar1);
+  dc | local_1a0 = UVar19;
+  ms | local_res18 = bVar1;
+  ms | local_1a0 = UVar19;
+===== replace dc[319:321] msvc[288:291]
+  dc | (((*(WCHAR *)UVar19 == L'>' || (*(WCHAR *)UVar19 == L'<')) ||
+  dc | ((*(WCHAR *)UVar19 == L'=' || (*(WCHAR *)UVar19 == L'!')))))) {
+  ms | (((*(WCHAR *)UVar19 == L'>') || (*(WCHAR *)UVar19 == L'<')) ||
+  ms | ((*(WCHAR *)UVar19 == L'=') ||
+  ms | (*(WCHAR *)UVar19 == L'!')))) {
+===== replace dc[326:329] msvc[296:300]
+  dc | if ('\x01' < cVar31) break;
+  dc | uVar12 = (ulonglong)(cVar31 + 1);
+  dc | FUN_1400170b0(&local_150);
+  ms | if ('\x01' < cVar31)
+  ms | break;
+  ms | uVar12 = (uint64_t)(cVar31 + 1);
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_150);
+===== replace dc[338:339] msvc[309:311]
+  dc | if ((local_1a4 != *(WCHAR *)UVar27) && (local_180 != *(WCHAR *)UVar27))
+  ms | if ((local_1a4 != *(WCHAR *)UVar27) &&
+  ms | (local_180 != *(WCHAR *)UVar27)) {
+===== replace dc[340:341] msvc[312:314]
+  dc | pWVar41 = (WCHAR *)(ulonglong)*(WCHAR *)UVar27;
+  ms | }
+  ms | pWVar41 = (WCHAR *)(uintptr_t)*(WCHAR *)UVar27;
+===== replace dc[342:343] msvc[315:317]
+  dc | if (pWVar41 == (WCHAR *)UVar30) goto LAB_140033464;
+  ms | if (pWVar41 == (WCHAR *)(uintptr_t)UVar30)
+  ms | goto LAB_140033464;
+===== replace dc[344:345] msvc[318:319]
+  dc | FUN_1400170b0(&local_150);
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_150);
+===== replace dc[346:348] msvc[320:322]
+  dc | if ((*(WCHAR *)local_150 == L'@') &&
+  dc | ((*(WCHAR *)(local_150 + 2) + L'￐') < 10)) {
+  ms | if ((*(WCHAR *)local_150 == L'@') &&
+  ms | ((*(WCHAR *)(local_150 + 2) + 0xfff0) < 10)) {
+===== replace dc[350:352] msvc[324:326]
+  dc | WVar29 = *(WCHAR *)local_170;
+  dc | UVar19 = UVar30;
+  ms | WVar29 = *(WCHAR *)local_170;
+  ms | UVar19 = 0;
+===== replace dc[354:355] msvc[328:330]
+  dc | if ((2 < (UVar19 + 1)) && (local_d8 == (WCHAR *)UVar30))
+  ms | if ((2 < (int64_t)(UVar19 + 1)) &&
+  ms | (local_d8 == (WCHAR *)(uintptr_t)UVar30)) {
+===== replace dc[356:357] msvc[331:333]
+  dc | while( true ) {
+  ms | }
+  ms | while (1) {
+===== replace dc[358:360] msvc[334:337]
+  dc | WVar29 = *(WCHAR *)local_170;
+  dc | if (WVar29 == L'%') break;
+  ms | WVar29 = *(WCHAR *)local_170;
+  ms | if (WVar29 == L'%')
+  ms | break;
+===== replace dc[361:362] msvc[338:340]
+  dc | (((8 < WVar29 && (WVar29 < 0xe)) || (WVar29 == L' '))))
+  ms | (((8 < WVar29 && (WVar29 < 0xe)) ||
+  ms | (WVar29 == L' ')))) {
+===== insert dc[363:363] msvc[341:342]
+  ms | }
+===== replace dc[366:369] msvc[345:351]
+  dc | else if (((((8 < WVar29) && (WVar29 < 0xe)) || (WVar29 == L' ')) ||
+  dc | ((WVar29 == L')' || (WVar29 == L']')))) ||
+  dc | ((WVar29 == L'&' || ((WVar29 == L'|' || (WVar29 == L'@')))))) break;
+  ms | else if (((((8 < WVar29) && (WVar29 < 0xe)) ||
+  ms | (WVar29 == L' ')) ||
+  ms | ((WVar29 == L')') || (WVar29 == L']'))) ||
+  ms | ((WVar29 == L'&') || ((WVar29 == L'|') || (WVar29 == L'@')))) {
+  ms | break;
+  ms | }
+===== replace dc[377:378] msvc[359:361]
+  dc | if ((*(WCHAR *)UVar27 == L'\'') || (uVar3 = 1, *(WCHAR *)UVar27 == L'*')) {
+  ms | if ((*(WCHAR *)UVar27 == L'\'') ||
+  ms | (uVar3 = 1, *(WCHAR *)UVar27 == L'*')) {
+===== replace dc[380:381] msvc[363:365]
+  dc | if ((DVar9 & uVar3) != 0) goto LAB_1400333d1;
+  ms | if ((DVar9 & uVar3) != 0)
+  ms | goto LAB_1400333d1;
+===== replace dc[382:384] msvc[366:367]
+  dc | local_170 = (U)
+  dc | FUN_140024c48((longlong *)&local_1a0,(longlong *)0x0,0xc1);
+  ms | local_170 = FUN_140024C48((int64_t *)&local_1a0, NULL, 0xc1);
+===== replace dc[387:392] msvc[370:376]
+  dc | if (bVar1 == bVar16) goto LAB_1400336c4;
+  dc | FUN_140063888((longlong *)&local_130,(LPCWSTR)UVar35,
+  dc | (local_170 - UVar35) >> 1);
+  dc | *(WCHAR *)UVar35 = WVar2;
+  dc | local_160 = local_130;
+  ms | if (bVar1 == bVar16)
+  ms | goto LAB_1400336c4;
+  ms | PECMD_StrCopyW((WCHAR **)&local_130, (LPCWSTR)UVar35,
+  ms | (int64_t)(local_170 - UVar35) >> 1);
+  ms | *(WCHAR *)UVar35 = WVar2;
+  ms | local_160 = local_130;
+===== replace dc[414:415] msvc[398:399]
+  dc | if (local_d8 == (WCHAR *)UVar30) {
+  ms | if (local_d8 == (WCHAR *)(uintptr_t)UVar30) {
+===== replace dc[417:419] msvc[401:404]
+  dc | if ((*(byte *)(param_1 + 0xd) == bVar16) && (*(short *)UVar27 != 0x26)) {
+  dc | FUN_14006f884((LPCWSTR)UVar27,&local_190);
+  ms | if ((*(uint8_t *)((char *)script + 0xd) == bVar16) &&
+  ms | (*(int16_t *)UVar27 != 0x26)) {
+  ms | FUN_14006F884((LPCWSTR)UVar27, &local_190);
+===== replace dc[421:424] msvc[406:409]
+  dc | pWVar41 = (WCHAR *)FUN_14001e69c(param_1,(LPCWSTR)UVar27,(longlong *)0x0,-1);
+  dc | if (pWVar41 == (WCHAR *)UVar30) {
+  dc | pWVar18 = &DAT_14011c638;
+  ms | pWVar41 = FUN_14001E69C(script, (LPCWSTR)UVar27, NULL, -1);
+  ms | if (pWVar41 == (WCHAR *)(uintptr_t)UVar30) {
+  ms | pWVar18 = g_szEmpty;
+===== replace dc[428:429] msvc[413:414]
+  dc | FUN_1400703e4((longlong *)&local_190,pWVar18);
+  ms | PECMD_StrBldCopyWide((WCHAR **)&local_190, pWVar18);
+===== replace dc[432:433] msvc[417:418]
+  dc | FUN_14007bf44(param_1,(WCHAR *)UVar27,&local_190,0,1);
+  ms | FUN_14007BF44(script, (WCHAR *)UVar27, &local_190, 0, 1);
+===== replace dc[434:437] msvc[419:422]
+  dc | local_a8 = local_190;
+  dc | local_190 = UVar30;
+  dc | FUN_14007a224(param_1,(WCHAR *)UVar19,&local_190,0,bVar16);
+  ms | local_a8 = local_190;
+  ms | local_190 = 0;
+  ms | FUN_14007A224(script, (WCHAR *)UVar19, &local_190, 0, bVar16);
+===== replace dc[438:439] msvc[423:424]
+  dc | FUN_14007bf44(param_1,(WCHAR *)UVar15,&local_138,0,1);
+  ms | FUN_14007BF44(script, (WCHAR *)UVar15, &local_138, 0, 1);
+===== replace dc[440:448] msvc[425:433]
+  dc | local_b0 = local_138;
+  dc | local_138 = UVar30;
+  dc | FUN_14007a224(param_1,(WCHAR *)UVar15,&local_138,0,bVar16);
+  dc | iVar7 = lstrlenW((LPCWSTR)local_190);
+  dc | FUN_14006375c((longlong *)&local_190,(LPCWSTR)local_138);
+  dc | UVar15 = local_190 + iVar7 * 2;
+  ms | local_b0 = local_138;
+  ms | local_138 = 0;
+  ms | FUN_14007A224(script, (WCHAR *)UVar15, &local_138, 0, bVar16);
+  ms | iVar7 = lstrlenW((LPCWSTR)local_190);
+  ms | FUN_14006375C((WCHAR **)&local_190, (LPCWSTR)local_138);
+  ms | UVar15 = local_190 + (int64_t)iVar7 * 2;
+   ...(+2)
+===== replace dc[449:450] msvc[434:435]
+  dc | FUN_14005b104((longlong *)&local_a8);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_a8);
+===== replace dc[452:454] msvc[437:440]
+  dc | if (uVar26 != DVar8) goto LAB_14003378b;
+  dc | FUN_14007bf44(param_1,(WCHAR *)UVar27,&local_190,0,1);
+  ms | if (uVar26 != DVar8)
+  ms | goto LAB_14003378b;
+  ms | FUN_14007BF44(script, (WCHAR *)UVar27, &local_190, 0, 1);
+===== replace dc[458:459] msvc[444:445]
+  dc | lVar13 = iVar7;
+  ms | lVar13 = (int64_t)iVar7;
+===== replace dc[460:462] msvc[446:448]
+  dc | FUN_14007bf44(param_1,(WCHAR *)local_160,&local_138,0,1);
+  dc | FUN_14006375c((longlong *)&local_190,(LPCWSTR)local_138);
+  ms | FUN_14007BF44(script, (WCHAR *)local_160, &local_138, 0, 1);
+  ms | FUN_14006375C((WCHAR **)&local_190, (LPCWSTR)local_138);
+===== replace dc[464:467] msvc[450:455]
+  dc | for (UVar19 = local_160;
+  dc | (((*(short *)UVar19 == 0x3e || (*(short *)UVar19 == 0x3c)) || (*(short *)UVar19 == 0x3d)
+  dc | ) || (*(short *)UVar19 == 0x21)); UVar19 = UVar19 + 2) {
+  ms | for (UVar19 = local_160; (((*(int16_t *)UVar19 == 0x3e) ||
+  ms | (*(int16_t *)UVar19 == 0x3c)) ||
+  ms | (*(int16_t *)UVar19 == 0x3d)) ||
+  ms | (*(int16_t *)UVar19 == 0x21);
+  ms | UVar19 = UVar19 + 2) {
+===== replace dc[468:475] msvc[456:465]
+  dc | bVar1 = local_res18;
+  dc | pWVar32 = (WCHAR *)((UVar19 - local_160) >> 1);
+  dc | pWVar41 = &DAT_14011c638;
+  dc | local_1a0 = UVar30;
+  dc | if (((*(byte *)(param_1 + 0xd) != bVar16) || (*(short *)UVar19 == 0x26)) &&
+  dc | (pWVar11 = (WCHAR *)FUN_140028484(param_1,(LPCWSTR)UVar19,&local_1a0),
+  ms | bVar1 = local_res18;
+  ms | pWVar32 = (WCHAR *)((UVar19 - local_160) >> 1);
+  ms | pWVar41 = g_szEmpty;
+  ms | local_1a0 = 0;
+  ms | if (((*(uint8_t *)((char *)script + 0xd) != bVar16) ||
+  ms | (*(int16_t *)UVar19 == 0x26)) &&
+   ...(+3)
+===== replace dc[478:482] msvc[468:473]
+  dc | FUN_140063720(&local_190,pWVar32 + lVar13 + iVar7);
+  dc | if (pWVar32 != (WCHAR *)UVar30) {
+  dc | FUN_14001d78c((undefined1 *)(local_190 + lVar13 * 2),(undefined1 *)UVar15,
+  dc | pWVar32 * 2);
+  ms | PECMD_AllocString(&local_190,
+  ms | (int64_t)(uintptr_t)pWVar32 + lVar13 + iVar7);
+  ms | if (pWVar32 != (WCHAR *)(uintptr_t)UVar30) {
+  ms | memcpy((void *)(local_190 + lVar13 * 2), (const void *)UVar15,
+  ms | (uintptr_t)pWVar32 * 2);
+===== replace dc[483:487] msvc[474:478]
+  dc | FUN_14001d78c((undefined1 *)(local_190 + (pWVar32 + lVar13) * 2),
+  dc | (undefined1 *)pWVar41,(iVar7 + 1) * 2);
+  dc | FUN_14005b104((longlong *)&local_1a0);
+  dc | uVar37 = local_188.LowPart;
+  ms | memcpy((void *)(local_190 + ((uintptr_t)pWVar32 + lVar13) * 2),
+  ms | (const void *)pWVar41, (iVar7 + 1) * 2);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_1a0);
+  ms | uVar37 = local_188.LowPart;
+===== replace dc[492:497] msvc[483:488]
+  dc | local_res10 = local_190;
+  dc | FUN_140018b70((LPCWSTR)local_190);
+  dc | iVar7 = lstrlenW((LPCWSTR)local_res10);
+  dc | local_1a0 = local_res10;
+  dc | lVar13 = local_res10 + iVar7 * 2;
+  ms | local_res10 = local_190;
+  ms | PECMD_StripTrailingSpaces((LPCWSTR)local_190);
+  ms | iVar7 = lstrlenW((LPCWSTR)local_res10);
+  ms | local_1a0 = local_res10;
+  ms | lVar13 = local_res10 + (int64_t)iVar7 * 2;
+===== replace dc[498:501] msvc[489:492]
+  dc | iVar7 = lstrlenW((LPCWSTR)local_res10);
+  dc | UVar15 = local_res10 + iVar7 * 2;
+  dc | local_160 = UVar15;
+  ms | iVar7 = lstrlenW((LPCWSTR)local_res10);
+  ms | UVar15 = local_res10 + (int64_t)iVar7 * 2;
+  ms | local_160 = UVar15;
+===== replace dc[505:507] msvc[496:499]
+  dc | for (; ((*(WCHAR *)UVar19 < 9 || (0xd < *(WCHAR *)UVar19)) &&
+  dc | ((*(WCHAR *)UVar19 != L' ' && (UVar19 < UVar15))));
+  ms | for (; ((*(WCHAR *)UVar19 < 9 ||
+  ms | (0xd < *(WCHAR *)UVar19)) &&
+  ms | ((*(WCHAR *)UVar19 != L' ') && (UVar19 < UVar15)));
+===== replace dc[510:512] msvc[502:504]
+  dc | lVar40 = (UVar19 - local_res10) >> 1;
+  dc | UVar19._1_7_ = (undefined7)((ulonglong)UVar30 >> 8);
+  ms | lVar40 = (int64_t)((UVar19 - local_res10) >> 1);
+  ms | UVar19 = (UVar19 & 0xffULL) | (UVar30 & 0xffffffffffffff00ULL);
+===== replace dc[514:516] msvc[506:508]
+  dc | if ((((bVar1 == bVar16) && (local_d0 == (WCHAR *)UVar30)) &&
+  dc | (*(WCHAR *)local_res10 != L':')) &&
+  ms | if ((((bVar1 == bVar16) && (local_d0 == (WCHAR *)(uintptr_t)UVar30)) &&
+  ms | (*(WCHAR *)local_res10 != L':')) &&
+===== replace dc[517:519] msvc[509:513]
+  dc | (((*(WCHAR *)local_res10 < 0x30 || (0x39 < *(WCHAR *)local_res10)) &&
+  dc | ((*(WCHAR *)local_res10 != L'(' && (*(WCHAR *)local_res10 != L'-')))))))) {
+  ms | (((*(WCHAR *)local_res10 < 0x30 ||
+  ms | (0x39 < *(WCHAR *)local_res10)) &&
+  ms | ((*(WCHAR *)local_res10 != L'(') &&
+  ms | (*(WCHAR *)local_res10 != L'-'))))))) {
+===== replace dc[522:526] msvc[516:522]
+  dc | FUN_14005b374(&local_1a0,0x2a,0x3f);
+  dc | DVar8 = FUN_14002d708((LPCWSTR)local_res10,-(*(WCHAR *)local_1a0 != L'\0') & 0x101,
+  dc | (longlong *)0x0,0,DVar8);
+  dc | UVar19.LowPart._0_1_ = (WCHAR *)CONCAT44(extraout_var,DVar8) != (WCHAR *)UVar30;
+  ms | PECMD_SkipUntilDelim((WCHAR **)&local_1a0, 0x2a, 0x3f);
+  ms | DVar8 = FUN_14002D708(
+  ms | (LPCWSTR)local_res10,
+  ms | (-(*(WCHAR *)local_1a0 != L'\0') & 0x101), NULL, 0,
+  ms | DVar8);
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) | (DVar8 != 0);
+===== replace dc[529:531] msvc[525:528]
+  dc | local_res10 = (_struct_22)FUN_14001be14(UVar27);
+  dc | DVar9 = lstrlenW((LPCWSTR)local_res10);
+  ms | local_res10 =
+  ms | (uint64_t)(uintptr_t)FUN_14001BE14((WCHAR *)(uintptr_t)UVar27);
+  ms | DVar9 = lstrlenW((LPCWSTR)local_res10);
+===== replace dc[532:534] msvc[529:532]
+  dc | uVar28 = *(WCHAR *)local_res10 & 0xffdf;
+  dc | if (((uVar28 - 0x41) < 0x1a) && (*(WCHAR *)(local_res10 + 2) == L':')) {
+  ms | uVar28 = *(WCHAR *)local_res10 & 0xffdf;
+  ms | if (((uVar28 - 0x41) < 0x1a) &&
+  ms | (*(WCHAR *)(local_res10 + 2) == L':')) {
+===== replace dc[539:542] msvc[537:540]
+  dc | UVar19.LowPart = DVar10 >> ((char)uVar28 + 0xbfU & 0x1f) & 1;
+  dc | UVar19.HighPart = 0;
+  dc | if ((UVar19.LowPart == 0) || (*(WCHAR *)(local_res10 + 4) == WVar2))
+  ms | UVar19.LowPart = (DVar10 >> (((char)uVar28 + 0xbfU) & 0x1f)) & 1;
+  ms | UVar19.HighPart = 0;
+  ms | if ((UVar19.LowPart == 0) || (*(WCHAR *)(local_res10 + 4) == WVar2)) {
+===== insert dc[544:544] msvc[542:543]
+  ms | }
+===== replace dc[545:548] msvc[544:546]
+  dc | uVar12 = FUN_140101cdc(uVar28);
+  dc | uVar14 = CONCAT71(UVar19._1_7_,(DWORD)uVar12 == DVar8);
+  dc | DVar38 = (DWORD)uVar14;
+  ms | uVar12 = PECMD_IsRemovableDrive(uVar28);
+  ms | DVar38 = (uVar12 == DVar8);
+===== replace dc[549:550] msvc[547:549]
+  dc | if (DVar38 != DVar8) goto LAB_140034486;
+  ms | if (DVar38 != DVar8)
+  ms | goto LAB_140034486;
+===== replace dc[553:555] msvc[552:554]
+  dc | ((((WCHAR *)(local_res10 - 2))[DVar9] == L'\\' ||
+  dc | (((WCHAR *)(local_res10 - 2))[DVar9] == L'/')))) {
+  ms | ((((WCHAR *)(local_res10 - 2))[DVar9] == L'\\') ||
+  ms | (((WCHAR *)(local_res10 - 2))[DVar9] == L'/'))) {
+===== replace dc[556:558] msvc[555:557]
+  dc | lVar13 = (DVar9 - 1);
+  dc | if (UVar30 <= lVar13) {
+  ms | lVar13 = (int64_t)(DVar9 - 1);
+  ms | if ((int64_t)UVar30 <= lVar13) {
+===== replace dc[560:561] msvc[559:561]
+  dc | (*(WCHAR *)(local_res10 + lVar13 * 2) != L'/')) break;
+  ms | (*(WCHAR *)(local_res10 + lVar13 * 2) != L'/'))
+  ms | break;
+===== replace dc[562:563] msvc[562:563]
+  dc | lVar13 = lVar13 + -1;
+  ms | lVar13 = lVar13 - 1;
+===== replace dc[568:578] msvc[568:588]
+  dc | if ((DVar9 != DVar8) &&
+  dc | ((((local_c0 == (WCHAR *)UVar30 || (*(WCHAR *)local_res10 == WVar2)) ||
+  dc | (*(WCHAR *)(local_res10 + 2) != L':')) ||
+  dc | ((DVar38 <= DVar8 &&
+  dc | ((DVar8 <= DVar38 ||
+  dc | (uVar12 = FUN_140101cdc(*(WCHAR *)local_res10), (DWORD)uVar12 != DVar8)))))))) {
+  ms | {
+  ms | bool condA = (local_c0 == (WCHAR *)(uintptr_t)UVar30) ||
+  ms | (*(WCHAR *)local_res10 == WVar2) ||
+  ms | (*(WCHAR *)(local_res10 + 2) != L':');
+  ms | bool condB = (DVar38 <= DVar8 &&
+  ms | (DVar8 <= DVar38 ||
+   ...(+14)
+===== replace dc[586:588] msvc[596:600]
+  dc | if ((((bVar1 == 1) && (local_188 = UVar15 + 2, *(WCHAR *)local_188 != L'=')) &&
+  dc | ((UVar35 = UVar15, *(WCHAR *)UVar15 != L'<' || (*(WCHAR *)local_188 != L'>')))) ||
+  ms | if ((((bVar1 == 1) &&
+  ms | (local_188 = UVar15 + 2, *(WCHAR *)local_188 != L'=')) &&
+  ms | ((UVar35 = UVar15, *(WCHAR *)UVar15 != L'<') ||
+  ms | (*(WCHAR *)local_188 != L'>'))) ||
+===== insert dc[591:591] msvc[603:605]
+  ms | /* R24(031/061 live 对照定案): dc:30963 为 UVar35 = UVar30 (真值积累槽),
+  ms | * 旧实现误推 0 — 与上一条同源 Ghidra 伪影处理失误, 一并归正。 */
+===== replace dc[593:595] msvc[607:609]
+  dc | FUN_1400170b0(&local_188);
+  dc | uVar3 = UVar35.LowPart;
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_188);
+  ms | uVar3 = UVar35.LowPart;
+===== replace dc[599:601] msvc[613:615]
+  dc | local_188 = UVar35;
+  dc | FUN_1400170b0(&local_res20);
+  ms | local_188 = UVar35;
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_res20);
+===== replace dc[604:607] msvc[618:622]
+  dc | WVar29 = *(WCHAR *)UVar27;
+  dc | uVar22 = WVar29;
+  dc | if (((local_168 == WVar29) || (uVar26 == WVar29)) || (local_1a4 == uVar22)) {
+  ms | WVar29 = *(WCHAR *)UVar27;
+  ms | uVar22 = WVar29;
+  ms | if (((local_168 == WVar29) || (uVar26 == WVar29)) ||
+  ms | (local_1a4 == uVar22)) {
+===== replace dc[613:614] msvc[628:629]
+  dc | if ((((pWVar41 != (WCHAR *)UVar30) && (local_1a7 == bVar16)) &&
+  ms | if ((((pWVar41 != (WCHAR *)(uintptr_t)UVar30) && (local_1a7 == bVar16)) &&
+===== replace dc[615:617] msvc[630:634]
+  dc | ((FUN_1400170b0(&local_res10), UVar27 = local_res10, *(WCHAR *)local_res10 < 0x30 ||
+  dc | (0x39 < *(WCHAR *)local_res10)))))) && (*(WCHAR *)local_res10 != L'.')) {
+  ms | ((PECMD_SkipLeadingControls((WCHAR **)&local_res10), UVar27 = local_res10,
+  ms | *(WCHAR *)local_res10 < 0x30 ||
+  ms | (0x39 < *(WCHAR *)local_res10)))))) &&
+  ms | (*(WCHAR *)local_res10 != L'.')) {
+===== replace dc[619:620] msvc[636:638]
+  dc | if (((local_a0 == (WCHAR *)UVar30) && (uVar3 == DVar8)) && (*(WCHAR *)UVar27 == L'\'')) {
+  ms | if (((local_a0 == (WCHAR *)(uintptr_t)UVar30) && (uVar3 == DVar8)) &&
+  ms | (*(WCHAR *)UVar27 == L'\'')) {
+===== replace dc[626:635] msvc[644:655]
+  dc | FUN_140082448((longlong *)&local_res10,(double *)&local_1a0);
+  dc | FUN_140082448((longlong *)&local_188,(double *)&local_150);
+  dc | local_140 = (_struct_22)local_1a0;
+  dc | local_178 = (_struct_22)local_150;
+  dc | if (((char)local_res18 < '\x02') &&
+  dc | (((double)local_1a0 != (double)local_140 ||
+  ms | PECMD_ParseParenthesizedExpression((int64_t *)&local_res10,
+  ms | (double *)&local_1a0);
+  ms | PECMD_ParseParenthesizedExpression((int64_t *)&local_188,
+  ms | (double *)&local_150);
+  ms | local_140 = local_1a0;
+  ms | local_178 = local_150;
+   ...(+5)
+===== replace dc[646:648] msvc[666:668]
+  dc | FUN_1400745c8((longlong *)&local_res10,&local_140);
+  dc | FUN_1400745c8((longlong *)&local_188,&local_178);
+  ms | PECMD_EvalParenStripped((int64_t *)&local_res10, &local_140);
+  ms | PECMD_EvalParenStripped((int64_t *)&local_188, &local_178);
+===== replace dc[652:658] msvc[672:679]
+  dc | if (pWVar41 == (WCHAR *)UVar30) {
+  dc | FUN_14005b104((longlong *)&local_130);
+  dc | FUN_14005b104((longlong *)&local_138);
+  dc | FUN_14005b104((longlong *)&local_190);
+  dc | LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  dc | return (U)0xffffffff80070057;
+  ms | if (pWVar41 == (WCHAR *)(uintptr_t)UVar30) {
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_130);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_138);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_190);
+  ms | LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
+  ms | UVar15 = 0xffffffff80070057ULL;
+   ...(+1)
+===== replace dc[661:662] msvc[682:683]
+  dc | FUN_1400170b0(&local_188);
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_188);
+===== replace dc[675:679] msvc[696:700]
+  dc | uVar12 = FUN_140077f90((longlong *)&local_118,&local_120);
+  dc | local_118 = local_188;
+  dc | FUN_14006a7f4((longlong *)&local_118,&local_178);
+  dc | if (*(WCHAR *)local_118 == L'.') {
+  ms | uVar12 = PECMD_ParseAndSkipSpace_7f90((int64_t *)&local_118, &local_120);
+  ms | local_118 = local_188;
+  ms | FUN_14006A7F4((int64_t *)&local_118, &local_178);
+  ms | if (*(WCHAR *)local_118 == L'.') {
+===== replace dc[681:682] msvc[702:704]
+  dc | if ((iVar7 - 3U < 3) && (DVar9 = StrCmpNIW((LPCWSTR)local_1a0,L"MEM",3), DVar9 == DVar8)) {
+  ms | if (((iVar7 - 3) < 3) &&
+  ms | (DVar9 = StrCmpNIW((LPCWSTR)local_1a0, WSTR("MEM"), 3), DVar9 == DVar8)) {
+===== replace dc[688:690] msvc[710:712]
+  dc | local_140 = FUN_14001e870((char)bVar21);
+  dc | UVar27 = local_140;
+  ms | local_140 = PECMD_QueryPhysicalMemory((char)bVar21);
+  ms | UVar27 = local_140;
+===== replace dc[691:692] msvc[713:714]
+  dc | UVar27 = local_140 + 0xfffff >> 0x14;
+  ms | UVar27 = (local_140 + 0xfffff) >> 0x14;
+===== replace dc[697:700] msvc[719:722]
+  dc | dVar45 = (double)UVar27;
+  dc | if (UVar27 < 0) {
+  dc | dVar45 = dVar45 + DAT_140121668;
+  ms | dVar45 = (double)(int64_t)UVar27;
+  ms | if ((int64_t)UVar27 < 0) {
+  ms | dVar45 = dVar45 + g_dbl1668;
+===== replace dc[702:703] msvc[724:725]
+  dc | bVar42 = NAN(dVar45) || NAN(local_120);
+  ms | bVar42 = isnan(dVar45) || isnan(local_120);
+===== replace dc[705:707] msvc[727:729]
+  dc | if ((bVar42) || (UVar27 = UVar30, !bVar44)) {
+  dc | UVar27 = 0xffffffffffffffff;
+  ms | if (bVar42 || (UVar27 = 0, !bVar44)) {
+  ms | UVar27 = 0xffffffffffffffffULL;
+===== replace dc[727:730] msvc[749:754]
+  dc | if (uVar28 != ((short)lVar40 + 0x3dU)) {
+  dc | if (uVar28 == 0x42) goto LAB_140033e77;
+  dc | if (uVar28 != 0x55) goto LAB_140033f6b;
+  ms | if (uVar28 != ((int16_t)lVar40 + 0x3dU)) {
+  ms | if (uVar28 == 0x42)
+  ms | goto LAB_140033e77;
+  ms | if (uVar28 != 0x55)
+  ms | goto LAB_140033f6b;
+===== replace dc[734:735] msvc[758:760]
+  dc | if (iVar7 != 5) goto LAB_140033f47;
+  ms | if (iVar7 != 5)
+  ms | goto LAB_140033f47;
+===== replace dc[741:742] msvc[766:768]
+  dc | if (uVar17 != 0x41) goto LAB_140033f6b;
+  ms | if (uVar17 != 0x41)
+  ms | goto LAB_140033f6b;
+===== replace dc[766:767] msvc[792:793]
+  dc | UVar27 = (ULONGLONG)&local_f0;
+  ms | UVar27 = (uint64_t)(uintptr_t)&local_f0;
+===== replace dc[768:772] msvc[794:799]
+  dc | if (((local_f0 == L'\\') && (UVar27 = local_1a0, local_160 != UVar30)) &&
+  dc | (*(WCHAR *)local_160 != WVar2)) {
+  dc | WVar29 = *(WCHAR *)local_160;
+  dc | *(WCHAR *)local_160 = WVar2;
+  ms | if ((local_f0 == L'\\') &&
+  ms | (UVar27 = local_1a0, local_160 != UVar30) &&
+  ms | (*(WCHAR *)local_160 != WVar2)) {
+  ms | WVar29 = *(WCHAR *)local_160;
+  ms | *(WCHAR *)local_160 = WVar2;
+===== replace dc[774:775] msvc[801:803]
+  dc | UVar27 = FUN_140018bf0(UVar27,(char)local_148,0);
+  ms | UVar27 = PECMD_GetDiskSpaceInfo((WCHAR *)(uintptr_t)UVar27,
+  ms | (char)local_148, 0);
+===== replace dc[780:781] msvc[808:809]
+  dc | UVar30 = 0xffffffffffffffff;
+  ms | UVar30 = 0xffffffffffffffffULL;
+===== replace dc[789:790] msvc[817:818]
+  dc | if (local_178 < UVar30) {
+  ms | if ((int64_t)local_178 < (int64_t)UVar30) {
+===== replace dc[795:797] msvc[823:825]
+  dc | if (*(WCHAR *)local_118 == L'.') {
+  dc | dVar45 = dVar45 + (double)(UVar27.LowPart & 0xfffff) * _DAT_140121630;
+  ms | if (*(WCHAR *)local_118 == L'.') {
+  ms | dVar45 = dVar45 + (double)(UVar27.LowPart & 0xfffff) * g_dbl21630;
+===== replace dc[799:800] msvc[827:828]
+  dc | bVar42 = NAN(dVar45) || NAN(local_120);
+  ms | bVar42 = isnan(dVar45) || isnan(local_120);
+===== replace dc[806:808] msvc[834:836]
+  dc | uVar14 = FUN_14001ba3c(local_res20,UVar27,param_1);
+  dc | UVar30 = (U)uVar14;
+  ms | uVar14 = PECMD_WriteNumberToScriptVar(local_res20, UVar27, script);
+  ms | UVar30 = (uint64_t)(int32_t)uVar14;
+===== replace dc[811:812] msvc[839:841]
+  dc | if ((iVar7 != 3) || (DVar9 = StrCmpNIW((LPCWSTR)local_1a0,L"KEY",3), DVar9 != DVar8))
+  ms | if ((iVar7 != 3) ||
+  ms | (DVar9 = StrCmpNIW((LPCWSTR)local_1a0, WSTR("KEY"), 3), DVar9 != DVar8)) {
+===== insert dc[813:813] msvc[842:843]
+  ms | }
+===== replace dc[814:817] msvc[844:847]
+  dc | if (((*(short *)local_188 - 0x30U) < 10) &&
+  dc | (((*(ushort *)(local_188 + 2) - 0x30) < 10 ||
+  dc | ((*(ushort *)(local_188 + 2) | 0x20) == 0x78)))) {
+  ms | if (((*(int16_t *)local_188 - 0x30) < 10) &&
+  ms | (((*(uint16_t *)(local_188 + 2) - 0x30) < 10) ||
+  ms | ((*(uint16_t *)(local_188 + 2) | 0x20) == 0x78))) {
+===== replace dc[820:822] msvc[850:852]
+  dc | uVar26 = FUN_1400226e4((LPCWSTR)local_188,'\0');
+  dc | local_178 = (U)uVar26;
+  ms | uVar26 = PECMD_ParseVkKeyName((LPCWSTR)local_188, '\0');
+  ms | local_178 = (uint64_t)(int32_t)uVar26;
+===== replace dc[823:824] msvc[853:854]
+  dc | if (UVar30 < local_178) {
+  ms | if ((int64_t)UVar30 < (int64_t)local_178) {
+===== replace dc[827:830] msvc[857:860]
+  dc | uVar28 = GetAsyncKeyState(local_178.LowPart);
+  dc | uVar26 = -((uVar28 & 0x8000) != 0) & local_178.LowPart;
+  dc | local_140 = (U)uVar26;
+  ms | uVar28 = GetAsyncKeyState(local_178.LowPart);
+  ms | uVar26 = (-((uVar28 & 0x8000) != 0) & local_178.LowPart);
+  ms | local_140 = (uint64_t)(int32_t)uVar26;
+===== replace dc[833:834] msvc[863:864]
+  dc | wsprintfW(&local_98,L"0x%lX");
+  ms | wsprintfW(&local_98, WSTR("0x%lX"));
+===== replace dc[836:837] msvc[866:867]
+  dc | FUN_1400629b8(param_1,local_res20,&local_98);
+  ms | FUN_1400629B8(script, local_res20, &local_98);
+===== replace dc[839:840] msvc[869:870]
+  dc | FUN_1400629b8(param_1,L"PressKey",&local_98);
+  ms | FUN_1400629B8(script, WSTR("PressKey"), &local_98);
+===== replace dc[844:845] msvc[874:875]
+  dc | UVar30 = 0xffffffff80070057;
+  ms | UVar30 = 0xffffffff80070057ULL;
+===== replace dc[846:851] msvc[876:881]
+  dc | FUN_14005b104((longlong *)&local_130);
+  dc | FUN_14005b104((longlong *)&local_138);
+  dc | FUN_14005b104((longlong *)&local_190);
+  dc | LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  dc | return (U)UVar30;
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_130);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_138);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_190);
+  ms | LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
+  ms | return UVar30;
+===== replace dc[853:854] msvc[883:884]
+  dc | FUN_1400170b0(&local_1a0);
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_1a0);
+===== replace dc[856:859] msvc[886:890]
+  dc | for (; (local_1a0 <= pWVar41 &&
+  dc | (((UVar15 = local_160, 8 < *pWVar41 && (*pWVar41 < 0xe)) ||
+  dc | (*pWVar41 == L' ')))); pWVar41 = pWVar41 + -1) {
+  ms | for (; (local_1a0 <= (uint64_t)(uintptr_t)pWVar41 &&
+  ms | (((UVar15 = local_160, 8 < *pWVar41 && (*pWVar41 < 0xe)) ||
+  ms | (*pWVar41 == L' '))));
+  ms | pWVar41 = pWVar41 - 1) {
+===== replace dc[860:861] msvc[891:892]
+  dc | iVar7 = (pWVar41 + (2 - local_1a0) >> 1);
+  ms | iVar7 = (((uintptr_t)pWVar41 + 2 - local_1a0) >> 1);
+===== replace dc[863:866] msvc[894:897]
+  dc | FUN_1400170b0(&local_1a0);
+  dc | for (puVar24 = (ushort *)(lVar13 + -2);
+  dc | (local_1a0 <= puVar24 &&
+  ms | PECMD_SkipLeadingControls((WCHAR **)&local_1a0);
+  ms | for (puVar24 = (uint16_t *)(lVar13 + -2);
+  ms | ((uint64_t)(uintptr_t)local_1a0 <= (uint64_t)(uintptr_t)puVar24 &&
+===== replace dc[867:868] msvc[898:899]
+  dc | puVar24 = puVar24 + -1) {
+  ms | puVar24 = puVar24 - 1) {
+===== replace dc[869:870] msvc[900:901]
+  dc | iVar23 = (puVar24 + (2 - local_1a0) >> 1);
+  ms | iVar23 = (((uintptr_t)puVar24 + 2 - local_1a0) >> 1);
+===== replace dc[875:877] msvc[906:908]
+  dc | if (local_c8 == (WCHAR *)UVar30) {
+  dc | DVar9 = StrCmpNIW((LPCWSTR)UVar27,(LPCWSTR)local_1a0,iVar6);
+  ms | if (local_c8 == (WCHAR *)(uintptr_t)UVar30) {
+  ms | DVar9 = StrCmpNIW((LPCWSTR)UVar27, (LPCWSTR)local_1a0, iVar6);
+===== replace dc[879:880] msvc[910:911]
+  dc | DVar9 = StrCmpNW((LPCWSTR)UVar27,(LPCWSTR)local_1a0,iVar6);
+  ms | DVar9 = StrCmpNW((LPCWSTR)UVar27, (LPCWSTR)local_1a0, iVar6);
+===== replace dc[883:884] msvc[914:916]
+  dc | if (bVar44) goto LAB_140033c4c;
+  ms | if (bVar44)
+  ms | goto LAB_140033c4c;
+===== replace dc[890:891] msvc[922:923]
+  dc | local_140 = (U)DVar8;
+  ms | local_140 = (uint64_t)(int32_t)DVar8;
+===== replace dc[893:895] msvc[925:927]
+  dc | UVar27 = UVar30;
+  dc | if (*(WCHAR *)UVar15 == WVar2) {
+  ms | UVar27 = 0;
+  ms | if (*(WCHAR *)UVar15 == WVar2) {
+===== replace dc[896:897] msvc[928:930]
+  dc | UVar19.LowPart._0_1_ = local_140 != UVar27;
+  ms | UVar19.LowPart =
+  ms | (UVar19.LowPart & 0xffffff00u) | (local_140 != UVar27);
+===== replace dc[899:901] msvc[932:935]
+  dc | if (*(WCHAR *)UVar15 == L'=') {
+  dc | UVar19.LowPart._0_1_ = local_140 == local_178;
+  ms | if (*(WCHAR *)UVar15 == L'=') {
+  ms | UVar19.LowPart =
+  ms | (UVar19.LowPart & 0xffffff00u) | (local_140 == local_178);
+===== replace dc[905:906] msvc[939:941]
+  dc | UVar19.LowPart._0_1_ = local_178 <= local_140;
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) |
+  ms | ((int64_t)local_178 <= (int64_t)local_140);
+===== replace dc[913:914] msvc[948:950]
+  dc | if (*(WCHAR *)(UVar15 + 2) == L'>') goto LAB_14003427e;
+  ms | if (*(WCHAR *)(UVar15 + 2) == L'>')
+  ms | goto LAB_14003427e;
+===== replace dc[917:918] msvc[953:955]
+  dc | UVar19.LowPart._0_1_ = local_140 <= local_178;
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) |
+  ms | ((int64_t)local_140 <= (int64_t)local_178);
+===== replace dc[921:925] msvc[958:965]
+  dc | if (*(WCHAR *)UVar15 == L'!') {
+  dc | if (*(WCHAR *)(UVar15 + 2) == L'=') goto LAB_14003427e;
+  dc | if (*(WCHAR *)(UVar15 + 2) == L'>') goto LAB_1400342cc;
+  dc | if (*(WCHAR *)(UVar15 + 2) == L'<') goto LAB_1400342af;
+  ms | if (*(WCHAR *)UVar15 == L'!') {
+  ms | if (*(WCHAR *)(UVar15 + 2) == L'=')
+  ms | goto LAB_14003427e;
+  ms | if (*(WCHAR *)(UVar15 + 2) == L'>')
+  ms | goto LAB_1400342cc;
+  ms | if (*(WCHAR *)(UVar15 + 2) == L'<')
+   ...(+1)
+===== replace dc[926:928] msvc[966:969]
+  dc | if (*(WCHAR *)UVar15 == L'>') {
+  dc | UVar19.LowPart._0_1_ = local_178 < local_140;
+  ms | if (*(WCHAR *)UVar15 == L'>') {
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) |
+  ms | ((int64_t)local_178 < (int64_t)local_140);
+===== replace dc[930:932] msvc[971:974]
+  dc | if (*(WCHAR *)UVar15 == L'<') {
+  dc | UVar19.LowPart._0_1_ = local_140 < local_178;
+  ms | if (*(WCHAR *)UVar15 == L'<') {
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) |
+  ms | ((int64_t)local_140 < (int64_t)local_178);
+===== replace dc[934:936] msvc[976:979]
+  dc | if (*(WCHAR *)UVar15 == L'&') {
+  dc | if ((local_140 != UVar30) && (local_178 != UVar30)) {
+  ms | if (*(WCHAR *)UVar15 == L'&') {
+  ms | if ((local_140 != UVar30) &&
+  ms | (local_178 != UVar30)) {
+===== replace dc[940:942] msvc[983:986]
+  dc | if (*(WCHAR *)UVar15 == L'|') {
+  dc | if ((local_140 != UVar30) || (local_178 != UVar30)) {
+  ms | if (*(WCHAR *)UVar15 == L'|') {
+  ms | if ((local_140 != UVar30) ||
+  ms | (local_178 != UVar30)) {
+===== replace dc[946:950] msvc[990:995]
+  dc | if (*(WCHAR *)UVar15 != L'@') goto LAB_140034640;
+  dc | uVar25 = CONCAT71(UVar19._1_7_,local_178 != UVar30);
+  dc | uVar14 = CONCAT71(UVar19._1_7_,local_140 != UVar30);
+  dc | uVar26 = uVar25 ^ uVar14;
+  ms | if (*(WCHAR *)UVar15 != L'@')
+  ms | goto LAB_140034640;
+  ms | uVar25 = (uint64_t)(local_178 != UVar30);
+  ms | uVar14 = (uint64_t)(local_140 != UVar30);
+  ms | uVar26 = uVar25 ^ uVar14;
+===== replace dc[951:953] msvc[996:998]
+  dc | uVar3 = UVar30.LowPart;
+  dc | UVar27._1_7_ = (undefined7)((ulonglong)UVar30 >> 8);
+  ms | uVar3 = UVar30.LowPart;
+  ms | UVar27 = (UVar27 & 0xffULL) | (UVar30 & 0xffffffffffffff00ULL);
+===== replace dc[959:961] msvc[1004:1006]
+  dc | UVar27.LowPart._0_1_ = bVar44;
+  dc | *local_110 = (short)UVar27.LowPart + L'0';
+  ms | UVar19.LowPart = (UVar19.LowPart & 0xffffff00u) | bVar44;
+  ms | *local_110 = (WCHAR)(UVar19.LowPart + L'0');
+===== replace dc[962:963] msvc[1007:1008]
+  dc | UVar15 = UVar27;
+  ms | UVar15 = UVar19;
+===== replace dc[964:967] msvc[1009:1013]
+  dc | if (bVar43 == (bool)(char)UVar30.LowPart) goto LAB_1400346eb;
+  dc | WVar2 = *(WCHAR *)local_170;
+  dc | WVar29 = (WCHAR)UVar30.LowPart;
+  ms | if (bVar43 == (bool)(char)UVar30.LowPart)
+  ms | goto LAB_1400346eb;
+  ms | WVar2 = *(WCHAR *)local_170;
+  ms | WVar29 = (WCHAR)UVar30.LowPart;
+===== replace dc[971:976] msvc[1017:1022]
+  dc | ((WVar2 == L')' || (WVar2 == L'&')))) ||
+  dc | ((WVar2 == L'|' &&
+  dc | (((8 < *(WCHAR *)(local_170 + 2) &&
+  dc | (*(WCHAR *)(local_170 + 2) < 0xe)) ||
+  dc | (*(WCHAR *)(local_170 + 2) == L' ')))))) || (WVar2 == L'@')) {
+  ms | ((WVar2 == L')') || (WVar2 == L'&'))) ||
+  ms | ((WVar2 == L'|' && (((8 < *(WCHAR *)(local_170 + 2) &&
+  ms | (*(WCHAR *)(local_170 + 2) < 0xe)) ||
+  ms | (*(WCHAR *)(local_170 + 2) == L' ')))))) ||
+  ms | (WVar2 == L'@')) {
+===== replace dc[980:981] msvc[1026:1027]
+  dc | else if (((WVar2 < 9) || (0xd < WVar2)) && (WVar2 != L' '))
+  ms | else if (((WVar2 < 9) || (0xd < WVar2)) && (WVar2 != L' ')) {
+===== insert dc[982:982] msvc[1028:1029]
+  ms | }
+===== replace dc[983:986] msvc[1030:1034]
+  dc | WVar2 = *(WCHAR *)local_170;
+  dc | if (WVar2 == WVar29) break;
+  dc | } while( true );
+  ms | WVar2 = *(WCHAR *)local_170;
+  ms | if (WVar2 == WVar29)
+  ms | break;
+  ms | } while (1);
+===== replace dc[990:991] msvc[1038:1039]
+  dc | *(undefined2 *)&((pthreadmbcinfo)(local_b8 + -1))->refcount = 0x3d;
+  ms | *(uint16_t *)(local_b8 - 1) = 0x3d;
+===== replace dc[992:994] msvc[1040:1041]
+  dc | UVar15 = (U)
+  dc | FUN_1400bf358(param_1,(pthreadmbcinfo)(local_b8 + -1),(undefined8 *)&local_98);
+  ms | UVar15 = PECMD_CalcExpression(script, local_b8 - 1, (void *)&local_98);
+===== replace dc[997:999] msvc[1044:1046]
+  dc | UVar15._1_7_ = UVar27._1_7_;
+  dc | UVar15.LowPart._0_1_ = bVar43;
+  ms | UVar15 = (UVar15 & 0xffULL) | (UVar27 & 0xffffffffffffff00ULL);
+  ms | UVar15.LowPart = (UVar15.LowPart & 0xffffff00u) | bVar43;
+===== replace dc[1000:1005] msvc[1047:1052]
+  dc | FUN_14005b104((longlong *)&local_130);
+  dc | FUN_14005b104((longlong *)&local_138);
+  dc | FUN_14005b104((longlong *)&local_190);
+  dc | LeaveCriticalSection((LPCRITICAL_SECTION)&DAT_14013e190);
+  dc | return (U)UVar15;
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_130);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_138);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_190);
+  ms | LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
+  ms | return UVar15;
+===== replace dc[1006:1010] msvc[1053:1058]
+  dc | if (*(WCHAR *)local_170 == WVar29) goto LAB_1400346b2;
+  dc | FUN_14005b104((longlong *)&local_130);
+  dc | FUN_14005b104((longlong *)&local_138);
+  dc | FUN_14005b104((longlong *)&local_190);
+  ms | if (*(WCHAR *)local_170 == WVar29)
+  ms | goto LAB_1400346b2;
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_130);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_138);
+  ms | PECMD_FreeStrBuf((WCHAR **)&local_190);

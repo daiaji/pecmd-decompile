@@ -1859,6 +1859,11 @@ label_02a0e6:
 #include <stdint.h>
 #include <math.h>
 
+/* TEMP PROBE 最小 CRT 原型 (禁 stdio.h: 撞 win32_api_stubs 内联; R24d J 簇取证) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
+extern int __cdecl fclose(void *_Stream);
+
 #include "pecmd_defs.h"
 
 #ifndef B2F_PART2_LOCAL
@@ -2664,6 +2669,18 @@ HMODULE PECMD_FontCommand(int64_t *fontList, WCHAR *spec, uint64_t unused, WCHAR
 ULARGE_INTEGER PECMD_EvalLoopCondition(int64_t *script, ULARGE_INTEGER value, uint32_t flags,
                                        LPCWSTR text)
 {
+    { /* TEMP PROBE(J-cluster R24d): script 状态 + cond 输入取证 — 031/061 真判假
+         (script+0xd/0xda 决定 06F884 vs 01E69C 分支; T5 拆除) */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[ELC] s=%p d=%02x da=%02x cond=%ls flags=%x\n",
+                    (void *)script,
+                    (unsigned)(uint8_t)*(uint8_t *)((char *)script + 0xd),
+                    (unsigned)(uint8_t)*(uint8_t *)((char *)script + 0xda),
+                    (const wchar_t *)(uintptr_t)value.QuadPart, flags);
+            fclose(pf_);
+        }
+    }
     uint8_t bVar1 = 0, bVar16 = 0, bVar20 = 0, bVar21 = 0, bVar33 = 0, bVar36 = 0;
     WCHAR WVar2 = 0, WVar29 = 0;
     uint32_t uVar3 = 0, uVar4 = 0, uVar5 = 0, uVar22 = 0, uVar26 = 0, uVar37 = 0;
@@ -3583,6 +3600,16 @@ LAB_1400330ae:
         else {
             DVar9 = StrCmpNW((LPCWSTR)UVar27.QuadPart, (LPCWSTR)local_1a0.QuadPart, iVar6);
         }
+        { /* TEMP PROBE(J-cluster R24d): 等值比较两操作数取证 (T5 拆除) */
+            void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+            if (pf_) {
+                fprintf(pf_, "[ELC] cmp i7=%d i23=%d len=%d lft=[%ls] rgt=[%ls]\n",
+                        iVar7, iVar23, iVar6,
+                        (const wchar_t *)(uintptr_t)UVar27.QuadPart,
+                        (const wchar_t *)(uintptr_t)local_1a0.QuadPart);
+                fclose(pf_);
+            }
+        }
         bVar44 = DVar9 == DVar8;
         DVar8 = DVar9;
         if (bVar44)
@@ -4404,6 +4431,16 @@ int64_t PECMD_IfexFindExecutor(int64_t *script, ULARGE_INTEGER cmdline_ui,
             uint32_t flags = (uint32_t)verb_mode | (uint32_t)ab_bit | (uint32_t)slot_68;
             ULARGE_INTEGER cr;
             cr = PECMD_EvalLoopCondition((int64_t *)script, cond_text, (int)flags, act1);
+            { /* TEMP PROBE(J-cluster R24d): 032dc4 返回值取证 (T5 拆除) */
+                void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+                if (pf_) {
+                    fprintf(pf_, "[ELC] ret=%lld cond=%ls text=%ls\n",
+                            (long long)cr.QuadPart,
+                            (const wchar_t *)(uintptr_t)cond_text,
+                            (const wchar_t *)(uintptr_t)act1);
+                    fclose(pf_);
+                }
+            }
             truthy = ((int64_t)cr.QuadPart > 0);
         }
         PECMD_SkipLeadingControls((uint64_t *)&act1);

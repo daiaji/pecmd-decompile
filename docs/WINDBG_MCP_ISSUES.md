@@ -1,5 +1,25 @@
 # WINDBG_MCP_ISSUES.md — windbg MCP 鲁棒性问题专档
 
+> **2026-08-27 台账（R24e）：T1-T4 全部实测复现 → 本地修复（windbg-mcp 侧）→ 上游 #242 已提交。**
+> **复现**：部署版（2026-08-26 08:00 构建，v0.12.0 时代）与更新版（2fc8823）上按 FAULTS_REPRO.md 配方
+> 逐条实测，T1-T4 全中；T-2 连发 resume 在部署版上还出现 **worker 进程消亡**（死前日志：settle 失败 0x8000FFFF）。
+> **根因落定**（引擎状态日志实证）：四条触发面共享同一缺陷——目标于 resume/泵事件期间退出，引擎遗留
+> 「滞留运行态 + 无当前进程」（实测状态 `0x7` GO_NOT_HANDLED、无进程；.lastevent 空），`settle` 的
+> `is_running()` 误判为 Fine → 泵输出被丢弃、命令静默回显，后续无线程命令裸报 `E_UNEXPECTED`（0x80040205）
+> 而 `.echo`/`.lastevent` 仍活=「半死」表象；worker 消亡 = raw `Execute` 路径缺失 `execute_and_wait`
+> 已有的 NO_DEBUGGEE 守卫，对无 debuggee 引擎发执行控制触发 dbgeng 访问冲突（dbgscope 文档自证该 AV）。
+> **修复**（windbg-mcp `src/worker.rs`，commit fd450a1，仅此一文件）：launch/attach_process 会话限定；
+> 每操作后一次状态分类（无 debuggee 或滞留态背后无进程 → 标记「目标已退出」终态）；观察者命令携带解释附注，
+> 后续命令一律干净拒绝（不再裸 0x80040205，且不再向死引擎发执行控制=AV 窗口关闭）；EndSession 保留可调。
+> **复测**：T1/T2chain/T2rapid/T3/T4 在 dev 与 release 构建全绿，dump 会话回归不误伤，cargo test 84/84，
+> clippy/fmt 净。修复版已部署 `~\.dsh\tools\windbg-mcp\`；**当前 GUI 会话仍跑旧代码，重连 windbg MCP 后生效**
+> （届时可删 `windbg-mcp.exe.stale`）。
+> **上游**：[windbg-mcp #242](https://github.com/glslang/windbg-mcp/issues/242) 已提交（gh，账号 daiaji），
+> 正文含四条配方、根因、本地缓解与**明确划出的「需上游推动」dbgscope 原语层三项**：
+> ① `settle` 泵失败时丢弃已捕获输出（应把「泵中退出」作为携带输出的终态 CommandRun）；
+> ② `execute_command_bounded` 缺 NO_DEBUGGEE 守卫（AV 崩溃路径应在原语内防护）；
+> ③（可选）settle 区分「泵到停止」与「泵到退出」。本侧无力推进该层（git 依赖 pin + 人审），移交上游。
+
 > **2026-08-26 状态更新（R14c）：上游已修复，实测通过。**
 > ① `execute("g")` 控制通路真实生效（launch→bp→g 进程运行至自然退出，全程 .lastevent/registers 可响应，不再吞命令、不再半死）；② 单条命令失败不再污染会话（错误后 .lastevent 立即可用）。
 > 仍需注意：dump 会话对不可读栈区/错误宽度模式的 `s` 搜索报 0x80040205 属合法失败（如 `-dq` 需 8 字节模式），会话可继续使用。

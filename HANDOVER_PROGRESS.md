@@ -289,3 +289,29 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   待与 dc 逐段甄别(两侧入参已铁证一致: 034788/032dc4 双入口 live 对照)；windbg MCP 每 2-3
   次操作后 0x80040205 半死复发(命令串 bp 触发, 病理已登记—exec0 快跑进程勿用 bp-after-launch
   查末段)；031/061 深水区下轮主工单(J 簇)。
+
+---
+
+## R24d/e (2026-08-27) — windbg MCP 故障专档化 + 上游修复验证 + 031 深水区取证推进，基线 41/63 持平
+- ★windbg MCP 故障触发面专档化：`docs/WINDBG_MCP_FAULTS_REPRO.md`（独立文档，不污染
+  AGENTS.md/ISSUES 职责）：T1 bp内嵌命令串 / T2 单条execute连发resume / T3 快退进程二次放行
+  worker消亡 / T4 bp设不可达函数——每条含前置/精确步骤/判定标准/机制推断；§0.1 复现物料清单
+  （路径+md5 已核验）；文末故障浮现速查卡 + 规避三律(execute单放行/禁bp内嵌串/热点用探针)。
+- ★上游修复验证(R24d 实测, ffa39f7)：T1/T3/T4 全转为"目标退出→明确报告 target exited,
+  session ended"健康终态；T2 仍报 0x8000FFFF 为一次的错但不再半死链。ISSUES 头部另有 R24e
+  台账(外部编写, 已保留)：根因落定=目标于 resume/泵期间退出→引擎滞留运行态+无当前进程
+  (GO_NOT_HANDLED / .lastevent 空)→settle 失败；上游 #242 已提交修复。
+- 031/061 深水区当前结论(J 簇, 探针版部署体 md5 304eea38 含 [ELC] TEMP PROBE, T5 待拆)：
+  ①两侧入参铁证一致(034788/032dc4 双入口 live, script+0xd=0/+0xda=0)；
+  ②dc vs msvc EvalLoopCondition 归一化全 diff 同构(154 块全等价变换, 见 analysis/
+  r24_032dc4_semdiff.txt)——差异不在函数体, 在**执行环境**；
+  ③[ELC] 探针数据: 013(缺失=0)✓ 015(数值真=1)✓ 016(不等=0)✓ 但 031(等值=0✗ 期望1)、
+  061(存在=0✗)；**031 未走到等值段**(cmp 探针仅 016 命中) → 早退路径待断;
+  ④已修二处 Ghidra 伪影误清 0 (UVar19=extraout_EAX dc:30938 / UVar35=UVar30 dc:30963),
+  031/061 未因此翻转 → 疑点收窄至 78b 决策前 UVar27 装配/01E69C 直查返回。
+  下步: 78b 决策点探针(UVar27 内容+走 06F884/01E69C 哪支) 一次构建拿全。
+- 工单队列(ROI 序): R24e#1 031/061 78b 决策探针→R24e#2 EVar27 装配对照→其后 B 同址归一
+  转发+解码内核 / CALC 归正(6) / G dump(5) / F 参数族(7) / E TEAM(2) / 034788 T8 模式路径 /
+  全套 TEMP PROBE T5 拆除(含 [ELC]×3+memfail 历史残留 8 处)。
+- 提交链: ecfa8a1(C1) → 21e3be3(41/63 回归) → 1c533d6(交接) → 1f9d34c/3c2b7f4/d20417b/
+  ffa39f7(R24d 文档) → 本批(031 取证产物+探针版)。
