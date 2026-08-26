@@ -1,4 +1,4 @@
-# make_symsnap.ps1 - V-Gate gate-0 infrastructure (R20)
+﻿# make_symsnap.ps1 - V-Gate gate-0 infrastructure (R20)
 # Run after successful build: generates build\msvc\symsnap.txt
 # (git hash + key-symbol RVA snapshot). Breakpoint addresses MUST come
 # from this file, never from stale notes (discipline V1).

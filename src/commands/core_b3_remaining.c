@@ -24631,7 +24631,7 @@ int64_t PECMD_ExecuteCommand(int64_t *param_1, LPCWSTR param_2, int64_t param_3,
                       (*(WCHAR *)((uint8_t *)param_1 + 0x12) == *pWVar12))));
                  pWVar12 = pWVar12 + 1) {
             }
-            if ((*(uint16_t *)((uint8_t *)param_1 + 9) ^ 0x2a) == *pWVar12) {
+            if ((*(uint16_t *)((uint8_t *)param_1 + 0x48) ^ 0x2a) == *pWVar12) { /* FIX(R20C): dc:103227 字节偏移 9→0x48(原移植笔误, 邻域均为 0x48 族关键字) */
                 cVar7 = '\x01';
             }
         }

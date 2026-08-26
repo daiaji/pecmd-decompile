@@ -110,6 +110,13 @@ extern void FUN_1400702B0(WCHAR **ps, LPCWSTR src);               /* @0x1400702b
 static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint32_t flags,
                                      LPCWSTR extra, LPCWSTR logs)
 {
+    /* FIX(R20C): dc 裸文件执行入口 FUN_140031068 在装载前种子化关键字
+     * (dc:29410 FUN_14006159c(clone,key)；形态同 dc:110331)。本替代路径原先
+     * key=0 明文直跑且从不写 script+0x88/8A/90 分隔符——下游 ExtractTableSegment
+     * 扫描器无 NUL 兜底，踩到未初始化堆即静默自旋(021/037/038 等五案挂死根因)。
+     * seed 取 script+0x48 低字 | 0x10000(高位仅门控花括号表, 与 rb:7869 同形)。 */
+    PECMD_InitObfuscatedKeywords(script,
+        (uint64_t)(*(uint16_t *)((char *)script + 0x48)) | 0x10000ULL);
     HANDLE h = NULL;
     LARGE_INTEGER fsz;
     uint8_t *buf = NULL;
