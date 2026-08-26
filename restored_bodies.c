@@ -5900,7 +5900,7 @@ PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *p
   { /* TEMP PROBE (鎵嬪啓 CRT extern, 绂?stdio.h: 涓?win32_api_stubs 鐨?_vsnwprintf 鎾炲唴鑱? */
       void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
       if (pf_ != NULL) {
-          fprintf(pf_, "[PSB] line=%ls\n", (const wchar_t *)(uintptr_t)param_2.QuadPart);
+          fprintf(pf_, "[PSB] line=%ls slot50=%p\n", (const wchar_t *)(uintptr_t)param_2.QuadPart, (void *)(uintptr_t)*(longlong *)(uintptr_t)(param_1.QuadPart + 0x50));
           fclose(pf_);
       }
   }
