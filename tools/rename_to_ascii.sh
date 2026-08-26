@@ -40,7 +40,10 @@ done
 # Append conversion note to AGENTS.md transition section (idempotent guard).
 NOTE="⚠ R23 改名: 根目录已由 \`D:\\repo\\PECMD反编译\` 更名为 \`D:\\repo\\pecmd-decompile\`；
 活性文档已同步, 历史档案中的旧路径按「PECMD反编译 ⇒ pecmd-decompile」换算。"
-grep -q "pecmd-decompile" "$ROOT/AGENTS.md" || printf '%s\n' "$NOTE" >> "$ROOT/AGENTS.md"
+# Idempotence guard: check the NOTE's own marker (arrow + new name). Checking
+# plain "pecmd-decompile" would always match AFTER the path replacement above,
+# silently skipping the note forever (R23 bug found during handover review).
+grep -q "⇒ pecmd-decompile" "$ROOT/AGENTS.md" || printf '%s\n' "$NOTE" >> "$ROOT/AGENTS.md"
 
 echo "[rename] done. Remaining historical refs (keep as evidence):"
 grep -rl "PECMD反编译" "$ROOT" 2>/dev/null | grep -v "^$ROOT/build/" | grep -v "^$ROOT/reference/" | grep -v "__pycache__" | head -20 || true
