@@ -885,7 +885,9 @@ BOOL SetNamedSecurityInfoW(LPCWSTR, int, DWORD, void *, void *, void *, void *);
 BOOL PathMatchSpecW(LPCWSTR, LPCWSTR);
 LPWSTR StrChrW(LPCWSTR, WCHAR);
 LPWSTR StrRChrW(LPCWSTR, LPCWSTR, WCHAR);
-BOOL StrPBrkW(LPCWSTR, LPCWSTR);
+/* R24f: shlwapi 真原型应为 LPWSTR (旧 BOOL 致调用方 CDQE 截断 64 位返回,
+ * CALC 6 案 0xC0000409 根因); stubs_common.h 已同步) */
+LPWSTR StrPBrkW(LPCWSTR, LPCWSTR);
 int StrCmpNIW(LPCWSTR, LPCWSTR, int);
 int StrCmpNIA(LPCSTR, LPCSTR, int);
 int StrCmpNW(LPCWSTR, LPCWSTR, int);

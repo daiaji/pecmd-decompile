@@ -3124,7 +3124,9 @@ uint64_t CharUpperA(void);
 uint64_t DeleteVolumeMountPointW(void);
 uint64_t LookupAccountSidW(void);
 uint64_t StrCmpNA(void);
-uint64_t StrPBrkW(void);
+/* R24f: 修正为 shlwapi 真原型 (旧 uint64_t(void) 与调用点 2 参 ABI 不符,
+ * 且仅 core_b3_remaining.c 使用; 该文件已补局部 extern, 此处同步) */
+WCHAR *StrPBrkW(LPCWSTR s, LPCWSTR chars);
 uint64_t FUN_140001188(void);
 /* S11 已删(零参旧签名), 统一走 xproto.h */
 uint64_t PECMD_ResizeBuffer(void);

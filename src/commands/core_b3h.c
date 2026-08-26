@@ -600,18 +600,23 @@ int64_t FUN_140079C80(int64_t *ctx, int64_t *pp, int64_t *out)
  */
 uint64_t PECMD_ParsePathRecord2(LPWSTR path, uint8_t *flags)
 {
-    int local_68[2];
-    uint8_t local_60 = 0;
-    int64_t local_58[3] = {0, 0, 0};
-    uint8_t local_40 = 0;
-    int64_t local_38[3] = {0, 0, 0};
-    uint8_t local_20 = 0;
-    FUN_14007E34C((uint32_t *)local_68, 1);
-    uint64_t *puVar2 = (uint64_t *)PECMD_ParseExpression(local_68, path);
-    uint64_t uVar1 = *puVar2;
-    *flags = (uint8_t)(local_60 | local_40 | local_20);
-    PECMD_FreeStrBuf((WCHAR **)local_38);
-    PECMD_FreeStrBuf((WCHAR **)local_58);
+    /* R24f: 同 core_b3f.c ParsePathRecord — 栈 ctx 布局碰撞根治方案: ctx 堆分配,
+     * 向量释放按 E34C 固定偏移 (ctx+0x10/+0x30)。 */
+    uint32_t *cx = (uint32_t *)calloc(0x60, 1) /* R24f 定案: 同 b3f */;
+    uint8_t bAll = 0;
+    uint64_t uVar1 = 0;
+    if (cx != NULL) {
+        FUN_14007E34C(cx, 1);
+        uVar1 = *((uint64_t *)PECMD_ParseExpression(cx, path));
+        bAll = (uint8_t)(*(uint8_t *)((uint8_t *)cx + 8) | *(uint8_t *)((uint8_t *)cx + 0x28) |
+                         *(uint8_t *)((uint8_t *)cx + 0x48));
+        *flags = bAll;
+        PECMD_FreeStrBuf((WCHAR **)((uint8_t *)cx + 0x10));
+        PECMD_FreeStrBuf((WCHAR **)((uint8_t *)cx + 0x30));
+        free(cx);
+    } else {
+        *flags = 2;
+    }
     return uVar1;
 }
 

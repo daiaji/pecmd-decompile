@@ -6,7 +6,7 @@
  },
  "exit": {
   "exp": 16,
-  "got": 3476699840
+  "got": 16
  },
  "vars": {
   "same": true,
@@ -21,6 +21,6 @@
  "reg": {
   "same": true
  },
- "verdict": "FAIL",
+ "verdict": "PASS",
  "flaky_pool": false
 }

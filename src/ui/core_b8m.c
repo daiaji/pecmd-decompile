@@ -2102,7 +2102,10 @@ WCHAR **PECMD_FormatDoubleToStr(WCHAR **out, double value, LPCWSTR fmt, uint32_t
     else {
         format = WSTR("%.*lE");
     }
-    PECMD_SafeVFormatW(*out, 99, format, p);
+    /* R24f(静态定案): PECMD_SafeVFormatW 仅收 1 个 vararg — 旧调用只传精度 p,
+     * 值从不进格式化 (%.*lf 读到垃圾 → CALC 成功路径 %R% 全部 "0")。
+     * 改直接 swprintf 传 (p, value)。 */
+    (void)swprintf((wchar_t *)(void *)*out, 99, (const wchar_t *)(const void *)format, p, value);
 
     expPart = StrChrW(*out, L'E');
     if (expPart != NULL) {

@@ -508,9 +508,13 @@ uint32_t *FUN_14007E34C(uint32_t *ctx, uint8_t mode)
 {
     *(uint8_t *)((uint8_t *)ctx + 10) = mode;
     *(uint8_t *)((uint8_t *)ctx + 8) = 0;
-    *(uint8_t *)((uint8_t *)ctx + 10) = 0;
+    /* R24f(ASM 定案 @0x14007e36e/0x14007e389): dc 的 `param_1+10`/`param_1+0x12` 是
+     * uint32 单位索引 → 应清 byte 0x28/0x48。旧移植误按 uint8 单位写成 byte 0xa/0x12:
+     * 后者(0x12=18)命中 data1 指针第 3 字节 → CalcExpression 首次调用即 0xC0000005
+     * (R24f 全 6 案 CALC 崩溃根因), 原版两处分别清零 byte 40 / byte 72。 */
+    *(uint8_t *)((uint8_t *)ctx + 0x28) = 0; /* dc: *(undefined1 *)(param_1 + 10) = 0 */
     FUN_140063A6C((uint64_t *)(ctx + 4), (int64_t *)(ctx + 6), (uint64_t *)(ctx + 8), 2);
-    *(uint8_t *)((uint8_t *)ctx + 0x12) = 0;
+    *(uint8_t *)((uint8_t *)ctx + 0x48) = 0; /* dc: *(undefined1 *)(param_1 + 0x12) = 0 */
     FUN_140063A6C((uint64_t *)(ctx + 0xc), (int64_t *)(ctx + 0xe), (uint64_t *)(ctx + 0x10), 8);
     FUN_1400706B4(ctx);
     return ctx;
@@ -521,18 +525,25 @@ uint32_t *FUN_14007E34C(uint32_t *ctx, uint8_t mode)
  */
 uint64_t PECMD_ParsePathRecord(LPWSTR path, uint8_t *flags)
 {
-    int local_58[2];
-    uint8_t local_50 = 0;
-    int64_t local_48[3] = {0, 0, 0};
-    uint8_t local_30 = 0;
-    int64_t local_28[3] = {0, 0, 0};
-    uint8_t local_10 = 0;
-    FUN_14007E34C((uint32_t *)local_58, 0);
-    uint64_t *puVar2 = (uint64_t *)PECMD_ParseExpression(local_58, path);
-    uint64_t uVar1 = *puVar2;
-    *flags = (uint8_t)(local_50 | local_30 | local_10);
-    PECMD_FreeStrBuf((WCHAR **)local_28);
-    PECMD_FreeStrBuf((WCHAR **)local_48);
+    /* R24f(现场定案 @PECMD_ParsePathRecord2+0x98): 栈上 ctx 布局被 MSVC 局部临时量
+     * (uVar1 等) 碰撞 — 结果值覆写 vec1-data 槽 → 释放 7.0 → 0xC0000374。根治:
+     * ctx 改堆分配 (0x48 字节, calloc), 布局冲突结构上排除; 向量释放按 E34C 固定
+     * 偏移 (ctx+0x10=op 栈 data / ctx+0x30=值栈 data), 与局部布局彻底解耦。 */
+    uint32_t *cx = (uint32_t *)calloc(0x60, 1) /* R24f 定案: ctx 尾部有 ≥0x48 宽访, 0x60 为安全包络 */;
+    uint8_t bAll = 0;
+    uint64_t uVar1 = 0;
+    if (cx != NULL) {
+        FUN_14007E34C(cx, 0);
+        uVar1 = *((uint64_t *)PECMD_ParseExpression(cx, path));
+        bAll = (uint8_t)(*(uint8_t *)((uint8_t *)cx + 8) | *(uint8_t *)((uint8_t *)cx + 0x28) |
+                         *(uint8_t *)((uint8_t *)cx + 0x48));
+        *flags = bAll;
+        PECMD_FreeStrBuf((WCHAR **)((uint8_t *)cx + 0x10));
+        PECMD_FreeStrBuf((WCHAR **)((uint8_t *)cx + 0x30));
+        free(cx);
+    } else {
+        *flags = 2; /* 分配失败 → 置非法标志 (dc 语义: 解析失败=0x02) */
+    }
     return uVar1;
 }
 
