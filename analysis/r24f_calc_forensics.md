@@ -158,3 +158,20 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
 - 候选根因残余: 终止符写 `data[local_68]=0` 的 local_68 依赖与 StrBld 对象 len 槽的栈别名
   (dc 同构依赖) — 显式别名读取版触发挂起, 机制未明 — 下次以"不改代码的 windbg 单步观察
   011 的 local_b0 段"收官 (或 dh 堆对比原版/msvc 的 pFrom 内容)。
+
+## 10e. B 簇挂起实锤 (R24d-e, live 栈×2 + bp 轨迹, 已回滚)
+
+- 011 挂起 (124) 实锤: 两次 live 栈 = USER32!MessageBoxW ← FUN_1400630D0 (错误弹窗)
+  ← PECMD_HeapRealloc+0x177 ← PECMD_AllocString+0x28 ← **PECMD_AppendParamToken+0x14b**
+  ← FUN_14003C06C+0x7c0 — 即 Append 内 AllocString 收到巨量 count → HeapRealloc 失败 →
+  弹"内存不足"框阻塞。
+- 尝试修复 A (终止符显式 len 读 &obj+8): 011 仍挂 (同栈) — 去掉探针纯改动版同样。
+- 尝试修复 B (+ 槽显式清零 &obj+8/+0x10): 仍挂 (同栈) — ⟹ len 槽模型不完整 —
+  append 的 list[1] 巨量读另有来源 (list 实参/槽区域 与 C 变量布局的深层错位)。
+- bp PECMD_AllocString 轨迹: 11 连击全为 NewVarNode/StrCopy 帧 (ENVI 变量节点创建),
+  AppendParamToken 帧从未出现于 bp 命中 — FILE 行的 append 在调试器慢速下未及执行即
+  …(或 011 路径先弹窗)。011 的 87/0 与挂起三态随构建波动 (07:05-07:14 五次构建观察)。
+- 结论: B 簇 = AppendParamToken 的 list 对象布局错位 (与 C 变量分离) + HeapRealloc
+  失败弹窗双重; 已回滚 2cb7fca 干净基线 (md5 a8b828ac, 011=0/010=87); 下轮方向:
+  bp PECMD_AppendParamToken 入口读 list[1]/list[2] 实值 (或先修 HeapRealloc 失败弹窗
+  为静默返回以暴露真实计数)。
