@@ -181,3 +181,42 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - A线第一枪(R20C补丁: srx入口种子化 + rb:24634 字节偏移归正)已部署(md5 DC353E0E)但五案仍124——SG尾迹显示dispatch可完整往返, 说明五案死态异质(A线原分解: 021/037=SUB机自旋, 038=吞体, 004=TEAM双停, 002=堆互锁嫌疑), 单点种子化只覆盖其一。
 - 下一步(ROI序): 对五案逐一attach抓栈(V-Gate门3, 每案2分钟)取得各自死点 → 分型施治; Ghidra MCP 定案 PATCH-1/unaff_R13D 两笔 TODO(verify); 之后回归全量。
 - 环境备忘: 构建日志GBK按gbk读; PS5.1脚本必须 BOM+CRLF(python utf-8-sig 写入); analysis历史文档绝对路径指旧布局, 按 refactored\X⇒根\X 换算。
+
+
+## R23 (2026-08-26/27) — 构建链UTF-8化+两笔TODO定案落码+五案死态取证, 基线 17/63 (持平)
+- ★构建链 v3 (用户主导方向): ┃ tools/build_msvc.py(python 全托管, subprocess 调 cmd.exe) + bash 薄包装 build_msvc.sh;
+  ┃ **零中文进 cmd 层**(sources.rsp/_msvc_cmd.bat 全相对路径, cwd=仓库根) + chcp 65001 全 UTF-8 链, 双绿门保留。
+  ┃ 旧 msvc_build.bat 保留未删(84 行, 可作对照); 已废弃 cmd //c 绝对路径/GBK 方案(MSYS 转换坑+ACP 读乱)。
+- ★make_symsnap.sh awk→内嵌 python (本机 awk 缺失根因: winuxsh 精简环境+DSH 会话快照未合并注册表);
+  ┃ 注册表用户 PATH 已补 Git\bin+Git\usr\bin(R23 末重启 DSH/终端后验证 awk/gawk/perl 全部恢复, 无需注销)。
+- ★PATCH-1 (S-TEMP-1) Ghidra 定案落码 (真源=原版 0x140008110 反汇编, 推翻 skill 旧记录"tmp+PID+Tick+空串"):
+  ┃ 目录模式 fmt 带尾孤立%(0x14011d0d8 实字节)/vararg1=param_4(e26c="exedata")/vararg3=Tick+NextRandomSeed/
+  ┃ vararg4=".tmp"(0x14011d108); 文件模式 vararg3=0/fmt 无尾%(0x14011d0a8)/vararg4=param_5 → **函数实为 5 参**。
+  ┃ 落码: stubs_common.h+xproto.h 原型×2 + core_b1_remaining.c 函数体两处 wsprintfW + 4 调用点补第5参
+  ┃ (e26c="exedata"+".tmp" 含 "exedat" 少字符笔误修正 / devi文件=".tmp.cab" / devi目录="tmp" / mktmp=".tmp" 占位)。
+- ★unaff_R13D (S-TEAM-1) 定案: 0x14004c177 MOV R13B,SIL(序言清零) → 0x14004c18a 写 local_170 低32位,
+  ┃ unaff_R13D ≡ 0 恒真, restored_bodies.c:5862 `= 0` 初始化即精确还原(非近似), TODO(verify) 关闭。
+- 021 死点漂移实证(分析/r23_021_live_stack.md + r23_021_deadpoint_shift.md): 补丁前 attach=ExtractTableSegment
+  (FUN_14001b23c)+0x75 ↔ r19a 同构; R20C+PATCH-1 版 attach=+0x9a(同环前移 0x25) → **R20C 种子化部分生效但未终结**;
+  裸跑 main.pecmd(无 harness 尾声) = 0xC0000409 fastfail 快速退出 vs harness 场景挂死 → 未初始化堆异质终局佐证。
+- 机制链更新(下轮关键): ExtractTableSegment 扫的是**文本流**找 0x88/8A/90 值或终止符; RunScriptText
+  (core_execmain.c:218-229) pPersist==NULL 时 calloc(0xf0)+ScriptCopy(0x00-0xEB)+ScriptInit 生成克隆体;
+  srx 种子化写的是对象 +0x88/8A/90, **从不写文本** → 需要活体读 *param_4 指向缓冲判定。
+- 基线: 全量 63 案 17/63 PASS 零回归零改进; 提交 cd13046(48 files); 部署 md5=62e5ddd3 hash=cd13046。
+- 档案: analysis/r23_ghidra_verdicts.md(PATCH-1/R13D 完整证据链) + r23_021_live_stack.md + r23_021_deadpoint_shift.md;
+  r19d_fastfail_overrun.md 追加 R23 勘误后记; AGENTS.md 命令速查已改 bash 版。
+
+### 下轮工单 (ROI 序)
+1. **021 文本流取证**: attach 后读 (a) RIP 帧 *param_4 文本指针前 64 字节 (b) script+0x88/8A/90 值
+   (c) bufRef/文本分配者 —— 判定"对象种子化不解决文本"后选治: 文本分配点补终止符(dc 对应位置须有证据)/修扫描等价位置。
+2. **五案其余 4 案 (002/004/037/038) 逐一 attach 抓栈** (V-Gate 门3, 002=ENVI 展开前置区, 004=TEAM 内层 PSB, 037=SUB 机, 038=吞体) → 分型施治。
+3. **exit-1 三案 (031/052/054) 共享退出码链根因** (stdout/vars/fs 全一致, 仅 exit 1 vs 0)。
+4. 队列: g_cmdTable 注册链(D-16: dc:7412 触发时机)/ ECD EXEC 等待补齐(dc:11260+ 深水段)/ FUN_140034788 汇编还原(IFEX/FIND 共享体 4312B)/ #083 TokenizeExpression 尾段(~690行)/ ExpandVarsRecursive AV 二分。
+5. 回归纪律: 每次落码后全量 63 案双跑, 零回归门.
+
+### 环境备忘 (R23 更新)
+- 构建: `bash tools/build_msvc.sh` (语法门加 syntax); 部署: `bash tools/post_build.sh . C:/pectest` (symsnap+拷贝+身份戳一站)。
+- 本机 awk/gawk/perl 已随注册表修正恢复 (Git\usr\bin); 工具脚本仍以 python 内嵌为稳。
+- 构建日志 UTF-8 解码 (chcp 65001 链); 旧 GBK 解码规则仅适用 build_*.log 历史件 (r20c 及以前)。
+- windbg/Ghidra MCP 通道在线; symsnap.txt 已 python 化刷新 (14 符号, V1 法律来源有效)。
+- 部署身份: C:/pectest/DEPLOYED_BUILD.txt → hash=cd13046 md5=62e5ddd3 (2026-08-27 00:07)。
