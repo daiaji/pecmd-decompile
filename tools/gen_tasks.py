@@ -15,7 +15,7 @@ import sys
 import json
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # refactored/
-ROOT = os.path.dirname(BASE)                                         # PECMD反编译/
+ROOT = os.path.dirname(BASE)                                         # repo root (pecmd-decompile)
 SRC = os.path.join(ROOT, 'decompiled.c')
 
 DONE_CACHE = None

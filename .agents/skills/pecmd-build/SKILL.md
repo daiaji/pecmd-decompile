@@ -8,7 +8,7 @@ whenToUse: 需要编译 pecmd_msvc.exe、跑 syntax 门、或部署到 C:\pectes
 
 ## 前置事实
 
-- 仓库: `D:\repo\PECMD反编译` (R21 起 git 根=项目根; 原 refactored 子层已上提; 语义真值在 reference\decompiled.c)
+- 仓库: `D:\repo\pecmd-decompile` (R21 起 git 根=项目根; 原 refactored 子层已上提; R23 改名旧名 PECMD反编译; 语义真值在 reference\decompiled.c)
 - VS 2022 Community; vcvarsall: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat`
 - 本机 8GB 内存, 编译峰值 ~2GB — **不要并行多份构建**; 构建产物用完即删
 - 门禁口径 (双绿门): `syntax` 全绿 + 完整构建 exit 0, 缺一不可

@@ -11,7 +11,7 @@
 ## 目录地图（R21 重构后：git 根 = 项目根）
 
 ```
-D:\repo\PECMD反编译\          # ★ git 根 = 项目根（原 refactored 子层已整体上提一级）
+D:\repo\pecmd-decompile\          # ★ git 根 = 项目根（原 refactored 子层已整体上提一级; R23 改名: 旧名 PECMD反编译）
 ├── src\**                    # 还原实现（commands/runtime/lang/kernel/ui/app/misc/device 分包）
 ├── restored_bodies.c         # dc 直移巨体（ECD 等）；unimplemented_stubs.c / win32_api_stubs.c / crt_shims.c
 ├── include\                  # stubs_common.h / pecmd_defs.h / win32_stub.h

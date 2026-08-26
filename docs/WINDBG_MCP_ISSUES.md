@@ -11,7 +11,7 @@
 >
 > **编纂注记（信息源偏差，保守处理）**
 > 1. 任务书所列 `refactored\DEBUGGER_HANDOFF.md` 实际位于仓库根目录
->    `D:\repo\PECMD反编译\DEBUGGER_HANDOFF.md`（refactored\ 下无此文件），本文按实际位置取材；
+>    `D:\repo\pecmd-decompile\DEBUGGER_HANDOFF.md`（refactored\ 下无此文件；R23 改名: 旧名 PECMD反编译），本文按实际位置取材；
 > 2. `refactored\REVIEW.md` 全文**无字面 "windbg" 条目**（grep 实证），最接近的相关内容为
 >    §130 战果链表（dump/探针证据栏）、§130 教训 5（dumpbt.py 三件套）与文末 WER LocalDumps 备注，
 >    本文以这些条目替代；

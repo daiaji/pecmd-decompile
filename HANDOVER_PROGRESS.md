@@ -225,14 +225,14 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   cwd/脚本位派生; gen_tasks.py 仅一行注释文本提及; rename_to_ascii.sh 自身含替换常量属预期);
   活性文档仅 AGENTS.md/SKILL.md/WINDBG_MCP_ISSUES.md 三处, 由 rename_to_ascii.sh 白名单覆盖;
   历史档案原文保留按换算说明处理; 无 .dsh 配置引用。
-### ★ 改名待办 (R23 末登记, 用户主导执行)
-- **动作**: 将根目录 `D:\repo\PECMD反编译` 更名为 `D:\repo\pecmd-decompile` (ASCII)。
-- **为什么现在安全**: R23 构建链已零中文进 cmd 层 (rsp/bat 全相对路径), harness/tools 脚本
-  零硬编码仓库路径 (全部 cwd/脚本位派生) → 改名**不需要改任何代码**。
-- **用户步骤**: ① 启动器/DSH 确认无进程占用该目录 ② 重命名文件夹 ③ DSH 重配 workspace
-  到新路径并重启。
-- **代理步骤 (改名后新会话)**: 就地运行 `bash tools/rename_to_ascii.sh` (自动替换 AGENTS.md /
-  pecmd-build SKILL / WINDBG_MCP_ISSUES 中的绝对路径并按幂等保护追加换算注记; 历史档案原文
-  保留) → `bash tools/build_msvc.sh` 全量构建 → `bash tools/post_build.sh . C:/pectest` →
-  冒烟 001 + 全量基线复核 (期望 17/63 持平)。
+### ★ 改名执行状态 (R23 末, 目录侧用户主导)
+- **目录侧**: 根目录 `D:\repo\PECMD反编译` → `D:\repo\pecmd-decompile` 由用户执行
+  (需无进程占用 + DSH 重配 workspace)。2026-08-27 检查时仓库物理路径仍为旧名。
+- **代理侧 (已完成)**: 仓库内脚本/活性文档的全部 `D:\repo\PECMD反编译` 路径引用已切换为
+  `D:\repo\pecmd-decompile` —— AGENTS.md 目录地图行 / pecmd-build SKILL 仓库行 /
+  WINDBG_MCP_ISSUES 取材说明 / gen_tasks.py 注释 / rename_to_ascii.sh 替换目标。
+- **为什么安全**: R23 构建链已零中文进 cmd 层 (rsp/bat 全相对路径), harness/tools 脚本
+  零硬编码仓库路径 (全部 cwd/脚本位派生) → 路径切换**不需要改任何代码**。
+- **目录侧完成后**: `bash tools/rename_to_ascii.sh` (幂等) → `bash tools/build_msvc.sh` 全量
+  构建 → `bash tools/post_build.sh . C:/pectest` → 冒烟 001 + 全量基线复核 (期望 17/63 持平)。
 - 历史文档换算: 「PECMD反编译 ⇒ pecmd-decompile」 (与 refactored\X ⇒ 根\X 同款纪律)。
