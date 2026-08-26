@@ -212,3 +212,13 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   通道恢复续追 — 已登记 (G 簇 1 例剩)。
 - 本日通道统计: windbg 会话 10+ 次, T2/T3 故障 4 次 (bp-跟踪 2、r;k 1、复合 1) —
   均按 FAULTS_REPRO 处置, 无越权绕过。
+
+## 14. H 簇初案 (R24f-b): 053 HASH 0xC0000374 现场
+
+- sxe c0000374 → BreakPoint: ntdll!RtlFreeHeap 侧; pecmd 帧: +0x110da1 (PECMD_SynthDlgKeyMsg
+  体, 0x110d80-0x110df5 反汇编 = MSG 组装+IsDialogMessageW@0x1ed6a4, 无 free) ←
+  +0x152878 (PECMD_RegiEditRegistry=REGI 写引擎, 0x151920-0x1557a0) ← PSB+0x1a827a。
+- 053 脚本 (WRITE+HASH) 无 REGI 行 — REGI-EDIT 帧蹊跷, 需 bp RegiEditRegistry 入口
+  确认调用者 (疑: WRITE/HASH 内部借道或 PSB verb 表错位)。
+- 结论: 0xC0000374 = free 遇已损坏块头; 首写者待 PageHeap (BinaryVerifier 0xF/0xC 流程)
+  点名 — 下轮执行 (注册表 IFEO + 053 复跑)。
