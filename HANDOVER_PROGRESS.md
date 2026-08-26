@@ -236,3 +236,56 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - **目录侧完成后**: `bash tools/rename_to_ascii.sh` (幂等) → `bash tools/build_msvc.sh` 全量
   构建 → `bash tools/post_build.sh . C:/pectest` → 冒烟 001 + 全量基线复核 (期望 17/63 持平)。
 - 历史文档换算: 「PECMD反编译 ⇒ pecmd-decompile」 (与 refactored\X ⇒ 根\X 同款纪律)。
+
+---
+
+## R24 (2026-08-27) — SUB/ENVI 双族挂死定案修复×2 + 全量分型 + 五线取证，基线 17/63 -> 22/63
+- ★021/037 挂死同源定案+修复：活体 attach(PID548) 铁证死点=unimplemented_stubs.obj FUN_14001b23c
+  桩副本(非真体@0x122950)，扫描环语义与 dc:15781-15795 分叉(缺无条件+1前进/0x88检查错位)，
+  文本流与分隔符实测全部正常——R23"对象种子化不解决文本"假设证伪。落码=94行错误副本删改单行
+  转发 ≡ PECMD_ExtractTableSegment(核心照抄 FUN_14005bc28 转发惯例)。档案 r24_021_stub_semantics.md。
+- ★002/004/038 ENVI 展开器挂死定案+修复：子代理 D 三案活体 attach 全同根因=FUN_14007A224
+  (core_execline.c:119) 主扫描环缺环头游标复载(%族分支只推进 line，非空 %var% 展开后 inP 永停'%'，
+  StrBldGrowWide 每迭代+0x400 膨胀至 33-34MB 自旋)；修复=环头 `inP=line;`(dc:77750 单游标语义，
+  模板照抄同文件 ExpandEnvVars H1 dc:78742)。触发条件=变量值非空(003 空值不挂)。档案 r24_hang_triage_002_004_038.md。
+- ★全量分型(r24_fail_triage.md, 子代理A)：44 FAIL 分歧维度仅 exit(stdout/vars/reg 全 same)；
+  退出码链=dc 忠实直移(rb:7187-7189≡dc:45139-45141) 无需修——FAIL 本质全是动词处理器返回值错误。
+  11 簇: A挂死×3(已修) | B FILE契约×3(l180=87) | C1 IFEX/FIND桩×11(+3借道, 034788 4312B 未去桩)
+  | D CALC垃圾码×6(exit=指针低32) | E TEAM×2(0xC0000374) | F 0x80070057×7 | G AV×5
+  | H 堆损坏×2 | I 055 fastfail | J exit=1×3(031/052/054) | K 061=183。
+- ★D-16 重大修正(r24_cmdtable_chain.md, 子代理B)：原版 g_cmdTable1/2 **无启动即注册路径**——
+  唯一填充者 FUN_14000c764(LoadPlugin, dc:6894-7070) 是 ^/-mode/&&& 行首条件触发(dc:7412链)，
+  R16"补初始化调用"前提不成立作废。缺口改写为: 同址别名归一转发
+  (FUN_14000C764→PECMD_RegisterFileAssociations core_b1_remaining.c:4830 死代码 / PECMD_ResDecode→
+  FUN_1400E7D58 core_resdecode.c:52) + INDATA 解码内核五件套仍为 stub(FUN_14005B184 恒0歪曲BOM判定)。
+  原版资源实证: INDATA/4=18B "LOAD: HELLO1  #1  "、SCRIPTINIT/100=756B；msvc 无 .rc(D-17 成立)。
+  98 动词 FourCC=硬编码直比级联，与 cmdTable 无数据流 → 表空零影响。
+- ECD EXEC 工单闭合(r24_ecd_exec_wait.md, 子代理C)：**缺等待结论证伪**——等句柄环
+  (MsgWaitForMultipleObjects 末位 hProcess, dc:11295↔rb:3837)、超时预算(dc:11483↔rb:4028)、
+  退出码写回(dc:9687↔rb:2178) 全同构；7 条差异 D1-D7 全等价/命名级，D1 TODO(verify) resolve。
+  P3 收尾: CPW 十参探针×2+R20 gle_restore 已拆(core_b9_remaining.c, 行为等价)。
+- s083 关闭(r24_s083_verdict.md, 子代理E)：TokenizeExpression 尾段(dc:103680-103730 ↔
+  core_b3_remaining.c:25119-25172) 逐语句 1:1，零落码；S16 dc:103903 TODO 关闭；S17 dc:104036
+  8字节 vs 低32截断登记 divergence 移交 CreateMenuItem 归属线；draft 订正3处。
+- 队列: U-1(原版"2写入者" s17§8) 未定位——对拍已钦定: IFEX/FIND 文件判定成功→2、
+  条件/表达式路径→0(015/034 PASS 证 0==0)；031/061 golden=0 为 C1 反向风险案。下轮主工单
+  =C1 034788 去桩(最多翻转 16 案, 前置 U-1), 其后 CALC 归正(6)/G dump(5)/F 参数族(7)/E TEAM(2)。
+- 提交: abc0084(R24 桩转发) + b84da37(R24b A224同步+CPW拆+五档案)；部署 db9a3566
+  (01:37:58)；基线 22/63 PASS 零回归；worktree 清理(dumps\ 有 5 枚历史 WER dump 待下轮清理)。
+- 环境备忘: 子代理并发取证已验证可行(windbg MCP 多会话+run_case 独占纪律)；Ghidra MCP 会话对
+  子代理不可用(子代理B于 R24 实测)——需 Ghidra 的取证由主代理或带说明派发。
+- ★R24c C1 去桩(ecfa8a1/21e3be3)：PECMD_IfexFindExecutor @0x140034788 真体(902行草稿→合入
+  core_b2f.c, 420条指令级还原, 旧误归属 PECMD_BuildImDiskMenu SKIP桩废弃) + core_b2a 包装器
+  回传执行结果。U-1 语义：真→裸分支行执行回传(ENVI→0)；假→嵌套 PSB(act2 "ELSE <分支>"
+  RDX=[0x60]) 该行返 2 ⇒ 013/014/016/017/035/036 直接翻转 + 借道 043/046/047/048/049/050/
+  052/054/058/059/062/063/064 共 19 案。BE14 隐式 int 截断指针 AV 修复(013/014/061 崩解)。
+  真值路径 dc 对齐二处(Ghidra 伪影误清 0: UVar19=extraout_EAX@dc:30938 / UVar35=UVar30@dc:30963)。
+  基线 **22/63 -> 41/63 PASS 零回归**(015/018/034 表达式案保持)。
+- U-1 工单闭环(r24_u1_exit2_writer.md, 子代理G+cdb 原生取证)：写入者=PECMD_ProcessScriptBlock
+  尾 0x14004C533 mov [rax],rdx(guard 非零 local_180)；真实槽=0x14013D188(根脚本+0x58)而非
+  0x14013caf0(从未写非零, s17 §8 找错对象)；值 2 三来源：WRITE/FILE 自带 2 / IFEX·FIND 假分支
+  "ELSE <分支>" 行返 2 / 真分支=分支命令值 0；**FIND $X=Y 是等值比较非子串**(016/043 标签改写)。
+- 遗留：031/061 真判假(exit=2 vs golden 0) — EvalLoopCondition 内 01E69C 直查/等值路径语义
+  待与 dc 逐段甄别(两侧入参已铁证一致: 034788/032dc4 双入口 live 对照)；windbg MCP 每 2-3
+  次操作后 0x80040205 半死复发(命令串 bp 触发, 病理已登记—exec0 快跑进程勿用 bp-after-launch
+  查末段)；031/061 深水区下轮主工单(J 簇)。
