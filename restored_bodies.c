@@ -3368,7 +3368,11 @@ LAB_1400141ec:
 LAB_140014239:
             PECMD_CreateTempMutexDir((int64_t *)&local_d30.QuadPart,
                                      (longlong *)(uintptr_t)_Var39.v,(uint64_t *)(void *)local_c00,
-                                     (uint64_t)(uintptr_t)(const uint16_t *)L"exedat");
+                                     (uint64_t)(uintptr_t)(const uint16_t *)L"exedata",
+                                     (uint64_t)(uintptr_t)(const uint16_t *)L".tmp");
+            /* R23 定案: 原版 e26c 传 R9=0x14011d960"exedata"(原写 "exedat" 少一字符,
+             * 反汇编 0x140014248 现场实证), 第5参=[rsp+0x20]=CMOVNZ(".tmp",[RSP+0x3d8]);
+             * 本调用 param_1 非空走目录模式(param_5 不读), 传 ".tmp" 忠实缺省支。 */
             PECMD_ReplaceStringSlot((longlong *)(local_ca8 + 8),(uint64_t *)(void *)&local_d30);
             pvVar32 = local_9f0;
             local_c00 = &local_9f0;

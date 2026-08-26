@@ -3567,9 +3567,17 @@ LAB_140007fcb:
 }
 
 HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *param_3,
-                                uint64_t param_4)
+                                uint64_t param_4, uint64_t param_5)
 {
-    /* @0x140008110 size=687 临时目录/互斥文件创建 */
+    /* @0x140008110 size=687 临时目录/互斥文件创建
+     * R23 定案(PATCH-1 Ghidra 实证, 真源=原版反汇编): 原版实为 5 参。
+     * param_5(调用者 [rsp+0x20] 栈参)仅被文件模式 wsprintfW 用作第 4 实参;
+     * 目录模式写死 ".tmp"(0x14011d108)。目录模式 fmt 带尾孤立 '%'
+     * (0x14011d0d8 实字节 "~pecmd_%s.%lu.%lu~%s%"), 文件模式 fmt 无尾 %
+     * (0x14011d0a8)。目录模式 vararg3 = GetTickCount()+NextRandomSeed()(u32 截断加);
+     * 文件模式 vararg3 = 0(EDI, XOR ESI,ESI 起)。 */
+    /* 调用点实参(反汇编): e26c "exedata"+".tmp"; devi[文件] ".tmp.cab"; devi[目录] "tmp";
+     * mktmp "mktmp"+运行时值(目录模式不读, 占位 ".tmp")。 */
     int64_t lVar1;
     bool bVar2;
     BOOL BVar3;
@@ -3622,17 +3630,16 @@ HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *pa
             goto LAB_1400082bf;
         }
         lVar1 = *plVar8;
-        GetTickCount();
-        PECMD_NextRandomSeed();
-        GetCurrentProcessId();
-        /* FIX(R19D S-TEMP-1): 原行编译了 dc:4409 的 Ghidra 变参丢弃伪影——0 实参喂
-         * 4 占位符且格式串尾孤立 '%', %s 拉寄存器/栈垃圾作指针野读写, 可写爆
-         * AllocString(0x26c) 目标槽。补齐实参消解 UB。
-         * TODO(verify): 实参取值/顺序需以原版 EXE 该 call 现场复核(Ghidra 工程核对寄存器/栈)；
-         * 第 4 参暂取空串而非 local_res20, 避免引入新的未初始化读。 */
-        wsprintfW((LPWSTR)(lVar1 + (int64_t)iVar4 * 2), WSTR("~pecmd_%s.%lu.%lu~%s"),
-                  WSTR("tmp"), (unsigned long)GetCurrentProcessId(),
-                  (unsigned long)GetTickCount(), WSTR(""));
+        /* FIX(R23 PATCH-1 实证): 原行编译 dc:4409 的 Ghidra 变参丢弃伪影(Ghidra 把
+         * tick/seed/pid 三连裸调 + 零实参当 wsprintfW 调用, 实参被丢)。真源反汇编
+         * 0x1400081e0-0x14000821a: EBX=GetTickCount()+FUN_14005e04c(u32 截断加),
+         * R9D=GetCurrentProcessId, vararg1=[RSP+0xc8](=序言 R9 home=param_4),
+         * vararg4=0x14011d108 ".tmp", fmt=0x14011d0d8 带尾孤立 '%'(真实字节, 非伪影)。
+         * 求值顺序与原版(tick→seed→pid)仅 seed 相对顺差, 无对拍影响。 */
+        wsprintfW((LPWSTR)(lVar1 + (int64_t)iVar4 * 2), WSTR("~pecmd_%s.%lu.%lu~%s%"),
+                  (LPCWSTR)(uintptr_t)local_res20, (unsigned long)GetCurrentProcessId(),
+                  (unsigned long)(GetTickCount() + (uint32_t)PECMD_NextRandomSeed()),
+                  WSTR(".tmp"));
         BVar3 = CreateDirectoryW((LPCWSTR)*plVar8, NULL);
         if (BVar3 != 0) {
             bVar2 = true;
@@ -3659,11 +3666,13 @@ HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *pa
             break;
     LAB_1400082bf:
         lVar1 = *plVar6;
-        GetCurrentProcessId();
-        /* FIX(R19D S-TEMP-1): 1 实参喂 4 占位符同源伪影, 补齐实参(TODO(verify) 同上)。 */
+        /* FIX(R23 PATCH-1 实证): 反汇编 0x1400082bf-0x1400082f3 实参:
+         * vararg1=[RSP+0xc8]=param_4, vararg2=GetCurrentProcessId(),
+         * vararg3=EDI(=0, 非 Tick!), vararg4=[RSP+0xd0]=param_5(调用者栈参),
+         * fmt=0x14011d0a8(无尾 '%')。 */
         wsprintfW((LPWSTR)(lVar1 + (int64_t)iVar4 * 2), WSTR("~pecmd_%s.%lu.%lu~%s"),
-                  (LPCWSTR)local_res20, (unsigned long)GetCurrentProcessId(),
-                  (unsigned long)GetTickCount(), WSTR(""));
+                  (LPCWSTR)(uintptr_t)local_res20, (unsigned long)GetCurrentProcessId(), 0UL,
+                  (LPCWSTR)(uintptr_t)param_5);
         local_res8 = 0;
         /* PECMD_OpenFileHandle 经 *out 写回句柄并返回 void (Ghidra 以 eax 残留承载返回值) */
         PECMD_OpenFileHandle((HANDLE *)&local_res8, (LPCWSTR)*plVar6, 0x40000000, 0, NULL, 1, 0x80,

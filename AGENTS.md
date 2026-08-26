@@ -76,18 +76,20 @@ C:\pectest\                   # 部署与运行现场：pecmd_msvc.exe、DEPLOYE
 
 ## 常用命令速查
 
-```powershell
-# 构建（语法门可加 syntax 参数）
-cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"" x64 && cd /d D:\repo\PECMD反编译\refactored && tools\msvc_build.bat"
-# 部署三连（构建绿后）
-taskkill /F /IM pecmd_msvc.exe; Copy-Item build\msvc\pecmd_msvc.exe C:\pectest\ -Force
-Set-Content C:\pectest\DEPLOYED_BUILD.txt "hash=$((git rev-parse --short HEAD)) md5=$((Get-FileHash C:\pectest\pecmd_msvc.exe -Algorithm MD5).Hash)"
+```bash
+# 构建（R23 起: build_msvc.py 全托管 UTF-8 链, bash 薄包装; 语法门加 syntax 参数）
+bash tools/build_msvc.sh            # 全量构建 -> build/msvc/pecmd_msvc.exe (双绿门: exit 0 + [msvc_build] OK)
+bash tools/build_msvc.sh syntax     # 语法门 cl /Zs
+# 部署三连（构建绿后）—— post_build.sh 一站完成: symsnap 刷新 + 部署 + 身份戳
+bash tools/post_build.sh . C:/pectest
 # 对拍（单案 / 全量）
-python harness\runners\run_case.py <case_id> --exe msvc --timeout 240
-python harness\runners\run_case.py --all; python harness\runners\diff_case.py --all
-# 活体抓栈（挂死现场）
+python harness/runners/run_case.py <case_id> --exe msvc --timeout 240
+bash tools/run_corpus.sh            # 全量双跑 + diff
+# 活体抓栈（挂死现场）—— 断点选址唯一来源: build/msvc/symsnap.txt (V1)
 mcp attach_process <pid> → ~* k 30 → read_memory → end_session
 ```
+> R23 注: 构建链已全面 UTF-8 化并零中文进 cmd 层（rsp/bat 全相对路径）;
+> 工具 Python 依赖（awk 本机已不可用, make_symsnap 已改内嵌 python）。
 
 ## 权威文档与技能索引
 

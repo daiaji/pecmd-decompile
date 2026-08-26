@@ -137,7 +137,7 @@ static __inline ULARGE_INTEGER S11_U64ToULI(uint64_t v)
 /* 1 site(s) */ extern uint8_t * PECMD_CreateMenuItem(int64_t *param_1, int16_t *param_2); /* def src\commands\core_b3r_h4.c:724 */
 /* 1 site(s) */ extern bool PECMD_CreateProgressCtl(int64_t *a, uint32_t b, int *c, HWND h, uint32_t e); /* dc 原文权威签名(S11) */
 /* 1 site(s) */ extern uint64_t PECMD_CreateSymbolicLink(uint64_t, uint64_t, uint32_t); /* def src\commands\core_b3g.c:308 */
-/* 1 site(s) */ extern HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *param_3, uint64_t); /* def src\misc\core_b1_remaining.c:3561 */
+/* 1 site(s) */ extern HANDLE PECMD_CreateTempMutexDir(int64_t *param_1, int64_t *param_2, uint64_t *param_3, uint64_t, uint64_t); /* def src\misc\core_b1_remaining.c:3561 */
 /* 1 site(s) */ extern uint64_t PECMD_CreateTextControl(int64_t *param_1, WCHAR *param_2, uintptr_t, uint64_t); /* def src\device\core_b3r_g.c:581 */
 /* 1 site(s) */ extern int64_t PECMD_DefineDosDevice(int64_t *param_1, WCHAR *param_2); /* def src\commands\core_b3_remaining.c:17811 */
 /* 1 site(s) */ extern LPCWSTR PECMD_DerefVarName(void *script, WCHAR **pp); /* def src\commands\core_b2a.c:269 */

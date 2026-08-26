@@ -3001,7 +3001,8 @@ LAB_14004775d:
                 PECMD_AllocStrSlot(&local_1658);
                 pwVar48 = (LPWSTR)WSTR("devi");
                 PECMD_CreateTempMutexDir((int64_t *)0, (int64_t *)&local_1658, (void *)0,
-                                         WSTR("devi"));
+                                         WSTR("devi"), (uint64_t)(uintptr_t)WSTR(".tmp.cab"));
+                /* R23 定案: 原版 0x140048d66(param_1=0 文件模式) 第5参=0x140122ea8 ".tmp.cab" */
                 PECMD_StrDupAssign(&local_16a8, WSTR(" -dd -len=16M  \""));
                 PECMD_AppendWideStr(&local_16a8.QuadPart, local_1658);
                 PECMD_AppendWideStr(&local_16a8.QuadPart, WSTR("\",0,"));
@@ -4093,7 +4094,8 @@ LAB_14004a8ba:
                     PECMD_AllocStrSlot(&local_1710);
                     pwVar48 = (LPWSTR)WSTR("devi");
                     PECMD_CreateTempMutexDir((int64_t *)&local_1710, (int64_t *)0, (void *)0,
-                                             WSTR("devi"));
+                                             WSTR("devi"), (uint64_t)(uintptr_t)WSTR("tmp"));
+                    /* R23 定案: 原版 0x14004a9f1(param_1 非空=目录模式) 第5参=0x140122c68 "tmp" */
                     PECMD_AllocWStringBuffer((WCHAR **)&local_1620, 0x105);
                     GetShortPathNameW(local_1710, local_1620, 0x104);
                     pWVar24 = local_1710;

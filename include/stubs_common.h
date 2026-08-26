@@ -1058,8 +1058,11 @@ extern bool FUN_140101e70(const WCHAR *name);
 extern uint64_t PECMD_GenerateTimeText(LPCWSTR p1, int64_t *p2, uint64_t p3, uint64_t p4,
                                        uint64_t p5);
 /* def core_b3_remaining.c:7183 */
-extern HANDLE PECMD_CreateTempMutexDir(int64_t *p1, int64_t *p2, uint64_t *p3, uint64_t name);
-/* def core_b1_remaining.c:3462 */
+extern HANDLE PECMD_CreateTempMutexDir(int64_t *p1, int64_t *p2, uint64_t *p3, uint64_t name,
+                                       uint64_t suffix); /* def core_b1_remaining.c:3462 */
+/* R23 定案(PATCH-1 Ghidra 实证): 原版实为 5 参——param_5 仅在文件模式作为 wsprintfW
+ * 第 4 实参(目录模式写死 ".tmp")。d="devi" 时 suffix=".tmp.cab"(文件)/"tmp"(目录);
+ * e26c 传 "exedata"+".tmp"; mktmp 传 "mktmp"+运行时值。 */
 extern void PECMD_FlushFileThrice(HANDLE hFile);
 /* def core_b3b.c:217 */
 extern void *PECMD_DriverInstall(int64_t *script, LPCWSTR line);

@@ -680,7 +680,9 @@ LARGE_INTEGER *PECMD_TempPathCommand(longlong *param_1, LARGE_INTEGER param_2, l
             pLVar14 = pLVar17;
         }
         PECMD_CreateTempMutexDir(&pLVar12->QuadPart, &pLVar14->QuadPart, (undefined8 *)0x0,
-                                 WSTR("mktmp"));
+                                 WSTR("mktmp"), (uint64_t)(uintptr_t)WSTR(".tmp"));
+        /* R23 定案: 原版 0x14009bf48 第5参=[RSP+0x20]=RAX 运行时值(param_1 非空走目录模式,
+         * param_5 不读; 传 ".tmp" 占位)。 */
         if (cVar18 == '\x01') {
             PECMD_SetVariable(param_1, local_ed0, (LPCWSTR)local_ec0);
             WVar15 = *(WCHAR *)local_ec0;

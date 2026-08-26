@@ -237,3 +237,21 @@ TEMP 同型返回 `(LARGE_INTEGER*)0xffffffff80070057`（core_b3r_h2.c:729 ≙ d
    定位坏块的形成者（现有 memfail.log 探针网可直接扩展）。
 3. 排查树内其余"双名分裂"恒 0 桩（grep `unimplemented_stubs.c` 中带写出参却 `(void)` 吞参的定义),
    特别是位于 LOAD/脚本装载路径上、可能向调用方栈帧/槽写坏的 arity 错误桩。
+
+---
+
+## 【R23 勘误后记】(2026-08-26, 主代理) — PATCH-1 与 unaff_R13D 反汇编定案
+
+> 依据纪律"历史档案只增不改"，本后记覆盖本文 PATCH-1/S-TEAM-1 文本中仍带
+> `TODO(verify)` 或假设性表述的部分。完整证据链见 `analysis/r23_ghidra_verdicts.md`。
+
+1. **PATCH-1 (S-TEMP-1) 实参已由 Ghidra 反汇编 0x140008110 现场定案**，本文 §3 补丁文本
+   不再适用，落码以 r23_ghidra_verdicts.md §1.3 表为准：
+   - 目录模式 fmt 带尾孤立 `%`（0x14011d0d8 实字节，非 Ghidra 伪影）；文件模式 fmt 无尾 `%`。
+   - vararg1 = param_4（e26c 实传 "exedata"，非本文假设的 "tmp"）。
+   - 目录模式 vararg3 = `GetTickCount() + NextRandomSeed()`（u32 截断加）；文件模式 vararg3 = 0。
+   - vararg4 = ".tmp"（目录模式硬编码 0x14011d108）/ 第 5 参（文件模式）——函数实为 5 参。
+   - 调用点实参表见 r23_ghidra_verdicts.md §1.4；"exedat" 少字符笔误已修为 "exedata"。
+2. **S-TEAM-1 (unaff_R13D) 定案 = 0 精确还原**：0x14004c177 `MOV R13B,SIL`（SIL 序言清零）
+   + 0x14004c18a `MOV [RSP+0x58],R13D`——原版先清零再写入 local_170 低 32 位，
+   unaff_R13D 恒 0，全函数无其它 R13 引用。本文 §3 PATCH-2 的 `= 0` 初始化即真值。
