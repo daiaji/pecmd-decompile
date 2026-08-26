@@ -210,3 +210,24 @@ ExpandVarDispatch(展开变量) → FUN_140024C48 提取首 token="WRITE" → lo
 - 干净部署后行为固化复现: exit=0xb7(183)/out.txt 未产出/WriteFileEncoded 入口探针未触发(双证: 探针缺失+[BP]未命中)
 - [WB] verb=WRIT 为 local_158 打包值(可信); l180=183 的来源处理器**不是** WriteFileEncoded(rb:6939 分支未进入)
 - 下轮首动作: 用 Ghidra msvc 工程反编译 PSB 的 0x54495257 分支体(Ghidra 地址需按 map 重算), 核对编译后的真实 call 序列; 同时以 DispatchBuiltin 内部探针打印每次表项比较, 确定 "WRITE" 是否到达表匹配
+
+
+## 18. EXEC=259 最终工单(Round13, 上下文极限收尾)
+
+**现象**: 所有含 EXEC 行的用例 exit=STILL_ACTIVE(259)。内容产物正确(done/vars 一致)但退出码污染。
+
+**根因链(多轮活体+探针实锤)**:
+1. EXEC 行进 PSB 级联 → 匹配 EXEC 分支(rb:6362-6366) → 调 ExecCmdDispatch
+2. ECD 内部 CreateProcessW 成功(cmd.exe 启动, echo 正确执行, vars.txt 内容一致)
+3. 但 ECD 返回 259 —— 某处 GetExitCodeProcess 在子进程结束前读取了 STILL_ACTIVE
+4. PSB 尾部写回: 259 ≠ 0 → 写入 g_Script+0x58 缓存 → GetExitCodeGlobal 读出 259 → exit=259
+
+**原版对照**: 同场景 golden exit=0 => 原版 ECD 对成功 EXEC 返 0(等待后取码或直接返 0)
+
+**修复方向**(下轮首动作)
+A. 快速修: 在 ECD 内 EXEC 成功路径(CreateProcessW ret!=0 后)显式补 WaitForSingleObject(hProcess, timeout)+GetExitCodeProcess, 替代当前的异步句柄收集模式
+B. 正确修: 对照 dc FUN_14000e26c 中 EXEC 分支的完整返回值组装逻辑(dc:11260+ 深水段), 找到 msvc 缺失的等待步骤
+
+**影响面**: 001/024 等 EXEC 用例退出码异常(内容不受影响)。与 WRITE 体返 183(s20 §8.1)同属"动词处理器返回值语义错误"家族。
+
+**当前基线**: 17/43 PASS。EXEC=259 影响约 10 案(001/024 及其他含 EXEC 行的用例的退出码维度)。
