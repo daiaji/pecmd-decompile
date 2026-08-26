@@ -17,6 +17,21 @@
 | 复现载体 | MCP 工具序列：`launch` / `execute` / `session_status` / `end_session` |
 | 纪律 | 每个触发面用独立会话；复现后必须 `end_session` 再开下一个 |
 
+## 0.1 复现物料清单（R24d 当日核验，全部在位）
+
+| 物料 | 位置 | 身份/备注 |
+|---|---|---|
+| msvc 部署体（目标 A） | `C:\pectest\pecmd_msvc.exe` | md5 依 `C:\pectest\DEPLOYED_BUILD.txt`（hash+md5+time + 身份核对规则）；**当前部署体可能携带 [ELC] TEMP PROBE**（memfail.log 有记录）——复现 T2-T4 前先看身份戳，探针版不影响触发 |
+| 原版无 ASLR 副本（目标 B） | `C:\pectest\PECMD.EXE` | md5 `4b97f08dd4b8391619d0ee7620c48a9c`，基址固定 0x140000000 |
+| 原版原始件 | `D:\repo\pecmd-decompile\reference\PECMD.exe` / `reference\PECMD原始.EXE` | 只读参考；Ghidra 程序源 |
+| 复现用例 | `C:\pectest\031_set_assign\run_all.pecmd`（+ `main.pecmd`） | 由 run_case.py 部署再生；语料源 `harness\corpus\cases\031_set_assign\` |
+| 探针日志（[ELC] 数据） | `C:\pectest\memfail.log` | 追加式；复现前可清空以隔离噪音 |
+| WER 崩溃 dump | `C:\pectest\dumps\` | 每轮取证后清理防误读 |
+| 构建产物/身份旁证 | `D:\repo\pecmd-decompile\build\msvc\pecmd_msvc.exe` + `pecmd_msvc.map` + `symsnap.txt` | map 第 3 列 VA 才是断点选址依据（§ISSUES R19 教训） |
+
+> 核对规则：任何分析/复现前先 `cat C:/pectest/DEPLOYED_BUILD.txt` 确认与当前
+> 工作树 git HEAD 对应；dumps\ 清理纪律同 R23（每轮取证前清空防误读）。
+
 > 复现 T1-T4 均不需要特殊语料：任何"启动后 1-2 秒内自然退出"的进程即可。
 > 想要更慢的窗口，可把脚本改成 `TEAM WAIT 5000` 之类延长运行，但**快退本身就是
 > T3/T4 的触发条件**，勿为方便而改变。
