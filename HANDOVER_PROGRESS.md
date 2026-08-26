@@ -430,3 +430,19 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - 已回滚 2cb7fca 干净基线 (md5 a8b828ac): 011=0/010=87; 下轮方向 = bp AppendParamToken
   入口读 list[1]/list[2] 实值, 或先令 HeapRealloc 失败静默化以暴露真实计数。
 - 全量基线 49/63 (回滚后未复跑, 下轮首查); 提交 2456eba。
+
+---
+
+## R24e (2026-08-27) — ★B 簇收官: StrBld 对象结构体化, 010/011/012/041 全翻, 49→53/63 零回归
+- ★根因定谳: dc FUN_14003c06c 以三邻接局部 (local_70/68/60, 58/50/48) 拟 StrBld 对象
+  {data,len,cap}, 1400216c4-append 经 &local_70 以 list[1]/list[2] 写 len/cap — 邻接依赖
+  编译器布局, MSVC 优化分离放置 ⟹ len 槽读栈残留: (a) 终止符 data[0]=0 清空 pFrom/pTo
+  → SHFO 87 (010/012), (b) 残留巨大 → append AllocString 巨量 count → HeapRealloc 失败
+  → MessageBoxW 弹窗挂起 124 — 三态同根 (四个多轮探针/活体证据链闭合: 探针 srcS=[]
+  + MessageBox 栈 + 编译产物布局对照 + 三态波动)。
+- ★修复: 两组三局部 → 单块结构体 `struct { WCHAR *data; int64_t len; uint64_t cap; }
+  strb1/strb2` — 24B 连续布局由类型系统保证, 别名依赖彻底消除 (dc 语义等价)。
+- ★验收: 010=2 ✓ 011=2 ✓ 012=2 ✓ 041 (MDIR+FILE 组合) = 2 ✓; 全量 63 案 53/10
+  零回归 (10 FAIL = 纯已知队列 E×3/J×2/G×2/H×2/I×1); 提交 170bacf; 部署 md5 60e5b054。
+- 下一站: 同款"三邻接局部拟 StrBld 对象"模式全库排查 (grep 相邻 LARGE_INTEGER+
+  int64 声明组) — 同类潜在地雷; 队列队首转 G (051/057)。
