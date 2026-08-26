@@ -496,3 +496,10 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   HASH 尾三释放中 wslot/ansi_slot/list_alloc 画像完成 — 下轮 bp 371-free 前查 wslot
   实值; PECMD_AssignString 空桩 (restored_bodies:7725) 契约缺口登记。
 - 全量 54/9 基线。
+
+---
+
+## R24f-f (2026-08-27) — 053 四现场: wslot 头垃圾实锤, res_src 源头待探
+- bp HASH+0x7b3: wslot=0x2177db0e460 (头无 StrBld 魔数, 内容" ") — 释放非法块成因
+  落定; 0637DC 端口复核无恙 ⟹ 疑点前移至 StrBldCopyAnsi 的 res_src 入参 (bp 探针
+  下一招)。全量 54/9。
