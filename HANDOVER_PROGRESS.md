@@ -356,3 +356,17 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   修复后 1.5 系由 -NAN → "整数部" (残留小数尾截断, 机理锁在箍环语义, 待原版汇编定谳 —
   非语料路径已登记, 不阻塞对拍)。7%3 %-数字展开差另案登记。
 - 提�交 1b290f4 (29 files); 部署 md5=dcc512a7; 全量复跑确认 48/63。
+
+---
+
+## R24f-c (2026-08-27) — 夹具 U-2 升级第一步 (vars_val 变量值回捞) + B 簇档案，全量 48/63 稳
+- ★夹具: make_epilogue 新增 vars_val.txt 工件 (manifest.vars_val=true 显式开关, 默认关 —
+  实测批量 63 案下追加第三条 EXEC 会放大 EXEC 通道偶发哑火 (33/63), 故 opt-in)。
+  形态 'CASE=<id>|A=5|B=3|R=gt!'; diff_case 不比对 ⇒ 金标/判据零扰动, 全量复跑 48/63 稳。
+  首发证据: 015 IFEX 真臂 msvc R=gt = orig R=gt (分支语义 exit 单维外首次可观测);
+  010 F 值双方一致; 026 CALC-%R%-echo 空值边缘已记录。
+- ★B 簇档案 (forensics §9): 原版 FILE 契约活体定案 — 复制成功/删除成功/源缺失全返 2
+  (pb1-pb4; 金标 2 = SHFileOperationW 缺文件错 2, 010 源在用例时序中恒缺); msvc 症状 =
+  010/012=87 (SHFO 参数非法), 011=0; 现场 struct hwnd/wFunc=0x18/0x1a 垃圾 + pFrom/pTo
+  悬垂 (栈覆写/释放时序, R24f 同族) — 症状级登记, 专项调试工单下轮。
+- 提交 24549a0 (harness/runners/run_case.py + forensics §9 + 结果工件)。
