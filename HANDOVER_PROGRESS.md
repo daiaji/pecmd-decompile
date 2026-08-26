@@ -418,3 +418,15 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   探针构建间行为漂移实证 (87↔124 挂起) → V4 透明性违反记录, git checkout 回滚干净基线。
 - 干净基线 md5 a18a8964: 010=87/011=0/012=87 (与 triage 一致), 全量 49/14 零回归。
 - B 簇残余: 终止符 local_68 栈别名候选 — 下轮以不改代码的 windbg 单步/dh 堆对比收官。
+
+---
+
+## R24d-e (2026-08-27) — B 簇挂起实锤: MessageBox/HeapRealloc/AppendParamToken 链, 已回滚基线
+- ★011 挂起根因实锤 (live 栈×2): USER32!MessageBoxW ← FUN_1400630D0 ← HeapRealloc ←
+  AllocString ← **AppendParamToken** ← FUN_14003C06C — append 收集巨量 count → 分配失败
+  弹"内存不足"阻塞 (124 = harness 超时杀)。
+- 修复尝试 A (终止符显式 len) / B (+槽清零) 均未解 (同栈复现) ⟹ len 槽模型不完整;
+  bp AllocString 轨迹 11 连击全 NewVarNode (ENVI 节点), append 帧未现。
+- 已回滚 2cb7fca 干净基线 (md5 a8b828ac): 011=0/010=87; 下轮方向 = bp AppendParamToken
+  入口读 list[1]/list[2] 实值, 或先令 HeapRealloc 失败静默化以暴露真实计数。
+- 全量基线 49/63 (回滚后未复跑, 下轮首查); 提交 2456eba。
