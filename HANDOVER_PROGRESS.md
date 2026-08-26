@@ -221,6 +221,10 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - windbg/Ghidra MCP 通道在线; symsnap.txt 已 python 化刷新 (14 符号, V1 法律来源有效)。
 - 部署身份: C:/pectest/DEPLOYED_BUILD.txt → hash=cd13046 md5=62e5ddd3 (2026-08-27 00:07)。
 
+- **改名安全性体检 (R23 末)**: 可执行/配置类零硬编码仓库绝对路径 (harness/runners、tools 全部
+  cwd/脚本位派生; gen_tasks.py 仅一行注释文本提及; rename_to_ascii.sh 自身含替换常量属预期);
+  活性文档仅 AGENTS.md/SKILL.md/WINDBG_MCP_ISSUES.md 三处, 由 rename_to_ascii.sh 白名单覆盖;
+  历史档案原文保留按换算说明处理; 无 .dsh 配置引用。
 ### ★ 改名待办 (R23 末登记, 用户主导执行)
 - **动作**: 将根目录 `D:\repo\PECMD反编译` 更名为 `D:\repo\pecmd-decompile` (ASCII)。
 - **为什么现在安全**: R23 构建链已零中文进 cmd 层 (rsp/bat 全相对路径), harness/tools 脚本
