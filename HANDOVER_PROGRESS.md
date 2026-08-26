@@ -396,3 +396,17 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   逐段同构 (选项/wFunc/清零/双槽/GetLastError 链); 新证据点 local_68 恒 0 终止符写入三侧
   一致 ⟹ "清 pFrom" 理论排除; 87 唯一差异渠道 = SHFO 运行时实参内容 (live/堆对比), 下轮收口.
 - 提交: 2cb7fca (R24d) + 03d1e13/… (对照结论); 部署 md5 f9872ef7; 全量 49/63.
+
+---
+
+## R24d-c (2026-08-27) — B 簇探针定案 (空路径 + garbage 结构实锤), 全量 49/63 稳
+- ★TEMP PROBE (Win32 通道, 禁 stdio — V4 纪律): FUN_14003C06C 双 SHFO 调用点前
+  打印结构字段 + 内容; 011 现场 = `hwnd=18 wFunc=1a pF=…F5F8 pT=…385A srcS=[] dstS=[]`
+  — pFrom/pTo 内容为空串 + 结构首 8 字节为栈残留 (未初始化) ⟹ SHFO 87 (ERROR_INVALID_PARAMETER)
+  的机制 = 空路径参数。
+- dc-len 机制复原: FUN_1400216c4 向 {data,len,cap} 对象追加 (len 槽 = 尾部 local_68 别名,
+  终止符 data[len]=0 落串尾); msvc 移植体 PECMD_AppendParamToken (b2b:272) 同样维护
+  list[1]=len ⟹ 空内容 = token 切片阶段 (LVar21) 已空/追加被跳过 — 下轮在 append 调用点
+  加第二层探针抓 token 到达实况。
+- 全量 63 案 49/14 零回归 (探针构建); 提交 aC (R24d-c 探针定案); 部署 md5 dc543d7a;
+  TEMP PROBE 已标记 T5 待拆。
