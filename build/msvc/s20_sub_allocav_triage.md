@@ -203,3 +203,10 @@ ExpandVarDispatch(展开变量) → FUN_140024C48 提取首 token="WRITE" → lo
 3. msvc 的 GetExitCodeGlobal 读侧修复(g_Script+0x50 链)是**错的**, 应恢复读 *g_pExitCode(g_exitCodeCache)
 4. 真正缺口=**谁往 g_exitCodeCache 写入最终退出码**(msvc 无写入者恒 0; 原版经某路径写入 2)
 下轮: 全树搜 g_exitCodeCache 的写入者; 若无, 对照 dc 找 DAT_14013caf0(=g_exitCodeCache 对应物)的写入函数并补移植。
+
+
+## 17. R18 部署纠偏与现状固化(Round13)
+- 部署事故根因: 残留 GUI 进程锁文件, Stop-Process 后需 taskkill+Move 绕过; 已建 "杀进程-重命名-复制" 部署序列
+- 干净部署后行为固化复现: exit=0xb7(183)/out.txt 未产出/WriteFileEncoded 入口探针未触发(双证: 探针缺失+[BP]未命中)
+- [WB] verb=WRIT 为 local_158 打包值(可信); l180=183 的来源处理器**不是** WriteFileEncoded(rb:6939 分支未进入)
+- 下轮首动作: 用 Ghidra msvc 工程反编译 PSB 的 0x54495257 分支体(Ghidra 地址需按 map 重算), 核对编译后的真实 call 序列; 同时以 DispatchBuiltin 内部探针打印每次表项比较, 确定 "WRITE" 是否到达表匹配
