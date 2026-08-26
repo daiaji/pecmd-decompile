@@ -31,6 +31,9 @@
 
 #include "pecmd_defs.h"
 
+/* R24f-d: C4013 隐式 int 防护 — 指针返回型 extern 补齐 */
+extern int64_t *PECMD_ReplaceStringSlot(int64_t *, uint64_t *); /* @0x140070398 */
+
 /* ---- 已实现公共工具 (pecmd_defs.h / core_*.c) ---- */
 extern void PECMD_GetApiProcCached(LPCSTR func, LPCSTR dll, void **out,
                                    HMODULE *hmod);                             /* @0x14005c828 */

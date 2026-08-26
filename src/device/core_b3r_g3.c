@@ -16,6 +16,9 @@
 #include "win32_stub.h"
 #include "pecmd_defs.h"
 
+/* R24f-d: C4013 隐式 int 防护 — 指针返回型 extern 补齐 */
+extern short *PECMD_UnquoteString(short *); /* @0x1400xxxx */
+
 /* ---- 本文件使用的 BOM 常量 (对应 .rdata 中的 DAT_140124128/12c/130) ---- */
 static const uint8_t DAT_140124128[] = {0xFF, 0xFE};       /* UTF-16LE BOM */
 static const uint8_t DAT_14012412c[] = {0xFE, 0xFF};       /* UTF-16BE BOM */

@@ -25,6 +25,10 @@
 #include "pecmd_defs.h"
 
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
+/* R24f-d(041 MDIR AV 定案): 本 TU 的 334/388 两处调用此前无原型 → C4013 隐式 int
+ * → CDQE 截断 64 位指针 (0x258f621cea2→0xfffffffff621cea2) → G 簇
+ * 041/051/057/060 类 AV 首例实锤; core_b2f.c 已有同款 (R24 013), 此处补齐。 */
+extern WCHAR *FUN_14001BE14(WCHAR *s); /* core_exec2.c:260 @0x14001be14 去首尾引号 */
 extern uint64_t PECMD_ParseCommandBlock(void *script, void **args, int count, uint64_t flags);
 extern uint64_t PECMD_OneTimeInitBody(void);
 extern void PECMD_SetObjectVtable(void *obj);

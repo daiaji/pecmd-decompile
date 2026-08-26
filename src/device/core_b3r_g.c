@@ -21,6 +21,9 @@
 #include "win32_stub.h"
 #include "pecmd_defs.h"
 
+/* R24f-d: C4013 隐式 int 防护 — 指针返回型 extern 补齐 */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len); /* @0x140063424 */
+
 /* ---- Ghidra primitive aliases ---- */
 typedef unsigned int uint;
 typedef unsigned short ushort;

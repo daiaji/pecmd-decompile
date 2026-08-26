@@ -44,6 +44,9 @@
 
 #include "pecmd_defs.h"
 
+/* R24f-d: C4013 隐式 int 防护 — 指针返回型 extern 补齐 */
+extern int64_t *PECMD_AllocMagicString(LPCWSTR param_1); /* 定义处 longlong* (stubs_common.h) */
+
 /* ---- 未实现依赖 (extern + TODO(verify)) ---- */
 extern void PECMD_CreateVariable(int64_t *obj, uint64_t value, LPCWSTR text, int64_t *out);
 extern void PECMD_ZeroLenBuf(void *p);
