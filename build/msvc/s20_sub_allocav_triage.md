@@ -189,3 +189,17 @@ ExpandVarDispatch(展开变量) → FUN_140024C48 提取首 token="WRITE" → lo
 - 全指令扫描: 无任何 cmp 0x54495257 直比指令 => PSB 级联对 WRITE 的分发经函数指针表间接进行, [WB] 的 verb 槽读数为残留值不可信
 - 可靠事实链保持: exit=0xb7(183)/out.txt 未产出/WriteFileEncoded 未被调([WIN] 探针+bp 双证)
 - 下轮首动作: 定位函数指针表 1402ca7f4 所在数组结构与其填充者(RegisterFileAssociations 静态模式段?), 从表内容反推 WRITE 行的真实处理器; 或在 DispatchBuiltin 内部加免解引用探针打印每次比较的表项名
+
+
+## 19. R18 关键对照: 原版 vs msvc 的命令表与退出码槽(Round15)
+**原版活体 dd(GetExitCodeGlobal 断点命中时)**:
+- 14013ca98(cmdTable1Count?)=0 / 14013a078=0 / 14013a080=0 —— **原版计数同样为 0, D-16/D-17 表空假设被推翻**
+- 14013a050=0x4011d4b8(非空堆指针)
+- **14013d180=0x4013d188(堆缓存指针), 该缓存处值=2(WRITE 成功码)**
+
+**结论修正**:
+1. DAT_14013d180 是独立全局指针变量(非 g_Script 字段! S17 的"g_Script+0x50 等价"系地址相邻误判)
+2. DispatchBuiltin 表空在两边一致 => WRITE 行不走 DispatchBuiltin, 走 PSB local_158 级联(rb:6939 WriteFileEncoded) => D-16/D-17 工单方向作废
+3. msvc 的 GetExitCodeGlobal 读侧修复(g_Script+0x50 链)是**错的**, 应恢复读 *g_pExitCode(g_exitCodeCache)
+4. 真正缺口=**谁往 g_exitCodeCache 写入最终退出码**(msvc 无写入者恒 0; 原版经某路径写入 2)
+下轮: 全树搜 g_exitCodeCache 的写入者; 若无, 对照 dc 找 DAT_14013caf0(=g_exitCodeCache 对应物)的写入函数并补移植。
