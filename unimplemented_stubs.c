@@ -435,99 +435,16 @@ uint64_t PECMD_ClipboardCommand(void) { return 0; }
    ============================================================ */
 int      FUN_14006156c(const uint16_t *a, const uint16_t *b) { (void)a;(void)b; return 0; }
 uint64_t FUN_1400a53e4(int64_t a, void *b, void *c, int d, const uint16_t *e) { (void)a;(void)b;(void)c;(void)d;(void)e; return 0; }
-/* R14(SUB 族 dump 16664 定案): FUN_14001b23c v0 桩不写回游标出参 param_4 →
- * 调用方 FUN_14006e030(rb core_b3m.c) 的 *pp 停在预清 0 → NULL 解引用 AV。
- * 按 dc:15729-15819 直移真体 + 两 helper(注释截断/RTrim)。 */
-extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);      /* 真体 core_init.c @0x140063720 */
-extern uint64_t *PECMD_SkipLeadingControls(uint64_t *pp);        /* 真体 core_b1_remaining.c @0x1400170b0 */
-extern int64_t PECMD_WideStrLen(const uint16_t *s);              /* 真体 core_b9_remaining.c @0x140103020 */
-extern uint8_t g_charTableF;                                     /* DAT_14013a248 pecmd_globals.h */
+/* R24(021 活体取证定案): FUN_14001b23c 直移副本扫描环语义与 dc:15781-15795 分叉
+ * （缺无条件 +1 前进；0x8a 分支写成 cur+=2、0x88 检查在当前位置而非下一字符）
+ * → 文本流/分隔符全部正常亦原地自旋（021/037/038 SUB 族挂死根因，对比真体
+ * core_b1_remaining.c:7969-7977 与 dc 原文）。改单行转发 ≡ 真体
+ * PECMD_ExtractTableSegment（声明 stubs_common.h:1569，定义 core_b1_remaining.c:7964）。 */
+extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);      /* 真体 core_init.c @0x140063720 (FUN_140063720 转发用) */
 
-/* dc:13726-13741 RTrim: 去尾部空格/tab */
-static LPCWSTR local_RTrim(LPCWSTR s)
+LPCWSTR FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, char e)
 {
-    int n = lstrlenW(s);
-    LPCWSTR end = s + n - 1;
-    while (s <= end && (*end == L' ' || *end == L'\t')) {
-        *(WCHAR *)end = L'\0';
-        end--;
-    }
-    return s;
-}
-
-/* dc:15729-15771 注释/特殊前缀截断 */
-static uint64_t local_StripInlineComments(uint16_t *buf, int len)
-{
-    uint64_t r;
-    uint16_t *p;
-    WCHAR *cursor = (WCHAR *)buf;
-    PECMD_SkipLeadingControls((uint64_t *)&cursor);
-    p = (uint16_t *)cursor;
-    if (*cursor == 0x60 || *cursor == 0x7e || *cursor == 0x3b || *cursor == 0x2f ||
-        *cursor == 0x23 || *cursor == 0x27 || *cursor == 0x3d || *cursor == 0x3a) {
-        *buf = 0;
-        return 1;
-    }
-    if (len < 1) {
-        len = (int)PECMD_WideStrLen(buf);
-    }
-    {
-        uint16_t *endp = buf + len;
-        for (; p < endp; p++) {
-            if (((8 < *p && *p < 0xe) || *p == 0x20) &&
-                (p[1] == 0x60 || (p[1] == 0x2f && p[2] == 0x2f))) {
-                *p = 0;
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
-/* dc:15778-15819 提取表段 token(XOR 解码+可选截断), 写回 *param_4 游标 */
-const uint16_t *FUN_14001b23c(int64_t a, void *b, const uint16_t *c, void *d, char e)
-{
-    short ch;
-    LPCWSTR ret;
-    int n;
-    uint16_t *src = (uint16_t *)c;
-    int64_t *cur = (int64_t *)d;
-    uint16_t *dst;
-    if (*(int64_t *)d == 0) {
-        *(int64_t *)d = (int64_t)(intptr_t)c;
-        if (*(uint16_t *)(intptr_t)c != *(uint16_t *)(a + 0x88)) {
-            for (;;) {
-                ch = *(short *)*(int64_t *)d;
-                if (ch == *(short *)(a + 0x90)) break;
-                if (ch == *(short *)(a + 0x8a)) {
-                    *(int64_t *)d += 2;
-                }
-                if (*(short *)*(int64_t *)d == *(short *)(a + 0x88)) break;
-            }
-        }
-    }
-    for (; src <= (uint16_t *)*(int64_t *)d &&
-           (*(uint16_t *)(a + 0x92) == *src || *(uint16_t *)(a + 0x94) == *src);
-         src++) {
-    }
-    n = (int)((*(int64_t *)d - (int64_t)(intptr_t)src) >> 1);
-    PECMD_AllocString((WCHAR **)b, (int64_t)n + 6);
-    dst = *(uint16_t **)b;
-    for (; src < (uint16_t *)*(int64_t *)d; src++) {
-        *dst = (uint16_t)(*(uint16_t *)(a + 0x48) ^ *src);
-        dst++;
-    }
-    *dst = 0;
-    dst[1] = 0;
-    dst[2] = 0;
-    ret = (LPCWSTR)*(void **)b;
-    if ((0 < g_charTableF) && (*(char *)(a + 0xe) == '\0')) {
-        local_StripInlineComments((uint16_t *)ret, n);
-    }
-    if (e == '\0') {
-        local_RTrim(ret);
-    }
-    return ret;
+    return PECMD_ExtractTableSegment(a, (uint64_t *)b, (uint16_t *)c, (int64_t *)d, e);
 }
 
 /* ============================================================
