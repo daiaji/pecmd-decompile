@@ -177,11 +177,15 @@ uint64_t PECMD_ParsePrefixColon(void) { return 0; }
  * 原 no-op 桩使 ProcessScriptBlock→PECMD_ExpandVarDispatch 展开支路整体空转
  * （%VAR% 不展开, 且输出槽不写→调用方读未初始化）。现转发真体。 */
 long long PECMD_ExpandCommandLine(long long *a, WCHAR *b, void *c, int d, uint8_t e)
-    { P8_Probe("ExpandCL", (longlong)(uintptr_t)b, (longlong)d);
-      return (long long)FUN_14007A224((void *)a,(WCHAR *)b,(WCHAR **)c,d,e); }
+    { P8_Probe("ExpandCL-in", (longlong)(uintptr_t)b, (longlong)d);
+      long long rr = (long long)FUN_14007A224((void *)a,(WCHAR *)b,(WCHAR **)c,d,e);
+      P8_Probe("ExpandCL-out", (long long)(c ? *(long long *)c : 0), rr);
+      return rr; }
 long long PECMD_ExpandVarsRecursive(long long *a, WCHAR *b, void *c, int d, uint8_t e)
-    { P8_Probe("ExpandVR", (longlong)(uintptr_t)b, (longlong)d);
-      return (long long)FUN_14007BDA8((void *)a,(WCHAR *)b,(WCHAR **)c,d,e); }
+    { P8_Probe("ExpandVR-in", (longlong)(uintptr_t)b, (longlong)d);
+      long long rr = (long long)FUN_14007BDA8((void *)a,(WCHAR *)b,(WCHAR **)c,d,e);
+      P8_Probe("ExpandVR-out", (long long)(c ? *(long long *)c : 0), rr);
+      return rr; }
 /* S11(dc 签名归正): 原为 uint64_t f(void) 零参占位 —— 与全部调用点(2-3 参)
  * ABI 不符。按 decompiled.c 原文签名改为占位真体(函数体仍待移植, 见 T4 分诊):
  *   FUN_14007d0ac(longlong*,LPCWSTR,LPCWSTR)->void  (变量前缀赋值)
