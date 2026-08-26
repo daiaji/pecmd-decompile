@@ -29,8 +29,8 @@ extern uint64_t PECMD_ParseCommandBlock(void *script, void **args, int count, ui
 extern uint64_t PECMD_OneTimeInitBody(void);
 extern void PECMD_SetObjectVtable(void *obj);
 extern uint64_t PECMD_GetPackedSystemVersion(void);
-extern HMENU PECMD_BuildImDiskMenu(int64_t *obj, ULARGE_INTEGER pos, int mode, int64_t *out,
-                                   uint64_t flags);
+extern int64_t PECMD_IfexFindExecutor(int64_t *obj, ULARGE_INTEGER pos, uint8_t verb_mode,
+                                      int64_t *out, uint64_t flags);
 extern uint64_t PECMD_HelpDlgProc(void *app, HWND hwnd, uint32_t msg, HDC hdc, HWND wnd);
 extern HGDIOBJ PECMD_LogoDlgProc(void *script, HWND hwnd, uint32_t msg, HDC hdc, void *p4);
 extern int64_t PECMD_MainMsgWndProc(uintptr_t script, HWND hwnd, uint32_t msg, void *wParam,
@@ -134,25 +134,22 @@ void PECMD_InitIfOldSystem(void)
 }
 
 /* ========== PECMD_IfexCmdHandler @0x140035b08 ==========
- * @0x140035b08 size=25 — 文件大小/位置包装(asm→C): 纯尾调用包装,
- *   将第4参(r8)移入第4槽(r9)、置第3参 r8b=1, call PECMD_BuildImDiskMenu。
+ * @0x140035b08 size=25 — IFEX 纯尾调用包装(asm→C): 第4参(r8)移入第4槽(r9)、
+ *   置第3参 r8b=1, 尾调 PECMD_IfexFindExecutor(@0x140034788 共享体)。
  */
 uint64_t PECMD_IfexCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
-    /* S11(dc 签名 undefined=RAX 残留伪影): 返回型归正, 显式 return 0 (T4 分诊候选) */
-    PECMD_BuildImDiskMenu(obj, pos, 1, out, flags);
-    return 0;
+    /* R24(C1 去桩, 归一转发惯例): 包装器回传共享体执行结果 (=动词返回值) */
+    return (uint64_t)PECMD_IfexFindExecutor(obj, pos, 1, out, flags);
 }
 
 /* ========== PECMD_FindCmdHandler @0x140035b24 ==========
- * @0x140035b24 size=25 — 文件大小/位置包装(asm→C): 同 b08, 第3参 xor r8d=0,
- *   call PECMD_BuildImDiskMenu。
+ * @0x140035b24 size=25 — FIND 纯尾调用包装(asm→C): 同 b08, 第3参 xor r8d=0,
+ *   尾调 PECMD_IfexFindExecutor。
  */
 uint64_t PECMD_FindCmdHandler(int64_t *obj, ULARGE_INTEGER pos, int64_t *out, uint64_t flags)
 {
-    /* S11(dc 签名 undefined=RAX 残留伪影): 返回型归正, 显式 return 0 (T4 分诊候选) */
-    PECMD_BuildImDiskMenu(obj, pos, 0, out, flags);
-    return 0;
+    return (uint64_t)PECMD_IfexFindExecutor(obj, pos, 0, out, flags);
 }
 
 /* ========== PECMD_HelpDialogProc @0x140037b84 ==========
