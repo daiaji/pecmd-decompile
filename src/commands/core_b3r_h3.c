@@ -42,6 +42,10 @@ extern int PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2,
 extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, uint64_t f,
                                         int64_t *g, HWND h, int64_t i);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
+/* TEMP PROBE 最小 CRT 原型 (禁 stdio.h) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
+extern int __cdecl fclose(void *_Stream);
 /* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
 
 
@@ -2626,6 +2630,13 @@ LAB_14009f52b:
         PECMD_FreeStrBuf((void *)&local_b8.QuadPart);
     }
     LVar31 = LVar30;
+    { /* TEMP PROBE R14b(WRITE 返回值取证) */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[WRET] LVar30=%lld\n", (long long)LVar30.QuadPart);
+            fclose(pf_);
+        }
+    }
     PECMD_FreeStrBuf((void *)&local_98);
     PECMD_FreeStrBuf((void *)&local_90);
 LAB_1400a037e:
