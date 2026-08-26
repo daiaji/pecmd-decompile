@@ -62,9 +62,14 @@ static void PECMD_ExitProcessCall(int code)
 }
 
 /* ========== 退出码 @0x14005b7dc ========== */
+/* R14b(S17 UNVERIFIABLE 解锁, 活体 dd 实锤): 原版 DAT_14013d180≡g_Script+0x50
+ * 同址, ScriptInit(parent==0) 自锚槽值=&this+0x58, PSB 尾部(rb LAB_14004c525 /
+ * dc:45139-141)把最后非零动词返回值写进 *(script+0x50) ⇒ 进程退出码。
+ * v0 读独立 g_exitCodeCache(无写入者)恒 0 —— golden=2 的 17 案全败根因。
+ * WRITE→2 / ENVI,CALC,SUB,TEAM→0 / CALC 除0→16 与触发面表完全吻合。 */
 int PECMD_GetExitCodeGlobal(void)
 {
-    return (int)*g_pExitCode;
+    return (int)*(uint32_t *)(*(uint64_t *)(void *)(g_Script + 0x50));
 }
 
 /* ========== 初始化 @0x140027690 ========== */

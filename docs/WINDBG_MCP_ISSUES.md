@@ -1,5 +1,10 @@
 # WINDBG_MCP_ISSUES.md — windbg MCP 鲁棒性问题专档
 
+> **2026-08-26 状态更新（R14c）：上游已修复，实测通过。**
+> ① `execute("g")` 控制通路真实生效（launch→bp→g 进程运行至自然退出，全程 .lastevent/registers 可响应，不再吞命令、不再半死）；② 单条命令失败不再污染会话（错误后 .lastevent 立即可用）。
+> 仍需注意：dump 会话对不可读栈区/错误宽度模式的 `s` 搜索报 0x80040205 属合法失败（如 `-dq` 需 8 字节模式），会话可继续使用。
+> 以下 A-H 为历史病理档案，保留作鉴别诊断参考；SOP 第 4 条放宽为「控制类优先专用工具，execute 单语句已可用」。
+
 > 2026-08-25 编纂 | 文档子代理产出 | 定位：windbg-mcp（Rust 主服务 + python worker 组）在
 > pecmd_msvc.exe 活调试中的已知缺陷登记、受控复现实录与安全操作规程。
 > 上游纪律文档：`refactored\DEBUGGER_HANDOFF.md` §7/§10/§11/§12、`HANDOVER_PROGRESS.md` §5/§8。
