@@ -251,3 +251,13 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   vs hex 大小) 或 (b) **PECMD_AssignString = 空桩 (restored_bodies:7725, return 0)** —
   其 dc 真体有实际写槽语义, 桩化后 HASH 结果通路为空 — 供下轮 bp 371-free 前查
   wslot 实值 (或直读 free 参数 rdx)。
+
+## 18. 053 四现场 (R24f-f): wslot 槽实值 = 非 StrBld 分配物
+
+- bp PECMD_HashCmdCompute+0x7b3 (wslot 释放点): rcx=&wslot, **wslot=0x2177db0e460**,
+  其 -8 头 = {0x8e0001451caea860, 0x20} 无 StrBld 魔数/尺寸语义 — 非本分配器产物,
+  内容 = 宽串 " " (单空格) — 与结果格式 " <hex>" 的第一字符吻合。
+- 0637DC (core_init:178, ANSI→Wide 端口) 复核: AllocString(srclen+3) → conv → 
+  AllocString(len+1) 缩容 — 头由 HeapRealloc 维护, 语义正常 ⟹ 槽被污染发生在
+  StrBldCopyAnsi 之前/之间 — 下一探针 = bp StrBldCopyAnsi 入口读 b (res_src) 实值
+  (疑: res_src/hash_out 初始化或 CryptoHashCompute 输出槽指错)。
