@@ -220,3 +220,15 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - 构建日志 UTF-8 解码 (chcp 65001 链); 旧 GBK 解码规则仅适用 build_*.log 历史件 (r20c 及以前)。
 - windbg/Ghidra MCP 通道在线; symsnap.txt 已 python 化刷新 (14 符号, V1 法律来源有效)。
 - 部署身份: C:/pectest/DEPLOYED_BUILD.txt → hash=cd13046 md5=62e5ddd3 (2026-08-27 00:07)。
+
+### ★ 改名待办 (R23 末登记, 用户主导执行)
+- **动作**: 将根目录 `D:\repo\PECMD反编译` 更名为 `D:\repo\pecmd-decompile` (ASCII)。
+- **为什么现在安全**: R23 构建链已零中文进 cmd 层 (rsp/bat 全相对路径), harness/tools 脚本
+  零硬编码仓库路径 (全部 cwd/脚本位派生) → 改名**不需要改任何代码**。
+- **用户步骤**: ① 启动器/DSH 确认无进程占用该目录 ② 重命名文件夹 ③ DSH 重配 workspace
+  到新路径并重启。
+- **代理步骤 (改名后新会话)**: 就地运行 `bash tools/rename_to_ascii.sh` (自动替换 AGENTS.md /
+  pecmd-build SKILL / WINDBG_MCP_ISSUES 中的绝对路径并按幂等保护追加换算注记; 历史档案原文
+  保留) → `bash tools/build_msvc.sh` 全量构建 → `bash tools/post_build.sh . C:/pectest` →
+  冒烟 001 + 全量基线复核 (期望 17/63 持平)。
+- 历史文档换算: 「PECMD反编译 ⇒ pecmd-decompile」 (与 refactored\X ⇒ 根\X 同款纪律)。

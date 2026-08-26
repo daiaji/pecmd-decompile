@@ -184,7 +184,7 @@ def run_case(args, case_id):
     # 显式 --exe msvc 时缺产物视为硬错误; both 下允许跳过 (P0 产出前为常态)
     for label, exe, _ in targets:
         if label == "msvc" and args.exe == "msvc" and not os.path.isfile(exe):
-            fail(f"编译产物不存在: {exe} (先运行 tools\\msvc_build.bat)")
+            fail(f"编译产物不存在: {exe} (先运行 bash tools/build_msvc.sh)")
     if all(not os.path.isfile(exe) for _, exe, _ in targets):
         fail(f"无可用 EXE: {args.orig_exe} / {args.msvc_exe}")
 

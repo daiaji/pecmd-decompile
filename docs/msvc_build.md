@@ -50,3 +50,20 @@ python harness\runners\diff_case.py 001_envi_smoke         :: verdict
 
 门禁口径（双绿门 v4.1）：`syntax 门全绿` + `完整构建 exit 0`。
 `build.sh` 为 Linux gcc 参考门，留档不作为 WIN 门禁。
+
+---
+
+## 【R23 后记】(2026-08-27) — 构建入口迁移: bat → UTF-8 python 链
+
+> 本文件为冻结设计注记, 原文保留; 仅追加迁移事实。权威现状以 AGENTS.md `常用命令速查` 与
+> `tools/build_msvc.py` 头部注释为准。
+
+1. **R23 起主链 = `tools/build_msvc.py` + `bash tools/build_msvc.sh` 薄包装**:
+   - rsp/临时 bat 全**相对路径** → 零中文进 cmd 层 (中文根路径只活在 bash/python 与 cmd cwd);
+   - `chcp 65001` 全 UTF-8 链 (rsp UTF-8 文件、stdout UTF-8 解码、cl /utf-8);
+   - 双绿门保留: exit 0 + `[msvc_build] OK` + exe 存在; 语法门参数 `syntax` 不变。
+2. `tools/msvc_build.bat` 保留未删 (自管 chcp 936, 可作对照); 迁移动机 = 旧链
+   cmd //c/MSYS 参数转换坑 + GBK/ACP 编码包袱 (R23 实战踩坑: git-bash `cmd //c` 不执行 bat,
+   必须 `cmd.exe /c`; 含中文绝对路径经 MSYS 转 argv 会乱码)。
+3. `tools/make_symsnap.sh` 同步 awk→内嵌 python (本机 awk 曾缺失, R23 末注册表 PATH 修正后已恢复,
+   但工具脚本以 python 内嵌为稳)。

@@ -247,7 +247,7 @@ SOP 对照组结论：纯净流程（launch → bp 工具单断点 → go 工具
 - **所有权/生命周期取证**：[FREE]/[_ReturnAddress()] 定位 double-free 调用点（REVIEW §130 T1e）。
 - **探针工程纪律**：TEMP PROBE 统一命名、手写 CRT extern `fopen/fprintf/fclose`
   并**禁 `#include <stdio.h>`**（撞 win32_api_stubs 的 _vsnwprintf 内联）；探针网过门后
-  T5 统一拆除；每步保构建绿（chcp 936 + `[msvc_build] OK` 行为准）。
+  T5 统一拆除；每步保构建绿（R23 起 `bash tools/build_msvc.sh` 双绿门: exit 0 + `[msvc_build] OK`；旧 bat 时代以 chcp 936 行为准）。
 
 windbg 仍不可替代的场景：
 - 崩溃**事后**分析（WER dump + 真实 unwind 远胜栈扫描，ResDecode/NextToken 两案实锤）；

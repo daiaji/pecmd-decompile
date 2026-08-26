@@ -19,7 +19,7 @@ D:\repo\PECMD反编译\          # ★ git 根 = 项目根（原 refactored 子�
 ├── harness\golden            # golden 语料（win_real / win_real_orig）
 ├── docs\                     # 病理档案与规程（含 DEBUGGER_HANDOFF_legacy.md；索引见 docs\README.md）
 ├── analysis\                 # 轮次报告（r19a_/r19b_/r19d_… 前缀=轮次-线别）
-├── tools\                    # msvc_build.bat / make_symsnap.sh / post_build.sh / run_corpus.sh / 批处理 JSON（勿移动，脚本引用相对路径）
+├── tools\                    # build_msvc.py/.sh (R23 构建主链, UTF-8) / msvc_build.bat (旧对照) / make_symsnap.sh / post_build.sh / run_corpus.sh / 批处理 JSON（勿移动，脚本引用相对路径）
 ├── .agents\skills\           # 技能库（SKILL.md 格式）
 ├── build\msvc\               # exe + pecmd_msvc.map + symsnap.txt + build_*.log
 ├── AGENTS.md / HANDOVER_PROGRESS.md / REVIEW.md / FUNC_NAMES.md …
@@ -37,8 +37,8 @@ C:\pectest\                   # 部署与运行现场：pecmd_msvc.exe、DEPLOYE
 ## 硬性纪律（每条都有事故背书）
 
 ### 构建（主代理专属，子代理禁止构建）
-1. **构建前三查**：无在途 windbg 会话（含子代理取证会话，LNK1201 主因）→ 磁盘余量 → 上次构建日志无未处置错误。chcp 936 由脚本自管。
-2. 双绿门：exit 0 且输出含 `[msvc_build] OK`。构建日志是 GBK：按 gbk 解码读尾部，错误正则 `error (C\d+|LNK\d+)`。
+1. **构建前三查**：无在途 windbg 会话（含子代理取证会话，LNK1201 主因）→ 磁盘余量 → 上次构建日志无未处置错误。码页由脚本自管（R23 新链 chcp 65001；旧 bat 自管 936）。
+2. 双绿门：exit 0 且输出含 `[msvc_build] OK`。R23 起构建日志按 UTF-8 解码读尾部（旧 build_*.log 历史件仍按 GBK），错误正则 `error (C\d+|LNK\d+)`。
 3. 构建成功后必跑 `tools\make_symsnap.sh` 刷新 `build\msvc\symsnap.txt`（或 `bash tools/post_build.sh` 一站完成 symsnap+部署+身份戳）。
 4. ⚠ `cmd /c "... && cd /d X && ..."` 里的 cd 只影响子进程——后续 PowerShell 步骤一律绝对路径或显式 Set-Location。
 
@@ -89,7 +89,7 @@ bash tools/run_corpus.sh            # 全量双跑 + diff
 mcp attach_process <pid> → ~* k 30 → read_memory → end_session
 ```
 > R23 注: 构建链已全面 UTF-8 化并零中文进 cmd 层（rsp/bat 全相对路径）;
-> 工具 Python 依赖（awk 本机已不可用, make_symsnap 已改内嵌 python）。
+> 工具脚本以 python 内嵌为稳（awk/perl 已于 R23 末随注册表 PATH 修正恢复, Git\usr\bin）。
 
 ## 权威文档与技能索引
 

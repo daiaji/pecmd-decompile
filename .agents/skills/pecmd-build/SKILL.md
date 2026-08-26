@@ -13,12 +13,17 @@ whenToUse: 需要编译 pecmd_msvc.exe、跑 syntax 门、或部署到 C:\pectes
 - 本机 8GB 内存, 编译峰值 ~2GB — **不要并行多份构建**; 构建产物用完即删
 - 门禁口径 (双绿门): `syntax` 全绿 + 完整构建 exit 0, 缺一不可
 
-## 构建命令
+## 构建命令 (R23 起: python 全托管 UTF-8 链; 旧 bat 仅保留作对照)
 
-```bat
-cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"" x64 && tools\msvc_build.bat syntax"   :: 语法门 (cl /Zs)
-cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"" x64 && tools\msvc_build.bat"          :: 完整构建 -> build\msvc\pecmd_msvc.exe (+ .map)
+```bash
+bash tools/build_msvc.sh syntax     :: 语法门 (cl /Zs)
+bash tools/build_msvc.sh            :: 完整构建 -> build/msvc/pecmd_msvc.exe (+ .map)
+bash tools/post_build.sh . C:/pectest   :: symsnap 刷新 + 部署 + 身份戳一站
 ```
+- 实现: tools/build_msvc.py (sources.rsp/_msvc_cmd.bat 全相对路径→零中文进 cmd 层;
+  chcp 65001 全 UTF-8 链; 双绿门保留: exit 0 + `[msvc_build] OK`)。
+- 旧路径 `cmd /c "call ""…vcvarsall.bat"" x64 && tools\msvc_build.bat"` 仍可工作 (bat 自管 chcp 936),
+  仅作对照; git-bash `cmd //c` 不执行 bat (MSYS 转换), 必须 `cmd.exe /c`。
 
 **构建前三查(R20/V6)**: ① 无在途 windbg 会话(含子代理取证会话, worker 持 PDB → LNK1201);
 ② 磁盘余量; ③ 注意 `cmd /c` 内的 cd 不影响外层 cwd, 收尾步骤用绝对路径。
