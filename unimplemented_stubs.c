@@ -277,7 +277,21 @@ uint64_t PECMD_EncodeDet(long long a, uint64_t b) { (void)a;(void)b; return 1; }
 short PECMD_ParseHashNumbers(int64_t *pp, int64_t val) { (void)pp; (void)val; return 0; }
 uint64_t PECMD_GetComboItemText(void) { return 0; }
 uint64_t PECMD_SaveSelectionToVar(void) { return 0; }
-uint64_t PECMD_SkipWCharUntil(void *pp, uint16_t ch) { (void)pp;(void)ch; return 0; }
+uint64_t PECMD_SkipWCharUntil(void *pp, uint16_t ch)
+{
+    /* R24f(F 簇定案): ≡dc FUN_1400f429c (dc:149819, 38B) — 宽字符游标前进至命中 ch 或
+     * 串尾; 旧 no-op 桩致 LSTR/RSTR 第二闸失效 → 029/040 0x80070057 (r24f_fcluster_forensics)。 */
+    WCHAR *p;
+    WCHAR **ppw = (WCHAR **)pp;
+    p = *ppw;
+    if (p != NULL) {
+        while (*p != L'\0' && (uint16_t)ch != (uint16_t)*p) {
+            p++;
+            *ppw = p;
+        }
+    }
+    return (uint64_t)(uintptr_t)pp;
+}
 /* S11(dc FUN_1400549bc(longlong,uint,longlong)->void) */
 void PECMD_InitDragDrop(int64_t a, uint32_t b, int64_t c)
     { (void)a;(void)b;(void)c; }
@@ -476,7 +490,20 @@ uint64_t FUN_1400662a4(int64_t *p1, void *p2, int64_t *p3, const uint16_t *p4,
                        const uint16_t *p5, uint p6)
 { (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6; return 0; }
 void *FUN_140063224(uint64_t *a, uint64_t b) { (void)a;(void)b; return 0; }
-uint64_t thunk_FUN_1400f429c(void *a, short b) { (void)a;(void)b; return 0; }
+uint64_t thunk_FUN_1400f429c(void *a, short b)
+{
+    /* R24f: 同 PECMD_SkipWCharUntil 真体 (dc FUN_1400f429c) — ?N 路径等依赖游标推进 */
+    WCHAR *p;
+    WCHAR **ppw = (WCHAR **)a;
+    p = *ppw;
+    if (p != NULL) {
+        while (*p != L'\0' && (uint16_t)b != (uint16_t)*p) {
+            p++;
+            *ppw = p;
+        }
+    }
+    return (uint64_t)(uintptr_t)a;
+}
 /* DAT_140125230 -> g_dbl25230 = 0.5 (core_globals.c 定义), DAT_140125238 -> g_fontMinus0 = -0.0 */
 /* 计算器栈写入辅助: 将值 param_3 写入栈元素 param_2 并递减栈指针 (param_1+4) */
 void FUN_14005bc48(int64_t param_1, double *param_2, double param_3)
@@ -1054,13 +1081,20 @@ double   DAT_1401237e8;
 double   DAT_1401237f0;
 double   DAT_1401237f8;
 double   DAT_140123800;
-double   DAT_140124110;
+/* R24f(Ghidra .rdata 定案 @0x140124110): e 常数 — 旧 0.0 桩致
+ * 数字解析的 e-路径失真。 */
+double   DAT_140124110 = 2.7182818284590452353602874713527;
 double   DAT_140124118 = 3.1415926535897932384626433832795;
 double   DAT_1401263a0 = 10.0;
 double   DAT_1401261a0 = 1.0;
-double   DAT_140126398;
-double   DAT_140126390;
-double   DAT_140121668;
+/* R24f(Ghidra .rdata 定案 @0x140126398): (double)INT64_MIN — 舍入阈值;
+ * 旧 0.0 桩使小数解析 (42-精度箍) 失效 → 1.5 系全部 -NAN(IND)。 */
+double   DAT_140126398 = -9223372036854775808.0;
+/* R24f(Ghidra .rdata 定案 @0x140126390): 5.0 — 小数位缩放基数;
+ * 旧 0.0 桩 → 小数分母 0 → 0/0 → -NAN(IND)。*/
+double   DAT_140126390 = 5.0;
+/* R24f(Ghidra .rdata 定案 @0x140121668): 2^63 — int64 回绕修正。*/
+double   DAT_140121668 = 9223372036854775808.0;
 uint32_t DAT_14013a34c = 0x80000000;
 uintptr_t g_hFontE2B8;
 double DAT_140124120 = 1.5707963267948966192313216916398;

@@ -87,3 +87,14 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
 值契约: 11/13 与原版逐位一致; 2 项非语料偏差登记:
 - `7%3` → msvc 7 vs 原版 1 (%-数字实参展开语义差, PSB 侧)
 - `1.5+0.5` → msvc -NAN(IND) vs 原版 2 (ParseDoubleNumber 小数分支)
+
+## 8. R24f-b 续: F 簇桩直移 + 浮点常量定案 (部署体 md5 dcc512a7)
+
+- F 簇: PECMD_SkipWCharUntil + thunk_FUN_1400f429c 双桩按 dc FUN_1400f429c (dc:149819) 直移
+  (unimplemented_stubs.c) → 029/040 翻转 PASS (0x80070057→0), 049 语义修复(exit 仍被 FIND 掩蔽);
+  048/050/058/062 "用例形态"案保持掩蔽 PASS; 全量 **48/63 零回归** (F 簇工单闭合)。
+- 浮点常数四联 (Ghidra .rdata 定案): DAT_140126390=5.0 (旧 0.0 → 小数分母 0 → -NAN(IND)),
+  DAT_140126398=(double)INT64_MIN (箍环), DAT_140121668=2^63 (回绕修正), DAT_140124110=e。
+  修复后 1.5 系由 -NAN 转 "仅整数部分" — 残留 = 小数位截断, 机理锁定在箍环
+  (dVar7<dVar13 恒真 + 2^63 上推 → cvttsd2si 饱和) — 需原版汇编逐指令对照后方可定谳,
+  登记为待办 (非语料路径, 不阻塞对拍)。

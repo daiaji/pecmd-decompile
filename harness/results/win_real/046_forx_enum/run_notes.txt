@@ -26,3 +26,5 @@
 [msvc] 产物缺失 vars.txt (用例可能失败)
 [msvc] 产物缺失 vars.txt (用例可能失败)
 [msvc] 产物缺失 vars.txt (用例可能失败)
+[msvc] 产物缺失 vars.txt (用例可能失败)
+[msvc] 产物缺失 vars.txt (用例可能失败)
