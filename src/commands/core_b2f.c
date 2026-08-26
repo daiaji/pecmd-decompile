@@ -46,26 +46,6 @@
 
 #include "pecmd_defs.h"
 
-/* TEMP PROBE (R24d-c B簇): SHFO 实参观测 — Win32 通道 (禁 stdio.h); T5 拆除 */
-extern uint64_t wsprintfA(char *out, const char *fmt, ...);
-static void PROBE_SHWrite(uint64_t hwnd, unsigned wf, const WCHAR *pf, const WCHAR *pt)
-{
-    char buf_[1024];
-    int n_ = (int)wsprintfA(buf_, "SHFO hwnd=%I64x wFunc=%x pF=%p pT=%p srcS=[%S] dstS=[%S]\r\n",
-                            hwnd, wf, (const void *)pf, (const void *)pt, pf, pt);
-    HANDLE h_ = CreateFileA("C:\\pectest\\probe_shfo.txt", 4 /*FILE_APPEND_DATA*/, 3, 0,
-                            4 /*OPEN_ALWAYS*/, 1, 0);
-    if (h_ != (HANDLE)(intptr_t)-1) {
-        DWORD w_ = 0;
-        WriteFile(h_, buf_, (unsigned long)n_, &w_, 0);
-        CloseHandle(h_);
-    }
-}
-#define PROBE_SHFILEOP(expr) \
-    (PROBE_SHWrite((uint64_t)(uintptr_t)local_b0.hwnd, (unsigned)local_b0.wFunc, \
-                   (const WCHAR *)(uintptr_t)local_b0.pFrom, (const WCHAR *)(uintptr_t)local_b0.pTo), \
-     (expr))
-
 /* Portable (a*b)/d with 128-bit intermediate for MSVC C (no __int128).
  * Bit-by-bit long division; safe because r < d <= 2^63 keeps r<<1 in range.
  * Replaces the GCC (__uint128_t) product form. */
@@ -7491,7 +7471,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
     }
     SetLastError(0);
     if ((uVar10 != 0) && (local_b0.wFunc == 3)) {
-        if (((uVar10 & 2) == 0) || (PROBE_SHFILEOP(iVar18 = SHFileOperationW(&local_b0)),
+        if (((uVar10 & 2) == 0) || (iVar18 = SHFileOperationW(&local_b0),
                                     LVar22.QuadPart = LVar23.QuadPart, iVar18 != 0)) {
             LVar22.QuadPart =
                 PECMD_DeleteDirectoryTree((LPCWSTR)local_70.QuadPart, (uint32_t)(uint8_t)local_c5);
@@ -7512,7 +7492,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                 if (1 < iVar18) {
                     local_b0.fFlags = local_b0.fFlags | 1;
                 }
-                PROBE_SHFILEOP(iVar18 = SHFileOperationW(&local_b0));
+                iVar18 = SHFileOperationW(&local_b0);
                 LVar22.QuadPart = iVar18;
                 goto LAB_14003c9a2;
             }

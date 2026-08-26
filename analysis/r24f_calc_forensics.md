@@ -146,3 +146,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
 - 待下轮: append 调用点探针抓 token 实况 (切片位置 vs in-place 指针) — SHFO 87 = 空路径
   参数的必然结果 (ERROR_INVALID_PARAMETER); 空切片疑点 = Func_140011da0/063620 槽初始化
   或 LVar21 指向被扩展开销后的副本区。
+
+## 10d. B 簇二级探针实验 (R24d-d, 已回滚 — 记录全部数据)
+
+- 二级探针 (ENTRY + APP-SEMI + APP-FINAL + SHFO) 实测 011:
+  `ENTRY len=25 str=[C:\\pectest\\out\\copy.txt<>]` — **PSB 传参完全正确** (空路径不在传参层);
+  且不同探针构建间行为漂移: dc543d7a 011=87(SHFO 探针触发, wFunc=0x1a garbage),
+  75b3e0b2 011=87(仅 ENTRY, SHFO 未触发), 显式 len 终止符版 011/010/012 全部 124 挂起 —
+  ⟹ 探针/改动会改变该函数编译形态与运行时行为 (V4 透明性违反的实证), 已 git checkout
+  2cb7fca 回滚干净基线 (md5 a18a8964, 010=87/011=0/012=87 与 triage 一致, 全量 49/63 稳)。
+- 候选根因残余: 终止符写 `data[local_68]=0` 的 local_68 依赖与 StrBld 对象 len 槽的栈别名
+  (dc 同构依赖) — 显式别名读取版触发挂起, 机制未明 — 下次以"不改代码的 windbg 单步观察
+  011 的 local_b0 段"收官 (或 dh 堆对比原版/msvc 的 pFrom 内容)。
