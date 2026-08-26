@@ -384,3 +384,15 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - 全量 63 案 49/14 零回归; 提交 2cb7fca; 部署 md5=f9872ef7。
 - 注: windbg 通道 T2/T3 故障面在本轮两次复发 (bp 链式自毁/快退 parse) — 已按
   WINDBG_MCP_FAULTS_REPRO 规避三律处置; 构建前会话清理纪律 (LNK1201) 复犯一次已即时收。
+
+---
+
+## R24d-b (2026-08-27) — B 簇三侧同构定论: dc ≡ 源码 ≡ 编译产物, 87 机制锁 live 层; G 簇 060+1
+- ★构建: core_b2a.c 补 FUN_14001BE14 extern (C4013 隐式 int → CDQE 截断, 与 R24-013/b2f
+  同款、b2f 曾修 b2a 漏) → **060_path_special 翻转 PASS** → 全量 49/63 零回归; 041 前进至
+  B簇87 (MDIR 已通). C4013 扫雷 93 警告/指针返回型清单 → analysis/r24d_c4013_minefield.md,
+  预防 extern ×6 (b3a/3r_g/3r_d/b8i/3r_g3 + b2a).
+- ★B 簇终局: 当前构建导入 Ghidra 反编译 (auto 分析 8158 函数) — FUN_14003e710 与 dc
+  逐段同构 (选项/wFunc/清零/双槽/GetLastError 链); 新证据点 local_68 恒 0 终止符写入三侧
+  一致 ⟹ "清 pFrom" 理论排除; 87 唯一差异渠道 = SHFO 运行时实参内容 (live/堆对比), 下轮收口.
+- 提交: 2cb7fca (R24d) + 03d1e13/… (对照结论); 部署 md5 f9872ef7; 全量 49/63.
