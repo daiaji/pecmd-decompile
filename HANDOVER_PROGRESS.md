@@ -462,3 +462,11 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - 057 FORM: Ghidra 编译形态全流程对照 (两分支终点皆 local_f8 非空) — pWVar10=NULL
   疑 C 流/goto 结构与编译分歧, 需 windbg bp 定向 (本日通道故障 3 次) — 已登记 §13。
 - C4013 minefield 终版: 90 名全核, 指针返回型 7 修/3 豁免 (家族 4 次命中记录)。
+
+---
+
+## R24f-b (2026-08-27) — 053 HASH 0xC0000374 首现场 + C4013 地雷区复核闭环
+- 053 live: sxe c0000374 抓帧 — RtlFreeHeap 侧, pecmd 链: SynthDlgKeyMsg 体 →
+  RegiEditRegistry (0x151920) → PSB; 053 脚本无 REGI 行 → REGI-EDIT 帧待 bp 确认;
+  首写者待 PageHeap 点名 (下轮 IFEO 已备)。
+- 057 FORM pWVar10-NULL 待 windbg 通道恢复 (登记 §13); C4013 地雷区终版 (7修/3豁免)。
