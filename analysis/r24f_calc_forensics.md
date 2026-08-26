@@ -240,3 +240,14 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   违 AGENTS.md 禁 stdio 红线）— 依据 T5 台账全数拆除; 重建 md5 85f92a27。
 - 阴性: 拆除后 053/056 仍 0xC0000374 ⟹ 探针非病因（此前 bp vsprintf 首击 = 探针的
   干扰已被剔除）— 下轮 053 在干净构建上 bp 0xEB60 将直达真实格式串调用。
+
+## 17. 053 三现场 (R24f-e): FreeStrBuf 崩于 HASH 尾 (干净构建首帧符号化)
+
+- 干净构建 (探针已除) 0xC0000374 首帧: RtlFreeHeap ← **PECMD_FreeStrBuf+0x31** ←
+  **PECMD_HashCmdCompute+0x7b8** ← PSB — HASH 自己的槽释放拿到非法指针。
+- HASH 尾三释放 (371 wslot / 379 ansi_slot / 380 list_alloc): wslot 由 StrBldCopyAnsi
+  (restored_bodies:7721, '*a=0; 0637dc(a,b,c,~0)') 生成; ansi_slot/list_alloc 文件模式
+  = NULL (FreeStrBuf 有 NULL 守卫) ⟹ 疑点: (a) CryptoHashCompute 输出槽契约 (二进制
+  vs hex 大小) 或 (b) **PECMD_AssignString = 空桩 (restored_bodies:7725, return 0)** —
+  其 dc 真体有实际写槽语义, 桩化后 HASH 结果通路为空 — 供下轮 bp 371-free 前查
+  wslot 实值 (或直读 free 参数 rdx)。
