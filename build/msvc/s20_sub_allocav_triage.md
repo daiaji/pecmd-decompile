@@ -231,3 +231,8 @@ B. 正确修: 对照 dc FUN_14000e26c 中 EXEC 分支的完整返回值组装逻
 **影响面**: 001/024 等 EXEC 用例退出码异常(内容不受影响)。与 WRITE 体返 183(s20 §8.1)同属"动词处理器返回值语义错误"家族。
 
 **当前基线**: 17/43 PASS。EXEC=259 影响约 10 案(001/024 及其他含 EXEC 行的用例的退出码维度)。
+
+## 19.1 EXEC=259 精确修复点锁定(Round16)
+rb:2292 `local_df8 = local_db4` —— local_db4 来自 GetExitCodeProcess(hProcess,&local_db4) 读到 STILL_ACTIVE(259)。
+**修复**: 在 rb:2178 GetExitCodeProcess 调用前补 WaitForSingleObject(local_af8.hProcess, timeout), 使子进程完成后才读退出码。
+需对照 dc 原文确认原版的等待时机与超时值(可能为 INFINITE 或与 -wait/-timeout 修饰符关联的超时)。
