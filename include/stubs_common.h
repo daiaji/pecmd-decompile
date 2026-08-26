@@ -757,7 +757,10 @@ extern int64_t (*DAT_14013ce30)(void);
 extern void *DAT_14013d3b8;
 ;
 ;
-extern int64_t DAT_14013a24f;
+/* DAT_14013a24f(@0x14013a24f) 与 g_flagA24F 是同一原版全局，此前裂为两个独立存储对象：
+ * e26c 九处读点绑到孤立 int64_t=0，启动侧写者(core_main.c:183 等)全写 g_flagA24F。
+ * 按 T1b(g_hHeap) 先例改宏别名统一对象(e26c_exec_wait 根因①②，初值真值 0x01 随之恢复)。 */
+#define DAT_14013a24f g_flagA24F
 ;
 ;
 extern int64_t DAT_14013a24c;

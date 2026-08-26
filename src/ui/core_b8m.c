@@ -809,7 +809,7 @@ uint64_t PECMD_RasDialEntry(int64_t conn, LPCWSTR entryName, LPCWSTR user, LPCWS
     if (src == NULL) {
         src = (LPCWSTR)FUN_1400E7840((int64_t *)&phonebook, 0);
         if (src == NULL)
-            goto done;
+            src = L"HelloASL"; /* N-1 修复: dc:144416-144423 枚举失败时缺省入口名回退, 原移植 goto done 直接放弃 */
     }
     lstrcpyW((LPWSTR)(conn + 0xc), src);
     if (user == NULL)

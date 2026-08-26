@@ -978,7 +978,10 @@ uint8_t  DAT_14013d300 = 0x10;
  * 分配器拿到永远为 0 的句柄 (ntdll 分配路径 AV)。 */
 uint32_t DAT_140147000 = 0x100;
 void *DAT_14013d3b8 = 0;
-int64_t DAT_14013a24f = 0;
+/* T1b 先例第二例: DAT_14013a24f 独立定义已删除 — 与 core_globals.c 的 g_flagA24F 是
+ * 同一原版全局(PE .data 真值字节 0x01)。对象分裂曾使 e26c 九处读点恒见 0，
+ * EXEC 等待早退门(rb:4023)恒真 → 跳过 MsgWait 环 → GetExitCodeProcess 读到 259。
+ * 访问统一经 stubs_common.h 的 #define 别名。 */
 int64_t DAT_14013a24c = 0;
 longlong DAT_14013e118 = 0;
 longlong DAT_14013e120 = 0;

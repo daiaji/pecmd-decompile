@@ -1,4 +1,4 @@
-﻿/* restored_bodies.c - B0/P3: real bodies from P4 waves, mechanically split out of link_stubs.c. */
+/* restored_bodies.c - B0/P3: real bodies from P4 waves, mechanically split out of link_stubs.c. */
 #include "stubs_common.h"
 
 /* TEMP PROBE 鐢ㄦ渶灏?CRT 鍘熷瀷 (绂?stdio.h: 浼氫笌 win32_api_stubs 鐨?_vsnwprintf 鎾炲唴鑱? */
@@ -7384,13 +7384,30 @@ void PECMD_InitNullDaclSD(uint64_t *param_1)
 }
 /* @0x140061470 size=鈥?10ms 寰呮爣蹇?瓒呮椂寰幆(鐩寸Щ) */
 void PECMD_WaitTickCount(void)
+/* [H4 修复] dc:59109-59144 直移: 10ms 窗口内消息泵(PeekMessageW PM_REMOVE ->
+ * Translate -> Dispatch, 至多派发 9 条)。dc 递减的是局部预算 iVar4, 从不写
+ * DAT_14013a24f(=g_flagA24F 宏别名)。旧体错写为全局标志递减, EXEC 流程
+ * (core_execmain.c:427)一次调用即把等待早退门(rb:4023)清零 → 跳过 MsgWait 环。 */
 {
-  uint32_t t0 = GetTickCount();
+  DWORD tickBase;
+  DWORD tickNow;
+  BOOL  bPumped;
+  int   pumpBudget = 9;              /* dc:59121 iVar4 = 9 */
+  MSG   msg;
+  FUN_140102a90((uint64_t *)&msg, 0, sizeof(MSG)); /* dc:59118-59119 hwnd=0 整块清零(含填充) */
+  tickBase = GetTickCount();         /* dc:59120 */
   for (;;) {
-    if (t0 + 10 == GetTickCount()) return;
-    if (DAT_14013a24f < 1) return;
-    if ((int)((t0 + 10) - GetTickCount()) < 1) return;
-    DAT_14013a24f = DAT_14013a24f - 1;
+    tickNow = GetTickCount();        /* dc:59123 */
+    if (tickBase + 10 == tickNow) return;             /* dc:59124-59125 */
+    if (DAT_14013a24f < '\x01') return;               /* dc:59127-59128 */
+    tickNow = GetTickCount();        /* dc:59130 */
+    if ((int)((tickBase + 10) - tickNow) < 1) return; /* dc:59131-59132 */
+    bPumped = PeekMessageW(&msg, (HWND)0, 0, 0, 1);   /* dc:59134 PM_REMOVE */
+    if (bPumped == 0) return;        /* dc:59135 break -> 59143 return */
+    TranslateMessage(&msg);          /* dc:59136 */
+    DispatchMessageW(&msg);          /* dc:59137 */
+    pumpBudget--;                    /* dc:59138 递减局部预算, 非全局标志 */
+    if (pumpBudget < 0) return;      /* dc:59139-59140 */
   }
 }   /* CoFreeUnusedLibrariesEx */
 /* @0x140061c44 size=358 鈥?OLE32 API 鎯版€ц杞?(decompiled.c @59529 鐩寸Щ;

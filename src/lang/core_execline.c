@@ -639,6 +639,7 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
     int64_t iVar3, iVar10, lVar7, uVar14, local_230;
     uint8_t envHit;
     WCHAR *p13, *p11, *nameStart;
+    WCHAR *raw_src, *raw_dst; /* dc:78569-78570 的 pWVar13/pWVar8，函数域声明：三个入口共用 */
     WCHAR *lp, *val, *vp;
     int64_t start, len;
     uint8_t *node;
@@ -840,6 +841,13 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
                     }
                     goto var_b6ee;
                 }
+                /* H3 修复(v2): dc:78427-78428 未闭合名走 else 直跳拷贝序言 bc3c，
+                 * 载荷已就位——pWVar13=扫描终点(p13)、pWVar8='%'-起点(pctPos)、
+                 * iVar10=:823 的全跨度；拷至 NUL 自然终止。
+                 * 原移植裸跳缺 src/dst 装载(未初始化指针 AV 根因)；
+                 * v1 误经 b961 守卫链(dc:78423 属 ? 特殊名子路径)致未闭合段原地自旋。 */
+                raw_src = p13;
+                raw_dst = pctPos;
                 goto copy_raw;
             }
             uVar14 = (uint64_t)((int64_t)script + 0x75bd036); /* __THIS TODO(verify) */
@@ -1033,7 +1041,10 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
         if (bVar2) {
             if (xflag == 1)
                 continue;
-            inP = inP - 1;
+            /* H2 修复: dc:78569-78571 原型由 b961 自带 src/dst 装载后直跳拷贝序言；
+               原移植既无装载(未初始化指针)又曾跳前多减一次 inP(双重递减)，双错叠加 */
+            raw_src = inP - 1;
+            raw_dst = pctPos;
             goto copy_raw;
         }
         local_268 = '\x01';
@@ -1131,23 +1142,24 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
 
     bab5: /* 未找到：原样复制原始段 */
         if (xflag != 1) {
-            WCHAR *src = inP - 1;
-            WCHAR *dst = pctPos;
+            raw_src = inP - 1;
+            raw_dst = pctPos;
         copy_raw:
             PECMD_TextBufReserve(xb, (int)iVar10 + 3);
-            if (*src == L'%') {
-                WCHAR t = src[1];
+            if (*raw_src == L'%') {
+                WCHAR t = raw_src[1];
                 if (t == L'%' || t == L'*' || t == L'@' || t == L'#' || t == L'~' || XDigit(t)) {
-                    src++;
+                    raw_src++;
                     iVar10++;
                 }
             }
             while (iVar10-- > 0) {
-                WCHAR w = *dst;
-                dst++;
+                WCHAR w = *raw_dst;
+                raw_dst++;
                 *cur = w;
                 cur++;
             }
+            inP = raw_src; /* H1: dc:78742 循环头 param_2=pWVar13 强制同步主游标(零长拷贝也同步) */
         }
         continue;
     }

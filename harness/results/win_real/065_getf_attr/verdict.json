@@ -6,7 +6,7 @@
  },
  "exit": {
   "exp": 2,
-  "got": 3221225477
+  "got": 183
  },
  "vars": {
   "same": true,
@@ -15,9 +15,7 @@
  "fs": {
   "same": true,
   "added": [],
-  "removed": [
-   "done.txt"
-  ],
+  "removed": [],
   "changed": []
  },
  "reg": {
