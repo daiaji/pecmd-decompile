@@ -7160,9 +7160,17 @@ LAB_14004cb4c:
     }
   }
 LAB_14004c525:
-  if (local_180.QuadPart != 0) {
+    { /* TEMP PROBE R14b: 每行动词返回值序列(退出码链取证, T5 拆) */
+        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
+        if (pf_) {
+            fprintf(pf_, "[WB] verb=%08x l180=%lld\n", (unsigned)local_158,
+                    (long long)local_180.QuadPart);
+            fclose(pf_);
+        }
+    }
+    if (local_180.QuadPart != 0) {
     (*(LARGE_INTEGER **)(uintptr_t)(param_1.QuadPart + 0x50))->QuadPart = (LONGLONG)local_180.QuadPart;
-  }
+    }
 LAB_14004c53b:
   if (local_180.QuadPart < 0) {
     wsprintfW(local_c8,(const unsigned short *)L"0x%p",(void *)(uintptr_t)local_180.QuadPart); /* B5 约定: 还原被 Ghidra 丢弃的 value 实参(ERROR/&&ERROR 显示值) */
