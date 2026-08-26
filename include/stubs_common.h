@@ -3439,7 +3439,7 @@ LPWSTR FUN_1400bf358(longlong *a, pthreadmbcinfo b, undefined8 *c);
 uint64_t *PECMD_InitObjSlot2A(uint64_t *param_1, uint param_2, uint64_t param_3);
 undefined1 *FUN_14005b848(undefined1 *a);
 longlong *FUN_140070398(longlong *a, undefined8 *b);
-void FUN_1400e7664(LPCWSTR a);
+uint64_t FUN_1400e7664(LPCWSTR a);   /* R14b(batch-A #124) 返回型归正(void→ulonglong), 转发真体 core_b8i.c */
 void *FUN_1400e7840(longlong *a, int b);
 uint PECMD_ArgTokenize(longlong *param_1, LPCWSTR param_2, int param_3);
 ulonglong FUN_1400ffa38(longlong param_1, longlong *param_2, byte *param_3, longlong *param_4);

@@ -307,7 +307,7 @@ int64_t FUN_1400E5B0C(int64_t obj, uint64_t msg, int64_t wParam, int64_t *lParam
             }
             if (msg == 0x85) {
                 ((void (*)(void))vt[0xa8 / 8])();
-                ((int64_t (*)(uint64_t, uint64_t, int64_t, int64_t *))vt[8])(
+                ((int64_t (*)(uint64_t, uint64_t, int64_t, int64_t *))vt[1])( /* R14b(batch-A #051): dc:140597 vtable+8=槽1; v0 误 vt[8] */
                     *(uint64_t *)(b + OBJ_HWND), 0x85, wParam, lParam);
                 return 0;
             }
@@ -899,10 +899,13 @@ uint32_t FUN_1400E3288(uint32_t mode, uint32_t flags)
             &regType, &policy, &regVal[0]);
     result = policy;
     if (iVar2 == 0) {
-        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("DEVI驱动签名【%s】(%d.%d)\r\n"),
-                          (uint64_t)(uintptr_t)&g_b12ae98, (uint64_t)(flags & 0xffffffef));
-        if (policy == local_res8 && (flags & 0xffffffef) == 0 && regVal[0] == 1) {
-            return result;
+        /* R14b(batch-A #069①): dc:138762-765 日志在 policy==期望 的 && 链内(短路); v0 无条件先记 */
+        if (policy == local_res8) {
+            PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script, WSTR("DEVI驱动签名【%s】(%d.%d)\r\n"),
+                              (uint64_t)(uintptr_t)&g_b12ae98, (uint64_t)(flags & 0xffffffef));
+            if ((flags & 0xffffffef) == 0 && autoDisverify == 1) { /* dc local_res20[0]=DEVIAutoDisverify 读值; v0 误用 regVal[0](size 出参槽) */
+                return result;
+            }
         }
         uVar10 = regType;
         if (autoDisverify != 4 && (uVar1 = result, autoDisverify != 3))
@@ -995,14 +998,14 @@ LAB_365f:
     if (hashObj != 0)
         CryptDestroyHash(hashObj);
     PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000001, WSTR("Software\\Microsoft\\Driver Signing"),
-                              WSTR("Policy"), uVar1, (BYTE *)regVal, uVar10);
+                              WSTR("Policy"), uVar1, (BYTE *)&local_res8, uVar10); /* R14b(#069②): dc:138798 数据=local_res8 缓冲(首元素=mode); v0 误传 regVal(size 槽) ×3 */
     PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
                               WSTR("Software\\Microsoft\\Non-Driver Signing"), WSTR("Policy"),
-                              uVar1, (BYTE *)regVal, uVar10);
+                              uVar1, (BYTE *)&local_res8, uVar10);
     {
         DWORD dw = PECMD_RegSetValueWithOpen((HKEY)0xffffffff80000002,
                                              WSTR("Software\\Microsoft\\Driver Signing"),
-                                             WSTR("Policy"), uVar1, (BYTE *)regVal, uVar10);
+                                             WSTR("Policy"), uVar1, (BYTE *)&local_res8, uVar10);
         if (iVar2 != 0) {
             GetLastError();
             step = 7;

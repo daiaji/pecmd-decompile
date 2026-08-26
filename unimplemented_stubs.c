@@ -652,7 +652,8 @@ uint8_t DAT_14011d308[8] = {0};
 
 
 /* ---- wave-current support: 0ebd30 ---- */
-void  FUN_1400e7664(LPCWSTR a) { (void)a; }  /* 0x14013e298 参数槽 */
+extern uint64_t FUN_1400E7664(LPCWSTR name); /* 真体 core_b8i.c:274 (dc:141859) */
+uint64_t FUN_1400e7664(LPCWSTR a) { return FUN_1400E7664(a); } /* R14b(batch-A #124): 转发+返回型归正(void→ulonglong); v0 no-op 吞调用 */
 uint8_t  DAT_14013e300[512] = {0}; /* 0x14013e300 错误消息缓冲 */
 
 /* ---- wave-current support: 073ccc ---- */

@@ -300,13 +300,13 @@ uint64_t FUN_1400E7664(LPCWSTR name)
             do {
                 if (*name == L'*') {
                     result = PECMD_HangUpRasConnection(
-                        (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x15b + 1));
+                        (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x56c + 4)); /* R14b(batch-A #081): dc:141892 元素算术=字节 i*0x56c+4; v0 步长缩4倍且首项偏移错 */
                     result &= 0xffffffffU;
                 }
                 else {
-                    if (lstrcmpiW(name, (LPCWSTR)(blk + i * 0x15b + 3)) == 0) {
+                    if (lstrcmpiW(name, (LPCWSTR)(blk + i * 0x15b + 3)) == 0) { /* 名字槽 dword 算术 dc:141889 一致 */
                         result = PECMD_HangUpRasConnection(
-                            (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x15b + 1));
+                            (uint64_t *)((uint8_t *)blk + (int64_t)i * 0x56c + 4)); /* R14b 同上 */
                         result &= 0xffffffffU;
                     }
                 }

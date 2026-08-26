@@ -12551,7 +12551,7 @@ void PECMD_FreeInitObjectList(char *param_1)
     param_1[13] = '\0';
     param_1[14] = '\0';
     param_1[15] = '\0';
-    FUN_14005B154((WCHAR **)&local_res8);
+    PECMD_FreeStrBuf((WCHAR **)&local_res8); /* R14b(batch-A #045): dc:61823 收尾释放串槽; v0 误调跳空白助手致数组泄漏 */
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
 }
 

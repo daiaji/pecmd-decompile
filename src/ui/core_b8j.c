@@ -206,9 +206,12 @@ void FUN_1400EC880(int64_t obj, char mode)
         i = 0;
         do {
             uint32_t local_48 = 1;
+            uint32_t local_44 = 0;
             uint64_t local_40 = 0;
+            uint64_t local_38;
 
             memset(&local_40, 0, 0x20);
+            local_38 = *(uint64_t *)(*scan + 8); /* R14b(batch-A #039): dc:144866 消息结构第3字段=*(child+8); v0 缺失致 0x133E 广播负载残缺 */
             SendMessageW(*(HWND *)((uint8_t *)obj + OBJ_HWND), 0x133e, wp, (LPARAM)&local_48);
             i++;
             scan++;
