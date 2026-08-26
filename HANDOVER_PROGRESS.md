@@ -487,3 +487,12 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   重建 md5 85f92a27; 053/056 仍 0xC0000374 = 探针非病因（阴性）。
 - 053 下一招: 干净构建上 bp 0xEB60（swprintf 包装）直达真实格式串调用链。
 - 全量基线 54/9。
+
+---
+
+## R24f-e (2026-08-27) — 053 三现场: FreeStrBuf@HASH 尾, 疑点收窄至 CryptoHashCompute
+  契约 / AssignString 空桩
+- 干净构建首帧符号化: RtlFreeHeap ← PECMD_FreeStrBuf+0x31 ← PECMD_HashCmdCompute+0x7b8;
+  HASH 尾三释放中 wslot/ansi_slot/list_alloc 画像完成 — 下轮 bp 371-free 前查 wslot
+  实值; PECMD_AssignString 空桩 (restored_bodies:7725) 契约缺口登记。
+- 全量 54/9 基线。
