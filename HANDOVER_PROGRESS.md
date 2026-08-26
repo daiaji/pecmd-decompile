@@ -470,3 +470,12 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   RegiEditRegistry (0x151920) → PSB; 053 脚本无 REGI 行 → REGI-EDIT 帧待 bp 确认;
   首写者待 PageHeap 点名 (下轮 IFEO 已备)。
 - 057 FORM pWVar10-NULL 待 windbg 通道恢复 (登记 §13); C4013 地雷区终版 (7修/3豁免)。
+
+---
+
+## R24f-c (2026-08-27) — 053 PageHeap 点名: CRT vsprintf '%g' 参数槽守卫页命中
+- PageHeap (IFEO, 用后即撤) + sxe av: 首违例 = __crt_stdio_output 内联链
+  (fp_format_g → common_vsprintf → __stdio_common_vsprintf_s) 读堆区参数槽 — vsprintf
+  收到的 '%g' 双精度参落在守卫页邻域; 用户帧 = 0xeab0-0xebc0 (b2a 小函数区, 符号名
+  与 053 语义不符) — 下轮 bp vsprintf 入口打印格式串确认发起者。
+- 全量基线 54/9 未动。
