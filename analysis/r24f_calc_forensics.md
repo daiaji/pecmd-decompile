@@ -111,3 +111,14 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   ⟹ msvc 的 local_b0 结构在 token 循环后首 8 字节被覆写、pFrom/pTo 指向已释放块 —
   与 R24f 五连虫同族 (栈/生命周期), 需下一次专项调试 (bp wFunc-写点/FreeStrBuf 计时)。
   登记至 B 簇工单 (010/011/012), 不阻塞他簇。
+
+## 10. R24d-b B 簇编译产物对照 (Ghidra 当前构建反编译)
+
+- 当前构建 (md5 dab02b3f 代) 的 FUN_14003C06C 由 Ghidra 完整反编译 (import+auto 分析):
+  结构逐段与 dc 同构 — 选项扫描/wFunc 1/2/3/4 赋值/'=' 前驱判定/memset(0x30)/
+  pFrom=pTo 槽拷贝/SHFileOperationW 分支/GetLastError→uVar 返回链 全部一致。
+  ⟹ 87 非代码结构缺陷, 锁定数据层: SHFO 结构 (hwnd/wFunc 区 = 0x18/0x1a 垃圾,
+  pFrom/pTo 悬垂) — 疑似局部结构未被清零的另一个入口 (typedef fFlags=WORD 小异不解释 87),
+  需下一轮: ba 写监视 local_b0 wFunc/hwnd 区 + pFrom/pTo 内容指针的释放时序 (FreeStrBuf 计时).
+- 附带: rCX@SHFO = &uStack_70, 栈上结构首 8 字节稳定出现 0x18/0x1a (跨两次会话) —
+  指向"首个写入者"为该 executor 的确定性代码 (非随机垃圾)。
