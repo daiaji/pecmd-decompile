@@ -134,3 +134,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
 - 结论: 87 机制不在语法/结构层 — 唯一差异渠道 = SHFO 运行时实参内容/悬垂 (live 观测),
   下轮以 ba 写监视 pFrom/pTo 槽内容指针 + 释放时序收口 (windbg 通道 T2/T3 故障面期间
   改用 dump 对比: 原版 SHFO 前后堆内容 vs msvc)。
+
+## 10c. B 簇探针定案 (R24d-c, TEMP PROBE @SHFO 双调用点, md5 dc543d7a)
+
+- 011 现场 (Win32 通道探针): `SHFO hwnd=18 wFunc=1a pF=...F5F8 pT=...385A srcS=[] dstS=[]`
+  — 结构首 8 字节 = 栈残留 (未初始化) + pFrom/pTo 内容为空串。
+- dc-len 机制复原: FUN_1400216c4 = 向 {data,len,cap} 对象追加 — 调用 `&pLVar16->QuadPart`
+  (pLVar16=&local_70) 时 len 槽 = local_68 (栈续接别名!) — 尾部 `data[local_68]=0` = 串尾
+  终止符。msvc 移植体 PECMD_AppendParamToken (b2b:272) 同样维护 list[1]=len ✓ —
+  ⟹ 空内容 = token 切片阶段 (LVar21 内容) 已空/追加被跳过 (append 对空 token 直接 return)。
+- 待下轮: append 调用点探针抓 token 实况 (切片位置 vs in-place 指针) — SHFO 87 = 空路径
+  参数的必然结果 (ERROR_INVALID_PARAMETER); 空切片疑点 = Func_140011da0/063620 槽初始化
+  或 LVar21 指向被扩展开销后的副本区。
