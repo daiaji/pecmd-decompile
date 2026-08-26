@@ -370,3 +370,17 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   010/012=87 (SHFO 参数非法), 011=0; 现场 struct hwnd/wFunc=0x18/0x1a 垃圾 + pFrom/pTo
   悬垂 (栈覆写/释放时序, R24f 同族) — 症状级登记, 专项调试工单下轮。
 - 提交 24549a0 (harness/runners/run_case.py + forensics §9 + 结果工件)。
+
+---
+
+## R24d (2026-08-27) — G簇首翻 (060) + C4013 隐式 int 地雷扫雷，基线 48/63 -> 49/63 零回归
+- ★041 MDIR AV 定案 (live): PECMD_CreateDirectoryTree @rax=0xfffffffff621cea2 (real
+  0x258f621cea2) — core_b2a.c 334/388 未声明 FUN_14001BE14 → C4013 隐式 int → CDQE
+  截断 — 与 R24-013/b2f 同款 (b2f 曾修、b2a 漏) — 补 extern → 060_path_special 翻转 PASS;
+  041 前进至 B簇87 (MDIR 通 → 其 FILE 行承接 B 症状)。
+- ★C4013 全库扫雷: 构建日志 93 个不同名警告; 指针/HANDLE 返回型高危 7+ 列入
+  analysis/r24d_c4013_minefield.md; 本轮补 extern ×6 (b2a/b3a/b3r_g/b3r_d/b8i/b3r_g3)
+  — 预防性 (下一位触发者已预拆)。
+- 全量 63 案 49/14 零回归; 提交 2cb7fca; 部署 md5=f9872ef7。
+- 注: windbg 通道 T2/T3 故障面在本轮两次复发 (bp 链式自毁/快退 parse) — 已按
+  WINDBG_MCP_FAULTS_REPRO 规避三律处置; 构建前会话清理纪律 (LNK1201) 复犯一次已即时收。
