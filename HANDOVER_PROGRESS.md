@@ -315,3 +315,32 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   全套 TEMP PROBE T5 拆除(含 [ELC]×3+memfail 历史残留 8 处)。
 - 提交链: ecfa8a1(C1) → 21e3be3(41/63 回归) → 1c533d6(交接) → 1f9d34c/3c2b7f4/d20417b/
   ffa39f7(R24d 文档) → 本批(031 取证产物+探针版)。
+
+---
+
+## R24f (2026-08-27) — CALC D簇归正 + 求值器链五连虫定案，基线 41/63 -> 46/63 零回归
+- ★FUN_1400bf358 忠实移植落地 (core_calc_expr.c, 1007 行, dc:118318-119158 逐语句, 标号 21/21):
+  替换 core_b3_remaining.c 旧"重构/简化版" (成功路径返堆指针 → exit=指针低32 的 D 簇根因)。
+  子代理移植 + 主代理审查; 移植规格书 analysis/r24f_calc_port_spec.md。
+- ★返回值契约 (原版活体对拍定案): CALC 成功返 0 / 除0 返 16 (pWVar6=0x10 via LAB_1400c0876
+  赋值分支 pWVar5=pWVar6) / -err= 只影响错误文本不影响返回值; 值契约 11/13 逐位一致
+  (7|4.5|17|21|1|-4|-5|2|4|7|2147483648|4294967296|0)。
+- ★集成期五连虫 (windbg 硬件监视 + PageHeap 逐层伏击; 全部为既有移植体的潜伏缺陷,
+  首次被 CALC 路径踩中):
+  1) E34C 清字节 0x12 误置 (uint8/uint32 单位混用) → data1 指针第3字节归零 → 0xC0000005;
+     原版清 0x28/0x48 (Ghidra 反汇编 @14007e36e/389 定案)。
+  2) StrPBrkW 无原型/错原型 (win32_stub.h:888 BOOL) → C89 隐式 int → CDQE 截断 64 位返回 → 0xC0000409。
+  3) 求值包装器按局部名释放向量 — MSVC 局部排布偏移 → 实释 op 栈 cap(=4) → HeapFree(-4) → 0xC0000374。
+  4) MSVC 临时量 (uVar1) 恰好落在 ctx+0x10 (vec1-data 槽) → 结果值覆写向量指针;
+     根治: 包装器 ctx 改堆分配 (calloc 0x60, 定案安全包络, PageHeap suffix 越写 0xF 也在此闭合)。
+  5) repo FormatDoubleToStr 调 SafeVFormatW 仅传精度 p, 值不进 vararg → 成功值全部 "0"
+     (解析侧 4294967296.0 已证; 静态判死 core_b8d.c:132)。
+- 验收: 026/027/028/032/033 PASS (exit 0/16/0/0/0 全对金标), 015/018/034 (表达式案) 零回归,
+  039 残留 exit=2 (TEAM 内层槽隔离, 归 E 簇); 全量 63 案 46/63 零回归。
+- 非语料偏差登记 (forensics §7): `7%3` → msvc 7 vs 原版 1 (%-数字实参展开语义); `1.5+0.5` →
+  -NAN(IND) vs 2 (ParseDoubleNumber 小数分支) — 两处待后续轮次。
+- 附产: F 簇取证 (r24f_fcluster_forensics.md — 真分叉仅 029/040/049, 根因 SkipWCharUntil 空桩
+  dc:149819 38B); T5 探针台账 (r24f_probe_audit.md — 61 标记/47 写盘全只读, [ELC]×3 保留);
+  PRODUCTION_ROADMAP v4.2 (现代化裁定对齐 S14: L1 提前并行 / L2 归 S14+两项安全前置 / L3 非目标)。
+- 提交 c9df979 (50 files, +1861/-239); 部署 md5=7d1b2bb9; 环境: PageHeap 演练后已撤;
+  windbg T1 红线再犯一次 (bp 内嵌串) 已即时改正, 计入 windbg 纪律自查。
