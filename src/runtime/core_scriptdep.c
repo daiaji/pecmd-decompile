@@ -209,8 +209,24 @@ void PECMD_CheckFirstStartupFlag(void *script)
  *   flags  : 高 16 位 = XOR 密钥, 低 16 位执行标志
  * 返回 (执行结果 & 0xffff) | flags。
  */
+/* ---- R20-A 诊断探针(V4 透明化): 定位 CALL/SUB 挂死死点, 过门后统一拆除 ----
+ * 手写 CRT extern(禁 <stdio.h>: 撞 win32_api_stubs 的 _vsnwprintf 内联) */
+extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
+extern int __cdecl fprintf(void *, const char *, ...);
+extern int __cdecl fclose(void *);
+void SG_Probe(const char *tag, long long v)
+{
+    unsigned long le__ = GetLastError();
+    void *f = fopen("C:\\pectest\\memfail.log", "a");
+    if (f) {
+        fprintf(f, "[SG] %s %llx\n", tag, (unsigned long long)v);
+        fclose(f);
+    }
+    SetLastError(le__);
+}
 uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
 {
+    SG_Probe("invoke-enter", (long long)(unsigned long)flags);
     WCHAR *nls = NULL; /* local_res10 "\n" */
     WCHAR *cwd = NULL; /* local_res8 当前目录 */
     WCHAR *v98 = NULL; /* local_98 容器 */
@@ -221,6 +237,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
 
     FUN_1400702B0(&nls, WSTR("\n"));
     pos = PECMD_StrChrOffset(*(const WCHAR **)script, (WCHAR)key);
+    SG_Probe("invoke-pos", (long long)pos);
     PECMD_AllocWStringBuffer((WCHAR **)&cwd, 0x20a);
     GetCurrentDirectoryW(0x208, cwd);
     FUN_140017CDC(sub, tmpl);
@@ -231,6 +248,7 @@ uint32_t PECMD_InvokeSubRoutine(void *script, void *tmpl, uint32_t flags)
     PECMD_InitObfuscatedKeywords(sub, (uint64_t)(flags >> 16 & 0xffff));
     r = PECMD_ParseScriptSegments(script, 0, (int)pos, &nls, sub,
                                   flags); /* TODO(verify) @0x140030420 */
+    SG_Probe("invoke-ret", (long long)r);
     EnterCriticalSection(&g_csInit);
     v98 = NULL; /* 反编译 local_98[1]=0 (死写) TODO(verify) */
     LeaveCriticalSection(&g_csInit);
