@@ -454,3 +454,11 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   返回截断 (0x17096823d0c→0xffffffff96823d0c) → AV; 按定义签名补 extern → 051 PASS。
 - 057 FORM: NULL-deref @ *pWVar10 (尾段应为 local_f8) — 待 bp 定向; b3r_h1 C4013 ×3
   同族登记。提交; 部署 md5 24219467; 全量 54/9。
+
+---
+
+## R24f-a (2026-08-27) — G 簇 051 翻转后收尾: 057 FORM 对照登记 + C4013 地雷区清零
+- 051 SIZE: SplitNextToken extern 补齐 → 翻转 (53→54/63, 全量 54/9 零回归, md5 24219467)。
+- 057 FORM: Ghidra 编译形态全流程对照 (两分支终点皆 local_f8 非空) — pWVar10=NULL
+  疑 C 流/goto 结构与编译分歧, 需 windbg bp 定向 (本日通道故障 3 次) — 已登记 §13。
+- C4013 minefield 终版: 90 名全核, 指针返回型 7 修/3 豁免 (家族 4 次命中记录)。
