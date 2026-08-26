@@ -19,7 +19,7 @@ D:\repo\PECMD反编译\          # ★ git 根 = 项目根（原 refactored 子�
 ├── harness\golden            # golden 语料（win_real / win_real_orig）
 ├── docs\                     # 病理档案与规程（含 DEBUGGER_HANDOFF_legacy.md；索引见 docs\README.md）
 ├── analysis\                 # 轮次报告（r19a_/r19b_/r19d_… 前缀=轮次-线别）
-├── tools\                    # msvc_build.bat / make_symsnap.ps1 / 批处理 JSON（勿移动，脚本引用相对路径）
+├── tools\                    # msvc_build.bat / make_symsnap.sh / post_build.sh / run_corpus.sh / 批处理 JSON（勿移动，脚本引用相对路径）
 ├── .agents\skills\           # 技能库（SKILL.md 格式）
 ├── build\msvc\               # exe + pecmd_msvc.map + symsnap.txt + build_*.log
 ├── AGENTS.md / HANDOVER_PROGRESS.md / REVIEW.md / FUNC_NAMES.md …
@@ -39,7 +39,7 @@ C:\pectest\                   # 部署与运行现场：pecmd_msvc.exe、DEPLOYE
 ### 构建（主代理专属，子代理禁止构建）
 1. **构建前三查**：无在途 windbg 会话（含子代理取证会话，LNK1201 主因）→ 磁盘余量 → 上次构建日志无未处置错误。chcp 936 由脚本自管。
 2. 双绿门：exit 0 且输出含 `[msvc_build] OK`。构建日志是 GBK：按 gbk 解码读尾部，错误正则 `error (C\d+|LNK\d+)`。
-3. 构建成功后必跑 `tools\make_symsnap.ps1` 刷新 `build\msvc\symsnap.txt`。
+3. 构建成功后必跑 `tools\make_symsnap.sh` 刷新 `build\msvc\symsnap.txt`（或 `bash tools/post_build.sh` 一站完成 symsnap+部署+身份戳）。
 4. ⚠ `cmd /c "... && cd /d X && ..."` 里的 cd 只影响子进程——后续 PowerShell 步骤一律绝对路径或显式 Set-Location。
 
 ### 部署与身份（V3）

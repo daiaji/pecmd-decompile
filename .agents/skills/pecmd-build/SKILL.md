@@ -25,10 +25,9 @@ cmd /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxili
 绿门判定: exit 0 且输出含 `[msvc_build] OK`。
 
 构建成功后必跑:
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\make_symsnap.ps1 -RepoRoot <repo根>   # 刷新 symsnap.txt(断点选址唯一来源)
-Copy-Item build\msvc\pecmd_msvc.exe C:\pectest\ -Force
-Set-Content C:\pectest\DEPLOYED_BUILD.txt "hash=$((git rev-parse --short HEAD)) md5=$((Get-FileHash C:\pectest\pecmd_msvc.exe -Algorithm MD5).Hash) time=$((Get-Date))"
+```bash
+bash tools/make_symsnap.sh <repo根>    # 刷新 symsnap.txt(断点选址唯一来源)
+bash tools/post_build.sh <repo根>      # 或一站完成: symsnap + 部署 C:\pectest + DEPLOYED_BUILD.txt 身份戳
 ```
 
 构建日志是 GBK 编码: 用 `python -c "open(r'%TEMP%\log','rb').read().decode('gbk')"` 或

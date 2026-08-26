@@ -331,7 +331,7 @@ end_session，零构建）编纂；实验原始观察已内嵌各条目，未改
 >
 > - **V1 断点前版本核验(P0)**：任何 bp/ba 之前必须对部署目标取哈希并与当期构建产物比对，
 >   并从【当期】pecmd_msvc.map 第三列重推目标 RVA；禁止复用历史会话笔记中的 module+offset。
->   构建后运行 tools\make_symsnap.ps1 生成 build\msvc\symsnap.txt——断点选址唯一合法来源。
+>   构建后运行 tools\make_symsnap.sh 生成 build\msvc\symsnap.txt——断点选址唯一合法来源。
 > - **V2 落点自证**：下点后 disassemble 验证指令边界，首次命中 registers 核对 rip 落在预期函数
 >   map 区间内，不符立即弃点重推。"从未命中"的结论只有 V1+V2 均满足后才有资格成立。
 > - **V3 部署身份标记**：每次部署同步写 C:\pectest\DEPLOYED_BUILD.txt(git hash+MD5+时间)；

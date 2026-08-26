@@ -14,7 +14,7 @@ whenToUse: 需要对 pecmd_msvc.exe 做活体断点、attach 抓栈、内存取�
 
 1. 读 `C:\pectest\DEPLOYED_BUILD.txt`，与本地 `build\msvc\pecmd_msvc.exe` 的 MD5 比对；
    不一致 → 先重新部署，禁止在身份不明的二进制上调试。
-2. 所有断点地址从当期 `build\msvc\symsnap.txt` 取（构建后由 `tools\make_symsnap.ps1` 生成）。
+2. 所有断点地址从当期 `build\msvc\symsnap.txt` 取（构建后由 `tools\make_symsnap.sh` 生成）。
    **禁止复用历史会话笔记/docs 里的 module+offset**（六轮重建即可让旧 RVA 指进无关函数）。
 
 ## 门 1 下点自证
