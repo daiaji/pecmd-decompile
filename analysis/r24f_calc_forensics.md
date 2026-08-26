@@ -222,3 +222,14 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   确认调用者 (疑: WRITE/HASH 内部借道或 PSB verb 表错位)。
 - 结论: 0xC0000374 = free 遇已损坏块头; 首写者待 PageHeap (BinaryVerifier 0xF/0xC 流程)
   点名 — 下轮执行 (注册表 IFEO + 053 复跑)。
+
+## 15. H 簇 053 二现场 (R24f-c): PageHeap 点名 = CRT vsprintf '%g'
+
+- PageHeap 下 053: exit 0xC0000005 (守卫页提前); live: `cmp [rdx],0 @+0x25b5f8`
+  rdx=堆区 0x2129a3c2fa8 (guard-adjacent) — 帧链全为 __crt_stdio_output 内联
+  (fp_format_g/update_field_width/state_case_type/process/has_flag/common_vsprintf
+  /__stdio_common_vsprintf_s@0x230236) — 即 **vsprintf 的 '%g' 双精度参数槽命中守卫页**。
+- 用户帧: 0xeb3e→0xeb99 (回 0xeab0-0xebc0 b2a 小函数区, 符号 PECMD_SetFbwfThreshold/
+  PECMD_IsVkPrefix 边界内) — 该区源码无 vsprintf ⟹ 与 053 (WRITE+HASH) 的关联待
+  bp __stdio_common_vsprintf_s 读格式串+va 槽确认 (下轮: bp + 格式串 %S 打印)。
+- 处置: PageHeap 已撤 (公约); 053 保持登记 (0xC0000374/0xC0000005 双态)。
