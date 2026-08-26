@@ -18,6 +18,11 @@
 
 /* R24f-d: C4013 隐式 int 防护 — 指针返回型 extern 补齐 */
 extern short *PECMD_UnquoteString(short *); /* @0x1400xxxx */
+/* R24e(051 SIZE AV 定案): S11 曾删本地声明"统一 xproto"但本文件不包含 xproto →
+ * C4013 隐式 int → SplitNextToken 返回截断 (0x17096823d0c→0xffffffff96823d0c) → AV。
+ * 按 core_b3i.c:216 定义签名补齐。 */
+extern int16_t *PECMD_SplitNextToken(int64_t *script, int64_t *pp, int64_t *out, int16_t sep1,
+                                     int16_t sep2); /* @0x1400547bc core_b3i.c */
 
 /* ---- 本文件使用的 BOM 常量 (对应 .rdata 中的 DAT_140124128/12c/130) ---- */
 static const uint8_t DAT_140124128[] = {0xFF, 0xFE};       /* UTF-16LE BOM */

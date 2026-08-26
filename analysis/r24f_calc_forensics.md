@@ -188,3 +188,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
 - 验收: 010=2 ✓ 011=2 ✓ 012=2 ✓ (55 天内 B 簇 ×3 首翻); 041 (MDIR+FILE 组合) 连带
   2 ✓; 全量 63 案 53/10 零回归 (10 FAIL = 已知队列 E×3/J×2/G×2/H×2/I×1)。
 - 部署 md5 60e5b054; 下一步登记: 同款"三邻接局部拟 StrBld 对象"模式全库排查。
+
+## 12. G 簇续 (R24e): 051 SIZE 翻转 = SplitNextToken C4013 截断; 057 FORM = NULL 待追
+
+- 051 live (sxe av): PECMD_GetPathSizeToVar+0xfa — rax = 0xffffffff96823d0c (real
+  0x17096823d0c) — CDQE 截断字谜: PECMD_SplitNextToken 声明在 S11 时代被删 ("统一
+  xproto") 但 core_b3r_g3.c 不包含 xproto → C4013 隐式 int → 返回截断。按 core_b3i.c:216
+  签名补 extern → **051 翻转 PASS (exit=2, 全量 53→54/63 零回归)**; md5 24219467。
+- 057 live: PECMD_GetDiskFreeSpace+0x3a5 — `movzx [rax]` rax=0 (NULL) — 位置 = 尾段
+  `if (*pWVar10 == L'\0')` (pWVar10 应为 local_f8, NULL=流未达 f8 赋值); dc 同段
+  pWVar10 必为 local_f8 — 待下轮 bp f8 赋值点定位流向 (FORM V,C: 路径)。
+- 同族提示: b3r_h1 C4013 ×3 (SplitTokenAssignVar/ParseLtwhParams/ExtractTokenByDelim);
+  "S11 删本地声明"模式 = 全库潜伏雷区已在 minefield 清单。
