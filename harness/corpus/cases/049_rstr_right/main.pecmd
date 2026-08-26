@@ -1,0 +1,4 @@
+ENVI S=abcdef
+RSTR R=%S%,2,3
+FIND $%R%=def, ENVI F=rstr_def! ELSE ENVI F=rstr_other
+ENVI BODY_DONE=YES

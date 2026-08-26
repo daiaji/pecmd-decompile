@@ -1,0 +1,3 @@
+FORX W,a,b,c,ENVI LAST=%W%
+FIND $%LAST%=c, ENVI R=forx_last_c! ELSE ENVI R=forx_other
+ENVI BODY_DONE=YES

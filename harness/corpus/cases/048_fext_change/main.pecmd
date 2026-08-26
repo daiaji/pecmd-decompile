@@ -1,0 +1,4 @@
+ENVI N=s48pic.old
+FEXT M,%N%,jpg
+FIND $%M%=s48pic.jpg, ENVI R=fext_jpg! ELSE ENVI R=fext_other
+ENVI BODY_DONE=YES

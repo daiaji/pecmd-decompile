@@ -1,0 +1,3 @@
+RECY V
+IFEX %V%, ENVI R=recy_exist! ELSE ENVI R=recy_none
+ENVI BODY_DONE=YES

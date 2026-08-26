@@ -1,0 +1,5 @@
+ENVI T=C:\pectest\out\s59_target.txt
+WRITE %T%,link59
+LINK C:\pectest\out\s59.lnk,%T%
+IFEX C:\pectest\out\s59.lnk, ENVI R=link_ok! ELSE ENVI R=link_none
+ENVI BODY_DONE=YES

@@ -1,0 +1,4 @@
+ENVI S=abc123abc
+RPOS T,%S%,123,X9
+FIND $%T%=abcX9abc, ENVI F=rpos_hit! ELSE ENVI F=rpos_other
+ENVI BODY_DONE=YES

@@ -1,0 +1,4 @@
+ENVI REL=out\s47_probe
+FDIR FULL,%REL%
+FIND $%FULL%=C:\pectest\out\s47_probe, ENVI R=fdir_abs! ELSE ENVI R=fdir_other
+ENVI BODY_DONE=YES

@@ -1,0 +1,3 @@
+EXEC =C:\WINDOWS\System32\cmd.exe /c echo exec64^>"C:\pectest\out\s64_exec.txt"
+IFEX C:\pectest\out\s64_exec.txt, ENVI R=exec_ok! ELSE ENVI R=exec_fail
+ENVI BODY_DONE=YES

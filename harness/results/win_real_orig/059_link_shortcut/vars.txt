@@ -1,0 +1,1 @@
+CASE=059_link_shortcut|R|%R%|BODY_DONE

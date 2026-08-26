@@ -1,0 +1,10 @@
+{
+  "id": "052_dir_wildcard",
+  "slug": "dir_wildcard_count",
+  "cmds": ["DIR", "WRITE", "IFEX"],
+  "vars": ["N", "%N%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "DIR 首案: 自建3个 s52_*.txt 后通配计数; 输入自建无跨案依赖, 计数值确定"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "058_recy_volume",
+  "slug": "recy_volume_query",
+  "cmds": ["RECY", "IFEX"],
+  "vars": ["V", "%V%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "RECY 首案: 回收站卷查询→变量; 只读探测, 值捕获附半稳定注记(卷符跨日稳定, 变更属环境事件非实现缺陷)"
+}

@@ -1,0 +1,4 @@
+ENVI S=abcdef
+STRL L,%S%
+FIND $%L%=6, ENVI R=len6! ELSE ENVI R=len_other
+ENVI BODY_DONE=YES

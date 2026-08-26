@@ -1,0 +1,4 @@
+ENVI F=C:\pectest\out\s53_src.txt
+WRITE %F%,hash53
+HASH H,%F%
+ENVI BODY_DONE=YES

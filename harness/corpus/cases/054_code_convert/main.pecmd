@@ -1,0 +1,5 @@
+ENVI F=C:\pectest\out\s54_in.txt
+WRITE %F%,code54
+CODE %F%=>C:\pectest\out\s54_out.txt
+IFEX C:\pectest\out\s54_out.txt, ENVI R=code_out! ELSE ENVI R=code_none
+ENVI BODY_DONE=YES

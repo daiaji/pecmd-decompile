@@ -1,0 +1,5 @@
+ENVI F=C:\pectest\out\s51_data.txt
+WRITE %F%,data51
+SIZE Z,%F%
+IFEX $%Z%>0, ENVI R=size_pos! ELSE ENVI R=size_neg
+ENVI BODY_DONE=YES

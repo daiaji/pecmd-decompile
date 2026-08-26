@@ -1,0 +1,5 @@
+ENVI F=C:\pectest\out\s65_attr.txt
+WRITE %F%,attr65
+GETF G,%F%
+IFEX $%G%>0, ENVI R=getf_num! ELSE ENVI R=getf_other
+ENVI BODY_DONE=YES

@@ -1,0 +1,10 @@
+{
+  "id": "046_forx_enum",
+  "slug": "forx_fixed_list_enum",
+  "cmds": ["FORX", "FIND", "ENVI"],
+  "vars": ["LAST", "%LAST%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "FORX 首案: 固定小列表 a,b,c 枚举赋值, FIND 校验末值为 c; vars 以 %LAST%/%R% 引用捕获值级证据 (本批新约定)"
+}

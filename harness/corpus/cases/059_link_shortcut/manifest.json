@@ -1,0 +1,10 @@
+{
+  "id": "059_link_shortcut",
+  "slug": "link_create_shortcut",
+  "cmds": ["LINK", "WRITE", "IFEX"],
+  "vars": ["R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "LINK 首案: .lnk 创建→IFEX 存在断言; 副作用 confined 在 C:\\pectest\\out (下轮清除)"
+}

@@ -1,0 +1,3 @@
+LOGS C:\pectest\out\s61.log
+IFEX C:\pectest\out\s61.log, ENVI R=logs_open! ELSE ENVI R=logs_none
+ENVI BODY_DONE=YES

@@ -1,0 +1,4 @@
+ENVI S=abcdef
+SSTR P,%S%,cd
+FIND $%P%=3, ENVI R=pos3! ELSE ENVI R=pos_other
+ENVI BODY_DONE=YES

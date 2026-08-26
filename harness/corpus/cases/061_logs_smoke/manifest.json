@@ -1,0 +1,10 @@
+{
+  "id": "061_logs_smoke",
+  "slug": "logs_open_safe_form",
+  "cmds": ["LOGS", "IFEX"],
+  "vars": ["R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "LOGS 首案: 合法路径开日志+正常退出; 刻意避开 S7 已知 AV 输入形态 LOGS\\0\\n\\n (REVIEW 记载)"
+}

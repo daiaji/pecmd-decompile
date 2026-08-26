@@ -1,0 +1,10 @@
+{
+  "id": "047_fdir_normalize",
+  "slug": "fdir_relative_normalize",
+  "cmds": ["FDIR", "FIND", "ENVI"],
+  "vars": ["FULL", "%FULL%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "FDIR 首案: 相对路径归一为绝对路径 (runner cwd=C:\\pectest); 写回组动词(R1已修) msvc 侧具备可比前提"
+}

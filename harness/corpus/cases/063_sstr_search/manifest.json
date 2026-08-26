@@ -1,0 +1,10 @@
+{
+  "id": "063_sstr_search",
+  "slug": "sstr_substring_search",
+  "cmds": ["SSTR", "FIND", "ENVI"],
+  "vars": ["P", "%P%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "SSTR 首案: 子串搜索探针 (矩阵§5无行项; 1-based 位置假设 cd→3)"
+}

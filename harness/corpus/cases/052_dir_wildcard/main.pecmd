@@ -1,0 +1,7 @@
+ENVI D=C:\pectest\out
+WRITE %D%\s52_a.txt,a52
+WRITE %D%\s52_b.txt,b52
+WRITE %D%\s52_c.txt,c52
+DIR N,%D%\s52_*.txt
+IFEX $%N%=3, ENVI R=dir_cnt3! ELSE ENVI R=dir_other
+ENVI BODY_DONE=YES

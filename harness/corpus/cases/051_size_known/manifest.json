@@ -1,0 +1,10 @@
+{
+  "id": "051_size_known",
+  "slug": "size_known_file",
+  "cmds": ["SIZE", "WRITE", "IFEX"],
+  "vars": ["Z", "%Z%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "SIZE 首案: 自建已知内容文件后取尺寸; 输入每次由本案重建, 值确定可对拍"
+}

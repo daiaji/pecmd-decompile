@@ -1,0 +1,10 @@
+{
+  "id": "056_temp_exist",
+  "slug": "temp_dir_exist",
+  "cmds": ["TEMP", "IFEX"],
+  "vars": ["T", "%T%", "R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "TEMP 首案: 临时目录回捞+存在性断言; 同机 TEMP 路径跨运行稳定故 %T% 值捕获可对拍"
+}

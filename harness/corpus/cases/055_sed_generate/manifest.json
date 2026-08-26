@@ -1,0 +1,10 @@
+{
+  "id": "055_sed_generate",
+  "slug": "sed_text_generate",
+  "cmds": ["SED"],
+  "vars": ["G", "%G%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "SED 首案: 文本生成探针 (3字母分支, GenerateTextContent); 值捕获锁定真实输出形态"
+}

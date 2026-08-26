@@ -1,0 +1,3 @@
+TEMP T
+IFEX %T%, ENVI R=temp_exist! ELSE ENVI R=temp_none
+ENVI BODY_DONE=YES

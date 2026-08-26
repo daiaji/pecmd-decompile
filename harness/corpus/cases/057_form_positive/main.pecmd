@@ -1,0 +1,3 @@
+FORM V,C:
+IFEX $%V%>0, ENVI R=form_pos! ELSE ENVI R=form_other
+ENVI BODY_DONE=YES

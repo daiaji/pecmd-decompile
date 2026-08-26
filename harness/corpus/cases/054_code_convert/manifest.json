@@ -1,0 +1,10 @@
+{
+  "id": "054_code_convert",
+  "slug": "code_convert_probe",
+  "cmds": ["CODE", "WRITE", "IFEX"],
+  "vars": ["R", "%R%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "CODE 首案: 小文本转码探针, => 输出文件形态镜像 FILE(010) 实证语法; 纯 ASCII 内容下转码应无损"
+}

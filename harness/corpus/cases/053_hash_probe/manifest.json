@@ -1,0 +1,10 @@
+{
+  "id": "053_hash_probe",
+  "slug": "hash_file_dialect",
+  "cmds": ["HASH", "WRITE"],
+  "vars": ["H", "%H%", "BODY_DONE"],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "HASH 方言探针: 固定内容文件的哈希→变量; 算法未知但输入固定故值确定, 直接以 %H% 值捕获锁定"
+}
