@@ -1,20 +1,20 @@
-/*
- * core_b3r_h3.c — 还原 gh3 的 7 个业务函数
+﻿/*
+ * core_b3r_h3.c 鈥?杩樺師 gh3 鐨?7 涓笟鍔″嚱鏁?
  *
- *   PECMD_HandleControlCommand @0x14009ce20  控件/列表命令处理 (Check 特殊分支)
- *   PECMD_ReadTextLine @0x14009da54  READLINE/文件读行（编码识别/BOM/行扫描）
- *   PECMD_WriteFileEncoded @0x14009f070  写文件（编码转换/定位/追加）
- *   PECMD_WriteVarEncoded @0x1400a03ac  写变量/输出（-m/-bin/-8 编码分支）
- *   PECMD_WriteVarTruncated @0x1400a0644  字符串按长度截断写变量
- *   PECMD_SetVarRange @0x1400a0844  字符串按长度截断写变量(尾部)
- *   PECMD_SearchStringAndLocate @0x1400a0d38  字符串/列表查找与位置计算
+ *   PECMD_HandleControlCommand @0x14009ce20  鎺т欢/鍒楄〃鍛戒护澶勭悊 (Check 鐗规畩鍒嗘敮)
+ *   PECMD_ReadTextLine @0x14009da54  READLINE/鏂囦欢璇昏锛堢紪鐮佽瘑鍒?BOM/琛屾壂鎻忥級
+ *   PECMD_WriteFileEncoded @0x14009f070  鍐欐枃浠讹紙缂栫爜杞崲/瀹氫綅/杩藉姞锛?
+ *   PECMD_WriteVarEncoded @0x1400a03ac  鍐欏彉閲?杈撳嚭锛?m/-bin/-8 缂栫爜鍒嗘敮锛?
+ *   PECMD_WriteVarTruncated @0x1400a0644  瀛楃涓叉寜闀垮害鎴柇鍐欏彉閲?
+ *   PECMD_SetVarRange @0x1400a0844  瀛楃涓叉寜闀垮害鎴柇鍐欏彉閲?灏鹃儴)
+ *   PECMD_SearchStringAndLocate @0x1400a0d38  瀛楃涓?鍒楄〃鏌ユ壘涓庝綅缃绠?
  *
- * 说明:
- *   - 仅实现本文件列出的目标函数; 所有辅助函数/全局仅 extern, 不定义。
- *   - FUN_140102a90 是 memset 别名 → 直接调 memset。
- *   - thunk_FUN_1400f429c 是 PECMD_SkipWCharUntil 的 thunk, 统一调用 PECMD_SkipWCharUntil。
- *   - Ghidra 的 CONCAT71/CONCAT44/CONCAT22 等已简化为普通整数/位运算。
- *   - 唤醒返回值 (extraout_var*) 在 int 判定处的 CONCAT71 已简化为直接比较。
+ * 璇存槑:
+ *   - 浠呭疄鐜版湰鏂囦欢鍒楀嚭鐨勭洰鏍囧嚱鏁? 鎵€鏈夎緟鍔╁嚱鏁?鍏ㄥ眬浠?extern, 涓嶅畾涔夈€?
+ *   - FUN_140102a90 鏄?memset 鍒悕 鈫?鐩存帴璋?memset銆?
+ *   - thunk_FUN_1400f429c 鏄?PECMD_SkipWCharUntil 鐨?thunk, 缁熶竴璋冪敤 PECMD_SkipWCharUntil銆?
+ *   - Ghidra 鐨?CONCAT71/CONCAT44/CONCAT22 绛夊凡绠€鍖栦负鏅€氭暣鏁?浣嶈繍绠椼€?
+ *   - 鍞ら啋杩斿洖鍊?(extraout_var*) 鍦?int 鍒ゅ畾澶勭殑 CONCAT71 宸茬畝鍖栦负鐩存帴姣旇緝銆?
  */
 
 #include <stdbool.h>
@@ -24,41 +24,38 @@
 #include "win32_stub.h"
 #include "pecmd_defs.h"
 
-/* ---- 本文件引用的全局 (link_stubs.c / core_globals.c / .rdata 定义) ---- */
-extern WCHAR g_szEmpty[]; /* g_szEmpty 空串 */
+/* ---- 鏈枃浠跺紩鐢ㄧ殑鍏ㄥ眬 (link_stubs.c / core_globals.c / .rdata 瀹氫箟) ---- */
+extern WCHAR g_szEmpty[]; /* g_szEmpty 绌轰覆 */
 extern HANDLE g_hStdIn;   /* GetStdHandle(STD_INPUT_HANDLE) */
 extern HANDLE g_hStdErr;  /* GetStdHandle(STD_ERROR_HANDLE) */
 extern HANDLE g_hStdOut;  /* GetStdHandle(STD_OUTPUT_HANDLE) */
-extern uint8_t g_u8CCB1;  /* MAIN_DBG 日志标志 */
+extern uint8_t g_u8CCB1;  /* MAIN_DBG 鏃ュ織鏍囧織 */
 
-/* BOM 常量 (.rdata DAT_140124128/12c/130) */
+/* BOM 甯搁噺 (.rdata DAT_140124128/12c/130) */
 static const uint8_t DAT_140124128[] = {0xFF, 0xFE};       /* UTF-16LE BOM */
 static const uint8_t DAT_14012412c[] = {0xFE, 0xFF};       /* UTF-16BE BOM */
 static const uint8_t DAT_140124130[] = {0xEF, 0xBB, 0xBF}; /* UTF-8 BOM */
 
-/* ---- 本文件引用的辅助函数 (均为 extern, 不在本文件定义) ---- */
+/* ---- 鏈枃浠跺紩鐢ㄧ殑杈呭姪鍑芥暟 (鍧囦负 extern, 涓嶅湪鏈枃浠跺畾涔? ---- */
 extern int PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2,
-                                 HWND param_3); /* 列表接受检查 */
+                                 HWND param_3); /* 鍒楄〃鎺ュ彈妫€鏌?*/
 extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, uint64_t f,
                                         int64_t *g, HWND h, int64_t i);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
-/* TEMP PROBE 最小 CRT 原型 (禁 stdio.h) */
+/* TEMP PROBE 鏈€灏?CRT 鍘熷瀷 (绂?stdio.h) */
 extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
 extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
 extern int __cdecl fclose(void *_Stream);
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? /* S11: 鏈湴澹版槑涓庡畾涔夊啿绐? 宸插垹闄? 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
 
 
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern int64_t PECMD_ExpandCommandLine(int64_t *ctx, WCHAR *src, WCHAR **out, int mode, uint8_t flag);) */
 
 
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 按定界符切分 * / extern uint64_t PE) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_SplitTokenTrimWs(int64_t *src, int64_t *dst, int16_t delim); /* 鎸夊畾鐣岀鍒囧垎 * / extern uint64_t PE) */
 
 
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_FreeStrBuf(void *ps); /* 释放字符串槽 * / extern void PECMD_AllocStringSlot2(void **ps, int64_t len) */
-
-
-
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_FreeStrBuf(void *ps); /* 閲婃斁瀛楃涓叉Ы * / extern void PECMD_AllocStringSlot2(void **ps, int64_t len) */
 
 
 
@@ -66,19 +63,22 @@ extern int __cdecl fclose(void *_Stream);
 
 
 
-extern void PECMD_AllocSmallObject(void *pp);                /* 小对象分配 */
-extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* 分隔符扫描 */
+
+
+
+extern void PECMD_AllocSmallObject(void *pp);                /* 灏忓璞″垎閰?*/
+extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* 鍒嗛殧绗︽壂鎻?*/
 extern void PECMD_GenerateTimeText(LPCWSTR a, int64_t *out, LPCWSTR b, int64_t c, FILETIME d);
-extern uint32_t PECMD_MultiByteConvert(LPCWSTR p, int64_t len); /* 编码识别 → codepage */
-extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);      /* 分配清零槽数组 */
+extern uint32_t PECMD_MultiByteConvert(LPCWSTR p, int64_t len); /* 缂栫爜璇嗗埆 鈫?codepage */
+extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);      /* 鍒嗛厤娓呴浂妲芥暟缁?*/
 extern WCHAR *PECMD_StrDupA(WCHAR **ps, LPCWSTR src, int64_t a, int64_t b);
 extern int64_t PECMD_VarLookup(void *script, LPCWSTR name, void *scope, int64_t len,
                                uint64_t *extra);
-extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);    /* 分配 */
-extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 定长拷贝 */
+extern void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count);    /* 鍒嗛厤 */
+extern WCHAR *PECMD_StrCopyW(WCHAR **ps, LPCWSTR src, int64_t len); /* 瀹氶暱鎷疯礉 */
 extern void PECMD_StrBldCopyWideN(WCHAR **pname, LPCWSTR src, int64_t len);
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_AllocStrSlot(WCHAR **out); /* 串容器初始化 * / extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWST) */
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2); /* 大小写转换 * / extern int64_t PECMD_WideToAnsiCon) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_AllocStrSlot(WCHAR **out); /* 涓插鍣ㄥ垵濮嬪寲 * / extern WCHAR *PECMD_AppendWideStr(WCHAR **ps, LPCWST) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_SwapBytePairs(uint8_t *param_1, int param_2); /* 澶у皬鍐欒浆鎹?* / extern int64_t PECMD_WideToAnsiCon) */
 
 
 
@@ -94,34 +94,34 @@ extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWOR
 extern LARGE_INTEGER PECMD_SetFilePointer(HANDLE hFile, LARGE_INTEGER pos,
                                           DWORD method); /* SetFilePointer */
 extern uint32_t PECMD_GetFileSize(HANDLE hFile);         /* GetFileSize */
-extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 日志 */
+extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a, uint64_t b); /* 鏃ュ織 */
 extern void *PECMD_StrBldCopyWide(void *a, const WCHAR *b);                       /* StrCpyW2 */
 extern int64_t PECMD_FindVarValue(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
-                                  int param_4);       /* 变量插值 */
-extern void PECMD_GetEnvVarToStr(LPCWSTR a, void *b); /* 输出/插值 */
+                                  int param_4);       /* 鍙橀噺鎻掑€?*/
+extern void PECMD_GetEnvVarToStr(LPCWSTR a, void *b); /* 杈撳嚭/鎻掑€?*/
 extern int64_t *PECMD_AssignString(int64_t *param_1, LPCWSTR param_2);
 extern void PECMD_ExpandVarDispatch(int64_t *param_1, LPCWSTR param_2, int64_t *param_3,
                                     int param_4, int param_5);
-extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);              /* 记录命中位置 */
+extern void PECMD_AppendFormattedI64(int64_t *list, int64_t pos);              /* 璁板綍鍛戒腑浣嶇疆 */
 extern void PECMD_AppendLongDecimal(void *script, int64_t value, LPCWSTR key); /* SetVarD */
 extern void PECMD_JoinTokensAndResolve(int64_t *ctx, int64_t *pp, int64_t *out);
 extern void PECMD_ParseShortStore(WCHAR **pp, int *out, WCHAR sep);
-/* S11: 本地声明与定义冲突已删除, 统一采用 xproto.h 原型 (原: extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d); /* 位置计算 * / extern void PECMD_SetEndOf) */
+/* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern uint64_t PECMD_CountNewlines(uint64_t *a, int b, void *c, int d); /* 浣嶇疆璁＄畻 * / extern void PECMD_SetEndOf) */
 
-extern int64_t PECMD_AllocConsoleBuffers(int64_t a); /* __chkstk/刷新 */
-extern WCHAR *PECMD_UnquoteString(WCHAR *s);         /* 串标签查找 */
+extern int64_t PECMD_AllocConsoleBuffers(int64_t a); /* __chkstk/鍒锋柊 */
+extern WCHAR *PECMD_UnquoteString(WCHAR *s);         /* 涓叉爣绛炬煡鎵?*/
 extern void PECMD_DeviceCheckReady(LPCWSTR s);
-extern uint32_t FUN_140063060(uint32_t *buf); /* 取 BUFFER 大小 */
+extern uint32_t FUN_140063060(uint32_t *buf); /* 鍙?BUFFER 澶у皬 */
 extern WCHAR *PECMD_SplitNextToken(int64_t *ctx, int64_t *pp, int64_t *out, int16_t c1, int16_t c2);
-extern void PECMD_RunCommandLine(int64_t *ctx, void *key, int mode); /* 变量取值 */
+extern void PECMD_RunCommandLine(int64_t *ctx, void *key, int mode); /* 鍙橀噺鍙栧€?*/
 extern bool PECMD_ParseHexOrDecBool(WCHAR **pp, int *out);
-extern uint64_t PECMD_IsNumericString(const WCHAR *p); /* 数解析 */
+extern uint64_t PECMD_IsNumericString(const WCHAR *p); /* 鏁拌В鏋?*/
 extern int64_t PECMD_FindTokenIndex(LPCWSTR a, WCHAR *b, uint32_t c, int d, uint16_t e);
 
 /* ==========================================================================
  * @0x14009ce20  (undefined8 PECMD_HandleControlCommand(undefined8*, longlong*, LPCWSTR,
  *                 LPCWSTR, LPCWSTR, undefined8*))
- * 控件/列表命令处理: 先检查接收, 命中 "Check" 时走状态机, 否则回发消息。
+ * 鎺т欢/鍒楄〃鍛戒护澶勭悊: 鍏堟鏌ユ帴鏀? 鍛戒腑 "Check" 鏃惰蛋鐘舵€佹満, 鍚﹀垯鍥炲彂娑堟伅銆?
  * ========================================================================== */
 uint64_t PECMD_HandleControlCommand(uint64_t *param_1, int64_t *param_2, LPCWSTR param_3,
                                     LPCWSTR param_4, LPCWSTR param_5, void **param_6)
@@ -181,7 +181,7 @@ uint64_t PECMD_HandleControlCommand(uint64_t *param_1, int64_t *param_2, LPCWSTR
 
 /* ==========================================================================
  * @0x1400a03ac  (undefined8 PECMD_WriteVarEncoded(longlong*, LPCWSTR))
- * 输出/写变量命令: 按 -m/-bin/-8 分支求值并写回 (param_2 作为键)。
+ * 杈撳嚭/鍐欏彉閲忓懡浠? 鎸?-m/-bin/-8 鍒嗘敮姹傚€煎苟鍐欏洖 (param_2 浣滀负閿?銆?
  * ========================================================================== */
 uint64_t PECMD_WriteVarEncoded(int64_t *param_1, LPCWSTR param_2)
 {
@@ -269,7 +269,7 @@ LAB_0a0617:
 
 /* ==========================================================================
  * @0x1400a0644  (undefined8 PECMD_WriteVarTruncated(longlong*, LPCWSTR))
- * 变量按长度截断写 (前部): key=value 取首段并限长。
+ * 鍙橀噺鎸夐暱搴︽埅鏂啓 (鍓嶉儴): key=value 鍙栭娈靛苟闄愰暱銆?
  * ========================================================================== */
 uint64_t PECMD_WriteVarTruncated(int64_t *param_1, LPCWSTR param_2)
 {
@@ -349,7 +349,7 @@ LAB_0a0829:
 
 /* ==========================================================================
  * @0x1400a0844  (undefined8 PECMD_SetVarRange(longlong*, LPCWSTR))
- * 变量按长度截断写 (尾部): 同 0a0644 但保留右段。
+ * 鍙橀噺鎸夐暱搴︽埅鏂啓 (灏鹃儴): 鍚?0a0644 浣嗕繚鐣欏彸娈点€?
  * ========================================================================== */
 uint64_t PECMD_SetVarRange(int64_t *param_1, LPCWSTR param_2)
 {
@@ -428,8 +428,8 @@ LAB_0a0a21:
 
 /* ==========================================================================
  * @0x1400a0d38  (LPCWSTR* PECMD_SearchStringAndLocate(longlong*, WCHAR*, undefined8, byte))
- * 字符串/列表查找: 解析分隔符/大小写/星号等修饰, 计算命中位置并写回变量。
- * 返回错误码 (0xffffffff80070057) 或命中指针, 以 LPCWSTR* 位模式承载。
+ * 瀛楃涓?鍒楄〃鏌ユ壘: 瑙ｆ瀽鍒嗛殧绗?澶у皬鍐?鏄熷彿绛変慨楗? 璁＄畻鍛戒腑浣嶇疆骞跺啓鍥炲彉閲忋€?
+ * 杩斿洖閿欒鐮?(0xffffffff80070057) 鎴栧懡涓寚閽? 浠?LPCWSTR* 浣嶆ā寮忔壙杞姐€?
  * ========================================================================== */
 LPCWSTR *PECMD_SearchStringAndLocate(int64_t *param_1, WCHAR *param_2, uint64_t param_3,
                                      uint8_t param_4)
@@ -919,10 +919,10 @@ LAB_0a18da:
 
 /* ==========================================================================
  * @0x14009da54  (LARGE_INTEGER PECMD_ReadTextLine(longlong*, _FILETIME))
- * READLINE/读文件行: BOM/编码识别、行扫描、*fix *nl *left 修饰。
- * 注意: Ghidra 将大量局部量类型化为 _FILETIME 但实际是"编码标志寄存器 +
- * FILETIME 计数 + WCHAR 指针"的多态栈槽, 此处以 uint64_t 承载并用位运算
- * 访问字段 (TODO(verify))。
+ * READLINE/璇绘枃浠惰: BOM/缂栫爜璇嗗埆銆佽鎵弿銆?fix *nl *left 淇グ銆?
+ * 娉ㄦ剰: Ghidra 灏嗗ぇ閲忓眬閮ㄩ噺绫诲瀷鍖栦负 _FILETIME 浣嗗疄闄呮槸"缂栫爜鏍囧織瀵勫瓨鍣?+
+ * FILETIME 璁℃暟 + WCHAR 鎸囬拡"鐨勫鎬佹爤妲? 姝ゅ浠?uint64_t 鎵胯浇骞剁敤浣嶈繍绠?
+ * 璁块棶瀛楁 (TODO(verify))銆?
  * ========================================================================== */
 LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
 {
@@ -1231,8 +1231,8 @@ LARGE_INTEGER PECMD_ReadTextLine(int64_t *param_1, FILETIME param_2)
             if (0 < (int)local_78) {
                 local_res10 = (uint64_t)((int64_t)local_80 + local_70);
             }
-            /* BOM 探测: 原体为有符号 -1/-2/-17/-85/-65 比较(dc@18645),
-             * 此处按无符号等价改写恢复可达性 */
+            /* BOM 鎺㈡祴: 鍘熶綋涓烘湁绗﹀彿 -1/-2/-17/-85/-65 姣旇緝(dc@18645),
+             * 姝ゅ鎸夋棤绗﹀彿绛変环鏀瑰啓鎭㈠鍙揪鎬?*/
             iVar13 = (int)*(uint8_t *)(uintptr_t)local_res10;
             if ((iVar13 == 0xff) && (*(uint8_t *)(uintptr_t)((int64_t)local_res10 + 1) == 0xfe)) {
                 DVar31 = 0x4b0;
@@ -1823,8 +1823,8 @@ LAB_14009f024:
 
 /* ==========================================================================
  * @0x14009f070  (LARGE_INTEGER PECMD_WriteFileEncoded(longlong*, LARGE_INTEGER))
- * 写文件: 编码 codepage 判定、*fix *v *fv *c *sparse *nobom 修饰、文件定位/
- * 追加/截断、BOM 写入。local_res20 为字节标志寄存器 (bWriteMode 等)。
+ * 鍐欐枃浠? 缂栫爜 codepage 鍒ゅ畾銆?fix *v *fv *c *sparse *nobom 淇グ銆佹枃浠跺畾浣?
+ * 杩藉姞/鎴柇銆丅OM 鍐欏叆銆俵ocal_res20 涓哄瓧鑺傛爣蹇楀瘎瀛樺櫒 (bWriteMode 绛?銆?
  * ========================================================================== */
 LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
 {
@@ -2248,7 +2248,7 @@ LAB_14009f52b:
                         LVar34.LowPart = uVar11;
                         if (((LVar25.QuadPart != 1) ||
                              (uVar11 = 0, LVar34.QuadPart = LVar30.QuadPart, local_c8 != '+'))) {
-                            LVar31 = local_res10;
+                            LVar31 = LVar30; /* R14b: dc:99848=LVar30(鍒濆0); v0 璇敤 local_res10(param_2 娓告爣)鈫掕繑鍥炲亸绉?83 */
                         }
                         if (((((local_c8 != '-') || (LVar25.QuadPart != 1)) &&
                               (iVar10 = 0, iVar32 = 0, LVar25.QuadPart == 1)) &&
@@ -2347,6 +2347,7 @@ LAB_14009f52b:
                                     LVar34.LowPart * 2);
                         }
                         LVar31 = local_88;
+                        { void *pf_=fopen("C:\\pectest\\memfail.log","a"); if(pf_){fprintf(pf_,"[L31@2349] val=%lld\n",(long long)LVar31.QuadPart);fclose(pf_);} }
                         if (local_c0.QuadPart != 0) {
                             *puVar19 = 0xd;
                             puVar19[1] = 10;
@@ -2630,7 +2631,7 @@ LAB_14009f52b:
         PECMD_FreeStrBuf((void *)&local_b8.QuadPart);
     }
     LVar31 = LVar30;
-    { /* TEMP PROBE R14b(WRITE 返回值取证) */
+    { /* TEMP PROBE R14b(WRITE 杩斿洖鍊煎彇璇? */
         void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
         if (pf_) {
             fprintf(pf_, "[WRET] LVar30=%lld\n", (long long)LVar30.QuadPart);
