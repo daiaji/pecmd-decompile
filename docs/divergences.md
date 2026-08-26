@@ -140,3 +140,11 @@
 - **影响面**：所有依赖内置表分发的动词行(WRITE/FIND 等)掉 ECD 被当外部程序执行失败；错误码污染退出码缓存(EXEC=259 同家族)。
 - **状态**：工单已开 —— ① 补初始化调用(需先核对 dc 触发时机: LoadPlugin= 行 vs 启动序列) ② INDATA 资源加载链(FUN_14001ea18+ResDecode)在 msvc 的对应执行验证。
 
+
+### D-17 INDATA 资源缺失 → g_cmdTable1/2 注册链架构性断裂｜工单已开(架构级)
+
+- **根因**：原版 PECMD.EXE 内嵌 INDATA 资源(RegisterFileAssociations dc:6897 经 FUN_14001ea18+ResDecode 按行扫 "LOAD:" 双 token 写 g_cmdTable2/dc:100374-10040, 静态 .exe/.com 等扩展名模式写 g_cmdTable1/dc:6955-6971)。msvc 重建 exe **天然不含该资源** → 表恒空(活体 dd 实锤 count=0)。
+- **证据链**：s20 §16-§17([WB]/[BP] 探针序列+活体 dd)；batch-A #030 真体全文核对 MATCH(代码忠实, 差异在数据)。
+- **影响面**：DispatchBuiltin 全动词拦截失效 → WRITE/FIND/IFEX-file 等掉 bare-path/ECD 兜底；EXEC 掉兜底产生 STILL_ACTIVE 259 污染退出码缓存。
+- **状态**：工单已开 —— 架构级修复需二选一: (a) 从原版 EXE 提取 INDATA 资源字节嵌入 msvc 构建并接加载链; (b) 将 LOAD:/模式注册改为静态源码表初始化。需先动态观测原版表最终内容作为权威基线。
+
