@@ -1,0 +1,28 @@
+{
+ "case": "053_hash_probe",
+ "backend": "win_real",
+ "stdout": {
+  "same": true
+ },
+ "exit": {
+  "exp": 2,
+  "got": 3221225477
+ },
+ "vars": {
+  "same": true,
+  "diff": []
+ },
+ "fs": {
+  "same": true,
+  "added": [],
+  "removed": [
+   "done.txt"
+  ],
+  "changed": []
+ },
+ "reg": {
+  "same": true
+ },
+ "verdict": "FAIL",
+ "flaky_pool": false
+}
