@@ -122,3 +122,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   需下一轮: ba 写监视 local_b0 wFunc/hwnd 区 + pFrom/pTo 内容指针的释放时序 (FreeStrBuf 计时).
 - 附带: rCX@SHFO = &uStack_70, 栈上结构首 8 字节稳定出现 0x18/0x1a (跨两次会话) —
   指向"首个写入者"为该 executor 的确定性代码 (非随机垃圾)。
+
+## 10b. B 簇三侧同构 + 新证据点 (local_68)
+
+- 三侧逐字节同构: dc (decompiled.c:35252/35363) ≡ msvc C 源 (b2f:7207+) ≡ msvc 编译产物
+  (Ghidra 反编译 FUN_14003e710): 选项扫描/wFunc 赋值/'=>' 前驱判定/memset(0x30)/
+  StrBld 双槽拷贝/SHFO 分支/GetLastError 链。
+- 新证据点: `local_68 = 0` 仅一次初始化, 唯一使用 = 尾部终止符写入
+  `*(WCHAR*)(local_70.QuadPart + local_68*2) = 0` 恒写 [0] — 三侧完全一致,
+  dc 亦同 (decompiled.c:35363)。⟹ "[0]=0 清 pFrom" 理论不成立 (原版同样行为且工作)。
+- 结论: 87 机制不在语法/结构层 — 唯一差异渠道 = SHFO 运行时实参内容/悬垂 (live 观测),
+  下轮以 ba 写监视 pFrom/pTo 槽内容指针 + 释放时序收口 (windbg 通道 T2/T3 故障面期间
+  改用 dump 对比: 原版 SHFO 前后堆内容 vs msvc)。
