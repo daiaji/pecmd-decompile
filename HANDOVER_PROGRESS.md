@@ -446,3 +446,11 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   零回归 (10 FAIL = 纯已知队列 E×3/J×2/G×2/H×2/I×1); 提交 170bacf; 部署 md5 60e5b054。
 - 下一站: 同款"三邻接局部拟 StrBld 对象"模式全库排查 (grep 相邻 LARGE_INTEGER+
   int64 声明组) — 同类潜在地雷; 队列队首转 G (051/057)。
+
+---
+
+## R24e-b (2026-08-27) — G 簇 051 翻转, 全量 53→54/63 零回归
+- 051 live 定案: SplitNextToken 无声明 (S11 删声明未果, 文件不含 xproto) → C4013 →
+  返回截断 (0x17096823d0c→0xffffffff96823d0c) → AV; 按定义签名补 extern → 051 PASS。
+- 057 FORM: NULL-deref @ *pWVar10 (尾段应为 local_f8) — 待 bp 定向; b3r_h1 C4013 ×3
+  同族登记。提交; 部署 md5 24219467; 全量 54/9。
