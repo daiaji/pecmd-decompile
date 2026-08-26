@@ -195,42 +195,10 @@ int PECMD_CreateProcessW(LPCWSTR cmd, LPWSTR buf, LPSECURITY_ATTRIBUTES sa,
                          LPSECURITY_ATTRIBUTES da, BOOL inherit, DWORD flags, LPVOID env,
                          LPCWSTR cwd, LPSTARTUPINFOW si, LPPROCESS_INFORMATION pi)
 {
-    /* @0x140101e04 size=103 CreateProcessW 业务包装(返回成功标志) */
-    { /* TEMP PROBE(S11): 十参现场落盘 — 定位 EXEC 启动 AV 后拆除 */
-        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) {
-            fprintf(pf_, "[CPW] cmd=%p buf=%p sa=%p da=%p inh=%d flg=%x env=%p cwd=%p si=%p pi=%p\n",
-                    (void *)cmd, (void *)buf, (void *)sa, (void *)da,
-                    inherit, flags, env, (void *)cwd, (void *)si, (void *)pi);
-            if (cmd) fprintf(pf_, "[CPW]   cmd.str=%ls\n", cmd);
-            if (buf) fprintf(pf_, "[CPW]   buf.str=%ls\n", buf);
-            if (cwd) fprintf(pf_, "[CPW]   cwd.str=%ls\n", cwd);
-            if (si) {
-                unsigned *u = (unsigned *)(void *)si;
-                fprintf(pf_, "[CPW]   si.dump:");
-                for (int i = 0; i < 26; i++) fprintf(pf_, " %08x", u[i]);
-                fprintf(pf_, "\n");
-            }
-            fclose(pf_);
-        }
-    }
-    {
-        int r = CreateProcessW(cmd, buf, sa, da, inherit, flags, env, cwd, si, pi);
-        DWORD gle = GetLastError();
-        DWORD gle_restore = gle; /* R20 探针透明化: fopen("a") 成功路径置 LastError=183
-                                    (ERROR_ALREADY_EXISTS), 曾污染调用方
-                                    ExecCmdDispatch@LAB_140014c72 的 GetLastError 捕获,
-                                    WRITE 族/061/065 退出码 183(原版=2)。返回前恢复。 */
-        { /* TEMP PROBE(S11): 返回现场 */
-            void *pf2_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf2_) {
-                fprintf(pf2_, "[CPW] ret=%d gle=%lu\n", r, (unsigned long)gle);
-                fclose(pf2_);
-            }
-        }
-        SetLastError(gle_restore); /* 保持 LastError 对调用方透明 */
-        return r != 0;
-    }
+    /* @0x140101e04 size=103 CreateProcessW 业务包装(返回成功标志)
+     * R24(ECD 静态对照闭合 r24_ecd_exec_wait.md): 拆除 S11 十参现场探针×2 及
+     * R20 探针透明化 gle_restore(探针移除后为幂等 no-op, 与"恢复"行为等价)。 */
+    return CreateProcessW(cmd, buf, sa, da, inherit, flags, env, cwd, si, pi) != 0;
 }
 
 uint32_t PECMD_FindFileOrDir(LPWSTR param_1, uint32_t param_2)

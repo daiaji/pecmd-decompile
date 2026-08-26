@@ -173,7 +173,8 @@ s083_loop_exit: /* dc:103681 关闭 do 包裹层 */
     iVar15 = 0; /* dc:103690 token 模式正常收尾 → 返回码清零 */
 
     if (local_74 != 0) {
-        /* dc:103692-103696 参数替换模式 (local_74!=0): 走命令块解析器 */
+        /* dc:103692-103696 参数替换模式: 触发条件是 (param_4&1)!=0 模式位
+         * (r24_s083_verdict.md 订正: 旧注误标 local_74!=0; 实现侧既有 else 正确) */
         uVar10 = PECMD_ParseCommandBlock(local_80.QuadPart, param_3, 1, pWVar20);
         iVar15 = (int)uVar10;
         LVar9 = local_80;
@@ -316,7 +317,8 @@ byte *s083_create_menu_tail_B_reference(longlong *param_1, int16_t *param_2)
     PECMD_AssignString((void *)(uintptr_t)(LVar10.QuadPart + 0x08), local_res20);
     PECMD_AssignString((void *)(uintptr_t)(LVar10.QuadPart + 0x30), local_78);
     if ((int)uVar4 < 0) {
-        /* TODO(dc:103903): 错误码归一化 `-v|1` (保号去零), 语义待汇编核验 */
+        /* dc:103903 错误码归一化 `-v|1` (保号去零) — r24_s083_verdict.md 定案:
+         * 与 dc 逐字一致, TODO 关闭 (S16) */
         uVar4 = -uVar4 | 1;
     }
     *(byte *)(uintptr_t)LVar10.QuadPart = (byte)uVar4;
@@ -494,7 +496,9 @@ LAB_s083_a65eb: /* dc:104031 公共清理出口: 四槽逆序释放 (错误路�
     PECMD_FreeStrBuf((void *)&local_res20);
     PECMD_FreeStrBuf((void *)&local_68);
     /* dc:104036 只取 LVar11 低 32 位返回 (HMENU 截断/错误码复用)
-     * TODO(dc:104036): 成功路径返回值语义待汇编核验 */
+     * r24_s083_verdict.md S17 divergence 登记: dc return (byte*)LVar11.s 为
+     * 8 字节(错误码 -0x7ff8ffa9 时 64 位), 本实现 (uint32_t)LowPart 截断,
+     * 移交 CreateMenuItem 归属线定案(树内暂无其调用方). TODO(verify) 挂起 */
     return (byte *)(uintptr_t)(uint32_t)LVar11.LowPart;
 }
 

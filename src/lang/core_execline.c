@@ -167,6 +167,13 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
 
     for (;;) {
         iVar10 = iVar3;
+        /* R24(D 活体取证 r24_hang_triage_002_004_038): dc:77750 环头单游标复载 ——
+         * % 族分支只推进 line(如 line=pw16+1 / line=inP+2), 环头检查仍读 inP ⇒
+         * 非空 %var% 展开后 inP 永停 '%', StrBldGrowWide 每迭代 +0x400 自旋膨胀
+         * (002/004/038 实测 33-34MB); 空值 %var% 因 goto var_lookup 内 inP 直接推进
+         * 而不挂。模板照抄 PECMD_ExpandEnvVars 同款 H1(dc:78742), 每个分支均已
+         * 先行推进 line 或 inP, 此处复载语义安全。 */
+        inP = line;
         if (end <= cur || *inP == L'\0') {
             *cur = L'\0';
             PECMD_AllocString(out, (int64_t)(cur - base) + 2);
