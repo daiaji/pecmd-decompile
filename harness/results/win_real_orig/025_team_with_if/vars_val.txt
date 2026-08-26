@@ -1,0 +1,1 @@
+CASE=025_team_with_if|A=1|B=ok

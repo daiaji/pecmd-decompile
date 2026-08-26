@@ -1,0 +1,1 @@
+CASE=065_getf_attr|R=%R%|%R%=%R%|BODY_DONE=YES

@@ -98,3 +98,16 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   修复后 1.5 系由 -NAN 转 "仅整数部分" — 残留 = 小数位截断, 机理锁定在箍环
   (dVar7<dVar13 恒真 + 2^63 上推 → cvttsd2si 饱和) — 需原版汇编逐指令对照后方可定谳,
   登记为待办 (非语料路径, 不阻塞对拍)。
+
+## 9. R24f-c B 簇档案 (FILE 契约×3, 症状级定案, 待专项调试)
+
+- 活体契约定案: 原版 FILE 复制成功/删除成功/源缺失 全返 2 (pb1-pb4 探针);
+  EXEC-echo 返 0 (pb2) → 金标 2 全来自 FILE 行自身, 由 SHFileOperationW 路径
+  (bVar25==0) 返回缺文件错 2 达成 (010 源 C:\\pectest\\out\\demo.txt 在用例时序中不存在 —
+  run_case 每案清空 out!, 源缺失是固定前提)。
+- msvc 症状: 010/012 = 87 (SHFileOperationW 参数非法), 011 = 0 (删"成功").
+- 现场 (windbg @shell32!SHFileOperationW 首击): struct@栈 — hwnd=0x18 / wFunc=0x1a (垃圾,
+  应为 0/2!) / fFlags=0x614 (真实) / pFrom=0x20d1b2d1538 pTo=0x20d1b2bf578 (du 不可读=悬垂).
+  ⟹ msvc 的 local_b0 结构在 token 循环后首 8 字节被覆写、pFrom/pTo 指向已释放块 —
+  与 R24f 五连虫同族 (栈/生命周期), 需下一次专项调试 (bp wFunc-写点/FreeStrBuf 计时)。
+  登记至 B 簇工单 (010/011/012), 不阻塞他簇。

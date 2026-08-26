@@ -1,0 +1,1 @@
+CASE=065_getf_attr|R=%=??|BO=YES
