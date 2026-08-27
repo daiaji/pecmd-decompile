@@ -513,3 +513,10 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - 053: vsprintf 链 = 探针 printf (干扰实锤, 阴性互证); 病灶 = HASH 尾 wslot 释放
   (§18 四现场), 下轮首查 res_src/hash_out 源头。
 - 存留探针清单: exec2/exec4/execmain/script2(S7 依赖)/scriptrun/scriptdep/var/b9/b3e/h3。
+
+---
+
+## R24g (2026-08-27) — 053 五现场: 摘要未产 (CryptAPI 链待首查)
+- bp StrBldCopyAnsi@HASH+0x73b: res_src = 静态 hb_align 且仅" " — CryptoHashCompute 未
+  写 hexbuf ⟹ CryptAcquireContextW 链失败/跳过 (下轮首探); wslot 头垃圾另列 ba 监视
+  终局。全量 54/9 基线。
