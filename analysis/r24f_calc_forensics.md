@@ -261,3 +261,15 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   AllocString(len+1) 缩容 — 头由 HeapRealloc 维护, 语义正常 ⟹ 槽被污染发生在
   StrBldCopyAnsi 之前/之间 — 下一探针 = bp StrBldCopyAnsi 入口读 b (res_src) 实值
   (疑: res_src/hash_out 初始化或 CryptoHashCompute 输出槽指错)。
+
+## 19. T5 全库清理·核心完成 (R24f-g)
+
+- 已拆 (精确逐块, read+edit): core_main×3 + core_init PROBE_STEP 系 + core_b2f×3
+  ([ELC] 取证) + core_string×4 (OOM site-1/2/3 + dialog-probe) — 禁 stdio.h 红线全数
+  恢复, 构建绿 (md5 1e1df48e), 全量 54/9 零回归。
+- 存留 (git 还原后保持原位, 均已标 TEMP PROBE): exec2/exec4/execmain/script2
+  (S7-bisect 依赖, 注释明示) / scriptrun / scriptdep / var / b9 / b3e / h3(R14b) —
+  列为下一轮精确拆解清单 (自动化正则曾误伤 11 文件, 已全量 git checkout 恢复 —
+  教训: 探针块形态各异, 必须逐块 read+edit)。
+- 053 进展: 探针干扰已除 (vsprintf 链 = 探针 printf!), 干净画面下病灶 =
+  HASH 尾 wslot 释放 (四现场 §18) — 下轮首查 res_src/hash_out 源头。
