@@ -12,6 +12,7 @@
 | divergences.md | 与原版行为的差异登记 | 活页 |
 | provenance.map | 符号 ↔ dc 地址 ↔ 源文件 映射表 | 活页 |
 | triage_map.md / bc_evaluation_inputs.md | 分诊与评估输入留档 | 参考 |
+| MCP_ONBOARDING.md | **参与者接入文档**: ghidra-mcp/windbg-mcp 前置与安装、winuxsh+dsh-winuxsh bundle、反代取件、对接点与故障禁忌 | 活页 |
 
 ## 历史批次记录（冻结，只增不改）
 
