@@ -283,3 +283,12 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   →hex — 未产出 ⟹ CryptAPI 链失败/未达 (首查 bp CryptAcquireContextW 命中与否,
   次查 Crypt* 桩实态) — 下轮第一探针点。
 - wslot 头垃圾残留未解 (复制后槽被二次写坏?) — ba w8 槽监视列为终局手段。
+
+## 21. 053 六现场 (R24g-b): 值通道裁决 — 原版 H 亦未置
+
+- 053 vars_val 双跑: orig `H=%H%|%H%=%H%|BODY_DONE=YES` (H 空!) vs msvc 无产物 (崩)
+  — 原版 HASH 'H,%F%' 的 H 也未写变量 (解析语义两侧一致 — 值的差异非不同点)。
+- CryptAcquireContextW dwFlags=0xF0000000: dc 全库 135 处同型 → 原版镜像, 非差异点
+  (acquire 失败 = 两侧共有, digest 缺失非 msvc 独有)。
+- 剩余差异仍 = wslot 槽被二次写坏 (槽头垃圾) — 终局: ba w8 wslot 槽监视 (写者即停)
+  或 FUN_1400BEF64 执行 " " (空行) 的崩溃链验证。
