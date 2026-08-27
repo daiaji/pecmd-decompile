@@ -520,3 +520,10 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - bp StrBldCopyAnsi@HASH+0x73b: res_src = 静态 hb_align 且仅" " — CryptoHashCompute 未
   写 hexbuf ⟹ CryptAcquireContextW 链失败/跳过 (下轮首探); wslot 头垃圾另列 ba 监视
   终局。全量 54/9 基线。
+
+---
+
+## R24g-b (2026-08-27) — 053 六现场: 值通道裁决 (H 两侧未置), 差异收窄至 wslot 槽覆写
+- vars_val 双跑: orig H 空 = msvc-同 — acquire-0xF0000000 = dc 135 处原版同型 —
+  均非差异点; 剩余 = wslot 槽二次写坏 → ba w8 槽监视终局 (或 ' '-execute 链验证)。
+- 全量 54/9 基线。
