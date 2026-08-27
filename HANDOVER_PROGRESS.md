@@ -503,3 +503,13 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - bp HASH+0x7b3: wslot=0x2177db0e460 (头无 StrBld 魔数, 内容" ") — 释放非法块成因
   落定; 0637DC 端口复核无恙 ⟹ 疑点前移至 StrBldCopyAnsi 的 res_src 入参 (bp 探针
   下一招)。全量 54/9。
+
+---
+
+## R24f-g (2026-08-27) — T5 核心拆解完成 + 053 探针干扰确认排除
+- 拆: core_main×3/core_init/core_b2f×3/core_string×4 (OOM 系+ELC 系, 禁 stdio 恢复);
+  构建 md5 1e1df48e, 全量 54/9 零回归。自动化正则误伤 11 文件 → git 还原 + 逐块
+  read+edit 重做 (教训入档 §19)。
+- 053: vsprintf 链 = 探针 printf (干扰实锤, 阴性互证); 病灶 = HASH 尾 wslot 释放
+  (§18 四现场), 下轮首查 res_src/hash_out 源头。
+- 存留探针清单: exec2/exec4/execmain/script2(S7 依赖)/scriptrun/scriptdep/var/b9/b3e/h3。
