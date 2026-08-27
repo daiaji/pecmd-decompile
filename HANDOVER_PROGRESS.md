@@ -527,3 +527,43 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - vars_val 双跑: orig H 空 = msvc-同 — acquire-0xF0000000 = dc 135 处原版同型 —
   均非差异点; 剩余 = wslot 槽二次写坏 → ba w8 槽监视终局 (或 ' '-execute 链验证)。
 - 全量 54/9 基线。
+
+---
+
+## R24-最新现状 (2026-08-27, 部署 md5=1e1df48e, hash=cb9fcba, 全量 54/9)
+
+### 53-H 簇 (053/056, 0xC0000374) — 六现场, 病灶收窄至 wslot 槽覆写
+
+- 已排除 (值通道/静态/活体三轮裁决):
+  1) T5 探针干扰 (core_string/core_main/core_init/core_b2f 的 printf 探针 = vsprintf 链真相,
+     已拆除, 禁 stdio 红线恢复);
+  2) CryptAPI 链 (map 证实为真 advapi32 链接, 非桩; dc 全库 135 处 0xf0000000 同型,
+     acquire 失败为两侧共有 — digest 缺失非 msvc 独有);
+  3) 传参层 (053 的 HASH 'H,%F%' 解析: varname='%F%' 展开路径, 原版 H 也同样未写入
+     H 变量 — 值通道 vars_val 裁判 H 两侧皆空);
+  4) res_src 源头 (StrBldCopyAnsi@HASH+0x73b 实读: rdx=模块静态 hb_align 区, 内容仅" "
+     = hexbuf 初值 — 摘要从未写入, 但此与 CryptAPI 共有结论一致, 已被排除为差异点)。
+- 现存差异唯一 = **wslot 槽 (HASH 尾局部) 被二次写坏**: wslot@rsp 槽含指针
+  0x2177db0e460, 其 -8 块头 = {0x8e0001451caea860, 0x20} 无 StrBld 魔数/尺寸语义 =
+  非分配器物; 而 StrBldCopyAnsi 端口 (restored_bodies:7721, '*a=0; 0637dc(a,b,c,~0)')
+  语义正常 (AllocString→conv→缩容, 头由 HeapRealloc 维护) ⟹ 槽污染发生于复制之后、
+  释放之前 — 即 SetVariable(varname='C:\...路径', wslot+2) / FUN_1400BEF64(" ")执行 之一。
+- **终局手段 (已武装, 下一次 launch 即用)**: bp StrBldCopyAnsi(2 地址 bm) → 命中取
+  rcx=&wslot → `ba w8 @rcx` 槽监视 → 继续 → **写者即停** (区分: 复制期自身写 vs
+  槽覆写的第二写者). 候选写者: (a) FUN_1400BEF64(" ") 执行空行命令链; (b) SetVariable
+  以 'C:\...' 为 key 的节点插入覆栈; (c) wslot+2 越界读后相邻局部写串扰。
+- 053 用例 053_hash_probe 已开 vars_val (manifest, 值通道可用); golden=2 (尾部
+  BODY_DONE 非零守卫, 非 HASH 行返回值 — 053 无尾 IFEX, exit 来源=结束时的槽值链)。
+
+### 下一步 (H 簇本轮优先)
+1. ba w8 wslot 槽监视抓第二写者 → 定根 → 修 → 053/056 双案, 期望全量 +2。
+2. 若写者为 FUN_1400BEF64(" ") (空行执行) → 对照 dc 该分支 (空/纯空白 varname 的
+   HASH 不应执行空行命令 — dc:119318/119358 调用点上下文) 定案。
+
+### 其余队列 (未动)
+- T5 存留清单: exec2/exec4/execmain/script2(S7-bisect 依赖, 注释明示)/scriptrun/
+  scriptdep/var/b9/b3e/h3(R14b) — 逐块 read+edit (正则曾误伤 11 文件, 教训在 §19)。
+- G/H 剩余: 057 FORM (pWVar10=NULL, Ghidra 编译形态对照§13, 需 bp), 056 TEMP (同 H)。
+- P2: 051 已翻 (SplitNextToken extern); I 055 (fastfail); E TEAM (024/025/039);
+  J 031/061 (深水); 非语料二项 (小数箍环/7%3); divergences 登记簿; 同类 StrBld
+  邻接排查 (B簇结构体化模式推广); U-2 vars_val 普及。
