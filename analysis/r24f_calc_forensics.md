@@ -273,3 +273,13 @@ bf358 函数级 `if (local_res10->refcount == 0x23) { uVar33 |= 0x23; ...}` — 
   教训: 探针块形态各异, 必须逐块 read+edit)。
 - 053 进展: 探针干扰已除 (vsprintf 链 = 探针 printf!), 干净画面下病灶 =
   HASH 尾 wslot 释放 (四现场 §18) — 下轮首查 res_src/hash_out 源头。
+
+## 20. 053 五现场 (R24g): res_src = 静态 hb_align, 内容仅 " " — 摘要从未写入
+
+- bp PECMD_StrBldCopyAnsi (HASH+0x73b): rdx(res_src) = 模块静态 0x7ff7..3237
+  (= hb_align 区), 内容 " " (hexbuf 初值 [0]=' ' [1]=0) — CryptoHashCompute 未产出摘要。
+- CryptoHashCompute (core_b8_failed:78) 契约: out = extra&~7 (hexbuf+1, 8 对齐 ✓),
+  r13 = extra&7 = 0 → 常规路径 = CryptAcquireContext→CreateHash→HashData→GetHashParam
+  →hex — 未产出 ⟹ CryptAPI 链失败/未达 (首查 bp CryptAcquireContextW 命中与否,
+  次查 Crypt* 桩实态) — 下轮第一探针点。
+- wslot 头垃圾残留未解 (复制后槽被二次写坏?) — ba w8 槽监视列为终局手段。
