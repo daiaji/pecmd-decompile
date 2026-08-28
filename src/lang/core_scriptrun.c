@@ -18,7 +18,6 @@
  *   经 ASM 验证为词首 2 字符，与 pthreadmbcinfo 字段渲染无关）。
  * ==================================================================== */
 #include <stdbool.h>
-#include <stdio.h> /* TEMP PROBE */
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -226,14 +225,6 @@ static int64_t srx_ExecuteScriptFile(void *script, LPCWSTR cmd, LPCWSTR a3, uint
             convText = NULL;
         }
     }
-    { /* TEMP PROBE [S10] (诊断 LOAD 装载, T5 随探针网拆除) */
-        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) {
-            fprintf(pf_, "[S10] LOAD cmd=%ls a3=%ls flags=%08x chars=%lld\n", cmd, a3, flags,
-                    (long long)wchars);
-            fclose(pf_);
-        }
-    }
     if ((flags & 8) != 0) { /* dc:29425-bit3: 执行后删源文件 */
         DeleteFileW(cmd);
     }
@@ -266,10 +257,6 @@ done:
  */
 int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
 {
-    { /* TEMP PROBE */
-        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) { fprintf(pf_, "PROBE RunCommand enter\n"); fclose(pf_); }
-    }
     WCHAR *pp = cmdline;
     int flags = 0, flags2 = 0;
     uint8_t m_flag = 0, mem_flag = 0;
@@ -280,10 +267,6 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
     int64_t DVar13 = 0;
 
     /* ---- 段1：前缀指令解析 ---- */
-    { /* TEMP PROBE */
-        FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) { fprintf(pf_, "PROBE before SrParsePrefix\n"); fclose(pf_); }
-    }
     PECMD_SrParsePrefix(script, &pp, &flags, &flags2, &m_flag, &mem_flag, &sysinit_name, &b_sysinit,
                         &outbuf, &qkmode);
 
@@ -598,14 +581,6 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                                                                 (uint32_t)(flags | flags2),
                                                                 NULL, outbuf);
                         argLine = NULL;
-                        { /* TEMP PROBE [S10] */
-                            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-                            if (pf_) {
-                                fprintf(pf_, "[S10] drive-hit %ls r=%lld\n", cand,
-                                        (long long)DVar13);
-                                fclose(pf_);
-                            }
-                        }
                         if (m_flag == 0) /* dc:30049 m 前缀置位才继续遍历 */ {
                             PECMD_FreeStrBuf(&cand);
                             break;
@@ -698,15 +673,6 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             PECMD_RunSysInit(script, WSTR("sysinit_end"));
         }
         FUN_14009BB28(script, 0);
-        { /* TEMP PROBE */
-            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf_) {
-                fprintf(pf_, "[RCCLEAN] f8=%p p40=%p p60=%p p78=%p ob=%p\n",
-                        (void *)local_1f8, (void *)local_240, (void *)local_260,
-                        (void *)local_278, (void *)outbuf);
-                fclose(pf_);
-            }
-        }
         PECMD_FreeStrBuf(&local_1f8);
         PECMD_FreeStrBuf(&local_240);
         PECMD_FreeStrBuf(&local_260);

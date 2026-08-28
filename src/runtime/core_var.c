@@ -14,7 +14,6 @@
  * ==================================================================== */
 #include <stdint.h>
 #include <stddef.h>
-#include <stdio.h> /* TEMP PROBE: memfail.log */
 
 #include "pecmd_defs.h"
 /* ---- 待重构函数原型 (后续批次) ---- */
@@ -62,14 +61,6 @@ void PECMD_AllocWStringBuffer(WCHAR **ps, int64_t count)
             hdr = (uint8_t *)HeapAlloc(g_hHeap, 0, (size_t)count * 2 + 10);
             if (hdr)
                 break;
-            { /* TEMP PROBE */
-                FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-                if (pf_) {
-                    fprintf(pf_, "OOM core_var alloc count=0x%llx\n",
-                            (unsigned long long)count);
-                    fclose(pf_);
-                }
-            }
             FUN_1400630D0(2);
         }
         /* 原文 @60866-60867: 先魔数 dword(+4) 后 qword 尺寸(+0), 尺寸存储覆盖魔数

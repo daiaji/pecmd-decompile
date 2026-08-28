@@ -100,11 +100,7 @@ uint64_t PECMD_DispatchCommand(int64_t *script, LPCWSTR cmd, int64_t *out)
         return 0;
     }
     else {
-        { /* TEMP PROBE R20-A: CALL 裸路径进出夹逼 */
-          extern void SG_Probe(const char *, long long);
-          SG_Probe("dispatch-exec", (long long)(uintptr_t)cmd); }
         PECMD_ExecuteCommand(script, cmd, (uint64_t)(uintptr_t)out, NULL, 0, 0, 0);
-        { extern void SG_Probe(const char *, long long); SG_Probe("dispatch-ret", 0); }
         return 0;
     }
 }

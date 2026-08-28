@@ -20,7 +20,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h> /* TEMP PROBE 用 */
 
 #include "pecmd_defs.h"
 
@@ -218,21 +217,6 @@ void PECMD_RefCountRelease(WCHAR **ps)
         (*(int *)((char *)*ps + 8))--;
         blk = (int64_t *)*ps;
         if (*(int *)((char *)blk + 8) < 1 && blk != NULL) {
-            { /* TEMP PROBE */
-                extern void *_get_heap_handle(void);
-                FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-                if (pf_) {
-                    int okU = (int)HeapValidate(_get_heap_handle(), 0, blk);
-                    int okG = g_hHeap ? (int)HeapValidate(g_hHeap, 0, blk) : -1;
-                    int64_t tb = *(int64_t *)blk;
-                    int okT = (tb != 0 && g_hHeap)
-                        ? (int)HeapValidate(g_hHeap, 0, (const void *)(uintptr_t)(tb - 8)) : -9;
-                    fprintf(pf_, "[REL] blk=%p ucrtOK=%d ghOK=%d cnt=%d b0=%p txtHdrOK=%d\n",
-                            (void *)blk, okU, okG,
-                            *(int *)((char *)blk + 8), (void *)tb, okT);
-                    fclose(pf_);
-                }
-            }
             PECMD_FreeStrBuf((WCHAR **)blk); /* 原文 FUN_14005b104(块): 释块内数据并清零 */
             free(blk);
         }
@@ -265,16 +249,6 @@ void PECMD_AdoptRefCountedString(WCHAR **ps, LPCWSTR src)
         blk = NULL;
     }
     else {
-        { /* TEMP PROBE */
-            FILE *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf_) {
-                int okHdr = g_hHeap ? (int)HeapValidate(g_hHeap, 0,
-                    (const void *)(uintptr_t)((int64_t)(intptr_t)src - 8)) : -1;
-                fprintf(pf_, "[ADOPT] blk=%p src=%p hdrOK=%d\n",
-                        (void *)blk, (const void *)src, okHdr);
-                fclose(pf_);
-            }
-        }
         FUN_1400702B0((WCHAR **)blk, NULL); /* 清零块首 qword (传块本身, 非 &local!) */
         *(int *)((char *)blk + 8) = 0;
     }

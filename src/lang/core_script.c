@@ -75,16 +75,11 @@ uint32_t PECMD_ParseScriptSegments(int64_t *ctrl, int start, int len, int64_t *o
             WCHAR *seg2;
             int n;
             uint32_t f2 = flags;
-            { /* TEMP PROBE R20-A: 段扫描环进出夹逼(H3 失 NUL 停机检测) */
-              extern void SG_Probe(const char *, long long);
-              SG_Probe("seg-top", (long long)(t - p)); }
             if (*p == script[0x44])
                 break;
             /* 找段尾 */
             while (*t != script[0x45] && *t != script[0x48] && *t != script[0x44])
                 t++;
-            { extern void SG_Probe(const char *, long long);
-              SG_Probe("seg-scan-done", (long long)(t - p)); }
             n = (int)(t - p);
             if (n > 0x800)
                 n = 0x800;

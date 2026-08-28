@@ -1,14 +1,8 @@
 /* restored_bodies.c - B0/P3: real bodies from P4 waves, mechanically split out of link_stubs.c. */
 #include "stubs_common.h"
 
-/* TEMP PROBE 鐢ㄦ渶灏?CRT 鍘熷瀷 (绂?stdio.h: 浼氫笌 win32_api_stubs 鐨?_vsnwprintf 鎾炲唴鑱? */
-extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
-extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
-extern int __cdecl fclose(void *_Stream);
-
 /* T1d2: DAT_14013e190 鈫?g_csInit 褰掍竴鍚庣殑涓寸晫鍖哄０鏄?*/
 extern CRITICAL_SECTION g_csInit;
-
 
 static void PECMD_AppendLongDecimal(int64_t *a, uint64_t b, const uint16_t *c);
 static void PECMD_FormatI64Dec(const uint16_t *dst, uint64_t v);
@@ -258,13 +252,7 @@ static int64_t *PECMD_StrBldCopyAnsi(int64_t *out, char *src, uint64_t len);  /*
 
 uint64_t PECMD_ExecCmdDispatch(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f, uint64_t g, uint64_t h)
 {
-  { /* TEMP PROBE */
-      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-      if (pf_ != NULL) {
-          fprintf(pf_, "[ECD] line=%ls\n", (const wchar_t *)(uintptr_t)b);
-          fclose(pf_);
-      }
-  }
+
   longlong *param_1 = (longlong *)(uintptr_t)a;
   uint64_t param_2 = b;
   longlong *param_3 = (longlong *)(uintptr_t)c;
@@ -4548,16 +4536,10 @@ void PECMD_FixKnownDlls32(void)
                 (*DAT_14013cb48)(local_58, (void *)L"\\KnownDlls32\\KnownDllPath");
                 (*DAT_14013cb48)(local_68, local_38);
 
-
-
-
-
-
                 local_res8 = 0;
                 local_res10[0] = 0;
 
                 local_b8 = local_58;
-
 
                 local_98[0] = 0x30;
                 local_c8[0] = 0x30;
@@ -5392,7 +5374,6 @@ LAB_14002716f:
             if ((*pWVar1 != L'\0') && (pWVar1[1] == L':')) {
               local_c0 = (undefined4)((0x3aU << 16) | (uint16_t)*pWVar1);
 
-
               local_res10 = pWVar1;
               if (((local_res20 & 1) == 0) ||
                  ((BVar13 = GetVolumeNameForVolumeMountPointW((LPCWSTR)&local_c0,lpszVolumeName,DVar23),
@@ -5902,15 +5883,9 @@ PECMD_ProcessScriptBlock(LARGE_INTEGER param_1,LARGE_INTEGER param_2,longlong *p
   LARGE_INTEGER local_d8;
   longlong local_d0;
   WCHAR local_c8 [68];
-  
+
   LVar15.QuadPart = 0;
-  { /* TEMP PROBE (鎵嬪啓 CRT extern, 绂?stdio.h: 涓?win32_api_stubs 鐨?_vsnwprintf 鎾炲唴鑱? */
-      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-      if (pf_ != NULL) {
-          fprintf(pf_, "[PSB] line=%ls slot50=%p\n", (const wchar_t *)(uintptr_t)param_2.QuadPart, (void *)(uintptr_t)*(longlong *)(uintptr_t)(param_1.QuadPart + 0x50));
-          fclose(pf_);
-      }
-  }
+
   if (param_3 == (void *)0) {
     param_3 = *(longlong **)(param_1.QuadPart + 0x40);
   }
@@ -6304,14 +6279,7 @@ LAB_14004df3c:
           local_e0 = 0;
           FUN_140024c48((longlong *)&local_e8.QuadPart,(longlong *)&local_e0,0);
           PECMD_StrBldCopyWideN((uint16_t **)&local_f8,(LPCWSTR)(uintptr_t)local_e8.QuadPart,(int64_t)local_e0);
-          { /* TEMP PROBE R15(bare-path 鍒ゅ畾杈撳叆鍙栬瘉) */
-            void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-            if (pf_) {
-              fprintf(pf_, "[BP] e0=%lld f8=[%.32ls]\n", (long long)local_e0,
-                      (LPCWSTR)(uintptr_t)local_f8);
-              fclose(pf_);
-            }
-          }
+
           local_150[0] = 0;
           /* S11(T4 缂洪櫡鐢? dc:44284 鎰忓浘涓?8 瀛楄妭娓呴浂): 浠呮竻 [0] 鏃?[1..3]
            * 闄堟棫鏍堝瀮鍦捐鎵撳寘杩?ECD 绗?4 鍙?鈫?鍏ュ彛闂ㄨ鍒?鈫?瑙ｅ紩鐢ㄩ噹鎸囬拡 AV */
@@ -7175,15 +7143,7 @@ LAB_14004cb4c:
     }
   }
 LAB_14004c525:
-    { /* TEMP PROBE R14b: 姣忚鍔ㄨ瘝杩斿洖鍊煎簭鍒?閫€鍑虹爜閾惧彇璇? T5 鎷? */
-        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) {
-            fprintf(pf_, "[WB] verb=%08x l180=%lld line=[%.28ls]\n", (unsigned)local_158,
-                    (long long)local_180.QuadPart,
-                    (const wchar_t *)(uintptr_t)LVar11.QuadPart);
-            fclose(pf_);
-        }
-    }
+
     if (local_180.QuadPart != 0) {
     (*(LARGE_INTEGER **)(uintptr_t)(param_1.QuadPart + 0x50))->QuadPart = (LONGLONG)local_180.QuadPart;
     }
@@ -7206,19 +7166,6 @@ LAB_14004c53b:
   PECMD_FreeStrBuf(&local_160.QuadPart);
   goto LAB_14004e27a;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void PECMD_ClearTaskTable(undefined8 param_1, int param_2){
     int iVar1;
@@ -7490,10 +7437,7 @@ uint16_t *PECMD_AllocStrSlot(uint16_t **out)
 /* @0x14006375c size=鈥?瀹戒覆杩藉姞(鐩寸Щ) */
 longlong *PECMD_AppendWideStr(void *param_1p,LPCWSTR param_2)
 {
-  { /* TEMP PROBE */
-    void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-    if (pf_) { fprintf(pf_, "[AWS] slot=%p old=%llx src=%ls", param_1p, (unsigned long long)*(longlong *)param_1p, param_2); fclose(pf_); }
-  }
+
   longlong *param_1 = (longlong *)param_1p;
   int n1 = 0;
   if ((uintptr_t)param_2 != 0) {
@@ -7565,7 +7509,6 @@ static uint64_t PECMD_AppendFmtValue(void *a, uint64_t b, const void *c, const v
   FUN_1400629b8(param_1,(const uint16_t *)c,local_88);
   return 0;
 }
-
 
 /* @0x1400679b0 size=43 鈥?short 瑙ｆ瀽骞跺啓鍥?鐩寸Щ) */
 void PECMD_ParseShortStore(uint64_t *param_1, int *param_2, short param_3)
@@ -7854,17 +7797,7 @@ uint64_t PECMD_DispatchExpressionBlock(uint64_t a, uint64_t b)
   LARGE_INTEGER param_1;
   ulonglong param_2 = b;
   param_1.QuadPart = (long long)a;
-  { /* TEMP PROBE [DEB] (S9' 璇婃柇: 琛屽惊鐜叆鍙? */
-      void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-      if (pf_) {
-          fprintf(pf_, "[DEB] ent a=%llx b=%llx head=%ls end88=%04x sep48=%04x f200=%04x\n",
-                  (unsigned long long)(uintptr_t)a,(unsigned long long)(uintptr_t)b,
-                  (const wchar_t *)(uintptr_t)(b & 0xfffffffffffffffeULL),
-                  *(uint16_t *)(a + 0x88), *(uint16_t *)(a + 0x48),
-                  *(uint16_t *)(a + 200));
-          fclose(pf_);
-      }
-  }
+
   uVar1 = *(ushort *)(param_1.QuadPart + 0x48);
   iVar10 = 0;
   pWVar11 = (WCHAR *)(param_2 & 0xfffffffffffffffe);
@@ -8028,13 +7961,7 @@ LAB_1400b17e7:
                  ((uVar2 != 0x20 && (uVar2 != 0)))))))) {
               PECMD_CheckFirstStartupFlag(param_1.QuadPart);
             }
-            { /* TEMP PROBE [DEB] (S9' 璇婃柇: 琛屽垎鍙戝埌 PSB) */
-                void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-                if (pf_) {
-                    fprintf(pf_, "[DEB] line=%ls\n", (const wchar_t *)(uintptr_t)lpStr1.QuadPart);
-                    fclose(pf_);
-                }
-            }
+
             PECMD_ProcessScriptBlock(param_1,lpStr1,(longlong *)0x0,(longlong *)&local_res10,
                                      (pthreadmbcinfo)*ppWVar13);
           }
@@ -8190,7 +8117,7 @@ static char PECMD_NormalizeDiskDevicePath(longlong *p) { (void)p; return '\0'; }
   longlong local_60;
   LARGE_INTEGER local_58;
   longlong local_50 [3];
-  
+
   LVar37.QuadPart = 0;
   LVar23.QuadPart = 0;
   local_50[0] = 0;
@@ -10196,8 +10123,6 @@ void PECMD_DestroyWindowObj(uint64_t *a)
   }
 }   /* PECMD_SetControlGeom 鎭㈠浣撴柊澧炴々 */
 
-
-
 uint64_t PECMD_SetControlGeom(uintptr_t hwnd, uint16_t *s, int64_t p3, int64_t *p4, uintptr_t p5, uint32_t color, int64_t p7)
 {
   (void)p3;
@@ -10599,7 +10524,6 @@ static void PECMD_AppendLongDecimal(int64_t *a, uint64_t b, const uint16_t *c)
   wsprintfW(local_78,(const uint16_t *)L"%ld",(longlong)(int32_t)(uint32_t)b);
   FUN_1400629b8((void *)a,c,local_78);
 }
-
 
 /* @0x140060b5c 缁熻鎹㈣/鍒惰〃绗︽暟鐩?(decompiled.c 鐩寸Щ, 鑷寘鍚? */
 int PECMD_CountNewlines(ulonglong *param_1,int param_2,int param_3,int param_4)
@@ -13341,9 +13265,6 @@ BOOL FUN_14006f908(char param_1,int param_2)
   local_res18 = (HANDLE)0x0;
   local_res8[0] = 0;
 
-
-
-
   FUN_140003864(&local_res18,local_28,0xc0000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
   if (local_res18 == (HANDLE)0x0) {
     FUN_140003864(&local_res18,local_28,0x80000000,3,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,(HANDLE)0x0);
@@ -14663,7 +14584,6 @@ LAB_140078d61:
   return iVar2;
 }
 
-
 /* ---- wave-current support: 07d0ac/07e01c ---- */
 /* @0x14005d534 size=34 鈥?闈炵┖鍚嶅垯璁剧疆鐜鍙橀噺(鐩寸Щ) */
 int PECMD_SetEnvIfNonEmpty(undefined8 param_1, LPCWSTR param_2, LPCWSTR param_3)
@@ -14776,7 +14696,6 @@ void FUN_14007e01c(longlong param_1,uint param_2,LPWSTR param_3)
   }
 }
 
-
 /* ---- wave-current support: 08293c/072d8c ---- */
 longlong FUN_140072cc0(void) { return (longlong)0; }   /* 閫傞厤鍣ㄩ摼澶?(leaf stub) */
 longlong *FUN_1400637dc(longlong *a, LPCSTR b, ulonglong c, ulonglong d) { (void)a;(void)b;(void)c;(void)d; return (longlong*)0; }   /* 0x14013d4d8 GetAdaptersInfo 妲?(鍒?0) */
@@ -14882,7 +14801,6 @@ LAB_140072e5b:
   return uVar2;
 }
 
-
 /* ---- wave-current support: 0745c8 ---- */
 LPWSTR  FUN_1400bf358(longlong *a, pthreadmbcinfo b, undefined8 *c) { (void)a;(void)b;(void)c; return (LPWSTR)0; } /* 鎷彿鍐呰〃杈惧紡姹傚€?(leaf stub) */
 
@@ -14935,7 +14853,6 @@ ulonglong PECMD_EvalParenStripped(longlong *param_1,ulonglong *param_2)
   }
   return uVar4;
 }
-
 
 /* ---- wave-current support: 0731d8 ---- */
 /* @0x1400e9048 size=鈥?瀵硅薄妲?0x2a 绯诲垪鍒濆鍖?鐩寸Щ) */
@@ -15419,7 +15336,6 @@ ulonglong FUN_1400ffa38(longlong param_1, longlong *param_2, byte *param_3, long
     }
     return PECMD_FindTreeItemByPath(param_1,(WCHAR *)(uintptr_t)puVar3,(uint64_t *)(uintptr_t)0);
 }
-
 
 /* ========== FUN_140100ac4 @0x140100ac4 size=4631 ==========
  * 鎺т欢 VAL/CHECK/ENABLE/Expand 灞炴€у簲鐢ㄤ笌榧犳爣瀹氫綅(ScreenToClient/SetFocus)澶勭悊銆?
@@ -16152,7 +16068,6 @@ LAB_140101ca7:
     }
     return 0;
 }                                /* @0x1400e89fc size=1610 澶ф々: 鍚庣画娉㈡ */
-
 
 /* ========== FUN_1400d9818 @0x1400d9818 size=7726 ==========
  * 涓荤獥浣?PECMD2012)娑堟伅杩囩▼: 鎵樼洏/瀹氭椂鍣?婊氬姩鏉?鑴氭湰鍧楄Е鍙?鍓嶆櫙閿佸畾/閫忔槑搴︺€?
@@ -17419,7 +17334,6 @@ undefined8 FUN_140067e88(longlong *param_1, longlong *param_2)
     return uVar2;
 } /* size=1413 鍥炬爣缁樺埗寮曟搸(澶ф々鍚庣画娉㈡) */
 
-
 /* ========== FUN_1400f6db0 @0x1400f6db0 size=8526 ==========
  * 鍒楄〃瀹夸富鑷粯(WM_DRAWITEM鈫扡B/CB GETITEM): 缃戞牸绾?瀵归綈鏍囪/杩涘害鏉″簳鑹?澶氬瓙椤?
  * (鍥炬爣+鏂囨湰)甯冨眬缁樺埗寮曟搸銆侷NDIR: EXE .rdata 铏氳〃鍖?file_off 0x12b940 / RVA 0x12c740
@@ -18034,7 +17948,6 @@ LAB_1400f7cb1:
                                 }
                                 if (*pWVar42 != (WCHAR)lVar46) {
                                     local_1a8 = *(ulonglong *)((longlong)local_348 + uVar14 + 0x10);
-
 
                                     pHVar19 = FUN_14001f1d4(pWVar42,&local_1a8);
                                     *(HICON *)((longlong)local_370 + uVar14) = pHVar19;

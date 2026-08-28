@@ -5,10 +5,6 @@
 
 #include "pecmd_defs.h"
 
-/* TEMP PROBE 用最小 CRT 原型 (禁 stdio.h: 撞 win32_api_stubs 内联) */
-extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
-extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
-extern int __cdecl fclose(void *_Stream);
 
 /* CRT/内部数据符号（link_stubs.c 提供桩定义） */
 extern uint64_t g_u64E598;

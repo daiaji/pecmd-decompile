@@ -1,4 +1,4 @@
-﻿/*
+/*
  * core_b3r_h3.c 鈥?杩樺師 gh3 鐨?7 涓笟鍔″嚱鏁?
  *
  *   PECMD_HandleControlCommand @0x14009ce20  鎺т欢/鍒楄〃鍛戒护澶勭悊 (Check 鐗规畩鍒嗘敮)
@@ -42,10 +42,6 @@ extern int PECMD_OnDeleteCommand(uint64_t *param_1, LPCWSTR param_2,
 extern int PECMD_DispatchControlCommand(void *a, LPCWSTR b, WPARAM c, HWND d, LPCWSTR e, uint64_t f,
                                         int64_t *g, HWND h, int64_t i);
 extern uint64_t PECMD_ParseIntRound(int64_t *pp, int *out);
-/* TEMP PROBE 鏈€灏?CRT 鍘熷瀷 (绂?stdio.h) */
-extern void *__cdecl fopen(const char *_Filename, const char *_Mode);
-extern int __cdecl fprintf(void *_Stream, const char *_Format, ...);
-extern int __cdecl fclose(void *_Stream);
 /* S11: 鏈湴澹版槑涓庡畾涔夊啿绐佸凡鍒犻櫎, 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? /* S11: 鏈湴澹版槑涓庡畾涔夊啿绐? 宸插垹闄? 缁熶竴閲囩敤 xproto.h 鍘熷瀷 (鍘? extern void PECMD_SetVariableWithPrefix(int64_t *ctx, LPCWSTR key) */
 
 
@@ -1828,10 +1824,6 @@ LAB_14009f024:
  * ========================================================================== */
 LARGE_INTEGER PECMD_WriteFileEncoded(int64_t *param_1, LARGE_INTEGER param_2)
 {
-    { /* TEMP PROBE entry */
-        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) { fprintf(pf_, "[WIN] entered\n"); fclose(pf_); }
-    }
     bool bVar1;
     bool bVar2;
     bool bVar3;
@@ -2055,7 +2047,7 @@ LAB_14009f25f:
     pWVar15 = PECMD_UnquoteString((WCHAR *)local_90);
     local_78 = pWVar15;
     if (*pWVar15 == L'\0') {
-        PECMD_FreeStrBuf((void *)&local_98);
+    PECMD_FreeStrBuf((void *)&local_98);
         PECMD_FreeStrBuf((void *)&local_90);
         LVar31.QuadPart = -0x7ff8ffa9;
         goto LAB_1400a037e;
@@ -2351,7 +2343,6 @@ LAB_14009f52b:
                                     LVar34.LowPart * 2);
                         }
                         LVar31 = local_88;
-                        { void *pf_=fopen("C:\\pectest\\memfail.log","a"); if(pf_){fprintf(pf_,"[L31@2349] val=%lld\n",(long long)LVar31.QuadPart);fclose(pf_);} }
                         if (local_c0.QuadPart != 0) {
                             *puVar19 = 0xd;
                             puVar19[1] = 10;
@@ -2518,7 +2509,7 @@ LAB_14009f52b:
                         CloseHandle((HANDLE)LVar21.QuadPart);
                     }
                     PECMD_FreeStrBuf((void *)&local_b8.QuadPart);
-                    PECMD_FreeStrBuf((void *)&local_98);
+                PECMD_FreeStrBuf((void *)&local_98);
                     PECMD_FreeStrBuf((void *)&local_90);
                     goto LAB_1400a037e;
                 }
@@ -2635,23 +2626,9 @@ LAB_14009f52b:
         PECMD_FreeStrBuf((void *)&local_b8.QuadPart);
     }
     LVar31 = LVar30;
-    { /* TEMP PROBE R14b(WRITE 杩斿洖鍊煎彇璇? */
-        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) {
-            fprintf(pf_, "[WRET] LVar30=%lld\n", (long long)LVar30.QuadPart);
-            fclose(pf_);
-        }
-    }
     PECMD_FreeStrBuf((void *)&local_98);
     PECMD_FreeStrBuf((void *)&local_90);
 LAB_1400a037e:
-    { /* TEMP PROBE R14b(WRITE exit capture, all paths) */
-        void *pf_ = fopen("C:\\pectest\\memfail.log", "a");
-        if (pf_) {
-            fprintf(pf_, "[WRET2] LVar31=%lld LVar30=%lld\n", (long long)LVar31.QuadPart, (long long)LVar30.QuadPart);
-            fclose(pf_);
-        }
-    }
     PECMD_FreeStrBuf((void *)&local_58);
     return LVar31;
 }
