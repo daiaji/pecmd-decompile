@@ -1,24 +1,27 @@
 # WINDBG_MCP_ISSUES.md — windbg MCP 鲁棒性问题专档
 
-> **2026-08-27 台账（R24e）：T1-T4 全部实测复现 → 本地修复（windbg-mcp 侧）→ 上游 #242 已提交。**
-> **复现**：部署版（2026-08-26 08:00 构建，v0.12.0 时代）与更新版（2fc8823）上按 FAULTS_REPRO.md 配方
-> 逐条实测，T1-T4 全中；T-2 连发 resume 在部署版上还出现 **worker 进程消亡**（死前日志：settle 失败 0x8000FFFF）。
-> **根因落定**（引擎状态日志实证）：四条触发面共享同一缺陷——目标于 resume/泵事件期间退出，引擎遗留
-> 「滞留运行态 + 无当前进程」（实测状态 `0x7` GO_NOT_HANDLED、无进程；.lastevent 空），`settle` 的
-> `is_running()` 误判为 Fine → 泵输出被丢弃、命令静默回显，后续无线程命令裸报 `E_UNEXPECTED`（0x80040205）
-> 而 `.echo`/`.lastevent` 仍活=「半死」表象；worker 消亡 = raw `Execute` 路径缺失 `execute_and_wait`
-> 已有的 NO_DEBUGGEE 守卫，对无 debuggee 引擎发执行控制触发 dbgeng 访问冲突（dbgscope 文档自证该 AV）。
-> **修复**（windbg-mcp `src/worker.rs`，commit fd450a1，仅此一文件）：launch/attach_process 会话限定；
-> 每操作后一次状态分类（无 debuggee 或滞留态背后无进程 → 标记「目标已退出」终态）；观察者命令携带解释附注，
-> 后续命令一律干净拒绝（不再裸 0x80040205，且不再向死引擎发执行控制=AV 窗口关闭）；EndSession 保留可调。
-> **复测**：T1/T2chain/T2rapid/T3/T4 在 dev 与 release 构建全绿，dump 会话回归不误伤，cargo test 84/84，
-> clippy/fmt 净。修复版已部署 `~\.dsh\tools\windbg-mcp\`；**当前 GUI 会话仍跑旧代码，重连 windbg MCP 后生效**
-> （届时可删 `windbg-mcp.exe.stale`）。
-> **上游**：[windbg-mcp #242](https://github.com/glslang/windbg-mcp/issues/242) 已提交（gh，账号 daiaji），
-> 正文含四条配方、根因、本地缓解与**明确划出的「需上游推动」dbgscope 原语层三项**：
-> ① `settle` 泵失败时丢弃已捕获输出（应把「泵中退出」作为携带输出的终态 CommandRun）；
-> ② `execute_command_bounded` 缺 NO_DEBUGGEE 守卫（AV 崩溃路径应在原语内防护）；
-> ③（可选）settle 区分「泵到停止」与「泵到退出」。本侧无力推进该层（git 依赖 pin + 人审），移交上游。
+> **2026-08-27 台账（R24e 终）：T1-T4 复现 → 本地临时修复 → 上游已修复并合并（#243 + dbgscope#120）→ 本机合并验证全绿。**
+> **复现**：部署版（v0.12.0 时代）与更新版（2fc8823）上按 FAULTS_REPRO.md 配方逐条实测，T1-T4 全中；
+> T-2 连发 resume 在部署版上出现 **worker 进程消亡**（死前日志：settle 失败 0x8000FFFF）。
+> **根因（上游纠正后定稿）**：目标于 resume/泵事件期间退出，引擎**确定性**进入无 debuggee 态——实测状态
+> `0x7` 在绑定常量里即 `DEBUG_STATUS_NO_DEBUGGEE`（**本侧曾误读为 GO_NOT_HANDLED「滞留运行态」，
+> 经上游纠正：NO_DEBUGGEE=7、GO_NOT_HANDLED=3，无滞留态，`GetNumberProcesses`/`GetCurrentProcessSystemId`/
+> `GetExitCode` 届时全部 E_UNEXPECTED**）；`settle` 只问是否在跑，把泵中退出误判 Fine → 泵输出被丢弃、
+> 命令静默回显，后续无线程命令裸报 `E_UNEXPECTED`（0x80040205）而 `.echo`/`.lastevent` 仍活=「半死」表象。
+> worker 消亡 = raw `Execute` 对**任意文本×无 debuggee**（即使全新空引擎）触发 dbgeng 访问冲突撕进程——
+> 上游实测**首轮必现**（非本侧原先标注的间歇竞态；亦非「退出之后」专属，空引擎同样必崩）。
+> **本地临时修复**（worker.rs，fd450a1）：launch/attach 会话限定 + 每操作后状态分类标记「目标已退出」终态
+> + 观察者附注 + 后续干净拒绝。**已被上游实现取代而退役**。
+> **上游修复**（2026-08-27 合并，下个 release 带出）：dbgscope#120 = `CommandRun::target_gone`（泵中退出=
+> **ending 非 error**，携带捕获输出）+ 原语内 NO_DEBUGGEE 拒绝（覆盖四条 Execute 入口）；windbg-mcp#243 =
+> `worker::refuse_when_the_target_is_gone`（typed 工具统一拒绝，分类 `stale_session`）+ `debug_batch` 遇 ending
+> 即停。**上游其余结论**：变体 1/3 未单独跑，以新增 `examples/session_fuzz.rs` 覆盖；ask ③（脚本错误结构化）
+> **拒绝**（#77 原则：从渲染文本反推=测渲染）。
+> **本机合并验证**（2026-08-27）：本地 main 合并至上游 `93233f6`（源树=origin/main，本地缓解退役），
+> release 构建后以 FAULTS_REPRO 配方 + dump 回归 + 上游最小复现（launch cmd /c ping -n 2 → `g` → `k 3`）实测：
+> **T1/T2chain/T2rapid/T3/T4 全 FIXED、dump 不误伤、竞态重复 3 轮无 worker 消亡**；拒绝文案为
+> 「This session has no target left: … `end_session` releases the session」。
+> **遗留**：`session_status` 仍报该会话 open（上游 FOLLOWUPS item 48，pre-existing，`end_session` 兜底）。
 
 > **2026-08-26 状态更新（R14c）：上游已修复，实测通过。**
 > ① `execute("g")` 控制通路真实生效（launch→bp→g 进程运行至自然退出，全程 .lastevent/registers 可响应，不再吞命令、不再半死）；② 单条命令失败不再污染会话（错误后 .lastevent 立即可用）。
@@ -223,7 +226,12 @@ SOP 对照组结论：纯净流程（launch → bp 工具单断点 → go 工具
 
 ## 【安全操作规程 SOP】— windbg MCP 现行纪律汇总
 
-以下每条均有本轮实验或历史档案背书：
+> **2026-08-27 注（随 #242 修复更新）**：上游修复已合并（#243 + dbgscope#120），本 SOP 中
+> 与「execute 控制类受控 / 半死处置 / 断点自动命令串」相关的条目（4/5/9/10 及速查卡）对**当前
+> 版本**降级为防御性习惯：目标退出现为 ending（`stale_session` 拒绝），不再有半死链与 worker
+> 消亡；历史构建仍按本 SOP 处置。R20 版本锁定纪律已解除（见该节注）。
+
+以下每条均有本轮实验或历史档案背书（历史构建背书）：
 
 1. **全新会话纪律**：每轮追踪开新 launch/open_dump；会话用完（或报废）立即 end_session。
    本轮 5 个实验会话 + server_log 当日 14+ worker 全部即时回收，零残留。
@@ -331,6 +339,8 @@ end_session，零构建）编纂；实验原始观察已内嵌各条目，未改
   - 会话日志 turn 7 还自证过 PSB 实为 `+0x1a1060`, turn 26 换用后**仍失败**(该轮又重建, map 显示 `0x1a1060`=另一个函数内部) —— 地址始终没有与当时的 exe 绑定核验。
 - 症状全过程 = 断点设在从未执行的代码上 → 进程跑完脚本自然退出 → `execute("g")` 忠实回传退出 → 无 debuggee 后 registers 报 0x80040205(合法失败)。
   `go` 报 0x8000FFFF 同理 = 上游已记录"等待期间目标退出"(FOLLOWUPS item 48), 非 worker 半死。
+  （**2026-08-27 #242 修复后更新**：该症状已由上游修复——目标跑完成为 **ending（`target_gone`，携带输出）**，
+  后续工具统一 `stale_session` 拒绝；item 48 仅余「`session_status` 仍报该会话 open」这一半，`end_session` 兜底。）
 
 ### C. 工作流缺陷与修正纪律(取代 R18 的"MCP 不可用"结论)
 
@@ -343,7 +353,14 @@ end_session，零构建）编纂；实验原始观察已内嵌各条目，未改
 
 ---
 
-## 【R20 版本锁定纪律】(2026-08-26 双误诊复盘新增)
+## 【R20 版本锁定纪律】(2026-08-26 双误诊复盘新增；**2026-08-27 已解除**)
+
+> **解除注（2026-08-27）**：本纪律锁定旧二进制（v0.12.0/fec77eb 时代）为受控观测基线，
+> 因上游引擎当时存在 execute 控制类故障。上游 #242 修复已合并（#243 + dbgscope#120）并经
+> 本机合并验证（上游 `93233f6`，dbgscope `199f2b6`；T1-T4+dump 全绿），锁定的必要性消失——
+> 后续观测直接使用上游当前 release 即可。V1-V5 中与**地址-二进制绑定**相关的通用纪律
+> （断点 RVA 只从当期 map/symsnap 派生、落点自证、部署身份标记）**仍然有效**，属调试基本功，
+> 与引擎版本无关；仅"锁定旧 windbg-mcp 二进制"这一层解除。
 
 > 背景：R18"断点不可用"误诊与 B 簇 exit=183 探针污染（analysis/r19b_exit183_chain.md）
 > 同属一类事故——观测装置/过期工件污染被当成产品缺陷。断点调试任务编排=V-Gate 五道门，

@@ -105,6 +105,8 @@ Mac 可驱动 Windows VM——见官方 `docs/mcp-clients.md` 与 `docs/remote-l
 - **已知故障面**：本会话记录过 T2/T3（`g` 超时=目标挂起如弹窗阻塞、`r;k` 偶发 0x80040205、
   bp 链式自毁）——对应处置全录于 `docs/WINDBG_MCP_FAULTS_REPRO.md`，按该文三律规避：
   `execute` 单命令放行、构建前三查无在途会话（LNK1201）、断点不带内嵌命令串（T1）。
+  （**2026-08-27 更新**：T2/T3 与 `r;k` 偶发 0x80040205 已随上游 #243+dbgscope#120 合并修复；
+  现行行为=目标跑完自动 **ending**、后续工具 `stale_session` 拒绝，三律降级为防御性习惯。）
 - 构建前必须无在途 windbg 会话（PDB 锁 → LNK1201），有则 `end_session` 后再 `build_msvc.sh`。
 
 ---

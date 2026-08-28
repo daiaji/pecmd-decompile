@@ -6,7 +6,7 @@
 
 | 文件 | 内容 | 状态 |
 |---|---|---|
-| WINDBG_MCP_ISSUES.md | windbg MCP 病理 A–H 登记、SOP、R19 误诊裁定附录、**R20 版本锁定纪律（V1–V6）** | 权威 |
+| WINDBG_MCP_ISSUES.md | windbg MCP 病理 A–H 登记、SOP、R19 误诊裁定附录、R20 版本锁定纪律（V1–V6，**#242 修复合并后已解除**，见该节注） | 权威（历史真相档案） |
 | WINDBG_MCP_REPRO_UPSTREAM.md | R18 断点误诊复现报告（**已撤回，勿发上游**；保留作鉴别诊断样本） | 归档 |
 | known_limits.md | 已知边界限制登记（KL-编号制） | 活页 |
 | divergences.md | 与原版行为的差异登记 | 活页 |

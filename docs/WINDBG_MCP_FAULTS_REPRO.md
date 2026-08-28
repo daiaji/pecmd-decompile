@@ -4,6 +4,14 @@
 > 本档只回答一个问题：**故障怎么一步步复现**——每条触发面给出可在本机执行的精确命令序列、
 > 预期观察与判定标准。文末附「故障浮现速查卡」供取证/调试时即时对照。
 
+> **状态（2026-08-27 终）**：上游已修复并合并（dbgscope#120 + windbg-mcp#243，见
+> ISSUES 台账 R24e 终）。本档保留为**历史配方 + 鉴别/回归参考**；修复后预期行为以文末
+> 【上游修复验证】对照表与 ISSUES R24e 终端为准：目标退出 = **ending（`target_gone`，携带
+> 捕获输出）**，随后工具统一 **`stale_session` 拒绝**（「This session has no target left…」），
+> 不再出现 0x80040205 半死链 / worker 消亡。速查卡中「半死 / 0x8000FFFF / worker gone」三行
+> 修复后**不再作为常态出现**；若再现 = 回归，按本档配方取证并上报。规避三律降级为防御性
+> 习惯（连发 resume 仍是非法操作，引擎仍以 0x8000FFFF 叙述拒绝）。
+
 ---
 
 ## 0. 复现环境（固定不变的前提）
@@ -179,28 +187,31 @@ resume/控制类命令的处理。** 这也是"规避三律"的依据。
 
 | 文档 | 内容 |
 |---|---|
-| `docs/WINDBG_MCP_ISSUES.md` | 病理 A–H 全史 + 上游修复记录 + R20 版本锁定纪律（历史真相） |
+| `docs/WINDBG_MCP_ISSUES.md` | 病理 A–H 全史 + 上游修复记录（R14c/#226、R24e/#242 合并）+ R20 版本锁定纪律（**已解除**，见该节注） |
 | `docs/WINDBG_MCP_FAULTS_REPRO.md`（本档） | 触发面 T1-T4 复现配方 + 判定标准 + 速查卡（行动指南） |
 
 如遇新触发面：在本档追加"Tx 复现配方"，同时把终态现象一行追加到 ISSUES 的台账，
 两档职责不重叠。
 ---
 
-## 【上游修复验证】(R24d 追加, 2026-08-27 二次实测)
+## 【上游修复验证】(R24d 追加实测 → R24e 终：上游合并 + 本机复测定稿)
 
-> 用户通告"MCP 故障已修复"后，按 §T1-T4 配方逐一复现（同一 windbg-mcp 二进制，
-> 会话 -2/-3/-4/-5 独立复现，全部 end_session 收尾）。结论：**修复核心 = 退出检测 +
-> 会话自动终结**——目标退出不再把 worker 留在半死态；所有触发面的终态统一为
-> "明确报错 + 会话终结"，可安全 end_session 重开。
+> 两阶段实测。**R24d（本地临时缓解版）**：目标退出被干净检测，会话明确终结（终态文案
+> 「target exited, session ended」为本侧缓解措辞）。**R24e（2026-08-27 终）**：上游修复
+> 已合并（dbgscope#120 `CommandRun::target_gone` + 原语内 NO_DEBUGGEE 拒绝；windbg-mcp#243
+> `refuse_when_the_target_is_gone`），本机 main 合并至上游 `93233f6`（dbgscope `199f2b6`）
+> release 实测：T1/T2chain/T2rapid/T3/T4 全 FIXED、dump 不误伤、竞态重复 3 轮无 worker 消亡。
+> 修复后终态语义统一为：**目标跑完 = ending 非 error**（携带运行输出），之后工具统一
+> `stale_session` 拒绝「This session has no target left: … `end_session` releases the session」。
 
-| 触发面 | 修复前终态 | 修复后实测 |
+| 触发面 | 修复前终态 | 修复后实测（上游语义） |
 |---|---|---|
-| T-1 bp 内嵌串 + g | g 无返回 → 全 0x80040205 半死 | 断点正常放行、目标退出 → 明确报告 `target exited, session ended`（无半死） |
-| T-2 连发 g | 0x8000FFFF → 全 0x80040205 半死链 | 仍报 `0x8000FFFF`（resume-on-exited 仍是非法操作），但**伴随会话终结报告**，不再进入半死链 |
-| T-3 快退二次放行 | worker 进程消亡（engine gone） | 目标退出被干净检测 → `target exited, session ended`（worker 不崩） |
-| T-4 不可达 bp + g | g 无命中 → 任意命令 0x80040205 | 干净退出检测 → 会话终结（无半死） |
+| T-1 bp 内嵌串 + g | g 无返回 → 全 0x80040205 半死 | 断点命中、目标跑完 → **ending（`target_gone`，携带捕获输出）**，后续 `stale_session` 拒绝（无半死） |
+| T-2 连发 g | 0x8000FFFF → 全 0x80040205 半死链 | 引擎仍以 0x8000FFFF 叙述拒绝连发 resume（非法操作），随后 **ending**；不再进入半死链 |
+| T-3 快退二次放行 | worker 进程消亡（engine gone） | 目标跑完 → **ending**，worker 不崩，后续工具干净拒绝 |
+| T-4 不可达 bp + g | g 无命中 → 任意命令 0x80040205 | 目标跑完 → **ending**（无半死），后续 `stale_session` 拒绝 |
 
-- 残余注意：T-2 的 0x8000FFFF 依旧会报错——连发 resume 仍是非法操作，规避三律
-  继续有效（execute 每条单放行）；但即使误发，代价从"报废会话"降为"一次报错"。
-- 会话终结后不必再手动 end_session（引擎已标记 ended），但照旧执行 end_session
-  无害且能释放 engine 进程（构建前清点会话纪律不变）。
+- 残余注意：T-2 的 0x8000FFFF 叙述依旧会出现——连发 resume 仍是非法操作，规避三律
+  降级为防御性习惯（execute 每条单放行）；误发代价已从"报废会话"降为"一次报错 + ending"。
+- 会话终结后照旧 end_session（无害，释放 engine 进程；构建前清点会话纪律不变。
+  上游遗留：`session_status` 对该会话仍报 open（FOLLOWUPS item 48）。
