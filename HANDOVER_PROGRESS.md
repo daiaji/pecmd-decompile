@@ -62,8 +62,7 @@
 | MCP | 用途 | 状态/注意 |
 |---|---|---|
 | **Ghidra MCP 静态** | 原版 /PECMD.exe 的 xref/反编译/字节取证 | ✅ 一直可用 |
-| **windbg MCP** | pecmd_msvc 活体断点/unwind/dump 分析 | ✅ 本轮 5 枚 dump 全靠 open_dump+backtrace+.ecxr+ub retaddr 破案；⚠️ 引擎脆弱：`s -dq` 栈搜索触发 0x80040205 半死，改用源码推理；**dump 会话不关就构建=LNK1201 PDB 锁（实战再现）** |
-| memory 知识图谱 | — | 维持不用（§7 结论不变） |
+| **windbg MCP** | pecmd_msvc 活体断点/unwind/dump 分析 | ✅ 本轮 5 枚 dump 全靠 open_dump+backtrace+.ecxr+ub retaddr 破案；⚠️ 引擎脆弱结论已过时：R24d 上游修复验证（ffa39f7）后 T1/T3/T4 转为 `target exited, session ended` 明确报告、不再 0x80040205 半死，`s -dq` 面随修复关闭；**LNK1201 = 构建纪律（任何在途会话锁 PDB，非引擎故障）** |
 
 破案工作流定型：**open_dump(WER) → backtrace(真实unwind) → 对 pecmd_msvc 返回址反汇编(`ub`) → 返回址↔map 第三列 RVA↔源码行 → dc 权威对照 → 最小修复 → 双绿门构建 → run_case 复验**。
 
@@ -286,9 +285,9 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
   0x14013caf0(从未写非零, s17 §8 找错对象)；值 2 三来源：WRITE/FILE 自带 2 / IFEX·FIND 假分支
   "ELSE <分支>" 行返 2 / 真分支=分支命令值 0；**FIND $X=Y 是等值比较非子串**(016/043 标签改写)。
 - 遗留：031/061 真判假(exit=2 vs golden 0) — EvalLoopCondition 内 01E69C 直查/等值路径语义
-  待与 dc 逐段甄别(两侧入参已铁证一致: 034788/032dc4 双入口 live 对照)；windbg MCP 每 2-3
-  次操作后 0x80040205 半死复发(命令串 bp 触发, 病理已登记—exec0 快跑进程勿用 bp-after-launch
-  查末段)；031/061 深水区下轮主工单(J 簇)。
+  待与 dc 逐段甄别(两侧入参已铁证一致: 034788/032dc4 双入口 live 对照)；windbg MCP 半死复发结论
+  已过时: R24d 上游修复验证(ffa39f7)后 T1/T3/T4 不再 0x80040205 半死, T2 残余 0x8000FFFF
+  但伴随会话终结报告; 031/061 深水区下轮主工单(J 簇)。
 
 ---
 
