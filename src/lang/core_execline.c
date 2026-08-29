@@ -828,7 +828,10 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
                 }
                 local_230 = (int64_t)(int)(char)xflag;
                 local_268 = '\0';
-                iVar10 = (int64_t)(p13 - p) >> 1;
+                /* dc:78350 (longlong)pWVar13-(longlong)pWVar8>>1 = 字节差>>1 ≡ 元素数;
+                 * 旧移植 (p13-p)>>1 把元素差再折半 → %X% 未命中段只拷 '%'(应拷 '%X'),
+                 * 039 活体定案: TEAM 行展开 '%X%'→'%', FIND $%=6 判假 exit=2 */
+                iVar10 = (int64_t)((intptr_t)p13 - (intptr_t)p) >> 1;
                 if (*p13 == L'%') {
                     nameStart = p11;
                     if (neg || (*p11 != L'&' && (xflag == 0 || *p11 == L'^'))) {

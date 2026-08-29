@@ -956,3 +956,41 @@ WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
 3. 伴生差异登记(-mode 恒死/*map: 桩/run_case 时序) + Top5 动词真体化(MESS 起)。
 4. P1 L1 语义化开线(前 10 高浓度文件 local_xx/param_N, M2/M3 倒退待扭转)。
 5. 存留: script2.c 探针(S7 依赖)/U-2 vars_val 普及/非语料二项(小数箍环/7%3)。
+
+---
+
+## R25-g (2026-08-29) — ★63/63 全量 PASS 首次完全收敛 + 039 真根因定案(移植单位错误族), 基线 62→63/63
+
+### 039 活体收口: R25-e 的 script+0xd 假说正式证伪, 真根因 = 指针差单位错误(元素差再>>1=折半)
+- 活体链(V-Gate 合规, 4 会话迭代, 硬件断点 ba w1 + 表枚举 + VarLookup 审计):
+  ①TEAM 行展开时脚本对象 +0xd = 0(展开器入口 rcx+0xd 实测), R25-e "script+0xd=1 → b961 删 %X%"
+  在当前构建不成立(该假说系探针构建时代的对象误认, C5-a 应验);
+  ②修复 :831 后展开输出 %X% 存活, 但仍 exit=2 → 下游继续;
+  ③枚举 VarLookup("X") 返回 rax=0 + 三张表(S2 9 变量/g_Script 38/S1 2)全无 X
+  → CALC 根本没写 X; ④cmd1 整行展开输入 = "CALC "(值部丢失) → TEAM 分段腰斩实锤。
+
+### 两处根因修复(均 dc 行号锚定, 字节差>>1 ≡ 元素数 的 dc 语义归正)
+1. `core_execline.c:831`(dc:78350): `iVar10 = (int64_t)(p13 - p) >> 1` 元素差再>>1 折半
+   → %X% 未命中段(bab5/H3 组合)只拷半截; 修 = `(intptr_t)p13 - (intptr_t)p) >> 1`。
+2. `core_b2d.c` ParseCommandBlock(dc FUN_140025474) 同族四处:
+   - :611 段拷贝(dc:22675): `(pWVar10 - *pp) >> 1` → TEAM 段 "CALC X=2*3" 拷成 "CALC "
+     → CALC 无参不写 X → FIND $%X% miss → 判假 exit=2(039 直接根因);
+   - :533 []块拷贝(dc:22565) / :555 }块拷贝(dc:22626) / :591 末字符指针(dc:22653 字节地址运算)。
+- 修复后组合行为: TEAM 行整行展开保真 → CALC X=2*3 真实写入 → FIND 条件期 VarLookup("X")
+  命中 → $6=6 判真 → chain_ok → exit 0(039 PASS, exit=0 = golden)。
+
+### 全量回归
+- **63/63 PASS**(修复部署 md5=fa90cb9c 后全量 EXE=msvc 重跑 + diff, 零回归)。
+- 收敛曲线: R19 9 → R24b 41 → R24e 53 → R25a 54 → R25c 59 → R25f 62 → **R25g 63/63**。
+
+### 新立工单: `>>1` 单位错误族全库审计(高优先)
+- 同一移植族错误模式(dc `(longlong)a-(longlong)b>>1`=字节差>>1=元素数; msvc 误写 `(a-b)>>1`
+  =元素差>>1=半数)已实锤 5 处(core_execline.c:831 + core_b2d.c×4); 修复只覆盖 039 路径,
+  **其余同族站点未审计**(如 core_execline.c b81b 区 :1024/:1048 附近疑似同型, 语料未覆盖=静默)。
+- 审计法: grep 全库 `(a - b) >> 1` 指针差模式 → 逐站点核 dc 对应行是否为
+  `(longlong)差 >> 1`(字节差) → 是则归正。语料盲区必须逐点核, 不可凭"已 PASS"放过。
+
+### 存留(沿 R25-f)
+- 67 动词登记并入 divergences(真体59/简化1/恒0桩7, Top5=MESS>MSTR>SOCK>ADSL>USER)。
+- 伴生差异: core_b2e.c:1386 -mode 恒死 / *map: 桩不执行 / run_case 双后端 out_dir 时序。
+- script2.c 探针(S7 依赖) / P1 L1 语义化(M2/M3 倒退待扭转) / 非语料二项。

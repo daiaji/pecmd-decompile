@@ -530,7 +530,8 @@ uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags, voi
                 }
                 continue;
             }
-            PECMD_StrBldCopyWideN(&local_40, pWVar9, (*pp - pWVar9) >> 1);
+            PECMD_StrBldCopyWideN(&local_40, pWVar9,
+                                  (int64_t)((intptr_t)*pp - (intptr_t)pWVar9) >> 1);
             pWVar11 = *pp + 2;
             *pp = pWVar11;
             PECMD_SkipLeadingControls(pp);
@@ -552,7 +553,9 @@ uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags, voi
                     }
                 } while ((8 < (uint16_t)*pWVar11 && (uint16_t)*pWVar11 < 0xe) || *pWVar11 == L' ');
                 if ((pWVar9 <= pWVar11) && (*pWVar11 == L'}')) {
-                    PECMD_StrCopyW(&local_50, local_58, (int64_t)(pWVar11 - local_58) >> 1);
+                    /* dc:22626 (longlong)pWVar11-(longlong)local_58>>1 = 字节差>>1 ≡ 元素数 */
+                    PECMD_StrCopyW(&local_50, local_58,
+                                   (int64_t)((intptr_t)pWVar11 - (intptr_t)local_58) >> 1);
                     *pp = pWVar5 + 1;
                     break;
                 }
@@ -586,10 +589,11 @@ uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags, voi
                 pWVar5 = PECMD_RemoveDuplicateChar(*pp, WVar12);
                 pWVar10 = pWVar5;
                 if ((flags & 1) != 0) {
-                    if (pWVar5 == NULL) {
-                        int iVar3 = lstrlenW(*pp);
-                        pWVar10 = *pp - 2 + iVar3 * 2;
-                    }
+                if (pWVar5 == NULL) {
+                    int iVar3 = lstrlenW(*pp);
+                    /* dc:22653 (WCHAR*)(*param_2-2+iVar3*2) 为字节地址运算 → 末字符指针 */
+                    pWVar10 = (WCHAR *)((intptr_t)*pp - 2 + (intptr_t)iVar3 * 2);
+                }
                     else {
                         pWVar10 = pWVar5 - 1;
                     }
@@ -607,8 +611,12 @@ uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags, voi
                     }
                     pWVar10 = pWVar5;
                 }
-            label_0258c3:
-                PECMD_StrCopyW((WCHAR **)&local_res10, *pp, (int64_t)(pWVar10 - *pp) >> 1);
+        label_0258c3:
+                /* dc:22675 (longlong)pWVar10-*param_2>>1 = 字节差>>1 ≡ 元素数;
+                 * 旧移植元素差再>>1 折半 → TEAM 段 "CALC X=2*3" 腰斩为 "CALC "
+                 * → CALC 无参不写 X → FIND $%X% 未命中 → 判假 exit=2 (039 活体定案) */
+                PECMD_StrCopyW((WCHAR **)&local_res10, *pp,
+                               (int64_t)((intptr_t)pWVar10 - (intptr_t)*pp) >> 1);
             }
             {
                 LARGE_INTEGER LVar6;

@@ -1,1 +1,1 @@
-CASE=053_hash_probe|H==%|=YES
+CASE=053_hash_probe|H=%H%|%H%=%H%|BODY_DONE=YES
