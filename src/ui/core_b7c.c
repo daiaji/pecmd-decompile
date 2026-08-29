@@ -6083,170 +6083,170 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
 {
     WCHAR WVar1;
     WCHAR WVar2;
-    WCHAR WVar3;
-    const WCHAR *pWVar4;
-    WCHAR *pWVar5;
-    int iVar6;
-    int64_t *plVar7;
+    WCHAR look_char;
+    const WCHAR *spec_start;
+    WCHAR *opt_zone_end;
+    int spec_len;
+    int64_t *split_ctx;
     uint64_t uVar8;
-    longlong lVar9;
+    longlong left_match;
     ulonglong uVar11;
-    ushort *puVar12;
-    short *psVar13; /* decompiled short* 累计标志位 */
-    ushort *puVar14;
-    WCHAR *pWVar16;
-    WCHAR *pWVar17;
-    LPCWSTR pWVar18;
-    WCHAR *local_res10; /* 游标 */
-    WPARAM local_res18;
-    int local_res20[2]; /* [0]=H */
-    WCHAR local_e8;     /* -sl: 字符 */
-    WCHAR local_e6;     /* -sc: 字符 */
-    uint16_t local_e4;  /* -sl:* 标志 */
-    uint16_t local_e2;  /* -sc:* 标志 */
+    ushort *def_item;
+    short *opt_flagbits; /* decompiled short* 累计标志位 */
+    ushort *ret_no_ctl;
+    WCHAR *word_cur;
+    WCHAR *val_cur;
+    LPCWSTR rest_cur;
+    WCHAR *parse_cur; /* 游标 */
+    WPARAM dlg_saved;
+    int coord_h[2]; /* [0]=H */
+    WCHAR opt_sl_char;     /* -sl: 字符 */
+    WCHAR opt_sc_char;     /* -sc: 字符 */
+    uint16_t opt_sl_star;  /* -sl:* 标志 */
+    uint16_t opt_sc_star;  /* -sc:* 标志 */
     WCHAR *local_e0;
-    int local_d8[2];    /* [0]=L */
-    WCHAR *local_d0;    /* 项文本串槽 */
-    int local_c8;       /* T */
-    int local_c4;       /* W */
-    WCHAR *local_c0;    /* 文本串槽 */
-    WCHAR *local_b8;    /* 默认项串槽 */
-    WCHAR *local_b0;    /* 规格首字段串槽 */
-    WCHAR *local_a8;    /* -cksz: 值 */
-    WCHAR *local_a0;    /* -font: 名 */
-    WCHAR *local_98;    /* -hfont: 名 */
-    WCHAR *local_90;    /* 展开上下文槽 xctx[0] */
-    longlong *local_88; /* xctx[1] = script */
-    int64_t local_80;   /* xctx[2] */
-    WCHAR *local_78;    /* -color: 名 */
-    WCHAR *local_70;    /* 未用槽 (真体分配后释放) */
-    WCHAR *local_68;    /* 未用槽 */
-    LPCWSTR local_60;   /* 首字段后的剩余行 */
-    double local_58[3];
+    int coord_l[2];    /* [0]=L */
+    WCHAR *item_text;    /* 项文本串槽 */
+    int coord_t;       /* T */
+    int coord_w;       /* W */
+    WCHAR *ctl_text;    /* 文本串槽 */
+    WCHAR *def_text;    /* 默认项串槽 */
+    WCHAR *spec_text;    /* 规格首字段串槽 */
+    WCHAR *opt_cksz;    /* -cksz: 值 */
+    WCHAR *opt_font;    /* -font: 名 */
+    WCHAR *opt_hfont;    /* -hfont: 名 */
+    WCHAR *expand_slot;    /* 展开上下文槽 xctx[0] */
+    longlong *xctx_script; /* xctx[1] = script */
+    int64_t xctx_aux;   /* xctx[2] */
+    WCHAR *opt_color;    /* -color: 名 */
+    WCHAR *spare_slot;    /* 未用槽 (真体分配后释放) */
+    WCHAR *spare_slot2;    /* 未用槽 */
+    LPCWSTR rest_saved;   /* 首字段后的剩余行 */
+    double paren_num[3];
 
-    psVar13 = (short *)0;
+    opt_flagbits = (short *)0;
     for (;
          (WVar1 = *a2,
          WVar1 != L'\0' && ((((uint16_t)WVar1 < 9 || (0xd < (uint16_t)WVar1)) && (WVar1 != L' '))));
          a2 = a2 + 1) {
     }
-    local_res10 = (WCHAR *)a2;
-    local_res18 = a3;
-    FUN_14005B154((WCHAR **)&local_res10);
-    PECMD_AllocStrSlot(&local_90);
-    local_80 = 0;
-    local_a0 = (WCHAR *)(uintptr_t)g_szEmpty;
-    local_88 = a1;
-    (void)local_80;
-    (void)local_88; /* xctx 槽位镜像 */
-    PECMD_StrAssign(&local_d0, g_szEmpty);
-    PECMD_AllocStrSlot(&local_c0);
-    PECMD_AllocStrSlot(&local_b8);
-    PECMD_AllocStrSlot(&local_68);
-    PECMD_AllocStrSlot(&local_b0);
-    puVar14 = (ushort *)1;
-    local_a8 = NULL;
-    local_70 = NULL;
-    plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90, &local_res10, 0x2c, 1);
-    PECMD_SplitTokenTrimWs((WCHAR **)plVar7, &local_b0, 0);
-    pWVar18 = local_res10;
-    local_78 = (WCHAR *)(uintptr_t)g_szEmpty;
-    local_98 = (WCHAR *)(uintptr_t)g_szEmpty;
-    local_res10 = local_b0;
-    local_60 = pWVar18;
-    local_d8[0] = 0;
-    local_c8 = 0;
-    local_c4 = 0;
-    local_res20[0] = 0;
-    local_e8 = L'\0';
-    local_e6 = L'\t';
-    local_e4 = 0;
-    local_e2 = 0;
-    (void)local_e6;
-    (void)local_e4;
-    (void)local_e2; /* -sl/-sc 解析旗标 */
-    WVar1 = *local_b0;
+    parse_cur = (WCHAR *)a2;
+    dlg_saved = a3;
+    FUN_14005B154((WCHAR **)&parse_cur);
+    PECMD_AllocStrSlot(&expand_slot);
+    xctx_aux = 0;
+    opt_font = (WCHAR *)(uintptr_t)g_szEmpty;
+    xctx_script = a1;
+    (void)xctx_aux;
+    (void)xctx_script; /* xctx 槽位镜像 */
+    PECMD_StrAssign(&item_text, g_szEmpty);
+    PECMD_AllocStrSlot(&ctl_text);
+    PECMD_AllocStrSlot(&def_text);
+    PECMD_AllocStrSlot(&spare_slot2);
+    PECMD_AllocStrSlot(&spec_text);
+    ret_no_ctl = (ushort *)1;
+    opt_cksz = NULL;
+    spare_slot = NULL;
+    split_ctx = PECMD_SplitTokenAssignVar((int64_t *)&expand_slot, &parse_cur, 0x2c, 1);
+    PECMD_SplitTokenTrimWs((WCHAR **)split_ctx, &spec_text, 0);
+    rest_cur = parse_cur;
+    opt_color = (WCHAR *)(uintptr_t)g_szEmpty;
+    opt_hfont = (WCHAR *)(uintptr_t)g_szEmpty;
+    parse_cur = spec_text;
+    rest_saved = rest_cur;
+    coord_l[0] = 0;
+    coord_t = 0;
+    coord_w = 0;
+    coord_h[0] = 0;
+    opt_sl_char = L'\0';
+    opt_sc_char = L'\t';
+    opt_sl_star = 0;
+    opt_sc_star = 0;
+    (void)opt_sc_char;
+    (void)opt_sl_star;
+    (void)opt_sc_star; /* -sl/-sc 解析旗标 */
+    WVar1 = *spec_text;
     if (WVar1 == L'*') {
-        local_res10 = local_b0 + 1;
-        FUN_14005B154((WCHAR **)&local_res10);
+        parse_cur = spec_text + 1;
+        FUN_14005B154((WCHAR **)&parse_cur);
     }
-    pWVar4 = local_res10;
-    iVar6 = lstrlenW(local_res10);
+    spec_start = parse_cur;
+    spec_len = lstrlenW(parse_cur);
     /* 尾随空白裁剪: 自串尾反向找最后一个空白串首, 再前跳到其后首字符。
      * 无空白时停在规格串首 (此时选项区为空, 直接走字段分支)。 */
     {
         int hit_ws = 0;
-        local_e0 = (WCHAR *)pWVar4 + iVar6;
-        for (; local_res10 < local_e0; local_e0 = local_e0 - 1) {
-            pWVar16 = local_e0;
+        local_e0 = (WCHAR *)spec_start + spec_len;
+        for (; parse_cur < local_e0; local_e0 = local_e0 - 1) {
+            word_cur = local_e0;
             if (((8 < (uint16_t)*local_e0) && ((uint16_t)*local_e0 < 0xe)) || (*local_e0 == L' ')) {
                 hit_ws = 1;
                 break;
             }
         }
         if (hit_ws) {
-            local_e0 = pWVar16;
-            while (local_e0 > local_res10) {
-                pWVar16 = local_e0 - 1;
-                if (!((8 < (uint16_t)*pWVar16 && (uint16_t)*pWVar16 < 0xe) || (*pWVar16 == L' '))) {
+            local_e0 = word_cur;
+            while (local_e0 > parse_cur) {
+                word_cur = local_e0 - 1;
+                if (!((8 < (uint16_t)*word_cur && (uint16_t)*word_cur < 0xe) || (*word_cur == L' '))) {
                     break;
                 }
-                local_e0 = pWVar16;
+                local_e0 = word_cur;
             }
         }
         /* LAB_1400cb1a8 */
         FUN_14005B154(&local_e0);
     }
-    pWVar5 = local_e0;
+    opt_zone_end = local_e0;
     WVar2 = *local_e0;
     *local_e0 = L'\0';
-    WVar3 = *local_res10;
-    pWVar16 = local_res10;
+    look_char = *parse_cur;
+    word_cur = parse_cur;
     do {
-        if ((WVar3 != L'-') ||
-            (a3 = local_res18, pWVar18 = local_60, (uintptr_t)pWVar5 <= (uintptr_t)pWVar16)) {
+        if ((look_char != L'-') ||
+            (a3 = dlg_saved, rest_cur = rest_saved, (uintptr_t)opt_zone_end <= (uintptr_t)word_cur)) {
             /* ---- LAB 字段分支: 项文本 + 坐标/文本/默认项/标志 ---- */
-            *pWVar5 = WVar2;
-            WVar2 = *pWVar16;
-            local_res10 = pWVar16;
+            *opt_zone_end = WVar2;
+            WVar2 = *word_cur;
+            parse_cur = word_cur;
             if (WVar2 == L'*') {
-                local_res10 = pWVar16 + 1;
-                FUN_14005B154(&local_res10);
+                parse_cur = word_cur + 1;
+                FUN_14005B154(&parse_cur);
             }
-            PECMD_SplitTokenTrimWs((WCHAR **)&local_res10, &local_d0, 0x2c);
-            b7c_003a20((longlong *)a1, &local_d0, 1);
-            local_res10 = (WCHAR *)pWVar18;
-            if (*pWVar18 == L',') {
-                local_res10 = (WCHAR *)pWVar18 + 1;
-                plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90, &local_res10, 0x2c, 1);
-                PECMD_ParseLtwhParams(plVar7, (uint32_t *)local_d8, (uint32_t *)&local_c8,
-                                      (uint32_t *)&local_c4, (uint32_t *)local_res20);
-                if (*local_res10 == L',') {
-                    local_res10 = local_res10 + 1;
-                    plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90, &local_res10, 0x2c, 1);
-                    PECMD_SplitTokenTrimWs((WCHAR **)plVar7, &local_c0, 0);
-                    puVar14 = (ushort *)0;
-                    puVar12 = puVar14;
-                    if (*local_res10 == L',') {
-                        pWVar18 = local_res10 + 1;
-                        if ((local_res10[1] == L' ') &&
-                            (pWVar18 = local_res10 + 2, *pWVar18 == L',')) {
-                            puVar12 = (ushort *)1;
+            PECMD_SplitTokenTrimWs((WCHAR **)&parse_cur, &item_text, 0x2c);
+            b7c_003a20((longlong *)a1, &item_text, 1);
+            parse_cur = (WCHAR *)rest_cur;
+            if (*rest_cur == L',') {
+                parse_cur = (WCHAR *)rest_cur + 1;
+                split_ctx = PECMD_SplitTokenAssignVar((int64_t *)&expand_slot, &parse_cur, 0x2c, 1);
+                PECMD_ParseLtwhParams(split_ctx, (uint32_t *)coord_l, (uint32_t *)&coord_t,
+                                      (uint32_t *)&coord_w, (uint32_t *)coord_h);
+                if (*parse_cur == L',') {
+                    parse_cur = parse_cur + 1;
+                    split_ctx = PECMD_SplitTokenAssignVar((int64_t *)&expand_slot, &parse_cur, 0x2c, 1);
+                    PECMD_SplitTokenTrimWs((WCHAR **)split_ctx, &ctl_text, 0);
+                    ret_no_ctl = (ushort *)0;
+                    def_item = ret_no_ctl;
+                    if (*parse_cur == L',') {
+                        rest_cur = parse_cur + 1;
+                        if ((parse_cur[1] == L' ') &&
+                            (rest_cur = parse_cur + 2, *rest_cur == L',')) {
+                            def_item = (ushort *)1;
                         }
-                        local_res10 = (WCHAR *)pWVar18;
-                        plVar7 =
-                            PECMD_SplitTokenAssignVar((int64_t *)&local_90, &local_res10, 0x2c, 1);
-                        PECMD_ExtractTokenByDelim((WCHAR **)plVar7, &local_b8, 0);
-                        if (puVar12 == (ushort *)0) {
-                            puVar12 = local_b8;
+                        parse_cur = (WCHAR *)rest_cur;
+                        split_ctx =
+                            PECMD_SplitTokenAssignVar((int64_t *)&expand_slot, &parse_cur, 0x2c, 1);
+                        PECMD_ExtractTokenByDelim((WCHAR **)split_ctx, &def_text, 0);
+                        if (def_item == (ushort *)0) {
+                            def_item = def_text;
                         }
-                        if (*local_res10 == L',') {
-                            local_res10 = local_res10 + 1;
-                            plVar7 = PECMD_SplitTokenAssignVar((int64_t *)&local_90, &local_res10,
+                        if (*parse_cur == L',') {
+                            parse_cur = parse_cur + 1;
+                            split_ctx = PECMD_SplitTokenAssignVar((int64_t *)&expand_slot, &parse_cur,
                                                                0x2c, 1);
                             uVar11 = PECMD_ParseSignedNumber(
-                                (int16_t *)(uintptr_t)*(int64_t *)(plVar7 + 2));
-                            psVar13 = (short *)((ulonglong)(uintptr_t)psVar13 |
+                                (int16_t *)(uintptr_t)*(int64_t *)(split_ctx + 2));
+                            opt_flagbits = (short *)((ulonglong)(uintptr_t)opt_flagbits |
                                                 (ulonglong)((uint32_t)uVar11 & 0xfffffffU));
                         }
                     }
@@ -6254,140 +6254,140 @@ uint16_t *PECMD_TablCreateControl(int64_t *a1, LPCWSTR a2, WPARAM a3)
                         a1 = *(int64_t **)((uintptr_t)a3 + 0x290);
                     }
                     PECMD_AddDialogControl(
-                        a3, (uint64_t)(intptr_t)a1, (uint64_t)(intptr_t)a3, (uint64_t *)&local_d0,
-                        (int)local_d8[0], local_c8, local_c4, (int)local_res20[0],
-                        (uint64_t *)&local_c0, puVar12, local_a0, (int64_t)(intptr_t)local_78,
-                        (int16_t *)(uintptr_t)psVar13, local_98, (uint64_t)(uintptr_t)&local_e8,
-                        (uint64_t)(intptr_t)local_a8);
+                        a3, (uint64_t)(intptr_t)a1, (uint64_t)(intptr_t)a3, (uint64_t *)&item_text,
+                        (int)coord_l[0], coord_t, coord_w, (int)coord_h[0],
+                        (uint64_t *)&ctl_text, def_item, opt_font, (int64_t)(intptr_t)opt_color,
+                        (int16_t *)(uintptr_t)opt_flagbits, opt_hfont, (uint64_t)(uintptr_t)&opt_sl_char,
+                        (uint64_t)(intptr_t)opt_cksz);
                 }
             }
-            PECMD_FreeStrBuf(&local_70);
-            PECMD_FreeStrBuf(&local_b0);
-            PECMD_FreeStrBuf(&local_68);
-            PECMD_FreeStrBuf(&local_b8);
-            PECMD_FreeStrBuf(&local_c0);
-            PECMD_FreeStrBuf(&local_d0);
-            PECMD_FreeStrBuf(&local_90);
-            return puVar14;
+            PECMD_FreeStrBuf(&spare_slot);
+            PECMD_FreeStrBuf(&spec_text);
+            PECMD_FreeStrBuf(&spare_slot2);
+            PECMD_FreeStrBuf(&def_text);
+            PECMD_FreeStrBuf(&ctl_text);
+            PECMD_FreeStrBuf(&item_text);
+            PECMD_FreeStrBuf(&expand_slot);
+            return ret_no_ctl;
         }
         /* ---- 选项分支 ---- */
-        local_res10 = pWVar16;
-        uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sps", (const uint16_t *)pWVar16, 4);
+        parse_cur = word_cur;
+        uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sps", (const uint16_t *)word_cur, 4);
         if ((char)uVar8 != '\0') {
-            psVar13 = (short *)((ulonglong)(uintptr_t)psVar13 | 0x100000000ULL);
+            opt_flagbits = (short *)((ulonglong)(uintptr_t)opt_flagbits | 0x100000000ULL);
             goto LAB_1400cb43c;
         }
-        uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-font:", (const uint16_t *)pWVar16, 6);
+        uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-font:", (const uint16_t *)word_cur, 6);
         if ((char)uVar8 == '\0') {
             uVar8 =
-                (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-hfont:", (const uint16_t *)pWVar16, 7);
+                (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-hfont:", (const uint16_t *)word_cur, 7);
             if ((char)uVar8 == '\0') {
                 uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp(
-                    "-color:", (const uint16_t *)pWVar16, 7);
+                    "-color:", (const uint16_t *)word_cur, 7);
                 if ((char)uVar8 != '\0') {
-                    pWVar16 = pWVar16 + 7;
-                    local_78 = pWVar16;
+                    word_cur = word_cur + 7;
+                    opt_color = word_cur;
                     goto LAB_1400cb43c;
                 }
                 uVar8 =
-                    (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sl:", (const uint16_t *)pWVar16, 4);
+                    (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sl:", (const uint16_t *)word_cur, 4);
                 if ((char)uVar8 != '\0') {
-                    local_e8 = pWVar16[4];
-                    if (pWVar16[5] == L'*') {
-                        local_e4 = 1;
+                    opt_sl_char = word_cur[4];
+                    if (word_cur[5] == L'*') {
+                        opt_sl_star = 1;
                     }
                     goto LAB_1400cb43c;
                 }
                 uVar8 =
-                    (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sc:", (const uint16_t *)pWVar16, 4);
+                    (uint64_t)(longlong)PECMD_AsciiPrefixICmp("-sc:", (const uint16_t *)word_cur, 4);
                 if ((char)uVar8 != '\0') {
-                    local_e6 = pWVar16[4];
-                    if (pWVar16[5] == L'*') {
-                        local_e2 = 1;
+                    opt_sc_char = word_cur[4];
+                    if (word_cur[5] == L'*') {
+                        opt_sc_star = 1;
                     }
                     goto LAB_1400cb43c;
                 }
                 uVar8 = (uint64_t)(longlong)PECMD_AsciiPrefixICmp(
-                    "-cksz:", (const uint16_t *)pWVar16, 6);
+                    "-cksz:", (const uint16_t *)word_cur, 6);
                 if ((char)uVar8 == '\0') {
-                    lVar9 = PECMD_TokPrefixICmp("-left", pWVar16, 5);
-                    if ((char)lVar9 != '\0') {
-                        psVar13 = (short *)(uintptr_t)0x80000000UL;
+                    left_match = PECMD_TokPrefixICmp("-left", word_cur, 5);
+                    if ((char)left_match != '\0') {
+                        opt_flagbits = (short *)(uintptr_t)0x80000000UL;
                     }
                     goto LAB_1400cb43c;
                 }
                 /* -cksz: 已匹配 */
-                local_a8 = pWVar16 + 6;
-                if ((*local_a8 == L'\"') || (*local_a8 == L'\'')) {
-                    local_res10 = pWVar16 + 7;
-                    local_a8 = local_res10;
+                opt_cksz = word_cur + 6;
+                if ((*opt_cksz == L'\"') || (*opt_cksz == L'\'')) {
+                    parse_cur = word_cur + 7;
+                    opt_cksz = parse_cur;
                     goto LAB_1400cb446;
                 }
-                WVar3 = pWVar16[5];
-                pWVar16 = pWVar16 + 5;
-                while (local_res10 = pWVar16, WVar3 == L':') {
-                    local_res10 = pWVar16 + 1;
-                    PECMD_CalcEvalParenAtom((int64_t *)&local_res10, local_58);
-                    pWVar16 = local_res10;
-                    WVar3 = *local_res10;
+                look_char = word_cur[5];
+                word_cur = word_cur + 5;
+                while (parse_cur = word_cur, look_char == L':') {
+                    parse_cur = word_cur + 1;
+                    PECMD_CalcEvalParenAtom((int64_t *)&parse_cur, paren_num);
+                    word_cur = parse_cur;
+                    look_char = *parse_cur;
                 }
             }
             else {
-                pWVar17 = pWVar16 + 7;
-                local_98 = pWVar17;
-                if (*pWVar17 != L'\"') {
+                val_cur = word_cur + 7;
+                opt_hfont = val_cur;
+                if (*val_cur != L'\"') {
                     goto LAB_1400cb46a;
                 }
-                local_98 = pWVar16 + 8;
-                pWVar16 = pWVar17;
+                opt_hfont = word_cur + 8;
+                word_cur = val_cur;
             LAB_1400cb43c:
-                pWVar17 = pWVar16;
-                if (*pWVar16 != L'\"') {
+                val_cur = word_cur;
+                if (*word_cur != L'\"') {
                     goto LAB_1400cb46a;
                 }
-                local_res10 = pWVar16 + 1;
+                parse_cur = word_cur + 1;
             LAB_1400cb446:
-                b7c_skip_to((WCHAR **)&local_res10, local_res10[-1]);
-                pWVar16 = local_res10;
+                b7c_skip_to((WCHAR **)&parse_cur, parse_cur[-1]);
+                word_cur = parse_cur;
             }
         }
         else {
-            pWVar17 = pWVar16 + 6;
-            local_a0 = pWVar17;
-            if (*pWVar17 == L'\"') {
-                local_a0 = pWVar16 + 7;
-                pWVar16 = pWVar17;
+            val_cur = word_cur + 6;
+            opt_font = val_cur;
+            if (*val_cur == L'\"') {
+                opt_font = word_cur + 7;
+                word_cur = val_cur;
                 goto LAB_1400cb43c;
             }
         LAB_1400cb46a:
-            local_e0 = pWVar17;
+            local_e0 = val_cur;
             uVar8 = 0;
             uVar11 = 0x2d;
             do {
-                WVar3 = *local_e0;
-                pWVar16 = local_e0;
-                while ((WVar3 != (WCHAR)uVar8 &&
-                        ((((uint16_t)WVar3 < 9 || (0xd < (uint16_t)WVar3)) && (WVar3 != L' '))))) {
-                    pWVar16 = pWVar16 + 1;
-                    WVar3 = *pWVar16;
+                look_char = *local_e0;
+                word_cur = local_e0;
+                while ((look_char != (WCHAR)uVar8 &&
+                        ((((uint16_t)look_char < 9 || (0xd < (uint16_t)look_char)) && (look_char != L' '))))) {
+                    word_cur = word_cur + 1;
+                    look_char = *word_cur;
                 }
-                local_res10 = pWVar16;
-                local_e0 = pWVar16;
+                parse_cur = word_cur;
+                local_e0 = word_cur;
                 FUN_14005B154(&local_e0);
             } while ((*local_e0 != (WCHAR)uVar8) && ((WCHAR)uVar11 != *local_e0));
         }
         /* 选项词尾部: NUL 截断并推进游标至下一词 */
-        if (*pWVar16 != L'\0') {
-            *pWVar16 = L'\0';
-            local_res10 = local_res10 + 1;
+        if (*word_cur != L'\0') {
+            *word_cur = L'\0';
+            parse_cur = parse_cur + 1;
         }
-        FUN_14005B154(&local_res10);
-        WVar3 = *local_res10;
-        a3 = local_res18;
-        pWVar18 = local_60;
-        pWVar16 = local_res10;
+        FUN_14005B154(&parse_cur);
+        look_char = *parse_cur;
+        a3 = dlg_saved;
+        rest_cur = rest_saved;
+        word_cur = parse_cur;
     } while (true);
-    return puVar14;
+    return ret_no_ctl;
 }
 
 /* ========== PECMD_EvalQueryValue @0x1400cb820 ==========
@@ -9180,44 +9180,44 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     int stack_size = 0;      /* in_stack_00000030 */
     LPCWSTR name_arg = NULL; /* in_stack_00000038 */
     char unaff_BL = 0;
-    WCHAR *local_190;
-    bool bVar4;
-    bool bVar5;
-    unsigned char local_198;
+    WCHAR *name_cur;
+    bool tried_once;
+    bool star_mode;
+    unsigned char mode_flags;
     RECT rc;
-    ulonglong local_100;
-    ulonglong local_f8;
-    uint64_t *local_120;
-    uint64_t local_a0;
-    HBITMAP local_180;
-    HICON local_138;
+    ulonglong ctl_w;
+    ulonglong ctl_h;
+    uint64_t *outbmp_ptr;
+    uint64_t tmpbmp_slot;
+    HBITMAP load_bmp;
+    HICON load_icon;
     HICON local_108;
-    longlong *local_d0;
-    ulonglong local_118;
-    int local_168;
-    uint32_t local_160v;
-    uint64_t local_158;
-    uint64_t local_148;
-    uint64_t local_128v;
-    uint64_t local_140;
+    longlong *wic_obj;
+    ulonglong key_idx;
+    int geo_w;
+    uint32_t geo_x;
+    uint64_t geo_sx;
+    uint64_t src_h;
+    uint64_t src_w;
+    uint64_t geo_y;
     longlong lVar25;
     longlong lVar16;
     longlong lVar24;
     uint32_t iVar27;
-    uint32_t iVar6;
+    uint32_t geo_h;
     uint32_t iVar7;
-    uint32_t iVar8;
+    uint32_t tgt_size;
     int flag170;
-    WCHAR WVar22;
-    WCHAR WVar2;
-    char cVar26;
+    WCHAR scan_ch;
+    WCHAR pct_char;
+    char hex_count;
     LPCWSTR pWVar18;
     LPCWSTR local_150;
     uint16_t *res_type;
-    HRGN local_f0;
-    int local_e8;
-    uint64_t uVar19;
-    uint64_t uVar20;
+    HRGN pic_rgn;
+    int size_saved;
+    uint64_t gdip_w;
+    uint64_t gdip_h;
     uint32_t y1;
     uint32_t y2;
     longlong key_color;
@@ -9232,15 +9232,15 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
         uint64_t count;
     } resinfo;
 
-    bVar4 = false;
-    bVar5 = false;
-    local_198 = 2;
-    local_e8 = stack_size;
-    local_f0 = (HRGN)0;
+    tried_once = false;
+    star_mode = false;
+    mode_flags = 2;
+    size_saved = stack_size;
+    pic_rgn = (HRGN)0;
     iVar27 = 1;
-    local_190 = (WCHAR *)name_arg;
+    name_cur = (WCHAR *)name_arg;
     if (name_arg == NULL) {
-        local_190 = (WCHAR *)*(LPCWSTR *)((char *)obj + 0x260);
+        name_cur = (WCHAR *)*(LPCWSTR *)((char *)obj + 0x260);
     }
     else if (*name_arg == L'\0') {
         if ((flagbyte & 0x40) == 0) {
@@ -9269,166 +9269,166 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     }
     rc.left = rc.top = rc.right = rc.bottom = 0;
     GetWindowRect(*(HWND *)((char *)obj + 0x20), &rc);
-    local_100 = (ulonglong)(uint32_t)(rc.right - rc.left);
-    local_a0 = 0;
-    local_f8 = (ulonglong)(uint32_t)(rc.bottom - rc.top);
-    local_120 = &local_a0;
-    local_180 = (HBITMAP)0;
-    local_138 = (HICON)0;
+    ctl_w = (ulonglong)(uint32_t)(rc.right - rc.left);
+    tmpbmp_slot = 0;
+    ctl_h = (ulonglong)(uint32_t)(rc.bottom - rc.top);
+    outbmp_ptr = &tmpbmp_slot;
+    load_bmp = (HBITMAP)0;
+    load_icon = (HICON)0;
     local_108 = (HICON)0;
-    local_d0 = NULL;
-    local_118 = 0;
-    pWVar18 = local_190;
+    wic_obj = NULL;
+    key_idx = 0;
+    pWVar18 = name_cur;
 
     /* ---- "frm<" 框架样式前缀 ---- */
-    if (FUN_14005c788((char *)"frm<", (uint16_t *)local_190, 4) != 0) {
+    if (FUN_14005c788((char *)"frm<", (uint16_t *)name_cur, 4) != 0) {
         pWVar18 += 4;
-        local_190 = (WCHAR *)pWVar18;
-        b7c_skip_to((WCHAR **)&local_190, L'>');
-        WVar22 = *local_190;
-        if (WVar22 != L'\0') {
-            *local_190 = L'\0';
+        name_cur = (WCHAR *)pWVar18;
+        b7c_skip_to((WCHAR **)&name_cur, L'>');
+        scan_ch = *name_cur;
+        if (scan_ch != L'\0') {
+            *name_cur = L'\0';
         }
         FUN_14007f764_stub((longlong *)(obj + 0xc0 * 8), (short *)pWVar18,
                            *(HWND *)((char *)obj + 0x20), 1);
-        pWVar18 = local_190;
-        if (WVar22 != L'\0') {
-            *local_190 = WVar22;
+        pWVar18 = name_cur;
+        if (scan_ch != L'\0') {
+            *name_cur = scan_ch;
         }
     }
 
     /* ---- "%索引%" / "%hex%" 参数 ---- */
-    WVar22 = L'(';
+    scan_ch = L'(';
     if (*pWVar18 == L'%') {
-        local_190 = (WCHAR *)(pWVar18 + 1);
-        FUN_14005B154((WCHAR **)&local_190);
-        WVar2 = *local_190;
-        local_118 = 0;
-        if (WVar22 == WVar2) {
+        name_cur = (WCHAR *)(pWVar18 + 1);
+        FUN_14005B154((WCHAR **)&name_cur);
+        pct_char = *name_cur;
+        key_idx = 0;
+        if (scan_ch == pct_char) {
             int iv = 0;
-            PECMD_ParseUIntValue((WCHAR **)&local_190, &iv);
-            local_118 = (uint32_t)iv;
+            PECMD_ParseUIntValue((WCHAR **)&name_cur, &iv);
+            key_idx = (uint32_t)iv;
         }
         else {
-            if ((((uint16_t)WVar2 > 0x2f) && ((uint16_t)WVar2 < 0x3a)) ||
-                (((uint16_t)(WVar2 | 0x20) > 0x60) && ((uint16_t)(WVar2 | 0x20) < 0x67))) {
+            if ((((uint16_t)pct_char > 0x2f) && ((uint16_t)pct_char < 0x3a)) ||
+                (((uint16_t)(pct_char | 0x20) > 0x60) && ((uint16_t)(pct_char | 0x20) < 0x67))) {
                 {
                     int64_t ansi = 0;
-                    FUN_14006355c(&ansi, local_190, -1, ~(uint64_t)0);
-                    local_118 = (uint64_t)FUN_1400649f4((unsigned char *)(uintptr_t)ansi);
+                    FUN_14006355c(&ansi, name_cur, -1, ~(uint64_t)0);
+                    key_idx = (uint64_t)FUN_1400649f4((unsigned char *)(uintptr_t)ansi);
                     PECMD_FreeStrBuf((WCHAR **)&ansi);
                 }
-                cVar26 = '\0';
+                hex_count = '\0';
                 do {
-                    WVar22 = *local_190;
-                    if ((((uint16_t)WVar22 < 0x30) || (0x39 < (uint16_t)WVar22)) &&
-                        (((uint16_t)(WVar22 | 0x20) < 0x61) ||
-                         (0x66 < (uint16_t)(WVar22 | 0x20)))) {
+                    scan_ch = *name_cur;
+                    if ((((uint16_t)scan_ch < 0x30) || (0x39 < (uint16_t)scan_ch)) &&
+                        (((uint16_t)(scan_ch | 0x20) < 0x61) ||
+                         (0x66 < (uint16_t)(scan_ch | 0x20)))) {
                         break;
                     }
-                    local_190++;
-                    cVar26++;
-                } while (cVar26 < '\b');
+                    name_cur++;
+                    hex_count++;
+                } while (hex_count < '\b');
             }
-            FUN_14005B154((WCHAR **)&local_190);
+            FUN_14005B154((WCHAR **)&name_cur);
         }
-        if (*local_190 == L'%') {
-            local_190++;
+        if (*name_cur == L'%') {
+            name_cur++;
         }
-        FUN_14005B154((WCHAR **)&local_190);
-        pWVar18 = local_190;
+        FUN_14005B154((WCHAR **)&name_cur);
+        pWVar18 = name_cur;
     }
 
     /* ---- '*' 星标模式 ---- */
     if (*pWVar18 == L'*') {
-        local_190 = (WCHAR *)(pWVar18 + 1);
-        WVar22 = *local_190;
-        if (WVar22 != L'*') {
-            local_198 = 2;
+        name_cur = (WCHAR *)(pWVar18 + 1);
+        scan_ch = *name_cur;
+        if (scan_ch != L'*') {
+            mode_flags = 2;
         }
         else {
-            local_190 = (WCHAR *)(pWVar18 + 2);
-            local_198 = 0x42;
+            name_cur = (WCHAR *)(pWVar18 + 2);
+            mode_flags = 0x42;
         }
-        bVar5 = (WVar22 == L'*');
-        if (*local_190 == L'~') {
-            local_190++;
-            local_198 |= 0x10;
+        star_mode = (scan_ch == L'*');
+        if (*name_cur == L'~') {
+            name_cur++;
+            mode_flags |= 0x10;
         }
-        local_198 |= 4;
-        local_120 = bmpslot;
+        mode_flags |= 4;
+        outbmp_ptr = bmpslot;
     }
-    FUN_14005B154((WCHAR **)&local_190);
+    FUN_14005B154((WCHAR **)&name_cur);
 
     /* ---- "<w,h,x,y,sx,sy>" 几何覆盖 ---- */
-    local_128v = 0;
-    local_148 = 0;
-    local_168 = 0;
-    local_140 = 0;
-    local_160v = 0;
-    local_158 = 0;
+    src_w = 0;
+    src_h = 0;
+    geo_w = 0;
+    geo_y = 0;
+    geo_x = 0;
+    geo_sx = 0;
     key_color = 0;
-    if (*local_190 == L'<') {
-        int v1 = (int32_t)local_100;
-        int v2 = (int32_t)local_f8;
+    if (*name_cur == L'<') {
+        int v1 = (int32_t)ctl_w;
+        int v2 = (int32_t)ctl_h;
         int v3 = 0;
         int v4 = 0;
         int v5 = 0;
         int v6 = 0;
         LPCWSTR closep;
         WCHAR savech;
-        local_190++;
-        closep = local_190;
-        b7c_skip_to((WCHAR **)&local_190, L'>');
-        pWVar18 = local_190;
-        WVar22 = *local_190;
-        if (*local_190 != L'\0') {
-            *local_190 = L'\0';
-            local_190++;
+        name_cur++;
+        closep = name_cur;
+        b7c_skip_to((WCHAR **)&name_cur, L'>');
+        pWVar18 = name_cur;
+        scan_ch = *name_cur;
+        if (*name_cur != L'\0') {
+            *name_cur = L'\0';
+            name_cur++;
         }
-        savech = WVar22;
+        savech = scan_ch;
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v1);
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v2);
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v3);
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v4);
-        local_168 = v1;
+        geo_w = v1;
         v5 = v1;
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v5);
         PECMD_ParseNumSkipChar_0224((int64_t *)&closep, &v6);
         if (savech != L'\0') {
             *(WCHAR *)pWVar18 = L'>';
         }
-        local_160v = (uint32_t)v3;
-        local_140 = (uint32_t)v4;
-        local_158 = (uint32_t)v5;
+        geo_x = (uint32_t)v3;
+        geo_y = (uint32_t)v4;
+        geo_sx = (uint32_t)v5;
         key_color = v6;
     }
 
     /* ---- 载入分派 ---- */
-    if ((local_120 != &local_a0) || ((HBITMAP)(uintptr_t)old_bmp == 0) || (stack_size >= 1)) {
-        WCHAR *cur = (WCHAR *)local_190;
+    if ((outbmp_ptr != &tmpbmp_slot) || ((HBITMAP)(uintptr_t)old_bmp == 0) || (stack_size >= 1)) {
+        WCHAR *cur = (WCHAR *)name_cur;
         LPCWSTR resref = FUN_140079f50(&cur, 1);
-        local_190 = cur;
-        if (*local_190 == L'#') {
+        name_cur = cur;
+        if (*name_cur == L'#') {
             int resid = 0;
-            LPCWSTR pk = local_190;
+            LPCWSTR pk = name_cur;
             PECMD_ParseUIntValue((WCHAR **)&pk, &resid);
             if (0 < resid) {
-                local_180 = LoadBitmapW(g_hInst, (LPCWSTR)(uintptr_t)(int64_t)resid);
+                load_bmp = LoadBitmapW(g_hInst, (LPCWSTR)(uintptr_t)(int64_t)resid);
             }
             goto LAB_1400d6484;
         }
         else if (resref == NULL) {
             unsigned char fflag = 0;
-            local_180 = (HBITMAP)(uintptr_t)FUN_14007c730_stub(local_190, &fflag);
-            if (((HBITMAP)(uintptr_t)local_180 == 0) && (fflag != 0)) {
+            load_bmp = (HBITMAP)(uintptr_t)FUN_14007c730_stub(name_cur, &fflag);
+            if (((HBITMAP)(uintptr_t)load_bmp == 0) && (fflag != 0)) {
                 return unaff_BL;
             }
-            if (!bVar5) {
+            if (!star_mode) {
                 goto LAB_1400d6395;
             }
-            while ((HBITMAP)(uintptr_t)local_180 == 0) {
-                if (bVar4) {
+            while ((HBITMAP)(uintptr_t)load_bmp == 0) {
+                if (tried_once) {
                 LAB_1400d63dd:
                     EnterCriticalSection(&g_csCom);
                     FUN_140061c44();
@@ -9441,12 +9441,12 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
                             }
                         }
                     }
-                    local_d0 = (longlong *)(uintptr_t)FUN_14006e3a4(local_190);
-                    if (local_d0 != NULL) {
-                        (*(void (**)(void *))((uintptr_t)*local_d0 + 0x18))(local_d0);
-                        if (local_180 == 0) {
-                            (*(void (**)(void *))((uintptr_t)*local_d0 + 0x10))(local_d0);
-                            local_d0 = NULL;
+                    wic_obj = (longlong *)(uintptr_t)FUN_14006e3a4(name_cur);
+                    if (wic_obj != NULL) {
+                        (*(void (**)(void *))((uintptr_t)*wic_obj + 0x18))(wic_obj);
+                        if (load_bmp == 0) {
+                            (*(void (**)(void *))((uintptr_t)*wic_obj + 0x10))(wic_obj);
+                            wic_obj = NULL;
                         }
                     }
                     if ((g_pOleUninit != NULL) && (iVar27 == 0)) {
@@ -9456,31 +9456,31 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
                     goto LAB_1400d6484;
                 }
                 {
-                    HICON ic = FUN_14001f1d4_stub(local_190, NULL);
-                    local_138 = ic;
+                    HICON ic = FUN_14001f1d4_stub(name_cur, NULL);
+                    load_icon = ic;
                     if (ic != 0) {
-                        if (bVar5) {
+                        if (star_mode) {
                             goto LAB_1400d6553;
                         }
-                        g_pGdipCreateHBITMAPFromBitmap(ic, &local_180, 0);
-                        if (local_180 != 0) {
+                        g_pGdipCreateHBITMAPFromBitmap(ic, &load_bmp, 0);
+                        if (load_bmp != 0) {
                             break;
                         }
                         DAT_14013cd90();
-                        local_138 = 0;
+                        load_icon = 0;
                     }
                 }
-                if ((!bVar5) || ((bVar4 = true), local_138 != 0)) {
-                    if (local_180 == 0) {
+                if ((!star_mode) || ((tried_once = true), load_icon != 0)) {
+                    if (load_bmp == 0) {
                         goto LAB_1400d63dd;
                     }
                     break;
                 }
             LAB_1400d6395:
-                if (local_180 != 0) {
+                if (load_bmp != 0) {
                     break;
                 }
-                local_180 = LoadImageW((HINSTANCE)0, local_190, 0, 0, 0, 0x10);
+                load_bmp = LoadImageW((HINSTANCE)0, name_cur, 0, 0, 0, 0x10);
             }
         }
         else {
@@ -9493,38 +9493,38 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
             }
             pWVar18 = local_150;
             if (local_150 != 0) {
-                hmod = LoadLibraryExW(local_190, (HANDLE)0, 2);
+                hmod = LoadLibraryExW(name_cur, (HANDLE)0, 2);
                 *(uint64_t *)(obj + 0x1e0) = (uint64_t)(uintptr_t)hmod;
             }
-            if (!bVar5) {
+            if (!star_mode) {
                 goto LAB_1400d6258;
             }
             while (*(uint64_t *)(obj + 0x1e0) != 0) {
-                if (local_180 != 0) {
+                if (load_bmp != 0) {
                     goto LAB_1400d64eb;
                 }
-                if (bVar4) {
+                if (tried_once) {
                     goto LAB_1400d62b5;
                 }
                 memset(&resinfo, 0, sizeof(resinfo));
                 FUN_14001ea18_stub((HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0), (LPCWSTR)pWVar18,
                                    (LPCWSTR)res_type, (longlong *)&resinfo, NULL);
-                local_180 = (HBITMAP)(uintptr_t)FUN_14006eaac_stub(&resinfo, &local_108);
-                local_138 = local_108;
-                if (bVar5 && local_108 != 0) {
+                load_bmp = (HBITMAP)(uintptr_t)FUN_14006eaac_stub(&resinfo, &local_108);
+                load_icon = local_108;
+                if (star_mode && local_108 != 0) {
                     goto LAB_1400d6553;
                 }
-                if ((!bVar5) || (local_108 != 0)) {
+                if ((!star_mode) || (local_108 != 0)) {
                     break;
                 }
-                bVar4 = true;
+                tried_once = true;
             LAB_1400d6258:
                 if (*(uint64_t *)(obj + 0x1e0) != 0) {
-                    local_180 = LoadBitmapW((HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0),
+                    load_bmp = LoadBitmapW((HMODULE)(uintptr_t)*(uint64_t *)(obj + 0x1e0),
                                             (LPCWSTR)pWVar18);
                 }
             }
-            if (local_180 == 0) {
+            if (load_bmp == 0) {
             LAB_1400d62b5:
                 if (*(uint64_t *)(obj + 0x1e0) == 0) {
                     goto LAB_1400d6495;
@@ -9535,11 +9535,11 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
             }
         }
     LAB_1400d6484:
-        if ((HBITMAP)(uintptr_t)local_180 == 0) {
+        if ((HBITMAP)(uintptr_t)load_bmp == 0) {
             goto LAB_1400d6495;
         }
     LAB_1400d64eb:
-        *local_120 = local_180;
+        *outbmp_ptr = load_bmp;
         if (name_arg != NULL) {
             PECMD_AssignString((int64_t *)((char *)obj + 0x260), name_arg);
         }
@@ -9557,7 +9557,7 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
         }
     }
 
-    iVar6 = (uint32_t)stack_size; /* local_184 */
+    geo_h = (uint32_t)stack_size; /* local_184 */
     local_108 = (HICON)(uintptr_t)0x60;
     if ((stack_size < 1) || (stack_size == 0x60)) {
         iVar7 = 0;
@@ -9565,55 +9565,55 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
     else {
         iVar7 = iVar27;
     }
-    iVar8 = 0x60;
+    tgt_size = 0x60;
     if (iVar7 != 0) {
-        iVar8 = (uint32_t)stack_size;
+        tgt_size = (uint32_t)stack_size;
     }
     flag170 = (int)iVar7;
-    local_150 = (LPCWSTR)(uintptr_t)iVar8;
-    if (bVar5 && (local_138 != 0) && (local_120 == bmpslot)) {
+    local_150 = (LPCWSTR)(uintptr_t)tgt_size;
+    if (star_mode && (load_icon != 0) && (outbmp_ptr == bmpslot)) {
         /* ---- GDI+ ARGB 缩放支路 (星标 + 图标) ---- */
-        HICON scaled = local_138;
-        if ((0 < local_168) || (0 < (int)iVar6)) {
+        HICON scaled = load_icon;
+        if ((0 < geo_w) || (0 < (int)geo_h)) {
             longlong w_ic = 0;
             longlong h_ic = 0;
             HBITMAP argbbmp = 0;
             void *g2 = NULL;
-            DAT_14013ce08(local_138, &w_ic);
-            DAT_14013ce10(local_138, &h_ic);
-            lVar25 = (longlong)local_168;
-            lVar16 = lVar25 * (longlong)iVar8;
+            DAT_14013ce08(load_icon, &w_ic);
+            DAT_14013ce10(load_icon, &h_ic);
+            lVar25 = (longlong)geo_w;
+            lVar16 = lVar25 * (longlong)tgt_size;
             lVar16 = lVar16 / 6 + (lVar16 >> 63);
-            uVar19 = (lVar16 >> 4) - (lVar16 >> 63);
-            iVar27 = (uint32_t)(int)uVar19;
-            lVar16 = (longlong)(int32_t)iVar6 * (longlong)(int32_t)(intptr_t)local_150;
+            gdip_w = (lVar16 >> 4) - (lVar16 >> 63);
+            iVar27 = (uint32_t)(int)gdip_w;
+            lVar16 = (longlong)(int32_t)geo_h * (longlong)(int32_t)(intptr_t)local_150;
             lVar16 = lVar16 / 6 + (lVar16 >> 63);
-            uVar20 = (lVar16 >> 4) - (lVar16 >> 63);
-            g_pGdipCreateBitmapFromScan0(uVar19 & 0xffffffffULL, uVar20 & 0xffffffffULL,
+            gdip_h = (lVar16 >> 4) - (lVar16 >> 63);
+            g_pGdipCreateBitmapFromScan0(gdip_w & 0xffffffffULL, gdip_h & 0xffffffffULL,
                                          (uint32_t)iVar27 << 2, 0x26200a, NULL, &argbbmp);
             g_pGdipGetImageGraphicsContext(argbbmp, &g2);
             g_pGdipSetInterpolationMode(g2, 7);
-            if (0 < (int32_t)local_158) {
+            if (0 < (int32_t)geo_sx) {
                 if (0 < (int32_t)key_color) {
                     ((int (*)(void *, void *, int, int, int, int, int, int, int, int, int, int, int,
                               int))g_pGdipDrawImageRectRectI)(
-                        g2, (void *)(uintptr_t)local_138, 0, 0, (int)iVar27, (int)uVar20,
-                        (int)(((uint32_t)local_160v * w_ic) / (int32_t)local_158),
-                        (int)(((int32_t)local_140 * h_ic) / (int32_t)key_color),
-                        (int)((lVar25 * w_ic) / (int32_t)local_158),
-                        (int)((iVar6 * h_ic) / (int32_t)key_color), 2, 0, 0, 0);
+                        g2, (void *)(uintptr_t)load_icon, 0, 0, (int)iVar27, (int)gdip_h,
+                        (int)(((uint32_t)geo_x * w_ic) / (int32_t)geo_sx),
+                        (int)(((int32_t)geo_y * h_ic) / (int32_t)key_color),
+                        (int)((lVar25 * w_ic) / (int32_t)geo_sx),
+                        (int)((geo_h * h_ic) / (int32_t)key_color), 2, 0, 0, 0);
                 }
             }
             DAT_14013ce30();
             DAT_14013cd90();
             scaled = (HICON)argbbmp;
         }
-        if (local_180 != 0) {
-            DeleteObject((HGDIOBJ)(uintptr_t)local_180);
-            local_180 = 0;
+        if (load_bmp != 0) {
+            DeleteObject((HGDIOBJ)(uintptr_t)load_bmp);
+            load_bmp = 0;
         }
         *bmpslot = (uint64_t)(uintptr_t)scaled;
-        local_198 |= 0x20;
+        mode_flags |= 0x20;
     }
     else {
         /* ---- 常规支路: 位图扫描色键生成区域 ---- */
@@ -9634,31 +9634,31 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
         longlong scalew;
         longlong x;
         memset(bmi, 0, sizeof(bmi));
-        GetObjectW((HGDIOBJ)(uintptr_t)*local_120, 0x20, &bm);
-        local_148 = (uint64_t)(uint32_t)bm.bmHeight;
-        local_128v = (uint64_t)(uint32_t)bm.bmWidth;
-        flagbyte = (unsigned char)!bVar5;
+        GetObjectW((HGDIOBJ)(uintptr_t)*outbmp_ptr, 0x20, &bm);
+        src_h = (uint64_t)(uint32_t)bm.bmHeight;
+        src_w = (uint64_t)(uint32_t)bm.bmWidth;
+        flagbyte = (unsigned char)!star_mode;
         dst_w =
-            (longlong)(((int32_t)local_100 - *(int32_t *)((char *)obj + 0x24c)) +
+            (longlong)(((int32_t)ctl_w - *(int32_t *)((char *)obj + 0x24c)) +
                        *(int32_t *)((char *)obj + 0x238) * -2 - *(int32_t *)((char *)obj + 0x248));
-        dst_h = (longlong)(((int32_t)local_f8 - *(int32_t *)((char *)obj + 0x244)) -
+        dst_h = (longlong)(((int32_t)ctl_h - *(int32_t *)((char *)obj + 0x244)) -
                            *(int32_t *)((char *)obj + 0x238) -
                            (*(int32_t *)((char *)obj + 0x240) + *(int32_t *)((char *)obj + 0x23c)));
         hdcMem = CreateCompatibleDC(hdcSrc);
         old_bmp = *bmpslot;
         old_sel = SelectObject(hdcMem, (HGDIOBJ)(uintptr_t)old_bmp);
         scaled_h = (longlong)(int32_t)(intptr_t)local_150;
-        scaled_w = (longlong)local_168;
+        scaled_w = (longlong)geo_w;
         lVar16 = 0x60;
-        if (0 < local_168) {
-            scaled_w = (longlong)local_168 * (longlong)(int32_t)(intptr_t)local_150;
-            local_108 = (HICON)(uintptr_t)(local_128v * 0x60);
+        if (0 < geo_w) {
+            scaled_w = (longlong)geo_w * (longlong)(int32_t)(intptr_t)local_150;
+            local_108 = (HICON)(uintptr_t)(src_w * 0x60);
         }
-        if (0 < (int)local_148) {
-            lVar16 = (longlong)local_148 * 0x60;
-            scaled_h = (longlong)(int)local_148 * (longlong)(int32_t)(intptr_t)local_150;
+        if (0 < (int)src_h) {
+            lVar16 = (longlong)src_h * 0x60;
+            scaled_h = (longlong)(int)src_h * (longlong)(int32_t)(intptr_t)local_150;
         }
-        lVar25 = (longlong)local_148;
+        lVar25 = (longlong)src_h;
         *(uint32_t *)(bmi + 0) = 0x28; /* biSize */
         got_dib = GetDIBits(hdcSrc, (HBITMAP)(uintptr_t)old_bmp, 0, (uint32_t)lVar25, NULL,
                             (BITMAPINFO *)bmi, 0);
@@ -9678,20 +9678,20 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
         row_last = (longlong)dib_h - 1;
         iVar7 = 0;
         if (got_dib != 0) {
-            iVar7 = GetDIBits(hdcSrc, (HBITMAP)(uintptr_t)old_bmp, 0, (uint32_t)local_148,
+            iVar7 = GetDIBits(hdcSrc, (HBITMAP)(uintptr_t)old_bmp, 0, (uint32_t)src_h,
                               (void *)lpvBits, (BITMAPINFO *)bmi, 0);
         }
-        if (!bVar5) {
-            local_f0 = b7c_CreateRectRgn(0, 0, (int)local_100, (int)local_f8);
+        if (!star_mode) {
+            pic_rgn = b7c_CreateRectRgn(0, 0, (int)ctl_w, (int)ctl_h);
         }
         if ((flagbyte != 0) && (iVar7 != 0) && (*(uint16_t *)(bmi + 0x12) == 0x20)) {
             stride = ((ulonglong)(uint32_t)dib_w * 4) >> 2;
             ratio_y = ((ulonglong)(lVar16 << 0x20)) / (ulonglong)scaled_h;
             keyrgb =
-                ((local_118 >> 0x10) & 0xff) | ((local_118 & 0xff) << 0x10) | (local_118 & 0xff00);
+                ((key_idx >> 0x10) & 0xff) | ((key_idx & 0xff) << 0x10) | (key_idx & 0xff00);
             bmwidth = (longlong)local_108;
             scalew = scaled_w;
-            x = (longlong)(int32_t)local_140;
+            x = (longlong)(int32_t)geo_y;
             while (x < dst_w) {
                 longlong src_x = (x * bmwidth) / scalew;
                 ulonglong y = 0; /* local_b0 恒 0 起点 */
@@ -9739,7 +9739,7 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
                         }
                         if ((int32_t)y1 >= 0) {
                             HRGN rtmp = b7c_CreateRectRgn((int)x, (int)y1, (int)x + 1, (int)y2);
-                            b7c_CombineRgn(local_f0, local_f0, rtmp, 3);
+                            b7c_CombineRgn(pic_rgn, pic_rgn, rtmp, 3);
                             DeleteObject((HGDIOBJ)rtmp);
                         }
                         y2 = y2 + 1;
@@ -9750,30 +9750,30 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
             }
         }
         /* ---- 目标尺寸重采样 ---- */
-        lVar16 = (longlong)local_128v;
-        lVar25 = (longlong)local_148;
-        if ((flag170 != 0) || (local_168 != 0) || ((int)local_140 != 0)) {
-            int cw = local_168;
-            int chh = (int)local_140;
+        lVar16 = (longlong)src_w;
+        lVar25 = (longlong)src_h;
+        if ((flag170 != 0) || (geo_w != 0) || ((int)geo_y != 0)) {
+            int cw = geo_w;
+            int chh = (int)geo_y;
             longlong tgt = (longlong)(int32_t)(intptr_t)local_150;
             if (cw < 1) {
-                local_128v = 1;
+                src_w = 1;
                 cw = (int)iVar27;
             }
             if (chh < 1) {
-                local_148 = 1;
+                src_h = 1;
                 chh = (int)iVar27;
             }
             {
-                longlong newh = ((longlong)chh * tgt * (longlong)local_148) / (local_128v * 0x60);
+                longlong newh = ((longlong)chh * tgt * (longlong)src_h) / (src_w * 0x60);
                 HDC hdcDest = CreateCompatibleDC(hdcSrc);
-                int neww = (int)((cw * tgt * lVar16) / (local_128v * 0x60));
+                int neww = (int)((cw * tgt * lVar16) / (src_w * 0x60));
                 HBITMAP nbmp = CreateCompatibleBitmap(hdcSrc, neww, (int)newh);
                 HGDIOBJ prev;
                 memset(selrec, 0, sizeof(selrec));
                 FUN_14005b028(selrec, hdcDest, (HGDIOBJ)nbmp);
-                prev = (HGDIOBJ)(uintptr_t)*local_120;
-                *local_120 = (uint64_t)(uintptr_t)nbmp;
+                prev = (HGDIOBJ)(uintptr_t)*outbmp_ptr;
+                *outbmp_ptr = (uint64_t)(uintptr_t)nbmp;
                 selrec[0] = (uint64_t)(uintptr_t)prev;
                 local_150 = 0;
                 {
@@ -9781,14 +9781,14 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
                     int sw = (int)lVar16;
                     void *lg = NULL;
                     uint32_t gr;
-                    if ((local_138 == 0) ||
+                    if ((load_icon == 0) ||
                         ((gr = (uint32_t)DAT_14013ce28(hdcDest, &lg), gr != 0))) {
                         StretchBlt(hdcDest, 0, 0, neww, (int)newh, hdcMem, 0, 0, sw, sh, 0xcc0020);
                     }
                     else {
                         ((int (*)(void *, void *, int, int, int, int, int, int, int, int, int, int,
                                   int, int))g_pGdipDrawImageRectRectI)(
-                            lg, (void *)(uintptr_t)local_138, 0, 0, neww, (int)newh, 0, 0, sw, sh,
+                            lg, (void *)(uintptr_t)load_icon, 0, 0, neww, (int)newh, 0, 0, sw, sh,
                             2, 0, 0, 0);
                     }
                     if (lg != NULL) {
@@ -9814,32 +9814,32 @@ char PECMD_CtlLoadPictureRgn(int64_t a1, HDC a2)
 
     /* ---- 区域应用/释放 + 收尾 (两支路汇合点) ---- */
     {
-        HRGN newrgn = local_f0;
+        HRGN newrgn = pic_rgn;
         HRGN delrgn;
-        if (!bVar5) {
+        if (!star_mode) {
             delrgn = *(HRGN *)((char *)obj + 0xf0);
-            SetWindowRgn(*(HWND *)((char *)obj + 0x20), local_f0, 1);
+            SetWindowRgn(*(HWND *)((char *)obj + 0x20), pic_rgn, 1);
             *(HRGN *)((char *)obj + 0xf0) = newrgn;
         }
         else {
-            delrgn = local_f0;
+            delrgn = pic_rgn;
         }
         if (delrgn != 0) {
             DeleteObject((HGDIOBJ)delrgn);
         }
     }
-    *(uint8_t *)((char *)obj + 0x250) = local_198;
-    if ((0 < local_e8) || (name_arg != NULL)) {
+    *(uint8_t *)((char *)obj + 0x250) = mode_flags;
+    if ((0 < size_saved) || (name_arg != NULL)) {
         InvalidateRect(*(HWND *)((char *)obj + 0x20), NULL, 1);
     }
 LAB_1400d6495:
-    if (local_a0 != 0) {
-        DeleteObject((HGDIOBJ)(uintptr_t)local_a0);
+    if (tmpbmp_slot != 0) {
+        DeleteObject((HGDIOBJ)(uintptr_t)tmpbmp_slot);
     }
-    if (local_d0 != NULL) {
-        (*(void (**)(void *))((uintptr_t)*local_d0 + 0x10))(local_d0);
+    if (wic_obj != NULL) {
+        (*(void (**)(void *))((uintptr_t)*wic_obj + 0x10))(wic_obj);
     }
-    if (local_138 != 0) {
+    if (load_icon != 0) {
         DAT_14013cd90();
     }
     return unaff_BL;
