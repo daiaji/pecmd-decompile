@@ -79,7 +79,7 @@ def _cmd_meta_escape(s):
     return s
 
 
-def make_epilogue(dst, case_id, manifest, pectest_root):
+def make_epilogue(dst, case_id, manifest, pectest_root, backend=BACKEND_MSVC):
     """[2/4] 尾声: 按 manifest.vars 回捞产物。
 
     T2 改造 (REVIEW §131): WRITE 在还原构建中尚不可靠, 统一改走
@@ -87,7 +87,10 @@ def make_epilogue(dst, case_id, manifest, pectest_root):
     (%VAR% 展开/^| 转义/CRLF), msvc 构建经 S7 分发链接通后同样可用。
     双方用同一通道 ⇒ golden 与 results 字节格式一致。
     """
-    out_dir = os.path.join(pectest_root, "out")
+    # D-21 (R25-j): out_dir 按后端隔离 —— 双后端共享同一 out_dir 时, 前一后端的
+    # 晚到 EXEC 写入 (PECMD EXEC 不等待子进程) 可在下一后端 copy2 窗口内落盘,
+    # 污染 vars/done 回捞 (analysis/r25f_039_script0xd_writers.md A4 mtime 实证)。
+    out_dir = os.path.join(pectest_root, "out_" + backend)
     os.makedirs(out_dir, exist_ok=True)
     cmd_exe = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"),
                            "System32", "cmd.exe")
@@ -220,7 +223,7 @@ def run_case(args, case_id):
             print(f"WARN: [{label}] 跳过 (产物不存在): {exe}", file=sys.stderr)
             continue
         dst = deploy(case_id, case_src, args.pectest_root)
-        out_dir = make_epilogue(dst, case_id, manifest, args.pectest_root)
+        out_dir = make_epilogue(dst, case_id, manifest, args.pectest_root, backend)
         run_exe(label, exe, backend, case_id, dst, out_dir, timeout_s,
                 args.pectest_root, notes_by_label[label])
 

@@ -176,4 +176,4 @@
 - **根因**：run_case 对同一 case 的 orig/msvc 两轮共享同一 out_dir(C:\pectest\<case>)，orig 先跑写入的 vars/done 产物可能被 msvc 轮次回捞 → verdict 的 fs.same/vars.same 存在假阳性可能(exit 维度不受影响)。
 - **证据链**：analysis/r25f_039_script0xd_writers.md 增补节 A4(039 产物 mtime 交错实证)。
 - **影响面**：仅 fs/vars 维度可信度；exit 维度(对拍主判据)不受影响。
-- **状态**：改进工单(按后端分 out_dir 或轮末清点)，非行为分歧，不阻塞。
+- **状态**：已修(R25-j, out_dir 按后端隔离 = `<pectest>\out_<backend>`, EXEC 晚到写入不再跨后端污染回捞; run_case makedirs 缺失一并补; 单案双跑验证 PASS)。非行为分歧，不阻塞。
