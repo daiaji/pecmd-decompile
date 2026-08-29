@@ -1063,3 +1063,14 @@ WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
 ### 纪律(不变)
 每处改动 dc 行号锚定; 逐批合入+每批全量回归(63/63 硬门, 掉即回滚排查);
 并行子代理单文件独占, 构建/审查/提交收敛主代理; windbg 只用于运行时状态问题。
+
+### R25-i 计划段（2026-08-29, 多轮路线图; TODO 同步跟踪）
+- 阶段0 L1批1(进行中): C3=b2f EvalLoopCondition(412处) + C4=b7c 高密度≤400处, 并行派发后逐批回归。
+- 阶段1 语义还原穿插: MESS 真体化(+core_b3l:1385/core_calc_expr:983 接线)→MSTR→SOCK→ADSL→USER,
+  每项 dc 取证→真体→构建→1-2 golden 语料案→全量回归→提交; D-20 *map: 真体(dc:379-390)。
+- 阶段2 L1规模化: 批2=b2f 剩余大函数(DispCommand 444/HelpDlgProc 321/B540 215/LinkCreateShortcut 212)
+  →批3=core_b3_remaining(12058, CALC/SED 体优先)→批4=restored_bodies/b1_remaining; G3 门=A区 local_xx≈0。
+- 阶段3 验证面: D-21 run_case 双后端 out_dir 时序修复→U-2 vars_val 灰度→真体化动词按需求录 golden。
+- 阶段4 沉淀: M2/M3 复测+Lua FFI 接口契约文档(签名→语义→验证状态)+script2.c S7 探针(依赖解除后)。
+- 口径: 67 零语料动词"全部完成"无承诺日期(ROADMAP §3.3 需求驱动长尾), Top5 即期;
+  每批硬门=全量 63/63 零回归; 配方=analysis/r25i_l1_recipe.md。
