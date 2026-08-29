@@ -1383,7 +1383,9 @@ LARGE_INTEGER PECMD_EvalSpecialToken(LARGE_INTEGER script, LPCWSTR arg, char mod
         p2 = *pp;
     }
 
-    if ((*arg == L'^') || ((*p == L'-') && ((uint16_t)(*p + 1) | 0x20) == 0x6d &&
+    /* dc:27047 (longlong)p+2 处 ushort = p[1] 取下一字符再 |0x20 小写化 == 'm';
+     * 旧移植 (*p+1) 误用当前字符('-'=0x2d→0x2e) → 分支恒死 (R25-f §4b/D-19) */
+    if ((*arg == L'^') || ((*p == L'-') && ((uint16_t)p[1] | 0x20) == 0x6d &&
                            (FUN_1400660AC("-mode", (int64_t *)&p, 5) != 0))) {
         cVar1 = PECMD_ParseEnvSwitches(p, (int64_t *)script.QuadPart, 0x26);
         result.QuadPart = 0;

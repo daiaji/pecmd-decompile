@@ -1026,3 +1026,7 @@ WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
 1. P1 L1 语义化开线(前 10 高浓度文件 local_xx/param_N, M2/M3 倒退待扭转)。
 2. D-19/D-20 待修(一行/一真体); Top5 动词真体化(MESS 起)。
 3. 存留: script2.c 探针(S7 依赖) / 非语料二项(小数箍环/7%3) / S18 ParseDateTimeSpec 对齐。
+
+### R25-h 追记(同日末批)
+- D-19 落码: core_b2e.c:1386 `-mode` 判定 `(*p+1)`→`p[1]`(dc:27047), 构建回归 **63/63 零回归**
+  (部署 md5=ffb900b7, hash=cf5daf7)。
