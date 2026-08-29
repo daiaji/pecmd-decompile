@@ -450,189 +450,189 @@ label_done:
  */
 uint64_t PECMD_ParseCommandBlock(int64_t script, WCHAR **pp, uint32_t flags, void *threadInfo)
 {
-    uint64_t uVar4 = 0;
-    bool bVar2 = false;
-    WCHAR WVar12 = L'|';
-    int16_t sVar1;
-    WCHAR *pWVar5;
-    WCHAR *pWVar9;
-    WCHAR *pWVar10;
-    WCHAR *pWVar11;
-    WCHAR WVar8;
-    LARGE_INTEGER local_res10;
-    LPCWSTR local_58;
-    LPCWSTR local_48;
-    WCHAR *local_40 = NULL;
-    WCHAR *local_50 = NULL;
+    uint64_t last_result = 0;
+    bool f_lt_jump = false;
+    WCHAR sep_char = L'|';
+    int16_t lead_char16;
+    WCHAR *scan_ptr;
+    WCHAR *seg_start;
+    WCHAR *seg_end;
+    WCHAR *body_ptr;
+    WCHAR cur_char;
+    LARGE_INTEGER seg_slot;
+    LPCWSTR body_text;
+    LPCWSTR body_check_ptr;
+    WCHAR *blk_prefix = NULL;
+    WCHAR *blk_text = NULL;
 
     if ((flags & 2) != 0) {
-        sVar1 = *(int16_t *)*pp;
-        bVar2 = false;
-        while ((sVar1 != 0) &&
-               ((pWVar5 = *pp, (uint16_t)*pWVar5 < 9 || (0xd < (uint16_t)*pWVar5)) &&
-                (*pWVar5 != L' '))) {
-            if (*pWVar5 == L'<') {
-                bVar2 = true;
-                *pp = pWVar5 + 1;
+        lead_char16 = *(int16_t *)*pp;
+        f_lt_jump = false;
+        while ((lead_char16 != 0) &&
+               ((scan_ptr = *pp, (uint16_t)*scan_ptr < 9 || (0xd < (uint16_t)*scan_ptr)) &&
+                (*scan_ptr != L' '))) {
+            if (*scan_ptr == L'<') {
+                f_lt_jump = true;
+                *pp = scan_ptr + 1;
             }
-            else if (*pWVar5 == L'^' || *pWVar5 == L'#' || *pWVar5 == L'~' || *pWVar5 == L'+' ||
-                     *pWVar5 == L'-' || *pWVar5 == L'@' || *pWVar5 == L'$' || *pWVar5 == L'*' ||
-                     *pWVar5 == L'=' || *pWVar5 == L'?' || *pWVar5 == L'/' || *pWVar5 == L'\\' ||
-                     *pWVar5 == L'%' || *pWVar5 == L';' || *pWVar5 == L',' || *pWVar5 == L'.' ||
-                     *pWVar5 == 0x2222 || *pWVar5 == L'\'') {
-                WVar12 = *pWVar5;
-                *pp = pWVar5 + 1;
+            else if (*scan_ptr == L'^' || *scan_ptr == L'#' || *scan_ptr == L'~' || *scan_ptr == L'+' ||
+                     *scan_ptr == L'-' || *scan_ptr == L'@' || *scan_ptr == L'$' || *scan_ptr == L'*' ||
+                     *scan_ptr == L'=' || *scan_ptr == L'?' || *scan_ptr == L'/' || *scan_ptr == L'\\' ||
+                     *scan_ptr == L'%' || *scan_ptr == L';' || *scan_ptr == L',' || *scan_ptr == L'.' ||
+                     *scan_ptr == 0x2222 || *scan_ptr == L'\'') {
+                sep_char = *scan_ptr;
+                *pp = scan_ptr + 1;
             }
-            sVar1 = *(int16_t *)*pp;
+            lead_char16 = *(int16_t *)*pp;
         }
     }
 
     do {
-        WVar8 = L'{';
+        cur_char = L'{';
         if (*pp == NULL) {
-            return (uint64_t)(int)uVar4;
+            return (uint64_t)(int)last_result;
         }
         PECMD_SkipLeadingControls(pp);
-        pWVar9 = *pp;
-        if ((pWVar9 == NULL) || (*pWVar9 == L'\0')) {
-            return uVar4;
+        seg_start = *pp;
+        if ((seg_start == NULL) || (*seg_start == L'\0')) {
+            return last_result;
         }
-        if (WVar8 == *pWVar9) {
-            pWVar9 = pWVar9 + 1;
-            *pp = pWVar9;
+        if (cur_char == *seg_start) {
+            seg_start = seg_start + 1;
+            *pp = seg_start;
             PECMD_SkipLeadingControls(pp);
             if (*(int16_t *)*pp != 0) {
-                *pp = pWVar9;
-                uVar4 =
+                *pp = seg_start;
+                last_result =
                     PECMD_TokenizeExpression(script, *(int64_t *)(script + 0x40), pp, 1, g_szEmpty);
             }
-            pWVar5 = PECMD_RemoveDuplicateChar(*pp, WVar12);
-            *pp = pWVar5;
-            if (pWVar5 != NULL) {
-                *pp = pWVar5 + 1;
+            scan_ptr = PECMD_RemoveDuplicateChar(*pp, sep_char);
+            *pp = scan_ptr;
+            if (scan_ptr != NULL) {
+                *pp = scan_ptr + 1;
             }
             continue;
         }
-        if (StrCmpNIW(WSTR("[]"), pWVar9, 2) == 0) {
-            pWVar9 = *pp;
-            *pp = pWVar9 + 2;
+        if (StrCmpNIW(WSTR("[]"), seg_start, 2) == 0) {
+            seg_start = *pp;
+            *pp = seg_start + 2;
             PECMD_SkipLeadingControls(pp);
-            WVar8 = **pp;
-            while ((WVar8 != L'\0') && (pWVar5 = *pp, *pWVar5 != WVar12) && (*pWVar5 != L'{')) {
-                *pp = pWVar5 + 1;
-                WVar8 = pWVar5[1];
+            cur_char = **pp;
+            while ((cur_char != L'\0') && (scan_ptr = *pp, *scan_ptr != sep_char) && (*scan_ptr != L'{')) {
+                *pp = scan_ptr + 1;
+                cur_char = scan_ptr[1];
             }
             if (*(int16_t *)*pp != 0x7b) {
-                pWVar5 = PECMD_RemoveDuplicateChar(*pp, WVar12);
-                *pp = pWVar5;
-                if (pWVar5 != NULL) {
-                    *pp = pWVar5 + 1;
+                scan_ptr = PECMD_RemoveDuplicateChar(*pp, sep_char);
+                *pp = scan_ptr;
+                if (scan_ptr != NULL) {
+                    *pp = scan_ptr + 1;
                 }
                 continue;
             }
-            PECMD_StrBldCopyWideN(&local_40, pWVar9,
-                                  (int64_t)((intptr_t)*pp - (intptr_t)pWVar9) >> 1);
-            pWVar11 = *pp + 2;
-            *pp = pWVar11;
+            PECMD_StrBldCopyWideN(&blk_prefix, seg_start,
+                                  (int64_t)((intptr_t)*pp - (intptr_t)seg_start) >> 1);
+            body_ptr = *pp + 2;
+            *pp = body_ptr;
             PECMD_SkipLeadingControls(pp);
-            pWVar9 = *pp;
-            local_58 = pWVar11;
-            PECMD_AllocWStringBuffer((WCHAR **)&local_50, 1);
-            WVar8 = *pWVar9;
-            while (WVar8 != L'\0') {
-                pWVar5 = PECMD_RemoveDuplicateChar(pWVar9, WVar12);
-                pWVar11 = pWVar5;
-                if (pWVar5 == NULL) {
+            seg_start = *pp;
+            body_text = body_ptr;
+            PECMD_AllocWStringBuffer((WCHAR **)&blk_text, 1);
+            cur_char = *seg_start;
+            while (cur_char != L'\0') {
+                scan_ptr = PECMD_RemoveDuplicateChar(seg_start, sep_char);
+                body_ptr = scan_ptr;
+                if (scan_ptr == NULL) {
                     *pp = NULL;
                     break;
                 }
                 do {
-                    pWVar11 = pWVar11 - 1;
-                    if (pWVar11 < pWVar9) {
+                    body_ptr = body_ptr - 1;
+                    if (body_ptr < seg_start) {
                         goto label_025783;
                     }
-                } while ((8 < (uint16_t)*pWVar11 && (uint16_t)*pWVar11 < 0xe) || *pWVar11 == L' ');
-                if ((pWVar9 <= pWVar11) && (*pWVar11 == L'}')) {
+                } while ((8 < (uint16_t)*body_ptr && (uint16_t)*body_ptr < 0xe) || *body_ptr == L' ');
+                if ((seg_start <= body_ptr) && (*body_ptr == L'}')) {
                     /* dc:22626 (longlong)pWVar11-(longlong)local_58>>1 = 字节差>>1 ≡ 元素数 */
-                    PECMD_StrCopyW(&local_50, local_58,
-                                   (int64_t)((intptr_t)pWVar11 - (intptr_t)local_58) >> 1);
-                    *pp = pWVar5 + 1;
+                    PECMD_StrCopyW(&blk_text, body_text,
+                                   (int64_t)((intptr_t)body_ptr - (intptr_t)body_text) >> 1);
+                    *pp = scan_ptr + 1;
                     break;
                 }
             label_025783:
-                pWVar9 = pWVar5;
-                WVar8 = *pWVar5;
+                seg_start = scan_ptr;
+                cur_char = *scan_ptr;
             }
-            local_58 = local_50;
-            local_48 = local_50;
-            PECMD_SkipLeadingControls((WCHAR **)&local_48);
-            if (*local_48 != L'\0') {
-                uVar4 = PECMD_TokenizeExpression(script, *(int64_t *)(script + 0x40),
-                                                 (WCHAR **)&local_58, 1, local_40);
-                uVar4 = uVar4 & 0xffffffff;
+            body_text = blk_text;
+            body_check_ptr = blk_text;
+            PECMD_SkipLeadingControls((WCHAR **)&body_check_ptr);
+            if (*body_check_ptr != L'\0') {
+                last_result = PECMD_TokenizeExpression(script, *(int64_t *)(script + 0x40),
+                                                 (WCHAR **)&body_text, 1, blk_prefix);
+                last_result = last_result & 0xffffffff;
             }
-            PECMD_FreeStrBuf(&local_50);
-            PECMD_FreeStrBuf(&local_40);
+            PECMD_FreeStrBuf(&blk_text);
+            PECMD_FreeStrBuf(&blk_prefix);
         }
         else {
             if (((flags & 1) != 0) && (*(int16_t *)*pp == 0x7d)) {
                 *pp = *pp + 2;
                 PECMD_SkipLeadingControls(pp);
-                return uVar4;
+                return last_result;
             }
-            memset(&local_res10, 0, sizeof(local_res10));
-            PECMD_AllocStrSlot(&local_res10);
-            if (bVar2) {
-                pWVar5 = (WCHAR *)PECMD_TrimTrailingSeparator((int64_t *)&local_res10, *pp, WVar12);
+            memset(&seg_slot, 0, sizeof(seg_slot));
+            PECMD_AllocStrSlot(&seg_slot);
+            if (f_lt_jump) {
+                scan_ptr = (WCHAR *)PECMD_TrimTrailingSeparator((int64_t *)&seg_slot, *pp, sep_char);
             }
             else {
-                pWVar5 = PECMD_RemoveDuplicateChar(*pp, WVar12);
-                pWVar10 = pWVar5;
+                scan_ptr = PECMD_RemoveDuplicateChar(*pp, sep_char);
+                seg_end = scan_ptr;
                 if ((flags & 1) != 0) {
-                if (pWVar5 == NULL) {
-                    int iVar3 = lstrlenW(*pp);
+                if (scan_ptr == NULL) {
+                    int text_len = lstrlenW(*pp);
                     /* dc:22653 (WCHAR*)(*param_2-2+iVar3*2) 为字节地址运算 → 末字符指针 */
-                    pWVar10 = (WCHAR *)((intptr_t)*pp - 2 + (intptr_t)iVar3 * 2);
+                    seg_end = (WCHAR *)((intptr_t)*pp - 2 + (intptr_t)text_len * 2);
                 }
                     else {
-                        pWVar10 = pWVar5 - 1;
+                        seg_end = scan_ptr - 1;
                     }
-                    if (*pp <= pWVar10) {
+                    if (*pp <= seg_end) {
                         do {
-                            if (((uint16_t)*pWVar10 < 9 || (0xd < (uint16_t)*pWVar10)) &&
-                                (*pWVar10 != L' ')) {
+                            if (((uint16_t)*seg_end < 9 || (0xd < (uint16_t)*seg_end)) &&
+                                (*seg_end != L' ')) {
                                 break;
                             }
-                            pWVar10 = pWVar10 - 1;
-                        } while (*pp <= pWVar10);
-                        if ((*pp <= pWVar10) && (*pWVar10 == L'}')) {
+                            seg_end = seg_end - 1;
+                        } while (*pp <= seg_end);
+                        if ((*pp <= seg_end) && (*seg_end == L'}')) {
                             goto label_0258c3;
                         }
                     }
-                    pWVar10 = pWVar5;
+                    seg_end = scan_ptr;
                 }
         label_0258c3:
                 /* dc:22675 (longlong)pWVar10-*param_2>>1 = 字节差>>1 ≡ 元素数;
                  * 旧移植元素差再>>1 折半 → TEAM 段 "CALC X=2*3" 腰斩为 "CALC "
                  * → CALC 无参不写 X → FIND $%X% 未命中 → 判假 exit=2 (039 活体定案) */
-                PECMD_StrCopyW((WCHAR **)&local_res10, *pp,
-                               (int64_t)((intptr_t)pWVar10 - (intptr_t)*pp) >> 1);
+                PECMD_StrCopyW((WCHAR **)&seg_slot, *pp,
+                               (int64_t)((intptr_t)seg_end - (intptr_t)*pp) >> 1);
             }
             {
-                LARGE_INTEGER LVar6;
-                LVar6.QuadPart = (int64_t)PECMD_ProcessScriptBlock(
-                    (uint64_t)script, (uint64_t)local_res10.QuadPart, NULL, NULL, threadInfo);
-                uVar4 = (uint64_t)(int32_t)LVar6.LowPart;
+                LARGE_INTEGER proc_ret;
+                proc_ret.QuadPart = (int64_t)PECMD_ProcessScriptBlock(
+                    (uint64_t)script, (uint64_t)seg_slot.QuadPart, NULL, NULL, threadInfo);
+                last_result = (uint64_t)(int32_t)proc_ret.LowPart;
             }
-            if ((pWVar5 == NULL) || (*(int16_t *)(script + 200) != 0)) {
-                PECMD_FreeStrBuf((WCHAR **)&local_res10);
-                return uVar4;
+            if ((scan_ptr == NULL) || (*(int16_t *)(script + 200) != 0)) {
+                PECMD_FreeStrBuf((WCHAR **)&seg_slot);
+                return last_result;
             }
-            *pp = pWVar5;
-            if (!bVar2) {
-                *pp = pWVar5 + 1;
+            *pp = scan_ptr;
+            if (!f_lt_jump) {
+                *pp = scan_ptr + 1;
             }
-            PECMD_FreeStrBuf((WCHAR **)&local_res10);
+            PECMD_FreeStrBuf((WCHAR **)&seg_slot);
         }
     } while (true);
 }

@@ -7182,105 +7182,105 @@ LAB_14003b8ed:
 LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
 
 {
-    uint16_t uVar1;
+    uint16_t skip_char;
     bool bVar2;
-    bool bVar3;
-    bool bVar4;
-    bool bVar5;
-    bool bVar6;
+    bool dest_flag_prev;
+    bool f_delay;
+    bool f_rd;
+    bool f_su;
     char cVar7;
-    uint8_t uVar8;
-    int iVar9;
+    uint8_t mflag_cached;
+    int text_len;
     uint32_t uVar10;
-    DWORD DVar11;
-    BOOL BVar12;
+    DWORD open_lasterr;
+    BOOL move_ok;
     int64_t lVar13;
-    LARGE_INTEGER LVar14;
-    short *psVar15;
+    LARGE_INTEGER rtrim_cursor;
+    short *last_sep;
     LARGE_INTEGER *pLVar16;
-    LARGE_INTEGER LVar17;
+    LARGE_INTEGER tok_cursor;
     int iVar18;
-    LARGE_INTEGER LVar19;
-    uint16_t uVar20;
-    LARGE_INTEGER LVar21;
+    LARGE_INTEGER dest_count_li;
+    uint16_t fflags_acc;
+    LARGE_INTEGER tok_start;
     LARGE_INTEGER LVar22;
-    WCHAR WVar24;
-    uint8_t bVar25;
-    LARGE_INTEGER local_res10;
+    WCHAR cur_char;
+    uint8_t op_code;
+    LARGE_INTEGER scan_cursor;
     LARGE_INTEGER local_res20;
-    char local_c5;
+    char progress_flag;
     LARGE_INTEGER local_c0;
-    uint32_t local_b8;
-    _SHFILEOPSTRUCTW local_b0;
-    WCHAR *local_78;
+    uint32_t dest_count;
+    _SHFILEOPSTRUCTW shfo;
+    WCHAR *line_copy_buf;
     struct { WCHAR *data; int64_t len; uint64_t cap; } strb1 = {0,0,0}, strb2 = {0,0,0};
     LARGE_INTEGER LVar23;
 
     LVar23.QuadPart = 0;
     iVar18 = 0;
     LVar22.QuadPart = 0;
-    uVar20 = 4;
-    bVar25 = 0;
+    fflags_acc = 4;
+    op_code = 0;
     local_res20.QuadPart = local_res20.QuadPart & 0xffffffffffffff00;
-    local_c5 = '\0';
+    progress_flag = '\0';
     bVar2 = false;
-    bVar5 = false;
-    bVar6 = false;
-    bVar4 = false;
-    local_res10 = cmd;
-    while (uVar10 = flags, *(uint16_t *)(uintptr_t)local_res10.QuadPart == 0x2d) {
-        if (*(uint16_t *)(local_res10.QuadPart + 2) == 0x2d) {
-            local_res10.QuadPart = local_res10.QuadPart + 2;
+    f_rd = false;
+    f_su = false;
+    f_delay = false;
+    scan_cursor = cmd;
+    while (uVar10 = flags, *(uint16_t *)(uintptr_t)scan_cursor.QuadPart == 0x2d) {
+        if (*(uint16_t *)(scan_cursor.QuadPart + 2) == 0x2d) {
+            scan_cursor.QuadPart = scan_cursor.QuadPart + 2;
         }
-        cVar7 = FUN_1400660AC("-", &local_res10.QuadPart, 1);
+        cVar7 = FUN_1400660AC("-", &scan_cursor.QuadPart, 1);
         if (cVar7 != '\0')
             break;
-        cVar7 = FUN_1400660AC("-simpleprogress", &local_res10.QuadPart, 0xf);
+        cVar7 = FUN_1400660AC("-simpleprogress", &scan_cursor.QuadPart, 0xf);
         flags = uVar10;
         if (cVar7 == '\0') {
-            cVar7 = FUN_1400660AC("-progress", &local_res10.QuadPart, 9);
+            cVar7 = FUN_1400660AC("-progress", &scan_cursor.QuadPart, 9);
             if (cVar7 == '\0') {
-                cVar7 = FUN_1400660AC("-file", &local_res10.QuadPart, 5);
+                cVar7 = FUN_1400660AC("-file", &scan_cursor.QuadPart, 5);
                 if (cVar7 == '\0') {
-                    cVar7 = FUN_1400660AC("-m", &local_res10.QuadPart, 2);
+                    cVar7 = FUN_1400660AC("-m", &scan_cursor.QuadPart, 2);
                     if (cVar7 == '\0') {
-                        cVar7 = FUN_1400660AC("-forceq", &local_res10.QuadPart, 7);
+                        cVar7 = FUN_1400660AC("-forceq", &scan_cursor.QuadPart, 7);
                         flags = 3;
                         if ((cVar7 == '\0') &&
-                            (cVar7 = FUN_1400660AC("-force", &local_res10.QuadPart, 6), flags = 1,
+                            (cVar7 = FUN_1400660AC("-force", &scan_cursor.QuadPart, 6), flags = 1,
                              cVar7 == '\0')) {
-                            cVar7 = FUN_1400660AC("-su", &local_res10.QuadPart, 3);
+                            cVar7 = FUN_1400660AC("-su", &scan_cursor.QuadPart, 3);
                             if (cVar7 == '\0') {
-                                cVar7 = FUN_1400660AC("-q", &local_res10.QuadPart, 2);
+                                cVar7 = FUN_1400660AC("-q", &scan_cursor.QuadPart, 2);
                                 if (cVar7 == '\0') {
-                                    cVar7 = FUN_1400660AC("-delme", &local_res10.QuadPart, 6);
+                                    cVar7 = FUN_1400660AC("-delme", &scan_cursor.QuadPart, 6);
                                     if (cVar7 == '\0') {
-                                        cVar7 = FUN_1400660AC("-rd", &local_res10.QuadPart, 3);
+                                        cVar7 = FUN_1400660AC("-rd", &scan_cursor.QuadPart, 3);
                                         if (cVar7 == '\0') {
                                             cVar7 =
-                                                FUN_1400660AC("-delay", &local_res10.QuadPart, 6);
+                                                FUN_1400660AC("-delay", &scan_cursor.QuadPart, 6);
                                             if (cVar7 == '\0') {
-                                                uVar1 =
-                                                    *(uint16_t *)(uintptr_t)local_res10.QuadPart;
+                                                skip_char =
+                                                    *(uint16_t *)(uintptr_t)scan_cursor.QuadPart;
                                                 while (
-                                                    (uVar1 != 0 && (((uVar1 < 9 || (0xd < uVar1)) &&
-                                                                     (uVar1 != 0x20))))) {
-                                                    local_res10.QuadPart = local_res10.QuadPart + 2;
-                                                    uVar1 = *(uint16_t *)(uintptr_t)
-                                                                 local_res10.QuadPart;
+                                                    (skip_char != 0 && (((skip_char < 9 || (0xd < skip_char)) &&
+                                                                     (skip_char != 0x20))))) {
+                                                    scan_cursor.QuadPart = scan_cursor.QuadPart + 2;
+                                                    skip_char = *(uint16_t *)(uintptr_t)
+                                                                 scan_cursor.QuadPart;
                                                 }
                                                 PECMD_SkipLeadingControls(
-                                                    (WCHAR **)&local_res10.QuadPart);
+                                                    (WCHAR **)&scan_cursor.QuadPart);
                                                 flags = uVar10;
                                             }
                                             else {
-                                                bVar4 = true;
+                                                f_delay = true;
                                                 flags = uVar10;
                                             }
                                         }
                                         else {
-                                            bVar25 = 2;
-                                            bVar5 = true;
+                                            op_code = 2;
+                                            f_rd = true;
                                             flags = uVar10;
                                         }
                                     }
@@ -7290,13 +7290,13 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                                     }
                                 }
                                 else {
-                                    local_c5 = '\x10';
+                                    progress_flag = '\x10';
                                     flags = uVar10;
                                 }
                             }
                             else {
-                                bVar6 = true;
-                                bVar25 = bVar25 | 0x10;
+                                f_su = true;
+                                op_code = op_code | 0x10;
                                 flags = uVar10;
                             }
                         }
@@ -7306,175 +7306,175 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                     }
                 }
                 else {
-                    bVar25 = 1;
+                    op_code = 1;
                 }
             }
             else {
-                uVar20 = 0;
+                fflags_acc = 0;
             }
         }
         else {
-            uVar20 = 0x100;
+            fflags_acc = 0x100;
         }
     }
-    PECMD_SkipLeadingControls((WCHAR **)&local_res10.QuadPart);
+    PECMD_SkipLeadingControls((WCHAR **)&scan_cursor.QuadPart);
     if (bVar2) {
         FUN_1400702B0((WCHAR **)&local_res20.QuadPart, WSTR("#23:INDATA "));
-        FUN_14006375C((WCHAR **)&local_res20.QuadPart, (LPCWSTR)(uintptr_t)local_res10.QuadPart);
+        FUN_14006375C((WCHAR **)&local_res20.QuadPart, (LPCWSTR)(uintptr_t)scan_cursor.QuadPart);
         lVar13 = PECMD_RunCommand((void *)g_Script, (WCHAR *)local_res20.QuadPart);
         PECMD_FreeStrBuf((WCHAR **)&local_res20.QuadPart);
         return PECMD_LI((int64_t)lVar13);
     }
-    if (*(int16_t *)(uintptr_t)local_res10.QuadPart == 0) {
+    if (*(int16_t *)(uintptr_t)scan_cursor.QuadPart == 0) {
         return PECMD_LI((int64_t)-0x7ff8ffa9);
     }
-    iVar9 = lstrlenW((LPCWSTR)(uintptr_t)local_res10.QuadPart);
-    PECMD_AllocWStringBuffer((WCHAR **)&local_78, (int64_t)((iVar9 + 1) * 2 + 4));
-    lVar13 = (int64_t)(iVar9 + 1) * 2;
-    memcpy((uint8_t *)local_78, (uint8_t *)(uintptr_t)local_res10.QuadPart, (int)lVar13);
-    local_res10.QuadPart = (int64_t)(uintptr_t)local_78;
-    *(uint16_t *)(lVar13 + (int64_t)local_78) = 0;
-    local_b0.hwnd = (HWND)0x0;
-    memset((uint64_t *)&local_b0.wFunc, 0, 0x30);
-    PECMD_SkipLeadingControls((WCHAR **)&local_res10.QuadPart);
-    LVar17 = local_res10;
-    local_b0.fFlags = uVar20 | 0x610;
-    local_b0.wFunc = 3;
-    local_b0.pFrom = (LPCWSTR)(uintptr_t)local_res10.QuadPart;
-    local_b8 = 0;
+    text_len = lstrlenW((LPCWSTR)(uintptr_t)scan_cursor.QuadPart);
+    PECMD_AllocWStringBuffer((WCHAR **)&line_copy_buf, (int64_t)((text_len + 1) * 2 + 4));
+    lVar13 = (int64_t)(text_len + 1) * 2;
+    memcpy((uint8_t *)line_copy_buf, (uint8_t *)(uintptr_t)scan_cursor.QuadPart, (int)lVar13);
+    scan_cursor.QuadPart = (int64_t)(uintptr_t)line_copy_buf;
+    *(uint16_t *)(lVar13 + (int64_t)line_copy_buf) = 0;
+    shfo.hwnd = (HWND)0x0;
+    memset((uint64_t *)&shfo.wFunc, 0, 0x30);
+    PECMD_SkipLeadingControls((WCHAR **)&scan_cursor.QuadPart);
+    tok_cursor = scan_cursor;
+    shfo.fFlags = fflags_acc | 0x610;
+    shfo.wFunc = 3;
+    shfo.pFrom = (LPCWSTR)(uintptr_t)scan_cursor.QuadPart;
+    dest_count = 0;
     bVar2 = false;
     PECMD_AllocStrSlot(&strb1.data);
     PECMD_AllocStrSlot(&strb2.data);
     pLVar16 = (int64_t *)&strb1.data;
     PECMD_AllocString(&strb1.data, 10);
     PECMD_AllocString(&strb2.data, 10);
-    WVar24 = *(WCHAR *)(uintptr_t)LVar17.QuadPart;
-    LVar21 = LVar17;
-    bVar3 = false;
-    if (WVar24 != L'\0') {
-        LVar19.QuadPart = LVar23.QuadPart;
-        uVar8 = B2F_LO8(local_res20.LowPart);
+    cur_char = *(WCHAR *)(uintptr_t)tok_cursor.QuadPart;
+    tok_start = tok_cursor;
+    dest_flag_prev = false;
+    if (cur_char != L'\0') {
+        dest_count_li.QuadPart = LVar23.QuadPart;
+        mflag_cached = B2F_LO8(local_res20.LowPart);
         do {
-            if ((uVar8 == '\0') || (WVar24 != L';')) {
-                if (WVar24 == L'>') {
-                    if (*(WCHAR *)(LVar17.QuadPart + -2) == L'=') {
-                        local_b0.wFunc = 2;
+            if ((mflag_cached == '\0') || (cur_char != L';')) {
+                if (cur_char == L'>') {
+                    if (*(WCHAR *)(tok_cursor.QuadPart + -2) == L'=') {
+                        shfo.wFunc = 2;
                     }
-                    else if (*(WCHAR *)(LVar17.QuadPart + -2) == L'-') {
-                        local_b0.wFunc = 1;
+                    else if (*(WCHAR *)(tok_cursor.QuadPart + -2) == L'-') {
+                        shfo.wFunc = 1;
                     }
-                    else if (*(WCHAR *)(LVar17.QuadPart + 2) == L'>') {
-                        LVar17.QuadPart = LVar17.QuadPart + 2;
-                        local_b0.wFunc = 4;
+                    else if (*(WCHAR *)(tok_cursor.QuadPart + 2) == L'>') {
+                        tok_cursor.QuadPart = tok_cursor.QuadPart + 2;
+                        shfo.wFunc = 4;
                     }
-                    LVar14.QuadPart = LVar17.QuadPart + -4;
-                    if ((uint64_t)LVar21.QuadPart <= (uint64_t)LVar14.QuadPart) {
+                    rtrim_cursor.QuadPart = tok_cursor.QuadPart + -4;
+                    if ((uint64_t)tok_start.QuadPart <= (uint64_t)rtrim_cursor.QuadPart) {
                         do {
-                            if ((((uint16_t)*(WCHAR *)(uintptr_t)LVar14.QuadPart < 9) ||
-                                 (0xd < (uint16_t)*(WCHAR *)(uintptr_t)LVar14.QuadPart)) &&
-                                (*(WCHAR *)(uintptr_t)LVar14.QuadPart != L' '))
+                            if ((((uint16_t)*(WCHAR *)(uintptr_t)rtrim_cursor.QuadPart < 9) ||
+                                 (0xd < (uint16_t)*(WCHAR *)(uintptr_t)rtrim_cursor.QuadPart)) &&
+                                (*(WCHAR *)(uintptr_t)rtrim_cursor.QuadPart != L' '))
                                 break;
-                            *(WCHAR *)(uintptr_t)LVar14.QuadPart = L'\0';
-                            LVar14.QuadPart = LVar14.QuadPart + -2;
-                        } while ((uint64_t)LVar21.QuadPart <= (uint64_t)LVar14.QuadPart);
-                        LVar19.HighPart = 0;
-                        LVar19.LowPart = local_b8;
+                            *(WCHAR *)(uintptr_t)rtrim_cursor.QuadPart = L'\0';
+                            rtrim_cursor.QuadPart = rtrim_cursor.QuadPart + -2;
+                        } while ((uint64_t)tok_start.QuadPart <= (uint64_t)rtrim_cursor.QuadPart);
+                        dest_count_li.HighPart = 0;
+                        dest_count_li.LowPart = dest_count;
                     }
-                    *(WCHAR *)(LVar17.QuadPart + -2) = L'\0';
-                    *(WCHAR *)(uintptr_t)LVar17.QuadPart = L'\0';
-                    local_c0.QuadPart = LVar17.QuadPart + 2;
+                    *(WCHAR *)(tok_cursor.QuadPart + -2) = L'\0';
+                    *(WCHAR *)(uintptr_t)tok_cursor.QuadPart = L'\0';
+                    local_c0.QuadPart = tok_cursor.QuadPart + 2;
                     PECMD_SkipLeadingControls((WCHAR **)&local_c0.QuadPart);
-                    LVar17 = local_c0;
-                    local_b0.pTo = (LPCWSTR)(uintptr_t)local_c0.QuadPart;
-                    if (*(WCHAR *)(uintptr_t)LVar21.QuadPart != L'\0') {
+                    tok_cursor = local_c0;
+                    shfo.pTo = (LPCWSTR)(uintptr_t)local_c0.QuadPart;
+                    if (*(WCHAR *)(uintptr_t)tok_start.QuadPart != L'\0') {
                         PECMD_AppendParamToken(pLVar16,
-                                               (LPCWSTR)(uintptr_t)LVar21.QuadPart, '\0');
+                                               (LPCWSTR)(uintptr_t)tok_start.QuadPart, '\0');
                     }
                     bVar2 = true;
                     pLVar16 = (int64_t *)&strb2.data;
-                    LVar21 = LVar17;
-                    uVar8 = B2F_LO8(local_res20.LowPart);
+                    tok_start = tok_cursor;
+                    mflag_cached = B2F_LO8(local_res20.LowPart);
                 }
             }
             else {
-                *(WCHAR *)(uintptr_t)LVar17.QuadPart = L'\0';
-                local_c0.QuadPart = LVar17.QuadPart + 2;
-                if (*(WCHAR *)(uintptr_t)LVar21.QuadPart != L'\0') {
-                    if ((bVar2) || (cVar7 = '\x01', bVar25 == 0)) {
+                *(WCHAR *)(uintptr_t)tok_cursor.QuadPart = L'\0';
+                local_c0.QuadPart = tok_cursor.QuadPart + 2;
+                if (*(WCHAR *)(uintptr_t)tok_start.QuadPart != L'\0') {
+                    if ((bVar2) || (cVar7 = '\x01', op_code == 0)) {
                         cVar7 = '\0';
                     }
-                    PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)LVar21.QuadPart,
+                    PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)tok_start.QuadPart,
                                            cVar7);
                 }
                 PECMD_SkipLeadingControls((WCHAR **)&local_c0.QuadPart);
-                LVar17 = local_c0;
-                LVar21 = local_c0;
-                uVar8 = B2F_LO8(local_res20.LowPart);
+                tok_cursor = local_c0;
+                tok_start = local_c0;
+                mflag_cached = B2F_LO8(local_res20.LowPart);
                 if (bVar2) {
-                    LVar19.LowPart = LVar19.LowPart + 1;
-                    LVar19.HighPart = 0;
-                    local_b8 = LVar19.LowPart;
+                    dest_count_li.LowPart = dest_count_li.LowPart + 1;
+                    dest_count_li.HighPart = 0;
+                    dest_count = dest_count_li.LowPart;
                 }
             }
-            iVar18 = (int)LVar19.QuadPart;
-            LVar17.QuadPart = LVar17.QuadPart + 2;
-            WVar24 = *(WCHAR *)(uintptr_t)LVar17.QuadPart;
-            bVar3 = bVar2;
-        } while (WVar24 != L'\0');
+            iVar18 = (int)dest_count_li.QuadPart;
+            tok_cursor.QuadPart = tok_cursor.QuadPart + 2;
+            cur_char = *(WCHAR *)(uintptr_t)tok_cursor.QuadPart;
+            dest_flag_prev = bVar2;
+        } while (cur_char != L'\0');
     }
-    if ((*(WCHAR *)(uintptr_t)LVar21.QuadPart != L'\0') &&
-        (PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)LVar21.QuadPart, '\0'),
-         bVar3)) {
+    if ((*(WCHAR *)(uintptr_t)tok_start.QuadPart != L'\0') &&
+        (PECMD_AppendParamToken(pLVar16, (LPCWSTR)(uintptr_t)tok_start.QuadPart, '\0'),
+         dest_flag_prev)) {
         iVar18 = iVar18 + 1;
     }
     *(WCHAR *)(strb1.data + strb1.len * 2) = L'\0';
     *(short *)(strb2.data + strb2.len * 2) = 0;
-    local_b0.pFrom = strb1.data;
+    shfo.pFrom = strb1.data;
     if (0 < iVar18) {
-        local_b0.pTo = strb2.data;
+        shfo.pTo = strb2.data;
     }
     SetLastError(0);
-    if ((uVar10 != 0) && (local_b0.wFunc == 3)) {
-        if (((uVar10 & 2) == 0) || (iVar18 = SHFileOperationW(&local_b0),
+    if ((uVar10 != 0) && (shfo.wFunc == 3)) {
+        if (((uVar10 & 2) == 0) || (iVar18 = SHFileOperationW(&shfo),
                                     LVar22.QuadPart = LVar23.QuadPart, iVar18 != 0)) {
             LVar22.QuadPart =
-                PECMD_DeleteDirectoryTree(strb1.data, (uint32_t)(uint8_t)local_c5);
+                PECMD_DeleteDirectoryTree(strb1.data, (uint32_t)(uint8_t)progress_flag);
         }
         goto LAB_14003c9a2;
     }
-    if (bVar4) {
-        if ((local_b0.pTo == (LPCWSTR)0x0) ||
-            (LVar22.QuadPart = (int64_t)(uintptr_t)local_b0.pTo, *local_b0.pTo == 0)) {
+    if (f_delay) {
+        if ((shfo.pTo == (LPCWSTR)0x0) ||
+            (LVar22.QuadPart = (int64_t)(uintptr_t)shfo.pTo, *shfo.pTo == 0)) {
             LVar22.QuadPart = LVar23.QuadPart;
         }
-        iVar18 = MoveFileExW(local_b0.pFrom, (LPCWSTR)(uintptr_t)LVar22.QuadPart, 6);
+        iVar18 = MoveFileExW(shfo.pFrom, (LPCWSTR)(uintptr_t)LVar22.QuadPart, 6);
     }
     else {
-        if (bVar25 == 0) {
+        if (op_code == 0) {
         LAB_14003c906:
-            if (local_b0.wFunc != 4) {
+            if (shfo.wFunc != 4) {
                 if (1 < iVar18) {
-                    local_b0.fFlags = local_b0.fFlags | 1;
+                    shfo.fFlags = shfo.fFlags | 1;
                 }
-                iVar18 = SHFileOperationW(&local_b0);
+                iVar18 = SHFileOperationW(&shfo);
                 LVar22.QuadPart = iVar18;
                 goto LAB_14003c9a2;
             }
-            FUN_1400702B0((WCHAR **)&local_c0.QuadPart, local_b0.pFrom);
-            psVar15 = PECMD_LastPathSeparator((short *)(uintptr_t)local_c0.QuadPart);
+            FUN_1400702B0((WCHAR **)&local_c0.QuadPart, shfo.pFrom);
+            last_sep = PECMD_LastPathSeparator((short *)(uintptr_t)local_c0.QuadPart);
             LVar22 = local_c0;
-            if (psVar15 != (short *)0x0) {
-                LVar22.QuadPart = (int64_t)(uintptr_t)(psVar15 + 1);
+            if (last_sep != (short *)0x0) {
+                LVar22.QuadPart = (int64_t)(uintptr_t)(last_sep + 1);
             }
             *(WCHAR *)(uintptr_t)LVar22.QuadPart = L'\0';
-            psVar15 = PECMD_LastPathSeparator(local_b0.pTo);
-            LVar22.QuadPart = (int64_t)(uintptr_t)local_b0.pTo;
-            if (psVar15 != (short *)0x0) {
-                LVar22.QuadPart = (int64_t)(uintptr_t)(psVar15 + 1);
+            last_sep = PECMD_LastPathSeparator(shfo.pTo);
+            LVar22.QuadPart = (int64_t)(uintptr_t)shfo.pTo;
+            if (last_sep != (short *)0x0) {
+                LVar22.QuadPart = (int64_t)(uintptr_t)(last_sep + 1);
             }
             FUN_14006375C((WCHAR **)&local_c0.QuadPart, (LPCWSTR)(uintptr_t)LVar22.QuadPart);
-            BVar12 = MoveFileW(local_b0.pFrom, (LPCWSTR)(uintptr_t)local_c0.QuadPart);
-            if (BVar12 != 1) {
+            move_ok = MoveFileW(shfo.pFrom, (LPCWSTR)(uintptr_t)local_c0.QuadPart);
+            if (move_ok != 1) {
                 uVar10 = GetLastError();
                 if (uVar10 == 0) {
                     uVar10 = 1;
@@ -7488,18 +7488,18 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
             PECMD_FreeStrBuf(&pLVar16->QuadPart);
             goto LAB_14003c9a2;
         }
-        if (bVar5) {
-            iVar18 = RemoveDirectoryW(local_b0.pFrom);
+        if (f_rd) {
+            iVar18 = RemoveDirectoryW(shfo.pFrom);
         }
-        else if (local_b0.wFunc == 3) {
-            if (bVar6) {
+        else if (shfo.wFunc == 3) {
+            if (f_su) {
                 local_res20.QuadPart = 0;
-                lVar13 = PECMD_OpenFileHandle((HANDLE *)&local_res20.QuadPart, local_b0.pFrom,
+                lVar13 = PECMD_OpenFileHandle((HANDLE *)&local_res20.QuadPart, shfo.pFrom,
                                               0x80000000, 7, (LPSECURITY_ATTRIBUTES)0x0, 3,
                                               0x6000080, (HANDLE)0x0);
-                DVar11 = GetLastError();
+                open_lasterr = GetLastError();
                 if (lVar13 == 0) {
-                    if (DVar11 == 2) {
+                    if (open_lasterr == 2) {
                         if (((WCHAR *)local_res20.QuadPart != (WCHAR *)0x0) &&
                             ((WCHAR *)local_res20.QuadPart != (WCHAR *)0xffffffffffffffff)) {
                             CloseHandle((HANDLE)(uintptr_t)local_res20.QuadPart);
@@ -7514,11 +7514,11 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                         CloseHandle((HANDLE)(uintptr_t)local_res20.QuadPart);
                     }
                     local_res20.QuadPart = 0;
-                    lVar13 = PECMD_OpenFileHandle((HANDLE *)&local_res20.QuadPart, local_b0.pFrom,
+                    lVar13 = PECMD_OpenFileHandle((HANDLE *)&local_res20.QuadPart, shfo.pFrom,
                                                   0x80000000, 7, (LPSECURITY_ATTRIBUTES)0x0, 3,
                                                   0x6000080, (HANDLE)0x0);
-                    DVar11 = GetLastError();
-                    if ((lVar13 == 0) && (DVar11 == 2)) {
+                    open_lasterr = GetLastError();
+                    if ((lVar13 == 0) && (open_lasterr == 2)) {
                         if (((WCHAR *)local_res20.QuadPart != (WCHAR *)0x0) &&
                             ((WCHAR *)local_res20.QuadPart != (WCHAR *)0xffffffffffffffff)) {
                             CloseHandle((HANDLE)(uintptr_t)local_res20.QuadPart);
@@ -7531,25 +7531,25 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                     CloseHandle((HANDLE)(uintptr_t)local_res20.QuadPart);
                 }
             }
-            iVar18 = DeleteFileW(local_b0.pFrom);
+            iVar18 = DeleteFileW(shfo.pFrom);
         }
-        else if (local_b0.wFunc == 2) {
-            if (bVar6) {
+        else if (shfo.wFunc == 2) {
+            if (f_su) {
                 FUN_1400702B0((WCHAR **)&local_res20.QuadPart, WSTR(" -dd -bs=8M \""));
-                FUN_14006375C((WCHAR **)&local_res20.QuadPart, local_b0.pTo);
+                FUN_14006375C((WCHAR **)&local_res20.QuadPart, shfo.pTo);
                 FUN_14006375C((WCHAR **)&local_res20.QuadPart, WSTR("\",0,\""));
-                FUN_14006375C((WCHAR **)&local_res20.QuadPart, local_b0.pFrom);
+                FUN_14006375C((WCHAR **)&local_res20.QuadPart, shfo.pFrom);
                 FUN_14006375C((WCHAR **)&local_res20.QuadPart, WSTR("\""));
                 LVar22 = FUN_1400D2E90(script, local_res20);
                 pLVar16 = &local_res20;
                 goto LAB_14003c8ca;
             }
-            iVar18 = CopyFileW(local_b0.pFrom, local_b0.pTo, 0);
+            iVar18 = CopyFileW(shfo.pFrom, shfo.pTo, 0);
         }
         else {
-            if (local_b0.wFunc != 1)
+            if (shfo.wFunc != 1)
                 goto LAB_14003c906;
-            iVar18 = MoveFileW(local_b0.pFrom, local_b0.pTo);
+            iVar18 = MoveFileW(shfo.pFrom, shfo.pTo);
         }
     }
     LVar22.QuadPart = LVar23.QuadPart;
@@ -7564,7 +7564,7 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
 LAB_14003c9a2:
     PECMD_FreeStrBuf(&strb2.data);
     PECMD_FreeStrBuf(&strb1.data);
-    PECMD_FreeStrBuf((WCHAR **)&local_78);
+    PECMD_FreeStrBuf((WCHAR **)&line_copy_buf);
     return LVar22;
 }
 
