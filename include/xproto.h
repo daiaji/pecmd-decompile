@@ -35,7 +35,7 @@ static __inline ULARGE_INTEGER S11_U64ToULI(uint64_t v)
 { ULARGE_INTEGER u; u.QuadPart = (int64_t)v; return u; }
 
 /* 1 site(s) */ extern void AtlThrowImpl(long); /* def src\commands\core_b3b.c:74 */
-/* 1 site(s) */ extern int FUN_140003864(void *a, const uint16_t *b, uint32_t, uint32_t, void *e, uint32_t, uint32_t, void *h); /* def unimplemented_stubs.c:406 */
+/* 1 site(s) */ extern uint64_t FUN_140003864(void *a, const uint16_t *b, uint32_t, uint32_t, void *e, uint32_t, uint32_t, void *h); /* def unimplemented_stubs.c (R25: CreateFileW 包装真体, HANDLE 返回) */
 /* 1 site(s) */ extern uint64_t FUN_1400048c4(int64_t *a); /* def unimplemented_stubs.c:409 */
 /* 1 site(s) */ extern uint64_t FUN_14000C764(LPCWSTR p); /* dc 原文权威签名(S11) */
 /* 1 site(s) */ extern uint32_t FUN_14000bfcc(uint64_t, uint64_t, const uint16_t *c); /* def unimplemented_stubs.c:411 */

@@ -1,1 +1,0 @@
-CASE=004_envi_global_scope|A=outer2

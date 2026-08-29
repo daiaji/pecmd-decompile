@@ -889,6 +889,11 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
     {
         WCHAR *q = nameStart;
         WCHAR *p7 = NULL, *p15 = NULL;
+        int via_b91f = 0; /* R25-e(031/039 %A% 深水定案): dc:78377-78426 两种退出 —
+                             pWVar13<=pWVar6 / nameStart 空 → goto LAB_14007b91f
+                             (跳过 pWVar15=pWVar6 → spec=NULL → FormatTypedMemValue
+                             直接取字符串); 仅 '?' 终止走 pWVar15=pWVar6(spec 格式化)。
+                             msvc 原无条件 p15=p7 → %B% 场景 spec="?" → 展开 "0x70"。 */
         start = 0;
         len = 0x7fffffffffffffffLL;
         for (;;) {
@@ -896,14 +901,18 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
             q = NULL;
             p15 = NULL;
             lp = p7;
-            if (p13 <= p7)
+            if (p13 <= p7) {
+                via_b91f = 1;
                 break;
+            }
             {
                 WCHAR ch = *p7;
                 q = NULL;
                 p15 = NULL;
-                if (ch == L'\0')
+                if (ch == L'\0') {
+                    via_b91f = 1;
                     break;
+                }
                 if (ch == L':' && p7[1] == L'~') {
                     *p7 = L'\0';
                     node = PECMD_VarLookup(script, nameStart, NULL, -1, NULL);
@@ -924,23 +933,25 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
             }
         }
         *p7 = L'\0';
-        for (;;) {
-            WCHAR ch = *lp;
-            q = p7;
-            if (ch == L'\0')
-                break;
-            lp++;
-            q = lp;
-            if (ch == L':')
-                break;
-        }
-        p15 = p7;
-        if (*p13 != L'\0' && p13[1] == L'%' && (p7 = p13 + 2, *p7 == L'd')) {
-            for (lp = p7; *p7 != L'\0'; p7++) {
-                if (*p7 == L'%') {
-                    inP = p7 + 1;
-                    p13 = p7;
+        if (via_b91f == 0) {
+            for (;;) {
+                WCHAR ch = *lp;
+                q = p7;
+                if (ch == L'\0')
                     break;
+                lp++;
+                q = lp;
+                if (ch == L':')
+                    break;
+            }
+            p15 = p7;
+            if (*p13 != L'\0' && p13[1] == L'%' && (p7 = p13 + 2, *p7 == L'd')) {
+                for (lp = p7; *p7 != L'\0'; p7++) {
+                    if (*p7 == L'%') {
+                        inP = p7 + 1;
+                        p13 = p7;
+                        break;
+                    }
                 }
             }
         }

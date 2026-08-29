@@ -179,16 +179,23 @@ int32_t FUN_14005C7C4(const char *a, const WCHAR *w)
  */
 int64_t *FUN_1400637DC(int64_t *out, const char *src, int64_t len)
 {
-    size_t n;
-    char *p;
+    /* R25(053 HASH 堆损坏定案): 原 calloc(无 PECMD 头)+memcpy(无 ANSI→宽转换)
+     * → PECMD_FreeStrBuf(ptr-8) 释放非法块 c0000374 (六现场 wslot 头无魔数)。
+     * 按 dc:60925-60948 (FUN_1400637dc size=171) 直移:
+     * PECMD_AllocString(带头分配 hdr+8) + MultiByteToWideChar(ANSI→宽, CP_ACP)。 */
+    extern WCHAR *PECMD_AllocString(WCHAR **ps, int64_t count);
+    int iVar1;
+    int64_t lVar2;
+
     if (len < 0)
-        len = lstrlenA(src);
-    n = (size_t)len;
-    p = (char *)calloc(1, n + 1);
-    if (p && src)
-        memcpy(p, src, n);
-    p[n] = 0;
-    *out = (int64_t)p;
+        len = (int64_t)lstrlenA(src);
+    PECMD_AllocString((WCHAR **)out, len + 3);
+    iVar1 = MultiByteToWideChar(0 /* CP_ACP */, 0, src, (int)len, (LPWSTR)*out, (int)len + 2);
+    lVar2 = (int64_t)iVar1;
+    if (iVar1 < 0)
+        lVar2 = 0;
+    *((WCHAR *)*out + lVar2) = 0;
+    PECMD_AllocString((WCHAR **)out, lVar2 + 1);
     return out;
 }
 

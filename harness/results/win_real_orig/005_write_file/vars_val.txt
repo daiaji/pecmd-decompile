@@ -1,1 +1,0 @@
-CASE=005_write_file|F=C:\pectest\out\demo.txt|C=%C%

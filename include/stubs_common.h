@@ -994,8 +994,8 @@ extern void PECMD_ExpandScriptVariables(int64_t *p1, int64_t *p2, int64_t *p3);
 /* core_b3_remaining.c */
 extern uint8_t *PECMD_MemMoveForward(uint8_t *dst, uint8_t *src, int n);
 /* 既存声明@527; 桩=memmove 本文件后部 */
-extern uint64_t PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag);
-/* 桩本文件后部 (arity 0->5) */
+extern void *PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag);
+/* R25: 还原为 dc:18077-18113 真体 (FUN_14001e5b0 变量创建), 返回节点指针 */
 extern void PECMD_ClearTaskTable(uint64_t script, int mode);
 /* def 本文件@6472 (undefined8→uint64_t) */
 extern uint64_t PECMD_VarLookup(int64_t *a, const uint16_t *b, int64_t *c, int64_t d, void *e);
@@ -1281,9 +1281,9 @@ extern uint8_t DAT_14011c638[64];
 /* 默认命令串 (定义见本文件后部) */
 int wsprintfW(unsigned short *out, const unsigned short *fmt, ...);
 /* 定义见后部 (def @3623) */
-int FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void *e, uint32_t f,
-                  uint32_t g, void *h);
-/* def @6340 (int 返回: 1062 行隐式调用在先) */
+uint64_t FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void *e, uint32_t f,
+                       uint32_t g, void *h);
+/* R25: 还原为 CreateFileW 包装真体 (dc:1179-1196, 同址别名 PECMD_OpenFileHandle), HANDLE 返回 */
 unsigned short *lstrcpyW(unsigned short *dst, const unsigned short *src);
 /* def 见后部 */
 COORD GetLargestConsoleWindowSize(void *h);

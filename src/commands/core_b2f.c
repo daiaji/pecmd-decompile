@@ -2682,8 +2682,10 @@ ULARGE_INTEGER PECMD_EvalLoopCondition(int64_t *script, ULARGE_INTEGER value, ui
     ULARGE_INTEGER UVar15 = {{0, 0}};
     ULARGE_INTEGER UVar19 = {{0, 0}};
     ULARGE_INTEGER UVar27 = {{0, 0}};
-    ULARGE_INTEGER UVar30 = {{0, 0}};
+    ULARGE_INTEGER UVar30 = {{0, 0}};   /* NULL 哨兵, 恒 0 (R25: FindFileOrDir 探测改走 probe_ui) */
     ULARGE_INTEGER UVar35 = {{0, 0}};
+    ULARGE_INTEGER probe_ui = {{0, 0}}; /* R25(061 IFEX AV 定案): FindFileOrDir 探测结果独立槽,
+                                          * 防止覆写 UVar30 哨兵 (原版 0x140032dc4 uVar20 独立)。 */
     ULARGE_INTEGER local_1a0 = {{0, 0}};
     ULARGE_INTEGER local_190 = {{0, 0}};
     ULARGE_INTEGER local_188 = {{0, 0}};
@@ -3065,7 +3067,7 @@ LAB_1400330ae:
         local_res10.QuadPart = UVar27.QuadPart;
     }
 
-    if (local_d8 == (WCHAR *)(uintptr_t)UVar30.QuadPart) {
+    if (local_d8 == NULL) {
         if (uVar26 != DVar8) {
         LAB_14003378b:
             if ((*(uint8_t *)((char *)script + 0xd) == bVar16) &&
@@ -3074,7 +3076,12 @@ LAB_1400330ae:
             }
             else {
                 pWVar41 = FUN_14001E69C(script, (LPCWSTR)UVar27.QuadPart, NULL, -1);
-                if (pWVar41 == (WCHAR *)(uintptr_t)UVar30.QuadPart) {
+                /* R25(061 IFEX AV 定案): dc:30786-30791 的 `pWVar41 == UVar30` 中 UVar30
+                 * 是 Ghidra 伪影(NULL 哨兵恒 0); msvc 还原了 dc:30938 FindFileOrDir 覆写
+                 * UVar30=1(文件存在) 后哨兵失效 → *pWVar41(NULL) 解引用 AV。
+                 * 原版反汇编(0x140032dc4)真实语义 = 直接判空: puVar9==0 → g_szEmpty。
+                 * 改为 NULL 判空(等价于 UVar30 未被污染时的行为)。 */
+                if (pWVar41 == NULL) {
                     pWVar18 = g_szEmpty;
                 }
                 else {
@@ -3245,16 +3252,21 @@ LAB_1400330ae:
                                (uVar12 = PECMD_IsRemovableDrive(*(WCHAR *)local_res10.QuadPart),
                                 (DWORD)uVar12 != DVar8)));
                 if ((DVar9 != DVar8) && (condA || condB)) {
-                    UVar30.LowPart = PECMD_FindFileOrDir((LPCWSTR)local_res10.QuadPart,
-                                                         (int)(char)bVar16 | 0x10);
-                    UVar30.HighPart = 0;
+                    /* R25(061 IFEX AV 定案): 旧实现写 UVar30 探测结果 → UVar30
+                     * NULL 哨兵被覆写为 1 → 下游 `xxx == UVar30` 哨兵比较全失效
+                     * → E69C 返回 NULL 后 *NULL 解引用 AV (崩溃点 EvalLoopCondition
+                     * +0x1697/+0x18f6)。原版反汇编 0x140032dc4(code_033f6b) 探测
+                     * 结果存独立 uVar20, UVar30 恒为 NULL 哨兵。探测改走 probe_ui。 */
+                    probe_ui.LowPart = PECMD_FindFileOrDir((LPCWSTR)local_res10.QuadPart,
+                                                           (int)(char)bVar16 | 0x10);
+                    probe_ui.HighPart = 0;
                     UVar19.HighPart = 0;
                     /* R24(031/061 live 对照定案): dc:30938-30942 此处为
                      * UVar19.s.LowPart = extraout_EAX —— Ghidra 对 FindFileOrDir
-                     * 返回的 RAX 残留记名, 实际值 = 刚写入 UVar30.LowPart 的同一 EAX。
+                     * 返回的 RAX 残留记名, 实际值 = 探测结果 EAX。
                      * 旧实现误写 0 → 文件探测真值丢失 → IFEX 文件存在/等值命中
-                     * 全判假 (031/061 exit=2 vs golden=0)。按 dc 改为 UVar30.LowPart。 */
-                    UVar19.LowPart = UVar30.LowPart;
+                     * 全判假 (031/061 exit=2 vs golden=0)。 */
+                    UVar19.LowPart = probe_ui.LowPart;
                 }
             }
         }
@@ -3273,8 +3285,8 @@ LAB_1400330ae:
         local_188.QuadPart = UVar35.QuadPart + 2;
     }
     /* R24(031/061 live 对照定案): dc:30963 为 UVar35 = UVar30 (真值积累槽),
-     * 旧实现误推 0 — 与上一条同源 Ghidra 伪影处理失误, 一并归正。 */
-    UVar35 = UVar30;
+     * 旧实现误推 0。R25 归正: UVar30 保持 NULL 哨兵, 探测真值经 probe_ui 传播。 */
+    UVar35 = probe_ui;
     uVar26 = local_180;
     PECMD_SkipLeadingControls((WCHAR **)&local_188.QuadPart);
     uVar3 = UVar35.LowPart;

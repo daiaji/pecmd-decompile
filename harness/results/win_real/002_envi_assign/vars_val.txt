@@ -1,1 +1,0 @@
-CASE=002_envi_assign|A=Hello|B=World|C=Hello_World

@@ -125,7 +125,15 @@ def run_exe(label, exe_path, backend, case_id, dst, out_dir, timeout_s,
             pectest_root, notes):
     """[3/4] 运行 + [4/4] 回捞: cwd=pectest_root, LOAD 用例绝对路径脚本"""
     result_dir = os.path.join(RESULTS_ROOT, backend, case_id)
-    os.makedirs(result_dir, exist_ok=True)
+    # R25 夹具缺陷修复: 旧版只 makedirs 不清空, 导致 result_dir 内残留上一轮
+    # (乃至上一个构建) 的 artifacts 被误读为本次证据 —— 曾造成 061 vars_val.txt
+    # 陈旧件 (mtime 8/27) 被当作"变量表内存损坏"证据的错误结论 (analysis/r25_*
+    # 取证线与主代理均受其误导)。现按 out_dir 同款策略: 逐条删除受管产物。
+    if os.path.isdir(result_dir):
+        for name in ARTIFACTS + ("stdout.txt", "exit.txt", "verdict.json"):
+            stale = os.path.join(result_dir, name)
+            if os.path.isfile(stale):
+                os.remove(stale)
 
     # 清空共享 out 目录, 防止上一用例残留产物污染本次回捞
     if os.path.isdir(out_dir):
@@ -134,10 +142,17 @@ def run_exe(label, exe_path, backend, case_id, dst, out_dir, timeout_s,
 
     exit_code = None
     stdout_bytes = b""
+    # R25-e (031/039 环境隔离): IDE 服务进程环境含 A=1 等单字符变量, 污染 %x% 展开
+    # (原版实测也判假 → golden 与实测失配)。启动前清除 A-Z 单字符环境变量, 保证对拍
+    # 可复现 (PECMD 运行期 ENVI/SET 设置的变量不受影响)。
+    clean_env = os.environ.copy()
+    for _ch in (chr(c) for c in range(ord("A"), ord("Z") + 1)):
+        clean_env.pop(_ch, None)
     try:
         proc = subprocess.run(
             [exe_path, "LOAD", os.path.join(dst, "run_all.pecmd")],
             cwd=pectest_root,
+            env=clean_env,
             timeout=timeout_s,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,

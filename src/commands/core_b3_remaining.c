@@ -21462,18 +21462,17 @@ uint64_t PECMD_ParseTokenResolve(int64_t *param_1, WCHAR *param_2, uint64_t *par
 LPCWSTR PECMD_ApplyVarWriteModifiers(int64_t *param_1, int64_t *param_2, uint16_t *param_3,
                                      int64_t *param_4)
 {
-    /* @0x140084a5c size=3133 — 格式/字节图案展开器(按 param_3 的 '$'/'%'/'='/'.'/'#'/'*' 修饰符把
-     *   输入串扩展为字节/字序列写入 *param_2, 返回结果串指针并写 *param_4=长度)。
-     * SKIP(经真实尝试 — 已通读全部 ~500 行反编译并反汇编入口确认): 该函数为 Ghidra
-     *   "Type propagation not settling", 类型未定型残留遍布全程 — 多层星号指针(LPCWSTR******)、
-     *   CONCAT44/CONCAT71 寄存器拼接、以及 local_70._0_1_/_0_2_ 字节/字拆分(指向 low-byte/low-word
-     *   重复展开)。忠实移植需逐指令反汇编解卷积整型/指针/字节拆分语义, 存在臆造语义风险; 且本函数在
-     *   重构树中无调用点(param_1/2/3/4 均为 out/in 缓冲与格式串), 移植无法被任何调用验证。
-     *   依规则"不臆造语义、不留红", 保留无副作用桩; 已嵌入地址/大小注明。 */
-    (void)param_1;
+    /* R25(031/039 SET value 空定案): 原 SKIP 空桩 → EnviMemReadWrite:3280 调用后
+     *   plen2(local_2d8) 不写 → v18=0 → AddVarDefault 第 5 参 flag=0 → VarWriteValueCap
+     *   (len=0) → SET 创建变量 value 恒空 → %A% 展开为 "" → FIND $%A%=pecmd 判假。
+     *   按 dc:84512-84517 无修饰符路径(首空白即 break, 修饰符集合 $ % = . # ~ 未命中)
+     *   最小化: *param_4 = lstrlenW(val)*2 (AddVarDefault 的 flag = val 字节长度)。
+     *   *param_2 保持不写(原版无修饰符时亦仅分配, 内容由 AddVarDefault 用 val 重写)。
+     * TODO(verify): '$'/'%'/'='/'.'/'#'/'~' 修饰符展开路径(dc:84514-84762 字节图案/
+     *   hex/重复)仍需完整移植 — 当前返回 NULL 保留原桩行为。 */
     (void)param_2;
     (void)param_3;
-    (void)param_4;
+    *param_4 = (int64_t)lstrlenW((LPCWSTR)(intptr_t)*param_1) * 2;
     return (LPCWSTR)0;
 }
 

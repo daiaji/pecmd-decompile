@@ -1,1 +1,0 @@
-CASE=006_write_crlf|F=C:\pectest\out\crlf.txt

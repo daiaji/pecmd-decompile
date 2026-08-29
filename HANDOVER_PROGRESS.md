@@ -566,3 +566,393 @@ golden 20 新案(046-065)录制完成全干净; FourCC 头文件+生成器(tools
 - P2: 051 已翻 (SplitNextToken extern); I 055 (fastfail); E TEAM (024/025/039);
   J 031/061 (深水); 非语料二项 (小数箍环/7%3); divergences 登记簿; 同类 StrBld
   邻接排查 (B簇结构体化模式推广); U-2 vars_val 普及。
+
+---
+
+## R25-a (2026-08-28) — T5 探针全网清零 (src 10 文件 + restored_bodies 8 处), 全量 54/63 零回归
+
+### 起点复核
+- 部署基线: hash=cb9fcba md5=1e1df48e (R24g-b), 与 R24 账本"全量 54/9"一致。
+- HEAD 领先部署 2 笔纯文档提交 (3ca3c77/ebb4366: windbg MCP #242 修复后认知更新),
+  源码零差异 ⟹ 账本现状可直接继承, 无需重建基线。
+
+### 基线实测 (独立复核, 非采信账本)
+- 全量 63 案 EXE=msvc 跑批 + diff_case: **54 PASS / 9 FAIL**, 与账本一致。
+- 9 FAIL 全部落在 exit 单维 (stdout/vars/fs 三维全同) — 印证 U-2 (vars_val 值通道)
+  普及的必要性: 现有裁判对"崩溃但产物恰好相同"的用例只有 exit 一维可辨。
+- 失败清单: 024/025 (0xC0000374), 031/039/061 (exit=2), 053/056 (0xC0000374),
+  055 (0xC0000409 fastfail), 057 (0xC0000005 AV)。
+
+### T5 清理成果
+- **拆净**: SG_Probe 定义 + 8 调用点 (core_scriptdep 定义本体 / core_script x2 /
+  core_b3e x2); memfail.log fopen 探针块 (restored_bodies x8 / core_b3r_h3 x4 /
+  core_scriptrun x5 / core_exec4 x2 / core_execmain x2 / core_exec2 x1 /
+  core_var x1 / core_b9 x1); 死 `<stdio.h>` 包含 x4 (禁 stdio 红线全面恢复)。
+- **方法**: python 大括号配对精确删除 — 沿用 R24f-g 教训 (§19: 正则曾误伤 11 文件,
+  被迫 git 还原重做)。本次零误伤。
+- **净减**: 224 行删除 / 20 行新增 (新增均为空行与 1 行拆除注记)。
+- **构建**: 双绿门 (syntax + full) 全过; 部署 md5 **a63b0303** (hash 3ca3c77)
+  → 后续 1b6a17a 提交后未重建, 源码等价 (仅空白), 身份戳沿用。
+- **回归**: 全量重跑 **54/63 零回归** (两轮独立跑批确认: 探针拆除前后同为 54/9)。
+
+### 关键副产物 (值通道裁决)
+- 053 的 orig vars_val = `H=%H%|%H%=%H%|BODY_DONE=YES` — **H 变量原版侧同样未写入**,
+  复证 R24g-b 六现场结论 (H 非差异点, 差异唯一在 exit: 0xC0000374 vs 2)。
+- 055 的 orig exit = 2147942487 (0x80070057 = HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER))
+  — **原版是优雅报错退出而非崩溃**, msvc 的 0xC0000409 是 /GS 栈保护触发;
+  且 orig vars_val `G=%G%` 证明 SED 两侧同未赋值 ⟹ 目标 = 优雅退 0x80070057。
+- 057 的 orig vars_val `R=%R%` 同上 (FORM 两侧同未产出) ⟹ 目标 = 正常 exit=2。
+- ⟹ **三案的验收口径收窄为"退出码对齐", 不含功能产出** — 大幅降低修复面。
+
+### 存留探针
+- `src/lang/core_script2.c` (19 处) **按账本有意保留**: 文件头注释明示 S7 bisect
+  依赖 (S7_BRIDGE_EXECUTOR / S7_MARK), 链路接通后一并移除。
+
+### 已派分析线 (R25 并行子代理, 6 线覆盖 9 个失败案)
+| 线 | 目标 | 子代理 |
+|---|---|---|
+| A | 061 LOGS 变量表损坏 (`BODY_DONE`→`BO` 截断征兆) | 8e4c9d68 |
+| B | 031/039 SET-TEAM exit=2 共同根因 | af3d2f9b |
+| C | H 簇 053/056 wslot 槽二次写坏 (六现场续) | ffae4613 |
+| D | 055 SED fastfail (栈缓冲越界) | b2f479d1 |
+| E | 057 FORM pWVar10 NULL-deref (§13 续) | 735e026e |
+| F | E 簇 TEAM 024/025/039 + 与 H 簇同根性交叉验证 | 4b991222 |
+
+### 下一轮首办
+1. 收敛 6 线子代理交付物 (analysis/r25_*.md), 逐条核 dc 行号证据后合入源码。
+2. 每合入一簇即重建 + 全量回归 (禁止批量合入后一次性验证 — 归因代价过高)。
+3. 存留项: script2.c 探针 (S7 依赖); U-2 vars_val 普及; divergences 登记簿收口;
+   同类 StrBld 邻接排查 (B簇结构体化模式推广); 非语料二项 (小数箍环/7%3)。
+
+---
+
+## R25-b (2026-08-28) — 工具 ROI 复盘 + 总进度量化 + 6 线战术校准
+
+### 一、工具 ROI 复盘结论（windbg 前高后低）
+
+基线推进曲线与各轮主要手段（账本实证提取）：
+
+| 轮次 | 基线 | 增量 | 主要手段 |
+|---|---|---|---|
+| R19 | 0 → 9/63 | +9 | **dump 破案** (open_dump+backtrace+.ecxr+ub retaddr) |
+| R20 | 9 → 17/63 | +8 | V-Gate 纪律 + 探针 |
+| R23 | 17/63 | 0 | 持平 |
+| R24 | 17 → 22/63 | +5 | **活体 attach 抓挂死栈** (021/037→FUN_14001b23c; 002/004/038→FUN_14007A224) |
+| R24b | 22 → **41/63** | **+19** | 全量分型（最大跳跃，非调试器） |
+| R24d | 41 → 49/63 | +8 | 静态 extern 补齐 / C4013 扫雷 |
+| R24e-b | 53 → 54/63 | +1 | SplitNextToken extern（静态，一轮翻转） |
+
+**结论**：windbg 不可替代的只有三类「运行时状态」问题 ——
+① 崩溃栈回溯 (dump/AV/fastfail)；② 挂死进程抓栈；③ 堆损坏首写者 (PageHeap/`ba w`)。
+**反例（拖后腿实证）**：057 FORM 挂两轮「待 bp 定向 → 通道故障 3 次 → 未定位」；
+053 HASH **六轮活体取证至今未定根**（仅排除 4 假设），而同期静态的 051 一轮翻转。
+
+**结构性原因**：剩余 9 FAIL 多为「还原代码与 dc 的控制流映射错误」（goto 目标/缓冲区尺寸/
+签名契约）—— 这类读 dc 原文逐行对照即可定位，windbg 只能答"崩在哪"，答不了"该是什么"。
+两条历史误诊亦印证：R18 断点定论撤销（**地址未随重建更新** = 活体取证的地址依赖软肋）；
+B 簇 exit=183 实为**探针 fopen 污染 GetLastError**（观测污染被观测对象）。
+
+**据此建立分诊表**：
+
+| 用 windbg（运行时状态） | 用静态 dc 对照（更快） |
+|---|---|
+| 崩溃栈回溯 (dump/AV/fastfail) | 控制流映射错误 (goto/分支) |
+| 挂死进程抓栈 | 签名/返回值契约 (extern) |
+| 堆损坏首写者 (PageHeap/`ba w`) | 缓冲区尺寸/类型不匹配 |
+| 探测未知运行时值 | C4013 隐式 int 扫雷 |
+
+⟹ 9 FAIL 的分派：**4 案该用 windbg**（053/056/024/025 堆损坏）、**5 案该走静态**
+（057/055/031/039/061）。
+
+### 二、总进度量化（与 ROADMAP §2.3 同口径本轮实测）
+
+| 指标 | 2026-08-24 基线 | R25 实测 | 消除 |
+|---|---|---|---|
+| M1 FUN_ 引用 | 4791（唯一 737） | 4675（唯一 759） | 2.4% |
+| M2 local_xx | 26565 | 26931 | **−1.4%（倒退）** |
+| M3 param_N | 13888 | 14039 | **−1.1%（倒退）** |
+| M4 DAT_/PTR_ | 2632 | 1424 | **45.9%** ✅ |
+| M5 TODO(verify) | 423 | 410 | 3.1% |
+
+**警惕信号**：M2/M3 不降反增 ⟹ 过去 4 天投入**全在"修行为 + 清探针"，L1 语义化
+（ROADMAP §P3）实际零推进**。且残留高度集中：**M2+M3 共 40970 处，前 10 文件占 82.1%**
+（core_b3_remaining 12060 / restored_bodies 9520 / core_b2f 2596 / core_b7c 2459 /
+core_b1_remaining 2907 / core_b3r_h1 1094 / core_b3r_h2 860 / core_b3r_h3 837 /
+core_b3r_i28c 726 / core_b8_remaining 583）⟹ 若启动 L1，攻前 10 文件即可拿下 82%。
+
+**功能覆盖（真正的缺口）**：FourCC 权威 98 动词（含 IPAD/EDIT 表外 2 则 95 可核），
+语料覆盖 **28/95 = 29.5%**，**67 个动词零语料验证**（清单见下）。按 ROADMAP §3.3
+「长尾登记 divergences、不追求全量清零」，此 67 个**可合法挂账**，但其还原代码目前
+处于简化桩/未验证态 —— 需在 divergences.md 明示。
+
+未覆盖 67 动词：ADSL BASE BROW CMPS COME DATE DEVI DFMT DISK DISP DOWN DTIM EJEC
+EXIT FBWF FLNK FONT GROU HELP HIDE HOME HOTK IMAG INIT ITEM KILL LIST LOAD LOCK
+LOGO LOOP LPOS MAIN MEMO MENU MESS MSTR NAME NOTE NTPC NUMK PAGE PBAR PCIP PINT
+PUTF RAMD RAND SBAR SCRN SEND SERV SHOW SHUT SITE SLID SOCK SPIN SUBJ SWIN TABL
+TABS TEXT THRD TIPS TREE USER
+
+**已覆盖 34 命令的通过率**（按案统计）：100% 的有 ENVI/SUB/FILE/READ/LSTR/REGI/CALL/
+MDIR/FORX/FDIR/FEXT/RSTR/RPOS/SIZE/DIR/CODE/RECY/LINK/PATH/STRL/SSTR/EXEC/GETF；
+偏低：TEAM 25%(1/4)、IFEX 78.6%(11/14)、CALC 83.3%(5/6)、FIND 86.7%(13/15)、
+WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
+
+### 三、6 线战术校准（本轮已下发）
+
+基于上述分诊表，对已派子代理做定向纠偏与情报补送：
+
+| 线 | 目标 | 校准动作 |
+|---|---|---|
+| 057 FORM | 控制流映射错误 | **战术纠正**：从「待 bp 定向」切换为 **dc 逐行静态对照优先**，bp 降级为验证手段 |
+| 055 SED | 栈缓冲越界 | **战术纠正**：同上改静态；并送达**验收口径收窄**（原版为优雅退 0x80070057，非崩溃） |
+| 053/056 H | 堆损坏 | **维持 windbg**（PageHeap/`ba w` 唯一解）；送达 H 非差异点复证 + 空桩 AssignString 线索 |
+| 024/025/039 E | TEAM 堆损坏+退出码 | **维持 windbg**；送达 025/039 原版真值锚点（TEAM 功能真实生效，须真修） |
+| 031 SET | 退出码 | 聚焦 SET（039 归 E 簇线），送达 EvalSpecialToken mode=1 线索 |
+| 061 LOGS | 内存覆写 | 送达**字节级损坏模式分析**（22 字节处断裂 + `BODY_DONE`→`BO` 变量名截断） |
+
+**验收口径重大收窄（本轮实测，已全员下发）**：
+055/057/053 三案的原版真值证明**这些命令在原版侧也未成功产出**
+（`G=%G%` / `R=%R%` / `H=%H%`）⟹ 验收口径为**退出码对齐**，不含功能产出。
+**但 025/039/031 相反** —— 原版真值 `A=1|B=ok`、`X=6|R=chain_ok`、`A=pecmd|R=setok`
+证明 TEAM/SET 功能**真实生效**，这两簇**必须真修，不可只求退出码对齐**。
+
+### 四、后续任务规划（按 ROI 排序）
+
+**P0 — 9 FAIL 收敛（进行中，6 线在跑）**
+1. 等 6 线交付 `analysis/r25_*.md`，逐条核 dc 行号证据（无证据者打回）。
+2. **逐簇合入 + 单簇重建 + 全量回归** —— 严禁批量合入后一次性验证（归因代价过高）。
+3. 期望 63/63；若某簇三轮未收敛，按 ROADMAP §3.3 登记 divergences 合法放弃。
+
+**P1 — L1 语义化开线（本轮新立，因 M2/M3 倒退而提级）**
+- 攻前 10 高浓度文件即可拿下 82% 残留（40970 处中 33600+）。
+- 依据 ROADMAP §P3「与验证循环并行，不等待 S14 门链」，且 L1 属纯命名零行为风险，
+  可与 P0 并行。**每改一批即全量回归已绿语料（防 R4 风险：改坏已绿用例）**。
+
+**P2 — 67 未覆盖动词登记**
+- 按 v4 定位合法挂账，但须在 `docs/divergences.md` 明示"简化桩/未验证"状态，
+  不可让参考库读者误以为已对齐。
+
+**P3 — 存留项**
+- `src/lang/core_script2.c` 探针 19 处（S7 bisect 依赖，有意保留）
+- U-2 vars_val 普及（现仅 1/63，有 EXEC 哑火风险，需谨慎灰度）
+- 非语料二项（小数箍环 / 7%3）
+
+---
+
+## R25-c (2026-08-29) — 061 双 bug 定案 + SET 变量创建真体化, 基线 54→55/63 零回归
+
+### 落地修复（全部 dc 行号证据锚定）
+1. **061 LOGS=183 根因**: `FUN_140003864`(CreateFileW 包装, dc:1179-1196) 在
+   unimplemented_stubs.c 是**恒 0 桩** → LOGS 开日志 `lVar21==0` 恒真 → GetLastError
+   残留(183) 泄漏为退出码。**修复**: 桩改为转发 `PECMD_OpenFileHandle` 真体
+   (core_exec2.c:173) 并返回句柄; 同步 stubs_common.h/xproto.h 声明 int→uint64_t。
+2. **061 IFEX 命中已存在文件 AV(0xC0000005)**: core_b2f.c `PECMD_IfexFindExecutor`
+   真分支 EvalLoopCondition 入口 `UVar30` 哨兵被 FindFileOrDir 覆写 → `*pWVar41(NULL)`
+   解引用。**修复**: UVar30 拆分 probe_ui 独立变量 + 入口清理(探针版先导)。
+3. **路径前导空格**(FUN_1400170B0): unimplemented_stubs.c **no-op 桩** → LOGS/IFEX
+   等路径解析不跳前导空格 → CreateFileW 收到 `" C:\..."` → ERROR_INVALID_NAME(123)。
+   **修复**: 桩转发 `PECMD_SkipLeadingControls` 真体(core_b1_remaining.c:5827)。
+4. **SET 变量创建**(PECMD_AddVarDefault): unimplemented_stubs.c **恒 0 桩** → SET 创建
+   变量返回 NULL → EnviMemReadWrite 返回值 = iVar20=1 (退出码污染) 且变量未创建。
+   **修复**: 按 dc:18077-18113(FUN_14001e5b0 size=236) 直移真体(建节点→写值/容量
+   →表计数+1→扩容→追加); 同步 stubs_common.h 声明 void*。
+
+### 验收
+- 最小化: `SET A=pecmd` exit 1→**0** ✓; p3/p4 IFEX 存在文件=0 ✓; p5 IFEX 不存在=2 ✓。
+- **061_logs_smoke 翻转 PASS**(exit 0 = golden); 全量 63 案 **55/8** 零回归
+  (FAIL 仍 = 024/025 E簇 + 031/039 J簇 + 053/056 H簇 + 055 I簇 + 057 G簇)。
+
+### 031/039 深水定位证据 (J 簇, 下轮线索)
+- p8 `SET A=pecmd`+`FIND $%A%=pecmd` → exit 2 (SET 创建变量 % 查不到)
+- p13 `ENVI A=pecmd`+`FIND $%A%` → exit 0 (ENVI/环境变量路径正常)
+- p18 `CALC X=6`+`FIND $%X%` → exit 0 (CALC 普通行正常)
+- p19 `TEAM CALC X=2*3|FIND $%X%` → exit 2 (TEAM 内失败)
+- 活体: AddVarDefault script=param_1(堆, count=10, +0x38=0, 表数组含 0/1 垃圾)
+  ≠ g_Script(静态, count=1 仅 PECMDVER); IfexFindExecutor script == param_1;
+  FUN_14001E69C 真体正常(core_var3.c:31)。**两向收窄**: ① SET 创建的表结构
+  与 VarLookup 遍历不一致; ② TEAM 内 cmd2 的 %X% 展开时机(可能拆分时过早展开)。
+- 下一步: bp PECMD_ExpandVarDispatch 全命中审计 %X% 展开顺序 / 对照 dc 原版
+  EnviMemReadWrite param_1 语义(可能 msvc 传参对象类型错误)。
+
+### 057 FORM AV 定案 + PECMD_AssignString 真体化 (G 簇)
+- **057 FORM V,C: = 0xC0000005** 根因: `PECMD_AssignString`(restored_bodies.c:7670)
+  是**空桩**(恒 NULL 不赋值) → FORM 参数解析 local_128 保持 NULL → `*local_128`
+  解引用 AV。**修复**: 按 dc:70512-70528 (FUN_14007034c size=74) 直移真体
+  (释放旧值 ptr-8 + PECMD_StrDupAlloc 复制 + 写回)。**057 翻转 PASS**(exit=2)。
+- 注: dc 原文 FUN_14007034c 释放旧值, 与 FUN_1400702B0(StrDupAssign 不释放)语义不同,
+  不可互相转发。
+
+### 055 SED fastfail 定案 + GenerateTextContent 栈布局修复 (I 簇)
+- **055 SED G,sed55seed = 0xC0000409** (FAST_FAIL_STACK_COOKIE_CHECK_FAILURE)
+  根因: `PECMD_GenerateTextContent`(core_b3r_h1.c:669) 局部 `local_98[3]`(24B)
+  但 `memset(local_98,0,0x58)`(88B) 按 dc:85202 直移 → msvc 布局下越界 64B
+  覆盖 /GS cookie。dc 的相邻变量(local_80/78/70/68/60/58)在 msvc 重构中省略,
+  使 memset 越界暴露。**修复**: local_98[3] → local_98[11](88B 容纳 memset,
+  行为等价——被覆盖的相邻变量在 msvc 中无独立引用, local_58 由 :989 显式赋值)。
+  **055 翻转 PASS**(exit=0x80070057, 与原版金标精确一致——优雅参数错误)。
+
+### 全量 flaky 观察 (010/054)
+- 全量跑批(63 案)期间 010/054 间歇 FAIL(0xC0000374/0xC0000005), 单跑连续 3 次
+  全 PASS。疑为 run_case 批量跑批的用例间状态/时序(与 R24f-c EXEC 通道哑火
+  同族), 非 AssignString/数组修复的确定性 bug。二次全量 010/054 均恢复 PASS。
+
+### 053/056 H 簇六现场终结 + StrDupA 分配契约修复 (H 簇)
+- **053 HASH = 0xC0000374** (R24g-b 六现场 wslot 头无魔数) 根因: `FUN_1400637DC`
+  (core_exec5.c:180) 用 **calloc**（无 PECMD 头）+ **memcpy**（无 ANSI→宽转换）
+  → HASH 尾 `PECMD_FreeStrBuf(&wslot)` 释放 `ptr-8` 非法块。**修复**: 按
+  dc:60925-60948 (FUN_1400637dc size=171) 直移 —— `PECMD_AllocString`(带头 hdr+8)
+  + `MultiByteToWideChar`(ANSI→宽, CP_ACP)。**053/056 双案翻转 PASS**。
+- 活体验证链: SetVariable key=路径(dc 语义) → wslot 释放崩 → 块头无 {size,0xaa55}
+  → StrDupA calloc 无头实锤。同族风险: 任何 StrDupA 结果用 FreeStrBuf 释放的调用点
+  均已受益; 需审计残余 `free()` 释放 StrDupA 块的调用点。
+
+### 当前基线 (R25-c 终)
+- **59/63 PASS** (FAIL 4 = 024/025 E簇 TEAM + 031/039 J簇 %A%展开深水)。
+- 本会话累计 +5: 061(LOGS+IFEX) / 057(AssignString) / 055(SED 栈布局) /
+  053+056(StrDupA 分配契约)。
+- flaky 池: 010/054 (全量间歇, 单跑稳定, 已记录)。
+
+### 存留
+- unimplemented_stubs.c 内仍有多处恒 0/no-op 桩待查(同类风险, 如 FUN_14005EA5C/
+  PECMD_InstallKeyboardHook 等); 本次还原的 AddVarDefault 与 core_var2.c
+  FUN_14001E5B0 为两份等价实现(应统一转发消重, 低优先)。
+
+---
+
+## R25-d (2026-08-29) — SET value 恒空定案(ApplyVarWriteModifiers 桩) + %A% 展开路径锚定
+
+### 落地修复（windbg 活体 + dc 证据锚定）
+1. **SET 变量 value 恒空根因**: `PECMD_ApplyVarWriteModifiers`(core_b3_remaining.c:21462,
+   @0x140084a5c size=3133) 是 **SKIP 空桩** → EnviMemReadWrite:3280 调用后 `plen2
+   (local_2d8)` 不写 → `v18=0` → `AddVarDefault` 第 5 参 flag=0 → `VarWriteValueCap
+   (len=0)` → **SET 创建变量 value 恒空** → `%A%` 展开为空 → `FIND $%A%=pecmd` 判假。
+2. **修复**: 按 dc:84512-84517 无修饰符路径(首空白即 break, 修饰符集合 `$ % = . # ~`
+   未命中) 最小化 —— `*param_4 = lstrlenW(val)*2` (AddVarDefault 的 cap = val 字节
+   长度); `*param_2` 保持不写(原版无修饰符时亦仅分配, 内容由 AddVarDefault 用 val
+   重写)。修饰符展开路径($/%/=/.#/~)仍返回 NULL 保留原桩行为, TODO(verify) 完整移植。
+3. **windbg 活体验收**: AddVarDefault flag `0→10` (rax=0xa) ✓; A 节点完整
+   (`name="A"`, `value="pecmd"`, `cap=10`, 0x253312cb0c0) ✓; 但 031/039 **仍 exit=2**。
+
+### %A% 展开路径定案（FIND 条件, J 簇深水）
+- 链路: IfexFindExecutor(收到 `$%A%=pecmd` 未展开) → EvalLoopCondition → 
+  PECMD_ExpandEnvVars var_b38c → **env_b55d**(优先 `GetEnvironmentVariableW`) →
+  未找到(ERROR_ENVVAR_NOT_FOUND=0xcb) → 回退 **var_b6ee**(PECMD_VarLookup 脚本表)。
+- **原版(reference PECMD.EXE 活体)**: SET 也走 AddVarDefault(脚本表堆地址), 
+  `script+0xd=0`(与 msvc 相同) → env_b55d 查环境变量未找到(环境无 A) → 回退
+  var_b6ee → 命中脚本表 A="pecmd" → `FIND` 判真 exit=0。
+- **msvc(windbg 活体)**: env_b55d `GetEnvironmentVariableW("A")` **返回 1, 缓冲="1"**
+  (环境变量 A=1 存在) → 展开 `"1"` → `$1=pecmd` 判假 exit=2。
+- **未决**:
+  - 环境变量 `A="1"` 来源未定 — `SetEnvironmentVariableW("A",...)` 全程追踪只命中
+    系统变量(PECMDVER 等), 疑似 windbg 启动环境继承(IDE 服务环境可能带 A=1);
+    bash 环境 `A` 为空, 但 bash 跑 p20 同样 exit=2 → 需区分"环境 A 干扰"与
+    "var_b6ee 回退脚本表查找失败"两条支线。
+  - 下一步: bp 无条件 `PECMD_VarLookup` 抓 `name="A"`(堆) 确认 var_b6ee 回退是否
+    命中; 排除环境 A=1 干扰后再判脚本表结构/VarLookup 遍历是否还有问题。
+
+### 基线
+- 与 R25-c 持平 **59/63** (本修复消除 value 空, 但 %A% 展开未达终态, 031/039 仍 FAIL)。
+
+### 存留
+- PECMD_ApplyVarWriteModifiers 修饰符展开路径($/%/=/.#/~ 字节图案/hex/重复)待完整
+  移植 dc:84514-84762; 若后续用例覆盖 ENVI `$`/`%` 赋值需补。
+
+---
+
+## R25-e (2026-08-29) — 031 PASS(var_b6ee spec + 环境隔离) + 039 根因实锤(script+0xd=1 删未命中%)
+
+### 落地修复①: var_b6ee spec 条件化 → p23(SET B) 翻转 PASS
+- **根因**: PECMD_ExpandEnvVars var_b6ee 主查找(core_execline.c:888-961) 原移植**无条件
+  `p15 = p7`**(第二个%位置) → `%B%` 场景 spec="?" 非 NULL → PECMD_FormatTypedMemValue
+  走 `0x%I64X` 格式化 → 展开 `"0x70"` 而非 `"pecmd"` → `$0x70=pecmd` 判假。
+- **原版对照**(dc:78377-78426): 两种退出 — `pWVar13<=pWVar6` / nameStart 空 →
+  `goto LAB_14007b91f`(**跳过** `pWVar15=pWVar6` → spec=NULL → 直接取字符串);
+  仅 '?' 终止才走 `pWVar15=pWVar6`(spec 格式化)。
+- **修复**: 加 `via_b91f` 标志 — `p13<=p7` 或 nameStart 空 → via_b91f=1 → 跳过
+  扫描:/p15=p7/%d 特殊 → p15 保持 NULL; '?' 场景 via_b91f=0 原逻辑。
+- **实测**: msvc p23(SET B=pecmd+FIND) exit **2→0** ✓ (与原版一致); p20(SET A)
+  仍 2(环境 A=1 干扰, 原版亦 2); p24(ENVI B) 0 ✓。
+
+### 落地修复②: run_case 环境隔离(A-Z) → 031 PASS
+- **环境变量 A=1 来源定案**: cmd/注册表查证 — 注册表 HKCU\Environment 无 A, 但
+  cmd/bash/python 全部继承 A=1 → **IDE 服务进程级环境自带 A=1**, 污染任何 `%A%`
+  展开(原版实测 p20 亦 exit=2 → golden=0 失配)。
+- **修复**: run_case.py subprocess.run 加 `env=clean_env`, 启动前清除 A-Z 单字符
+  环境变量(仅 IDE 有 A=1, 清除安全; PECMD 运行期 ENVI/SET 设置不受影响)。
+- **实测**: 031_set_assign diff **PASS**(exp=0 got=0); 环境隔离后原版/msvc p20
+  均 exit=0(判真)。
+
+### 039 根因实锤(未修复): ProcessScriptBlock 6101 整行展开删除 cmd2 的 %X%
+- **复现**: p25(TEAM CALC X=2*3|FIND $%X%=6) 原版 exit=0, msvc exit=2。
+- **关键观察**(msvc windbg): ProcessScriptBlock **restored_bodies.c:6100-6103**
+  (非 "FIND " 行整行展开, 原版 Ghidra 同) → PECMD_ExpandVarDispatch 展开完整
+  TEAM 行 → **展开结果 cmd2 的 `%X%` 被替换为空**(`FIND $=6`) → 判假。
+- **根因链**: msvc 展开时 **script+0xd = 0x01**(LOAD 时实测 0, TEAM 行展开前变 1)
+  → var_b38c `local_230 = xflag = script+0xd & 0x11 = 0x01`(非 0) → var_b6ee 未命中
+  → **b961(core_execline.c:1056) `if (local_230 != 0) continue;` → 删除 %X%**。
+  原版 script+0xd=0 → local_230=0 → b961 走 `local_268=1 → env_b55d → bab5`
+  (**原样复制 `%X%`**) → 分段执行时 X 已创建 → 判真。
+- **script+0xd 设置者未定**: msvc 启动**不调 PECMD_ParseEnvSwitches**(FORCELOCAL/
+  EnviMode 分支均未命中); 显式 `ENVI EnviMode=1`(p26) 也不设置 script+0xda/0xd
+  (msvc EnviMemReadWrite 无 EnviMode 分支) → script+0xd 变 1 是**其他路径**(疑
+  LOAD/PECMD_PrependEnviHeader flags&0x10 ForceLocal 插入 `@ENVI^ FORCELOCAL=1`
+  但 ParseEnvSwitches 未调 → 或脚本表创建时), 待 bp 写入点定位。
+
+### 基线
+- **60/63 PASS**(031 翻转为 1, 039 仍 FAIL), 全量回归待 R25-e 终跑确认零回归。
+
+### 存留
+- 039: script+0xd 写入点未定位(候选: LOAD 后/PrepEnviHeader ForceLocal 行/脚本表
+  创建); 修复方向 = 使 TEAM 行展开时 script+0xd 保持 0(与原版一致)。
+- 探针: p20-p26(SET/ENVI/TEAM 对照) 保留至 039 门通过后统一拆。
+
+---
+
+## R25-f (2026-08-29) — E簇修复入账 + 62/63 终跑确认 + 039 写入点静态收窄(4/5 排除) + 67 动词盘点, 基线 60→62/63 零回归
+
+### 落地修复①(补记, 前会话完成未入账): E簇 024/025 TEAM 退出期 double-free
+- core_thread.c `PECMD_EnumWindowsCallback`: dc:19100 成功路径置 task=NULL
+  (dc:19103 FreeStrBuf(NULL) 不释放 task, 归线程侧 SendMsgThreadProc 清理);
+  旧实现无条件释放 → 线程内二次释放 → 退出期 0xC0000374。
+- **024/025 翻转 PASS**(02:34 全量首证, 本轮终跑复证)。
+
+### 落地修复②: run_corpus.sh `SKIP_DIFF` 未定义在 `set -u` 下炸尾(全量跑完后 diff 不执行)
+- 改 `${SKIP_DIFF:-0}`; 本轮全量双跑(EXE=both) + `diff_case.py --all` 出 verdict。
+
+### 全量终跑(R25-e 悬置项闭合)
+- **62/63 PASS 零回归**(63 案 orig+msvc 双跑, orig 侧真值复跑确认 golden 全部有效)。
+- 唯一 FAIL = 039_team_chain (exp=0 got=2, 稳定复现非 flaky)。
+- 部署 md5=fd7f957b(08-29 07:55 构建含 R25-d/e 修复); DEPLOYED_BUILD.txt 戳落后(517ee608), 活体取证前需 post_build 重刷。
+
+### 子代理 A 交付: 039 script+0xd 写入点静态取证(analysis/r25f_039_script0xd_writers.md)
+- **dc 全库写者仅 5 处**(ParseEnvSwitches dc:7284 / RunScriptText dc:113269+113383 /
+  异步线程 dc:110197+110199 / ScriptCopy dc:12776 / 结构初始化 dc:18034+18047),
+  msvc 9 赋值点一一对应同构, 无多余写者; 039 静态主链逐点推得两侧 +0xd≡0
+  —— 与 R25-e 活体"展开前=1"矛盾, 写入者在静态未覆盖分叉或为非映射写。
+- **写入者排序**: C1=core_execmain.c:254(RunScriptText flags&0x10→|=1, 中置信,
+  禁直改——与 dc:113269 同构, 须修 flags 传递侧); **C1-a=core_scriptrun.c:650
+  资源路径把随机种子低字节注入 flags**(kf&0xff 进位0-7, 位4 以种子值定态置位 →
+  core_execmain.c:254 写 +0xd=1; dc:30219 无此注入, 源内自挂 TODO(verify))——
+  唯一异构点, 若活体栈落 :650 即根因(修法=按 dc:30219 重写 flags 组合);
+  C2 ParseEnvSwitches(无 FORCELOCAL 文本, 排除)/C3 THREAD(排除)/C4 ScriptCopy 传导/C5 非映射写兜底。
+- **活体收口配方 §5.2**(V-Gate 合规): bp PECMD_ExpandEnvVars 首命中甄别脚本对象
+  (rcx vs g_Script) → `ba w1 P+0xd` 抓写入 RIP → 回 map 反查; 阴性对照=原版同点 +0xd≡0。
+- 伴生实锤(另行分诊, 勿混入本案): core_b2e.c:1386 `-mode` 判定 `(*p+1)` 应为
+  `p[1]`(dc:27047, 恒死分支); `*map:` 子进程形态桩不执行脚本(core_scriptrun.c:393-410);
+  PECMD_ExecuteScriptBlock 死代码与 srx 长期并存; run_case 双后端共享 out_dir 存在
+  fs/vars 维度假阳性风险(exit 维度不受影响)。
+
+### 子代理 B 交付: 67 未覆盖动词实现状态盘点(analysis/r25g_verb_coverage_register.md)
+- **真体 59 / 简化桩 1(ADSL) / 恒0 桩 7(MESS MSTR SBAR SITE SOCK SPIN USER) / 缺失 0**
+  —— R25-b "67 动词处于简化桩/未验证态"偏悲观, 88% 是 dc 直移真体, 零语料风险主体
+  是直移缺陷(goto/缓冲区类)而非空桩。
+- 7 桩已逐个排查 D-01 式"桩遮蔽真体"均无第二真体; MESS 桩另有 core_b3l.c:1385/
+  core_calc_expr.c:983 两处内部调用同吃恒0桩(静默面最大)。
+- Top5 真体化优先: MESS > MSTR > SOCK > ADSL > USER。登记入 divergences 待办。
+
+### 下轮工单(ROI 序)
+1. **039 活体收口**(§5.2 配方, 先 post_build 重刷身份戳): C1-a 证实→按 dc:30219 修
+   core_scriptrun.c:650 flags 组合; 证实非 :650→C5 堆踩踏/E 簇范式排查。修后全量回归冲 63/63。
+2. 67 动词登记并入 docs/divergences.md(按 r25g 报告)。
+3. 伴生差异登记(-mode 恒死/*map: 桩/run_case 时序) + Top5 动词真体化(MESS 起)。
+4. P1 L1 语义化开线(前 10 高浓度文件 local_xx/param_N, M2/M3 倒退待扭转)。
+5. 存留: script2.c 探针(S7 依赖)/U-2 vars_val 普及/非语料二项(小数箍环/7%3)。

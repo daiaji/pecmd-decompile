@@ -1,1 +1,0 @@
-CASE=061_logs_smoke|R=logs_open|logs_open=%logs_open%|BODY_DONE=YES

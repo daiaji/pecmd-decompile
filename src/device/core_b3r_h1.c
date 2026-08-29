@@ -736,7 +736,7 @@ uint64_t PECMD_GenerateTextContent(int64_t *param_1, int64_t param_2)
     uint64_t local_70;
     WCHAR *local_68;
     uint64_t local_60;
-    uint64_t local_98[3];
+    uint64_t local_98[11]; /* 0x58=88B, 容纳 memset(local_98,0,0x58) 防栈越界 (R25 055 SED fastfail) */
     uint64_t local_58;
 
     pWVar24 = (LPWSTR)0x0;

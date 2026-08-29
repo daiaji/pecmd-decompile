@@ -1,1 +1,0 @@
-CASE=044_write_blank_line|F=C:\pectest\out\w44.txt

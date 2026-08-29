@@ -7667,7 +7667,23 @@ static int64_t *PECMD_StrBldCopyAnsi(int64_t *a, char *b, uint64_t c)
   FUN_1400637dc((longlong *)a,b,c,0xffffffffffffffffULL);
   return a;
 }
-int64_t *PECMD_AssignString(int64_t *param_1, const uint16_t *param_2) { (void)param_1;(void)param_2; return (int64_t *)0; }
+int64_t *PECMD_AssignString(int64_t *param_1, const uint16_t *param_2)
+{
+    /* R25(057 FORM AV 定案): 原空桩(恒 NULL 不赋值) → 057 local_128 保持 NULL
+     * → *local_128 解引用 AV(c0000005)。按 dc:70512-70528 (FUN_14007034c size=74)
+     * 直移真体: 释放旧值(ptr-8) + StrDup 复制 + 写回, 返回 param_1。 */
+    extern WCHAR *PECMD_StrDupAlloc(LPCWSTR src);
+    extern HANDLE g_hHeap;
+    uint64_t old = (uint64_t)(uintptr_t)*param_1;
+    *param_1 = 0;
+    if (param_2 != NULL) {
+        *param_1 = (int64_t)(uintptr_t)PECMD_StrDupAlloc((LPCWSTR)param_2);
+    }
+    if (old != 0) {
+        HeapFree(g_hHeap, 0, (void *)(uintptr_t)(old - 8));
+    }
+    return param_1;
+}
 /* @0x1400703e4 size=9 鈥?瀹戒覆鏁翠覆璧嬪€?len=-1) */
 void *PECMD_StrBldCopyWide(void *a, const WCHAR *b)
 {

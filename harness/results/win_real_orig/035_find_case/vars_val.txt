@@ -1,1 +1,0 @@
-CASE=035_find_case|S=Hello World|R=%R%

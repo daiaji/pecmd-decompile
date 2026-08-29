@@ -2,6 +2,7 @@
 #include "stubs_common.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* ==================== S8 新增 extern（真体所在文件见注释；仅本文件引用） ====================
  * 同址别名依据 tools/rename_map.json 权威映射：
@@ -44,7 +45,14 @@ void P8_Probe(const char *tag, long long v1, long long v2)
 
 
 uint64_t FUN_140103020(const uint16_t *s) { (void)s; return 0; }
-void *FUN_1400170b0(void **p) { (void)p; return 0; }
+void *FUN_1400170b0(void **p)
+{
+    /* R25(061 LOGS=123 定案): 原 no-op 桩 → LOGS/IFEX 等路径解析不跳前导空格
+     * → CreateFileW 收到 " C:\..." 前导空格 → ERROR_INVALID_NAME(123)。
+     * 转发 PECMD_SkipLeadingControls 真体 (core_b1_remaining.c @0x1400170b0)。 */
+    extern uint64_t *PECMD_SkipLeadingControls(uint64_t *pp);
+    return (void *)PECMD_SkipLeadingControls((uint64_t *)p);
+}
 void *FUN_140070044(const char *s) { (void)s; return 0; }
 int FUN_1400678f0(void *a, long long *b, short c) { (void)a;(void)b;(void)c; return 0; }
 void FUN_1400284d4(long long *a, const void *b) { (void)a;(void)b; }
@@ -80,7 +88,47 @@ uint64_t PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c)
     { return (uint64_t)(uint32_t)FUN_14001B5AC((LPCWSTR)(uintptr_t)a,b,(int64_t)c); }
 uint64_t PECMD_InstallKeyboardHook(void) { return 0; }
 uint64_t PECMD_ExpandDrivePathAlloc(void) { return 0; }
-uint64_t PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag) { (void)script;(void)name;(void)val;(void)len;(void)flag; return 0; }   /* arity 修正 0->5 (PECMD_ExecCmdDispatch 恢复体) */
+void *PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag)
+{
+    /* R25(031 SET=1 定案): 原恒 0 桩 → SET 创建变量走 AddVarDefault 返回 NULL
+     * → EnviMemReadWrite 返回值 = iVar20=1 (退出码污染) 且变量未创建。
+     * 按 dc:18077-18113 (FUN_14001e5b0 size=236) 直移真体: 建节点 → 写值/容量
+     * → 表计数+1 → 表扩容 → 追加节点。 */
+    extern void *PECMD_NewVarNode(void *node, LPCWSTR name, LPCWSTR value, int namelen, int64_t caplen);
+    extern void PECMD_VarWriteValueCap(WCHAR **pval, uint64_t *pcap, const void *src, int64_t len);
+    extern void *PECMD_HeapRealloc(void *ptr, size_t size);
+    extern uint8_t g_Script[0x200];
+
+    long long *plVar4 = NULL;
+    long long *node;
+    long long *newtbl;
+    WCHAR WVar1 = *name;
+    int64_t cap = flag;
+
+    for (;;) {
+        if (WVar1 == L'\0')
+            return NULL;
+        if (cap < 0)
+            cap = (int64_t)lstrlenW(val) * 2;
+        if ((name[0] != L':') || (name[1] != L':'))
+            break;
+        name += 2;
+        len -= 2;
+        script = &g_Script;
+        WVar1 = *name;
+    }
+    node = (long long *)calloc(1, 0x20); /* operator_new(0x20) */
+    if (node != NULL)
+        plVar4 = (long long *)PECMD_NewVarNode(node, name, val, len, -1);
+    PECMD_VarWriteValueCap((WCHAR **)(plVar4 + 1), (uint64_t *)(plVar4 + 3), val, cap);
+    plVar4[3] = cap;
+    *(int *)((uint8_t *)script + 8) = *(int *)((uint8_t *)script + 8) + 1;
+    newtbl = (long long *)PECMD_HeapRealloc(*(void **)script,
+                                            (size_t)*(int *)((uint8_t *)script + 8) * 32);
+    *(void **)script = newtbl;
+    newtbl[*(int *)((uint8_t *)script + 8) - 1] = (long long)plVar4;
+    return plVar4;
+}
 int64_t PECMD_FindVarValue(int64_t *a, LPCWSTR b, int64_t *c, int d) { (void)a;(void)b;(void)c;(void)d; return 0; }   /* arity 修正 0->4 (PECMD_ExecCmdDispatch 恢复体) */
 /* S11(dc FUN_14001e6bc(longlong*,LPCWSTR,LPCWSTR,longlong)->void) */
 void PECMD_SetVarCore(int64_t *script, LPCWSTR key, LPCWSTR val, int64_t n)
@@ -515,7 +563,18 @@ uint64_t FUN_14005e0a0(void) { return 0; }                /* 默认命令串缓�
 
 /* 缺失 helper 桩 (无调用方校验, 仅满足符号) */
 uint64_t FUN_14005ea5c(void) { return 0; }  /* 注册表读取值 */
-int      FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void *e, uint32_t f, uint32_t g, void *h) { (void)a;(void)b;(void)c;(void)d;(void)e;(void)f;(void)g;(void)h; return 0; }
+uint64_t FUN_140003864(void *a, const uint16_t *b, uint32_t c, uint32_t d, void *e, uint32_t f, uint32_t g, void *h)
+{
+    /* R25(061 LOGS=183 定案): 原恒 0 桩 → LOGS 开日志 lVar21==0 恒真 →
+     * GetLastError 残留(183) 泄漏为退出码。还原 CreateFileW 包装 (dc:1179-1196,
+     * 同址别名 PECMD_OpenFileHandle core_exec2.c)。为避 stubs_common.h CreateFileW
+     * 弱声明冲突, 直接转发真体。 */
+    extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
+                                      LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags,
+                                      HANDLE tmpl);
+    return (uint64_t)(uintptr_t)PECMD_OpenFileHandle((HANDLE *)a, (LPCWSTR)b, c, d,
+                                                     (LPSECURITY_ATTRIBUTES)e, f, g, (HANDLE)h);
+}
 void    *FUN_14005b374(void *a, int16_t b, int16_t c) { (void)a;(void)b;(void)c; return a; } /* 行切分 */
 void     PECMD_AppendQuotedString(int64_t *a, void *b, int c) { (void)a;(void)b;(void)c; }              /* 串填充 */
 uint64_t FUN_1400048c4(int64_t *a) { (void)a; return 0; }        /* 命名互斥/事件 */

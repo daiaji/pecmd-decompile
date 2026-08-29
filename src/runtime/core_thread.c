@@ -187,6 +187,9 @@ int PECMD_EnumWindowsCallback(HWND hwnd, void *ctx)
             }
             ResumeThread(hThread);
             c[2] = c[2] + 1;
+            task = NULL; /* R25(024/025 TEAM double-free 定案): dc:19100 成功置 NULL,
+                          * dc:19103 FreeStrBuf(NULL) 不释放 task(归线程 SendMsgThreadProc:143),
+                          * v0 无条件释放 → 线程内二次释放 → 退出期 c0000374 */
         }
         PECMD_FreeStrBuf((WCHAR **)&task);
     }

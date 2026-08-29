@@ -1,1 +1,0 @@
-CASE=042_regi_write_read|V=S12DATA

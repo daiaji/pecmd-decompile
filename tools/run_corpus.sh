@@ -17,7 +17,7 @@ args+=(--exe "$EXE")
 
 python "${args[@]}" 2>&1 | tail -n 5
 
-if [ -z "$CASE_ID" ] && [ "$SKIP_DIFF" != "1" ]; then
+if [ -z "$CASE_ID" ] && [ "${SKIP_DIFF:-0}" != "1" ]; then
   echo "=====DIFF====="
   python harness/runners/diff_case.py --all 2>&1 | tail -n 10
 fi

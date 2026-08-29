@@ -6,7 +6,7 @@
  },
  "exit": {
   "exp": 2,
-  "got": 3221226356
+  "got": 2
  },
  "vars": {
   "same": true,
@@ -15,14 +15,12 @@
  "fs": {
   "same": true,
   "added": [],
-  "removed": [
-   "done.txt"
-  ],
+  "removed": [],
   "changed": []
  },
  "reg": {
   "same": true
  },
- "verdict": "FAIL",
+ "verdict": "PASS",
  "flaky_pool": false
 }

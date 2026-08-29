@@ -1,1 +1,0 @@
-CASE=030_regi_read|V=C:\Program Files

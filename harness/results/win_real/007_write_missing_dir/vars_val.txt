@@ -1,1 +1,0 @@
-CASE=007_write_missing_dir|F=C:\pectest\nopath\x.txt

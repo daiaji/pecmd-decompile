@@ -1,1 +1,0 @@
-CASE=001_envi_smoke|A=Hello|B=Win|OUT=case001
