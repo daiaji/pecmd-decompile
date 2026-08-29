@@ -180,7 +180,9 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
             lVar11 = (int64_t)(cur - base);
             PECMD_FreeStrBuf(&envBuf);
             LeaveCriticalSection(&g_csInit);
-            return lVar11 >> 1;
+            /* dc:77758-77761 lVar11=字节差, return lVar11>>1=元素数;
+             * msvc lVar11 已是元素数(cur-base) → 再 >>1 即双重复偿折半 (R25-h S1) */
+            return lVar11;
         }
         PECMD_StrBldGrowWide(xb);
         uVar5 = 0;
@@ -303,7 +305,8 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
                     ch = *pw16;
                 }
                 p16 = pw16;
-                uVar5 = (int64_t)(pw16 - inP) >> 1;
+                /* dc:77875 (longlong)pw16-(longlong)inP>>1 = 字节差>>1 ≡ 元素数 (R25-h #7) */
+                uVar5 = (int64_t)((intptr_t)pw16 - (intptr_t)inP) >> 1;
                 if (*pw16 == L'%') {
                     if (neg || (*p15 != L'&' && (xflag == 0 || *p15 == L'^'))) {
                         line = pw16 + 1;
@@ -481,7 +484,8 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
                     w = *vp;
                 }
             }
-            lVar11 = (int64_t)(vp - val) >> 1;
+            /* dc:78112 (longlong)vp-(longlong)val>>1 = 字节差>>1 ≡ 元素数 (R25-h #8) */
+            lVar11 = (int64_t)((intptr_t)vp - (intptr_t)val) >> 1;
             if (start < 0) {
                 start += lVar11;
                 if (start < 0)
@@ -505,7 +509,8 @@ int64_t FUN_14007A224(void *script, WCHAR *line, WCHAR **out, int mode, uint8_t 
         }
         if (*vp == L'\0') {
             len = 0;
-            start = (int64_t)(vp - val) >> 1;
+            /* dc:78142 字节差>>1 ≡ 元素数 (R25-h #9) */
+            start = (int64_t)((intptr_t)vp - (intptr_t)val) >> 1;
             p6 = val + start;
             uVar5 = len;
             goto fmt_copy;
@@ -697,7 +702,8 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
             PECMD_AllocString(out, (int64_t)(cur - base) + 2);
             lVar7 = (int64_t)(cur - base);
             PECMD_FreeStrBuf(&envBuf);
-            return lVar7 >> 1;
+            /* dc:78320-78322 lVar7=字节差, return >>1=元素数; msvc 已是元素数 → 再 >>1 双重复偿 (R25-h S2) */
+            return lVar7;
         }
         PECMD_StrBldGrowWide(xb);
         uVar14 = 0;
@@ -1024,7 +1030,8 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
                     w = *vp;
                 }
             }
-            lVar7 = (int64_t)(vp - val) >> 1;
+            /* dc:78692 字节差>>1 ≡ 元素数 (R25-h #10) */
+            lVar7 = (int64_t)((intptr_t)vp - (intptr_t)val) >> 1;
             if (start < 0) {
                 start += lVar7;
                 if (start < 0)
@@ -1048,7 +1055,8 @@ int64_t PECMD_ExpandEnvVars(void *script, WCHAR *line, WCHAR **out, int mode, ui
         }
         if (*vp == L'\0') {
             len = 0;
-            start = (int64_t)(vp - val) >> 1;
+            /* dc:78723 字节差>>1 ≡ 元素数 (R25-h #11) */
+            start = (int64_t)((intptr_t)vp - (intptr_t)val) >> 1;
             p6 = val + start;
             uVar14 = 0;
             goto ba34;

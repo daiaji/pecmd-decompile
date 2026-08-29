@@ -2140,8 +2140,10 @@ WCHAR **PECMD_FormatDoubleToStr(WCHAR **out, double value, LPCWSTR fmt, uint32_t
             last--;
         }
         if ((int)prec < 0 && wc != L'.') {
-            if (0x11 < (int)((last + 2 - pStr) >> 1)) {
-                i = (int)((dot - pStr) >> 1);
+            /* dc:141232-141233 (longlong)last+2-(longlong)pStr>>1 = 字节差>>1 ≡ 元素数;
+             * msvc 元素差再>>1 → 17 门限变 34, 浮点截断定位错位 (R25-h S3/#12) */
+            if (0x11 < (int)(((intptr_t)last + 2 - (intptr_t)pStr) >> 1)) {
+                i = (int)(((intptr_t)dot - (intptr_t)pStr) >> 1);
                 if (i < 0x11)
                     pStr[0x11] = L'\0';
                 else
@@ -3117,7 +3119,8 @@ int FUN_1400F2384(int64_t obj, LPCWSTR text, int64_t *script, int64_t param4, in
             }
         }
         FUN_1400F429C(&p, L':');
-        PECMD_StrBldCopyWideN(&name, text, (int64_t)(p - text) >> 1);
+        /* dc:148352 (longlong)p-(longlong)text>>1 = 字节差>>1 ≡ 元素数 (R25-h #13) */
+        PECMD_StrBldCopyWideN(&name, text, (int64_t)((intptr_t)p - (intptr_t)text) >> 1);
         PECMD_AllocStrSlot(&expanded);
         q = name;
         FUN_14007BF44(script, q, &expanded, 0, 1);

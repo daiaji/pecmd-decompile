@@ -148,3 +148,31 @@
 - **影响面**：DispatchBuiltin 全动词拦截失效 → WRITE/FIND/IFEX-file 等掉 bare-path/ECD 兜底；EXEC 掉兜底产生 STILL_ACTIVE 259 污染退出码缓存。
 - **状态**：工单已开 —— 架构级修复需二选一: (a) 从原版 EXE 提取 INDATA 资源字节嵌入 msvc 构建并接加载链; (b) 将 LOAD:/模式注册改为静态源码表初始化。需先动态观测原版表最终内容作为权威基线。
 
+
+### D-18 67 个零语料验证动词的实现状态登记｜登记完成(2026-08-29)
+
+- **根因**：FourCC 权威 98 动词中 67 个无语料验证。子代理 B 全量盘点(analysis/r25g_verb_coverage_register.md)：**真体 59 / 简化桩 1(ADSL) / 恒0 no-op 桩 7(MESS MSTR SBAR SITE SOCK SPIN USER) / 缺失 0** —— R25-b "67 动词处于简化桩/未验证态"偏悲观，88% 为 dc 直移真体，零语料风险主体是直移缺陷(goto/缓冲区类)而非空桩。
+- **证据链**：analysis/r25g_verb_coverage_register.md §2 总表(动词|dc 地址+行|msvc file:line|四级状态|census 证据|风险推断)；7 桩已逐个排查 D-01 式"桩遮蔽真体"均无第二真体；MESS 桩另有 core_b3l.c:1385 / core_calc_expr.c:983 两处内部调用同吃恒0桩。
+- **影响面**：语料盲区内动词行为不可证；恒0桩若被未来语料覆盖预期"静默无操作"(MESS/MSTR/SBAR/SITE/USER)或"错值/崩"(SOCK 解引用/ADSL 假真体)。
+- **状态**：登记完成。真体化优先级 Top5：MESS(静默面最大+内部污染) > MSTR(静默错值) > SOCK(崩溃风险) > ADSL(消除假真体) > USER(恢复成本最低，dc 仅 7B 但其调用体 FUN_14001ada8 346B 有真实副作用)。LOAD/SHOW/PUTF/ITEM/SERV 真体内局部 TODO 已在总表标注。
+
+### D-19 msvc EvalSpecialToken `-mode` 判定恒死分支｜待修(读侧失真)
+
+- **根因**：core_b2e.c:1386 `((uint16_t)(*p + 1) | 0x20) == 0x6d` 把 dc:27047 的 `p[1]|0x20=='m'`（取下一字符）误写为 `(*p)+1`（当前字符+1）——'-'=0x2d→0x2e 恒≠0x6d，分支恒死。R25-f 子代理 A 与独立复核双确认。
+- **证据链**：analysis/r25f_039_script0xd_writers.md §4b + 增补节 A5 复核；dc:27022-27027。
+- **影响面**：`SET -mode …` 等依赖 `-mode` 识别的路径在 msvc 永不激活；语料未覆盖=静默。
+- **状态**：待修（一行改动，随下批源码修改一并落码+回归）。
+
+### D-20 msvc `*map:` 子进程形态桩不执行脚本｜待修(语义缺口)
+
+- **根因**：RunCommand 的 `*map:` 分支(core_scriptrun.c:393-410)只 MapViewOfFile 即返回，不执行映射文本(源内 TODO(verify)：反编译 379-390 行映射数据拷贝与解码)；dc:29831-29870 → dc:30268 会 RunScriptText 执行。
+- **证据链**：analysis/r25f_039_script0xd_writers.md 增补节 A3。
+- **影响面**：TEXT 窗口/`--exe:`/拖放等 `*map:` 子进程形态脚本静默不执行；039 主链(父进程裸路径)不受影响。
+- **状态**：待修（需先补 dc:379-390 段映射数据拷贝与解码的真体）。
+
+### D-21 run_case 双后端共享 out_dir 时序假阳性风险｜夹具改进工单
+
+- **根因**：run_case 对同一 case 的 orig/msvc 两轮共享同一 out_dir(C:\pectest\<case>)，orig 先跑写入的 vars/done 产物可能被 msvc 轮次回捞 → verdict 的 fs.same/vars.same 存在假阳性可能(exit 维度不受影响)。
+- **证据链**：analysis/r25f_039_script0xd_writers.md 增补节 A4(039 产物 mtime 交错实证)。
+- **影响面**：仅 fs/vars 维度可信度；exit 维度(对拍主判据)不受影响。
+- **状态**：改进工单(按后端分 out_dir 或轮末清点)，非行为分歧，不阻塞。

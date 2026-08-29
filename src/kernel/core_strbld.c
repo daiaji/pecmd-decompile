@@ -243,7 +243,9 @@ WCHAR *PECMD_FormatTypedMemValue(int64_t node, uint64_t *lenOut, WCHAR *spec, WC
             off = 0;
         }
     }
-    memcpy(&val, value + off, elmW);
+    /* dc:68740 偏移 off 为字节域(dataLen 字节、'~' 乘 elmW 字节), value+off 必须按字节寻址;
+     * msvc value 为 WCHAR* → 元素域 +2×off 倍差 (R25-h S4) */
+    memcpy(&val, (uint8_t *)value + off, elmW);
     dst[0] = L'\0';
     if (isLDouble) {
         PECMD_FormatU64RetEnd(dst, val, WSTR("%Lf"));

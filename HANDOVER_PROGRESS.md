@@ -994,3 +994,35 @@ WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
 - 67 动词登记并入 divergences(真体59/简化1/恒0桩7, Top5=MESS>MSTR>SOCK>ADSL>USER)。
 - 伴生差异: core_b2e.c:1386 -mode 恒死 / *map: 桩不执行 / run_case 双后端 out_dir 时序。
 - script2.c 探针(S7 依赖) / P1 L1 语义化(M2/M3 倒退待扭转) / 非语料二项。
+
+---
+
+## R25-h (2026-08-29) — >>1 单位错误族全库审计 + 22 处归正 + ImportEnvironment 孤儿接线, 63/63 保持零回归
+
+### 审计(analysis/r25h_ptrdiff_unit_audit.md, 子代理静态审计)
+- 不变量判据: **dc 全库 0 处裸指针相减**——一切差值均为 (longlong)a-(longlong)b 字节域;
+  msvc 凡 `(a-b)>>1`(元素差>>1=半数)必错, cast 形态必对。OK 19 / BUG 22(21 byte-diff 折半
+  + 1 byte-addr 倍差) / 未对齐 2。
+- 22 处分布: execline 双展开器 7(含两函数出口返回值双重复偿折半, 幸调用方全 void 丢弃)
+  / b8m 浮点截断门限+LIST name 3 / b1_remaining 卷枚举+图标名+启动关联链 6
+  / b2d TEAM 段拷贝 4(R25-g 已修) / scriptrun RUN 前缀 1 / strbld FormatTypedMemValue
+  字节寻址倍差 1(全库唯一 byte-addr)。
+
+### 落地修复(三组, 每组构建+全量回归 63/63 零回归: md5 dd5d5bdc→e6ecc49d→d05def76)
+- 组1: execline.c 183/306/484/508/700/1027/1051(dc:77758/77875/78112/78142/78320/78692/78723)
+  + core_strbld.c:246(dc:68740, `(uint8_t*)value+off` 字节寻址)。
+- 组2: b8m.c 2143/2144(dc:141232-3)/3120(dc:148352) + b1_remaining.c
+  3011/3024(dc:3796/3808)/3865(dc:4901)/4880/4890(dc:6942/6952)/4952/4960(dc:7013/7023)/
+  9934(dc:18892) + scriptrun.c:313(dc:29657)。
+- 组3(O1): unimplemented_stubs.c 恒0壳 PECMD_ImportEnvironment 删除 → core_b3m.c
+  FUN_14007BF78 改名 PECMD_ImportEnvironment 真体接线(i28c:1235 异步线程 '&' 分支,
+  rename_map.json:922 映射落地); 同步落 #2/#3(dc:78855/78862) 单位归正。
+
+### 登记
+- divergences.md D-18(67 动词登记, 真体59/简化1/恒0桩7, Top5=MESS>MSTR>SOCK>ADSL>USER)
+  / D-19(-mode 恒死分支) / D-20(*map: 桩不执行) / D-21(run_case 双后端 out_dir 时序)。
+
+### 下轮工单
+1. P1 L1 语义化开线(前 10 高浓度文件 local_xx/param_N, M2/M3 倒退待扭转)。
+2. D-19/D-20 待修(一行/一真体); Top5 动词真体化(MESS 起)。
+3. 存留: script2.c 探针(S7 依赖) / 非语料二项(小数箍环/7%3) / S18 ParseDateTimeSpec 对齐。

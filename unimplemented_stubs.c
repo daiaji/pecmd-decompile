@@ -486,7 +486,8 @@ uint64_t PECMD_ShakeTrayCursor(void) { return 0; }
 uint64_t FUN_14007033c(void) { return 0; }
 
 uint64_t PECMD_EnumNetworkDevices(void) { return 0; }
-uint64_t PECMD_ImportEnvironment(void) { return 0; }
+/* PECMD_ImportEnvironment 空壳已删(R25-h O1): 真体 = core_b3m.c PECMD_ImportEnvironment
+ * (原 FUN_14007BF78), i28c 异步线程 '&' 分支实调 3 参签名, 空壳同名遮蔽致孤儿 */
 uint64_t PECMD_SendTitleMessage(void) { return 0; }
 
 uint64_t PECMD_ClipboardCommand(void) { return 0; }

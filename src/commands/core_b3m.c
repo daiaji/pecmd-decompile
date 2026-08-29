@@ -22,7 +22,7 @@
  *   变更设备状态     FUN_140078C68 @0x140078c68
  *   解析短整型列表   FUN_140079CF8 @0x140079cf8
  *   查找 # 资源标记  FUN_140079F50 @0x140079f50
- *   导入环境变量     FUN_14007BF78 @0x14007bf78
+ *   导入环境变量     PECMD_ImportEnvironment(原 FUN_14007BF78) @0x14007bf78
  *   显示窗口并设状态 FUN_14007E01C @0x14007e01c
  *   处理控件消息     FUN_140080B0C @0x140080b0c
  *   展开变量字符串   PECMD_ExpandVarsLocked @0x14008569c
@@ -1084,10 +1084,10 @@ LPCWSTR FUN_140079F50(int64_t *pp, uint32_t flags)
     return pWVar2;
 }
 
-/* ========== FUN_14007BF78 @0x14007bf78 ==========
+/* ========== PECMD_ImportEnvironment(原 FUN_14007BF78) @0x14007bf78 ==========
  * 把进程环境块导入脚本变量；mode=0 时仅补缺失项。
  */
-void FUN_14007BF78(int64_t *script, int64_t *table, int mode)
+void PECMD_ImportEnvironment(int64_t *script, int64_t *table, int mode)
 {
     WCHAR WVar1;
     WCHAR *pWVar2;

@@ -3008,7 +3008,8 @@ WCHAR *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2, uint64_t param_3
                             pWVar11 = pWVar12 + iVar5 + 1;
                         }
                         *pWVar11 = L'\0';
-                        local_148 = (LPCWSTR)((int64_t)(pWVar11 - pWVar12) >> 1);
+                        /* dc:3796 字节差>>1 ≡ 元素数 (R25-h #14) */
+                        local_148 = (LPCWSTR)((intptr_t)((intptr_t)pWVar11 - (intptr_t)pWVar12) >> 1);
                         if (local_res18 == L'\0') {
                             pWVar12 = PECMD_AppendDriveLetter(pWVar11, (int64_t)iVar6,
                                                               (int64_t)*(int *)(local_c0 + 0x918),
@@ -3021,7 +3022,8 @@ WCHAR *PECMD_EnumerateVolume(int64_t *param_1, int64_t param_2, uint64_t param_3
                             *pWVar12 = L'\0';
                         }
                         pWVar20 = local_148;
-                        if ((int)((int64_t)(pWVar12 - pWVar11) >> 1) == 0) {
+                        /* dc:3808 字节差>>1 ≡ 元素数; 元素差域下「恰1字符」被误判为空 (R25-h #15) */
+                        if ((int)(((intptr_t)pWVar12 - (intptr_t)pWVar11) >> 1) == 0) {
                             pWVar11[-1] = L'\0';
                             if (local_150 < -99) {
                                 local_150 = PECMD_EnumeratePartitions(param_2, &local_140, NULL);
@@ -3862,7 +3864,8 @@ void PECMD_ScanDirectory(uint64_t *param_1, LPCWSTR param_2, LPCWSTR param_3, in
                     }
                 }
                 PECMD_AllocStrSlot((WCHAR **)&local_288);
-                iVar2 = (int)((int64_t)(pWVar6 - pWVar4) >> 1);
+                /* dc:4901 字节差>>1 ≡ 元素数 (R25-h #16) */
+                iVar2 = (int)(((intptr_t)pWVar6 - (intptr_t)pWVar4) >> 1);
                 if (0 < iVar2) {
                     PECMD_StrCopyW((WCHAR **)&local_288, pWVar4, (int64_t)iVar2);
                 }
@@ -4877,7 +4880,7 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
     if (pBSlash != (LPWSTR)0) {
         pTok = pBSlash + 1;                               /* 文件名部分 */
         FUN_140070310(&lps2, &lps);                       /* 复制完整路径槽 */
-        ((LPWSTR)lps2)[(int)((pTok - lps) >> 1)] = L'\0'; /* 截到文件名前 */
+        ((LPWSTR)lps2)[(int)(((intptr_t)pTok - (intptr_t)lps) >> 1)] = L'\0'; /* 截到文件名前, dc:6942 字节差>>1 (R25-h #17) */
         pStr = StrRChrW(pTok, (LPCWSTR)0, L'.');
         if (pStr == (LPWSTR)0) {
             iBasename = lstrlenW(pTok);
@@ -4887,7 +4890,7 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
             *pStr = L'\0'; /* 去掉扩展名 */
         }
         pDir = lps2;                      /* 目录路径 */
-        iLen = (int)((pStr - pTok) >> 1); /* 基本名长度 */
+        iLen = (int)(((intptr_t)pStr - (intptr_t)pTok) >> 1); /* 基本名长度, dc:6952 字节差>>1 (R25-h #18) */
         iBasename = iLen + 1;
 
         puSlot = (uint64_t *)PECMD_StrSetOrConcat(&lps, &lps3, WSTR(".*.exe"));
@@ -4949,7 +4952,7 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
                     for (; (c = *lps3) != L'\0' && ((c < 9 || c > 0xd) && c != L' ');
                          lps3 = lps3 + 1) {
                     }
-                    iLen = (int)((lps3 - pTok) >> 1); /* 第一段长度 */
+                    iLen = (int)(((intptr_t)lps3 - (intptr_t)pTok) >> 1); /* 第一段长度, dc:7013 字节差>>1 (R25-h #19) */
                     if (0 < iLen) {
                         PECMD_StrBldCopyWideN((WCHAR **)&pTok2, pTok, (int64_t)iLen);
                         FUN_14005B154((WCHAR **)&lps3);
@@ -4957,7 +4960,8 @@ uint8_t PECMD_RegisterFileAssociations(LPWSTR param_1)
                         for (; (c = *lps3) != L'\0' && ((c < 9 || c > 0xd) && c != L' ');
                              lps3 = lps3 + 1) {
                         }
-                        if ((*pTok == L'#') && (iLen = (int)((lps3 - pTok) >> 1), 1 < iLen)) {
+                        if ((*pTok == L'#') && (iLen = (int)(((intptr_t)lps3 - (intptr_t)pTok) >> 1), 1 < iLen)) {
+                        /* dc:7023 字节差>>1 ≡ 元素数; 元素差域 1 字符词被误判 (R25-h #20) */
                             PECMD_StrBldCopyWideN((WCHAR **)&pCmd, pTok - 1, (int64_t)(iLen + 1));
                             *(LPWSTR)pCmd = L'#'; /* 原体: 前置空格位改写为 '#' */
                             FUN_14006375C((WCHAR **)&pCmd, WSTR(" "));
@@ -9931,7 +9935,8 @@ HICON PECMD_LoadIcon(LPCWSTR param_1, uint64_t *param_2)
                 lVar6 = (int64_t)iVar2;
             }
             else {
-                lVar6 = (int64_t)(pWVar8 - lpString) >> 1;
+                /* dc:18892 字节差>>1 ≡ 元素数 (R25-h #21 图标名长度) */
+                lVar6 = (int64_t)((intptr_t)pWVar8 - (intptr_t)lpString) >> 1;
             }
             PECMD_StrCopyW((WCHAR **)&local_2f8, lpString, lVar6);
             lpString = local_2f8;

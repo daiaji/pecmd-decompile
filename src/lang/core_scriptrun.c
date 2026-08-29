@@ -310,7 +310,8 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         if (*pt2 == L'"' && pt2[1] == L'.' && (uint16_t)pt2[2] == 0x22 && pt2[3] == L'#') {
             /* ".# 组合 → g_hInstance 模式（TODO(verify): 原语义为版本串检测） */
             pt2 = pt2 + 3;
-            lVar32 = (int64_t)(pt2 - p) >> 1;
+            /* dc:29657 字节差>>1 ≡ 元素数 (R25-h #5) */
+            lVar32 = (int64_t)((intptr_t)pt2 - (intptr_t)p) >> 1;
         }
 
         /* 170-173：sysinit_end 检查 */
