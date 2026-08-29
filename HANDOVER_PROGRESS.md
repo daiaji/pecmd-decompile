@@ -1129,3 +1129,33 @@ b7c 后续: TablCreateListCtrl(756 行, dc 已预核)。
 - D-18 更新: 恒0桩 7→**6**(MESS MSTR SBAR SITE SOCK SPIN), 真体 59→60;
   USER 有逗号路径写真实 HKLM, 后续 golden 需注册表沙箱口径(Phase 3)。
 - 下一步: Phase 1 不可用层压缩按序 ADSL 假真体补全 → MSTR → SOCK; MESS 专项(口径设计)。
+
+---
+
+## R25-k (2026-08-29) — GUI 校对延后(用户决定) + 三线并发回货: D-20 关闭 / ADSL 真体化 / L1 批2-b7c
+
+### 规划修订（用户指示）
+- **GUI 部分延后**：MESS 专项(4933B GUI 体+弹窗阻塞口径)与 SBAR 等涉及"与原版 PECMD GUI 行为校对"的
+  项移出近程队列，挂 Phase 4 之后（校对口径复杂）。Phase 1 余量改为 **MSTR(3966B) → SOCK(8287B)**。
+
+### 三线交付（全部独立构建+64/64 验证）
+1. **D-20 `*map:` 执行体关闭**（core_scriptrun.c, +152 行）: dc:30235-30272 全序列直移
+   (ResDecode→随机键双层XOR→InvokeSubRoutine→key 分隔/填充→PrependEnviHeader→RunScriptText);
+   capstone 反汇编定案 0x140031bb0-0x140032560（门控 mem_flag==0 && size>0; 重映射 size+8 字节——
+   旧码 sz+2 单位错一并修正）; 失败路径接回 dc -0x7ff8ffa9。偏差 7 项登记
+   analysis/r25j_d20_map_port.md §6。**新实锤随案登记**: PECMD_StrBldCopyWideN(core_var2.c:68)
+   按字节拷贝 vs 原版按字符（R25-h 家族, 报告 §6#4, 待审计调用面后修）。
+2. **ADSL 真体化**（core_b3r_h2.c, 直移体 957 行）: FUN_140099f18 dc:96610-97468 全量直移,
+   if 105/dc104 同构、调用点 205:205 对表; 3 处 wsprintfW 变参丢弃 + 5 处 wlanapi 槽丢参按
+   原版 EXE 反汇编恢复; 补最小件 PECMD_InitEventSlots(1400e4e6c) 本文件 static。
+   **简化桩 1→0, 真体 61**（D-18 更新）。analysis/r25j_adsl_wlan_port.md。
+   登记: DAT_1401210f8(L"\r\n") 现挂零桩属全工程 data-stub 事项。
+3. **L1 批2-b7c**（core_b7c.c TablCreateListCtrl @0x1400c9b9c, 756 体行）: 50 名/430 站点改名,
+   保留 13 名/152 站点(多角色槽逐个登记); 纯度自检全绿(行界外字节一致+双向映射反演+撞名 0)。
+   analysis/r25j_l1_b7c_listctrl.md。
+
+### 构建/回归
+- 最终构建 md5=5ae03726 (54ac6cb) 部署 22:38 → **64/64**。中途一次 011_file_del exit 2→0 假阳性:
+  EXEC/FILE 通道偶发哑火 × 案间共享 `C:\pectest\out\` 状态链(005→010→011)级联, 复跑即过 →
+  新登记 **D-22 工单**(案间状态自足化候选)。
+- L1 批2 另一半(b2f DispCommand+HelpDlgProc)因平台并发上限被拒, 待重发。

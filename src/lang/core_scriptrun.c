@@ -16,6 +16,17 @@
  *   3) '#' 定位 → 资源路径；mem 前缀 → 变量路径（既有代码归位原分支次序）。
  *   分支条件均以 decompiled.c 字节级核对（1400319c1/9cf/9d9 反斜杠标志
  *   经 ASM 验证为词首 2 字符，与 pthreadmbcinfo 字段渲染无关）。
+ *
+ * R25-j（D-20）: 补全 *map: 执行块（dc:30235-30272），并对 PECMD原始.EXE
+ *   反汇编定案（区间 0x140031bb0-0x140032560，capstone 线性反汇编）：
+ *   - 门控 = mem_flag==0(0x140032081 cmp byte[rsp+0x2f8]) 且 映射 size>0
+ *     (0x14003234b cmp rsi,r9/jle，有符号 qword)；mem 前缀优先于 map 形；
+ *   - 重映射大小 = size+8 字节(0x140031cdf add rax,8)，payload=基址+8
+ *     (0x140031d1a add rax,8)；旧码 "+2" 为单位错已修正；
+ *   - 执行块单位: GrowByteBuffer(size+0x24 字节)/MemMoveForward(size 字节)/
+ *     memset(size 处 0x14 字节)/分隔符写入按 WCHAR(2 字节)索引；
+ *   - 读取前 line[restLen] 截断、执行块入口还原(dc:29839-29841/29921)。
+ *   详见 analysis/r25j_d20_map_port.md。
  * ==================================================================== */
 #include <stdbool.h>
 #include <stdint.h>
@@ -38,6 +49,8 @@ extern void FUN_14007BF44(void *script, WCHAR *line, WCHAR **out, int mode,
 
 /* 核心辅助 */
 extern void *PECMD_GrowByteBuffer(void **ps, int64_t len);          /* @0x140063424 */
+extern void *PECMD_AllocSmallObject(void **ps);                     /* @0x140063344 core_exec.c:120 (dc:30235) */
+extern uint8_t *PECMD_MemMoveForward(uint8_t *a, uint8_t *b, int n); /* @0x14001d78c restored_bodies.c:11567 (dc:30241) */
 extern void *PECMD_HeapRealloc(void *ptr, size_t size);             /* @0x140063118 */
 extern void PECMD_SwapBytePairs(uint8_t *p, int n); /* @0x140060a74 restored_bodies.c:12197 (WORD 内两字节互换) */
 extern uint16_t PECMD_GenRandomSeed16(void);                        /* @0x14001b510 */
@@ -291,6 +304,13 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         WCHAR *local_1a0 = NULL;
         WCHAR *mapStr = NULL;
         uint64_t mapOff = 0;
+        int64_t mapSize = 0;        /* dc:29855 local_178 映射 size (字节, 有符号) */
+        uint8_t *mapPayload = NULL; /* dc:29859 local_230 = 映射基址+8 (payload 起点) */
+        WCHAR mapSavedCh = 0;       /* dc:29840 local_238 映射读取期间截断的字符 */
+        size_t restLen = 0;         /* dc:29824 local_1a8 余串 token 长度 (R25-j 自内层上提) */
+        WCHAR *local_190 = NULL;    /* dc:29932 local_190 = local_240+dotHash+1 (RunScriptText pCurFile) */
+        WCHAR *rawWord = NULL;      /* dc:29656 local_190 旧值 (".#" 模式下 local_240 拷贝源基点) */
+        int dotHash = 0;            /* dc:29647 local_188: ".#" 形 '#' 词内偏移(字符) */
         int q1 = 0;                   /* local_298 词首反斜杠标志 (ASM 核实) */
         int starFlag = 0;             /* local_280 '*' 前缀标志 */
         WCHAR driveChar = 0;          /* local_270 ',' 后参数首字符(大写) */
@@ -304,6 +324,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
         int branches = 0;             /* 分支已执行标志: 1=map 2=变量 4=裸路径 8=资源 16=盘符 */
 
         /* 156-169：引号组合/实例检测（".# 组合 → g_hInstance 模式） */
+        rawWord = p; /* dc:29656 local_190 旧值（词起点, 星跳前） */
         pt2 = p;
         if (*p == L'*')
             pt2 = p + 1;
@@ -312,6 +333,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             pt2 = pt2 + 3;
             /* dc:29657 字节差>>1 ≡ 元素数 (R25-h #5) */
             lVar32 = (int64_t)((intptr_t)pt2 - (intptr_t)p) >> 1;
+            dotHash = (int)lVar32; /* dc:29647 local_188 = ('#' 位置 - 词起点)>>1 */
         }
 
         /* 170-173：sysinit_end 检查 */
@@ -386,8 +408,7 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
                 }
             }
         }
-        { /* dc:29824-29826 余串 token 化 + 展开 + 并入 line */
-            size_t restLen = 0;
+        { /* dc:29824-29826 余串 token 化 + 展开 + 并入 line（restLen 已上提供 map 截断用） */
             WCHAR *restExp = NULL;
             FUN_140024C48(&p, &restLen, 0x20);
             FUN_14007BF44(script, tokenEnd, &restExp, 0, 1);
@@ -397,30 +418,137 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             PECMD_FreeStrBuf(&restExp);
         }
 
-        /* ---- *map: 前缀检测（dc:29830-29870）---- */
+        /* ---- *map: 前缀检测（dc:29830-29870）----
+         * R25-j ASM 定案 (0x140032081): dc 实际门控次序 = mem 前缀优先于 map 形
+         * (mem_flag!=0 时 "*map:N" 整行走 mem 变量路径 dc:30273), 故本分支加 mem_flag==0 守卫。 */
         if (line != NULL && FUN_14005C788("*map:", line, 5) == 1) {
             mapStr = line;
         }
-        if (mapStr != NULL) {
-            /* 映射文件读取（dc:344-390 简版, 既有无改动） */
-            WCHAR *ms = mapStr + 5;
-            if (PECMD_ParseUIntValue(&ms, (int64_t *)&mapOff) > 0) {
-                void *mv = MapViewOfFile((HANDLE)(intptr_t)mapOff, 6, 0, 0, 8);
-                if (mv != NULL) {
-                    int64_t sz = *(int64_t *)mv;
-                    UnmapViewOfFile(mv);
-                    if (sz > 0) {
+        if (mapStr != NULL && mem_flag == 0) {
+            /* dc:29839-29841 (ASM 0x140031c11-0x140031c33): local_148 = line + restLen;
+             * local_238 = line[restLen]; line[restLen] = 0 —— 映射读取期间按余串长度截断,
+             * dc:29921 (ASM 0x140031e1d-0x140031e35) 在执行块入口还原。 */
+            mapSavedCh = line[restLen];
+            line[restLen] = L'\0';
+            /* ---- 映射读取（dc:29843-29870）---- */
+            {
+                WCHAR *ms = mapStr + 5; /* dc:29846 (ASM 0x140031c60 lea rax,[rdi+0xa] = +5 字符) */
+                if (PECMD_ParseUIntValue(&ms, (int64_t *)&mapOff) > 0) {
+                    void *mv = MapViewOfFile((HANDLE)(intptr_t)mapOff, 6, 0, 0, 8); /* dc:29851 */
+                    if (mv == NULL) {
+                        goto srx_mapfail; /* dc:29852 → LAB_140032a35 */
+                    }
+                    mapSize = *(int64_t *)mv; /* dc:29853 (ASM 0x140031cb5 mov rax,[rax] 读 8 字节) */
+                    UnmapViewOfFile(mv);      /* dc:29854 */
+                    if (mapSize <= 0) {
+                        goto srx_mapfail; /* dc:29856 (ASM 0x140031cd9 jle —— 有符号比较) */
+                    }
+                    /* dc:29857 重映射: ASM 0x140031cdf add rax,8 —— 大小 = size + 8 字节
+                     * (dc 字面 local_230+2 为 int 型指针步进; 旧码 "+2" 系单位错, R25-j 修正) */
+                    {
                         void *mv2 =
-                            MapViewOfFile((HANDLE)(intptr_t)mapOff, 6, 0, 0, (size_t)(sz + 2));
-                        if (mv2 != NULL) {
-                            local_1a0 = (WCHAR *)mv2;
-                            /* TODO(verify): 反编译 379-390 行映射数据拷贝与解码 */
+                            MapViewOfFile((HANDLE)(intptr_t)mapOff, 6, 0, 0, (size_t)mapSize + 8);
+                        if (mv2 == NULL) {
+                            goto srx_mapfail; /* dc:29858 → LAB_140032a35 */
                         }
+                        local_1a0 = (WCHAR *)mv2; /* dc:29857-29858 local_1a0 = 映射基址 */
+                        mapPayload = (uint8_t *)mv2 + 8; /* dc:29859 local_230 = 基址+8
+                                                            (ASM 0x140031d1a add rax,8) */
+                        /* ==== R25-j: *map: 执行块 (dc:30235-30272) ====
+                         * ASM 0x14003234b-0x140032538 定案: 到达条件 = mem_flag==0(0x140032081
+                         * cmp byte[rsp+0x2f8]) 且 映射 size>0(0x14003234b cmp rsi,r9/jle,
+                         * 有符号 qword); 读取块已保证 size>=1, 执行块必然顺序到达。 */
+                        line[restLen] = mapSavedCh; /* dc:29921 截断还原 */
+                        {
+                            int64_t mapSlot[3]; /* [0]=local_228 槽, [1]=local_220, [2]=local_218
+                             * (dc:30236-30240; ResDecode 经槽[1]读字节长, 与 mem 路径 resSlot
+                             * 同款 —— 三槽须真实邻接, 故用数组而非独立局部) */
+                            uint16_t seed;
+                            uint16_t w33;
+                            int64_t pos;
+                            WCHAR *mbuf;
+                            WCHAR *pText;
+                            /* dc:29926-29933 (LAB_140031e1d, ASM 0x140031e40-0x140031eaf):
+                             * local_240 = 自 词(-星跳)-2 拷 dotHash+restLen+1 字符 + NUL[len]
+                             *   (dc:60955 FUN_140063888 按 param_3*2 字节拷贝, len 为字符数);
+                             * map 形 line[0]=='*' → 词=line+2 → src=line (ASM lea rdx,[rsi-2]);
+                             * cVar6(dotHash)!=0 时 src = local_190 旧值-2 (ASM cmovne rsi,[rsp+0x148]);
+                             * local_190 = local_240 + dotHash + 1 → RunScriptText 第4参 pCurFile
+                             * (dc:29929-29932, ASM 0x140031e94 写 [rsp+0x148])。 */
+                            {
+                                WCHAR *src240 = (dotHash != 0) ? (rawWord - 2) : line;
+                                int64_t len240 = (int64_t)dotHash + (int64_t)restLen + 1;
+                                PECMD_AllocWStringBuffer(&local_240, len240 + 1); /* dc:60964 */
+                                memcpy(local_240, src240, (size_t)len240 * 2);    /* dc:60965 */
+                                local_240[len240] = 0;                            /* dc:60966/dc:29928 */
+                                local_190 = local_240 + dotHash + 1;              /* dc:29929-29932 */
+                            }
+                            PECMD_AllocSmallObject((void **)&mapSlot[0]); /* dc:30235 */
+                            mapSlot[1] = 0; /* dc:30236 local_220 = 0 */
+                            mapSlot[2] = 0; /* dc:30237 local_218 = 0 */
+                            /* dc:30238 (ASM 0x14003236b lea rdx,[rsi+0x24]): size + 0x24 字节
+                             * (dc 字面 piVar1+9 为 int 型指针步进 = +36 字节) */
+                            PECMD_GrowByteBuffer((void **)&mapSlot[0], mapSize + 0x24);
+                            mapSlot[1] = mapSize; /* dc:30240 local_220 = size */
+                            mapSlot[2] = mapSize; /* dc:30239 local_218 = size */
+                            mbuf = (WCHAR *)(intptr_t)mapSlot[0];
+                            /* dc:30241 (ASM 0x14003239c mov r8,rsi): 拷 size 字节 payload */
+                            PECMD_MemMoveForward((uint8_t *)mbuf, mapPayload, (int)mapSize);
+                            memset((uint8_t *)mbuf + mapSize, 0, 0x14); /* dc:30242 (ASM r8d=0x14) */
+                            UnmapViewOfFile(local_1a0);                 /* dc:30243 */
+                            FUN_1400E7D58(mapSlot, 1); /* dc:30244 ResDecode(槽,1), 槽[1]=字节长 */
+                            mbuf = (WCHAR *)(intptr_t)mapSlot[0]; /* 槽重读 (ASM 0x1400323ff) */
+                            seed = PECMD_GenRandomSeed16();       /* dc:30245 */
+                            w33 = (uint16_t)(((uint16_t)seed << 8) |
+                                             (seed & 0xff));       /* dc:30246 (ASM shl si,8/or) */
+                            FUN_14001B5AC(mbuf, (uint32_t)w33, 0); /* dc:30247 XorEncode(buf,WVar33,0) */
+                            PECMD_InvokeSubRoutine((void *)mapSlot, script,
+                                                   (uint32_t)w33);      /* dc:30248 (槽,script,WVar33) */
+                            mbuf = (WCHAR *)(intptr_t)mapSlot[0]; /* 槽重读 (ASM 0x140032424) */
+                            pos = PECMD_StrChrOffset(mbuf, (WCHAR)w33); /* dc:30251 (字符索引) */
+                            mbuf[pos] = (WCHAR)(w33 ^ 0xd);     /* dc:30253 (ASM word[rdi+r8*2], WCHAR 单位) */
+                            mbuf[pos + 1] = (WCHAR)(w33 ^ 0xa); /* dc:30254 */
+                            mbuf[pos + 2] = w33;                /* dc:30260 lVar41+0 */
+                            mbuf[pos + 3] = w33;                /* dc:30259 lVar41+1 */
+                            mbuf[pos + 4] = w33;                /* dc:30258 lVar41+2 */
+                            mbuf[pos + 5] = w33;                /* dc:30257 lVar41+3 */
+                            mbuf[pos + 6] = w33;                /* dc:30256 lVar41+4 */
+                            FUN_14001B5AC(mbuf, (uint32_t)(uint16_t)(seed ^ w33),
+                                          pos + 6); /* dc:30261 XorEncode(buf, seed^WVar33, iVar11+6) */
+                            if ((int8_t)g_charTableF < 0) { /* dc:30262-30264 DAT_14013a248 (ASM cmovl) */
+                                g_charTableF = 1;
+                            }
+                            /* dc:30265 PrependEnviHeader(seed, &local_228, local_258, local_294, 0)
+                             * —— 无条件调用 (ASM 0x1400324c4-0x1400324ef 无判空分支;
+                             * 资源路径同名调用带 *local_258 判空, map 路径没有)。 */
+                            PECMD_PrependEnviHeader((uint32_t)seed, (void **)mapSlot, outbuf,
+                                                    (uint32_t)flags2, 0);
+                            pText = (WCHAR *)(intptr_t)mapSlot[0]; /* dc:30266 pWVar22 = local_228 */
+                            mapSlot[0] = 0; /* dc:30267 local_228 = NULL (所有权移交内层, T1e) */
+                            /* dc:30268-30269 RunScriptText(script, 流, ptVar15=line, local_190,
+                             * flags = (seed<<16)|uVar31|0x40, NULL, NULL)
+                             * (ASM 0x1400324f4-0x140032529: r15=[rsp+0x128]=line, r9=[rsp+0x148]) */
+                            DVar13 = PECMD_RunScriptText(script, pText, line, local_190,
+                                                         ((uint32_t)seed << 16) | (uint32_t)flags |
+                                                             0x40u,
+                                                         NULL, NULL);
+                            PECMD_FreeStrBuf((WCHAR **)mapSlot); /* dc:30270-30271 ppWVar27 →
+                             * LAB_140032341 尾释放 (槽已 NULL, 空操作) */
+                        }
+                        branches |= 1;
+                        goto srx_tail;
                     }
                 }
             }
-            branches |= 1;
-            goto srx_tail;
+        srx_mapfail:
+            /* dc:29863-29869 失败尾: LAB_140032a2e lVar41 = -0x7ff8ffa9 → LAB_140032a35
+             * 释放 local_168(恒 0, 空操作) / local_278 / local_258 后直接返回。
+             * local_250 原版已于 dc:29829 释放(本实现释放点在收尾), 失败路径此处补齐防漏。
+             * 截断字符无须还原(原版失败路径同样不还原, line 随即释放)。 */
+            PECMD_FreeStrBuf(&line);      /* dc:29867 local_278 */
+            PECMD_FreeStrBuf(&outbuf);    /* dc:29868 local_258 */
+            PECMD_FreeStrBuf(&local_250); /* dc:29829 已释放语义的失败路径兜底 */
+            return (int64_t)-0x7ff8ffa9;
         }
 
         /* ---- token 分类（dc:29871-30002，本 S10 补齐）----
@@ -478,7 +606,12 @@ int64_t PECMD_RunCommand(void *script, WCHAR *cmdline)
             }
         }
 
-        /* ---- 分支分派（dc:30016-30332; mem 优先于 map, map 优先于裸/资源）---- */
+        /* ---- 分支分派（dc:30016-30332）----
+         * ASM 门控次序 (R25-j 定案): 0x140032081 mem_flag 判定 → 0x14003234b
+         * 映射 size 判定(>0 走 map 执行块) → 0x14003253d 反斜杠/裸路径/资源。
+         * map 形已在上方以 mem_flag==0 守卫提前执行, 故本分派仅剩
+         * mem / 裸路径 / 资源; 分派内的分类量与 dc 同名槽的对应见
+         * analysis/r25j_d20_map_port.md 参数对应表。 */
         if (mem_flag != 0) {
             /* ---- 变量执行路径（dc:30273-30332, 既有代码归位）---- */
             WCHAR *vp = wcls;

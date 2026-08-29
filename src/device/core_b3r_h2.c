@@ -1963,10 +1963,71 @@ longlong PECMD_VolumeDeviceCommand(longlong *param_1, LPCWSTR param_2)
     return (longlong)(int)(uintptr_t)pWVar21;
 }
 
+/* ---- R25-j 新增 extern (dc 直移依赖; 均引用全工程已有真体/桩, 定义处见行尾注) ---- */
+extern LPWSTR PECMD_GuidToString(LPWSTR out, uint *guid, int braces);  /* @0x14005fc90 def core_b3_remaining.c:11176 (param_3!=0 加花括号) */
+extern uint64_t *PECMD_GrowCapacityAligned(uint64_t *container, int64_t needed,
+                                           int64_t align);             /* @0x1400e6cf8 def core_b8d.c:150 (容量按 align 对齐扩展) */
+extern int PECMD_AnsiStrNCompare(char *a, longlong b, longlong n);     /* @0x14005b184 def restored_bodies.c:7212 (字节比较, 0=相等) */
+extern uint8_t *PECMD_MemMoveForward(uint8_t *a, uint8_t *b, int n);   /* @0x14001d78c def restored_bodies.c:11567 (前向 memmove) */
+extern void PECMD_TlsLogWrite(uint64_t ctx, const uint16_t *fmt, uint64_t a,
+                              uint64_t b);                             /* @0x140018d8c def restored_bodies.c:4311 (调试日志) */
+extern DWORD FUN_1400195F0(void *script, int64_t timeout, int maxmsg,
+                           void *param4);                             /* @0x1400195f0 def core_thread.c:250 (消息等待) */
+extern uint8_t *FUN_14001E69C(void *script, LPCWSTR name, void *scope,
+                              int64_t len);                           /* @0x14001e69c (变量节点查找, 全工程已有调用) */
+extern WCHAR *FUN_1400637DC(WCHAR **ps, LPCSTR src, int64_t srclen,
+                            int64_t codepage);                        /* @0x1400637dc ANSI→宽 (4 参形态, 同 core_b3l.c:54 与 core_main.c:45;
+                                                                         链接落在 core_exec5.c 3 参定义 = 既有全工程行为, 见报告) */
+extern int64_t *PECMD_InitStrContainer(int64_t *ps, LPCWSTR src, int64_t len,
+                                       uint64_t cap);                 /* @0x140070294 def core_b3a.c:357 (清槽后 WideToAnsiStr) */
+extern uint8_t DAT_1401210f8[8];                                       /* dc L"\r\n" .rdata 槽 (0x1401210f8; 现为 unimplemented_stubs.c:460 零桩, 内容差记报告) */
+
+/* ---- WLAN API 实参形态 typedef (仅本函数调用点就地换型) ----
+ * dc 对 DAT_14013d7xx 槽的调用丢弃了若干尾部参数 (Ghidra 槽签名过窄);
+ * 原版 EXE 反汇编证得实参数 (VA 见各调用点注), pecmd_globals.h 的槽声明
+ * 本 TU 已经包含且类型不可改, 故按 C 标准对槽值做函数指针换型后调用。 */
+typedef DWORD (*PECMD_FN_WlanOpenHandle)(DWORD, void *, DWORD *, HANDLE *);        /* 实调 4 参 @0x14009a686 */
+typedef DWORD (*PECMD_FN_WlanSetProfile)(HANDLE, void *, DWORD, LPCWSTR, LPCWSTR,
+                                         DWORD, void *, DWORD *);                  /* 实调 8 参 @0x14009b535 */
+typedef DWORD (*PECMD_FN_WlanScan)(HANDLE, void *, void *, void *, void *);        /* 实调 5 参 @0x14009aaca */
+typedef DWORD (*PECMD_FN_WlanGetAvailNetList)(HANDLE, void *, DWORD, void *,
+                                              void **);                            /* 实调 5 参 @0x14009ab0c */
+typedef void (*PECMD_FN_WlanFreeMemory)(void *);                                   /* 实调 1 参 @0x14009b6bc / 0x14009b6cf */
+
+/* ---- R25-j: FUN_1400e4e6c @0x1400e4e6c size=37 (dc 直移, 工程未还原件, 补最小静态体) ----
+ * RAS 拨号事件槽初始化: 挂函数指针表, 清两个同步事件句柄全局, 清槽 0x14f。 */
+extern uint8_t PTR_FUN_14012b1c0[];                                    /* dc 函数指针表 (0x14012b1c0) */
+extern HANDLE g_hSyncEvtA;                                             /* DAT_14013e1f8 (core_globals.c:167) */
+extern HANDLE g_hSyncEvtB;                                             /* DAT_14013e200 (core_globals.c:168) */
+static undefined8 *PECMD_InitEventSlots(undefined8 *param_1)
+{
+    *param_1 = (undefined8)(uintptr_t)&PTR_FUN_14012b1c0;              /* dc:FUN_1400e4e6c 首语句 */
+    g_hSyncEvtA = (HANDLE)0;                                           /* dc: DAT_14013e1f8 = 0 */
+    g_hSyncEvtB = (HANDLE)0;                                           /* dc: DAT_14013e200 = 0 */
+    param_1[0x14f] = 0;                                                /* dc: param_1[0x14f] = 0 */
+    return param_1;
+}
+
 /* ================================================================
  * @0x140099f18  (ulonglong PECMD_WlanManage(longlong*, LPCWSTR))
- * WLAN 管理命令 (-wlan): 枚举/扫描/连接/断开/设置配置文件/查询。
- * 依赖惰性加载 wlanapi 函数指针槽 (g_pWlanOpenHandle..7d0)。
+ * R25-j dc 直移体 (dc:96610-97468 FUN_140099f18 size=7183), 整体替换
+ * 前语义级重写残体 (彼体缺 WLAN 后 2/3 分支)。
+ * ADSL 动词处理器: "-wlan" 前缀路由 RAS(拨号/挂断/枚举) 与 WLAN
+ * (接口枚举/扫描/连接/配置文件/可用网络列表) 双路径。
+ * 直移纪律: 变量名沿用 dc (Ghidra 名); 逐段附 dc 行号; Ghidra 伪影
+ * (变参丢弃/unaff 残留/CONCAT 拼接) 处理决策见 analysis/r25j_adsl_wlan_port.md。
+ * 结构布局 (按 dc 访存偏移还原, 不引 wlanapi.h):
+ *   WLAN_INTERFACE_INFO_LIST    { u32 NumberOfItems; u32 Index; INFO[]; }
+ *   WLAN_INTERFACE_INFO (0x214) { GUID(0x10); WCHAR Description[256](@0x10);
+ *                                 u32 State(@0x210); }   表基+8 起每项 0x214
+ *   WLAN_AVAILABLE_NETWORK_LIST { u32 NumberOfItems; u32 Index; NET[]; }
+ *   WLAN_AVAILABLE_NETWORK(0x274){ WCHAR ProfileName[256](@0); u32 SSIDLen(@0x200);
+ *                                 u8 SSID[32](@0x204); u32 BssType(@0x224);
+ *                                 u32 NumBssid(@0x228); BOOL Connectable(@0x22C);
+ *                                 u32 Reason(@0x230); u32 NumPhyTypes(@0x234);
+ *                                 u32 PhyTypes[8](@0x238); BOOL MorePhyTypes(@0x258);
+ *                                 u32 SignalQuality(@0x25C); BOOL SecEnabled(@0x260);
+ *                                 u32 Auth(@0x264); u32 Cipher(@0x268); u32 Flags(@0x26C); }
  * ================================================================ */
 ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
 {
@@ -1975,7 +2036,7 @@ ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
     bool bVar3;
     bool bVar4;
     bool bVar5;
-    ulonglong *lpString;
+    uint64_t lpString;                       /* dc:96620 (ulonglong* 槽值形态) */
     LPWSTR pWVar6;
     char cVar7;
     bool bVar8;
@@ -1984,390 +2045,944 @@ ulonglong PECMD_WlanManage(longlong *param_1, LPCWSTR param_2)
     DWORD DVar11;
     undefined8 uVar12;
     longlong lVar13;
-    WCHAR *pwVar14;
+    wchar_t *pwVar14;
     LPWSTR *ppWVar15;
     WCHAR wVar16;
     uint uVar17;
     LPCWSTR *ppWVar18;
     LPCWSTR pWVar19;
     LPWSTR pWVar20;
-    LPCWSTR pWVar21;
+    LPWSTR pWVar21;                          /* dc:96629 LPCWSTR, 但 dc:97328/97329 以其为 wsprintfW 目标, 按可变点声明 */
     char cVar22;
     LPWSTR pWVar23;
     short *psVar24;
     uint uVar25;
     undefined2 *puVar26;
-    WCHAR *pwVar27;
+    wchar_t *pwVar27;
     longlong lVar28;
     int iVar29;
     LPCWSTR pWVar30;
-    WCHAR *pwVar31;
+    wchar_t *pwVar31;
     ulonglong uVar32;
     ulonglong uVar33;
+    uint uVarRow;                            /* R25-j: EXE r15d 行分隔计数 (dc:97081 变参丢弃, 恢复自 0x14009a94e) */
     LPWSTR pWVar34;
     LPCWSTR pWVar35;
-    LPCWSTR local_res10;
-    uint64_t local_res20;
-    char local_c57;
-    char local_c53;
-    WCHAR *local_c50;
-    uint local_c48[2];
-    LPCWSTR local_c40;
-    uint64_t local_c38;
-    LPCWSTR local_c30;
-    uint8_t local_c28;
-    char local_c27;
-    int *local_c20;
-    LPCWSTR local_c18;
-    LPCWSTR local_c10;
-    uint64_t local_c08;
-    LPWSTR local_c00;
-    WCHAR *local_bf8;
-    LPWSTR local_bf0;
-    uint64_t local_be8;
-    LPCWSTR local_be0;
-    LPCWSTR local_bd8;
-    uint32_t local_bd0;
-    WCHAR *local_bc8;
-    WCHAR *local_bc0;
-    longlong local_bb8;
-    uint64_t local_bb0;
-    LPWSTR local_ba8;
-    longlong local_ba0;
-    LPWSTR local_b98;
-    LPWSTR local_b90;
-    LPCWSTR local_b88;
-    uint local_b80;
-    uint32_t uStack_b7c;
-    uint32_t local_b78[4];
-    LPWSTR local_b68;
-    ulonglong local_b60[2];
-    uint8_t *local_b50;
-    uint32_t local_b40;
-    uint32_t local_b3c;
-    uint8_t local_b38[48];
-    WCHAR local_b08;
-    ulonglong local_b06[9];
-    undefined8 local_ab8[336];
+    uint64_t local_res10;                    /* dc:96651 解析游标(低32兼解析出参槽, dc:96964 显式半清零) */
+    uint64_t local_res20;                    /* dc:96652 多角色: list 模式值 / ANSI 串槽 */
+    char local_c57;                          /* dc:96653 排序模式 '\x01'/'\x02'/'\x10' */
+    char local_c53;                          /* dc:96654 '?' 前缀标记 */
+    wchar_t *local_c50;                      /* dc:96655 */
+    uint local_c48[2];                       /* dc:96656 */
+    WCHAR *local_c40;                        /* dc:96657 SSID 宽文本槽 */
+    uint64_t local_c38;                      /* dc:96658 query/queryall 标志字节 / ANSI token1 槽 */
+    WCHAR *local_c30;                        /* dc:96659 token3 槽 */
+    undefined1 local_c28;                    /* dc:96660 RAS API 加载出参 */
+    char local_c27;                          /* dc:96661 "-wlan" 命中 */
+    int *local_c20;                          /* dc:96662 WLAN_INTERFACE_INFO_LIST* */
+    uint64_t local_c18;                      /* dc:96663 宽字符名槽 */
+    WCHAR *local_c10;                        /* dc:96664 变量名槽 */
+    uint64_t local_c08;                      /* dc:96665 ANSI token2(密码) 槽 */
+    LPWSTR local_c00;                        /* dc:96666 XML 头缓冲 */
+    wchar_t *local_bf8;                      /* dc:96667 token1 槽 */
+    LPWSTR local_bf0;                        /* dc:96668 "%s.PN" 变量名槽 */
+    uint64_t local_be8;                      /* dc:96669 ssid 名长(低32) / ANSI token2 槽 */
+    WCHAR *local_be0;                        /* dc:96670 */
+    wchar_t *local_bd8;                      /* dc:96671 token2 槽 */
+    uint32_t local_bd0;                      /* dc:96672 连接模式 */
+    wchar_t *local_bc8;                      /* dc:96673 认证串 / RAS ANSI 槽 */
+    wchar_t *local_bc0;                      /* dc:96674 输出行缓冲 */
+    longlong local_bb8;                      /* dc:96675 已用字符数 */
+    undefined8 local_bb0;                    /* dc:96676 (仅 dc:96710 初始化, 全文无读点) */
+    LPWSTR local_ba8;                        /* dc:96677 sharedKey 块缓冲 / RAS ANSI 槽 */
+    longlong local_ba0;                      /* dc:96678 hClientHandle */
+    LPCWSTR local_b98;                       /* dc:96679 加密串 */
+    LPWSTR local_b90;                        /* dc:96680 当前接口项 */
+    WCHAR *local_b88;                        /* dc:96681 WLAN_AVAILABLE_NETWORK_LIST* */
+    uint64_t local_b80;                      /* dc:96682 (dc 拆 local_b80+uStack_b7c 的 64 位槽) */
+    uint32_t local_b78[4];                   /* dc:96684 协商版本出参 */
+    LPWSTR local_b68;                        /* dc:96685 hex SSID 串 */
+    ulonglong local_b60[5];                  /* dc:96686-96689 WLAN_CONNECTION_PARAMETERS 0x28 字节
+                                                (EXE: [rsp+0x188]; dc 的 b60[2]+b50+b40+b3c 连续拼合) */
+    uint8_t *local_b50;                      /* dc:96687 = 参数块 +0x10 pDot11Ssid */
+    uint32_t local_b40;                      /* dc:96688 = 参数块 +0x20 BssType */
+    uint32_t local_b3c;                      /* dc:96689 = 参数块 +0x24 dwFlags */
+    uint8_t local_b38[48];                   /* dc:96690 DOT11_SSID {u32 len; u8 ssid[32];} */
+    WCHAR local_b08[39];                     /* dc:96691-96692 GUID 串缓冲 (dc local_b08 + local_b06[9] 相邻合并;
+                                                EXE 清零跨度 0x4c+首字符 = 39 字符, 恰容 "{GUID}" 39 字符含 NUL) */
+    undefined8 local_ab8[336];               /* dc:96693 RAS 事件槽 */
 
-    (void)bVar2;
-    (void)bVar3;
-    (void)lpString;
-    (void)pWVar6;
-    (void)DVar11;
-    (void)pwVar14;
-    (void)ppWVar15;
-    (void)wVar16;
-    (void)pWVar19;
-    (void)pWVar20;
-    (void)pWVar21;
-    (void)pWVar23;
-    (void)psVar24;
-    (void)puVar26;
-    (void)pwVar27;
-    (void)lVar28;
-    (void)iVar29;
-    (void)pWVar34;
-    (void)pWVar35;
-    (void)local_c57;
-    (void)local_c50;
-    (void)local_c20;
-    (void)local_c08;
-    (void)local_bb8;
-    (void)local_bb0;
-    (void)local_ba0;
-    (void)local_b98;
-    (void)local_b90;
-    (void)local_b80;
-    (void)uStack_b7c;
-    (void)local_b78;
-    (void)local_b68;
-    (void)local_b60;
-    (void)local_b50;
-    (void)local_b40;
-    (void)local_b3c;
-    (void)local_b38;
-    (void)local_b08;
-    (void)local_b06;
-
-    local_res10 = param_2;
-    PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
-    local_c27 = PECMD_MatchTokenAdvance("-wlan", (WCHAR **)&local_res10, 5);
-    uVar33 = 0;
-    pWVar34 = (LPWSTR)0x0;
-    iVar10 = 0;
+    /* ---- 入口与词头 (dc:96695-96725) ---- */
+    local_res10 = (uint64_t)(uintptr_t)param_2;                                       /* dc:96695 */
+    PECMD_SkipLeadingControlChars((longlong *)&local_res10);                          /* dc:96696 */
+    local_c27 = PECMD_MatchTokenAdvance("-wlan", (WCHAR **)&local_res10, 5);          /* dc:96697 */
+    uVar33 = 0;                                                                       /* dc:96698 */
+    pWVar34 = (LPWSTR)0x0;                                                            /* dc:96699 */
+    iVar10 = 0;                                                                       /* dc:96700 */
+    /* dc:96701 为 Ghidra 残留 (读未初始化高半再移位); 全文只用低 32 位, 以 0 定值 */
     local_be8 = 0;
-    local_ba8 = (LPWSTR)0x0;
-    PECMD_AllocStrSlot(&local_bf8);
-    PECMD_AllocStrSlot(&local_bd8);
-    PECMD_AllocStrSlot(&local_bf0);
-    PECMD_AllocStrSlot(&local_c10);
-    PECMD_AllocStrSlot(&local_c30);
-    PECMD_AllocStrSlot(&local_bc0);
-    local_bb8 = 0;
-    local_bb0 = 0;
-    uVar25 = 1;
-    local_c48[0] = 1;
-    bVar4 = false;
+    local_ba8 = (LPWSTR)0x0;                                                          /* dc:96702 */
+    PECMD_AllocStrSlot(&local_bf8);                                                   /* dc:96703 */
+    PECMD_AllocStrSlot(&local_bd8);                                                   /* dc:96704 */
+    PECMD_AllocStrSlot(&local_bf0);                                                   /* dc:96705 */
+    PECMD_AllocStrSlot(&local_c10);                                                   /* dc:96706 */
+    PECMD_AllocStrSlot(&local_c30);                                                   /* dc:96707 */
+    PECMD_AllocStrSlot(&local_bc0);                                                   /* dc:96708 */
+    local_bb8 = 0;                                                                    /* dc:96709 */
+    local_bb0 = 0;                                                                    /* dc:96710 */
+    (void)local_bb0;
+    uVar25 = 1;                                                                       /* dc:96711 */
+    local_c48[0] = 1;                                                                 /* dc:96712 */
+    bVar4 = false;                                                                    /* dc:96713 */
+    /* dc:96714 Ghidra 残留 (低字节清零), 等价 0 定值 */
     local_c38 = 0;
-    bVar3 = false;
-    cVar22 = '\0';
+    bVar3 = false;                                                                    /* dc:96715 */
+    cVar22 = '\0';                                                                    /* dc:96716 */
+    /* dc:96717 Ghidra 残留 (低字节清零), 等价 0 定值 */
     local_res20 = 0;
-    bVar8 = false;
-    bVar5 = false;
-    bVar2 = false;
-    local_c57 = '\x02';
-    pWVar30 = local_res10;
-    uVar12 = PECMD_AsciiPrefixICmp("-ssid:", (ushort *)local_res10, 6);
-    pWVar20 = local_bf0;
-    pWVar21 = local_c10;
-    if ((char)uVar12 != '\0') {
-        pWVar30 = pWVar30 + 6;
-        for (local_res10 = pWVar30; WVar1 = *local_res10, WVar1 != L'\0';
-             local_res10 = local_res10 + 1) {
+    bVar8 = false;                                                                    /* dc:96718 */
+    bVar5 = false;                                                                    /* dc:96719 */
+    bVar2 = false;                                                                    /* dc:96720 */
+    local_c57 = '\x02';                                                               /* dc:96721 */
+    pWVar30 = (LPCWSTR)(uintptr_t)local_res10;                                        /* dc:96722 */
+    uVar12 = (undefined8)(int64_t)(int)PECMD_AsciiPrefixICmp("-ssid:", (ushort *)(uintptr_t)local_res10, 6);  /* dc:96723 */
+    pWVar20 = local_bf0;                                                              /* dc:96724 */
+    pWVar21 = local_c10;                                                              /* dc:96725 */
+    if ((char)uVar12 != '\0') {                                                       /* dc:96726 */
+        pWVar30 = pWVar30 + 6;                                                        /* dc:96727 */
+        /* dc:96728-96737: 取 -ssid: 名至空白/控制符止, 就地 NUL 截断
+         * (local_res10 为字节地址槽, dc 元素 +1 = 字节 +2) */
+        for (local_res10 = (uint64_t)(uintptr_t)pWVar30;
+             WVar1 = *(WCHAR *)(uintptr_t)local_res10, WVar1 != L'\0';
+             local_res10 = local_res10 + 2) {
             if (((8 < (ushort)WVar1) && ((ushort)WVar1 < 0xe)) || (WVar1 == L' ')) {
-                if (*local_res10 != L'\0') {
-                    *((LPWSTR)local_res10) = L'\0';
-                    local_res10 = local_res10 + 1;
+                if (*(WCHAR *)(uintptr_t)local_res10 != L'\0') {
+                    *(WCHAR *)(uintptr_t)local_res10 = L'\0';
+                    local_res10 = local_res10 + 2;
                 }
                 break;
             }
         }
-        PECMD_SkipLeadingControlChars((WCHAR **)&local_res10);
-        iVar9 = lstrlenW(pWVar30);
-        local_be8 = (local_be8 & 0xffffffff00000000ULL) | (uint32_t)iVar9;
-        PECMD_AllocString(&local_bf0, (longlong)(iVar9 + 0x68));
-        pWVar20 = local_bf0;
-        wsprintfW(local_bf0, WSTR("%s.PN"), pWVar30);
-        PECMD_AllocString((WCHAR **)&local_c10, (longlong)((int)(uint32_t)local_be8 + 100));
-        pWVar21 = local_c10;
-        wsprintfW((LPWSTR)local_c10, WSTR("%s"), pWVar30);
+        PECMD_SkipLeadingControlChars((longlong *)&local_res10);                      /* dc:96738 */
+        iVar9 = lstrlenW(pWVar30);                                                    /* dc:96739 */
+        local_be8 = (local_be8 & 0xffffffff00000000ULL) | (uint64_t)(uint32_t)iVar9;  /* dc:96740 */
+        PECMD_AllocString(&local_bf0, (longlong)(iVar9 + 0x68));                      /* dc:96741 */
+        pWVar20 = local_bf0;                                                          /* dc:96742 */
+        wsprintfW(local_bf0, WSTR("%s.PN"), pWVar30);                                 /* dc:96743 */
+        PECMD_AllocString(&local_c10, (longlong)((int)local_be8 + 100));              /* dc:96744 */
+        pWVar21 = local_c10;                                                          /* dc:96745 */
+        wsprintfW(local_c10, WSTR("%s"), pWVar30);                                    /* dc:96746 */
     }
-    cVar7 = PECMD_MatchTokenAdvance("-start", (WCHAR **)&local_res10, 6);
-    local_bd0 = 0;
-    if (cVar7 != '\0') {
-        local_bd0 = 0xe;
+    cVar7 = PECMD_MatchTokenAdvance("-start", (WCHAR **)&local_res10, 6);             /* dc:96748 */
+    local_bd0 = 0;                                                                    /* dc:96749 */
+    if (cVar7 != '\0') {                                                              /* dc:96750 */
+        local_bd0 = 0xe;                                                              /* dc:96751 */
     }
-    PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bf8, 0x2c);
-    if (*local_res10 == L',') {
-        local_res10 = local_res10 + 1;
-        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bd8, 0x2c);
+    PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bf8, 0x2c);   /* dc:96753 */
+    if (*(WCHAR *)(uintptr_t)local_res10 == L',') {                                   /* dc:96754 */
+        local_res10 = local_res10 + 2;                                                /* dc:96755 (dc 元素 +1) */
+        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bd8, 0x2c);  /* dc:96756 */
     }
-    if (*local_res10 == L',') {
-        local_res10 = local_res10 + 1;
-        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bc0, 0x2c);
-        local_c53 = '\0';
-        cVar22 = '\x02';
-        pwVar31 = local_bc0;
-        if (*local_bc0 == L'?') {
-            local_c53 = (char)*local_bc0;
-            pwVar31 = local_bc0 + 1;
+    if (*(WCHAR *)(uintptr_t)local_res10 == L',') {                                   /* dc:96758 */
+        local_res10 = local_res10 + 2;                                                /* dc:96759 (dc 元素 +1) */
+        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_bc0, 0x2c);  /* dc:96760 */
+        /* ---- 动词解析: 问号 / 星号 / 双星号 / 减号 / 尖号 前缀与 stop/start/list/query/scan 词 (dc:96761-96858) ---- */
+        local_c53 = '\0';                                                             /* dc:96761 */
+        cVar22 = '\x02';                                                              /* dc:96762 */
+        pwVar31 = local_bc0;                                                          /* dc:96763 */
+        if (*local_bc0 == L'?') {                                                     /* dc:96764 */
+            local_c53 = (char)*local_bc0;                                             /* dc:96765 */
+            pwVar31 = local_bc0 + 1;                                                  /* dc:96766 */
         }
-        cVar7 = '\x02';
-        if (*pwVar31 == L'*') {
-            if (pwVar31[1] == L'*') {
-                pwVar31 = pwVar31 + 2;
-                cVar22 = '\x10';
+        cVar7 = '\x02';                                                               /* dc:96768 */
+        if (*pwVar31 == L'*') {                                                       /* dc:96769 */
+            if (pwVar31[1] == L'*') {                                                 /* dc:96770 */
+                pwVar31 = pwVar31 + 2;                                                /* dc:96771 */
+                cVar22 = '\x10';                                                      /* dc:96772 */
             }
-            cVar7 = cVar22;
-            if (*pwVar31 == L'*') {
-                pwVar31 = pwVar31 + 1;
-                cVar7 = '\0';
+            cVar7 = cVar22;                                                           /* dc:96773 */
+            if (*pwVar31 == L'*') {                                                   /* dc:96775 */
+                pwVar31 = pwVar31 + 1;                                                /* dc:96776 */
+                cVar7 = '\0';                                                         /* dc:96777 */
             }
         }
-        if (*pwVar31 == L'-') {
-            pwVar31 = pwVar31 + 1;
-            cVar7 = '\x01';
+        if (*pwVar31 == L'-') {                                                       /* dc:96780 */
+            pwVar31 = pwVar31 + 1;                                                    /* dc:96781 */
+            cVar7 = '\x01';                                                           /* dc:96782 */
         }
-        if (*pwVar31 == L'^') {
-            pwVar31 = pwVar31 + 1;
-            cVar7 = '\x02';
+        if (*pwVar31 == L'^') {                                                       /* dc:96784 */
+            pwVar31 = pwVar31 + 1;                                                    /* dc:96785 */
+            cVar7 = '\x02';                                                           /* dc:96786 */
         }
-        iVar9 = lstrcmpiW(WSTR("stop"), pwVar31);
-        if (iVar9 == 0) {
-            bVar4 = true;
+        iVar9 = lstrcmpiW(WSTR("stop"), pwVar31);                                     /* dc:96788 */
+        if (iVar9 == 0) {                                                             /* dc:96789 */
+            bVar4 = true;                                                             /* dc:96790 */
         }
         else {
-            iVar9 = lstrcmpiW(WSTR("start+"), pwVar31);
-            if (iVar9 == 0) {
-                local_bd0 = (local_bd0 & 0xffffff00) | 6;
+            iVar9 = lstrcmpiW(WSTR("start+"), pwVar31);                               /* dc:96793 */
+            if (iVar9 == 0) {                                                         /* dc:96794 */
+                local_bd0 = (local_bd0 & 0xffffff00U) | 6;                            /* dc:96795 */
             }
             else {
-                iVar9 = StrCmpNIW(WSTR("start+"), pwVar31, 5);
-                if (iVar9 != 0) {
-                    iVar9 = lstrcmpiW(WSTR("list+"), pwVar31);
-                    if (iVar9 == 0) {
-                        local_res20 = (local_res20 & 0xffffffffffffff00ULL) | 3;
+                iVar9 = StrCmpNIW(WSTR("start+"), pwVar31, 5);                        /* dc:96798 */
+                if (iVar9 != 0) {                                                     /* dc:96799 */
+                    iVar9 = lstrcmpiW(WSTR("list+"), pwVar31);                        /* dc:96800 */
+                    if (iVar9 == 0) {                                                 /* dc:96801 */
+                        local_res20 = (local_res20 & 0xffffffffffffff00ULL) | 3;      /* dc:96802 */
                     }
                     else {
-                        iVar9 = lstrcmpiW(WSTR("list"), pwVar31);
-                        if (iVar9 != 0) {
-                            iVar9 = lstrcmpiW(WSTR("queryall"), pwVar31);
-                            if (iVar9 == 0) {
-                                bVar3 = true;
-                                local_c38 = (local_c38 & 0xffffffffffffff00ULL) | 8;
+                        iVar9 = lstrcmpiW(WSTR("list"), pwVar31);                     /* dc:96805 */
+                        if (iVar9 != 0) {                                             /* dc:96806 */
+                            iVar9 = lstrcmpiW(WSTR("queryall"), pwVar31);             /* dc:96807 */
+                            if (iVar9 == 0) {                                         /* dc:96808 */
+                                bVar3 = true;                                         /* dc:96809 */
+                                local_c38 = (local_c38 & 0xffffffffffffff00ULL) | 8;  /* dc:96810 */
                             }
                             else {
-                                iVar9 = lstrcmpiW(WSTR("query"), pwVar31);
-                                if (iVar9 == 0) {
-                                    local_c38 = (local_c38 & 0xffffffffffffff00ULL) | 1;
+                                iVar9 = lstrcmpiW(WSTR("query"), pwVar31);            /* dc:96813 */
+                                if (iVar9 == 0) {                                     /* dc:96814 */
+                                    local_c38 = (local_c38 & 0xffffffffffffff00ULL) | 1;  /* dc:96815 */
                                 }
                                 else {
-                                    iVar9 = lstrcmpiW(WSTR("scan"), pwVar31);
-                                    if (iVar9 == 0) {
-                                        bVar2 = true;
+                                    iVar9 = lstrcmpiW(WSTR("scan"), pwVar31);         /* dc:96818 */
+                                    if (iVar9 == 0) {                                 /* dc:96819 */
+                                        bVar2 = true;                                 /* dc:96820 */
                                     }
                                     else {
-                                        iVar9 = lstrcmpiW(WSTR("liston"), pwVar31);
-                                        if (iVar9 == 0) {
-                                            bVar8 = true;
-                                            bVar5 = true;
-                                            cVar22 = '\0';
-                                            goto LAB_14009a3f5;
+                                        iVar9 = lstrcmpiW(WSTR("liston"), pwVar31);   /* dc:96823 */
+                                        if (iVar9 == 0) {                             /* dc:96824 */
+                                            bVar8 = true;                             /* dc:96825 */
+                                            bVar5 = true;                             /* dc:96826 */
+                                            cVar22 = '\0';                            /* dc:96827 */
+                                            goto LAB_14009a3f5;                       /* dc:96828 */
                                         }
+                                        /* dc:96830: 其余词 → 解析重试次数入 local_c48 */
                                         PECMD_ParseShortStore((undefined8 *)&local_res10,
                                                               (int *)local_c48, 0x2c);
-                                        uVar25 = local_c48[0];
-                                        if ((int)local_c48[0] < 1) {
-                                            uVar25 = 0;
+                                        uVar25 = local_c48[0];                        /* dc:96831 */
+                                        if ((int)local_c48[0] < 1) {                  /* dc:96832 */
+                                            uVar25 = 0;                               /* dc:96833 */
                                         }
                                     }
                                 }
                             }
-                            goto LAB_14009a3ea;
+                            goto LAB_14009a3ea;                                       /* dc:96838 */
                         }
-                        local_res20 = (local_res20 & 0xffffffffffffff00ULL) | 1;
+                        local_res20 = (local_res20 & 0xffffffffffffff00ULL) | 1;      /* dc:96840 */
                     }
-                    cVar22 = (char)local_res20;
-                    uVar17 = (uint)(uint8_t)local_c38;
-                    bVar8 = false;
-                    if (local_c53 != '\0') {
-                        uVar17 = 1;
+                    cVar22 = (char)local_res20;                                       /* dc:96842 */
+                    uVar17 = (uint)(uint8_t)local_c38;                                /* dc:96843 */
+                    bVar8 = false;                                                    /* dc:96844 */
+                    if (local_c53 != '\0') {                                          /* dc:96845 */
+                        uVar17 = 1;                                                   /* dc:96846 */
                     }
-                    local_c38 = (local_c38 & 0xffffffff00000000ULL) | (uint32_t)uVar17;
-                    local_c57 = cVar7;
-                    goto LAB_14009a3f5;
+                    local_c38 = (local_c38 & 0xffffffff00000000ULL) | (uint64_t)uVar17;  /* dc:96848 */
+                    local_c57 = cVar7;                                                /* dc:96849 */
+                    goto LAB_14009a3f5;                                               /* dc:96850 */
                 }
-                local_bd0 = (local_bd0 & 0xffffff00) | 2;
+                local_bd0 = (local_bd0 & 0xffffff00U) | 2;                            /* dc:96852 */
             }
         }
     LAB_14009a3ea:
-        cVar22 = '\0';
-        bVar8 = false;
+        cVar22 = '\0';                                                                /* dc:96856 */
+        bVar8 = false;                                                                /* dc:96857 */
     }
 LAB_14009a3f5:
-    if (*local_res10 == L',') {
-        local_res10 = local_res10 + 1;
-        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_c30, 0x2c);
+    if (*(WCHAR *)(uintptr_t)local_res10 == L',') {                                   /* dc:96860 */
+        local_res10 = local_res10 + 2;                                                /* dc:96861 (dc 元素 +1) */
+        PECMD_SplitTokenTrimWs((longlong *)&local_res10, (longlong *)&local_c30, 0x2c);  /* dc:96862 */
     }
-    pWVar30 = local_c30;
-    if ((cVar22 != '\0') || (bVar8)) {
-        PECMD_SetVariableWithPrefix(param_1, local_c30, (LPCWSTR)g_szEmpty);
+    pWVar30 = local_c30;                                                              /* dc:96864 */
+    if ((cVar22 != '\0') || (bVar8)) {                                                /* dc:96865 */
+        PECMD_SetVariableWithPrefix(param_1, local_c30, (LPCWSTR)g_szEmpty);          /* dc:96866 (值 = &DAT_14011c638 空串) */
     }
-    pwVar31 = local_bf8;
-    if (local_c27 == '\0') {
-        PECMD_LoadRasApi((uint64_t)(uintptr_t)&local_c28);
-        bVar8 = PECMD_HasRasDialApi() != 0;
-        uVar32 = 1;
-        if (bVar8) {
-            if (bVar5) {
-                PECMD_AllocStrSlot(&local_res10);
-                PECMD_EnumRasConnections((longlong *)&local_res10);
-                PECMD_SetVariableWithPrefix(param_1, pWVar30, local_res10);
-                ppWVar18 = &local_res10;
+    pwVar31 = local_bf8;                                                              /* dc:96868 */
+    /* ---- RAS 半区 (未命中 -wlan): 枚举/拨号/挂断 (dc:96869-96962) ---- */
+    if (local_c27 == '\0') {                                                          /* dc:96869 */
+        PECMD_LoadRasApi((uint64_t)(uintptr_t)&local_c28);                            /* dc:96870 */
+        uVar12 = PECMD_HasRasDialApi();                                               /* dc:96871 (CONCAT71 拼装 = RAX 低 32) */
+        bVar8 = (char)uVar12 != '\0';
+        uVar32 = 1;                                                                   /* dc:96872 */
+        if ((int)uVar12 != 0) {                                                       /* dc:96873 */
+            if (bVar5) {                                                              /* dc:96874 */
+                PECMD_AllocStrSlot((WCHAR **)&local_res10);                           /* dc:96875 */
+                PECMD_EnumRasConnections((longlong *)&local_res10);                   /* dc:96876 */
+                PECMD_SetVariableWithPrefix(param_1, pWVar30, (LPCWSTR)(uintptr_t)local_res10);  /* dc:96877 */
+                ppWVar18 = (LPCWSTR *)&local_res10;                                   /* dc:96878 */
             }
             else {
-                if (cVar22 == '\0') {
-                    if (bVar4) {
-                        uVar33 = PECMD_FindRasConnection(pWVar30);
-                        uVar32 = (ulonglong)(int)uVar33;
+                if (cVar22 == '\0') {                                                 /* dc:96881 */
+                    if (bVar4) {                                                      /* dc:96882 */
+                        uVar33 = PECMD_FindRasConnection(pWVar30);                    /* dc:96883 */
+                        uVar32 = (ulonglong)(int)uVar33;                              /* dc:96884 */
                     }
                     else {
-                        local_c40 = (LPCWSTR)0x0;
-                        PECMD_WideToAnsiStr((longlong *)&local_c40, local_bf8, -1,
-                                            0xffffffffffffffff);
+                        /* dc:96887-96894: token1/token2(与 c30) ANSI 化, b64 出参槽备 */
+                        local_c40 = (WCHAR *)0x0;
+                        PECMD_WideToAnsiStr((longlong *)&local_c40, local_bf8, -1, 0xffffffffffffffff);  /* dc:96888 */
                         local_c00 = (LPWSTR)0x0;
-                        PECMD_WideToAnsiStr((longlong *)&local_c00, local_bd8, -1,
-                                            0xffffffffffffffff);
-                        local_c18 = (LPCWSTR)0x0;
-                        PECMD_WideToAnsiStr((longlong *)&local_c18, pWVar30, -1,
-                                            0xffffffffffffffff);
-                        PECMD_AllocSmallObject(&local_res20);
-                        PECMD_AllocSmallObject((undefined8 *)&local_res10);
-                        lVar13 = PECMD_Base64Decode((byte *)(uintptr_t)local_c40, &local_res20);
+                        PECMD_WideToAnsiStr((longlong *)&local_c00, local_bd8, -1, 0xffffffffffffffff);  /* dc:96890 */
+                        local_c18 = 0;
+                        PECMD_WideToAnsiStr((longlong *)&local_c18, pWVar30, -1, 0xffffffffffffffff);    /* dc:96892 */
+                        PECMD_AllocSmallObject((undefined8 *)&local_res20);           /* dc:96893 */
+                        PECMD_AllocSmallObject((undefined8 *)&local_res10);           /* dc:96894 */
+                        lVar13 = PECMD_Base64Decode((byte *)(uintptr_t)local_c40, (undefined8 *)&local_res20);  /* dc:96895 */
                         if ((lVar13 != 0) &&
                             (lVar13 = PECMD_Base64Decode((byte *)(uintptr_t)local_c00,
-                                                         (undefined8 *)&local_res10),
+                                                         (undefined8 *)&local_res10),  /* dc:96897 */
                              lVar13 != 0)) {
-                            PECMD_AllocStrSlot(&local_be0);
-                            PECMD_AllocStrSlot(&local_b88);
+                            PECMD_AllocStrSlot((WCHAR **)&local_be0);                 /* dc:96898 */
+                            PECMD_AllocStrSlot((WCHAR **)&local_b88);                 /* dc:96899 */
                             PECMD_StrBldCopyAnsi((longlong *)&local_ba8,
-                                                 (LPCSTR)(uintptr_t)local_res20,
-                                                 0xffffffffffffffff);
+                                                 (LPCSTR)(uintptr_t)local_res20, 0xffffffffffffffff);  /* dc:96900 */
                             PECMD_StrBldCopyAnsi((longlong *)&local_bc8,
-                                                 (LPCSTR)(uintptr_t)local_res10,
-                                                 0xffffffffffffffff);
-                            WVar1 = *pWVar30;
-                            do {
-                                uVar25 = uVar25 - 1;
-                                if ((int)uVar25 < 0) {
+                                                 (LPCSTR)(uintptr_t)local_res10, 0xffffffffffffffff);  /* dc:96901 */
+                            WVar1 = *pWVar30;                                         /* dc:96902 */
+                            do {                                                      /* dc:96903 拨号重试环 */
+                                uVar25 = uVar25 - 1;                                  /* dc:96904 */
+                                if ((int)uVar25 < 0) {                                /* dc:96905 */
                                 LAB_14009ba25:
-                                    PECMD_ZeroLenBuf((ulonglong *)local_res20);
-                                    PECMD_ZeroLenBuf((ulonglong *)local_res10);
-                                    PECMD_FreeStrBuf(&local_bc8);
-                                    PECMD_FreeStrBuf(&local_ba8);
-                                    PECMD_FreeStrBuf(&local_b88);
-                                    PECMD_FreeStrBuf(&local_be0);
-                                    PECMD_FreeStrBuf(&local_res10);
-                                    PECMD_FreeStrBuf(&local_res20);
-                                    PECMD_FreeStrBuf(&local_c18);
-                                    PECMD_FreeStrBuf(&local_c00);
-                                    PECMD_FreeStrBuf(&local_c40);
-                                    PECMD_FreeStrBuf(&local_bc0);
-                                    PECMD_FreeStrBuf(&local_c30);
-                                    PECMD_FreeContainer(&local_c10);
-                                    PECMD_FreeContainer(&local_bf0);
-                                    PECMD_FreeContainer(&local_bd8);
-                                    PECMD_FreeContainer(&local_bf8);
-                                    return (uint64_t)(iVar10 == 0);
+                                    PECMD_ZeroLenBuf((void *)(uintptr_t)local_res20); /* dc:96907 */
+                                    PECMD_ZeroLenBuf((void *)(uintptr_t)local_res10); /* dc:96908 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_bc8);           /* dc:96909 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_ba8);           /* dc:96910 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_b88);           /* dc:96911 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_be0);           /* dc:96912 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_res10);         /* dc:96913 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_res20);         /* dc:96914 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_c18);           /* dc:96915 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_c00);           /* dc:96916 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_c40);           /* dc:96917 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_bc0);           /* dc:96918 */
+                                    PECMD_FreeStrBuf((WCHAR **)&local_c30);           /* dc:96919 */
+                                    PECMD_FreeContainer((longlong *)&local_c10);      /* dc:96920 */
+                                    PECMD_FreeContainer((longlong *)&local_bf0);      /* dc:96921 */
+                                    PECMD_FreeContainer((longlong *)&local_bd8);      /* dc:96922 */
+                                    PECMD_FreeContainer((longlong *)&local_bf8);      /* dc:96923 */
+                                    return (ulonglong)(iVar10 == 0);                  /* dc:96924 */
                                 }
+                                PECMD_InitEventSlots(local_ab8);                      /* dc:96926 (FUN_1400e4e6c) */
                                 uVar12 = PECMD_RasDialEntry(
-                                    (longlong)(uintptr_t)local_ab8,
+                                    (longlong)(uintptr_t)local_ab8,                   /* dc:96927 */
                                     (LPCWSTR)(uintptr_t)(-(ulonglong)(WVar1 != L'\0') &
-                                                         (ulonglong)(uintptr_t)pWVar30),
-                                    local_be0, local_ba8, local_bc8, local_b88);
-                                iVar10 = (int)uVar12;
-                                if (iVar10 != 0) {
-                                    PECMD_DestroyEventSlots(local_ab8);
-                                    goto LAB_14009ba25;
+                                                         (ulonglong)(uintptr_t)pWVar30),  /* dc:96928 */
+                                    (LPCWSTR)(uintptr_t)local_be0, (LPCWSTR)(uintptr_t)local_ba8,
+                                    (LPCWSTR)(uintptr_t)local_bc8, (LPCWSTR)(uintptr_t)local_b88);      /* dc:96929 */
+                                iVar10 = (int)uVar12;                                 /* dc:96930 */
+                                if (iVar10 != 0) {                                    /* dc:96931 */
+                                    PECMD_DestroyEventSlots(local_ab8);               /* dc:96932 */
+                                    goto LAB_14009ba25;                               /* dc:96933 */
                                 }
-                                PECMD_DestroyEventSlots(local_ab8);
-                            } while (true);
+                                PECMD_DestroyEventSlots(local_ab8);                   /* dc:96935 */
+                            } while (true);                                          /* dc:96936 */
                         }
-                        PECMD_FreeStrBuf((WCHAR **)&local_res10);
-                        PECMD_FreeStrBuf((WCHAR **)&local_res20);
-                        PECMD_FreeStrBuf((WCHAR **)&local_c18);
-                        PECMD_FreeStrBuf((WCHAR **)&local_c00);
-                        PECMD_FreeStrBuf((WCHAR **)&local_c40);
-                        uVar32 = 0xffffffff80070057;
+                        PECMD_FreeStrBuf((WCHAR **)&local_res10);                     /* dc:96938 */
+                        PECMD_FreeStrBuf((WCHAR **)&local_res20);                     /* dc:96939 */
+                        PECMD_FreeStrBuf((WCHAR **)&local_c18);                       /* dc:96940 */
+                        PECMD_FreeStrBuf((WCHAR **)&local_c00);                       /* dc:96941 */
+                        PECMD_FreeStrBuf((WCHAR **)&local_c40);                       /* dc:96942 */
+                        uVar32 = 0xffffffff80070057;                                  /* dc:96943 */
                     }
-                    goto LAB_14009b90c;
+                    goto LAB_14009b90c;                                               /* dc:96945 */
                 }
-                PECMD_AllocStrSlot(&local_res20);
-                PECMD_EnumPhonebookEntries((longlong *)&local_res20, 1);
-                PECMD_SetVariableWithPrefix(param_1, pWVar30, (LPCWSTR)(uintptr_t)local_res20);
-                ppWVar18 = (LPCWSTR *)&local_res20;
+                PECMD_AllocStrSlot((WCHAR **)&local_res20);                           /* dc:96947 */
+                PECMD_EnumPhonebookEntries((longlong *)&local_res20, 1);              /* dc:96948 */
+                PECMD_SetVariableWithPrefix(param_1, pWVar30, (LPCWSTR)(uintptr_t)local_res20);  /* dc:96949 */
+                ppWVar18 = (LPCWSTR *)&local_res20;                                   /* dc:96950 */
             }
-            PECMD_FreeStrBuf((WCHAR **)&ppWVar18);
-            uVar32 = uVar33;
+            PECMD_FreeStrBuf((void *)ppWVar18);                                       /* dc:96952 */
+            uVar32 = uVar33;                                                          /* dc:96953 */
         }
     LAB_14009b90c:
-        PECMD_FreeStrBuf((WCHAR **)&local_bc0);
-        PECMD_FreeStrBuf((WCHAR **)&local_c30);
-        PECMD_FreeContainer((longlong *)&local_c10);
-        PECMD_FreeContainer((longlong *)&local_bf0);
-        PECMD_FreeContainer((longlong *)&local_bd8);
-        PECMD_FreeContainer((longlong *)&local_bf8);
-        return uVar32;
+        PECMD_FreeStrBuf((WCHAR **)&local_bc0);                                       /* dc:96956 */
+        PECMD_FreeStrBuf((WCHAR **)&local_c30);                                       /* dc:96957 */
+        PECMD_FreeContainer((longlong *)&local_c10);                                  /* dc:96958 */
+        PECMD_FreeContainer((longlong *)&local_bf0);                                  /* dc:96959 */
+        PECMD_FreeContainer((longlong *)&local_bd8);                                  /* dc:96960 */
+        PECMD_FreeContainer((longlong *)&local_bf8);                                  /* dc:96961 */
+        return uVar32;                                                                /* dc:96962 */
     }
+    /* ---- WLAN 半区入口: 解析接口号 (dc:96964-96988) ---- */
+    local_res10 = local_res10 & 0xffffffff00000000ULL;                                /* dc:96964 (低半清零, 槽兼作解析出参) */
+    local_c50 = local_bf8;                                                            /* dc:96965 */
+    if (((cVar22 != '\0') || (bVar2)) || ((char)local_c38 != '\0')) {                 /* dc:96966 */
+        local_c48[0] = 0;                                                             /* dc:96967 */
+    }
+    else {
+        local_c48[0] = 1;                                                             /* dc:96970 */
+        local_c50 = pWVar30;                                                          /* dc:96971 */
+    }
+    PECMD_ParseUIntValue((LPCWSTR *)&local_c50, (int *)&local_res10);                 /* dc:96973 */
+    uVar32 = local_res10 & 0xffffffffULL;                                             /* dc:96974 */
+    if (bVar3) {                                                                      /* dc:96975 */
+        uVar32 = 0;                                                                   /* dc:96976 */
+    }
+    if ((int)uVar32 < 0) {                                                            /* dc:96978 */
+        uVar33 = 0xffffffff80070057;                                                  /* dc:96979 */
+    LAB_14009a630:
+        PECMD_FreeStrBuf((WCHAR **)&local_bc0);                                       /* dc:96981 */
+        PECMD_FreeStrBuf((WCHAR **)&local_c30);                                       /* dc:96982 */
+        PECMD_FreeContainer((longlong *)&local_c10);                                  /* dc:96983 */
+        PECMD_FreeContainer((longlong *)&local_bf0);                                  /* dc:96984 */
+        PECMD_FreeContainer((longlong *)&local_bd8);                                  /* dc:96985 */
+        PECMD_FreeContainer((longlong *)&local_bf8);                                  /* dc:96986 */
+        return uVar33;                                                                /* dc:96987 */
+    }
+    /* ---- wlanapi 惰性加载 10 槽 (dc:96989-97006) ---- */
+    if (g_pWlanOpenHandle == (DWORD (*)(DWORD, void *, DWORD *))0) {                  /* dc:96989 */
+        PECMD_GetApiProcCached("WlanEnumInterfaces", "wlanapi.DLL",
+                               (void **)&g_pWlanEnumInterfaces, (uintptr_t *)0x0);    /* dc:96990 */
+        PECMD_GetApiProcCached("WlanSetProfile", "wlanapi.DLL",
+                               (void **)&g_pWlanSetProfile, (uintptr_t *)0x0);        /* dc:96991 */
+        PECMD_GetApiProcCached("WlanCloseHandle", "wlanapi.DLL",
+                               (void **)&g_pWlanCloseHandle, (uintptr_t *)0x0);       /* dc:96992 */
+        PECMD_GetApiProcCached("WlanRegisterNotification", "wlanapi.DLL",
+                               (void **)&g_pWlanRegisterNotification, (uintptr_t *)0x0);  /* dc:96993 */
+        PECMD_GetApiProcCached("WlanScan", "wlanapi.DLL",
+                               (void **)&g_pWlanScan, (uintptr_t *)0x0);              /* dc:96995 */
+        PECMD_GetApiProcCached("WlanGetAvailableNetworkList", "wlanapi.DLL",
+                               (void **)&g_pWlanGetAvailableNetworkList, (uintptr_t *)0x0);  /* dc:96996 */
+        PECMD_GetApiProcCached("WlanDisconnect", "wlanapi.DLL",
+                               (void **)&g_pWlanDisconnect, (uintptr_t *)0x0);        /* dc:96998 */
+        PECMD_GetApiProcCached("WlanFreeMemory", "wlanapi.DLL",
+                               (void **)&g_pWlanFreeMemory, (uintptr_t *)0x0);        /* dc:96999 */
+        PECMD_GetApiProcCached("WlanConnect", "wlanapi.DLL",
+                               (void **)&g_pWlanConnect, (uintptr_t *)0x0);           /* dc:97000 */
+        PECMD_GetApiProcCached("WlanOpenHandle", "wlanapi.DLL",
+                               (void **)&g_pWlanOpenHandle, (uintptr_t *)0x0);        /* dc:97001 */
+        if (g_pWlanOpenHandle == (DWORD (*)(DWORD, void *, DWORD *))0) {              /* dc:97002 */
+            uVar33 = 0xffffffff80004001;                                              /* dc:97003 */
+            goto LAB_14009a630;                                                       /* dc:97004 */
+        }
+    }
+    local_ba0 = 0;                                                                    /* dc:97007 */
+    local_b78[0] = 0;                                                                 /* dc:97008 */
+    local_c20 = (int *)0x0;                                                           /* dc:97009 */
+    local_c00 = (LPWSTR)0x0;                                                          /* dc:97010 */
+    local_b88 = (WCHAR *)0x0;                                                         /* dc:97011 */
+    /* dc:97012: dc 丢第 4 参; EXE @0x14009a686 实调 (2, NULL, &协商版本, &hClient) */
+    iVar10 = (int)((PECMD_FN_WlanOpenHandle)g_pWlanOpenHandle)(
+        2, (void *)0, local_b78, (HANDLE *)&local_ba0);
+    if (iVar10 != 0) {                                                                /* dc:97013 */
+        DVar11 = GetLastError();                                                      /* dc:97014 */
+        uVar33 = (ulonglong)DVar11;                                                   /* dc:97015 */
+        if (DVar11 == 0) {                                                            /* dc:97016 */
+            uVar33 = 1;                                                               /* dc:97017 */
+        }
+        PECMD_FreeStrBuf((WCHAR **)&local_c00);                                       /* dc:97019 */
+        PECMD_FreeStrBuf((WCHAR **)&local_bc0);                                       /* dc:97020 */
+        PECMD_FreeStrBuf((WCHAR **)&local_c30);                                       /* dc:97021 */
+        PECMD_FreeContainer((longlong *)&local_c10);                                  /* dc:97022 */
+        PECMD_FreeContainer((longlong *)&local_bf0);                                  /* dc:97023 */
+        PECMD_FreeContainer((longlong *)&local_bd8);                                  /* dc:97024 */
+        PECMD_FreeContainer((longlong *)&local_bf8);                                  /* dc:97025 */
+        return uVar33;                                                                /* dc:97026 */
+    }
+    local_b80 = (uint64_t)(uint32_t)(*g_pWlanEnumInterfaces)(
+        (HANDLE)local_ba0, (void *)0, (void **)&local_c20);                           /* dc:97028 */
+    if ((uint)local_b80 != 0) {                                                       /* dc:97029 */
+        DVar11 = GetLastError();                                                      /* dc:97030 */
+        pWVar34 = (LPWSTR)(ulonglong)DVar11;                                          /* dc:97031 */
+        if (DVar11 == 0) {                                                            /* dc:97032 */
+            pWVar34 = (LPWSTR)0x1;                                                    /* dc:97033 */
+        }
+        goto LAB_14009b69a;                                                           /* dc:97035 */
+    }
+    if ((local_c20 == (int *)0x0) || (*local_c20 == 0)) {                             /* dc:97037 */
+        if (((char)local_c38 == '\0') || (cVar22 != '\0')) {                          /* dc:97038 */
+            pWVar34 = (LPWSTR)0x1;                                                    /* dc:97039 */
+        }
+        goto LAB_14009b69a;                                                           /* dc:97041 */
+    }
+    PECMD_AllocString(&local_bc0, 0x1000);                                            /* dc:97043 */
+    if (*local_c20 <= (int)uVar32) {                                                  /* dc:97044 */
+    LAB_14009a7ac:
+        pWVar34 = (LPWSTR)0xffffffff80070057;                                         /* dc:97046 */
+        goto LAB_14009b69a;                                                           /* dc:97047 */
+    }
+    local_b08[0] = L'\0';                                                             /* dc:97049 */
+    memset(&local_b08[1], 0, 0x4c);                                                   /* dc:97050 (EXE 对 local_b08+local_b06 连续缓冲清 0x4c) */
+    if ((bVar4) && (*local_c30 == L'\0')) {                                           /* dc:97051 */
+        uVar32 = (ulonglong)(uint32_t)local_c20[1];                                   /* dc:97052 (list.Index) */
+    LAB_14009a8e9:
+        if (((int)uVar32 < 0) || (*local_c20 <= (int)uVar32)) {                       /* dc:97054 */
+            goto LAB_14009a7ac;
+        }
+    }
+    else if (((local_c48[0] != 0) || (bVar4)) && (*local_c30 != L'\0')) {             /* dc:97056 */
+        local_res10 = (local_res10 & 0xffffffff00000000ULL) | 0xffffffffULL;          /* dc:97057 (CONCAT44 低半 = -1) */
+        local_c50 = local_c30;                                                        /* dc:97058 */
+        uVar12 = (undefined8)PECMD_ParseUIntValue((LPCWSTR *)&local_c50, (int *)&local_res10);  /* dc:97059 (CONCAT71 拼装 = int 返回) */
+        bVar8 = (char)uVar12;
+        if (((int)uVar12 < 1) || (*local_c50 != L'\0')) {                             /* dc:97060 (解析失败或有余文) */
+            uVar32 = 0;                                                               /* dc:97061 */
+            if (0 < *local_c20) {                                                     /* dc:97061b */
+                do {                                                                  /* dc:97062 按名/GUID 串搜接口 */
+                    local_bc8 = (wchar_t *)(void *)(local_c20 + (longlong)(int)uVar32 * 0x85 + 2);  /* dc:97063 */
+                    iVar10 = lstrcmpiW(local_bc8 + 8, local_c30);                     /* dc:97064 (Description, 元素+8=字节+0x10) */
+                    if (iVar10 == 0) goto LAB_14009a8e9;                              /* dc:97065 */
+                    PECMD_GuidToString(local_b08, (uint *)local_bc8, 1);              /* dc:97066 (GUID→"{...}" 串) */
+                    iVar10 = lstrcmpiW(local_b08, local_c30);                         /* dc:97067 */
+                    if (iVar10 == 0) goto LAB_14009a8e9;                              /* dc:97068 */
+                    uVar25 = (int)uVar32 + 1;                                         /* dc:97069 */
+                    uVar32 = (ulonglong)uVar25;                                       /* dc:97070 */
+                } while ((int)uVar25 < *local_c20);                                   /* dc:97071 */
+            }
+            uVar32 = local_res10 & 0xffffffffULL;                                     /* dc:97073 (未命中回退解析值) */
+            goto LAB_14009a8e9;                                                       /* dc:97074 */
+        }
+        /* R25-j: dc:97060 良性解析路径无显式刷新; EXE @0x14009a8e2 证得
+         * uVar32 取 local_res10 低半 (esi = [rsp+0xcf8]), 补此行对齐二进制 */
+        uVar32 = local_res10 & 0xffffffffULL;
+    }
+    local_b90 = (LPWSTR)(void *)(local_c20 + (longlong)(int)uVar32 * 0x85 + 2);       /* dc:97076 (选中接口项) */
+    local_c48[0] = (uint)(*(int *)(void *)(local_b90 + 0x108) == 1);                  /* dc:97077 (State==1) */
+    if ((char)local_c38 != '\0') {                                                    /* dc:97078 (query/queryall) */
+        uVarRow = 0;                                                                  /* EXE @0x14009a94e (r15d = 已打印行数) */
+        while (true) {                                                                /* dc:97079 接口列表环 */
+            PECMD_GuidToString(local_b08, (uint *)local_b90, 1);                      /* dc:97080 */
+            /* dc:97081: 变参被 Ghidra 丢弃; EXE @0x14009a9b7 实参:
+             *   %s = (行计数>0 ? DAT_1401210f8("\r\n") : DAT_14011c638(""))
+             *   %d = 当前接口下标 (r9d = esi = uVar32)
+             *   %s = &local_b08 (GUID 串)      %u = *(u32*)(local_b90+0x108) 状态
+             *   %s = local_b90+8 (Description) */
+            iVar10 = wsprintfW(local_bc0 + local_bb8, WSTR("%s%d\t%s\t%u\t%s"),
+                               (0 < (int)uVarRow) ? (LPCWSTR)DAT_1401210f8 : (LPCWSTR)g_szEmpty,
+                               (int)uVar32, local_b08,
+                               *(uint32_t *)(void *)(local_b90 + 0x108), local_b90 + 8);
+            pWVar34 = local_ba8;                                                      /* dc:97082 */
+            local_bb8 = local_bb8 + iVar10;                                           /* dc:97083 */
+            if (!bVar3) break;                                                        /* dc:97084 */
+            uVar25 = (int)uVar32 + 1;                                                 /* dc:97085 */
+            uVar32 = (ulonglong)uVar25;                                               /* dc:97086 */
+            uVarRow = uVarRow + 1;                                                    /* EXE @0x14009a9e3 (随下标递增) */
+            if (*local_c20 <= (int)uVar25) break;                                     /* dc:97087 */
+            PECMD_GrowCapacityAligned((uint64_t *)&local_bc0, local_bb8 + 0x800, 0x1000);  /* dc:97088 */
+            local_b90 = (LPWSTR)(void *)(local_c20 + (longlong)(int)uVar25 * 0x85 + 2);      /* dc:97089 */
+            local_c48[0] = (uint)(*(int *)(void *)(local_b90 + 0x108) == 1);          /* dc:97090 */
+        }
+        pWVar20 = local_bf0;                                                          /* dc:97092 */
+        pWVar21 = local_c10;                                                          /* dc:97093 */
+        pwVar31 = local_bf8;                                                          /* dc:97094 */
+        if ((char)local_res20 == '\0') {                                              /* dc:97095 */
+            PECMD_SetVariableWithPrefix(param_1, local_c30, (LPCWSTR)local_bc0);      /* dc:97096 */
+            goto LAB_14009b69a;                                                       /* dc:97097 */
+        }
+    }
+    cVar22 = (char)local_res20;                                                       /* dc:97100 */
+    if (bVar4) {                                                                      /* dc:97101 */
+        (*g_pWlanDisconnect)((HANDLE)local_ba0, (LPCWSTR)local_b90, (LPCWSTR)0);      /* dc:97102 */
+        goto LAB_14009b69a;                                                           /* dc:97103 */
+    }
+    if (bVar2) {                                                                      /* dc:97105 */
+        /* dc:97106: dc 丢 3 参; EXE @0x14009aaca 实调 (handle, ifGuid, 0, 0, 0) */
+        iVar10 = (int)((PECMD_FN_WlanScan)g_pWlanScan)(
+            (HANDLE)local_ba0, (void *)local_b90, (void *)0, (void *)0, (void *)0);
+        if (iVar10 == 0) {                                                            /* dc:97107 */
+            FUN_1400195F0((void *)param_1, 4000, 0, (void *)0);                       /* dc:97108 */
+            goto LAB_14009b69a;                                                       /* dc:97109 */
+        }
+    }
+    else {                                                                            /* dc:97112 */
+        if (cVar22 == '\0') {                                                         /* dc:97113 (连接/配置路径) */
+            /* dc:97114-97123: token1/token2/c30 ANSI 化 */
+            local_c38 = 0;                                                            /* dc:97114 */
+            PECMD_WideToAnsiStr((longlong *)&local_c38, local_bf8, -1, 0xffffffffffffffff);  /* dc:97115 */
+            local_be8 = 0;                                                            /* dc:97116 */
+            PECMD_WideToAnsiStr((longlong *)&local_be8, local_bd8, -1, 0xffffffffffffffff);  /* dc:97117 */
+            local_res20 = 0;                                                          /* dc:97118 */
+            PECMD_WideToAnsiStr((longlong *)&local_res20, pwVar31, -1, 0xffffffffffffffff);  /* dc:97119 (pwVar31 = token1) */
+            local_c08 = 0;                                                            /* dc:97120 */
+            PECMD_WideToAnsiStr((longlong *)&local_c08, local_bd8, -1, 0xffffffffffffffff);  /* dc:97121 */
+            local_c40 = (WCHAR *)0x0;                                                 /* dc:97122 */
+            PECMD_WideToAnsiStr((longlong *)&local_c40, local_c30, -1, 0xffffffffffffffff);  /* dc:97123 */
+            if ((*(char *)(uintptr_t)local_c38 == 0x23) &&                            /* dc:97124 (token1 '#' → b64) */
+                (lVar13 = PECMD_Base64Decode((byte *)(uintptr_t)local_c38, (undefined8 *)&local_res20), lVar13 == 0)) {
+            LAB_14009b0f8:
+                pWVar34 = (LPWSTR)0xffffffff80070057;                                 /* dc:97126 */
+            }
+            else {
+                if ((*(char *)(uintptr_t)local_be8 == 0x23) &&                        /* dc:97129 (token2 '#' → b64) */
+                    (lVar13 = PECMD_Base64Decode((byte *)(uintptr_t)local_be8, (undefined8 *)&local_c08), lVar13 == 0)) {
+                    PECMD_ZeroLenBuf((void *)(uintptr_t)local_res20);                 /* dc:97130 */
+                    goto LAB_14009b0f8;                                               /* dc:97131 */
+                }
+                PECMD_StrBldCopyAnsi((longlong *)&local_c18, (LPCSTR)(uintptr_t)local_res20, 0xffffffffffffffff);  /* dc:97133 (ANSI→宽名) */
+                PECMD_ZeroLenBuf((void *)(uintptr_t)local_res20);                     /* dc:97134 */
+                pWVar21 = (LPWSTR)(uintptr_t)local_c18;                               /* dc:97135 */
+                PECMD_InitStrContainer((int64_t *)&local_be0, (LPCWSTR)(uintptr_t)local_c18, -1, 0xfde9);  /* dc:97136 (宽→ANSI/UTF-8) */
+                pWVar30 = local_be0;                                                  /* dc:97137 (此后 pWVar30 为 ANSI 形态) */
+                lpString = local_c08;                                                 /* dc:97138 */
+                if (((char)*(char *)(uintptr_t)local_c08 == '\0') &&                  /* dc:97139 (密码空) */
+                    (pWVar20 = local_b90, uVar25 = (uint)local_b80, (char)local_bd0 == '\x02')) {  /* dc:97140 */
+            LAB_14009b5a0:
+                if (((char)local_bd0 != '\0') || (local_c48[0] != 0)) {               /* dc:97142 */
+                    *(uint32_t *)local_b38 = 0;                                       /* dc:97143 (uSSIDLength) */
+                    memset(local_b38 + 4, 0, 0x20);                                   /* dc:97144 */
+                    *(uint32_t *)local_b38 = (uint32_t)lstrlenA((LPCSTR)pWVar30);      /* dc:97145 */
+                    PECMD_MemMoveForward(local_b38 + 4, (uint8_t *)(uintptr_t)pWVar30,
+                                         (int)*(uint32_t *)local_b38 + 1);            /* dc:97146 */
+                    memset(local_b60, 0, 0x28);                                       /* dc:97147 (WLAN_CONNECTION_PARAMETERS) */
+                    local_b50 = local_b38;                                            /* dc:97148 */
+                    local_b60[2] = (ulonglong)(uintptr_t)local_b50;                   /* dc:97148 落位 (+0x10 pDot11Ssid; EXE @0x14009b623) */
+                    local_b60[0] &= 0xffffffff00000000ULL;                            /* dc:97149 (mode 低半 = 0, 已清零) */
+                    local_b60[1] = (ulonglong)(uintptr_t)local_c18;                   /* EXE @0x14009b633: +0x08 strProfile = local_c18 (dc 漏记) */
+                    local_b40 = 3;                                                    /* dc:97150 */
+                    local_b3c = 1;                                                    /* dc:97151 */
+                    local_b60[4] = (ulonglong)local_b40 | ((ulonglong)local_b3c << 32);  /* dc:97150-97151 落位 (+0x20 BssType / +0x24 dwFlags) */
+                    uVar25 = (uint)(*g_pWlanConnect)((HANDLE)local_ba0, (LPCWSTR)pWVar20,
+                                                     local_b60, (void *)0);           /* dc:97152 */
+                    memset(local_b38, 0, 0x24);                                       /* dc:97153 */
+                }
+                if (uVar25 != 0) {                                                    /* dc:97155 */
+                    DVar11 = GetLastError();                                          /* dc:97156 */
+                    pWVar34 = (LPWSTR)(ulonglong)DVar11;                              /* dc:97157 */
+                    if (DVar11 == 0) {                                                /* dc:97158 */
+                        pWVar34 = (LPWSTR)0x1;                                        /* dc:97159 */
+                    }
+                }
+                }
+                else {                                                                /* dc:97164 (XML 配置文件路径) */
+                PECMD_StrBldCopyAnsi((longlong *)&local_b80, (LPCSTR)(uintptr_t)local_c08, 0xffffffffffffffff);  /* dc:97164 (密码 ANSI→宽) */
+                PECMD_ZeroLenBuf((void *)(uintptr_t)lpString);                        /* dc:97165 */
+                psVar24 = (short *)(uintptr_t)local_b80;                              /* dc:97166 */
+                local_bc8 = (wchar_t *)L"open";                                       /* dc:97167 */
+                if (*psVar24 != 0) {                                                  /* dc:97168 */
+                    local_bc8 = (wchar_t *)L"WPA2PSK";                                /* dc:97169 */
+                }
+                local_b98 = L"none";                                                  /* dc:97171 */
+                if (*psVar24 != 0) {                                                  /* dc:97172 */
+                    local_b98 = L"AES";                                               /* dc:97173 */
+                }
+                pwVar27 = local_bc0;                                                  /* dc:97175 */
+                if (*local_bc0 == L'>') {                                             /* dc:97176 */
+                    pwVar27 = local_bc0 + 1;                                          /* dc:97177 */
+                }
+                wVar16 = *pwVar27;                                                    /* dc:97179 */
+                pwVar14 = pwVar27;                                                    /* dc:97180 */
+                if (wVar16 != L'\0') {                                                /* dc:97181 */
+                    do {                                                              /* dc:97182 */
+                        if (((8 < (ushort)wVar16) && ((ushort)wVar16 < 0xe)) || (wVar16 == L' ')) {  /* dc:97183 */
+                            local_c50 = pwVar14;                                      /* dc:97184 */
+                            if (*pwVar14 != L'\0') {                                  /* dc:97185 */
+                                *pwVar14 = L'\0';                                     /* dc:97186 */
+                                local_c50 = pwVar14 + 1;                              /* dc:97187 */
+                            }
+                            break;                                                    /* dc:97188 */
+                        }
+                        pwVar14 = pwVar14 + 1;                                        /* dc:97191 */
+                        wVar16 = *pwVar14;                                            /* dc:97192 */
+                        local_c50 = pwVar14;                                          /* dc:97193 */
+                    } while (wVar16 != L'\0');                                        /* dc:97194 */
+                    local_bc8 = pwVar27;                                              /* dc:97195 */
+                    PECMD_SkipLeadingControlChars((longlong *)&local_c50);            /* dc:97196 */
+                    iVar10 = lstrcmpW(L"open", pwVar27);                              /* dc:97197 */
+                    if (iVar10 == 0) {                                                /* dc:97198 */
+                        local_b98 = L"none";                                          /* dc:97199 */
+                        if (*local_c50 != L'\0') {                                    /* dc:97200 */
+                            local_b98 = local_c50;                                    /* dc:97201 */
+                        }
+                    }
+                    else {
+                        local_b98 = local_c50;                                        /* dc:97205 */
+                    }
+                }
+                iVar10 = lstrlenW(pWVar21);                                           /* dc:97208 */
+                iVar9 = lstrlenA((LPCSTR)(uintptr_t)lpString);                        /* dc:97209 */
+                lVar13 = ((longlong)iVar9 + (longlong)iVar10) * 8 + 200;              /* dc:97210 */
+                PECMD_AllocString(&local_c00, lVar13 * 3 + 0x4000);                   /* dc:97211 */
+                PECMD_AllocStrSlot((WCHAR **)&local_c50);                             /* dc:97212 */
+                pWVar6 = local_c00;                                                   /* dc:97213 */
+                pWVar20 = local_c00 + 0x4000;                                         /* dc:97214 */
+                local_ba8 = pWVar20 + lVar13;                                         /* dc:97215 */
+                *pWVar20 = L'\0';                                                     /* dc:97216 */
+                *local_ba8 = L'\0';                                                   /* dc:97217 */
+                pWVar23 = local_ba8 + lVar13;                                         /* dc:97218 */
+                *pWVar23 = L'\0';                                                     /* dc:97219 */
+                local_b68 = pWVar23;                                                  /* dc:97220 */
+                if (*local_b98 != L'\0') {                                            /* dc:97221 */
+                    wsprintfW(pWVar20, WSTR("\t\t\t\t<encryption>%s</encryption>\r\n"), local_b98);  /* dc:97222 */
+                }
+                iVar10 = lstrlenA((LPCSTR)pWVar30);                                   /* dc:97224 */
+                local_b98 = pWVar23;                                                  /* dc:97225 */
+                if (0 < (longlong)iVar10) {                                           /* dc:97226 */
+                    do {                                                              /* dc:97227 */
+                        wsprintfW(pWVar23, WSTR("%02X"),
+                                  (ulonglong)*(byte *)(uVar33 + (longlong)(intptr_t)pWVar30));  /* dc:97228 */
+                        uVar33 = uVar33 + 1;                                          /* dc:97229 */
+                        pWVar23 = pWVar23 + 2;                                        /* dc:97230 */
+                    } while ((longlong)uVar33 < (longlong)iVar10);                    /* dc:97231 */
+                    psVar24 = (short *)(uintptr_t)local_b80;                          /* dc:97232 (CONCAT44(uStack_b7c,local_b80) = 同槽重组) */
+                    pWVar21 = (LPWSTR)(uintptr_t)local_c18;                           /* dc:97233 */
+                    pwVar31 = local_bf8;                                              /* dc:97234 */
+                }
+                if (*psVar24 != 0) {                                                  /* dc:97236 */
+                    wsprintfW(local_ba8,
+                              WSTR("\t\t\t<sharedKey>\r\n\t\t\t\t<keyType>passPhrase</keyType>\r\n\t\t\t\t<protected>false</protected>\r\n\t\t\t\t<keyMaterial>%s</keyMaterial>\r\n\t\t\t</sharedKey>\r\n"),
+                              psVar24);                                               /* dc:97237-97239 */
+                }
+                FUN_1400637DC((WCHAR **)&local_c50,
+                              "<?xml version=\"1.0\"?>\r\n<WLANProfile xmlns=\"http://www.microsoft.com/networking/WLAN/profile/v1\">\r\n\t<name>%s</name>\r\n\t<SSIDConfig>\r\n\t\t<SSID>\r\n\t\t\t<hex>%s</hex>\r\n\t\t\t<name>%s</name>\r\n\t\t</SSID>\r\n\t\t<nonBroadcast>true</nonBroadcast>\r\n\t</SSIDConfig>\r\n\t<connectionType>ESS</connectionType>\r\n\t<connectionMode>auto</connectionMode>\r\n\t<autoSwitch>false</autoSwitch>\r\n\t<MSM>\r\n\t\t<security>\r\n\t\t\t<authEncryption>\r\n\t\t\t\t<authentication>%s</authentication>\r\n%s\t\t\t\t<useOneX>false</useOneX>\r\n\t\t\t</authEncryption>\r\n%s\t\t</security>\r\n\t</MSM>\r\n</WLANProfile>\r\n",
+                              -1, -1);                                                /* dc:97241-97243 (dc 字面 0xffffffffffffffff) */
+                if (*pwVar31 == L'&') {                                               /* dc:97244 */
+                    ppWVar15 = (LPWSTR *)FUN_14001E69C((void *)param_1, (LPCWSTR)pwVar31,
+                                                       (void *)0, -1);                /* dc:97245 */
+                }
+                else {
+                    /* dc:97248: 6 个 %s 实参由 EXE @0x14009b4a5 恢复:
+                     *   1,3 = pWVar21 (名, 模板 <name> 出现两次)   2 = local_b68 (hex)
+                     *   4 = local_bc8 (authentication)   5 = pWVar20 (encryption 行)
+                     *   6 = local_ba8 (sharedKey 块) */
+                    wsprintfW(pWVar6, (LPCWSTR)local_c50, pWVar21, local_b68, pWVar21,
+                              (LPCWSTR)local_bc8, pWVar20, local_ba8);
+                    ppWVar15 = &local_c00;                                            /* dc:97249 */
+                }
+                pWVar20 = local_b90;                                                  /* dc:97251 */
+                if (ppWVar15 != (LPWSTR *)0x0) {                                      /* dc:97252 */
+                    local_res10 = local_res10 & 0xffffffff00000000ULL;                /* dc:97253 */
+                    /* dc:97254: dc 丢 4 参; EXE @0x14009b535 实调
+                     * (handle, ifGuid, 0, xml, security=NULL, fOverwrite=1, NULL, &reason) */
+                    uVar25 = (uint)((PECMD_FN_WlanSetProfile)g_pWlanSetProfile)(
+                        (HANDLE)local_ba0, (void *)local_b90, (DWORD)0, *ppWVar15,
+                        (LPCWSTR)0, (DWORD)1, (void *)0, (DWORD *)&local_res10);
+                    PECMD_ZeroLenBuf((void *)pWVar6);                                 /* dc:97255 */
+                    if (g_u8CCB1 != 0) {                                              /* dc:97256 (DAT_14013ccb1) */
+                        PECMD_TlsLogWrite((uint64_t)(uintptr_t)g_Script,
+                                          WSTR("dwResult=%d reson=%d\r\n"),
+                                          (ulonglong)uVar25,
+                                          (ulonglong)local_res10 & 0xffffffffULL);    /* dc:97257-97258 */
+                    }
+                    PECMD_FreeStrBuf((WCHAR **)&local_c50);                           /* dc:97260 */
+                    PECMD_FreeContainer((longlong *)&local_b80);                      /* dc:97261 */
+                    goto LAB_14009b5a0;                                               /* dc:97262 */
+                }
+                PECMD_FreeStrBuf((WCHAR **)&local_c50);                               /* dc:97264 */
+                PECMD_FreeContainer((longlong *)&local_b80);                          /* dc:97265 */
+                pWVar34 = (LPWSTR)0xffffffff80070057;                                 /* dc:97266 */
+                }
+                PECMD_FreeContainer((longlong *)&local_be0);                          /* dc:97268 */
+                PECMD_FreeContainer((longlong *)&local_c18);                          /* dc:97269 */
+            }                                                                         /* dc:97270 */
+            PECMD_FreeStrBuf((WCHAR **)&local_c40);                                   /* dc:97271 */
+            PECMD_FreeContainer((longlong *)&local_c08);                              /* dc:97272 */
+            PECMD_FreeContainer((longlong *)&local_res20);                            /* dc:97273 */
+            PECMD_FreeContainer((longlong *)&local_be8);                              /* dc:97274 */
+            PECMD_FreeContainer((longlong *)&local_c38);                              /* dc:97275 */
+            goto LAB_14009b69a;                                                       /* dc:97276 */
+        }
+        /* dc:97278: dc 丢第 5 参; EXE @0x14009ab0c 实调 (handle, ifGuid, 0, 0, &local_b88) */
+        iVar10 = (int)((PECMD_FN_WlanGetAvailNetList)g_pWlanGetAvailableNetworkList)(
+            (HANDLE)local_ba0, (void *)local_b90, (DWORD)0, (void *)0, (void **)&local_b88);
+        if (iVar10 == 0) {                                                            /* dc:97279 */
+            PECMD_AllocStrSlot((WCHAR **)&local_c40);                                 /* dc:97280 */
+            pWVar30 = local_b88;                                                      /* dc:97281 */
+            if (local_b88 != (WCHAR *)0x0) {                                          /* dc:97282 */
+                iVar10 = *(int *)local_b88;                                           /* dc:97283 (NumberOfItems) */
+                pwVar31 = (wchar_t *)(longlong)iVar10;                                /* dc:97284 (计数借指针槽) */
+                local_res20 = (local_res20 & 0xffffffff00000000ULL) | (uint64_t)(uint32_t)iVar10;  /* dc:97285 */
+                if (iVar10 != 0) {                                                    /* dc:97286 */
+                    local_c50 = (wchar_t *)g_szEmpty;                                 /* dc:97287 (&DAT_14011c638) */
+                    uVar33 = 0;                                                       /* dc:97288 */
+                    if (((int)cVar22 & 2U) != 0) {                                    /* dc:97289 */
+                        local_c50 = (wchar_t *)L"\t";                                 /* dc:97290 */
+                    }
+                    local_c08 = ((local_c08 & 0xffffffff00000000ULL) | (uint64_t)(uint32_t)(int)cVar22) & 0xffffffff00000002ULL;  /* dc:97292 */
+                    local_res10 = local_res10 & 0xffffffff00000000ULL;                /* dc:97293 */
+                    local_be0 = pWVar21;                                              /* dc:97294 */
+                    local_bc8 = pwVar31;                                              /* dc:97295 */
+                    local_b98 = pWVar20;                                              /* dc:97296 */
+                    if (0 < (longlong)(intptr_t)pwVar31) {                            /* dc:97297 */
+                        pWVar35 = local_b88 + 0x130;                                  /* dc:97298 (= 表基+0x260 = 首 entry+0x258) */
+                        local_c18 = (uint64_t)(intptr_t)pwVar31;                      /* dc:97299 (剩余计数) */
+                        do {                                                          /* dc:97300 网络列表主环 */
+                            iVar10 = (int)uVar33;                                     /* dc:97301 */
+                            pwVar27 = pwVar31;                                        /* dc:97302 */
+                            if (local_c57 == '\x01') {                                /* dc:97303 ('-' 模式: 与前项全等去重) */
+                                uVar33 = 0;                                           /* dc:97304 */
+                                if (0 < iVar10) {                                     /* dc:97305 */
+                                    pWVar19 = pWVar30 + ((longlong)iVar10 * 0x9d + 2) * 2;  /* dc:97306 */
+                                    do {                                              /* dc:97307 */
+                                        iVar9 = PECMD_AnsiStrNCompare((char *)pWVar19,
+                                            (longlong)(intptr_t)(pWVar30 + ((longlong)(int)uVar33 * 0x9d + 2) * 2),
+                                            0x274);                                   /* dc:97308-97310 (整项比较) */
+                                        if (iVar9 == 0) goto LAB_14009ac4c;           /* dc:97311 */
+                                        uVar25 = (int)uVar33 + 1;                     /* dc:97312 */
+                                        uVar33 = (ulonglong)uVar25;                   /* dc:97313 */
+                                    } while ((int)uVar25 < iVar10);                   /* dc:97314 */
+                                }
+                            LAB_14009ad9f:
+                                PECMD_GrowCapacityAligned((uint64_t *)&local_bc0, local_bb8 + 0x800, 0x1000);  /* dc:97317 */
+                                pWVar34 = pWVar30 + ((longlong)iVar10 * 0x9d + 2) * 2;/* dc:97318 */
+                                local_b90 = (LPWSTR)pWVar34;                          /* dc:97319 */
+                                FUN_1400637DC((WCHAR **)&local_c40,
+                                              (LPCSTR)(uintptr_t)(pWVar34 + 0x102),
+                                              (longlong)*(int *)(pWVar35 + -0x2c), 0xfde9);  /* dc:97320-97321 (SSID 字节→宽, UTF-8) */
+                                lVar13 = (longlong)(int)local_be8;                    /* dc:97322 */
+                                if ((int)local_be8 == 0) {                            /* dc:97323 */
+                                    local_be0 = local_c40;                            /* dc:97324 */
+                                    local_b98 = pWVar34;                              /* dc:97325 */
+                                }
+                                else {
+                                    wsprintfW(pWVar21 + lVar13, WSTR("%d"), iVar10 + 1);      /* dc:97328 */
+                                    wsprintfW(pWVar20 + lVar13, WSTR("%d.PN"), iVar10 + 1);  /* dc:97329 */
+                                    PECMD_SetVariableWithPrefix(param_1, pWVar21, (LPCWSTR)local_c40);  /* dc:97330 */
+                                    PECMD_SetVariableWithPrefix(param_1, pWVar20, (LPCWSTR)local_b90);  /* dc:97331 */
+                                    iVar10 = (int)local_res10;                        /* dc:97332 */
+                                }
+                                if (iVar10 < 1) {                                     /* dc:97334 */
+                                    puVar26 = (undefined2 *)g_szEmpty;                /* dc:97335 */
+                                    if ((char)local_c38 != '\0') goto LAB_14009aea7;  /* dc:97336 */
+                                }
+                                else {
+                                LAB_14009aea7:
+                                    puVar26 = (undefined2 *)DAT_1401210f8;            /* dc:97340 */
+                                }
+                                pWVar34 = (LPCWSTR)g_szEmpty;                         /* dc:97342 */
+                                if ((int)local_c08 != 0) {                            /* dc:97343 */
+                                    pWVar34 = local_b98;                              /* dc:97344 */
+                                }
+                                /* dc:97346-97348: 16 实参中 3-16 由 EXE @0x14009af57 恢复。
+                                 * %s×5: puVar26(行前缀), pWVar34(ProfileName 或空),
+                                 *       local_c50, local_be0, L"\t"(=0x14011fa84 常量);
+                                 * %u×11 顺次: SignalQuality(+0x25C), Flags(+0x26C),
+                                 *   BssType(+0x224), NumBssid(+0x228), Connectable(+0x22C),
+                                 *   Reason(+0x230), SecEnabled(+0x260), Auth(+0x264),
+                                 *   Cipher(+0x268), MorePhyTypes(+0x258), NumPhyTypes(+0x234) */
+                                iVar9 = wsprintfW(local_bc0 + local_bb8,
+                                                  WSTR("%s%s%s%s%s%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u"),
+                                                  (LPCWSTR)puVar26, pWVar34, (LPCWSTR)local_c50,
+                                                  (LPCWSTR)local_be0, WSTR("\t"),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 + 4),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 + 0x14),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 - 0x34),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 - 0x30),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 - 0x2c),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 - 0x28),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 + 8),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 + 0xc),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 + 0x10),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35),
+                                                  *(uint32_t *)((longlong)(intptr_t)pWVar35 - 0x24));
+                                local_bb8 = local_bb8 + iVar9;                        /* dc:97349 */
+                                iVar9 = *(int *)(pWVar35 + -0x12);                    /* dc:97350 (NumPhyTypes) */
+                                if (8 < iVar9) {                                      /* dc:97351 */
+                                    iVar9 = 8;                                        /* dc:97352 */
+                                }
+                                lVar13 = (longlong)iVar9;                             /* dc:97354 */
+                                if (0 < lVar13) {                                     /* dc:97355 */
+                                    pWVar19 = pWVar35 + -0x10;                        /* dc:97356 (PhyTypes[0]) */
+                                    do {
+                                        iVar9 = wsprintfW(local_bc0 + local_bb8, WSTR("\t%u"),
+                                                          *(uint32_t *)pWVar19);      /* dc:97358 */
+                                        pWVar19 = pWVar19 + 2;                        /* dc:97359 */
+                                        local_bb8 = local_bb8 + iVar9;                /* dc:97360 */
+                                        lVar13 = lVar13 + -1;                         /* dc:97361 */
+                                        pWVar21 = local_c10;                          /* dc:97362 */
+                                    } while (lVar13 != 0);                            /* dc:97363 */
+                                }
+                            }
+                            else {
+                            LAB_14009ac4c:
+                                iVar9 = (int)uVar33;                                  /* dc:97368 */
+                                iVar29 = (int)(intptr_t)pwVar27;                      /* dc:97369 */
+                                if (local_c57 == '\x02') {                            /* dc:97370 (向后扫: 同 SSID 且 Auth 更优) */
+                                    uVar25 = iVar29 - 1;                              /* dc:97371 */
+                                    if (-1 < (int)uVar25) {                           /* dc:97372 */
+                                        lVar28 = ((longlong)(intptr_t)pwVar31 + -1) * 0x274;  /* dc:97373 */
+                                        lVar13 = (longlong)iVar9 * 0x274;             /* dc:97374 */
+                                        pWVar21 = pWVar30 + ((longlong)(int)uVar25 * 0x9d + 0x82) * 2;  /* dc:97375 */
+                                        do {                                          /* dc:97376 */
+                                            uVar32 = (ulonglong)uVar25;               /* dc:97377 */
+                                            iVar9 = PECMD_AnsiStrNCompare(
+                                                (char *)(pWVar30 + ((longlong)(int)uVar33 * 0x9d + 0x82) * 2),
+                                                (longlong)(intptr_t)pWVar21, 0x24);   /* dc:97378-97380 (ProfileName 片段比较) */
+                                            if (((iVar9 == 0) &&
+                                                ((*(short *)((longlong)(intptr_t)pWVar30 + lVar28 + 8) != 0 ||
+                                                  (*(short *)((longlong)(intptr_t)pWVar30 + lVar13 + 8) == 0)))) &&
+                                               (*(uint32_t *)((longlong)(intptr_t)pWVar30 + lVar13 + 0x264) <=
+                                                *(uint32_t *)((longlong)(intptr_t)pWVar30 + lVar28 + 0x264))) {  /* dc:97381-97385 */
+                                                uVar33 = uVar32 & 0xffffffffULL;      /* dc:97386 */
+                                                lVar13 = lVar28;                      /* dc:97387 */
+                                            }
+                                            uVar25 = (int)uVar32 - 1;                 /* dc:97389 */
+                                            pWVar21 = pWVar21 + -0x13a;               /* dc:97390 */
+                                            lVar28 = lVar28 + -0x274;                 /* dc:97391 */
+                                        } while (-1 < (int)uVar25);                   /* dc:97392 */
+                                        iVar29 = (int)local_res20;                    /* dc:97393 */
+                                        pwVar31 = local_bc8;                          /* dc:97394 */
+                                        pWVar21 = local_c10;                          /* dc:97395 */
+                                        goto LAB_14009ad07;                           /* dc:97396 */
+                                    }
+                                }
+                                else {
+                                LAB_14009ad07:
+                                    iVar9 = (int)uVar33;                              /* dc:97401 */
+                                    if (local_c57 == '\x10') {                        /* dc:97402 ('**' 模式: 同 SSID 且对方有 Auth 我无) */
+                                        uVar25 = iVar29 - 1;                          /* dc:97403 */
+                                        if (-1 < (int)uVar25) {                       /* dc:97404 */
+                                            lVar13 = (longlong)iVar9 * 0x274;         /* dc:97405 */
+                                            lVar28 = ((longlong)(intptr_t)pwVar31 + -1) * 0x274;  /* dc:97406 */
+                                            pWVar19 = pWVar30 + ((longlong)(int)uVar25 * 0x9d + 0x82) * 2;  /* dc:97407 */
+                                            do {                                      /* dc:97408 */
+                                                uVar32 = (ulonglong)uVar25;           /* dc:97409 */
+                                                iVar9 = PECMD_AnsiStrNCompare(
+                                                    (char *)(pWVar30 + ((longlong)(int)uVar33 * 0x9d + 0x82) * 2),
+                                                    (longlong)(intptr_t)pWVar19, 0x24);  /* dc:97410-97412 */
+                                                if (((iVar9 == 0) && (*(short *)((longlong)(intptr_t)pWVar30 + lVar28 + 8) != 0)) &&
+                                                    (*(short *)((longlong)(intptr_t)pWVar30 + lVar13 + 8) == 0)) {  /* dc:97413-97414 */
+                                                    uVar33 = uVar32 & 0xffffffffULL;  /* dc:97415 */
+                                                    lVar13 = lVar28;                  /* dc:97416 */
+                                                }
+                                                iVar9 = (int)uVar33;                  /* dc:97418 */
+                                                uVar25 = (int)uVar32 - 1;             /* dc:97419 */
+                                                pWVar19 = pWVar19 + -0x13a;           /* dc:97420 */
+                                                lVar28 = lVar28 + -0x274;             /* dc:97421 */
+                                                pWVar20 = local_bf0;                  /* dc:97422 */
+                                            } while (-1 < (int)uVar25);               /* dc:97423 */
+                                        }
+                                    }
+                                }
+                                if (iVar9 == iVar10) goto LAB_14009ad9f;              /* dc:97427 */
+                            }
+                            pwVar31 = (wchar_t *)(longlong)(int)local_res20;          /* dc:97429 */
+                            uVar33 = (ulonglong)(iVar10 + 1U);                       /* dc:97430 */
+                            pWVar35 = pWVar35 + 0x13a;                               /* dc:97431 */
+                            local_c18 = (uint64_t)((longlong)local_c18 - 1);         /* dc:97432 */
+                            local_res10 = (local_res10 & 0xffffffff00000000ULL) | (uint64_t)(uint32_t)(iVar10 + 1U);  /* dc:97433 */
+                        } while (local_c18 != 0);                                    /* dc:97434 */
+                        local_c18 = 0;                                               /* dc:97435 */
+                        pWVar34 = local_ba8;                                         /* dc:97436 */
+                    }                                                                /* dc:97437 */
+                }                                                                    /* dc:97438 */
+            }                                                                        /* dc:97439 */
+            PECMD_SetVariableWithPrefix(param_1, local_c30, (LPCWSTR)local_bc0);      /* dc:97440 */
+            PECMD_FreeStrBuf((WCHAR **)&local_c40);                                  /* dc:97441 */
+            goto LAB_14009b69a;                                                      /* dc:97442 */
+        }
+    }                                                                                /* dc:97444 */
+    DVar11 = GetLastError();                                                         /* dc:97445 */
+    pWVar34 = (LPWSTR)(ulonglong)DVar11;                                             /* dc:97446 */
+    if (DVar11 == 0) {                                                               /* dc:97447 */
+        pWVar34 = (LPWSTR)0x1;                                                       /* dc:97448 */
+    }
+LAB_14009b69a:
+    if (local_ba0 != 0) {                                                            /* dc:97451 */
+        (*g_pWlanCloseHandle)((HANDLE)local_ba0, (void *)0);                         /* dc:97452 */
+    }
+    if (local_b88 != (WCHAR *)0x0) {                                                 /* dc:97454 */
+        /* dc:97455: dc 丢参; EXE @0x14009b6bc rcx = local_b88 */
+        ((PECMD_FN_WlanFreeMemory)g_pWlanFreeMemory)((void *)local_b88);
+    }
+    if (local_c20 != (int *)0x0) {                                                   /* dc:97457 */
+        /* dc:97458: dc 丢参; EXE @0x14009b6cf rcx = local_c20 */
+        ((PECMD_FN_WlanFreeMemory)g_pWlanFreeMemory)((void *)local_c20);
+    }
+    PECMD_FreeStrBuf((WCHAR **)&local_c00);                                          /* dc:97460 */
+    PECMD_FreeStrBuf((WCHAR **)&local_bc0);                                          /* dc:97461 */
+    PECMD_FreeStrBuf((WCHAR **)&local_c30);                                          /* dc:97462 */
+    PECMD_FreeContainer((longlong *)&local_c10);                                     /* dc:97463 */
+    PECMD_FreeContainer((longlong *)&local_bf0);                                     /* dc:97464 */
+    PECMD_FreeContainer((longlong *)&local_bd8);                                     /* dc:97465 */
+    PECMD_FreeContainer((longlong *)&local_bf8);                                     /* dc:97466 */
+    return (ulonglong)(int64_t)(int)(intptr_t)pWVar34;                               /* dc:97467 */
 }

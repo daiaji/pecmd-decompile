@@ -5306,78 +5306,78 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
 
     /* ---- 工作变量 (沿用 decompiled 命名) ---- */
     int iVar9;
-    longlong *plVar21;
+    longlong *null_seed;
     WCHAR WVar20;
-    WCHAR WVar36;
-    short local_248;
+    WCHAR face_flag;
+    short row_delim;
     short col_delim;
-    longlong *plVar13;
-    uint32_t uVar22;
+    longlong *list_obj;
+    uint32_t flag_lo;
     uint32_t uVar24;
-    uint32_t uVar8;
-    uint32_t uVar25;
-    uint32_t uVar27;
+    uint32_t style_0x800;
+    uint32_t win_style;
+    uint32_t title_colcnt;
     uint32_t uVar4flag;
-    int iVar26;
-    ulonglong uVar32;
-    longlong local_228;
-    uint64_t uStack_220;
-    uint32_t local_1f8;
-    ulonglong local_200;
-    double dVar5;
+    int title_idx;
+    ulonglong flaghi_bit0;
+    longlong rect_lt64;
+    uint64_t rect_rb64;
+    uint32_t flag_0x800;
+    ulonglong flag_hi;
+    double neg_zero;
     uint64_t *puVar12;
-    bool bVar3;
+    bool coord_neg;
     bool bVar38;
-    char cVar37;
-    WCHAR *pWVar30;
-    LPCWSTR pWVar28;
-    LPCWSTR local_258;
-    longlong lVar31;
-    HFONT pHVar15;
-    HFONT pHVar16;
+    char titles_empty;
+    WCHAR *colname_start;
+    LPCWSTR fontface_cur;
+    LPCWSTR spectail_cur;
+    longlong wchar_step;
+    HFONT main_font;
+    HFONT built_font;
     HDC hdc;
     HWND hWnd;
-    COLORREF CVar10;
+    COLORREF dc_bkcolor;
     LRESULT LVar14;
     uint32_t uVar39;
-    uint32_t uVar40;
-    uint32_t uVar41;
-    uint32_t uVar42;
-    DWORD DVar11;
-    int param_18_int;
+    uint32_t mainh_hi;
+    uint32_t mainw_lo;
+    uint32_t mainw_hi;
+    DWORD bk3_final;
+    int tail_int;
     double param_16;
-    double local_1d0;
-    uint64_t local_208;
-    uint64_t local_218;
-    uint64_t local_1d8;
-    uint64_t local_210;
+    double tail_alpha;
+    uint64_t tail_hdrh;
+    uint64_t tail_hdrw;
+    uint64_t tail_mainh;
+    uint64_t tail_mainw;
     uint64_t seed238;
     longlong cursor12;
     longlong cursor258;
-    int local_128;
-    int local_124;
-    int local_c8;
-    int local_c4[35];
+    int mainfont_h;
+    int mainfont_body;
+    int hdrfont_h;
+    int hdrfont_body[35];
     uint8_t lvi_ins[0x54]; /* LVITEM #1 (插入): 基址 = 原 &local_188 */
     uint8_t lvi_set[0x20]; /* LVITEM #2 (更新): 基址 = 原 &local_128 */
-    uint16_t *local_240;
-    uint16_t *local_170;
+    uint16_t *rows_cur;
+    uint16_t *ins_psztext;
     uint16_t *puVar17;
     uint16_t *puVar18;
-    uint16_t *puVar33;
+    uint16_t *scan_cur;
     uint16_t *local_250;
-    uint16_t uVar1;
-    uint16_t uVar2;
-    uint64_t uVar19;
+    uint16_t cur_ch;
+    uint16_t title_ch;
+    uint64_t item_idx;
     longlong lVar31b;
     longlong *plVar34;
     longlong *plVar35;
-    longlong *plVar29;
-    int local_1c0;
-    int local_1ec_i;
-    int local_1e8_i;
-    DWORD local_1e4;
-    uint32_t local_1f0;
+    longlong *title_colidx;
+    int colw_delta;
+    int textbk_color;
+    int bk2_color;
+    DWORD bk3_color;
+    uint32_t bk_color;
     int colcnt;
     int hdr_colbase;
     void *titleslot;
@@ -5393,13 +5393,13 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     int rect4[4];
     int32_t trio[4];
 
-    plVar21 = NULL;
+    null_seed = NULL;
     WVar20 = L'\0';
-    WVar36 = L'\0';
-    local_248 = 0;
+    face_flag = L'\0';
+    row_delim = 0;
     col_delim = 9;
-    uVar27 = 0;
-    param_18_int = -1;
+    title_colcnt = 0;
+    tail_int = -1;
 
     FUN_140053dc8(a1, 0x10, a2, (LPCWSTR)*a5, (LPCWSTR)g_szEmpty, (LPCWSTR)g_szEmpty, a6, a7, a8,
                   a9);
@@ -5408,18 +5408,18 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
 
     iVar9 = *(int32_t *)((char *)a3 + 0xd0);
     if (pd != NULL) {
-        local_248 = *pd;
+        row_delim = *pd;
         col_delim = pd[1];
     }
-    local_228 = (longlong)a1[8];
-    uVar22 = (uint32_t)F;
-    uStack_220 =
+    rect_lt64 = (longlong)a1[8];
+    flag_lo = (uint32_t)F;
+    rect_rb64 =
         ((uint64_t)(uint32_t)(*(int32_t *)((char *)a1 + 0x44) + *(int32_t *)((char *)a1 + 0x4c))
          << 32) |
         (uint32_t)((int32_t)a1[8] + *(int32_t *)((char *)a1 + 0x48));
-    local_1f8 = uVar22 & 0x800;
-    local_200 = F >> 32;
-    *(uint32_t *)((char *)a1 + 0x74) = uVar22 & 0xfffff7ffu;
+    flag_0x800 = flag_lo & 0x800;
+    flag_hi = F >> 32;
+    *(uint32_t *)((char *)a1 + 0x74) = flag_lo & 0xfffff7ffu;
     uVar4flag = (uint32_t)(F & 0x10); /* uVar4 */
     uVar24 = 0x10000000u;
     if (((F >> 15) & 1) != 0) {
@@ -5428,162 +5428,162 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     if ((F & 0x40) != 0) {
         uVar24 |= 0x800000u;
     }
-    uVar8 = 0;
+    style_0x800 = 0;
     if ((F & 0xffffffff80000000ULL) != 0) {
-        uVar8 = 0x800;
+        style_0x800 = 0x800;
     }
     if (((F >> 19) & 1) == 0) {
         uVar24 |= 8;
     }
-    uVar25 = uVar24 | 1;
+    win_style = uVar24 | 1;
     if (((F >> 13) & 1) != 0) {
-        uVar25 = uVar24 | 0x4001;
+        win_style = uVar24 | 0x4001;
     }
     if (((F >> 12) & 1) != 0) {
-        uVar25 |= 0x200;
+        win_style |= 0x200;
     }
     if ((F & 0x2090000ULL) != 0) {
-        uVar25 |= 4;
+        win_style |= 4;
     }
-    if (uVar8 != 0) {
-        uVar25 |= uVar8;
+    if (style_0x800 != 0) {
+        win_style |= style_0x800;
     }
 
     puVar12 = (uint64_t *)operator_new(0x400);
-    plVar13 = plVar21;
+    list_obj = null_seed;
     if (puVar12 != NULL) {
-        plVar13 = (longlong *)FUN_1400f9134(puVar12, (uint64_t)(uintptr_t)(a1 + 0xb),
+        list_obj = (longlong *)FUN_1400f9134(puVar12, (uint64_t)(uintptr_t)(a1 + 0xb),
                                             (uint64_t)(uintptr_t)a1);
     }
-    dVar5 = g_fontMinus0; /* DAT_140125238 = -0.0 */
-    a1[7] = (uint64_t)(uintptr_t)plVar13;
+    neg_zero = g_fontMinus0; /* DAT_140125238 = -0.0 */
+    a1[7] = (uint64_t)(uintptr_t)list_obj;
     *a16 = (uint64_t)(uintptr_t)a1;
     bVar38 = false;
     if (spec != NULL) {
         if ((*spec == 0x2a) || (*spec == 0x2d)) {
             spec++;
-            bVar3 = true;
+            coord_neg = true;
         }
         else {
-            bVar3 = false;
+            coord_neg = false;
         }
         cursor12 = (longlong)(uintptr_t)spec;
-        FUN_14007de4c(&cursor12, (double *)&plVar13[0x44]);
+        FUN_14007de4c(&cursor12, (double *)&list_obj[0x44]);
         spec = (short *)(uintptr_t)cursor12;
-        if (bVar3) {
-            plVar13[0x44] = (uint64_t)(dVar5 - (double)plVar13[0x44]);
+        if (coord_neg) {
+            list_obj[0x44] = (uint64_t)(neg_zero - (double)list_obj[0x44]);
         }
         if ((*spec == 0x2a) || (*spec == 0x2d)) {
             spec++;
-            bVar3 = true;
+            coord_neg = true;
         }
         else {
-            bVar3 = false;
+            coord_neg = false;
         }
         cursor12 = (longlong)(uintptr_t)spec;
-        FUN_14007de4c(&cursor12, (double *)&plVar13[0x45]);
+        FUN_14007de4c(&cursor12, (double *)&list_obj[0x45]);
         spec = (short *)(uintptr_t)cursor12;
-        if (bVar3) {
-            plVar13[0x45] = (uint64_t)(dVar5 - (double)plVar13[0x45]);
+        if (coord_neg) {
+            list_obj[0x45] = (uint64_t)(neg_zero - (double)list_obj[0x45]);
         }
         if ((*spec == 0x2a) || (*spec == 0x2d)) {
             spec++;
             bVar38 = true;
         }
         cursor12 = (longlong)(uintptr_t)spec;
-        FUN_14007de4c(&cursor12, (double *)&plVar13[0x46]);
+        FUN_14007de4c(&cursor12, (double *)&list_obj[0x46]);
         spec = (short *)(uintptr_t)cursor12;
         if (bVar38) {
-            plVar13[0x46] = (uint64_t)(dVar5 - (double)plVar13[0x46]);
+            list_obj[0x46] = (uint64_t)(neg_zero - (double)list_obj[0x46]);
         }
     }
 
     if (pd != NULL) {
         if (pd[2] != 0) {
-            *(uint16_t *)((char *)plVar13 + 0x23a) = (uint16_t)*pd;
+            *(uint16_t *)((char *)list_obj + 0x23a) = (uint16_t)*pd;
         }
         if (pd[3] != 0) {
-            *(uint16_t *)((char *)plVar13 + 0x47 * 8) = (uint16_t)pd[1];
+            *(uint16_t *)((char *)list_obj + 0x47 * 8) = (uint16_t)pd[1];
         }
     }
 
-    rect4[0] = (int32_t)local_228; /* X = (int)a1[8] */
-    rect4[1] = (int32_t)((uint64_t)local_228 >> 32);
-    rect4[2] = (int32_t)uStack_220;
-    rect4[3] = (int32_t)(uStack_220 >> 32);
-    FUN_1400f345c((longlong *)plVar13,
-                  uVar25 | (uint32_t)(~((ulonglong)iVar9 << 2) & 0x10000ULL) | 0x40000000u, rect4,
+    rect4[0] = (int32_t)rect_lt64; /* X = (int)a1[8] */
+    rect4[1] = (int32_t)((uint64_t)rect_lt64 >> 32);
+    rect4[2] = (int32_t)rect_rb64;
+    rect4[3] = (int32_t)(rect_rb64 >> 32);
+    FUN_1400f345c((longlong *)list_obj,
+                  win_style | (uint32_t)(~((ulonglong)iVar9 << 2) & 0x10000ULL) | 0x40000000u, rect4,
                   *(HWND *)((char *)a3 + 0x20), a4);
-    LVar14 = SendMessageW((HWND)(uintptr_t)plVar13[4], 0x101f, 0, 0);
-    FUN_1400f2b44((longlong *)(plVar13 + 0x1b), LVar14);
-    if ((uVar22 & 0x4800) == 0x4000) {
-        EnableWindow((HWND)(uintptr_t)plVar13[0x1f], 0);
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x100;
+    LVar14 = SendMessageW((HWND)(uintptr_t)list_obj[4], 0x101f, 0, 0);
+    FUN_1400f2b44((longlong *)(list_obj + 0x1b), LVar14);
+    if ((flag_lo & 0x4800) == 0x4000) {
+        EnableWindow((HWND)(uintptr_t)list_obj[0x1f], 0);
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x100;
     }
     if (((F >> 14) & 1) != 0) {
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 1;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 1;
     }
 
     /* ---- 列名段 "=名称[:]" ---- */
     PECMD_AllocStrSlot((WCHAR **)&colname_slot); /* FUN_140063620(&local_228) */
     cursor12 = (longlong)(uintptr_t)a12;         /* param_12 游标初值 */
-    pWVar28 = a12;
+    fontface_cur = a12;
     if (*a12 == L'=') {
-        pWVar30 = (WCHAR *)a12 + 1;
-        cursor12 = (longlong)(uintptr_t)pWVar30;
+        colname_start = (WCHAR *)a12 + 1;
+        cursor12 = (longlong)(uintptr_t)colname_start;
         b7c_skip_to((WCHAR **)&cursor12, L':'); /* thunk_FUN_1400f429c */
-        pWVar28 = (LPCWSTR)(uintptr_t)cursor12;
-        FUN_140063888(&colname_slot, pWVar30, (cursor12 - (longlong)(uintptr_t)pWVar30) >> 1);
-        if (*pWVar28 != L'\0') {
-            pWVar28++;
-            cursor12 = (longlong)(uintptr_t)pWVar28;
+        fontface_cur = (LPCWSTR)(uintptr_t)cursor12;
+        FUN_140063888(&colname_slot, colname_start, (cursor12 - (longlong)(uintptr_t)colname_start) >> 1);
+        if (*fontface_cur != L'\0') {
+            fontface_cur++;
+            cursor12 = (longlong)(uintptr_t)fontface_cur;
         }
     }
 
     /* ---- 字体链解析 ---- */
-    pHVar15 = (HFONT)(uintptr_t)FUN_1400e5890((longlong)a3);
+    main_font = (HFONT)(uintptr_t)FUN_1400e5890((longlong)a3);
     puVar12 = &g_u6435a0;
-    WVar36 = *pWVar28;
-    uVar41 = (uint32_t)g_u6435a0;
-    uVar42 = (uint32_t)(g_u6435a0 >> 32);
+    face_flag = *fontface_cur;
+    mainw_lo = (uint32_t)g_u6435a0;
+    mainw_hi = (uint32_t)(g_u6435a0 >> 32);
     seed238 = g_u6435a0; /* local_238[0]: 主字体高度位型 */
-    if ((WVar36 != L'\0') && (pWVar28[1] == L':')) {
-        WVar36 = WVar20; /* WVar20 此时为 0: 清「有面名」旗标 */
+    if ((face_flag != L'\0') && (fontface_cur[1] == L':')) {
+        face_flag = WVar20; /* WVar20 此时为 0: 清「有面名」旗标 */
     }
-    if (*pWVar28 == L'*') {
-        *(WCHAR *)pWVar28 = L'\0';
+    if (*fontface_cur == L'*') {
+        *(WCHAR *)fontface_cur = L'\0';
     }
     FUN_140067d54(&cursor12, (double *)&seed238);
-    pWVar28 = (LPCWSTR)(uintptr_t)cursor12;
-    lVar31 = 2;
-    if (*pWVar28 == L':') {
-        pWVar28++;
-        cursor12 = (longlong)(uintptr_t)pWVar28;
+    fontface_cur = (LPCWSTR)(uintptr_t)cursor12;
+    wchar_step = 2;
+    if (*fontface_cur == L':') {
+        fontface_cur++;
+        cursor12 = (longlong)(uintptr_t)fontface_cur;
     }
-    local_258 = pWVar28;
-    cursor258 = (longlong)(uintptr_t)local_258;
+    spectail_cur = fontface_cur;
+    cursor258 = (longlong)(uintptr_t)spectail_cur;
     b7c_skip_to((WCHAR **)&cursor258, L':');
-    local_258 = (LPCWSTR)(uintptr_t)cursor258;
-    if (*local_258 != L'\0') {
-        *(WCHAR *)local_258 = L'\0';
-        cursor258 += lVar31;
-        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+    if (*spectail_cur != L'\0') {
+        *(WCHAR *)spectail_cur = L'\0';
+        cursor258 += wchar_step;
+        spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
     }
-    local_208 = (uint64_t)(uintptr_t)puVar12;
-    local_218 = (uint64_t)(uintptr_t)puVar12;
+    tail_hdrh = (uint64_t)(uintptr_t)puVar12;
+    tail_hdrw = (uint64_t)(uintptr_t)puVar12;
     cursor12 = (cursor12 & 0xffffffff00000000ULL) | 0x80000000ULL;
     param_16 = 0.0;
-    local_1d0 = 0.0;
-    local_1d8 = (uint64_t)(uintptr_t)puVar12;
-    local_210 = (uint64_t)(uintptr_t)puVar12;
-    if ((*local_258 == L'-') || (*local_258 == L'*')) {
-        WVar20 = *local_258;
-        cursor258 += lVar31;
-        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    tail_alpha = 0.0;
+    tail_mainh = (uint64_t)(uintptr_t)puVar12;
+    tail_mainw = (uint64_t)(uintptr_t)puVar12;
+    if ((*spectail_cur == L'-') || (*spectail_cur == L'*')) {
+        WVar20 = *spectail_cur;
+        cursor258 += wchar_step;
+        spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
     }
     FUN_140067d54(&cursor258, &param_16);
     if (WVar20 == L'-') {
-        puVar12 = (uint64_t *)(uint64_t)(dVar5 - param_16);
+        puVar12 = (uint64_t *)(uint64_t)(neg_zero - param_16);
     }
     else if (WVar20 == L'*') {
         puVar12 = (uint64_t *)(uint64_t)(param_16 + g_scrollLimit);
@@ -5591,9 +5591,9 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     else {
         puVar12 = (uint64_t *)(uintptr_t)param_16;
     }
-    if (*local_258 != L'\0') {
-        cursor258 += lVar31;
-        local_258 = (LPCWSTR)(uintptr_t)cursor258;
+    if (*spectail_cur != L'\0') {
+        cursor258 += wchar_step;
+        spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
         cursor12 = 0xffffffff80000000ULL | (cursor12 & 0xffffffff00000000ULL);
         iVar9 = FUN_140066850(&cursor258, (uint64_t *)&cursor12);
         uVar39 = 0x80000000u;
@@ -5601,33 +5601,33 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
             uVar39 = (uint32_t)cursor12;
         }
         cursor12 = (cursor12 & 0xffffffff00000000ULL) | uVar39;
-        if (*local_258 != L'\0') {
-            cursor258 += lVar31;
-            local_258 = (LPCWSTR)(uintptr_t)cursor258;
-            FUN_140067d54(&cursor258, &local_1d0);
-            if (*local_258 != L'\0') {
-                cursor258 += lVar31;
-                local_258 = (LPCWSTR)(uintptr_t)cursor258;
-                FUN_140067d54(&cursor258, (double *)&local_208);
-                if (*local_258 != L'\0') {
-                    cursor258 += lVar31;
-                    local_258 = (LPCWSTR)(uintptr_t)cursor258;
-                    FUN_140067d54(&cursor258, (double *)&local_218);
-                    if (*local_258 != L'\0') {
-                        cursor258 += lVar31;
-                        local_258 = (LPCWSTR)(uintptr_t)cursor258;
-                        FUN_140067d54(&cursor258, (double *)&local_1d8);
-                        if (*local_258 != L'\0') {
-                            cursor258 += lVar31;
-                            local_258 = (LPCWSTR)(uintptr_t)cursor258;
-                            FUN_140067d54(&cursor258, (double *)&local_210);
-                            if (*local_258 != L'\0') {
-                                cursor258 += lVar31;
-                                local_258 = (LPCWSTR)(uintptr_t)cursor258;
-                                FUN_140067e2c(&cursor258, &param_18_int);
+        if (*spectail_cur != L'\0') {
+            cursor258 += wchar_step;
+            spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+            FUN_140067d54(&cursor258, &tail_alpha);
+            if (*spectail_cur != L'\0') {
+                cursor258 += wchar_step;
+                spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+                FUN_140067d54(&cursor258, (double *)&tail_hdrh);
+                if (*spectail_cur != L'\0') {
+                    cursor258 += wchar_step;
+                    spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+                    FUN_140067d54(&cursor258, (double *)&tail_hdrw);
+                    if (*spectail_cur != L'\0') {
+                        cursor258 += wchar_step;
+                        spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+                        FUN_140067d54(&cursor258, (double *)&tail_mainh);
+                        if (*spectail_cur != L'\0') {
+                            cursor258 += wchar_step;
+                            spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+                            FUN_140067d54(&cursor258, (double *)&tail_mainw);
+                            if (*spectail_cur != L'\0') {
+                                cursor258 += wchar_step;
+                                spectail_cur = (LPCWSTR)(uintptr_t)cursor258;
+                                FUN_140067e2c(&cursor258, &tail_int);
                             }
-                            uVar41 = (uint32_t)local_210;
-                            uVar42 = (uint32_t)(local_210 >> 32);
+                            mainw_lo = (uint32_t)tail_mainw;
+                            mainw_hi = (uint32_t)(tail_mainw >> 32);
                         }
                     }
                 }
@@ -5638,60 +5638,60 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     /* ---- 底色采样 + 主字体重建 ---- */
     hWnd = *(HWND *)((char *)a3 + 0x20);
     hdc = GetDC(hWnd);
-    CVar10 = GetBkColor(hdc);
-    SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1001 /*SETBKCOLOR*/, 0, CVar10);
+    dc_bkcolor = GetBkColor(hdc);
+    SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1001 /*SETBKCOLOR*/, 0, dc_bkcolor);
     if (hdc != NULL) {
         ReleaseDC(hWnd, hdc);
     }
-    plVar13[0x48] = (uint64_t)(uintptr_t)pHVar15;
-    if ((0.0 < *(double *)&seed238) || (*pWVar28 != L'\0') || (WVar36 != L'\0')) {
+    list_obj[0x48] = (uint64_t)(uintptr_t)main_font;
+    if ((0.0 < *(double *)&seed238) || (*fontface_cur != L'\0') || (face_flag != L'\0')) {
         param_16 = *(double *)&seed238;
-        local_128 = 0;
-        memset(&local_124, 0, 0x58);
-        GetObjectW(pHVar15, 0x5c, &local_128);
-        if (0.0 < *(double *)&local_1d8) {
-            local_128 = FUN_1400628b4(*(double *)&local_1d8);
+        mainfont_h = 0;
+        memset(&mainfont_body, 0, 0x58);
+        GetObjectW(main_font, 0x5c, &mainfont_h);
+        if (0.0 < *(double *)&tail_mainh) {
+            mainfont_h = FUN_1400628b4(*(double *)&tail_mainh);
         }
         {
-            double dseed = *(double *)(((uint64_t)uVar42 << 32) | uVar41);
+            double dseed = *(double *)(((uint64_t)mainw_hi << 32) | mainw_lo);
             if ((0.0 <= dseed) && (dseed != 0.0)) {
-                local_124 = FUN_1400628b4(dseed);
+                mainfont_body = FUN_1400628b4(dseed);
             }
         }
-        pHVar16 = FUN_1400b1f34(&local_128, &param_16, pWVar28);
-        plVar13[0xd] = (uint64_t)(uintptr_t)pHVar16;
-        if (pHVar16 != NULL) {
-            pHVar15 = pHVar16;
+        built_font = FUN_1400b1f34(&mainfont_h, &param_16, fontface_cur);
+        list_obj[0xd] = (uint64_t)(uintptr_t)built_font;
+        if (built_font != NULL) {
+            main_font = built_font;
         }
-        plVar13[0x48] = (uint64_t)(uintptr_t)pHVar15;
-        pHVar16 = FUN_1400b89dc(pHVar15, (double *)&seed238, pWVar28);
-        plVar13[0x49] = (uint64_t)(uintptr_t)pHVar16;
-        plVar13[0x48] = (uint64_t)(uintptr_t)pHVar16;
+        list_obj[0x48] = (uint64_t)(uintptr_t)main_font;
+        built_font = FUN_1400b89dc(main_font, (double *)&seed238, fontface_cur);
+        list_obj[0x49] = (uint64_t)(uintptr_t)built_font;
+        list_obj[0x48] = (uint64_t)(uintptr_t)built_font;
         uVar39 = (uint32_t)seed238;
-        uVar40 = (uint32_t)(seed238 >> 32);
+        mainh_hi = (uint32_t)(seed238 >> 32);
     }
     else {
         uVar39 = (uint32_t)seed238;
-        uVar40 = (uint32_t)(seed238 >> 32);
+        mainh_hi = (uint32_t)(seed238 >> 32);
     }
     {
-        double d7b = *(double *)(((uint64_t)uVar40 << 32) | uVar39);
+        double d7b = *(double *)(((uint64_t)mainh_hi << 32) | uVar39);
         if ((0.0 <= d7b) && (d7b != 0.0)) {
-            plVar13[0x7b] = ((uint64_t)uVar40 << 32) | uVar39;
+            list_obj[0x7b] = ((uint64_t)mainh_hi << 32) | uVar39;
         }
-        dVar5 = *(double *)(((uint64_t)uVar42 << 32) | uVar41);
-        if ((0.0 <= dVar5) && (dVar5 != 0.0)) {
-            plVar13[0x7c] = ((uint64_t)uVar42 << 32) | uVar41;
+        neg_zero = *(double *)(((uint64_t)mainw_hi << 32) | mainw_lo);
+        if ((0.0 <= neg_zero) && (neg_zero != 0.0)) {
+            list_obj[0x7c] = ((uint64_t)mainw_hi << 32) | mainw_lo;
         }
     }
 
-    DragAcceptFiles((HWND)(uintptr_t)plVar13[4], 1);
+    DragAcceptFiles((HWND)(uintptr_t)list_obj[4], 1);
     if (*(double *)&puVar12 != 0.0) {
-        FUN_1400f4040((longlong)plVar13, (float)*(double *)&puVar12);
+        FUN_1400f4040((longlong)list_obj, (float)*(double *)&puVar12);
     }
-    if (plVar13[0xd] != 0) {
-        ((b7c_vt_fn_t)(uintptr_t)((const void **)*(const void **)plVar13)[0x108 / 8])(
-            plVar13, pHVar15, 1); /* 虚方法 0x108: 应用字体 */
+    if (list_obj[0xd] != 0) {
+        ((b7c_vt_fn_t)(uintptr_t)((const void **)*(const void **)list_obj)[0x108 / 8])(
+            list_obj, main_font, 1); /* 虚方法 0x108: 应用字体 */
     }
 
     /* ---- 文本色 RGBA ---- */
@@ -5705,36 +5705,36 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
             gg = (color >> 8) & 0xff;
             rr = color & 0xff;
         }
-        FUN_1400f400c((longlong)plVar13, (int)rr, (int)gg, (int)bb,
-                      (uint32_t)*(double *)&local_1d0);
+        FUN_1400f400c((longlong)list_obj, (int)rr, (int)gg, (int)bb,
+                      (uint32_t)*(double *)&tail_alpha);
     }
 
     /* ---- 表头字体 ---- */
     {
         double seed = (double)g_fontSizeDef; /* DAT_1401293c0 */
-        local_c8 = 0;
-        memset(local_c4, 0, 0x58);
-        GetObjectW(pHVar15, 0x5c, &local_c8);
-        if (0.0 < *(double *)&local_208) {
-            local_c8 = FUN_1400628b4(*(double *)&local_208);
+        hdrfont_h = 0;
+        memset(hdrfont_body, 0, 0x58);
+        GetObjectW(main_font, 0x5c, &hdrfont_h);
+        if (0.0 < *(double *)&tail_hdrh) {
+            hdrfont_h = FUN_1400628b4(*(double *)&tail_hdrh);
         }
-        if (0.0 < *(double *)&local_218) {
-            local_c4[0] = FUN_1400628b4(*(double *)&local_218);
+        if (0.0 < *(double *)&tail_hdrw) {
+            hdrfont_body[0] = FUN_1400628b4(*(double *)&tail_hdrw);
         }
-        plVar13[0x3c] = (uint64_t)(uintptr_t)pHVar15;
-        if ((0.0 < *(double *)&local_208) || (0.0 < *(double *)&local_218) || (*a15 != L'\0')) {
-            pHVar15 = FUN_1400b1f34(&local_c8, &seed, a15);
-            plVar13[0x3d] = (uint64_t)(uintptr_t)pHVar15;
-            plVar13[0x3c] = (uint64_t)(uintptr_t)pHVar15;
+        list_obj[0x3c] = (uint64_t)(uintptr_t)main_font;
+        if ((0.0 < *(double *)&tail_hdrh) || (0.0 < *(double *)&tail_hdrw) || (*a15 != L'\0')) {
+            main_font = FUN_1400b1f34(&hdrfont_h, &seed, a15);
+            list_obj[0x3d] = (uint64_t)(uintptr_t)main_font;
+            list_obj[0x3c] = (uint64_t)(uintptr_t)main_font;
         }
     }
 
     /* ---- 扩展样式合成 ---- */
     if ((F & 0x80) != 0) {
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 4;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 4;
     }
     if (((ulonglong)(F & 0xfffffffffffff7ffULL) >> 8 & 1) != 0) {
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 8;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 8;
     }
     bVar38 = ((F & 0x3800200ULL) == 0);
     uVar24 = (uint32_t)(bVar38 ? 1 : 0);
@@ -5742,81 +5742,81 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
         uVar24 = (uint32_t)(bVar38 ? 1 : 0) | 4;
     }
     if (((F >> 14) & 1) != 0) {
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 1;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 1;
     }
-    if (local_1f8 != 0) {
+    if (flag_0x800 != 0) {
         uVar24 |= 0x10;
     }
     if (((F >> 17) & 1) != 0) {
         uVar24 |= 0x8000;
     }
-    LVar14 = SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1037 /*GETEXSTYLE*/, 0, 0);
+    LVar14 = SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1037 /*GETEXSTYLE*/, 0, 0);
     uVar24 |= (uint32_t)LVar14;
     if ((F & 0x600000ULL) != 0) {
         uVar24 |= 4;
     }
-    FUN_1400f353c((longlong)plVar13, uVar24);
+    FUN_1400f353c((longlong)list_obj, uVar24);
     if (((F >> 16) & 1) != 0) {
         /* psVar23 ← F & ~0x80000_0x800 (原体二次掩码) */
     }
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 18 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 2;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 2;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 19 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x20;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x20;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 20 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x40;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x40;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 21 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x400;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x400;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 22 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0xc00;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0xc00;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 23 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x1800;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x1800;
     if (((ulonglong)(F & 0xfffffffffff7f7ffULL) >> 24 & 1) != 0)
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x2800;
-    uVar32 = local_200 & 1;
-    local_200 &= 0xffffffffffffff01ULL;
-    if (uVar32 != 0) {
-        *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x200;
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x2800;
+    flaghi_bit0 = flag_hi & 1;
+    flag_hi &= 0xffffffffffffff01ULL;
+    if (flaghi_bit0 != 0) {
+        *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x200;
     }
 
     /* ---- 底色四连 "-1,bk,tbk,bk2" + '#sys' 回退 ---- */
     {
         longlong ccur = (longlong)(uintptr_t)(LPCWSTR)(uintptr_t)a13;
-        local_1f0 = 0xffffffffu;
-        local_1ec_i = -1;
-        local_1e8_i = -1;
-        local_1e4 = 0x80000000u;
+        bk_color = 0xffffffffu;
+        textbk_color = -1;
+        bk2_color = -1;
+        bk3_color = 0x80000000u;
         trio[0] = -1;
         trio[1] = -1;
         trio[2] = -1;
         trio[3] = (int32_t)0x80000000;
         FUN_1400677b0(&ccur, (longlong)(uintptr_t)trio);
-        local_1f0 = (uint32_t)trio[0];
-        local_1ec_i = trio[1];
-        local_1e8_i = trio[2];
-        DVar11 = local_1e4;
+        bk_color = (uint32_t)trio[0];
+        textbk_color = trio[1];
+        bk2_color = trio[2];
+        bk3_final = bk3_color;
         if (trio[3] != (int32_t)0x80000000) {
-            local_1e4 = (uint32_t)trio[3];
-            DVar11 = local_1e4;
+            bk3_color = (uint32_t)trio[3];
+            bk3_final = bk3_color;
         }
         else {
-            DVar11 = local_1e4;
+            bk3_final = bk3_color;
         }
-        if (-1 < (int)local_1f0) {
-            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1001, 0, local_1f0);
+        if (-1 < (int)bk_color) {
+            SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1001, 0, bk_color);
         }
-        if (-1 < local_1ec_i) {
-            *(uint32_t *)((char *)plVar13 + 0x3c4) = (uint32_t)local_1ec_i;
-            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1026 /*SETTEXTBKCOLOR*/, 0,
-                         (uint64_t)(uint32_t)local_1ec_i);
+        if (-1 < textbk_color) {
+            *(uint32_t *)((char *)list_obj + 0x3c4) = (uint32_t)textbk_color;
+            SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1026 /*SETTEXTBKCOLOR*/, 0,
+                         (uint64_t)(uint32_t)textbk_color);
         }
-        if (-1 < local_1e8_i) {
-            *(int32_t *)((char *)plVar13 + 0x78 * 8) = local_1e8_i;
-            FUN_1400f40bc((longlong)plVar13, (uint32_t)local_1e8_i);
+        if (-1 < bk2_color) {
+            *(int32_t *)((char *)list_obj + 0x78 * 8) = bk2_color;
+            FUN_1400f40bc((longlong)list_obj, (uint32_t)bk2_color);
         }
         iVar9 = 0xd;
-        DVar11 = local_1e4;
-        if (local_1e4 == 0x80000000u) {
+        bk3_final = bk3_color;
+        if (bk3_color == 0x80000000u) {
             if ((F & 0x50000ULL) == 0) { /* psVar23 掩码后低 32 位同值 */
                 WVar20 = L'#';
                 b7c_skip_to((WCHAR **)&ccur, L'#');
@@ -5833,20 +5833,20 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
                     goto LAB_1400ca7fa;
                 }
             }
-            DVar11 = GetSysColor(iVar9);
-            if (DVar11 == 0x80000000u) {
+            bk3_final = GetSysColor(iVar9);
+            if (bk3_final == 0x80000000u) {
                 goto LAB_1400ca7fa;
             }
         }
-        *(uint32_t *)((char *)plVar13 + 0x79 * 8) = DVar11;
+        *(uint32_t *)((char *)list_obj + 0x79 * 8) = bk3_final;
     LAB_1400ca7fa:
-        if (((int32_t)plVar13[0x79] >= 0) && (((F & 0xfffffffffff7f7ffULL) >> 16 & 1) != 0)) {
-            *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x10;
+        if (((int32_t)list_obj[0x79] >= 0) && (((F & 0xfffffffffff7f7ffULL) >> 16 & 1) != 0)) {
+            *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x10;
         }
-        if ((((int32_t)plVar13[0x79] >= 0) &&
-             ((*(uint8_t *)((char *)plVar13 + 0x7f * 8) & 0x10) != 0)) ||
-            ((*(uint8_t *)((char *)plVar13 + 0x7f * 8) & 0x20) != 0)) {
-            *(uint16_t *)((char *)plVar13 + 0x7f * 8) |= 0x80;
+        if ((((int32_t)list_obj[0x79] >= 0) &&
+             ((*(uint8_t *)((char *)list_obj + 0x7f * 8) & 0x10) != 0)) ||
+            ((*(uint8_t *)((char *)list_obj + 0x7f * 8) & 0x20) != 0)) {
+            *(uint16_t *)((char *)list_obj + 0x7f * 8) |= 0x80;
         }
     }
 
@@ -5856,15 +5856,15 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     titleslot = NULL;
     local_250 = (uint16_t *)(uintptr_t)*a10;
     hdr_colbase = *(int32_t *)((char *)a3 + 0x17c);
-    local_1c0 = 0;
-    uVar1 = *local_250;
-    uVar2 = *local_250;
-    cVar37 = (char)(uVar1 == 0);
-    hdr_done = cVar37;
-    plVar34 = plVar21;
-    plVar35 = plVar21;
-    plVar29 = plVar21;
-    while (uVar2 != 0) {
+    colw_delta = 0;
+    cur_ch = *local_250;
+    title_ch = *local_250;
+    titles_empty = (char)(cur_ch == 0);
+    hdr_done = titles_empty;
+    plVar34 = null_seed;
+    plVar35 = null_seed;
+    title_colidx = null_seed;
+    while (title_ch != 0) {
         uint32_t col_w;
         uint32_t col_align;
         int32_t col_wsub;
@@ -5878,26 +5878,26 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
                                          (longlong *)&titleslot, &col_wsub, &fmtbyte, &col_align,
                                          col_delim);
         col_w = (uint32_t)col_wsub;
-        iVar26 = (int)(uintptr_t)plVar29;
+        title_idx = (int)(uintptr_t)title_colidx;
         if (((int)uVar24 >= 0) || (col_wsub >= 0)) {
-            FUN_1400f8f00((longlong)plVar13, iVar26, col_w, (uint32_t)col_wsub);
+            FUN_1400f8f00((longlong)list_obj, title_idx, col_w, (uint32_t)col_wsub);
         }
-        plVar34 = (longlong *)((longlong)plVar34 + local_1c0);
+        plVar34 = (longlong *)((longlong)plVar34 + colw_delta);
         if (0 < hdr_colbase) {
-            local_1c0 = (int)((ulonglong)((longlong)hdr_colbase * (longlong)plVar34) / 0x60) -
+            colw_delta = (int)((ulonglong)((longlong)hdr_colbase * (longlong)plVar34) / 0x60) -
                         (int)(uintptr_t)plVar35;
         }
-        FUN_1400f5558((longlong)plVar13, iVar26, (longlong)&colctx, 0, col_align);
-        plVar35 = (longlong *)((longlong)plVar35 + local_1c0);
+        FUN_1400f5558((longlong)list_obj, title_idx, (longlong)&colctx, 0, col_align);
+        plVar35 = (longlong *)((longlong)plVar35 + colw_delta);
         colctx.f00 = 7;
         PECMD_FreeStrBuf((WCHAR **)&titleslot);
-        uVar27 = (uint32_t)iVar26 + 1;
-        plVar29 = (longlong *)(uintptr_t)(uint64_t)uVar27;
-        uVar2 = *local_250;
+        title_colcnt = (uint32_t)title_idx + 1;
+        title_colidx = (longlong *)(uintptr_t)(uint64_t)title_colcnt;
+        title_ch = *local_250;
     }
-    *(uint32_t *)((char *)a1 + 0x70) = uVar27; /* (a1+0xe) 列数 */
-    if (0 < param_18_int) {
-        FUN_1400f4064((longlong)plVar13, param_18_int, 0);
+    *(uint32_t *)((char *)a1 + 0x70) = title_colcnt; /* (a1+0xe) 列数 */
+    if (0 < tail_int) {
+        FUN_1400f4064((longlong)list_obj, tail_int, 0);
     }
 
     /* ---- 行文本装入 (LVITEM 双结构: 插入块 lvi_ins / 更新块 lvi_set) ---- */
@@ -5905,130 +5905,130 @@ uint64_t *PECMD_TablCreateListCtrl(uint64_t *a1, uint64_t a2, uint64_t a3, uint3
     *(uint32_t *)(lvi_ins + 0) = 1;                  /* local_188 = LVIF_TEXT */
     *(int32_t *)(lvi_ins + 4) = (int32_t)0x7fffffff; /* local_184 = iItem */
     *(int32_t *)(lvi_ins + 8) = 0;                   /* local_180 = iSubItem */
-    local_240 = a11;
-    local_170 = (uint16_t *)g_szEmpty;
-    *(WCHAR **)(lvi_ins + 0x18) = (WCHAR *)local_170; /* local_170 = pszText */
+    rows_cur = a11;
+    ins_psztext = (uint16_t *)g_szEmpty;
+    *(WCHAR **)(lvi_ins + 0x18) = (WCHAR *)ins_psztext; /* local_170 = pszText */
     if (a11 == (uint16_t *)1) {
-        local_240 = (uint16_t *)DAT_14011d308;
-        FUN_1400f3554((longlong)plVar13, (LPARAM)lvi_ins);
-        SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1008, 0, 0);
+        rows_cur = (uint16_t *)DAT_14011d308;
+        FUN_1400f3554((longlong)list_obj, (LPARAM)lvi_ins);
+        SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1008, 0, 0);
     }
-    uVar32 = local_200;
-    uVar1 = *local_240;
-    puVar33 = local_240;
+    flaghi_bit0 = flag_hi;
+    cur_ch = *rows_cur;
+    scan_cur = rows_cur;
     for (;;) {
-        if (uVar1 == 0) {
+        if (cur_ch == 0) {
             /* ---- 收尾 ---- */
             FUN_140053e78();
-            SendMessageW((HWND)(uintptr_t)plVar13[4], 0x100f, 1, 0x320032);
+            SendMessageW((HWND)(uintptr_t)list_obj[4], 0x100f, 1, 0x320032);
             bVar38 = (uVar4flag == 0);
             if (!bVar38) {
-                ShowWindow((HWND)(uintptr_t)plVar13[4], 0);
+                ShowWindow((HWND)(uintptr_t)list_obj[4], 0);
             }
             FUN_140053cec((longlong)a1, (int)(bVar38 ? 1 : 0));
-            FUN_1400f2c44((longlong)plVar13);
+            FUN_1400f2c44((longlong)list_obj);
             PECMD_FreeStrBuf((WCHAR **)&colname_slot);
             LeaveCriticalSection(&g_csInit);
             return a1;
         }
-        local_250 = puVar33;
-        if (local_248 == 0) {
-            uVar1 = *puVar33;
-            puVar17 = puVar33;
-            while ((uVar1 != 0) && (uVar1 != 0xd) && (uVar1 != 0xa)) {
+        local_250 = scan_cur;
+        if (row_delim == 0) {
+            cur_ch = *scan_cur;
+            puVar17 = scan_cur;
+            while ((cur_ch != 0) && (cur_ch != 0xd) && (cur_ch != 0xa)) {
                 puVar17++;
-                local_240 = puVar17;
-                uVar1 = *puVar17;
+                rows_cur = puVar17;
+                cur_ch = *puVar17;
             }
             puVar18 = puVar17;
             if (*puVar17 == 0xd) {
                 puVar18 = puVar17 + 1;
-                local_240 = puVar18;
+                rows_cur = puVar18;
             }
-            uVar1 = *puVar18;
+            cur_ch = *puVar18;
         }
         else {
-            b7c_skip_to((WCHAR **)&local_240, (WCHAR)local_248);
-            uVar1 = *local_240;
-            puVar17 = local_240;
-            puVar18 = local_240;
+            b7c_skip_to((WCHAR **)&rows_cur, (WCHAR)row_delim);
+            cur_ch = *rows_cur;
+            puVar17 = rows_cur;
+            puVar18 = rows_cur;
         }
-        if (uVar1 != 0) {
+        if (cur_ch != 0) {
             puVar18 = puVar18 + 1;
-            local_240 = puVar18;
+            rows_cur = puVar18;
         }
         if (*puVar17 != 0) {
             *puVar17 = 0;
-            puVar18 = local_240;
-            puVar33 = local_250;
+            puVar18 = rows_cur;
+            scan_cur = local_250;
         }
-        uVar1 = *puVar33;
-        plVar34 = plVar21;
-        plVar35 = plVar21;
-        puVar17 = puVar33;
-        while ((puVar33 = puVar18, uVar1 != 0)) {
+        cur_ch = *scan_cur;
+        plVar34 = null_seed;
+        plVar35 = null_seed;
+        puVar17 = scan_cur;
+        while ((scan_cur = puVar18, cur_ch != 0)) {
             lVar31b = 2;
             iVar9 = (int)(uintptr_t)plVar34;
             if ((hdr_done == '\0') &&
-                (puVar33 = local_240, *(uint32_t *)((char *)a1 + 0x70) <= (uint32_t)iVar9)) {
+                (scan_cur = rows_cur, *(uint32_t *)((char *)a1 + 0x70) <= (uint32_t)iVar9)) {
                 break;
             }
-            puVar33 = puVar17;
-            if ((char)uVar32 == '\0') {
+            scan_cur = puVar17;
+            if ((char)flaghi_bit0 == '\0') {
                 b7c_skip_to((WCHAR **)&local_250, (WCHAR)col_delim);
-                puVar33 = local_250;
+                scan_cur = local_250;
             LAB_1400cabb9:
-                if (*puVar33 != 0) {
-                    *puVar33 = 0;
-                    puVar33 = (uint16_t *)((longlong)local_250 + lVar31b);
-                    local_250 = puVar33;
+                if (*scan_cur != 0) {
+                    *scan_cur = 0;
+                    scan_cur = (uint16_t *)((longlong)local_250 + lVar31b);
+                    local_250 = scan_cur;
                 }
             }
             else {
-                while (uVar1 != 0) {
-                    if (((8 < uVar1) && (uVar1 < 0xe)) || (uVar1 == 0x20)) {
+                while (cur_ch != 0) {
+                    if (((8 < cur_ch) && (cur_ch < 0xe)) || (cur_ch == 0x20)) {
                         goto LAB_1400cabb9;
                     }
-                    local_250 = puVar33 + 1;
-                    puVar33 = local_250;
-                    uVar1 = *local_250;
+                    local_250 = scan_cur + 1;
+                    scan_cur = local_250;
+                    cur_ch = *local_250;
                 }
             }
-            if (((char)uVar32 != '\0') && (puVar33 != NULL)) {
-                while ((*puVar33 == 9) || (*puVar33 == 0xb) || (*puVar33 == 0xc) ||
-                       (*puVar33 == 0x20)) {
-                    puVar33 = (uint16_t *)((longlong)puVar33 + lVar31b);
-                    local_250 = puVar33;
+            if (((char)flaghi_bit0 != '\0') && (scan_cur != NULL)) {
+                while ((*scan_cur == 9) || (*scan_cur == 0xb) || (*scan_cur == 0xc) ||
+                       (*scan_cur == 0x20)) {
+                    scan_cur = (uint16_t *)((longlong)scan_cur + lVar31b);
+                    local_250 = scan_cur;
                 }
             }
             colcnt = *(int32_t *)((char *)a1 + 0x70);
             *(int32_t *)(lvi_ins + 8) = iVar9; /* LVITEM.iSubItem */
             if (colcnt <= iVar9) {
                 *(int32_t *)((char *)a1 + 0x70) = colcnt + 1;
-                FUN_1400f5558((longlong)plVar13, iVar9, (longlong)&colctx, 0, (int)lVar31b);
-                puVar33 = local_250;
+                FUN_1400f5558((longlong)list_obj, iVar9, (longlong)&colctx, 0, (int)lVar31b);
+                scan_cur = local_250;
             }
-            local_170 = puVar17;
+            ins_psztext = puVar17;
             *(WCHAR **)(lvi_ins + 0x18) = (WCHAR *)puVar17;
             if (iVar9 == 0) {
-                uVar19 = FUN_1400f3554((longlong)plVar13, (LPARAM)lvi_ins);
-                plVar35 = (longlong *)(uintptr_t)(uVar19 & 0xffffffffULL);
-                puVar33 = local_250;
+                item_idx = FUN_1400f3554((longlong)list_obj, (LPARAM)lvi_ins);
+                plVar35 = (longlong *)(uintptr_t)(item_idx & 0xffffffffULL);
+                scan_cur = local_250;
             }
             else if (*puVar17 != 0) {
                 memset(lvi_set, 0, sizeof(lvi_set));
                 *(int32_t *)(lvi_set + 8) = iVar9;              /* local_120 = iSubItem */
                 *(WCHAR **)(lvi_set + 0x18) = (WCHAR *)puVar17; /* local_110 = pszText */
-                SendMessageW((HWND)(uintptr_t)plVar13[4], 0x1074 /*SETITEMTEXTW*/,
+                SendMessageW((HWND)(uintptr_t)list_obj[4], 0x1074 /*SETITEMTEXTW*/,
                              (WPARAM)(int)(uintptr_t)plVar35, (LPARAM)lvi_set);
-                puVar33 = local_250;
+                scan_cur = local_250;
             }
             plVar34 = (longlong *)(uintptr_t)(uint64_t)(uint32_t)(iVar9 + 1);
-            puVar18 = local_240;
-            puVar17 = puVar33;
-            uVar1 = *puVar33;
+            puVar18 = rows_cur;
+            puVar17 = scan_cur;
+            cur_ch = *scan_cur;
         }
-        uVar1 = *puVar33;
+        cur_ch = *scan_cur;
     }
 }
 

@@ -156,6 +156,7 @@
 - **影响面**：语料盲区内动词行为不可证；恒0桩若被未来语料覆盖预期"静默无操作"(MESS/MSTR/SBAR/SITE/USER)或"错值/崩"(SOCK 解引用/ADSL 假真体)。
 - **状态**：登记完成。真体化优先级 Top5：MESS(静默面最大+内部污染) > MSTR(静默错值) > SOCK(崩溃风险) > ADSL(消除假真体) > USER(恢复成本最低，dc 仅 7B 但其调用体 FUN_14001ada8 346B 有真实副作用)。LOAD/SHOW/PUTF/ITEM/SERV 真体内局部 TODO 已在总表标注。
 - **R25-j 推进**：USER 已真体化——dc:15584 入口(7B=`xor dl,dl; jmp`尾调用)包装 + 调用体 FUN_14001ada8 真体 `PECMD_SetRegistryOwnerRun`(core_b1_remaining.c:7768, 早于本登记即已直移)。桩(unimplemented_stubs.c)拆除、skip 登记移出；新案 `066_user_noseg`(无逗号段早退路径, exit=1 两侧同链) 录 golden 后 **64/64 全绿**。恒0桩余 6: MESS MSTR SBAR SITE SOCK SPIN；语料注意: USER 有逗号路径会真实写 HKLM RegisteredOwner/RegisteredOrganization，录 golden 需先设计注册表沙箱口径。
+- **R25-j 二批推进**：ADSL 已真体化（dc:96610-97468 全量直移 957 行, if 105/dc104 同构, 调用点 205:205 对表; 3 处 wsprintfW 变参丢弃 + 5 处 wlanapi 槽丢参按原版 EXE 反汇编恢复; analysis/r25j_adsl_wlan_port.md）。**简化桩 1→0，真体 61**。恒0桩 6 中 GUI 件（MESS 弹窗/SBAR 状态栏）按 2026-08-29 用户决定**延后**（GUI 与原版校对口径复杂），非 GUI 件 MSTR→SOCK 仍为队列头。
 
 ### D-19 msvc EvalSpecialToken `-mode` 判定恒死分支｜待修(读侧失真)
 
@@ -169,7 +170,14 @@
 - **根因**：RunCommand 的 `*map:` 分支(core_scriptrun.c:393-410)只 MapViewOfFile 即返回，不执行映射文本(源内 TODO(verify)：反编译 379-390 行映射数据拷贝与解码)；dc:29831-29870 → dc:30268 会 RunScriptText 执行。
 - **证据链**：analysis/r25f_039_script0xd_writers.md 增补节 A3。
 - **影响面**：TEXT 窗口/`--exe:`/拖放等 `*map:` 子进程形态脚本静默不执行；039 主链(父进程裸路径)不受影响。
-- **状态**：待修（需先补 dc:379-390 段映射数据拷贝与解码的真体）。
+- **状态**：已修(R25-j, core_scriptrun.c *map: 执行块 dc:30235-30272 全序列直移; 门控/单位经 capstone 反汇编定案 0x140031bb0-0x140032560; 顺带修正 4 项既有码缺陷——重映射 sz+2→size+8 单位错、mem_flag 守卫、失败路径 -0x7ff8ffa9 返回语义、泄漏兜底; 回归 64/64; analysis/r25j_d20_map_port.md, 偏差 7 项登记其 §6)。
+
+### D-22 语料案 005→018 群共享 `C:\pectest\out\` 文件状态链｜夹具脆弱性工单
+
+- **根因**：005(WRITE demo.txt)→008/013/018(读/判/搜 demo.txt)→010(copy.txt)→011(删 copy.txt) 六案共享 `C:\pectest\out\` 下的跨案文件状态，且 FILE/EXEC 通道存在已知偶发哑火（run_case.py T2 注记）——任一上游哑火即级联下游假阳性（R25-j 实证: 011 因 copy.txt 缺席 exit 2→0, 复跑即过）。
+- **证据链**：R25-j 22:20 全量跑 63/64（011 exit=0）→ 22:24 单案复跑 PASS → 22:38 全量重跑 64/64；corpus 各案 main.pecmd 硬编码 `C:\pectest\out\` 路径。
+- **影响面**：仅全量跑的偶发假阳性；exit 对拍主判据在案内自洽（golden=2 为"文件存在且删除成功"路径）。
+- **状态**：工单（改法候选: 案间状态自足化——各案在 main.pecmd 内自建/自清理所需文件, 或 manifest 声明依赖由 runner 重建夹具）。非行为分歧，不阻塞。
 
 ### D-21 run_case 双后端共享 out_dir 时序假阳性风险｜夹具改进工单
 
