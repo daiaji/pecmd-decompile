@@ -169,7 +169,8 @@ uint64_t PECMD_IsPecmdScriptFile(uint64_t a)
     }
     return 1;
 }
-uint64_t PECMD_UserCmdHandler(uint64_t a) { (void)a; return 0; }
+/* R25-i: PECMD_UserCmdHandler 桩已拆除 — 真体 core_b1_remaining.c (@0x14001af0c 包装
+ * PECMD_SetRegistryOwnerRun, dc:15584); 分发器 restored_bodies.c USER tag 0x52455355 已接真体 */
 
 
 

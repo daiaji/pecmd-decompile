@@ -1,0 +1,13 @@
+{
+  "id": "066_user_noseg",
+  "cmds": [
+    "USER"
+  ],
+  "vars": [
+    "R"
+  ],
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "R25-i USER 真体化冒烟: 无逗号段路径 (dc:15546 返回 1, 不触达 RegisteredOwner/RegisteredOrganization 注册表写), 验证动词识别 + 脚本继续执行; %A% 在无逗号早退前不展开"
+}

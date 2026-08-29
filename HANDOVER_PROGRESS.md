@@ -1105,3 +1105,27 @@ python \b 全字替换严格限函数行界 → 纯度自检(行界外字节一�
 批2=b2f 剩余大函数(DispCommand 444/HelpDlgProc 321/B540 215/LinkCreateShortcut 212)
 →批3=core_b3_remaining(12058, CALC/SED 语料覆盖体优先)→批4=restored_bodies/b1_remaining;
 b7c 后续: TablCreateListCtrl(756 行, dc 已预核)。
+
+---
+
+## R25-j (2026-08-29) — USER 真体化 + 语料案 066, 语料库 63→64 (64/64 全绿)
+
+### 行为
+1. **真体接线**: dc:15584 `FUN_14001af0c`(7B=`xor dl,dl; jmp` 尾调用) → 新增包装 `PECMD_UserCmdHandler`
+   (core_b1_remaining.c, 调用既有真体 `PECMD_SetRegistryOwnerRun` @0x14001ada8 346B,
+   该体早前已 dc:15528 直移: AllocStrSlot×2 → StrRChrW 找最后逗号 → 段展开
+   (PECMD_ExpandVarDispatch, 首参 g_Script≡DAT_14013d130 已核 pecmd_defs.h:13) →
+   param_2=0 写 HKLM RegisteredOwner/RegisteredOrganization / param_2=4 写 CurrentVersion\Run,
+   RUNS tag 0x534e5552 已接)。恒0桩(unimplemented_stubs.c:172)拆除 + skip 登记移出。
+2. **语料案 066_user_noseg**: 无逗号段早退路径(dc:15546 返回 1 不触达注册表写, 对拍安全);
+   golden 录制 exit=1 (返回值经调度链同款传播到进程退出码, msvc 首跑即 PASS);
+   %A% 在早退前不展开的口径写入 manifest notes。
+3. **夹具修复**: run_case.py result_dir 缺 makedirs → 新案首跑 stdout.txt 直写崩溃(FileNotFoundError),
+   补 `os.makedirs(result_dir, exist_ok=True)`。
+4. **全量回归**: 构建 md5=dafd027b (515b927) → 部署 20:35 → run_corpus + diff_case --all
+   = **64/64 全绿零回归**。
+
+### 登记
+- D-18 更新: 恒0桩 7→**6**(MESS MSTR SBAR SITE SOCK SPIN), 真体 59→60;
+  USER 有逗号路径写真实 HKLM, 后续 golden 需注册表沙箱口径(Phase 3)。
+- 下一步: Phase 1 不可用层压缩按序 ADSL 假真体补全 → MSTR → SOCK; MESS 专项(口径设计)。

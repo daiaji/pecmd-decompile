@@ -139,6 +139,8 @@ def run_exe(label, exe_path, backend, case_id, dst, out_dir, timeout_s,
     if os.path.isdir(out_dir):
         shutil.rmtree(out_dir)
     os.makedirs(out_dir)
+    # R25-i: 新案首跑时 result_dir 不存在 → stdout.txt 直写崩溃, 统一补建
+    os.makedirs(result_dir, exist_ok=True)
 
     exit_code = None
     stdout_bytes = b""

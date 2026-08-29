@@ -149,12 +149,13 @@
 - **状态**：工单已开 —— 架构级修复需二选一: (a) 从原版 EXE 提取 INDATA 资源字节嵌入 msvc 构建并接加载链; (b) 将 LOAD:/模式注册改为静态源码表初始化。需先动态观测原版表最终内容作为权威基线。
 
 
-### D-18 67 个零语料验证动词的实现状态登记｜登记完成(2026-08-29)
+### D-18 67 个零语料验证动词的实现状态登记｜登记完成(2026-08-29)；R25-j USER 真体化(64/64)
 
 - **根因**：FourCC 权威 98 动词中 67 个无语料验证。子代理 B 全量盘点(analysis/r25g_verb_coverage_register.md)：**真体 59 / 简化桩 1(ADSL) / 恒0 no-op 桩 7(MESS MSTR SBAR SITE SOCK SPIN USER) / 缺失 0** —— R25-b "67 动词处于简化桩/未验证态"偏悲观，88% 为 dc 直移真体，零语料风险主体是直移缺陷(goto/缓冲区类)而非空桩。
 - **证据链**：analysis/r25g_verb_coverage_register.md §2 总表(动词|dc 地址+行|msvc file:line|四级状态|census 证据|风险推断)；7 桩已逐个排查 D-01 式"桩遮蔽真体"均无第二真体；MESS 桩另有 core_b3l.c:1385 / core_calc_expr.c:983 两处内部调用同吃恒0桩。
 - **影响面**：语料盲区内动词行为不可证；恒0桩若被未来语料覆盖预期"静默无操作"(MESS/MSTR/SBAR/SITE/USER)或"错值/崩"(SOCK 解引用/ADSL 假真体)。
 - **状态**：登记完成。真体化优先级 Top5：MESS(静默面最大+内部污染) > MSTR(静默错值) > SOCK(崩溃风险) > ADSL(消除假真体) > USER(恢复成本最低，dc 仅 7B 但其调用体 FUN_14001ada8 346B 有真实副作用)。LOAD/SHOW/PUTF/ITEM/SERV 真体内局部 TODO 已在总表标注。
+- **R25-j 推进**：USER 已真体化——dc:15584 入口(7B=`xor dl,dl; jmp`尾调用)包装 + 调用体 FUN_14001ada8 真体 `PECMD_SetRegistryOwnerRun`(core_b1_remaining.c:7768, 早于本登记即已直移)。桩(unimplemented_stubs.c)拆除、skip 登记移出；新案 `066_user_noseg`(无逗号段早退路径, exit=1 两侧同链) 录 golden 后 **64/64 全绿**。恒0桩余 6: MESS MSTR SBAR SITE SOCK SPIN；语料注意: USER 有逗号路径会真实写 HKLM RegisteredOwner/RegisteredOrganization，录 golden 需先设计注册表沙箱口径。
 
 ### D-19 msvc EvalSpecialToken `-mode` 判定恒死分支｜待修(读侧失真)
 

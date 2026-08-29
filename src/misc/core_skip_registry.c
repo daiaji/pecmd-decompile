@@ -14,7 +14,7 @@
 /* @0x140017afc PECMD_IsPecmdScriptFile size=142 SKIP */
 /* @0x140018220 PECMD_BindDelayImports size=475 SKIP */
 /* @0x14001a56c PECMD_NtShutdownSystemCall size=68 SKIP */
-/* @0x14001af0c PECMD_UserCmdHandler size=7 SKIP */
+/* R25-i: @0x14001af0c PECMD_UserCmdHandler 已真体化 (core_b1_remaining.c), 移出 SKIP */
 /* @0x140102d68 operator_new size=152 SKIP */
 /* @0x140102f50 atexit size=23 SKIP */
 /* @0x14010303c wcscat size=44 SKIP */

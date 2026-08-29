@@ -7820,6 +7820,13 @@ uint64_t PECMD_SetRegistryOwnerRun(int64_t param_1, char param_2)
     return uVar6;
 }
 
+uint64_t PECMD_UserCmdHandler(uint64_t param_1)
+{
+    /* @0x14001af0c size=7 USER 命令入口: xor dl,dl; jmp FUN_14001ada8 尾调用 (dc:15587)
+     * → 写 HKLM RegisteredOwner/RegisteredOrganization; 无逗号段时真体返回 1 且不写注册表 */
+    return PECMD_SetRegistryOwnerRun((int64_t)param_1, '\0');
+}
+
 uint64_t PECMD_EnumerateDeviceList(void)
 {
     /* @0x14001af14 size=103 */
