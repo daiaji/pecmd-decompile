@@ -1074,3 +1074,34 @@ WRITE 92.3%(12/13)；0%：SET/HASH/SED/TEMP/FORM/LOGS。
 - 阶段4 沉淀: M2/M3 复测+Lua FFI 接口契约文档(签名→语义→验证状态)+script2.c S7 探针(依赖解除后)。
 - 口径: 67 零语料动词"全部完成"无承诺日期(ROADMAP §3.3 需求驱动长尾), Top5 即期;
   每批硬门=全量 63/63 零回归; 配方=analysis/r25i_l1_recipe.md。
+
+---
+
+## R25-i (2026-08-29) — L1 语义化开线: 配方+双试点+批次1, M2/M3 首次扭降 (40943→40342, A区 5060→4479)
+
+### 配方 (analysis/r25i_l1_recipe.md, 七步)
+读双源建映射表 → snake_case 语义名+dc 行号证据 → 全库撞名预检(禁 Windows 宏词) →
+python \b 全字替换严格限函数行界 → 纯度自检(行界外字节一致+残留计数+diff round-trip 反演断言)
+→ 主代理双绿门+全量 63 案回归(硬门) → 提交登记。活样例 = 两份 pilot 报告。
+
+### 已完成三批 (每批独立构建+全量 63/63 零回归)
+1. **双试点**(096d554, md5=d5b769ee): C1=b2f FUN_14003C06C 22名/205站点(保留10名多角色槽)
+   + C2=b2d ParseCommandBlock 16名/174站点(TEAM 分段体, R25-g 锚点仅换名)。
+2. **批次1**(fe5a20c, md5=87645985): C3=b2f EvalLoopCondition @0x140032dc4 48名/340站点
+   (kind_marker_str/flt/int 三比较种类/lhs_buf/rhs_val/cond_neg_flag/env_gate_flag...,
+   保留 40 名多角色槽逐个登记, probe_ui 未动) + C4=b7c TablCreateControl+CtlLoadPictureRgn
+   63名/552站点(parse_cur/opt_flagbits/coord_l/name_cur/load_bmp/star_mode...);
+   C4 登记 2 项待核观察(dc:131608 iVar6=local_184 vs 还原件 stack_size / 几何 sy 缺省 dc=h vs 还原件=0)。
+3. **指标**: M2+M3 = 40943 → **40342**(-601, 首次扭降, 扭转 R25-b 倒退信号); A区(b2f/b7c/b8m/b8h)
+   残留 5060 → **4479**。累计改名 ~1450 站点/150 名, 零行为差异(每批 63/63)。
+
+### 在途状态 (未落码)
+- 语义还原穿插批取证: MESS(dc:116238 4933B GUI 体, Ghidra 类型传播失败, 最难件; 且弹窗阻塞语料
+  → 验证口径需设计) / USER(dc 入口 7B+FUN_14001ada8 346B 参数段解析执行) / MSTR(3966B)/
+  SOCK(8287B)/ADSL(假真体 104→33 分支)。成本调整: USER/ADSL 先行, MESS 专项。
+- 批次1 派发曾遭平台取消一次, 重发成功。
+
+### 批次规划 (analysis/r25i_l1_recipe.md §批次)
+批2=b2f 剩余大函数(DispCommand 444/HelpDlgProc 321/B540 215/LinkCreateShortcut 212)
+→批3=core_b3_remaining(12058, CALC/SED 语料覆盖体优先)→批4=restored_bodies/b1_remaining;
+b7c 后续: TablCreateListCtrl(756 行, dc 已预核)。
