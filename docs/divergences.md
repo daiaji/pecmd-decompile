@@ -40,7 +40,7 @@
 
 | ID | 标题 | 一句话根因 | 状态 |
 |----|------|-----------|------|
-| D-01 | 注入式 EXEC 三路径静默失败（static 桩遮蔽真实现） | rb:247 桩编译期抢绑两处调用，core_b8k 真体零调用方 | 未修 |
+| D-01 | 注入式 EXEC 三路径静默失败（static 桩遮蔽真实现） | rb:247 桩编译期抢绑两处调用，core_b8k 真体零调用方 | **已修(R26-c)** |
 | D-02 | 同族第二实例：PECMD_PatchRemoteWinExec 空桩 no-op | rb:252 空桩被 rb:3738 调用，core_b2c 真体未绑定 | **已修(S14批2)** |
 | D-03 | wsprintfW 缺变参 ×2（Ghidra 变参丢弃被忠实直移） | dc 原文即缺参，移植忠实继承；x64 下读寄存器/栈残留 | **已修(S14批1)** |
 | D-04 | 零参占位桩族（签名归正但体待移植） | unimplemented_stubs.c 大量 `(void){return 0;}` 占位 | 进行中(S14批3修2) |
@@ -63,7 +63,7 @@
 - **根因**：`restored_bodies.c:247-251` 定义文件级 `static int64_t PECMD_CreateInjectedProcess(...){…; return 0;}`（打桩注记「未还原 helper, 失败保守」），同 TU 内 rb:3080、rb:3564 两处调用按 C 内部链接作用域**编译期绑定到桩**；真实现 `src/ui/core_b8k.c:345`（↔ dc `FUN_1400e7414 @0x1400e7414`，逐行一致）全仓 0 个调用方，成镜像内死代码。桩出处 `tools/fun_14000e26c_HANDOFF.md:64`——打桩时真体尚未落地，其后真体完成而桩未回收。
 - **证据链**：`build/msvc/s11_inject_shadow_audit.md` §0-F1/F2、§1、§3（map 双符号共存：真体 `0x14017f490`(core_b8k.obj) vs 桩 `0x1401d55a0`(restored_bodies.obj)，无 ICF 折叠）；`build/msvc/s11_exec_launch_audit.md` §0-C5、§7-A。本轮复核 rb:247-251/3080/3564 与现源一致。
 - **影响面**：三类注入式 EXEC 全部**静默失败**（返回失败而非崩溃）：① `EXEC MEM <非磁盘 PE 目标>`；② 目标以 `&变量` 开头（变量 blob 为 PE 映像）；③ EXEDATA 资源 / LoadFileToSlot 内存映像启动。t2probe、t1、harness 28 语料**零暴露**（均走 `=` 前缀 ShellExecuteExW 或无 EXEC）→ 潜伏分歧，不污染现有验收门 A/T4；未来语料踩中即与原版分叉。
-- **状态**：未修（处方＝删桩绑定真体，inject 报告 §5-R1；同族处置见 D-02）。
+- **状态**：已修（2026-09-02 R26-c：删 restored_bodies.c 桩 + extern 绑定 core_b8k.c:345 真体（FUN_1400e7414 @0x1400e7414, dc:141754）；调用点 rb:3074/rb:3562 (=dc:10574/11038) 现链接真体；构建双绿门 + 64/64 零回归。语料对注入路径零暴露（audit §影响面），属潜伏分歧消除）。
 
 ### D-02 同族第二实例：PECMD_PatchRemoteWinExec 空桩 no-op｜未修
 
@@ -185,3 +185,17 @@
 - **证据链**：analysis/r25f_039_script0xd_writers.md 增补节 A4(039 产物 mtime 交错实证)。
 - **影响面**：仅 fs/vars 维度可信度；exit 维度(对拍主判据)不受影响。
 - **状态**：已修(R25-j, out_dir 按后端隔离 = `<pectest>\out_<backend>`, EXEC 晚到写入不再跨后端污染回捞; run_case makedirs 缺失一并补; 单案双跑验证 PASS)。非行为分歧，不阻塞。
+
+### D-23 PUTF(0x1400d2e90) 双符号分裂: 恒0桩 FUN_1400D2E90 吞 dc:35462 调用｜已修(R26-c)
+
+- **根因**：同一 dc 函数 FUN_1400d2e90 (dc:129675, 11447B) 在 msvc 被移植为两个符号——真体 `PECMD_DdCopyCommand` (restored_bodies.c:8040, 全 uint64 调用面) 与恒0桩 `FUN_1400D2E90` (core_b7c.c, LARGE_INTEGER 契约)。dc 四个调用点中 dc:42337/42378/44518 绑真体, **dc:35462 (core_b2f.c:7543, SHFILEOP -dd 复制路径) 误绑恒0桩** → 该路径 PUTF 静默失败且返回 {0}。R26-a 补记所列"PUTF 同地址双定义疑点"即此, 本轮定案。
+- **证据链**：dc:35462 ↔ core_b2f.c:7543 (LAB_14003c8ca 流完全对应); dc:42337/42378 ↔ core_b3_remaining.c:3010/3054; dc:44518 ↔ restored_bodies.c:6528; b7c 桩 `FUN_1400D2E90` 无第二调用方 (全仓 grep)。
+- **影响面**：`FILE -dd`(磁盘镜像 dd 复制) 的 shfo.wFunc==2 + f_su 组合路径返回恒 0; 其余 PUTF 调用面不受影响。语料未覆盖 = 潜伏。
+- **状态**：已修（2026-09-02 R26-c：core_b2f.c:7543 改绑 `PECMD_DdCopyCommand` (QuadPart 承接, 同 dc:44518 形态); core_b7c.c 桩删除; B2F_PART4_LOCAL 块 extern 归正; 64/64 零回归）。
+
+### D-24 ParseCommaNumbers 恒0桩 + 零参错签吞 h4 双调用点｜已修(R26-c)
+
+- **根因**：FUN_140079cf8 (dc:77418, 313B, 日期段解析) msvc 侧仅有 unimplemented_stubs.c:477 恒0桩, 且 stubs_common.h:3340 声明为 `uint64_t (void)` 零参错签 (D-04 家族); core_b3r_h4.c:1090/1101 (DATE 族日期段解析) 经本地三参 extern 链接到桩 → 解析结果恒 0。R26-c SITE 真体化时发现该函数是其时间分支依赖。
+- **证据链**：dc:77418-77473 全文直移核验; h4:1090/1101 调用形态 `PECMD_ParseCommaNumbers(cursor,&st.wYear,flag)` ↔ dc 同参。
+- **影响面**：DATE/DTIM 族带日期段的解析静默得 0; 无语料覆盖。
+- **状态**：已修（2026-09-02 R26-c：真体落 core_b3r_h4.c (dc:77418 直移, 8 段 SYSTEMTIME 槽映射两 flag 形态); 恒0桩拆除 + stubs_common.h:3340 声明归正三参; 64/64 零回归）。连带: SITE 真体化 (FUN_1400d0468 dc:128226 直移, b7c 恒0桩替换, 见 HANDOVER R26-c)。

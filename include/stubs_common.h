@@ -3337,7 +3337,7 @@ uint64_t PECMD_StreamClose(void);
 uint64_t PECMD_ConvertStringEncoding(void);
 uint64_t PECMD_MultiByteConvert(uint64_t param_1, uint64_t param_2);
 uint64_t PECMD_JoinTokensAndResolve(void);
-uint64_t PECMD_ParseCommaNumbers(void);
+int PECMD_ParseCommaNumbers(WCHAR **pp, uint16_t *year, uint8_t flag); /* R26-c 归正 (原恒0零参声明; 真体 dc:77418 @0x140079cf8) */
 undefined8 *PECMD_CreateNamedLock(const WCHAR *param_1, char param_2, uint32_t *param_3);
 uint64_t PECMD_LoadRasApi(void);
 void PECMD_DestroyEventSlots(uint64_t *param_1);

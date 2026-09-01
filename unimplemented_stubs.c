@@ -474,7 +474,7 @@ uint64_t PECMD_StreamClose(void) { return 0; }
 uint64_t PECMD_ConvertStringEncoding(void) { return 0; }
 uint64_t PECMD_DeviceCheckReady(LPCWSTR p) { (void)p; return 0; }
 uint64_t PECMD_JoinTokensAndResolve(void) { return 0; }
-uint64_t PECMD_ParseCommaNumbers(void) { return 0; }
+/* R26-c: PECMD_ParseCommaNumbers 恒0桩已拆除, 真体 @0x140079cf8 (dc:77418) 落 src/commands/core_b3r_h4.c */
 
 
 uint64_t PECMD_LoadRasApi(void) { return 0; }

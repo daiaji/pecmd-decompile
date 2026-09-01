@@ -124,6 +124,67 @@ extern char PECMD_MatchAndPad(const void *key, WCHAR **pp, int len);
 extern uint32_t PECMD_ArgTokenize(int64_t *param_1, LPCWSTR param_2, int param_3);
 extern void PECMD_JoinTokensAndResolve(void *ctx, void *pp, void *out);
 extern int PECMD_ParseCommaNumbers(WCHAR **pp, uint16_t *year, uint8_t flag);
+
+/* ========== PECMD_ParseCommaNumbers @0x140079cf8 (dc:77418, size=313) ==========
+ * R26-c 真体化 (原恒0桩 unimplemented_stubs.c:477, h4 两调用点 dc:1090 区静默吃 0)。
+ * 从 *pp 解析至多 8 个十进制数 (任一非数字分隔, 支持成对引号包裹), 按序写入 SYSTEMTIME
+ * ushort 槽: flag==0 → [y,m,d,dow,h,mi,s,ms]; flag!=0 → [y,m,d,h,mi,s,ms,dow] (dc:77453-77470)。
+ * 返回解析个数。dc 原文游标仅在引号分支经 SkipWCharUntil 前移, 数字循环用本地指针 (直移保真);
+ * dc local_18 槽未零初始化属未定义读, C 层统一零化 (仅影响 0 段输入的垃圾值路径)。 */
+int PECMD_ParseCommaNumbers(WCHAR **pp, uint16_t *year, uint8_t flag)
+{
+    extern long long PECMD_WideStrToInt64(WCHAR *p);            /* @0x140064a88 (core_string.c) */
+    extern WCHAR *PECMD_SkipWCharUntil(WCHAR **pp, uint16_t ch); /* @0x1400f429c */
+    WCHAR *p = *pp;
+    WCHAR quote = *p;
+    short v[8];
+    int cnt = 0;
+    int i;
+
+    for (i = 0; i < 8; i++) {
+        v[i] = 0;
+    }
+    if ((uint16_t)quote == 0x22 || (uint16_t)quote == 0x27) {
+        p++;
+        *pp = p;
+        PECMD_SkipWCharUntil(pp, (uint16_t)quote);
+    }
+    for (;;) {
+        if ((uint16_t)(*p - 0x30) > 9) {
+            break;
+        }
+        v[cnt] = (short)PECMD_WideStrToInt64(p);
+        for (; (uint16_t)(*p - 0x30) < 10; p++) {
+        }
+        if (*p != L'\0') {
+            p++;
+        }
+        cnt++;
+        if (cnt >= 8) {
+            break;
+        }
+    }
+    {
+        uint16_t *st = (uint16_t *)year;
+        st[0] = (uint16_t)v[0];
+        st[1] = (uint16_t)v[1];
+        st[3] = (uint16_t)v[2];
+        if (flag == 0) {
+            st[2] = (uint16_t)v[3];
+            st[4] = (uint16_t)v[4];
+            st[5] = (uint16_t)v[5];
+            st[6] = (uint16_t)v[6];
+            st[7] = (uint16_t)v[7];
+        } else {
+            st[4] = (uint16_t)v[3];
+            st[5] = (uint16_t)v[4];
+            st[6] = (uint16_t)v[5];
+            st[7] = (uint16_t)v[6];
+            st[2] = (uint16_t)v[7];
+        }
+    }
+    return cnt;
+}
 extern int PECMD_CalcDayOfYear(uint16_t *a1);
 extern int PECMD_CalcCalendarMonthRows(uint16_t *a, int b);
 extern void PECMD_GetTime100ns(int64_t *out);

@@ -1159,3 +1159,120 @@ b7c 后续: TablCreateListCtrl(756 行, dc 已预核)。
   EXEC/FILE 通道偶发哑火 × 案间共享 `C:\pectest\out\` 状态链(005→010→011)级联, 复跑即过 →
   新登记 **D-22 工单**(案间状态自足化候选)。
 - L1 批2 另一半(b2f DispCommand+HelpDlgProc)因平台并发上限被拒, 待重发。
+
+## R26-a (2026-08-30) — 优先级重定: 消费方(pecmd_compat)基准供给升为近程主轴 (无代码变更)
+
+### 规划修订（用户指示）
+- 第一优先级从「自身二进制保真收敛」调整为「为 pecmd_compat（Lua 重写，非 GUI 对齐路线）提供对照基准」。
+- R25-k 队列 **MSTR → SOCK 移出近程**：登记为「消费方决策暂缓」（compat 已正式否决旧语法/IPC 对象
+  复刻，无消费方；未来若恢复按自身保真目标重排）。GUI 族维持 R25-k 延后决定。
+- r25-g §3 Top5 按消费方视角重排：ADSL/USER 已完成；MESS/MSTR/SOCK 暂缓；
+  **SITE 升为唯一近程真体化项**（compat 消费其文件属性/时间语义）。
+
+### 消费方需求清单（近程队列，2026-08-30 按用户目标1 重排：功能对齐=排除 GUI 与旧语法的能力对齐，凡 compat matrix 有消费方且本仓 msvc 为桩的功能项排期拉高）
+1. **D-01 修复**（EXEC 注入三路径桩遮蔽）——EXEC 是 compat 头号 partial 项，真值源被污染，最高优先。
+2. **MOUN 真体化**（dc 完整 5907B @0x1400dfb14；compat MOUN=partial，功能对齐直接消费者；现 core_b7c.c:10344 恒0桩）。
+3. **PART 真体化**（dc 巨体 29895B @0x14008cffc；compat PART=partial 分区布局消费者；现 core_b3_remaining.c:22666 桩）。
+4. **GETF 真体化**（恒0桩 core_b7c.c:8793；compat GETF=needs_decision 下载面）。
+5. **SITE 真体化**（dc 265L @0x1400d0468，core_b7c.c:489 桩——可与 b7c 控件桩批合并；compat SITE=partial）。
+6. FORX msvc 修复（dc 完整 6498B，msvc 缩水为单次 SetVar；语法层现代替代=Lua，修复低成本）。
+7. SHOW 10 处 TODO(verify) 收口（返回值契约点）；PAGE 疑似直移缺陷核验（core_b2e.c:844）。
+8. PUTF 2 leaf 子桩——条件项（compat PUTF=needs_decision 落地"做"才排）。
+9. 定向语料扩展（EXEC 变体/REGI 值类型/SEND/KILL/WAIT/SWIN/PCIP 等）+ **D-22 案间状态修复先行**（预言机可信度）。
+MSTR/SOCK/MESS/SBAR/SPIN 维持「消费方决策暂缓」（无 compat 消费方）；GUI 族不排（compat 走 AHK 路线）。
+
+### 消费方取证发现（供登记核对）
+- **MOUN/PART 级联分支存在但未入 include/pecmd_fourcc.h 98 动词表**（gen_fourcc 口径缺口）；
+  MOUN msvc 为恒0桩（core_b7c.c:10348，启发式名「文件时间命令」系误标）、PART msvc 为桩
+  （core_b3_remaining.c:22666，自标 decompile-failed）——两者语义消费方已从 dc 抄录（其
+  docs/re-notes/w1-storage.md）；msvc 真体化按自身保真目标排期，非消费方刚需。
+- r25-g 登记表 USER 行已过期（R25-j 已真体化），引用该表时以本账本为准。
+
+### 消费方已交付物（登记）
+- pecmd_compat 新增 `docs/reverse-alignment.md`（对象级真值状态/可信度分级/名实勘误/暂缓划分/需求清单）
+  与 `docs/re-notes/w1-{engine,cond-loop,calc-time,storage}.md` 四批取证（29 对象，绑定本仓 @63179b34
+  快照）；chunks/matrix 已回填逆向核证块（TIME/DTIM 勘误改指 GUI 族、SCRN 标待核）。
+
+### 补记（R26-a 同日，消费方取证收尾）
+- GETF 恒0桩 + PUTF 同地址双定义疑点（core_b7c.c FUN_1400D2E90 桩 vs restored_bodies.c:8037 真体）——
+  D-01 型风险，链接取舍待定案。
+- RUNS 无独立动词（无 FOURCC/级联）；USER/PATH/RECY/FLNK 名实更正（细节见消费方
+  docs/re-notes/w2-reg-env.md / w2-proc-power.md）。
+- LOCK（PECMD_LoadTasksWait）与 WAIT（FUN_14003ED4C）已由消费方 V1 完整通读核验（2026-08-30，re-notes/v1-lock-wait.md）：
+  LOCK=**具名锁/互斥体同步**（非工作站锁，matrix 行已更正）；WAIT=**多语义等待**（按键/进程/父进程`*`/`$`线程/`-del` 文件/`-cmd`/`-sys*` 主线程通道/thread 任务队列/scan 键状态/freemem），与官方文档一致。
+
+## R26-b (2026-08-30) — 消费方目标1重排: 功能对齐(非GUI/非语法)的 msvc 真体化缺口升入近程 (无代码变更)
+
+### 背景（用户三目标）
+- 目标1: pecmd_compat 与 pecmd-decompile 完成**功能对齐**——排除 GUI（compat 侧按 AHK 路线重写）与排除旧语法
+  （compat 是 Lua 重写），但旧命令式语法实现的功能须以 C 移植形态对齐。
+- 目标2: 盘点反编译工作剩余的功能性(非 GUI)部分并拉高排期——本条目即该盘点与重排。
+- 目标3: 两端文档同步——compat 侧 reverse-map.md 已交付并挂指针。
+
+### 功能性(非 GUI)未移植/未还原清单（回答目标2）
+**dc(Ghidra 反编译原文)侧对这些功能基本齐全——缺口在 msvc 移植/真体化层**（FUN_140034788 等少数
+dc 反编译失败区已由汇编还原稿+活体裁定补齐，不在下例）：
+
+| 动词 | msvc 形态 | dc 参考 | compat 消费方 |
+|---|---|---|---|
+| MOUN | 恒0桩 core_b7c.c:10344 | FUN_1400dfb14 @0x1400dfb14 (dc:136693, 5907B) | matrix MOUN=partial |
+| PART | 桩 core_b3_remaining.c:22666 | FUN_14008cffc @0x14008cffc (dc:89789, 29895B) | matrix PART=partial |
+| GETF | 恒0桩 core_b7c.c:8793 | @0x1400d0c6c | matrix GETF=needs_decision |
+| SITE | 恒0桩 core_b7c.c:489 | @0x1400d0468 (dc:128226, 265L) | matrix SITE=partial |
+| FORX | 缩水桩 core_b3r_i28b.c:424 | FUN_1400acd90 @0x1400acd90 (dc:107739, 6498B) | 语法层（Lua 替代，低成本） |
+| PUTF | 真体+2 leaf 子桩 restored_bodies.c:8036-8037（另 core_b7c.c FUN_1400D2E90 同地址双定义疑点） | @0x1400d2e90 (dc:129678) | matrix PUTF=needs_decision(条件) |
+| SHOW | 真体+10 处 TODO(verify) core_b7c.c:6496 | @0x1400cd3a8 (dc:126546) | matrix SHOW=partial |
+| SERV | 真体+返回值 TODO core_b2f.c:174 | @0x140020018 (dc:19175) | matrix SERV=implemented |
+| PAGE | 真体+疑似直移缺陷 core_b2e.c:844 | @0x14002a910 (dc:25444) | matrix PAGE=partial |
+| DISP/FDRV/PCIP/REGI 等 | 真体但深水未逐行核 | — | 已可作参考，按需细读 |
+
+### 排期重排（覆盖 R26-a 需求清单；按功能对齐价值）
+近程队列：
+1. **D-01 修复**（EXEC 注入三路径桩遮蔽）——EXEC 是 compat 头号 partial，真值源污染。
+2. **MOUN 真体化**（dc 完整 5907B，compat MOUN=partial 直接消费）。
+3. **PART 真体化**（dc 巨体 29895B，compat PART=partial 分区布局消费；工程量大可分段）。
+4. **GETF 真体化**（本轮新确认的恒0桩）。
+5. **SITE 真体化**（265L，可与 b7c 桩批合并）。
+6. FORX msvc 修复（dc 完整，语法层但修复成本低）。
+7. 真体收口批：SHOW 10 处 TODO + PAGE 疑似缺陷核验 + SERV 返回值 TODO。
+8. PUTF 2 leaf 子桩（条件：compat PUTF 决策落地"做"）。
+9. 定向语料扩展 + D-22 案间状态修复（预言机可信度，持续）。
+
+暂缓维持：MSTR/SOCK/MESS/SBAR/SPIN（无 compat 消费方）+ GUI 族（compat 走 AHK 路线，不排）。
+
+### 消费方交付（目标3 联动）
+- pecmd_compat 新增 `docs/reverse-map.md`（逐对象 → dc 地址/行号 → msvc 位置 → 状态 → 证据笔记），
+  matrix/chunks/missing-alignment 均已挂指针；本表与 reverse-map.md §F 一致。
+
+## R26-c (2026-09-02) — 消费方队列首轮开工: D-01 修复 + PUTF 双定义定案 + SITE/ParseCommaNumbers 真体化, 64/64 零回归
+
+### 落码清单 (每项独立构建 + 全量回归后入账)
+1. **D-01 修复**（R26-b 队列头）: 删 restored_bodies.c:241-245 静态空注入桩 (return 0, 编译期抢绑 rb:3074/3562 两调用),
+   改 extern 绑定 core_b8k.c:345 真体 (FUN_1400e7414 @0x1400e7414, dc:141754, size=392) —— 处置同 D-02。
+   EXEC 注入三路径 (MEM PE blob / &变量 blob / EXEDATA) 不再静默失败。语料零暴露 = 潜伏分歧消除。
+2. **D-23 新登记+已修 (PUTF 双定义定案, 即 R26-a 补记疑点)**: dc FUN_1400d2e90 (dc:129675, 11447B) 双符号分裂 ——
+   真体 PECMD_DdCopyCommand (restored_bodies.c) vs 恒0桩 FUN_1400D2E90 (core_b7c.c); dc 四调用点中
+   dc:35462 (core_b2f.c:7543, SHFILEOP -dd 复制路径) 误绑恒0桩。改绑真体 (QuadPart 承接, 同 dc:44518 形态) + 删桩
+   + B2F_PART4_LOCAL extern 归正。详见 divergences.md D-23。
+3. **SITE 真体化**（R26-b 队列项5）: FUN_1400d0468 (dc:128226, size=1731, 265L) 全文直移替换 core_b7c.c:485 恒0桩。
+   语义 = 文件属性/时间设置: 属性分支 (+A/-A/+H/-H/+R/-R/+S/-S 循环 + SetFileAttributesW) 与 *touch 时间分支
+   (':c'/':r' 目标选择 + *utc:/*local:/*local0:/*sys:/*sys0:/裸 8 段日期 + OpenFileHandle/SetFileTime +
+   AppendLongDecimal 写 var)。返回 POINT 按调用面全 uint64 打包 (rb:6503 承接, 同 DdCopyCommand 模式)。
+   dc 陷阱直移: 'c'/'r' 分支与 || 副作用殊途同归 → 游标一律 +2 wchar; S 块双不匹配 +1 wchar 前移靠槽零填充兜底。
+4. **D-24 连带发现+已修**: SITE 时间分支依赖 FUN_140079cf8 (ParseCommaNumbers, dc:77418, 313B) 发现为恒0桩
+   且 stubs_common.h:3340 零参错签, h4:1090/1101 (DATE 族日期段解析) 静默吃 0 → 真体直移落 core_b3r_h4.c
+   (8 段 SYSTEMTIME 槽映射两 flag 形态) + 桩拆除 + 声明归正。详见 divergences.md D-24。
+5. 依赖核验面: PECMD_EvalQueryValue (0x1400cb820, 7047B) 确认为 b7c 简化桩 (SITE '?' 递归路径依赖, 待后续批);
+   GetFileAttributesExW/SetFileTime/LocalFileTimeToFileTime/StrCmpNIW 等声明面齐备 (win32_stub.h/xproto.h)。
+
+### 构建/回归
+- 分步构建 md5: b8e91d8e (D-01) → ee46fa6c (PUTF) → **2581139f (SITE+ParseCommaNumbers, 最终部署 04:27)**;
+  每步 run_corpus 全量 = **64/64 零回归**。过程脚本 build/msvc/_r26c_*.py (一次性, 可清)。
+
+### R26-b 近程队列状态
+- 已完成: **1. D-01 ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅** (PUTF 2 leaf 子桩 PECMD_HandleDuplicateValid/
+  PECMD_NormalizeDiskDevicePath 仍待, 条件项)。
+- 未动: 2. MOUN (5907B) / 3. PART (29895B) / 4. GETF (8737B) / 6. FORX (6498B, 实测非"低成本"——dc 712 行
+  类型传播警告体) / 7. SHOW/PAGE/SERV 收口 / 9. 语料扩展+D-22。
+- 消费方通报: pecmd_compat 可同步 reverse-map.md 行状态 (PUTF/SITE/ParseCommaNumbers 真体化 + D-01/D-23 桩遮蔽消除);
+  SITE 语义真值即 dc:128226 直移体, compat matrix SITE 行可引用。

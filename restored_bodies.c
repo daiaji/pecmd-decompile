@@ -238,11 +238,14 @@ void PECMD_InitSystemApiGlobals(void){
     PECMD_AppendLongDecimal((int64_t*)&DAT_14013d130,(uint32_t)DAT_14013c9f8,(const uint16_t*)L"&WM_TASKBARBUTTONCREATED");
 }  /* def 鏈枃浠禓6284 */
 static uint64_t PECMD_ZeroLenBuf(void *a);                                /* def core_b1_remaining.c:3305 */
-static int64_t PECMD_CreateInjectedProcess(void *p1, uint32_t p2, WCHAR *p3, DWORD p4, DWORD p5, void *p6,
-                      LPCWSTR p7, void *p8, void *p9, LPCWSTR p10) {
-    (void)p1;(void)p2;(void)p3;(void)p4;(void)p5;(void)p6;(void)p7;(void)p8;(void)p9;(void)p10;
-    return 0;                                                                /* 鏂板妗?@0x1400e7414 (鏈繕鍘?helper, 澶辫触淇濆畧) */
-}                                                   /* @0x14013cb09 鏍囧織 (杩愯鏃剁疆浣? */
+/* R26-c D01 fix: remove original static empty inject stub (return 0 no-op),
+ * bind real body via extern decl instead -- same treatment as D-02 (S14 batch2).
+ * real body: FUN_1400e7414 @0x1400e7414 (dc:141754, size=392) = src/ui/core_b8k.c:345
+ *   (Wow64MapPeImage + RunPeInjectStart remote-thread inject path);
+ * call sites: rb:3071/rb:3559 <-> dc:10574/dc:11038 (EXEC inject 3-path). See docs/divergences.md D-01. */
+extern int PECMD_CreateInjectedProcess(uint16_t *p1, uint32_t p2, LPWSTR p3, BOOL p4, uint32_t p5,
+                                       LPVOID p6, LPCWSTR p7, STARTUPINFOW *p8,
+                                       PROCESS_INFORMATION *p9, LPCWSTR p10);
 /* S14 鎵规2: 鍒犻櫎鍘熼潤鎬佺┖娉ㄥ叆妗?no-op), 鏀圭粡 extern 澹版槑缁戝畾鐪熶綋 鈥斺€?
  * @0x1400229f8 (dc:20765) 鐪熶綋 src/commands/core_b2c.c:189 (WriteProcessMemory 杩滅▼ WinExec 琛ヤ竵);
  * 璋冪敤鐐?rb:3738 (EXEC 琛ヤ竵璺緞 鈫?dc:11205)銆傝 docs/divergences.md D-02銆?*/

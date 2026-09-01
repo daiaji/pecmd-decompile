@@ -482,19 +482,234 @@ uint64_t FUN_1400C94F0(uint64_t *a1, int64_t *a2, HBITMAP a3, LPCWSTR a4, WPARAM
     return 0;
 }
 
-/* ========== PECMD_SiteSetFileAttrTime @0x1400d0468 ==========
- * [简化桩] 文件时间转 POINT。返回 {0,0}。
- * TODO(verify): 需完整还原时间转换。
- */
-POINT PECMD_SiteSetFileAttrTime(int64_t *a1, FILETIME a2, uint64_t a3)
+/* ========== PECMD_SiteSetFileAttrTime @0x1400d0468 (dc:128226, size=1731) ==========
+ * SITE 动词 = 文件属性/时间设置。R26-c 真体化 (原恒0桩, dc 全文直移)。
+ * 调用面 (rb:6503 <- dc:44493): a1=脚本对象, a2=参数串 (dc 误标 _FILETIME, 实为 WCHAR*),
+ * a3=上下文透传; 返回 POINT 按 Win64 8 字节寄存器语义打包 (x=低32, y=高32)。
+ * 路径: '?'+串 → ExpandVarDispatch 后 EvalQueryValue('\x02');
+ *       "name,spec[,var]": StrCmpNIW("*touch",name,6)!=0 → 属性分支
+ *       (+A/-A/+H/-H/+R/-R/+S/-S 逐槽推进, SetFileAttributesW 收口);
+ *       *touch 分支: ':c'/':r' 选 creation/access (其余字符同样消费 2 wchar, 缺省 lastwrite),
+ *       *utc:/*local:/*local0:/*sys:/*sys0: 或裸 8 段日期 → ParseCommaNumbers +
+ *       SystemTimeToFileTime (local 族加 LocalFileTimeToFileTime), OpenFileHandle + SetFileTime,
+ *       结果经 AppendLongDecimal 写回 var 槽。 */
+extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out);   /* @0x1400c1194 (core_exec5.c) 串转数 */
+extern POINT PECMD_EvalQueryValue(int64_t *a1, POINT a2, uint64_t a3, char a4); /* @0x1400cb820 (本文件后部) 前置声明 */
+
+static uint64_t PECMD_SitePackPt(POINT pt)
 {
-    POINT r;
-    (void)a1;
-    (void)a2;
-    (void)a3;
-    r.x = 0;
-    r.y = 0;
-    return r;
+    return (uint64_t)(uint32_t)pt.x | ((uint64_t)(uint32_t)pt.y << 32);
+}
+
+uint64_t PECMD_SiteSetFileAttrTime(uint64_t a1, uint64_t a2, uint64_t a3)
+{
+    longlong *param_1 = (longlong *)(uintptr_t)a1;
+    WCHAR *cur = (WCHAR *)(uintptr_t)a2;          /* dc param_2 → local_res10[0] 游标槽 */
+    uint64_t param_3 = a3;
+    POINT result;                                 /* dc PVar5 */
+    WCHAR *name = NULL;                           /* dc local_90 槽 */
+    WCHAR *spec = NULL;                           /* dc local_98 槽 */
+    WCHAR *msg = NULL;                            /* dc local_80 槽 */
+    FILETIME *creation;                           /* dc lpCreationTime (POINT pun → 指针) */
+    FILETIME *access;                             /* dc lpLastAccessTime */
+    FILETIME *lastwrite;                          /* dc PVar11 */
+    FILETIME ftLocal68;                           /* dc local_68 */
+    FILETIME ftNow;                               /* dc local_res20 */
+    SYSTEMTIME st;                                /* dc local_78 */
+
+    result.x = 0;
+    result.y = 0;
+    {   /* dc: 先扫到首个空白/串尾, 再 SkipLeadingControlChars (两段合一直移) */
+        WCHAR *p0 = cur;
+        while (*p0 != L'\0' && (((uint16_t)*p0 < 9 || (uint16_t)*p0 > 0xd) && *p0 != L' ')) {
+            p0++;
+        }
+        cur = p0;
+        PECMD_SkipLeadingControlChars((long long *)&cur);
+    }
+    if (*cur == 0x3f) {                           /* dc: '?' → 变量展开 + EvalQueryValue */
+        WCHAR *exp = NULL;                        /* dc local_res20 槽 */
+        union { POINT pt; uint64_t u; } pun;
+        PECMD_ExpandVarDispatch(param_1, cur, &exp, 0, 1);
+        cur = exp;
+        pun.u = (uint64_t)(uintptr_t)((char *)exp + 2);   /* dc: 槽基址+2 字节 */
+        result = PECMD_EvalQueryValue((int64_t *)param_1, pun.pt, param_3, '\x02');
+        PECMD_FreeStrBuf(&exp);
+        return PECMD_SitePackPt(result);
+    }
+    PECMD_SkipLeadingControlChars((long long *)&cur);
+    PECMD_AllocStrSlot(&name);
+    PECMD_AllocStrSlot(&spec);
+    cur = PECMD_TokenizeQuotedField((int64_t *)param_1, (int64_t *)&cur, (int64_t *)&name, L',', 0);
+    if (*cur == L',') {
+        cur += 1;
+        cur = PECMD_TokenizeQuotedField((int64_t *)param_1, (int64_t *)&cur, (int64_t *)&spec, L',', 0);
+    }
+    if (*name == L'\0' || *spec == L'\0') {
+        PECMD_FreeStrBuf(&spec);
+        PECMD_FreeStrBuf(&name);
+        result.x = (LONG)0x80070057;              /* dc -0x7ff8ffa9 */
+        result.y = -1;
+        return PECMD_SitePackPt(result);
+    }
+    if (StrCmpNIW(L"*touch", name, 6) != 0) {
+        /* ---- 属性分支 (dc:128302-128392) ---- */
+        uint32_t fdata[10];
+        uint32_t attrs;
+        memset(fdata, 0, sizeof(fdata));          /* dc local_60 未初始化读 → C 层零化 */
+        GetFileAttributesExW(name, 0 /*GetFileExInfoStandard*/, fdata);
+        cur = spec;
+        attrs = fdata[0];
+        for (;;) {
+            WCHAR *t;
+            if (*cur == L'\0') {
+                if (SetFileAttributesW(name, attrs) == 0) {
+                    DWORD err = GetLastError();
+                    if (err == 0) {
+                        err = 1;
+                    }
+                    result.y = 0;
+                    result.x = (LONG)err;
+                }
+                PECMD_FreeStrBuf(&spec);
+                PECMD_FreeStrBuf(&name);
+                return PECMD_SitePackPt(result);
+            }
+            t = cur;
+            if (PECMD_AsciiPrefixICmp("+A", t, 2)) { attrs |= 0x20; t += 2; cur = t; }
+            else if (PECMD_AsciiPrefixICmp("-A", t, 2)) { attrs &= 0xffffffdf; t += 2; cur = t; }
+            if (PECMD_AsciiPrefixICmp("+H", t, 2)) { attrs |= 0x2; t += 2; cur = t; }
+            else if (PECMD_AsciiPrefixICmp("-H", t, 2)) { attrs &= 0xfffffffd; t += 2; cur = t; }
+            if (PECMD_AsciiPrefixICmp("+R", t, 2)) { attrs |= 0x1; t += 2; cur = t; }
+            else if (PECMD_AsciiPrefixICmp("-R", t, 2)) { attrs &= 0xfffffffe; t += 2; cur = t; }
+            if (PECMD_AsciiPrefixICmp("+S", t, 2)) { attrs |= 0x4; t += 2; cur = t; }
+            else if (PECMD_AsciiPrefixICmp("-S", t, 2)) { attrs &= 0xfffffffb; t += 2; cur = t; }
+            else {
+                cur = t + 1;                      /* dc: S 双不匹配 → +1 wchar (槽零填充兜底) */
+            }
+            PECMD_SkipLeadingControlChars((long long *)&cur);
+        }
+    }
+    /* ---- *touch 时间分支 (dc:128393-128471) ---- */
+    PECMD_AllocStrSlot(&msg);
+    if (*cur == L',') {
+        cur += 1;
+        PECMD_SplitTokenTrimWs(&cur, &msg, 0x2c);
+    }
+    memset(&ftLocal68, 0, sizeof(ftLocal68));      /* dc local_68 = 0 */
+    memset(&ftNow, 0, sizeof(ftNow));              /* dc local_res20 = 0 */
+    memset(&st, 0, sizeof(st));                    /* dc local_78 = 0 */
+    creation = NULL;                               /* dc lpCreationTime = {0,0} */
+    access = NULL;                                 /* dc lpLastAccessTime = {0,0} */
+    lastwrite = NULL;                              /* dc PVar11 = {0,0} */
+    cur = name + 6;                                /* 跳过 "*touch" */
+    GetSystemTimeAsFileTime(&ftNow);
+    {
+        uint32_t flagSeed = 1;                     /* dc uVar9 */
+        if (*cur == L':') {
+            WCHAR sel = cur[1] | 0x20;             /* dc uVar1 */
+            cur += 2;  /* dc: 'c'/'r' 分支体与 || 副作用殊途同归 → 游标一律 +2 wchar */
+            lastwrite = NULL;                      /* dc PVar11 = PVar5 */
+            if (sel == L'c') {
+                creation = &ftNow;
+                access = NULL;
+            } else if (sel == L'r') {
+                access = &ftNow;
+                creation = NULL;
+            } else {
+                lastwrite = &ftNow;
+            }
+            PECMD_SkipLeadingControlChars((long long *)&cur);
+            goto opt_parse;
+        }
+        lastwrite = &ftNow;
+        creation = NULL;
+        access = NULL;
+        if (*cur == L'*') {
+            goto opt_parse;
+        }
+        goto open_apply;                           /* dc: 无 ':' 非 '*' → 不解析直接落盘 */
+    }
+opt_parse:
+    {
+        WCHAR *tp = cur;                           /* dc _Var10 = local_res10[0] */
+        uint32_t flag;
+        int use_local;
+        if (PECMD_AsciiPrefixICmp("*utc:", tp, 5)) {
+            union { FILETIME ft; uint64_t u; } cell;
+            cur = tp + 5;                          /* dc +10 字节 */
+            cell.ft = ftNow;                       /* dc local_88 = local_res20 */
+            FUN_1400C1194((LPCWSTR *)&cur, &cell.u);
+            ftNow = cell.ft;
+            goto open_apply;
+        }
+        if (PECMD_AsciiPrefixICmp("*local0:", tp, 8)) {
+            flag = 1;                              /* dc uVar8 = uVar9 */
+            cur = tp + 8;
+            use_local = 1;
+        } else if (PECMD_AsciiPrefixICmp("*local:", tp, 7)) {
+            flag = 0;
+            cur = tp + 7;
+            use_local = 1;
+        } else if (PECMD_AsciiPrefixICmp("*sys0:", tp, 6)) {
+            flag = 1;
+            cur = tp + 6;
+            use_local = 0;
+        } else if (PECMD_AsciiPrefixICmp("*sys:", tp, 5)) {
+            flag = 0;
+            cur = tp + 5;
+            use_local = 0;
+        } else if (*tp != L'\0') {
+            tp -= 8;                               /* dc: _Var10 -0x10 字节 */
+            flag = 1;
+            cur = tp + (flag + 7);                 /* LAB_1400d0847: +(uVar8+7) wchar → 净回 tp */
+            use_local = 1;
+        } else {
+            goto open_apply;                       /* dc: 串尽 → 不解析, ftNow=now */
+        }
+        if (PECMD_ParseCommaNumbers(&cur, &st.wYear, (uint8_t)flag) < 1) {
+            result.x = (LONG)0x80070057;           /* dc -0x7ff8ffa9 */
+            result.y = 0;
+            goto finish;
+        }
+        if (use_local) {
+            SystemTimeToFileTime(&st, &ftLocal68);
+            LocalFileTimeToFileTime(&ftLocal68, &ftNow);
+        } else {
+            SystemTimeToFileTime(&st, &ftNow);
+        }
+    }
+open_apply:
+    {
+        HANDLE fh = NULL;                          /* dc local_88 cell (先清零) */
+        HANDLE hv;
+        BOOL setTimeOk;
+        DWORD err;
+        PECMD_OpenFileHandle(&fh, spec, 0x100, 7, (LPSECURITY_ATTRIBUTES)0x0, 3, 0x2000080,
+                             (HANDLE)0x0);
+        hv = fh;                                   /* dc _Var10 = local_88 */
+        if (fh != NULL) {
+            setTimeOk = SetFileTime(fh, creation, access, lastwrite);
+            if (hv != INVALID_HANDLE_VALUE) {
+                CloseHandle(hv);
+            }
+            if (setTimeOk != 0) {
+                goto finish;
+            }
+        }
+        err = GetLastError();
+        if (err == 0) {
+            err = 1;                               /* dc uVar9 (=1) 兜底 */
+        }
+        result.y = 0;
+        result.x = (LONG)err;
+    }
+finish:
+    PECMD_AppendLongDecimal(param_1, (int64_t)PECMD_SitePackPt(result), msg);
+    PECMD_FreeStrBuf(&msg);
+    PECMD_FreeStrBuf(&spec);
+    PECMD_FreeStrBuf(&name);
+    return PECMD_SitePackPt(result);
 }
 
 /* ========== FUN_1400DC410 @0x1400dc410 ==========
@@ -8799,18 +9014,8 @@ LARGE_INTEGER PECMD_GetfReadData(int64_t *a1, LARGE_INTEGER a2)
     return r;
 }
 
-/* ========== FUN_1400D2E90 @0x1400d2e90 ==========
- * [简化桩] 执行命令 B。返回 {0}。
- * TODO(verify): 需完整还原执行逻辑。
- */
-LARGE_INTEGER FUN_1400D2E90(int64_t *a1, LARGE_INTEGER a2)
-{
-    LARGE_INTEGER r;
-    (void)a1;
-    (void)a2;
-    r.QuadPart = 0;
-    return r;
-}
+/* R26-c: FUN_1400D2E90 恒0桩已删除 —— dc 全调用面唯一真体 = PECMD_DdCopyCommand
+ * (dc:129675, restored_bodies.c); 唯一桩调用方 core_b2f.c (dc:35462) 已改绑真体 (D-23). */
 
 /* ---- FUN_1400d5b48 (控件图片装载/透明区域) 新增依赖 ---- */
 extern int64_t (*DAT_14013ce08)();               /* GdipGetImageWidth  (link_stubs.c) */

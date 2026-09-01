@@ -5867,7 +5867,9 @@ extern int64_t PECMD_FreeArray_ddf8();
 extern int64_t FUN_14009BB28();
 extern int64_t PECMD_RunScriptText(void *pScript, LPCWSTR pText, LPCWSTR pName, LPCWSTR pCurFile,
                                    uint32_t flags, LPCWSTR pFile, void *pPersist);
-extern LARGE_INTEGER FUN_1400D2E90();
+/* R26-c PUTF 双定义定案: dc 全调用面唯一真体 = PECMD_DdCopyCommand (dc:129675, restored_bodies.c),
+ * 本 TU 原extern FUN_1400D2E90 恒0桩已拆除, 调用点 (dc:35462) 改绑真体 (D-01 型遮蔽, 见 divergences D-23)。 */
+extern uint64_t PECMD_DdCopyCommand(uint64_t a, uint64_t b);
 extern void *PECMD_MapFileView();
 extern int64_t FUN_1400E693C();
 /* S11: 本地声明与定义冲突, 已删除, 统一采用 xproto.h 原型 (原: extern int64_t PECMD_FindFirstFileW(); */
@@ -7540,7 +7542,9 @@ LARGE_INTEGER FUN_14003C06C(int64_t *script, LARGE_INTEGER cmd, uint32_t flags)
                 FUN_14006375C((WCHAR **)&local_res20.QuadPart, WSTR("\",0,\""));
                 FUN_14006375C((WCHAR **)&local_res20.QuadPart, shfo.pFrom);
                 FUN_14006375C((WCHAR **)&local_res20.QuadPart, WSTR("\""));
-                LVar22 = FUN_1400D2E90(script, local_res20);
+                /* dc:35462 LVar22 = FUN_1400d2e90(param_1,local_res20): 真体 PECMD_DdCopyCommand
+ * (0x1400d2e90, dc:129675); 原误绑 core_b7c.c 恒0桩 FUN_1400D2E90, R26-c 改绑真体。 */
+LVar22.QuadPart = (long long)PECMD_DdCopyCommand((uint64_t)(uintptr_t)script,(uint64_t)local_res20.QuadPart);
                 pLVar16 = &local_res20;
                 goto LAB_14003c8ca;
             }
