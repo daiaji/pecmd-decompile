@@ -1276,3 +1276,12 @@ dc 反编译失败区已由汇编还原稿+活体裁定补齐，不在下例）�
   类型传播警告体) / 7. SHOW/PAGE/SERV 收口 / 9. 语料扩展+D-22。
 - 消费方通报: pecmd_compat 可同步 reverse-map.md 行状态 (PUTF/SITE/ParseCommaNumbers 真体化 + D-01/D-23 桩遮蔽消除);
   SITE 语义真值即 dc:128226 直移体, compat matrix SITE 行可引用。
+
+### R26-c 追记 (同日末批): D-25 PAGE 直移缺陷实锤+已修
+- R26-b 队列项 7 之"PAGE 疑似直移缺陷核验 (core_b2e.c:844)"**实锤**: dc:25537-25551 的 UNICODE_STRING 块
+  (Length/MaximumLength/Buffer = local_60/local_5e/local_58) 被移植成孤立 `int16_t len16` 传址 → NtCreatePagingFile
+  收垃圾 Buffer 指针。已按 dc 布局构造 struct 归正 (3 参调用契约保持 dc 原文), 64/64 零回归 (md5=8eaf0bee)。
+  登记 divergences.md **D-25**。队列项 7 之"SHOW 10 处 TODO 收口"仍待。
+- GETF 复核 (R26-b 队列项 4): dc 体实为 **1106 行** (dc:128565-129671, size=8737B), 非 8737B 直移量级口径;
+  与 FORX (712 行) 同为专轮工程, 本轮不动。语料 065_getf_attr 仅比对变量名序列, 桩态 PASS 不构成真体化回归风险,
+  但 GETF 返回值语义 (G 槽) 当前无对拍覆盖 → 真体化时应同步扩语料 (与队列项 9 合并)。

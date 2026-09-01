@@ -199,3 +199,10 @@
 - **证据链**：dc:77418-77473 全文直移核验; h4:1090/1101 调用形态 `PECMD_ParseCommaNumbers(cursor,&st.wYear,flag)` ↔ dc 同参。
 - **影响面**：DATE/DTIM 族带日期段的解析静默得 0; 无语料覆盖。
 - **状态**：已修（2026-09-02 R26-c：真体落 core_b3r_h4.c (dc:77418 直移, 8 段 SYSTEMTIME 槽映射两 flag 形态); 恒0桩拆除 + stubs_common.h:3340 声明归正三参; 64/64 零回归）。连带: SITE 真体化 (FUN_1400d0468 dc:128226 直移, b7c 恒0桩替换, 见 HANDOVER R26-c)。
+
+### D-25 PAGE(NtCreatePagingFile) 移植丢 UNICODE_STRING 字段: 孤立 len16 地址当 PUNICODE_STRING｜已修(R26-c)
+
+- **根因**：dc:25537-25551 构造完整 UNICODE_STRING 块后调 `(*pFVar9)(&local_60,&local_80,&local_68)` —— &local_60 处 +0=Length(short)、+2=MaximumLength(short,=Length+2)、+8=Buffer(psz1 指针, local_58) 恰成 {2,2,4pad,8ptr} 16 字节结构; msvc v0 (core_b2e.c:850/861) 仅声明孤立 `int16_t len16` 并传 `&len16` —— MaximumLength 与 Buffer 字段全为栈垃圾 → NtCreatePagingFile 将按垃圾 Buffer 指针建页面文件。
+- **证据链**：dc:25534-25551 (`local_60=(short)lVar8*2; local_5e=local_60+2; local_58=psz1;` + 三参调用) ↔ core_b2e.c:848-866; R26-b 队列项 7"PAGE 疑似直移缺陷核验 (core_b2e.c:844)"本轮实锤即此。
+- **影响面**：PAGE 建页面文件路径 (NtCreatePagingFile 已装载时) 必然失败/未定义; 语料未覆盖。
+- **状态**：已修（2026-09-02 R26-c：core_b2e.c 按 dc 布局构造 `struct {int16_t len; int16_t maxlen; int32_t pad; WCHAR *buf;} us` (=psz) 并传 `(int16_t *)&us`; 3 参调用契约保持 dc 原文; 64/64 零回归, 部署 md5=8eaf0bee）。

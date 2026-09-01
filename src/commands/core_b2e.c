@@ -847,7 +847,19 @@ uint64_t PECMD_CreatePageFile(WCHAR *cmdline)
         StrCpyNW(psz, buf + 0x10, 0x104);
         {
             int64_t lv = PECMD_WideStrLen(psz);
-            int16_t len16 = (int16_t)lv * 2;
+            /* dc:25537-25540 构造 UNICODE_STRING 块: local_60=Length, local_5e=Max(=+2),
+             * local_58=Buffer(+8 恰成 {2,2,4pad,8ptr} 结构)。v0 仅传孤立 len16 地址 →
+             * MaxLength/Buffer 字段全丢 (R26-c D-25 归正)。 */
+            struct {
+                int16_t len;
+                int16_t maxlen;
+                int32_t pad;
+                WCHAR *buf;
+            } us;
+            us.len = (int16_t)lv * 2;
+            us.maxlen = (int16_t)(us.len + 2);
+            us.pad = 0;
+            us.buf = psz;
             int64_t initialBytes = (int64_t)(minSize << 0x14);
             int64_t maxBytes = (int64_t)(maxSize << 0x14);
             int status;
@@ -858,7 +870,7 @@ uint64_t PECMD_CreatePageFile(WCHAR *cmdline)
                 int (*ntCreate)(int16_t *, int64_t *, int64_t *);
                 *(void **)&ntCreate = pNtCreate;
                 FUN_14001C2CC(WSTR("SeCreatePagefilePrivilege"), 2, 0);
-                status = ntCreate(&len16, &initialBytes, &maxBytes);
+                status = ntCreate((int16_t *)&us, &initialBytes, &maxBytes);
                 uVar7 = (uint64_t)(int64_t)status;
                 if (status == 0) {
                     local_res10 = (local_res10 & 0xffffffff00000000ULL) | 0x1450;
