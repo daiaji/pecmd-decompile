@@ -1,0 +1,20 @@
+{
+  "id": "068_forx_nl",
+  "slug": "forx_nl_line_iter_probe",
+  "cmds": [
+    "FORX"
+  ],
+  "vars": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "BODY_DONE"
+  ],
+  "vars_val": true,
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "FORX 行/切词迭代变体矩阵 (探测录制): /NL:# 与 /delims:# (#分隔), /delims:, (逗号分隔+逗号源), /NL: (纯换行), /v (切词对照); vars_val 逐变体回捞判方言"
+}

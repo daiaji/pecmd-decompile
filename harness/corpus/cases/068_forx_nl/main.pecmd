@@ -1,0 +1,13 @@
+ENVI SRC=x#y#z
+ENVI SRC2=p,q,r
+ENVI A1=start
+FORX /NL:# SRC,W,ENVI A1=%A1%_%W%
+ENVI A2=start
+FORX /delims:# SRC,W,ENVI A2=%A2%_%W%
+ENVI A3=start
+FORX /delims:, SRC2,W,ENVI A3=%A3%_%W%
+ENVI A4=start
+FORX /NL: SRC,W,ENVI A4=%A4%_%W%
+ENVI A5=start
+FORX /v SRC,W,ENVI A5=%A5%_%W%
+ENVI BODY_DONE=YES

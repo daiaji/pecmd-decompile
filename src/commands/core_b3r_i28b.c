@@ -601,7 +601,7 @@ LAB_1400ad429:
         }
         if (PECMD_AsciiPrefixICmp("delims:", cur + 1, 7) != 0) {
             cur = pWVar21 + 8;
-            opts = 6U | 10U;
+            opts = opts | 10U;                /* dc:107957-107958 delims: 不置 uVar33=6 (直接 goto 共享尾; R27 语料 068 原版实证: 与 /NL: 不同, 不触发 VarLookup) */
             PECMD_ParseStringToken((int64_t *)(uintptr_t)&cur, (uint64_t)(uintptr_t)param_1, NULL);
             c490 = *cur;
             pWVar21 = cur;

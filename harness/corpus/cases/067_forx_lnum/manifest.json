@@ -1,0 +1,11 @@
+{
+  "id": "067_forx_lnum",
+  "slug": "forx_l_numeric_iter_probe",
+  "cmds": ["FORX"],
+  "vars": ["ACC1", "ACC2", "BODY_DONE"],
+  "vars_val": true,
+  "timeout_s": 60,
+  "flaky": false,
+  "gui": false,
+  "notes": "FORX /L 数值迭代首案 (探测录制): 两组参数顺序判别 (1,5,3)/(1,2,5), vars_val 回捞 ACC1/ACC2 终值确定 start,end,step 与 start,step,end 哪种为真体语义; 录制后依实测回填 expected.md"
+}

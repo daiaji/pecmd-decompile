@@ -99,6 +99,16 @@ def verdict_for(case_id, backend="win_real"):
         if not same:
             verdict["verdict"] = "FAIL"
 
+    # vars_val.txt (R24f-c U-2 值级回捞; R27 起纳入判定 — 双方存在时值必须一致,
+    # 封堵"变量存在但值不同"的假绿盲区, FORX-L/NL 语料 067/068 即此类)
+    gvv, rvv = (os.path.join(gdir, "vars_val.txt"),
+                os.path.join(rdir, "vars_val.txt"))
+    if os.path.exists(gvv) and os.path.exists(rvv):
+        same, diff = diff_files(gvv, rvv, masks)
+        verdict["vars_val"] = {"same": same, "diff": diff[:5]}
+        if not same:
+            verdict["verdict"] = "FAIL"
+
     # done.txt 存在性 (运行完成信号)
     gd, rd = os.path.join(gdir, "done.txt"), os.path.join(rdir, "done.txt")
     if os.path.exists(gd) and not os.path.exists(rd):
