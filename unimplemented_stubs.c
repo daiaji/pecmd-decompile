@@ -87,7 +87,20 @@ uint64_t PECMD_WaitHandlesOrMessages(uint64_t param_1, int64_t param_2, int para
 uint64_t PECMD_XorEncode(const uint16_t *a, uint32_t b, uint64_t c)
     { return (uint64_t)(uint32_t)FUN_14001B5AC((LPCWSTR)(uintptr_t)a,b,(int64_t)c); }
 uint64_t PECMD_InstallKeyboardHook(void) { return 0; }
-uint64_t PECMD_ExpandDrivePathAlloc(void) { return 0; }
+/* ========== PECMD_ExpandDrivePathAlloc @0x14001c270 size=91 (R26-e 连带直移 dc:16578) ========== */
+/* 路径展开槽: 按源串长度分配槽, ExpandDrivePath 展开入槽, 返回槽指针。 */
+uint64_t PECMD_ExpandDrivePathAlloc(LPCWSTR param_1, uint64_t *param_2)
+{
+    int iVar1;
+    LPWSTR local_res10;
+
+    iVar1 = lstrlenW(param_1);
+    PECMD_AllocString((WCHAR **)param_2, (int64_t)iVar1 * 2 + 0x105);
+    local_res10 = NULL;
+    PECMD_ExpandDrivePath(param_1, (uint32_t)(iVar1 * 2 + 0x104), (LPWSTR)(uintptr_t)*param_2,
+                         &local_res10);
+    return *param_2;
+}
 void *PECMD_AddVarDefault(void *script, LPCWSTR name, LPCWSTR val, int len, int64_t flag)
 {
     /* R25(031 SET=1 定案): 原恒 0 桩 → SET 创建变量走 AddVarDefault 返回 NULL
@@ -213,7 +226,49 @@ void PECMD_SetVariable(void *a, const WCHAR *b, const WCHAR *c)
 }
 
 
-uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d) { (void)a;(void)b;(void)c;(void)d; return 0; }
+/* ========== PECMD_ExpandDrivePath @0x14006459c size=246 (R26-e 连带直移 dc:61513, capstone 核验) ========== */
+/* 常规路径→GetFullPathNameW; 裸盘根(首 wchar > 0x7a 且 "X:"三字符)→cwd 同盘重定向或极短 "X:\\"。 */
+DWORD PECMD_ExpandDrivePath(LPCWSTR param_1, uint32_t param_2, LPWSTR param_3, LPWSTR *param_4)
+{
+    WCHAR WVar1;
+    DWORD DVar2;
+    uint32_t uVar3;
+    WCHAR local_228[264];
+
+    if ((((uint16_t)*param_1 < 0x7b) || (param_1[1] != L':')) || (param_1[2] != L'\0')) {
+        DVar2 = GetFullPathNameW(param_1, param_2, param_3, param_4);
+    }
+    else {
+        local_228[0] = L'\0';
+        if (param_4 != NULL) {
+            *param_4 = NULL;
+        }
+        GetCurrentDirectoryW(0x104, local_228);
+        if (*param_1 == local_228[0]) {
+            DVar2 = lstrlenW(local_228);
+            uVar3 = DVar2 + 1;
+            if (4 < uVar3) {
+                if (param_2 < uVar3) {
+                    return uVar3;
+                }
+                memcpy(param_3, local_228, (size_t)uVar3 * 2);
+                return DVar2;
+            }
+        }
+        if (param_2 < 4) {
+            DVar2 = 4;
+        }
+        else {
+            WVar1 = *param_1;
+            param_3[1] = L':';
+            param_3[3] = L'\0';
+            *param_3 = WVar1;
+            param_3[2] = L'\\';
+            DVar2 = 3;
+        }
+    }
+    return DVar2;
+}
 long long FUN_140064a34(uint16_t *s) { (void)s; return 0; }
 uint64_t PECMD_EncodeStringId(LPCWSTR name, uint64_t *out, char mode) { (void)name;(void)out;(void)mode; return 0; }
 /* S8: 同址别名归一 —— FUN_1400702b0 ≡ PECMD_StrDupAssign（真体 core_string.c）。 */

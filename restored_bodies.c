@@ -9,7 +9,49 @@ static void PECMD_FormatI64Dec(const uint16_t *dst, uint64_t v);
 static void PECMD_AllocWStringBuffer(void *p, long long count);
 static void PECMD_AllocWStringBuffer(void *p, long long count);
 static void PECMD_FreeStrBuf(void *ps);
-void PECMD_ParseSizeNumber(int64_t *pp, int64_t *out) { (void)pp; *out = 0; }
+/* ========== PECMD_ParseSizeNumber @0x14006a740 size=179 (R26-e dc:66228 直移;
+ * 原清零桩拆除, i28b FORX /size: 族唯一消费方) ========== */
+/* 数字 + 单位后缀: 解析 *pp 游标整数(FUN_140067b78), 随后按当前 wchar(T/G/M/K/S,
+ * 大小写不敏感)移位: T<<40 / G<<30 / M<<20 / K<<10 / S<<9(扇区 512B);
+ * 非单位字符: 游标回退 1 wchar 后统一 +2 → 净零(不消费), 返回 0; 无数字返回 0。 */
+uint64_t PECMD_ParseSizeNumber(int64_t *pp, int64_t *out)
+{
+  uint16_t uVar1;
+  uint64_t uVar2;
+  uint64_t uVar3;
+
+  extern uint64_t FUN_140067b78(longlong *pcursor, uint64_t *out); /* core_b7c.c:4392 整词解析 */
+
+  PECMD_SkipLeadingControlChars((long long *)pp);
+  uVar2 = FUN_140067b78((longlong *)pp, (uint64_t *)out);
+  if ((int)uVar2 < 1) {
+    return 0;
+  }
+  uVar1 = *(uint16_t *)(uintptr_t)*pp & 0xffdf;
+  if (uVar1 == 0x54) {          /* 'T' */
+    uVar3 = (uint64_t)*out << 0x28;
+  }
+  else if (uVar1 == 0x47) {     /* 'G' */
+    uVar3 = (uint64_t)*out << 0x1e;
+  }
+  else if (uVar1 == 0x4d) {     /* 'M' */
+    uVar3 = (uint64_t)*out << 0x14;
+  }
+  else if (uVar1 == 0x4b) {     /* 'K' */
+    uVar3 = (uint64_t)*out << 10;
+  }
+  else {
+    if (uVar1 != 0x53) {        /* 非 T/G/M/K/S: 回退 1 wchar, 底部 +2 净零 */
+      *pp = (int64_t)(uintptr_t)((uint16_t *)(uintptr_t)*pp - 1);
+      goto LAB_14006a7df;
+    }
+    uVar3 = (uint64_t)*out << 9;  /* 'S' 扇区 */
+  }
+  *out = (int64_t)uVar3;
+LAB_14006a7df:
+  *pp = *pp + 2;
+  return 1;
+}
 /* @0x1400706b4 size=25 鈥?瀹瑰櫒瀛楁鍒濆鍖?鐩寸Щ) */
 void PECMD_InitContainerFields(uint32_t *param_1)
 {
@@ -7617,12 +7659,16 @@ int PECMD_ParseNumTryWriteback(long long *param_1, int *param_2)   /* @0x140067d
     return bVar1 != 0;
 }
 /* @0x14006a7f4 size=38 鈥?瑙ｆ瀽鏁板€? 鎴愬姛(闈?)鏃惰烦杩囧墠瀵肩┖鐧? 杩斿洖浣?2浣?(鐩寸Щ; ParseSizeNumber 涓哄彾妗? */
+/* R26-e dc:66273 直移归正: 旧移植把「返回旗」与「写出值」混用同一局部 v,
+ * *param_2 恒未写 → 按 dc 归正: *param_2 接收解析值, 返回值 = 成功旗(0/1)。 */
 uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2)
 {
-  int64_t v = 0;
-  PECMD_ParseSizeNumber(param_1, &v);
-  if ((int)v != 0) PECMD_SkipLeadingControlChars((long long *)param_1);
-  return (uint64_t)v & 0xffffffff;
+  uint64_t uVar1;
+  uVar1 = PECMD_ParseSizeNumber(param_1, (int64_t *)param_2);
+  if ((int)uVar1 != 0) {
+    PECMD_SkipLeadingControlChars((long long *)param_1);
+  }
+  return uVar1 & 0xffffffff;
 }   /* @0x14006b1e8 鍘熶綋瑙?core_b3g.c FUN_14006B1E8 */
 /* @0x14006f884 size=131 鈥?璇荤幆澧冨彉閲忓埌鍔ㄦ€佷覆(鐩寸Щ) */
 void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2)

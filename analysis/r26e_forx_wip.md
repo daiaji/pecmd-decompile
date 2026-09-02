@@ -1,6 +1,11 @@
-# R26-e FORX 真体化 — 在途存档 (2026-09-02, 会话中断前快照)
+# R26-e FORX 真体化 — 已入账 (2026-09-02, 会话恢复完成)
 
-> 本文 = FORX 全文直移作业的**进行中工作存档**。恢复作业时按「待办」节顺序继续。
+> **本文原为在途存档, 现已完结入账** (HANDOVER R26-e, 64/64 零回归)。
+> 与本文定案的差异均由 capstone 核验修正, 见 HANDOVER R26-e 登记与本文件尾「完结补记」;
+> 作业流程已按原「待办」节执行: capstone 核验 → ParseSizeNumber 真体化 →
+> 主体 part B 草拟 → 拼接替换 → 双门 → 64/64 回归 → HANDOVER 入账。
+
+
 > 配套草稿件: `build/msvc/_r26e_forx_a.txt`(选项循环部分草稿, 已定稿可直接用)。
 > 上位账本: `HANDOVER_PROGRESS.md`(R26-c/d 已提交; R26-e 未入账 — 本文即其前置)。
 
@@ -106,3 +111,31 @@ ParseStringToken / MatchPrefixAdvance / ParseUIntValue / g_flagA24F / g_csInit /
   SHOW 10 处 TODO(verify) 收口 / 语料扩展(队列项 9, GETF/MOUN 均建议随件扩语料)。
 - 部署现场: C:\pectest, 当前 md5=ddcd19b5(hash f00039b, 08:39)。
 - 过程件: build/msvc/_r26c_*.py、_r26d_*(MOUN, 含 body 分段)、_r26e_forx_a.txt(本件草稿)。
+
+---
+
+## 完结补记 (2026-09-02, 恢复会话)
+
+- **待办 1 (capstone)**: 已执行并对全文 (含 L 模式) 完成核验。**L 模式角色定案**:
+  local_3f8=当前值 (整数迭代, AppendLongDecimal 值低 32 位, capstone `mov edx,ebx` 实证) /
+  local_3c8=步长 (初值 1, 第二次解析覆盖) / local_400=终值 (start+step 兜底后被第三次解析
+  覆盖 — WideStrToDouble 恒写 out, 兜底语义=第三次解析结果)。`local_400 = local_3c8+local_3f8`
+  = 64 位整数加 (lea rcx,[rbx+rax] 实证), 非指针语义。
+- **待办 2 (ParseSizeNumber)**: 已真体化 (dc:66228 直移), 连带 ParseSizeAndSkipWs 包装器按
+  dc:66273 归正 (旧体 *param_2 恒未写)。
+- **待办 3 (part B)**: 已草拟并落码 (dc:108087-108548 全文)。
+- **待办 4**: 语法门 0 error → clean 全量构建 → **64/64 零回归**。注意: build/msvc 陈旧
+  .obj 曾毒化构建 (SyncWorkingDirectory 产物与源码字节不符 → 全量 0xC0000005), 回归前
+  **必须 rm build/msvc/*.obj**。
+- **待办 5**: HANDOVER R26-e 已入账; 本文标记完结。
+- **存档修正登记** (capstone 推翻原定案):
+  1. §2.3 "选项旗寄存器合并 (uVar15/uVar22/uVar23/uVar25/local_4a8 同寄存器)" 作废 —
+     local_4a8/uVar15 = /s 槽 (0x10), uVar22/uVar23 = *bf 寄存器 (1), 二者不同寄存器;
+     uVar20 = sFlag|oFlag; local_3b8 = sFlag ? bfReg : 0。
+  2. §2.9 "ade55 内 local_45c==0 空格分词分支为死代码" 作废 — capstone 0x1400adc84
+     `je 0x1400ade42` 实证 */- 无 L 时落入 (活路径), 已全文转写。
+  3. §2.2 "dc local_3e8(script) 未初始化读" 作废 — dc:107871 `local_3d8 = param_1` 为
+     显式 cell[1] 赋值。
+- **连带真体化** (WIP §4 标注桩): ExpandDrivePathAlloc (91B) + ExpandDrivePath (246B)
+  由零参/空桩直移真体; stubs_common.h 2827/2865/2915 三处零参旧声明同步修正。
+- **存量缺陷登记**: `WRIT` 命令真机崩溃 (原版 msvc 双侧一致), 非本轮引入, 归后续轮次。

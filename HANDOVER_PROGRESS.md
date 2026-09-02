@@ -1328,12 +1328,58 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
 
-## R26-e (在途, 2026-09-02) — FORX 真体化中断存档(未落码)
+## R26-e (2026-09-02) — FORX 真体化: FUN_1400acd90 (dc:107744-108549, 806 行) 全文直移, 64/64 零回归
 
-- 队列项 6(FORX)开工: dc FUN_1400acd90(dc:107744-108445, 712 行)全文通读+语义分析完成;
-  选项循环草稿已定稿(build/msvc/_r26e_forx_a.txt);主体(LAB_1400ad61f 起)未草拟;
-  未应用源码/未构建/未回归。**完整作业档案(语义定案 13 条 + L 模式未决风险 + 依赖核验 +
-  恢复待办)见 `analysis/r26e_forx_wip.md`** — 恢复作业以该文为准。
-- 连带缺口已定案待落码: PECMD_ParseSizeNumber(restored_bodies.c:12 清零桩, dc:66228 179B 直移,
-  i28b:73/stubs_common.h:2714 签名同步 uint64_t)。
-- 本节仅为存档指针;R26-e 正式入账待 FORX 落码+64/64 后。
+### 落码 (核心)
+- **PECMD_ForCommand 全文直移** (core_b3r_i28b.c, 替换"简化主体"桩): 选项循环(18 选项) +
+  *qu 引号扫描器 + ad61f 主体(@/$/\! 前缀 → 路径展开 → token1/token2/步长/体 四段切分) +
+  三引擎(默认文件通配 PCC 逐项 / /L 数值迭代 / NL: 行迭代) + epilogue(体==L"*"→SetVariable,
+  计数→AppendLongDecimal, 7+3 槽释放)。
+- **WIP 存档两处修正** (capstone 定案): ① 选项旗 uVar15/local_4a8(/s 槽, 0x10) 与 uVar22/uVar23(*bf
+  寄存器, 1) 是**不同寄存器** — WIP"同寄存器合并"登记作废; uVar20=sFlag|oFlag, local_3b8=
+  sFlag?bfReg:0 (n350 bit0)。② L 引擎 lFlag==0 空格分词分支为**活路径** (*/- 无 L 落入), 非
+  WIP 所称死代码; 该分支为 WIP 存档 Line 62-70 未决风险的全部答案。
+- **L 模式角色 capstone 核验**: s3f8=当前值(整数迭代, 值低 32 位写变量 mov edx,ebx 实证) /
+  n3c8=步长(初值 1) / s400=终值(先算 start+step 兜底再被第三次解析覆盖 — WideStrToDouble
+  恒写 out 参数, 兜底恒被覆盖, 语义=第三次解析结果) / dVar38/dStep/dEnd 浮点三值 (xmm7/8/9);
+  浮点写变量经 FormatU64RetEnd "%Lf" 位模式 (xmm1 槽实证); 步长==0 或任一次解析失败 →
+  0x80070057 错误返回。WideStrToDouble prec 位语义定案: bit0=分数/exponent, bit1=无数字(失败)。
+- **SkipLeadingControlChars/StrCopyW/StatLine 等 27 依赖全真体**（除 ExpandDrivePathAlloc 桩 —
+  本轮连带真体化, 见下）。
+
+### 连带真体化 (WIP 项 2 + 桩缺口)
+1. **PECMD_ParseSizeNumber** (restored_bodies.c:12 清零桩拆除 → dc:66228 直移, 179B):
+   数字+T/G/M/K/S 单位移位 (T<<40/G<<30/M<<20/K<<10/S<<9), 非单位字符游标回退净零;
+   i28b:73 与 stubs_common.h:2714 签名同步 `uint64_t(int64_t*, int64_t*)`。
+2. **PECMD_ParseSizeAndSkipWs** (rb 包装器按 dc:66273 归正): 旧移植把「返回旗」与「写出值」
+   混用局部 v, *param_2 恒未写 → 按 dc 直移 (*param_2 收值, 返回旗), 其 6 个消费站(core
+   b3_remaining:8264/8270、b8_remaining:712/716、i28c:1137、g5:348)随之获得正确值。
+3. **PECMD_ExpandDrivePathAlloc** (unimplemented_stubs.c:90 零参桩 → dc:16578 直移 91B)**+
+   PECMD_ExpandDrivePath** (dc:61513 直移 246B, capstone 核验 0x7a/jbe 边界): 默认文件通配
+   FORX 的普通路径展开第一次获得真体; stubs_common.h:2827/2865 零参旧声明同步修正。
+4. **stubs_common.h:2915 GetFullPathNameW 零参旧声明** → 真 4 参形式 (S11 惯例, 与
+   win32_stub.h:557 一致), 解除 unimplemented_stubs.c 新体编译冲突。
+
+### 登记偏差 (直移取舍)
+- **构建纪律事故**: build/msvc/ 陈旧 .obj 曾毒化构建 (SyncWorkingDirectory 编译产物与源码
+  字节不符, 全量 0xC0000005) — 全量回归前必须 `rm build/msvc/*.obj` 干净重建。已纳入
+  R26-e 回归流程; 建议后续轮次固定"clean 重建"纪律。
+- bVar4=true (dc:107909) 编译器折叠无存储指令 → 删除, 由体==L"*"判据在 ad61f 计算。
+- SplitTokenAssignVar cell[1]=script (dc:107871 local_3d8) 为显式赋值, 非 WIP 所称未初始化伪影。
+- g_flagA24F>0 为数值/NL 引擎循环准入条件 (capstone jle/jg 实证), 每轮尾部重查 <1 break。
+- 引号扫描器路径 cell[2]=cell[0] 显式复制 (dc:108085 local_3d0=local_3e0)。
+- **存量缺陷登记 (非本轮引入, 真机已核)**: `WRIT` 命令 (PECMD_WriteFileEncoded+0x660 →
+  SplitTokenTrimWs 收 32 位截断指针) 在 msvc 与原版对拍均崩溃 — 原版 PECMD.EXE 引号扫描
+  路径亦触发 (真机 0xC0000005); 语料未覆盖, 归后续轮次 (D-26 候选)。
+
+### 构建/回归
+- 语法门 (cl /Zs) 0 error; 全量构建 OK; **clean 重建后 run_corpus 全量 = 64/64 零回归**
+  (部署 md5=45614e7f)。
+- 语料现状: 046_forx_enum 覆盖默认逗号切分引擎; /L 数值/行迭代/NL 无对拍案 →
+  归队列项 9 语料扩展 (GETF 随件已定, FORX-L/NL 建议同步扩案)。
+- 过程件: build/msvc/_r26e_disasm.py (capstone 全函数反汇编) / _r26e_forx_body_new.txt
+  (全文直移体) / _r26e_syngate.bat。
+
+### R26-b 队列状态
+- 已完成: 1. D-01 / 2. MOUN / 5. SITE / 8. PUTF 双定义定案 (+ D-24/D-25 连带) / **6. FORX** ✅。
+- 未动: 3. PART (29895B) / 4. GETF (1106 行) / 7. SHOW TODO 收口 / 9. 语料扩展。

@@ -2711,7 +2711,7 @@ uint64_t FUN_140103020(const uint16_t *s);
 void *FUN_1400170b0(void **p);
 void *FUN_140070044(const char *s);
 int FUN_1400678f0(void *a, long long *b, short c);
-void PECMD_ParseSizeNumber(int64_t *pp, int64_t *out);
+uint64_t PECMD_ParseSizeNumber(int64_t *pp, int64_t *out); /* R26-e dc:66228 真体化 */
 void FUN_1400284d4(long long *a, const void *b);
 long long PECMD_Dialog2727Proc(void *a, unsigned int b, uint64_t c, uint64_t d);
 void FUN_140062950(void *a);
@@ -2824,7 +2824,7 @@ void PECMD_SetCurrentDirIfChanged(LPCWSTR param_1);
 undefined4 PECMD_LineIsTeamExecLoad(const WCHAR *param_1);
 void PECMD_RunClearTmpMbrosOnce(void *script);
 uint64_t PECMD_InstallKeyboardHook(void);
-uint64_t PECMD_ExpandDrivePathAlloc(void);
+uint64_t PECMD_ExpandDrivePathAlloc(LPCWSTR param_1, uint64_t *param_2); /* R26-e 零参旧签名修正 (dc:16578) */
 void PECMD_SyncWorkingDirectory(void);
 /* S11 已删(零参旧签名), 统一走 xproto.h */
 void PECMD_FixKnownDlls32(void);
@@ -2862,7 +2862,7 @@ longlong PECMD_VectorAppendGen(longlong *param_1, longlong *param_2, longlong *p
                                uint8_t *param_4, uint param_5, longlong param_6);
 int64_t PECMD_VectorSlotPtr(int64_t param_1, int64_t *param_2, int64_t *param_3,
                             unsigned int param_4);
-uint64_t PECMD_ExpandDrivePath(const uint16_t *a, uint64_t b, uint16_t *c, longlong *d);
+DWORD PECMD_ExpandDrivePath(LPCWSTR param_1, uint32_t param_2, LPWSTR param_3, LPWSTR *param_4); /* R26-e 零参旧签名修正 (dc:61513) */
 void PECMD_ParseShortStore(uint64_t *param_1, int *param_2, short param_3);
 uint64_t PECMD_ParseSizeAndSkipWs(int64_t *param_1, uint64_t *param_2);
 void PECMD_GetEnvVarToStr(LPCWSTR param_1, uint64_t *param_2);
@@ -2912,7 +2912,7 @@ uint64_t GetFileSize(void);
 uint64_t GetFileSizeEx(void);
 uint64_t GetFocus(void);
 uint64_t GetForegroundWindow(void);
-uint64_t GetFullPathNameW(void);
+DWORD GetFullPathNameW(LPCWSTR, DWORD, LPWSTR, LPWSTR *); /* S11 零参旧签名修正: 与真实 Windows 导出/win32_stub.h:557 一致 (R26-e) */
 uint64_t GetHandleInformation(void);
 uint64_t GetIconInfo(void);
 uint64_t GetKeyState(void);
