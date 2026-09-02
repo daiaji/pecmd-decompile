@@ -48,3 +48,19 @@ IsDevicePathPrefix / SetFilePointer / ZeroLenBuf / GrowByteBuffer / ExpandDriveL
   全部 64/64 零回归并提交 (pecmd-decompile db8c7e8/4ee67fa, compat 6d85fff)。
 - 注意事项: build/msvc 需 clean 重建 (陈旧 obj 曾毒化); 部署需先 taskkill pecmd_msvc.exe;
   探针严禁触碰系统路径 (R26-f 事故教训)。
+
+## 6. 结构图更新 (2026-09-02 深读确认)
+
+- dc:90112-90593 = **选项循环** (-admin/-super/-devid* 四兄弟/-gui(→RunCommand #21:INDATA)/
+  -usb/-hextp/-phy/-phy#/-drv/-fill/-dvol/-up/-xup/-axup/-hup/-ahup/-gpt/-gptmini/-gpth/
+  -mbr/-cmp/-force/-fs0:/-fs0/-fs/-x/-img/-lskip/-locku/-locku:/-lock:/-lock/-lockx/-lock-/
+  /mbr=/pbr/-alignend/-align/-clear/-clean/-clean-/del/-del/-raw/-swap:/-CHS=/-IMG=/-SKIP=/
+  -iv=/-iv/-cdrom/-floppy), 出口 LAB_14008e216 (37 引用) → 空游标 goto LAB_14008e22c。
+- dc:90596-90618 = 选项后处理 (ptVar68/local_228/local_248/-9 哨兵链 → -1/-8 归位)。
+- dc:90620-90713 = **子命令编码**: list/disk/part/drv/cdrom/floppy/parent/volume/dep →
+  local_3e8 低字节 1-8; init→local_448=1; fix→local_400=0x10; update→bVar52=0x10;
+  xupdate→local_463=0x20; hupdate/hupdatef→bVar52=0x10/0x18。
+- dc:90714+ = 主体分派 (local_3e8/local_448/local_400/local_463 编码 → 各执行段),
+  至 dc:93616 LAB_14009445a/93614 LAB_14008f546 = 函数尾。
+- 全部 96 LAB 可达, 无死代码。变量声明区自洽 (211 个, local_ 零遗漏)。
+- **恢复建议**: S1=dc:90112-90713 (选项+编码, ~600 行, 无歧义); S2/S3 按档案原分段。
