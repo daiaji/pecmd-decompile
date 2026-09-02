@@ -1285,3 +1285,45 @@ dc 反编译失败区已由汇编还原稿+活体裁定补齐，不在下例）�
 - GETF 复核 (R26-b 队列项 4): dc 体实为 **1106 行** (dc:128565-129671, size=8737B), 非 8737B 直移量级口径;
   与 FORX (712 行) 同为专轮工程, 本轮不动。语料 065_getf_attr 仅比对变量名序列, 桩态 PASS 不构成真体化回归风险,
   但 GETF 返回值语义 (G 槽) 当前无对拍覆盖 → 真体化时应同步扩语料 (与队列项 9 合并)。
+
+## R26-d (2026-09-02) — MOUN 真体化: FUN_1400dfb14 (dc:136698, 5907B/829行) 全文直移, 64/64 零回归
+
+### 落码
+- core_b7c.c 恒0桩 PECMD_MounMountWimImage 替换为 dc 全文直移体 (~830 行): WIM/VHD/UDM/SVR 四子引擎。
+  分支面: -udm [upud]/listud (ExpandCommandLine+GenerateTimeText+SetVariable 日期掩码挂载);
+  fallback "#22:INDATA mount ..."/"-svr" → RunCommand 委托; -vhd → LoadVhdApi+MounResolveDiskNo
+  (c/cx 创建经 CaptureWimImage); 其余 → WIM DLL (g_pWIM* 槽) query 枚举/卸载/挂载 + '*' 临时目录 +
+  PART update 联动。
+- 调用面保持: rb:6759 全 uint64 (返回 8 字节状态) + core_b2b.c:874 void 面 (-udm OnlyApp 链)。
+
+### 直移定案 (原版 EXE capstone 反汇编)
+1. dc:137198 wsprintfW 缺变参 (D-03 族): 格式 "%I64d	%d	%s" 3 规格 2 可见参 —— @1400e09c0
+   `mov [rsp+0x20], rdi` 实证第 5 参 = rdi = local_5f0 (lstrlenW 实参), 已补。
+2. dc:137302 TlsLogWrite "FOUND WIM [%s]..." 4 规格 2 可见参 —— @1400e0efd-0f10 实证 6 参
+   (script, fmt, _Var30, local_5f0, _Var15, iVar11), 已补。
+3. dc:137289 "PART update %d " —— @1400e0f5f 实证 PART 实参 = wsprintfW 缓冲 +8 字节 (真机行为,
+   非 Ghidra 帧伪影); 经 PECMD_ExecCommandLine (PART 桩) 2 参面照调 (第 3 参 r8=0 暂弃, 待 PART 真体化)。
+
+### 登记偏差 (直移取舍)
+- DAT_14013d878/DAT_14013dc98 两个未还原 CS (core_globals.c "不补" 注记) → g_csInit 替代
+  (CS 同线程递归安全, 串行化语义保持)。
+- dc 未初始化读 (local_5c0 初始化式 `high<<0x20`、local_res20 `& ~0xff` 基值) → C 层置 0。
+- dc local_528[4] 实际承载 ≥14 wchar (PART update 串/FormatI64Dec) → C 层 [32]。
+- dc local_618.dwLow = 0xffffffff 作 int32 (-1) 直移。
+
+### 依赖面核验 (全部真体, 除注明)
+MounResolveDiskNo (本文件 736) / RunCommand / ExpandCommandLine / GenerateTimeText / NextToken /
+VarLookup / ResetScriptChain / WrapParamCall_02d8 / CreateWindowInSlot / DetachVirtualDisk /
+LoadWimApi / QueryState_c95c / TlsLogWrite (变参) / EnumDeviceList / ImageCommitUnmount /
+ApplyWimImage / DeleteDosDevice / AssignDriveLetter / CaptureWimImage / LoadVhdApi /
+UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 桩) / g_pWIM* 槽
+(pecmd_globals.h, LoadWimApi 真体装载)。
+
+### 构建/回归
+- 部署 md5=ddcd19b5 (hash ec3babe) 08:39, run_corpus 全量 = **64/64 零回归**。
+- 语料注: MOUN 无对拍案 (需真 WIM/VHD 语料, 归队列项 9); 真体化不构成现有案回归风险 (桩态 0 返回
+  与真体路径在现有语料输入下同链)。过程件 build/msvc/_r26d_body_p*.txt + _r26d_moun_port.py。
+
+### R26-b 队列状态
+- 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
+- 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
