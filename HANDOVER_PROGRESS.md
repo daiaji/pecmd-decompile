@@ -1328,6 +1328,29 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
 
+## R26-h (2026-09-02) — PUTF 尾巴收口 (队列项 8 完结) + R26-a/b 消费方资产入库
+
+- **PUTF 余 2 leaf 子桩真体化** (D-23 后遗):
+  1. PECMD_EnableTokenPrivilege (@0x14001c2cc dc:16596, 223B 直移): 全局临界区 +
+     OpenProcessToken(0x28) + LookupPrivilegeValueW + AdjustTokenPrivileges +
+     g_privFlags (DAT_14013e20c) 登记去重。
+  2. PECMD_DeviceCheckReady (@0x14006caf0 dc:67943, 148B 直移): OpenFileHandle(GENERIC_RW,
+     OPEN_EXISTING) + IOCTL 0x900c4 就绪查询。
+- stubs_common.h 4 处零参弱声明修正 (GetCurrentProcess/OpenProcessToken/
+  LookupPrivilegeValueW/AdjustTokenPrivileges → 真签名, S11 惯例, 与 win32_stub.h 对齐)。
+- 64/64 零回归。**PUTF 全链真体化完结** (D-23 主体 + R26-h 双 leaf)。
+
+### R26-b 队列状态 (最终)
+- 已完成: 1. D-01 / 2. MOUN / 5. SITE / 6. FORX (R26-e) / 4. GETF (R26-f) /
+  7. SHOW TODO 收口 (R26-g) / **8. PUTF (R26-c 主体 + R26-h 双 leaf)** ✅。
+- 未动: 3. PART (dc:89789, 3845 行/29895B — 最大单体, 启动档案 analysis/r26h_part_wip.md,
+  下轮 S1 落码)。
+- 9. 语料扩展: GETF 已随 R26-f 扩 065; MOUN/PART 需真 WIM/磁盘语料, 归后续。
+
+### compat 侧 (R26-a/b 消费方资产, 本轮入库)
+- matrix.md 逆向核证/勘误 + missing-alignment/completion-target 更新 + docs/re-notes 九份
+  取证底稿 (~69 对象) + reverse-alignment + reverse-map 主表同步 — 提交 65bb381/05e2bd1。
+
 ## R26-g (2026-09-02) — SHOW TODO 收口 (队列项 7) + TlsLogWrite 变参归位
 
 - SHOW 引擎 (PECMD_PartShowHideDrive @0x1400cd3a8, b7c:6712-9033 真体) 内 8 处 TODO(verify) 定案:
