@@ -1,5 +1,7 @@
 /* unimplemented_stubs.c - B0/P3: FUN_/thunk_/DAT_/PTR_/gap-stub definitions. FOR LINK VERIFICATION ONLY. */
 #include "stubs_common.h"
+
+extern CRITICAL_SECTION g_csInit;   /* DAT_14013e190 (pecmd_defs.h:75; R26-h EnableTokenPrivilege 用) */
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,7 +214,52 @@ int PECMD_AsciiPrefixICmp(const char *a, const uint16_t *w, int n) { return FUN_
 uint64_t PECMD_AsciiWideICmp(const char *a, const uint16_t *b) { return (uint64_t)(int32_t)FUN_14005C7C4(a, b); }
 
 
-int64_t PECMD_EnableTokenPrivilege(LPCWSTR a, DWORD b, uint32_t c) { (void)a;(void)b;(void)c; return 0; }
+/* ========== PECMD_EnableTokenPrivilege @0x14001c2cc size=223 (R26-h dc:16596 直移;
+ * PUTF/DdCopyCommand leaf 子桩) ==========
+ * 提权: 全局临界区内 OpenProcessToken(TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY) →
+ * LookupPrivilegeValueW → AdjustTokenPrivileges; 成功且 param_3 非零时登记 g_privFlags;
+ * param_3 已在 g_privFlags 登记过则直接返回 0 (去重)。 */
+int64_t PECMD_EnableTokenPrivilege(LPCWSTR a, DWORD b, uint32_t c)
+{
+    /* 局部类型/API 声明 (win32_stub.h 未随 stubs_common.h 引入, 同 core_b1_remaining.c:379 族) */
+    typedef struct tagLUID { DWORD LowPart; LONG HighPart; } LUID;
+    typedef struct tagLUID_AND_ATTRIBUTES { LUID Luid; DWORD Attributes; } LUID_AND_ATTRIBUTES;
+    typedef struct tagTOKEN_PRIVILEGES {
+        DWORD PrivilegeCount;
+        LUID_AND_ATTRIBUTES Privileges[1];
+    } TOKEN_PRIVILEGES;
+    extern uint16_t g_privFlags;   /* DAT_14013e20c core_globals.c:115 */
+
+    BOOL BVar1;
+    HANDLE ProcessHandle;
+    longlong lVar2;
+    HANDLE local_res20;
+    TOKEN_PRIVILEGES local_18;
+
+    EnterCriticalSection(&g_csInit);
+    if ((c & g_privFlags) == 0) {
+        lVar2 = 0;
+        local_res20 = NULL;
+        ProcessHandle = GetCurrentProcess();
+        BVar1 = OpenProcessToken(ProcessHandle, 0x28, &local_res20);
+        if (BVar1 != 0) {
+            local_18.PrivilegeCount = 1;
+            local_18.Privileges[0].Attributes = b;
+            LookupPrivilegeValueW(NULL, a, &local_18.Privileges[0].Luid);
+            BVar1 = AdjustTokenPrivileges(local_res20, 0, &local_18, 0x10, NULL, NULL);
+            if ((BVar1 != 0) && (c != 0)) {
+                g_privFlags = (uint16_t)(g_privFlags | (uint16_t)c);
+            }
+            lVar2 = (longlong)BVar1;
+        }
+        LeaveCriticalSection(&g_csInit);
+    }
+    else {
+        LeaveCriticalSection(&g_csInit);
+        lVar2 = 0;
+    }
+    return lVar2;
+}
 
 void PECMD_DialogBeepNotify(int64_t a, int b) { (void)a;(void)b; }
 uint64_t PECMD_NextRandomSeed(void) { return 0; }
@@ -527,7 +574,25 @@ uint64_t PECMD_AllocConsoleBuffers(void) { return 0; }
 uint64_t PECMD_CalcCalendarMonthRows(void) { return 0; }
 uint64_t PECMD_StreamClose(void) { return 0; }
 uint64_t PECMD_ConvertStringEncoding(void) { return 0; }
-uint64_t PECMD_DeviceCheckReady(LPCWSTR p) { (void)p; return 0; }
+/* ========== PECMD_DeviceCheckReady @0x14006caf0 size=148 (R26-h dc:67943 直移;
+ * PUTF/DdCopyCommand leaf 子桩) ==========
+ * 设备就绪检测: 以 GENERIC_READ|WRITE 打开 (OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL) 后
+ * IOCTL 0x900c4 (SMART/就绪查询, 零缓冲) 判定, 关闭句柄返回 BOOL。 */
+uint64_t PECMD_DeviceCheckReady(LPCWSTR p)
+{
+    BOOL BVar1;
+    DWORD local_res18[2];
+    HANDLE local_res20;
+
+    local_res18[0] = 0;
+    local_res20 = NULL;
+    PECMD_OpenFileHandle(&local_res20, p, 0xc0000000, 3, NULL, 4, 0, NULL);
+    BVar1 = DeviceIoControl(local_res20, 0x900c4, NULL, 0, NULL, 0, local_res18, NULL);
+    if ((local_res20 != NULL) && (local_res20 != (HANDLE)(intptr_t)-1)) {
+        CloseHandle(local_res20);
+    }
+    return (uint64_t)BVar1;
+}
 uint64_t PECMD_JoinTokensAndResolve(void) { return 0; }
 /* R26-c: PECMD_ParseCommaNumbers 恒0桩已拆除, 真体 @0x140079cf8 (dc:77418) 落 src/commands/core_b3r_h4.c */
 

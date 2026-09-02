@@ -1149,7 +1149,7 @@ extern uint64_t PECMD_WaitHandlesOrMessages(uint64_t p1, int64_t p2, int p3, uin
 /* def @原832 */
 extern uint64_t PECMD_LoadFileToSlot(LPCWSTR path, int64_t *pp);
 /* core_b2f.c */
-extern uint64_t GetCurrentProcess(void);
+HANDLE GetCurrentProcess(void); /* S11 零参旧签名修正: 与 win32_stub.h:810 一致 (R26-h) */
 /* def @原6187 */
 extern uint64_t DuplicateHandle(void *hSrcP, void *hSrc, void *hDstP, HANDLE *phDst, DWORD acc,
                                 BOOL inh, DWORD opts);
@@ -2721,7 +2721,7 @@ void FUN_14001b888(uint64_t a);
 uint64_t AbortSystemShutdownW(void);
 uint64_t AddFontMemResourceEx(void);
 uint64_t AddFontResourceW(void);
-uint64_t AdjustTokenPrivileges(void);
+BOOL AdjustTokenPrivileges(HANDLE, BOOL, void *, DWORD, void *, DWORD *); /* S11 修正 (R26-h) */
 uint64_t AllocConsole(void);
 uint64_t AllocateAndInitializeSid(void);
 int AppendMenuW(void *m, unsigned int f, uint64_t id, const unsigned short *s);
@@ -2962,7 +2962,7 @@ uint64_t LoadEnvi(const uint16_t *a, const uint16_t *b);
 void *LoadIconW(void *hinst, const unsigned short *name);
 uint64_t LoadMenuW(void);
 uint64_t LockWorkStation(void);
-uint64_t LookupPrivilegeValueW(void);
+BOOL LookupPrivilegeValueW(LPCWSTR, LPCWSTR, void *); /* S11 修正 (R26-h) */
 uint64_t MapViewOfFile(void);
 int MessageBoxW(void *w, const unsigned short *t, const unsigned short *c, unsigned int f);
 uint64_t ModifyMenuW(void);
@@ -2974,7 +2974,7 @@ int OffsetRect(RECT *r, int dx, int dy);
 uint64_t OpenClipboard(void);
 uint64_t OpenFileMappingA(void);
 uint64_t OpenFileMappingW(void);
-uint64_t OpenProcessToken(void);
+BOOL OpenProcessToken(HANDLE, DWORD, HANDLE *); /* S11 修正 (R26-h) */
 void *OpenSCManagerW(const void *a, const void *b, unsigned long acc);
 void *OpenServiceW(void *mgr, const unsigned short *name, unsigned long acc);
 uint64_t OpenThread(void);
