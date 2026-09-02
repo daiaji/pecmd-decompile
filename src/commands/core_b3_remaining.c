@@ -22661,17 +22661,8 @@ LAB_14008cfad:
     LeaveCriticalSection((LPCRITICAL_SECTION)&g_csInit);
     return lVar31;
 }
-LARGE_INTEGER PECMD_ExecCommandLine(int64_t *param_1, LPCWSTR param_2)
-{
-    /* UNIMPLEMENTED @FUN_14008cffc — decompile-failed, body 未还原 */
-    /* @0x14008cffc size=29895 */
-    /* 简化桩: 巨型反编译(29895B)含 CRT/解析逻辑, 保留签名, 主体最小实现. TODO(restore/verify) */
-    LARGE_INTEGER r;
-    (void)param_1;
-    (void)param_2;
-    r.QuadPart = 0;
-    return r;
-}
+/* PECMD_ExecCommandLine (PART 引擎 @0x14008cffc) 已于 R26-i 真体化,
+ * 全文直移见 core_b3r_i28g.c (dc:89782-93623)。 */
 
 
 /* @0x140097150 */

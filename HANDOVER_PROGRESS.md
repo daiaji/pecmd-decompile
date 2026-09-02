@@ -1463,3 +1463,34 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 ### R26-b 队列状态
 - 已完成: 1. D-01 / 2. MOUN / 5. SITE / 8. PUTF 双定义定案 (+ D-24/D-25 连带) / **6. FORX** ✅。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
+
+---
+
+## R26-i · PART 真体化收口（2026-09-03, 64/64 零回归）
+
+> 档案: analysis\r26h_part_wip.md (§7-§11, §11=本轮终态)。目标语句按用户 /goal 执行:
+> 恢复存档 → 修语法门 → clean 构建 → 64/64 → HANDOVER 入账 + compat 同步, 严禁实盘测试。
+
+### 本轮实质
+1. **PART 全文直移完成** (dc FUN_14008cffc @89789, 29895B → core_b3r_i28g.c 4330 行,
+   旧桩 core_b3_remaining.c:22666 拆除, rsp 登记): 选项循环(30+ 项)/子命令编码
+   (list/disk/part/drv/cdrom/floppy/parent/volume/dep/init/fix/update/xupdate/hupdate/
+   hupdatef/del)/GPT 头+条目区构造(含 CRC32)/MBR 条目写入引擎/update 扩展分区扫描/
+   尾段扩展条目扫描+签名回写, 全部 dc 直移 (boot 模板 dos/nt5/nt6 + GPT GUID 常量
+   自 PECMD.exe 数据段提取)。
+2. **语法门归零**: 上轮遗留 2 错 (1698/1563) 实为巨体括号结构错位 (§10.4 的
+   "闭合链已落盘勿重做"判断错误)。本轮用 dc 括号事件序列(kind+depth)逐段比对,
+   修复 17 处 (7 处单语句 if(goto) 误包 `{}`、2 处清理段+标签整段丢失、
+   多余/缺失 `}` 若干、LAB_14008f58c/LAB_14009444b 标签补齐), 全表见 wip §11.1。
+3. **链接归零**: FUN_140007670→PECMD_OpenLockVolume(已有真体, core_b1_remaining.c)
+   别名修正; FUN_140102A90→memset 宏(h4 惯例); SBORROW2/SBORROW4 Ghidra 符号借位
+   helper 文件内定义 (dc 90974/93002 直移)。
+4. **验证**: 语法门 exit 0 → clean 构建 OK → 部署 → run_corpus 全量 →
+   **diff {"total": 64, "pass": 64, "fail": 0}**。
+5. **安全边界**: PART 严禁实体机写盘测试; 未新增 PART 语料; 行为对拍空白登记 (队列项 9)。
+
+### R26-b 队列状态 (更新)
+- 已完成: 1. D-01 / 2. MOUN / 5. SITE / 8. PUTF / **6. FORX** / **4. GETF** /
+  **7. SHOW TODO** / **3. PART** ✅ (R26-i)。
+- 未动: 9. 语料扩展 (GETF 随件已定; FORX-L/NL/PART 建议同批, PART 须虚机)。
+- compat reverse-map.md E/F 段 PART 两行已同步真体化 (本轮随 pecmd_compat 提交)。
