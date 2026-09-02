@@ -1328,6 +1328,45 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
 
+## R26-f (2026-09-02) — GETF 真体化 (FUN_1400d0c6c, dc:128565-129671 全文直移) + 语料扩展 + 对拍无窗口化
+
+### 落码 (core_b7c.c)
+- **PECMD_GetfReadData 全文直移** (~1100 行, 替换恒 0 桩): GETF 命令完整执行链 —
+  选项循环 (-find/-g[=|:]/偏移/-nolen/-bin/-free/-fd/-err:) + 文件名/偏移#长度/变量
+  三字段切分 + 资源形态 (LoadEncodedResource/#…) + "ud:设备" 直开 + PhysicalMemory 直读
+  + &命令输出形态 (RunCommandLine) + 文件读路径 (SetFilePointer/GetDeviceSize/QueryDeviceIoInfo/
+  分块 ReadFile) + -find 模式引擎 (FindPatternInFile 12 参) + 输出三形态
+  (十六进制串 0x%02X / 原始字节 VarWriteLine / 数值 AppendFmtValue+FormatI64Dec)。
+- **Ghidra 丢参补齐 (capstone 实证原版)**:
+  1. `wsprintfW("0x%02X ")` 缺数据字节参 —— @1400d217f/@1400d2be2 实证 r8=movzx byte[源指针]
+     (源=local_118 特殊源形态 / local_c0 文件分块缓冲), 源指针每轮 +1 (MZ 头 4D→5A→90→00 实证)。
+  2. `wsprintfW("%8X%s")` 缺偏移计数 + 偏移前缀串 2 参 (@1400d2164 r8=计数 r9=偏移串)。
+- **Ghidra 位域伪影** (_0_1_ 等) → 显式按位运算; CONCAT43/44/71 → 内联位拼接;
+  FUN_140102a90 → memset (项目约定); local_90 错误串槽 DAT_14012a360 未还原 → g_szEmpty。
+
+### 连带修复
+- **语料 065_getf_attr 扩展** (队列项 9 首落): 新增 GETF 真实字节读数 (cmd.exe MZ 头
+  0#4/0#16 + PE 偏移 200#4), IFEX MZ 判定; manifest vars_val=true 值捕获; 原版 golden 已录制
+  (H=0x4D 0x5A 0x90 0x00 / K=16B PE 头 / L=0x28 0x6E 0x9B 0x56 / R=getf_ok)。
+- **对拍无窗口化 (用户痛点)**: run_case.py 尾声 EXEC 由 `EXEC =cmd /c echo` 改
+  `EXEC -hide =cmd /c echo` (PECMD 原生 STARTF_USESHOWWINDOW+SW_HIDE 路径,
+  restored_bodies.c:2765-2766), 64 案批量对拍不再频繁弹黑窗口抢鼠标焦点。
+  实测: msvc 对 `EXEC =@cmd` 前缀不支持 (127) — EXEC 修饰符须用 `-hide` 语法。
+
+### 构建/回归
+- 语法门 0 error; clean 重建 OK; run_corpus 全量 = **64/64 零回归** (含新 065 强化案)。
+- 过程件: build/msvc/_r26f_getf_body.txt / _r26f_splice.py / _r26f_fix*.py / _r26f_disasm.txt。
+
+### 事故记录 (2026-09-02, 恢复作业中)
+- **误删 C:\WINDOWS\System32\cmd.exe**: GETF 探针脚本遗留 os.remove 系统文件行且被执行。
+  已从 WinSxS 组件库恢复 (amd64_microsoft-windows-commandprompt…, 376832B MZ 正常) 并实测
+  cmd.exe /c echo 通过。教训: 探针脚本严禁对系统路径执行删除; 后续探针已改只读文件。
+- 部署现场 C:\pectest\pecmd_msvc.exe 需 taskkill 后覆盖 (占用锁)。
+
+### R26-b 队列状态
+- 已完成: 1. D-01 / 2. MOUN / 5. SITE / 8. PUTF 双定义定案 / 6. FORX (R26-e) / **4. GETF** ✅。
+- 未动: 3. PART (29895B) / 7. SHOW TODO 收口 / 9. 语料扩展 (部分随 GETF 落)。
+
 ## R26-e (2026-09-02) — FORX 真体化: FUN_1400acd90 (dc:107744-108549, 806 行) 全文直移, 64/64 零回归
 
 ### 落码 (核心)

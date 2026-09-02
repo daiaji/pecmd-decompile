@@ -1,10 +1,25 @@
 {
   "id": "065_getf_attr",
   "slug": "getf_file_attr_probe",
-  "cmds": ["GETF", "WRITE", "IFEX"],
-  "vars": ["R", "%R%", "BODY_DONE"],
+  "cmds": [
+    "GETF",
+    "WRITE",
+    "IFEX"
+  ],
+  "vars": [
+    "R",
+    "%R%",
+    "BODY_DONE",
+    "H",
+    "%H%",
+    "K",
+    "%K%",
+    "L",
+    "%L%"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "GETF 首案: 文件属性→变量; 属性串含时间戳(随创建时刻漂移)故【不捕获原值】, 仅数值派生标志; masks 规则补齐后可升级原值捕获"
+  "notes": "GETF 真体化回归 (R26-f): cmd.exe 0#4/0#16/200#4 字节读数 + MZ 判定; vars_val 捕获原值",
+  "vars_val": true
 }

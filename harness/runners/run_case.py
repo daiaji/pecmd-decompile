@@ -100,9 +100,9 @@ def make_epilogue(dst, case_id, manifest, pectest_root, backend=BACKEND_MSVC):
     done_path = os.path.join(out_dir, "done.txt")
     lines = [
         f"ENVI T_CASE={case_id}",
-        f'EXEC ={cmd_exe} /c echo {vars_content}>"{vars_path}"',
+        f'EXEC -hide ={cmd_exe} /c echo {vars_content}>"{vars_path}"',
         "ENVI T_DONE=OK",
-        f'EXEC ={cmd_exe} /c echo %T_DONE%>"{done_path}"',
+        f'EXEC -hide ={cmd_exe} /c echo %T_DONE%>"{done_path}"',
     ]
     # R24f-c (U-2 夹具升级第一步): 新增 vars_val.txt —— 变量值回捞。
     # 默认关闭: manifest {"vars_val": true} 才追加第三条 EXEC (实测批量 63 案下
@@ -112,7 +112,7 @@ def make_epilogue(dst, case_id, manifest, pectest_root, backend=BACKEND_MSVC):
         vals_content = "|".join(f"{v}=%{v}%" for v in vars_list)
         vals_content = _cmd_meta_escape(f"CASE={case_id}|{vals_content}")
         vals_path = os.path.join(out_dir, "vars_val.txt")
-        lines.append(f'EXEC ={cmd_exe} /c echo {vals_content}>"{vals_path}"')
+        lines.append(f'EXEC -hide ={cmd_exe} /c echo {vals_content}>"{vals_path}"')
     epilogue = "\n".join(lines) + "\n"
 
     main_path = os.path.join(dst, "main.pecmd")
