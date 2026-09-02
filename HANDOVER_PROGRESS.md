@@ -1327,3 +1327,13 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 ### R26-b 队列状态
 - 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
+
+## R26-e (在途, 2026-09-02) — FORX 真体化中断存档(未落码)
+
+- 队列项 6(FORX)开工: dc FUN_1400acd90(dc:107744-108445, 712 行)全文通读+语义分析完成;
+  选项循环草稿已定稿(build/msvc/_r26e_forx_a.txt);主体(LAB_1400ad61f 起)未草拟;
+  未应用源码/未构建/未回归。**完整作业档案(语义定案 13 条 + L 模式未决风险 + 依赖核验 +
+  恢复待办)见 `analysis/r26e_forx_wip.md`** — 恢复作业以该文为准。
+- 连带缺口已定案待落码: PECMD_ParseSizeNumber(restored_bodies.c:12 清零桩, dc:66228 179B 直移,
+  i28b:73/stubs_common.h:2714 签名同步 uint64_t)。
+- 本节仅为存档指针;R26-e 正式入账待 FORX 落码+64/64 后。
