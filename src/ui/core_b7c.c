@@ -6666,8 +6666,7 @@ extern int PECMD_FindVolumeByDeviceId(uint32_t *devid, int64_t *out,
                                       LPWSTR flag); /* @0x14008b820 */
 extern int PECMD_PickFreeDriveLetter(uint32_t *bitmap, int16_t start, char mode,
                                      char *exclude); /* @0x14005f868 (core_b3j.c) */
-extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, uint64_t a,
-                              uint64_t b); /* @0x140018d8c 日志 (link_stubs.c, 固定4参截断) */
+extern void PECMD_TlsLogWrite(uint64_t ctx, LPCWSTR fmt, ...); /* @0x140018d8c 日志变参 (与 11763 同位) */
 extern void PECMD_SendHotkeyKeyMessage(uint32_t w, int a,
                                        int b); /* @0x140035b40 (core_b3_remaining.c extern) */
 extern void PECMD_MarkKeyTable(uint16_t key,
@@ -6921,7 +6920,7 @@ int64_t PECMD_PartShowHideDrive(uint64_t a1, WCHAR *a2)
     local_97b = 0x43;
     PECMD_FillCharTable(0x43, cand_tbl);
     uVar34 = 0;
-    local_884 = 0; /* 原体读未初始化高位后掩码; 置 0 TODO(verify) */
+    local_884 = 0; /* capstone @1400cd594 mov [rsp+0x94],r14d(0) 实证清零 — R26-g 收口 */
     bVar41 = false;
     local_985 = 0;
     uVar22 = 0;
@@ -7010,7 +7009,7 @@ LAB_1400cd654:
                     if (-1 >= lVar17) {
                         cur = pWVar27;
                         uVar15 = PECMD_EvalParenthesizedExpr(
-                            (int64_t *)&cur, (uint64_t *)local_838); /* TODO(verify): 近似体 */
+                            (int64_t *)&cur, (uint64_t *)local_838); /* callee 真体 core_b7a.c:114 — R26-g 收口 */
                         uVar34 = 0;
                         bVar28 = local_98f;
                         if ((int)uVar15 < 1)
@@ -7119,7 +7118,7 @@ LAB_1400cdb32:
         uVar39 = 0xffffffffU;
     }
     uVar29 = local_968;
-    local_878 = (uint)local_878 & 0xffff0000U; /* 原体: 高半保留低半清零 TODO(verify) */
+    local_878 = (uint)local_878 & 0xffff0000U; /* dc:127625 同款掩码 — R26-g 收口 */
     local_90c = 0;
     pWVar27 = local_900;
     if (*cur != L'\0') {
@@ -7909,7 +7908,9 @@ LAB_1400cdb32:
                                                                                         (uint64_t)
                                                                                             local_978,
                                                                                         (uint64_t)
-                                                                                            local_8f8);
+                                                                                            local_8f8,
+                                                                                        (uint64_t)(ushort)
+                                                                                            letter_str[0] /* R26-g @cf197 第5参=盘符 */);
                                                                                 }
                                                                                 if ((local_950 !=
                                                                                      0) &&
@@ -8981,7 +8982,7 @@ LAB_1400d00bd:
         if (BVar13 == 0) {
             GetLastError();
         }
-        rbx_ret = (longlong)local_8dc; /* movsxd rbx,[rsp+0xa0] TODO(verify) */
+        rbx_ret = (longlong)local_8dc; /* UpdatePartitionLayout 真体出参 — R26-g 收口 */
     }
     PECMD_FreeStrBuf((WCHAR **)&local_918);
     PECMD_FreeStrBuf((WCHAR **)&local_8c0);
