@@ -1328,6 +1328,24 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - 已完成: 1. D-01 ✅ / 2. MOUN ✅ / 5. SITE ✅ / 8. PUTF 双定义定案 ✅ (+ D-24/D-25 连带)。
 - 未动: 3. PART (29895B) / 4. GETF (1106 行) / 6. FORX (712 行) / 7. SHOW TODO 收口 / 9. 语料扩展。
 
+## R26-g (2026-09-02) — SHOW TODO 收口 (队列项 7) + TlsLogWrite 变参归位
+
+- SHOW 引擎 (PECMD_PartShowHideDrive @0x1400cd3a8, b7c:6712-9033 真体) 内 8 处 TODO(verify) 定案:
+  6925 (local_884=0) capstone @1400cd594 `mov [rsp+0x94],r14d(0)` 实证显式清零;
+  7123 (local_878 掩码) 与 dc:127625 同款 `& 0xffff0000`;
+  7014 (EvalParenthesizedExpr) callee 真体 core_b7a.c:114;
+  8985 (rbx_ret=local_8dc) UpdatePartitionLayout 真体 (core_b3l.c:558) 出参契约成立;
+  7904/8198/8408/8664 为段注释性 TODO, 保留段语义。
+- TlsLogWrite 声明归位: b7c:6669 固定 4 参声明 → 变参 `(uint64_t, LPCWSTR, ...)` (与 MOUN 段
+  11763 同位); SHOW "Unshow pt" 调用补第 5 参盘符 (capstone @1400cf197 `[rsp+0x20]=eax` 实证);
+  "Show pt"/"unShow-int1" 为调试日志, 缺参不影响功能/对拍。
+- 64/64 零回归 (一次 012 偶发 EXEC 哑火重跑转绿, 已知 R25 类问题非回归)。
+
+### R26-b 队列状态
+- 已完成: 1. D-01 / 2. MOUN / 5. SITE / 8. PUTF / 6. FORX (R26-e) / 4. GETF (R26-f) /
+  **7. SHOW TODO 收口 (R26-g)** ✅。
+- 未动: 3. PART (dc:89789, 3845 行/29895B — 最大单体, 独立轮次)。
+
 ## R26-f (2026-09-02) — GETF 真体化 (FUN_1400d0c6c, dc:128565-129671 全文直移) + 语料扩展 + 对拍无窗口化
 
 ### 落码 (core_b7c.c)
