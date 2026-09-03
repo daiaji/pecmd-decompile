@@ -1524,3 +1524,42 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - 全量 66/66 零失败 (067/068 值级 PASS; 065 存量 vars_val 同值不翻红)。
 - @d858eb0。队列项 9 剩余: FORX 默认引擎深路径 (glob/s/O:N/size 族)、
   PART 行为案 (须虚机)、NL 变量源可达路径。
+
+---
+
+## R27-c · PART 行为归正 + PART-on-VHD 语料（2026-09-03, 68/68）
+
+> 承用户提议: VHD 虚拟盘 = PART 验证的安全目标 (不触实体盘)。链路已全验证并
+> 沉淀为 harness 夹具; 语料对拍还**额外抓出并修复了 3 个 i28g 移植缺陷**。
+
+### VHD 夹具 (run_case.py, manifest {"vhd": true})
+- diskpart 创建 100MB 固定 VHD → attach → **Get-Disk 按文件路径定位磁盘号**(不猜号)
+  → 注入 main.pecmd 模板 @VHDDISK@ → 每后端独立 VHD → 跑完 detach+删盘。
+- 安全边界: 全程仅触碰夹具自建 VHD 文件; windbg 活体确认 PART hdN 路径。
+
+### 语料 (批 1/2, 值级)
+- **069_part_listdisk**: `PART list disk,A` 全盘号列表值级 (无 hdN 形态; flaky=true
+  注记环境盘敏感)。定案方言: 变量名在第二逗号字段。
+- **070_part_listpart**: `PART list part hd@VHDDISK@,A` 于 RAW 空盘 → 空态值级锁定。
+
+### 语料实证抓出并修复的 3 个 i28g 缺陷
+1. **双游标合并** (重大): dc local_res10 = 主解析游标 (选项/子命令/词/数字全走它,
+   dc:90018-90019), local_308 = 主游标副本 (dc:90037) 仅供逗号段切分 (90064/90071)。
+   i28g 合并为一个 cur → 子命令匹配落空串 → list disk 零输出。已按
+   dc:90112-91660 区间分离 (188 处, sub=主游标)。
+2. **词扫描终止集缺定界符**: 汇编 0x14008e634 `cmp ax,di` (di=delim) — 词终止于
+   ','; Ghidra 误写 `!= L'\0'` → 词吞逗号 → hdN 解析失败。已补 `WVar40 != L','`。
+3. **PhysicalDrive 字面量转义丢失** ×3: `L"\.\PhysicalDrive"` (少一杠) →
+   `L"\\.\PhysicalDrive"` (与 dc:90995/90997 一致)。
+
+### 活体取证定案 (windbg, 断 0x14008ecab/ed35/e663)
+- hd 词 = "hd6" (定界符终止), 解析 (0x14008ed35, 出参 [rsp+0x74]) 写 6,
+  **清零块 (0x14008ecab, dc:90913) 属 -img 分支且未执行** — dc:90913 行序为
+  Ghidra 块重排伪影, i28g 将其误归 hd 路径的问题随 (1) 游标分离一并消解。
+- 原版与 msvc 现于 list disk/list part 值级一致。
+
+### 遗留
+- **D-28 候选**: hd@VHDDISK@ 形态的 list disk hdN (单盘信息) — 词边界已修但
+  hd 输出值级对拍未归绿 (E_INVALIDARG 差异), 下轮专项。
+- 批 3 写案 (init/clean/-gpt/-mbr on VHD): 语法探测与值级锁定, 依赖 D-28。
+- 队列项 9 剩余: FORX 默认引擎深路径、NL 变量源可达路径 (_SUB/TEAM 上下文)。
