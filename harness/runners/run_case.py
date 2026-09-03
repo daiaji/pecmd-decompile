@@ -217,11 +217,19 @@ def setup_vhd(pectest_root):
         f'select vdisk file="{vhd_path}"\nattach vdisk\n')
     if rc != 0:
         return None
-    r = subprocess.run(
-        ["powershell", "-NoProfile", "-Command",
-         f'(Get-Disk | Where-Object Location -like "*part_case.vhdx*").Number'],
-        capture_output=True, text=True, timeout=60)
-    nums = [t.strip() for t in (r.stdout or "").split() if t.strip().isdigit()]
+    # R27-d: attach 后轮询等待磁盘就绪 (diskpart 返回 != OS 枚举完成, 069 flaky 根因)
+    import time
+    nums = []
+    for _ in range(20):
+        r = subprocess.run(
+            ["powershell", "-NoProfile", "-Command",
+             f'(Get-Disk | Where-Object Location -like "*part_case.vhdx*").Number'],
+            capture_output=True, text=True, timeout=60)
+        nums = [t.strip() for t in (r.stdout or "").split() if t.strip().isdigit()]
+        if nums:
+            time.sleep(1)  # 盘号出现后再稳一拍 (状态 Online 确认)
+            break
+        time.sleep(0.5)
     if not nums:
         _diskpart(f'select vdisk file="{vhd_path}"\ndetach vdisk\n')
         if os.path.exists(vhd_path):

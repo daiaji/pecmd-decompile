@@ -1587,7 +1587,7 @@ extern void (*DAT_14013d380)(void *h, long long len);
 extern HANDLE PECMD_OpenFileHandle(HANDLE *out, LPCWSTR path, DWORD access, DWORD share,
                                    LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl);
 
-int PECMD_ParseHexOrDec();
+int PECMD_ParseHexOrDec();  /* R27-d: 桩惯例保留 (返回 1 不改参); restored_bodies 封装改道 FUN_1400C1194 */
 
 uint64_t PECMD_MatchAssignToken(char *key, int64_t *pp, int len);
 /* def core_b3f.c */

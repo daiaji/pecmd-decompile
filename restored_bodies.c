@@ -8054,9 +8054,12 @@ uint64_t PECMD_CreateFont(void *a, void *b, void *c) { (void)a;(void)b;(void)c; 
 /* @0x1400c11c0 size=52 鈥?鍗佸叚杩涘埗/鍗佽繘鍒惰В鏋?bool 灏佽(鐩寸Щ) */
 bool PECMD_ParseHexOrDecBool(long long *param_1, int *param_2)
 {
-  uint64_t res[3]; res[0] = (uint64_t)*param_2;
-  bool b = PECMD_ParseHexOrDec(param_1,res);
-  if ((int)b > 0) { *param_2 = (int)res[0]; return 1; }
+  uint64_t res = 0;
+  /* R27-d: 原经 PECMD_ParseHexOrDec (unimplemented_stubs 零参桩, 恒 1 不解析) —
+   改道真体 FUN_1400C1194 (core_exec5.c); 其他桩惯例消费方不受影响 */
+  extern bool FUN_1400C1194(LPCWSTR *ps, uint64_t *out);
+  bool b = FUN_1400C1194((LPCWSTR *)param_1, &res);
+  if (b) { *param_2 = (int)res; return 1; }
   return 0;
 }
 /* ========== PECMD_DdCopyCommand @ 1400d2e90  size=11447 鎭㈠浣?(decompiled.c @129675) ==========

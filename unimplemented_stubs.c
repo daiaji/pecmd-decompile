@@ -348,7 +348,7 @@ void PECMD_SetCheckVariable(int64_t param_1, int param_2)
 /* S8: 同址别名归一 —— FUN_14009bb28 ≡ PECMD_NotifyMainWindowRefresh（真体 restored_bodies.c）。 */
 uint64_t PECMD_NotifyMainWindowRefresh(uint64_t a, int b) { FUN_14009BB28((void *)(uintptr_t)a,b); return 0; }   /* arity 修正 0->2 (core 调用方 + PECMD_ProcessScriptBlock 移入) */
 int64_t PECMD_QueryFontInfo(int64_t a, int *b, const void *c) { (void)a;(void)b;(void)c; return 0; }
-int PECMD_ParseHexOrDec() { return 1; }  /* 目标句柄克隆 (leaf stub) */
+int PECMD_ParseHexOrDec() { return 1; }  /* 目标句柄克隆 (leaf stub) — R27-d 保留桩惯例 (返回 1 不改参), restored_bodies 封装已改道真体 */
   /* 资源名定位 (leaf stub) */
   /* 设备/文件类型探测 (leaf stub) */
 static longlong PECMD_GetPartitionLayoutEntry(uintptr_t h, int mode, ulonglong *out) { (void)h;(void)mode;(void)out; return 0; }
