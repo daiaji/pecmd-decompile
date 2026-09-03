@@ -116,7 +116,11 @@ def make_epilogue(dst, case_id, manifest, pectest_root, backend=BACKEND_MSVC):
         vals_content = "|".join(f"{v}=%{v}%" for v in vars_list)
         vals_content = _cmd_meta_escape(f"CASE={case_id}|{vals_content}")
         vals_path = os.path.join(out_dir, "vars_val.txt")
-        lines.append(f'EXEC -hide ={cmd_exe} /c echo {vals_content}>"{vals_path}"')
+        # R28-c: 重定向前置 —— 旧形态 `echo X=N>"f"` 中"定界符后跟单个数字结尾"
+        # 的值 (R=7) 会被 cmd 解析为 FD7 重定向 → 0 字节文件 (026/027 确定性值损伤,
+        # 双方同伤=绿门假盲区)。前置 `>"f" echo X` 使 `>` 不再紧邻值文本, 陷阱消除。
+        # 产物字节与旧形态完全一致 (echo 正文+CRLF), 无伤案无需重录。
+        lines.append(f'EXEC -hide ={cmd_exe} /c >"{vals_path}" echo {vals_content}')
     epilogue = "\n".join(lines) + "\n"
 
     main_path = os.path.join(dst, "main.pecmd")

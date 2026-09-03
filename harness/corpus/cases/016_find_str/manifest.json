@@ -9,5 +9,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "正例: 子串查找"
+  "notes": "正例: 子串查找 (R28-c 值级升级)",
+  "vars_val": true
 }

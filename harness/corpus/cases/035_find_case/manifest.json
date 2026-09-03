@@ -1,10 +1,17 @@
 {
   "id": "035_find_case",
   "slug": "find_case_sensitivity",
-  "cmds": ["FIND", "ENVI"],
-  "vars": ["S", "R"],
+  "cmds": [
+    "FIND",
+    "ENVI"
+  ],
+  "vars": [
+    "S",
+    "R"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "FIND 大小写敏感性探针 (lstrcmpiW 语义取证)"
+  "notes": "FIND 大小写敏感性探针 (lstrcmpiW 语义取证) (R28-c 值级升级)",
+  "vars_val": true
 }

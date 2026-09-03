@@ -1,10 +1,15 @@
 {
   "id": "033_calc_div_floor",
   "slug": "calc_div_floor_semantics",
-  "cmds": ["CALC"],
-  "vars": ["R"],
+  "cmds": [
+    "CALC"
+  ],
+  "vars": [
+    "R"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "CALC 整除/舍入语义固定化: 9/2 (对照 027 除零)"
+  "notes": "CALC 整除/舍入语义固定化: 9/2 (对照 027 除零) (R28-c 值级升级)",
+  "vars_val": true
 }

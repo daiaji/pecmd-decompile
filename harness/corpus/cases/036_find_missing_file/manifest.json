@@ -1,10 +1,15 @@
 {
   "id": "036_find_missing_file",
   "slug": "find_s_missing_file",
-  "cmds": ["FIND"],
-  "vars": ["R"],
+  "cmds": [
+    "FIND"
+  ],
+  "vars": [
+    "R"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "FIND --s 目标不存在错误分支 (018 仅存在支)"
+  "notes": "FIND --s 目标不存在错误分支 (018 仅存在支) (R28-c 值级升级)",
+  "vars_val": true
 }

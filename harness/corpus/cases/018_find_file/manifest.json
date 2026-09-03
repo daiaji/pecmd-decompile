@@ -9,5 +9,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "边界例: 文件内查找(探针, 观察--s语义)"
+  "notes": "边界例: 文件内查找(探针, 观察--s语义) (R28-c 值级升级)",
+  "vars_val": true
 }

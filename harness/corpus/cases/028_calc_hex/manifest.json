@@ -9,5 +9,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "边界例: 十六进制输入"
+  "notes": "边界例: 十六进制输入 (R28-c 值级升级)",
+  "vars_val": true
 }

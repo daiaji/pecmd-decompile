@@ -1,0 +1,1 @@
+CASE=034_ifex_andor|A=5|B=3|R=and_ok
