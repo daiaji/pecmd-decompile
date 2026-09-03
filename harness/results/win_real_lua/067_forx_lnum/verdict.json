@@ -1,0 +1,33 @@
+{
+ "case": "067_forx_lnum",
+ "backend": "win_real_lua",
+ "stdout": {
+  "same": true
+ },
+ "exit": {
+  "exp": 0,
+  "got": 2
+ },
+ "vars": {
+  "same": true,
+  "diff": []
+ },
+ "fs": {
+  "same": true,
+  "added": [],
+  "removed": [],
+  "changed": []
+ },
+ "reg": {
+  "same": true
+ },
+ "verdict": "FAIL",
+ "flaky_pool": false,
+ "golden_fallback": "win_real",
+ "vars_val": {
+  "same": false,
+  "diff": [
+   "  g: CASE=067_forx_lnum|ACC1=start_1_3_5|ACC2=start_5_3_1|BODY_DONE=YES\n  r: CASE=067_forx_lnum|ACC1=start|ACC2=start|BODY_DONE=YES"
+  ]
+ }
+}

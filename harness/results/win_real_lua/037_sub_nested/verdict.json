@@ -1,0 +1,31 @@
+{
+ "case": "037_sub_nested",
+ "backend": "win_real_lua",
+ "stdout": {
+  "same": true
+ },
+ "exit": {
+  "exp": 0,
+  "got": 0
+ },
+ "vars": {
+  "same": true,
+  "diff": []
+ },
+ "fs": {
+  "same": true,
+  "added": [],
+  "removed": [],
+  "changed": []
+ },
+ "reg": {
+  "same": true
+ },
+ "verdict": "PASS",
+ "flaky_pool": false,
+ "golden_fallback": "win_real",
+ "vars_val": {
+  "same": true,
+  "diff": []
+ }
+}

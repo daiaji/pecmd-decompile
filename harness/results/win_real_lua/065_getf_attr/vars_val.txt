@@ -1,0 +1,1 @@
+CASE=065_getf_attr|R=getf_ok|getf_ok=%getf_ok%|BODY_DONE=YES|H=%H%|%H%=%%H%%|K=%K%|%K%=%%K%%|L=%L%|%L%=%%L%%
