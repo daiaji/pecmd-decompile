@@ -22,5 +22,9 @@
   "same": true
  },
  "verdict": "PASS",
- "flaky_pool": false
+ "flaky_pool": false,
+ "vars_val": {
+  "same": true,
+  "diff": []
+ }
 }

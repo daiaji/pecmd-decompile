@@ -9,5 +9,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "错误例: 调用未定义子过程"
+  "notes": "错误例: 调用未定义子过程 (R28-e 值级升级)",
+  "vars_val": true
 }
