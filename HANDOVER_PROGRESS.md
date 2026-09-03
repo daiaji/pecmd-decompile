@@ -1595,3 +1595,31 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
   capstone 全 .text 扫描未找到该格式串引用 (疑经寄存器间接/共享代码)。
 - 批 3 写案 (init/clean/-gpt/-mbr on VHD): 语法探测已通, 值级锁定依赖 hdN。
 - 语料 68 案 (069/070 值级) / 全量 68/68; D-26/FORX 深路径维持既有状态。
+
+## R28-a · Lua 后端接入冒烟（2026-09-03, pecmd-lua 新仓 4c03739 + harness 19e2984）
+
+> 启动 Lua 对齐线 (/goal: 依据 docs/lua_alignment_guide.md 全流程推进)。本轮 = 指南 §4
+> "工程接入" 全部落地: 空壳 Lua 后端跑通 001 冒烟。
+
+### 交付
+1. **pecmd-lua 新项目** (D:\repo\PECMD\pecmd-lua, 独立仓): Lua 5.4.7 静态宿主
+   lua_pecmd.exe (SUBSYSTEM:WINDOWS, stdout 静默=golden 口径) + C shim 忠实 Win32 面
+   (env_set/env_get/env_probe 三态, exec CREATE_NO_WINDOW, read_file 宽路径) +
+   runtime Lua 引擎壳 (LOAD/行扫描/%VAR% 展开/ENVI 赋值/EXEC -hide -wait)。
+   语义决策点登记 DEC-* 于 runtime 头注 (EXP-1 未定义保持字面/CMT-1/ENVI-1/EXEC-1/2)。
+2. **harness**: run_case.py `--exe lua` (win_real_lua, 契约 `lua_pecmd.exe LOAD <script>`,
+   exe 默认 C:\pectest\lua_pecmd.exe); diff_case.py golden 回退 (真值单一来源
+   golden/win_real, 其他后端回退并登记 golden_fallback — 杜绝按后端复制 golden)。
+3. **001_envi_smoke lua 后端 golden 值级 PASS ×3** (exit/vars/stdout 全同)。
+
+### 途中实证 (方法论即时应用)
+- Lua 模式 `[%%w_]` ≠ `[%w_]` (类内 %% = 字面 %) — 展开器静默失配,
+  %T_DONE% 未展开仍 "PASS 兜底假象" (cmd 侧继承环境展开), debug 通道定位。
+- 引擎退出快于原版 → D-21 同款回捞竞态 (cmd 子进程未落盘即 copy)。
+  解法 = settle 有界静置 (≤1s, 预算尽孤儿化=原版退出语义), 对齐可观测结果。
+- malloc 缺 stdlib.h 在 x64 = 指针截断 (C4013 非, 必须零容忍)。
+
+### 遗留
+- EXEC `=` 前导语义未定案 (DEC-EXEC-1 容忍跳过), 待语料裁决。
+- 反编译侧未动; 语料 68/68 状态不变; pecmd_compat 旧方案 (implementation-plan-lua,
+  "不实现 PECMD 语法" 路线) 与本对齐线并存不冲突 — 见 HANDOVER 本节声明。
