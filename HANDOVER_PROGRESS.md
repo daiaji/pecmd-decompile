@@ -1563,3 +1563,35 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
   hd 输出值级对拍未归绿 (E_INVALIDARG 差异), 下轮专项。
 - 批 3 写案 (init/clean/-gpt/-mbr on VHD): 语法探测与值级锁定, 依赖 D-28。
 - 队列项 9 剩余: FORX 默认引擎深路径、NL 变量源可达路径 (_SUB/TEAM 上下文)。
+
+---
+
+## R27-d · 方法论成文 + 桩毒修复（2026-09-03, 68/68）
+
+> 用户指令: "最终开始 Lua 对齐前，把教训和经验都更新到文档"。产出两份文档
+> + 顺带修复 ParseHexOrDec 桩毒 (012 回归事故 → 归零)。
+
+### 新文档 (Lua 对齐前置必读)
+1. **docs/lessons_validation_methodology.md** — R27 全程复盘:
+   语料是裁决者/汇编是复核/dc 是参考; dc 五类失真 (块行序/伪花括号/条件误翻/
+   丢参/转义二次丢失); 汇编+活体裁决链 (windbg 断执行序分叉点 + sxe -c av);
+   桩三毒 (零参桩假成功/遮蔽真体/惯例依赖) 与链接映射排查; VHD 方法论
+   (按文件路径定位盘号/就绪轮询/每后端独立/清理纪律); 方言定案 (FORX/PART/WRIT)。
+2. **docs/lua_alignment_guide.md** — Lua 实施手册: 开工顺序 (语料厚→薄, PART 最后)、
+   对着行为写不对着 C 翻、错误码=行为、语料纪律 (消费驱动补证)、
+   harness Lua backend 接入路径、坑速查 (全部 R27 实证)、每轮收尾清单。
+
+### 顺带修复 (与文档互为印证)
+- **ParseHexOrDec 桩毒** (D-28 深挖发现): restored_bodies 封装
+  PECMD_ParseHexOrDecBool 经 unimplemented_stubs 零参桩 `int ParseHexOrDec(){return 1;}`
+  (不解析不改参) → PART hdN 数字解析恒失败 (E_INVALIDARG)。修复: **封装内联改道
+  真体 FUN_1400C1194 (core_exec5.c), 桩原样保留** (先改桩为转发 → 012 时序回归
+  0xC0000005 → 还原, 印证"改链不改桩"纪律)。hdN 现写入归位 (local_434=5)。
+- **run_case VHD 夹具就绪等待**: attach 返回 ≠ 盘就绪 (069 flaky 根因:
+  golden 少录 6 号盘)。轮询 Get-Disk 至盘号出现 + 稳一拍。069/070 重录值级 PASS。
+
+### 遗留 (下轮入口)
+- hdN 单盘形态枚举路径 E_INVALIDARG: 12-spec 格式串 (dc:1020) 丢参 TODO 未完成;
+  capstone 全 .text 扫描未找到该格式串引用 (疑经寄存器间接/共享代码)。
+- 批 3 写案 (init/clean/-gpt/-mbr on VHD): 语法探测已通, 值级锁定依赖 hdN。
+- 语料 68 案 (069/070 值级) / 全量 68/68; D-26/FORX 深路径维持既有状态。
