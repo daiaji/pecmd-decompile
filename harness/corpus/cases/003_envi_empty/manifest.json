@@ -10,5 +10,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "边界例: 空值赋值与引用空变量"
+  "notes": "边界例: 空值赋值与引用空变量 (R28-b 值级升级: vars_val=true, lua 后端消费驱动)",
+  "vars_val": true
 }

@@ -4,10 +4,12 @@
     "ENVI"
   ],
   "vars": [
-    "A"
+    "A",
+    "B"
   ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "错误例(观察用): 作用域覆盖行为(探针)"
+  "notes": "错误例(观察用): 作用域覆盖行为(探针) (R28-b 值级升级: vars_val=true, lua 后端消费驱动)",
+  "vars_val": true
 }
