@@ -1,0 +1,6 @@
+﻿ENVI &Name=张三
+ENVI &City=北京
+MESS 你好，%&Name%！欢迎来到%&City%。@中文测试#OK
+CALC &Sum=1+2+3
+MESS 计算结果：%&Sum%@计算#OK
+EXIT FILE

@@ -1,0 +1,3355 @@
+﻿#!PECMD
+ENVI &Sot=%SystemRoot%
+ENVI^ EnviMode=1
+ENVI^ ForceLocal=1
+ENVI$ &NL=0d 0a
+ENVI ?&Very,3=PEBIT,"%&MyName%"
+ENVI ?&Vere,3=PEBIT,%&Sot%\System32
+FIND *&Vere<>&Very, EXIT File
+SET ::MyBit=%&Very%
+SET$ &TAB=09
+SET$ &NLa=0a
+SET$ &SL=0C
+SET$ &SC=0B
+SET$ &lls=22
+SET$ &lsl=20
+LPOS * &&Hsz=\,0,&MyName
+CALC &Hsz=%&Hsz% - 1
+MSTR * &dirCur=0,%&Hsz%,&MyName
+RAND &CuRnu
+ENVI &Pathfiles=%&Sot%\Temp\%&CuRnu%
+FIND $%&Vere%=x64, SET &Bitos=64Bit
+FIND $%&Vere%=x86, SET &Bitos=32Bit
+FIND $%&Vere%=ia64, SET &Bitos=ia64
+CALL $--qd --16 --ret:&verdll Kernel32.dll,GetModuleHandleW,$Version.dll
+CALL $--qd --16 --ret:&Shlwapi Kernel32.dll,GetModuleHandleW,$Shlwapi.dll
+CALL $--qd --16 --ret:&Userapi Kernel32.dll,GetModuleHandleW,$User32.dll
+CALL $--qd --16 --ret:&Oleapi Kernel32.dll,GetModuleHandleW,$Ole32.dll
+FIND #%&Oleapi%=0, CALL $--ret:&Oleapi &&lip,-LoadLibrary,^Ole32.dll
+FIND #%&verdll%=0, CALL $--ret:&verdll &dllNameB,-LoadLibrary,^Version.dll
+FIND #%&Shlwapi%=0, CALL $--ret:&Shlwapi &dllNamec,-LoadLibrary,^Shlwapi.dll
+FIND #%&Userapi%=0, CALL $--ret:&Userapi &dllNamed,-LoadLibrary,^User32.dll
+IFEX %&Sot%\System32\vcruntime140.dll,!
+{
+	DEVI *extract #103,,%&Sot%\System32
+	CALL $--ret:&vcr &dllNamer,-LoadLibrary,^vcruntime140.dll
+}
+CALL $--m --ret:&aes &&r,-LoadLibrary,*#104
+CALL $--ret:&Enc ,-GetProcAddress,*%&aes%,AESEncrypt
+CALL $--ret:&Dec ,-GetProcAddress,*%&aes%,AESDecrypt
+IFEX #[ %&SYSCODEPAGE%=936 | %&SYSCODEPAGE%=950 | %&SYSCODEPAGE%=52936 ],
+{*
+	SET &SYSlanguage=936
+	SET &Dstop=桌面
+	SET &CXJG=查询结果： 所有设备驱动程序已经安装。
+	SET &zanz=正在安装设备驱动程序，安装进度
+	SET &DSPHL=安装结果： 已忽略安装此设备驱动
+	SET &Hardid=硬件ID
+	SET &Yasbao=压缩包
+	SET &Infos=INF文件
+	SET &installfully=安装结果： 设备驱动程序安装成功。
+	SET &Theinstall=安装结果： 未能成功安装设备驱动程序。
+	SET &InstallNo=安装结果： 找不到匹配的驱动。
+	SET &Creatingindex=正在创建索引文件，请稍候
+	SET &Indexi=索引已制作完成。
+	SET &noindex=不需制作索引文件。
+	SET &Allindex=所有索引文件已制作完毕。
+	SET &driveFolder=选择驱动文件夹
+	SET &Fileth=文件路径：
+	SET &lplier=供应商：
+	SET &Indexs1=当前为创建索引模式，使用方法：%&NL%支持压缩包格式：7z cab zip rar wim esd iso %&NL%默认为搜索当前目录下的驱动压缩包创建索引，索引保存到压缩包相同位置。
+	SET &Indexs2=%&NL%%&NL%制作指定驱动压缩包索引，直接将驱动压缩包路径拖拽到这里->, 或手动选择路径。
+	SET &boxselection=输入需要安装驱动存放的文件夹，双击此处打开浏览对话框进行选择。
+	SET &Searchthis=搜索本机硬盘离线系统下的驱动，匹配安装到当前系统。
+	SET &Skipcard=勾选此项将跳过安装显卡设备。
+	SET &boxrtlection=输入需要储存备份驱动存放的文件夹，双击此处打开浏览对话框进行选择。
+	SET &type19=极速压缩
+	SET &type17=搜索硬盘中的驱动
+	SET &type18=忽略安装显卡驱动
+	SET &type16=创建索引
+	SET &type15=驱动文件夹
+	SET &type14=直接将驱动压缩包路径拖拽到这里->，或手动选择路径。
+	SET &type13=导出驱动|仅储存|极速压缩|快速压缩|标准压缩|最大压缩|极限压缩
+	SET &type12=完成后退出
+	SET &type11=计时耗时
+	SET &type10=执行
+	SET &type09=浏览
+	SET &type08=备份文件路径
+	SET &type46=默认
+	SET &type07=不选
+	SET &type06=全选
+	SET &type05=显示内置驱动
+	SET &type04=备份无线配置
+	SET &type03=驱动大小
+	SET &type02=驱动版本
+	SET &type01=驱动类型
+	SET &type20=驱动安装
+	SET &type21=驱动管理
+	SET &type22=当前系统
+	SET &type51=添加驱动
+	SET &type52=删除驱动
+	SET &type53=备份驱动
+	SET &type54=无分类|类型|制造商|描述名
+	SET &type55=类型
+	SET &type23=帮助
+	^SET &anzwc[1]=安装完成
+	^SET &anzwc[2]=二次扫描，安装完成
+	^SET &anzwc[3]=三次扫描，安装完成
+	SET &Vn=版本
+	SET &Ud=未知设备
+	SET &Ote=其他设备
+	SET &CompPassword=压缩包密码
+	SET &default=默认
+	SET &Encrypts=AES加密
+	^SET &DriveGUID[{4d36e972-e325-11ce]=网络适配器
+	^SET &DriveGUID[{4d36e973-e325-11ce]=网络客户端
+	^SET &DriveGUID[{4d36e974-e325-11ce]=网络服务
+	^SET &DriveGUID[{4d36e975-e325-11ce]=网络协议
+	^SET &DriveGUID[{87EF9AD1-8F70-49EE]=通用网络驱动器
+	^SET &DriveGUID[{71a27cdd-812a-11d0]=存储卷
+	^SET &DriveGUID[{e0cbf06c-cd8b-4647]=蓝牙
+	^SET &DriveGUID[{4d36e967-e325-11ce]=磁盘驱动器
+	^SET &DriveGUID[{4d36e968-e325-11ce]=显示适配器
+	^SET &DriveGUID[{4d36e96e-e325-11ce]=监视器
+	^SET &DriveGUID[{4d36e964-e325-11ce]=适配器
+	^SET &DriveGUID[{6bdd1fc6-810f-11d0]=图像设备
+	^SET &DriveGUID[{4d36e97e-e325-11ce]=其他设备
+	^SET &DriveGUID[{4d36e97b-e325-11ce]=存储控制器
+	^SET &DriveGUID[{4d36e96c-e325-11ce]=声音、视频和游戏控制器
+	^SET &DriveGUID[{50906cb8-ba12-11d1]=多端口串行适配器
+	^SET &DriveGUID[{4d36e96a-e325-11ce]=IDE ATA/ATAPI 控制器
+	^SET &DriveGUID[{36fc9e60-c465-11cf]=通用串行总线控制器
+	^SET &DriveGUID[{BBBE8734-08FA-4966]=通用串行总线功能控制器
+	^SET &DriveGUID[{53966CB1-4D46-4166]=永久性存储磁盘
+	^SET &DriveGUID[{88BAE032-5A81-49f0]=USB设备
+	^SET &DriveGUID[{8ecc055d-047f-11d1]=非即插即用驱动程序
+	^SET &DriveGUID[{4d36e97a-e325-11ce]=打印机
+	^SET &DriveGUID[{533c5b84-ec70-11d2]=存储卷快照
+	^SET &DriveGUID[{72631e54-78a4-11d0]=电池
+	^SET &DriveGUID[{4d36e97c-e325-11ce]=声音
+	^SET &DriveGUID[{c06ff265-ae09-48f0]=音频/视频控制器设备
+	^SET &DriveGUID[{C166523C-FE0C-4A94]=音频输入和输出
+	^SET &DriveGUID[{5989FCE8-9CD0-467D]=音频处理对象(APO)
+	^SET &DriveGUID[{4D36E97D-e325-11ce]=系统设备
+	^SET &DriveGUID[{53D29EF7-377C-4D14]=生物识别设备
+	^SET &DriveGUID[{ca3e7ab9-b4c3-4ae6]=相机设备
+	^SET &DriveGUID[{4d36e965-e325-11ce]=DVD/CD-ROM 驱动器
+	^SET &DriveGUID[{e2f84ce7-8efa-411c]=扩展
+	^SET &DriveGUID[{4d36e969-e325-11ce]=软盘驱动器控制器
+	^SET &DriveGUID[{4d36e980-e325-11ce]=软盘驱动器
+	^SET &DriveGUID[{eec5ad98-8080-425f]=便携设备
+	^SET &DriveGUID[{745a17a0-74d3-11d0]=人体学输入设备
+	^SET &DriveGUID[{d45b1c18-c8fa-11d1]=APM
+	^SET &DriveGUID[{4d36e966-e325-11ce]=计算机
+	^SET &DriveGUID[{4d36e96f-e325-11ce]=鼠标
+	^SET &DriveGUID[{6bdd1fc2-810f-11d0]=解码器
+	^SET &DriveGUID[{4d36e976-e325-11ce]=无驱动程序
+	^SET &DriveGUID[{4d36e979-e325-11ce]=打印机
+	^SET &DriveGUID[{4658ee7e-f050-11d1]=打印机
+	^SET &DriveGUID[{C30ECEA0-11EF-4EF9]=WSD 打印提供程序
+	^SET &DriveGUID[{66f250d6-7801-4a64]=IEEE 1394内核调试器
+	^SET &DriveGUID[{c459df55-db08-11d1]=IEEE 1394 IP网络枚举器
+	^SET &DriveGUID[{48721b56-6795-11d2]=IEEE 1284.4 设备
+	^SET &DriveGUID[{49ce6ac8-6f86-11d2]=IEEE 1284.4 兼容打印机
+	^SET &DriveGUID[{7ebefbc0-3200-11d2]=61883 设备
+	^SET &DriveGUID[{6bdd1fc1-810f-11d0]=IEEE 1394 控制器
+	^SET &DriveGUID[{6bdd1fc5-810f-11d0]=IrDA设备
+	^SET &DriveGUID[{4d36e96b-e325-11ce]=键盘
+	^SET &DriveGUID[{ce5939ae-ebde-11D0]=介质更换
+	^SET &DriveGUID[{4d36e970-e325-11ce]=内存技术驱动程序
+	^SET &DriveGUID[{4d36e96d-e325-11ce]=调制解调器
+	^SET &DriveGUID[{4d36e971-e325-11ce]=多功能设备
+	^SET &DriveGUID[{268c95a1-edfe-11d3]=PCI SSL加速器
+	^SET &DriveGUID[{4d36e977-e325-11ce]=PCMCIA适配器
+	^SET &DriveGUID[{d48179be-ec20-11d1]=SBP2 IEEE 1394
+	^SET &DriveGUID[{4d36e978-e325-11ce]=端口（COM和LPT端口)
+	^SET &DriveGUID[{50127dc3-0f36-415e]=处理器
+	^SET &DriveGUID[{d94ee5d8-d189-4994]=安全设备类
+	^SET &DriveGUID[{5175d334-c371-4806]=传感器
+	^SET &DriveGUID[{50dd5230-ba8a-11d1]=智能卡读取器
+	^SET &DriveGUID[{5c4c3332-344d-483c]=软件组件
+	^SET &DriveGUID[{25dbce51-6c8f-4a72]=CE USB 同步软件设备
+	^SET &DriveGUID[{6d807884-7d21-11cf]=磁带驱动器
+	^SET &DriveGUID[{F01A9D53-3FF6-48D2]=Compute accelerators
+	^SET &DriveGUID[{D61CA365-5AF4-4486]=Xbox 360 外设
+	^SET &DriveGUID[{F2E7DD72-6468-4E36]=固件
+	^SET &DriveGUID[{5099944A-F6B9-4057]=内存设备
+	^SET &DriveGUID[{53CCB149-E543-4C84]=存储类内存卷
+	^SET &DriveGUID[{A0A588A4-C46F-4B37]=SD 主适配器
+	^SET &DriveGUID[{53487C23-680F-4585]=叠瓦式磁记录盘
+	^SET &DriveGUID[{53B3CF03-8F5A-4788]=叠瓦式磁记录盘卷
+	^SET &DriveGUID[{E6F1AA1C-7F3B-4473]=USB 连接器管理器
+	^SET &DriveGUID[{9DA2B80F-F89F-4A49]=IEEE 1667 接收器和控制设备
+	^SET &DriveGUID[{C243FFBD-3AFC-45E9]=POS Barcode Scanner
+	^SET &DriveGUID[{772E18F2-8925-4229]=POS Cash Drawer
+	^SET &DriveGUID[{B86DFF51-A31E-4BAC]=FS 活动监控筛选器
+	^SET &DriveGUID[{B1D1A169-C54F-4379]=FS 防病毒筛选器
+	^SET &DriveGUID[{CDCF0939-B75B-4630]=FS CFS 元数据服务器筛选器
+	^SET &DriveGUID[{F3586BAF-B5AA-49B5]=FS 压缩筛选器
+	^SET &DriveGUID[{3E3F0674-C83C-4558]=FS 内容筛选过滤器
+	^SET &DriveGUID[{71AA14F8-6FAD-4622]=FS 连续备份筛选器
+	^SET &DriveGUID[{89786FF1-9C12-402F]=FS 复制保护筛选器
+	^SET &DriveGUID[{A0A701C0-A511-42FF]=FS 加密筛选器
+	^SET &DriveGUID[{D546500A-2AEB-45F6]=FS HSM 筛选器
+	^SET &DriveGUID[{E55FA6F9-128C-4D04]=FS 基础结构筛选器
+	^SET &DriveGUID[{F8ECAFA6-66D1-41A5]=FS 打开文件备份筛选器
+	^SET &DriveGUID[{6A0A8E78-BBA6-4FC4]=FS 物理配额管理筛选器
+	^SET &DriveGUID[{8503C911-A6C7-4919]=FS 配额管理筛选器
+	^SET &DriveGUID[{48D3EBC4-4CF8-48FF]=FS 复制筛选器
+	^SET &DriveGUID[{D02BC3DA-0C8E-4945]=FS 安全性增强器筛选器
+	^SET &DriveGUID[{5D1B9AAA-01E2-46AF]=FS 系统筛选器
+	^SET &DriveGUID[{2DB15374-706E-4131]=FS 系统恢复筛选器
+	^SET &DriveGUID[{FE8F1572-C67A-48C0]=FS 撤消删除筛选器
+	^SET &DriveGUID[{F75A86C0-10D8-4C3A]=FS 虚拟化筛选器
+	^SET &DriveGUID[{4FC9541C-0FE6-4480]=POS Line Display
+	^SET &DriveGUID[{2A9FE532-0CDC-44F9]=POS HID 磁条阅读器设备
+	^SET &DriveGUID[{43675D81-502A-4A82]=Media Center Extenders
+	^SET &DriveGUID[{5630831C-06C9-4856]=邻近感应设备
+	^SET &DriveGUID[{C7BC9B22-21F0-4F0D]=POS Receipt Printer
+	^SET &DriveGUID[{990A2BD7-E738-46C7]=智能卡
+	^SET &DriveGUID[{DB4F6DDD-9C0E-45E4]=智能卡筛选器
+	^SET &DriveGUID[{62F9C741-B25A-46CE]=软件设备
+	^SET &DriveGUID[{05F5CFE2-4733-4950]=Xbox 外设
+	^SET &DriveGUID[{14B62F50-3F15-11DD]=数字媒体设备
+	^SET &DriveGUID[{2A9FE532-0CDC-44F9]=POS HID 磁条阅读器设备
+	^SET &DriveGUID[{2A9FE532-0CDC-44F9]=POS HID 磁条阅读器设备
+	^SET &DriveGUID[{D421B08E-6D16-41CA]=Miracast 显示设备
+	^SET &DriveGUID[{990A2BD7-E738-46C7]=智能卡
+	^SET &DriveGUID[{5AEA001D-9372-4ED7]=OPOS 旧设备
+	^SET &DriveGUID[{1ED2BBF9-11F0-4084]=打印队列
+	^SET &DriveGUID[{62F9C741-B25A-46CE]=软件设备
+	^SET &DriveGUID[{B2728D24-AC56-42DB]=远程桌面摄像头设备
+	^SET &DriveGUID[{13E42DFA-85D9-424D]=POS 远程设备
+	^SET &DriveGUID[{DB4F6DDD-9C0E-45E4]=智能卡筛选器
+	^SET &DriveGUID[{990A2BD7-E738-46C7]=智能卡
+	^SET &DriveGUID[{88A1C342-4539-11D3]=通用远程桌面设备
+	^SET &DriveGUID[{62F9C741-B25A-46CE]=软件设备
+	^SET &DriveGUID[{05F5CFE2-4733-4950]=Xbox 外设
+}!
+{*
+	SET &Dstop=Desktop
+	SET &CXJG=Query results： All device drivers have been installed。
+	SET &zanz=Installing device drivers，Installation progress
+	SET &DSPHL=The installation of this device driver has been ignored
+	SET &Hardid=Hardware ID
+	SET &Yasbao=Package name
+	SET &Infos=Inf path
+	SET &installfully=Installation results： Device driver installed successfully。
+	SET &Theinstall=Installation results： The device driver could not be successfully installed。
+	SET &InstallNo=Installation results： No matching driver found。
+	SET &Creatingindex=Creating index file，please wait
+	SET &Indexi=Indexing completed。
+	SET &noindex=There is no need to make index files。
+	SET &Allindex=All index files have been created。
+	SET &Fileth=File Path：
+	SET &lplier=Supplier：
+	SET &driveFolder=Select drive folder
+	SET &Indexs1=Index creation mode is currently，Usage Method：%&NL%Support compressed package format：7z cab zip rar wim esd iso %&NL%The index is saved to the same 
+	SET &Indexs2=location as the compressed package. By default, the index is created to search the drive compressed package in the current directory，The index is saved to the same 
+	SET &Indexs3=location as the compressed package。%&NL%%&NL%Index the specified drive package，Drag the drive package path here directly->。Or manually select the path。
+	SET &boxselection=Enter the folder where the driver needs to be installed. Double click here to open the browse dialog box for selection。
+	SET &Searchthis=Search the drive under the offline system of the local hard disk and install it to the current system。
+	SET &Skipcard=Check this box to skip the installation of graphics card devices。
+	SET &boxrtlection=Enter the folder where the backup drive needs to be stored，and double-click here to open the browse dialog box for selection
+	SET &type01=Drive type
+	SET &type02=Driver version
+	SET &type03=Drive Size
+	SET &type04=Backup WIFI
+	SET &type05=Show built-in
+	SET &type46=Defa
+	SET &type06=All
+	SET &type07=on
+	SET &type08=BackupFilePath
+	SET &type09=Browse
+	SET &type10=Executed
+	SET &type11=Times
+	SET &type12=Exitwhenfinished
+	SET &type13=No compress|Storage|Topspeed|Fast|Standard|MAX|limit
+	SET &type14=Drag the drive package path here directly->，Or manually select the Path
+	SET &type15=Drive folder
+	SET &type16=Create index
+	SET &type17=Search disk
+	SET &type18=Ignore graphics
+	SET &type19=Topspeed
+	SET &type20=Drive install
+	SET &type21=Drive Manag
+	SET &type22=Current system
+	SET &type51=Add
+	SET &type52=Delete
+	SET &type53=Backup
+	SET &type54=No classification|Type|Manufacturer|Description
+	SET &type55=Type
+	SET &type23=Help
+	^SET &anzwc[1]=Installation progress
+	^SET &anzwc[2]=Secondary scanning，Installation progress
+	^SET &anzwc[3]=Three scans, installation completed
+	SET &Vn=Version
+	SET &Ud=Unknown device
+	SET &Ote=Other equipment
+	SET &CompPassword=Password
+	SET &default=default
+	SET &Encrypts=AES Ksy
+}
+SET &Hrvice1=360tray.exe 360sd.exe MsMpEng.exe hipstray.exe ksafe.exe QQPCRTP.exe kxetray.exe KvMonXP.exe RavMonD.exe Mcshield.exe avp.exe TMBMSRV.exe avcenter.exe rtvscan.exe
+SET &Hrvice2=ccSetMgr.exe a2guard.exe ad-watch.exe cleaner8.exe vba32lder.exe MongoosaGUI.exe CorantiControlCenter32.exe F-PROT.exe CMCTrayIcon.exe K7TSecurity.exe UnThreat.exe
+SET &Hrvice3=CKSoftShiedAntivirus4.exe AVWatchService.exe ArcaTasksService.exe iptray.exe PSafeSysTray.exe nspupsvc.exe SpywareTerminatorShield.exe BKavService.exe mssecess.exe hws_ui.exe
+SET &Hrvice4=SBAMSvc.exe ccSvcHst.exe f-secure.exe egui.exe knsdtray.exe ashDisp.exe patray.exe V3Svc.exe avgwdsvc.exe QUHLPSVC.exe SavProgress.exe fsavgui.exe vsserv.exe remupd.exe hws.exe
+SET &Hrvice5=FortiTray.exe safedog.exe parmor.exe beikesan.exe KSWebShield.exe TrojanHunter.exe AST.exe ananwidget.exe AVK.exe ccapp.exe avg.exe spidernt.exe Mcshield.exe avgaurd.exe hwsd.exe
+SET &Hrvice6=F-PROT.exe vsmon.exe avp.exee cpf.exe rfwmain.exe kpfwtray.exe FYFireWall.exe MPMon.exe ServUDaemon.exe BaiduSdSvc.exe SafeDogGuardCenter.exe safedogupdatecenter.exe
+SET &Hrvice7=safedogguardcenter.exe SafeDogSiteIIS.exe SafeDogTray.exe SafeDogServerUI.exe D_Safe_Manage.exe d_manage.exe yunsuo_agent_servic.exe yunsuo_agent_daemon.exe HwsPanel.exe
+SET &Grvice=%&Hrvice1% %&Hrvice2% %&Hrvice3% %&Hrvice4% %&Hrvice5% %&Hrvice6% %&Hrvice7%
+TEAM SET &Hrvice1=|SET &Hrvice2=|SET &Hrvice3=|SET &Hrvice4=|SET &Hrvice5=|SET &Hrvice6=|SET &Hrvice7=
+REGI --init --ak HKLM\SYSTEM\,&CurrTal
+FORX *NL &CurrTal,&&Tal,
+{*
+	LPOS * &&Asl=ControlSet,1,&Tal
+	FIND #%&Asl%=0, EXIT -
+	REGI --init --ak HKLM\SYSTEM\%&Tal%\Enum\,&Datven
+	FIND *&Datven<>, TEAM ENVI &CurControl=%&Tal%| EXIT FORX
+}
+SET &ind=IMAGE INDEX=
+REGI  --init --ak HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\,&qwPro
+MSTR * &qwPro=<#>&qwPro
+FDRV &Dri=%&Sot%
+IFEX %&Sot%\System32\ntoskrnl.exe, SET &SoRoot=%&Sot%\System32\ntoskrnl.exe! SET &SoRoot=%&Sot%\System32\ntkrnlpa.exe
+IFEX %&SoRoot%,! ENVI &SoRoot=%&Sot%\System32\Kernel32.dll
+SITE ?&SysVer=FVER,%&SoRoot%
+SET$# &lpVersionInfo=*160 0
+CALL $--qd --ret:&&et Ntdll.dll,RtlGetVersion,*&lpVersionInfo
+SET?int &lpVersionInfo=&VerInfo:4
+SET?int &lpVersionInfo=&TStrVer:8
+SET?int &lpVersionInfo=&WinVerinfo:12
+MSTR *  -delims:. &SysVer=<-1>&SysVer
+REGI --init .HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UBR,&BuildNumber
+FIND *&BuildNumber<>,
+{*
+	FIND #%&BuildNumber%>%&SysVer%,
+	{*	
+		CALC &BuildNumber=%&BuildNumber%
+		CALC &Buildber=%&SysVer% + 100
+		FIND #%&Buildber%>%&BuildNumber%, SET &SysVer=%&BuildNumber%
+	}
+}
+SET &WinVr=%&VerInfo%.%&TStrVer%.%&WinVerinfo%.%&SysVer%
+REGI --init .HKLM\HARDWARE\DESCRIPTION\System\BIOS\BaseBoardProduct,&BoardProduct
+REGI --init .HKLM\HARDWARE\DESCRIPTION\System\BIOS\BaseBoardManufacturer,&BoardManufacturer
+REGI --init .HKLM\HARDWARE\DESCRIPTION\System\BIOS\SystemManufacturer,&Manufact
+REGI --init .HKLM\HARDWARE\DESCRIPTION\System\BIOS\SystemProductName,&ProName
+REGI --init .HKLMSYSTEM\%&CurControl%\Control\SystemInformation\SystemProductName,&SProduct
+SET &BaseName=%&BoardProduct% %&BoardManufacturer% %&ProName% %&Manufact% %&SProduct%
+LPOS * &Srtie=APPLE,0,&BaseName
+ENVI ?&rei=ispe
+FIND $%&rei%=0,ENVI &zui=%&Dstop%! ENVI &zui=PE
+CALL $--bool --qd --ret:&DPI_Aware *%&Userapi%,SetProcessDPIAware
+CALL $--qd --ret:&Gpixelsx *%&Userapi%,GetDpiForSystem
+IFEX #%&Gpixelsx%<1,
+{*
+	CALL $--qd --ret:&H *%&Userapi%,GetDC,#0
+	CALL $--qd --ret:&Gpixelsx Gdi32.dll,GetDeviceCaps,#%&H%,#88
+	CALL $--qd --ret:&T Kernel32.dll,CloseHandle,#%&H%
+}
+CALC &Tro=%&Gpixelsx% / 96 * 100  #2
+CALC &Hcd=%&Tro% / 100 #2
+CALC &hoa=20 * %&Hcd% #2
+CALC &ics=24 * %&Hcd% #2
+CALC &glc=40 * %&Hcd% #2
+ENVI &Scalr=-scalef:%&Tro% -scale:%&Tro% 
+SET &Filery=
+SET &Filedris=
+FDRV &FRVID=*:
+FORX * %&FRVID%,&Drisd,
+{*
+	IFEX [ %&Drisd%\Windows\System32\shell32.dll & %&Drisd%\Windows\System32\config\SYSTEM  & %&Drisd%\Windows\System32\DriverStore\FileRepository\ ],
+	{*
+		IFEX %&Drisd%\Windows\System32\ntoskrnl.exe, SET &ntkrnl=ntoskrnl.exe! SET &ntkrnl=kernel32.dll
+		SITE ?,&Ayter=FVER,%&Drisd%\Windows\System32\%&ntkrnl%
+		IFEX #%&Ayter%>5,
+		{*
+			ENVI ?&Bitre,3=PEBIT,%&Drisd%\Windows\System32\%&ntkrnl%
+			SET< &Filery=%&Drisd%|
+			MSTR * -delims:. &VerInfo,&TStrVer,&aStrVer=<1><2><3>&Ayter
+			IFEX $%&VerInfo%=10,
+			{*
+				IFEX #%&aStrVer%>21999, SET &Winver=11! SET &Winver=10
+			}
+			IFEX $%&VerInfo%.%&TStrVer%=6.3, SET &Winver=8.1
+			IFEX $%&VerInfo%.%&TStrVer%=6.2, SET &Winver=8
+			IFEX $%&VerInfo%.%&TStrVer%=6.1, SET &Winver=7
+			FIND $%&Drisd%=%Dri%, SET &Ayter=%&WinVr%
+			^SET &Boxhwnd[%&Drisd%]=Windows%&Winver%  %&Ayter% %&Bitre%
+			SET< &Filedris=Windows%&Winver%  %&Ayter% %&Bitre%%&nl%
+		}
+	}
+}
+SET &BacPath=
+LPOS * &&Asdtt=|,2,&Filery
+FIND #%&Asdtt%=0, SET< &Filery= |
+SET &Secret=
+FIND $%1=,
+{*
+	FIND  --wid*@ &Aindex,Drvindex    安装驱动工具         v
+	FIND $%&Aindex%=,
+	{*
+		CALL @Getdevtools
+	}!
+	{*
+		MSTR * &Seret=<2>&Aindex
+		ENVI @@Visible=%&Seret%:1
+		ENVI @@POS=%&Seret%:::::::1
+		MESS=-top+icon0 服务的实例已在运行中。@Drvindex
+		EXIT File
+	}
+}!
+{*
+	SET &Ntdhs=%*
+	FIND $%~1=-a,
+	{*
+		SCRN -win &Rigt,&B
+		SCRN -desk &a,&Hih
+		CALC &Right=%&Rigt% - 450 * %&Hcd% #0
+		CALC &High=%&Hih% - 90 * %&Hcd% #0
+		MSTR * &nlv=<2->&Ntdhs
+		GetdevBackups &nlv
+		EXIT File
+	}
+	FIND  --wid*@ &Aindex,Drvindex    安装驱动工具         v
+	SET &Hnd=0
+	LOOP $"%&Aindex%"<>"",
+	{*
+		WAIT 1000
+		FIND  --wid*@ &Aindex,Drvindex    安装驱动工具         v
+		CALC #&Hnd=%&Hnd%+1
+		FIND $%&Aindex%=, EXIT LOOP
+		IFEX #%&Hnd%=300, EXIT File
+	}
+	ENVI &Parameter=%~1
+	SET &logfile=
+	FIND $%~2<>, MSTR -trimp++ -rq++ -delims:, &GFolder,&Secret=<1><2->%~2
+	MSTR * &Filemsg=<2->&Ntdhs
+	FORX * %&Filemsg%,&&ile,
+	{*
+		FIND $%&ile%=-hide, ENVI &Winhide=-hide
+		LSTR * &laStr=4,&ile
+		FIND $%&laStr%=log=, MSTR * &logfile=5,0,&ile
+	}
+	IFEX %&GFolder%, ENVI &DrvFolder=%&GFolder%! TEAM ENVI &DrvFolder=| ENVI &Secret=
+	ENVI ?&F1,&FS=DROPFILE,%*
+	MSTR * -rq &Ntdhs=&Ntdhs
+	IFEX %&Ntdhs%,
+	{*
+		IFEX %&Ntdhs%\,
+		{*
+			ENVI &Parameter=-add
+			ENVI &DrvFolder=%&Ntdhs%
+			GetManually
+		}!
+		{*
+			FEXT &dxt=%&Ntdhs%
+			FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],
+			{*
+				ENVI &Parameter=-add
+				ENVI &DrvFolder=%&Ntdhs%
+				GetManually
+			}
+		}
+		EXIT File
+	}
+	GetManually
+}
+EXIT File
+_SUB Getdevtools,W640H480,Drvindex    安装驱动工具         v7  23.10.2501     - %&Bitos%, GetTheWin ,#1,,, %&Scalr%
+	HKEY$ Alt+k,CALL Getkillall
+	SET &sonxr=1
+	SET &ation=0
+	SET &DGR=%&Dri%
+	ENVI &Windi=%&__WinID%
+	LABE LABEINFO,L0T0W0H0,,,
+	ENVI @LABEINFO.ID=?&Winld
+	ENVI @LABEINFO.MSG=0x000C::&&wp,&lpdws, GetSETTEXTLText %&lpdws%
+	GROU Groupnim,L8T25W619H386,,,
+	RADI &Dteptpa,L50T10W110H20,%&type20%,GetSwitchPanel 1 ,1,0,
+	RADI &Dteptpg,L170T10W110H20,%&type21%, GetSwitchPanel 2 &sonxr %&sonxr% ,0,0,
+	LABE- -3D  Label10,L8T415W621H1,,,
+	LABE -left  &MSGSho,L15T426W530H20,@ Lightning	%&type22% %&Dri% %&WinVr% %&Vere%  %&zui%,,,10
+	ITEM -font:10 HelpInfo,L545T420W60H24,%&type23%, CALL @-Gethelpes ,,
+	LABE -left  &aafos,L15T357W82H20,%&type15%
+	EDIT. -vcenter &DrvFolder,L105T354W315H20,%&dirCur%,,
+	ITEM  SelectDirectory,L435T353W61H22,%&type09%, CAPTURE_PATH &DrvFolder  ,
+	CHEK  &Indeks,L15T327W88H20,%&type16%,GetIndexInfo,
+	PBAR ShowProgress,L105T384W290H20,-1,,
+	LABE &Passimes,L15T387W83H17,%&CompPassword%,,
+	EDIT. -vcenter &Drivepass,L105T384W389H20,,,
+	EDIT. -vcenter &BFDrivepass,L105T384W290H20,,,
+	CHEK &SkipDevice,L105T327W130H20,%&type18%,,1,
+	CHEK &SearchDisk,L278T327W115H20,%&type17%,,,
+	ITEM Toinstall,L515T370W100H36,%&type10%, GetManually ,
+	EDIT.|  OutputShow,L15T40W605H278,%&type14%,,0x68,,
+	TABL -sl:%&SL% -sc:%&SC% -cksz:%&hoa% -font:10:::0xF5F5F5:0.5:::::%&glc%  ContentDiskinfo,L15T40W605H258,395/10:%&type01%%&SC%120/6:%&type02%%&SC%72/5:%&type03%,,0x4004C0
+	CHEK &NetAll,L15T328W90H18,网卡驱动, GetselectAll 11 1 0,0,
+	CHEK &AuoAll,L125T328W90H18,声卡驱动, GetselectAll 11 1 0,0,
+	CHEK &DipAll,L235T328W90H18,显卡驱动, GetselectAll 11 1 0,0,
+	CHEK &SysAll,L345T328W90H18,设备驱动, GetselectAll 11 1 0,0,
+	LABE -left &backsear,L345T307W180H18,,
+	LIST &BackGrt,L15T302W90H20,%&Filery%,GetpathFile  &DGR  1 0,%&Dri%,0x10100
+	CHEK &PriveAll,L125T303W100H18,%&type05%, GetpathFile 99 ,0
+	CHEK &BackPass,L235T303W95H20,%&type04%,,
+	ITEM &DOCTRAN1,L440T326W50H22,%&type06%, GetselectAll 1 1 ,,
+	ITEM &DOCTRAN2,L506T326W50H22,%&type07%, GetselectAll 0 1 ,,
+	ITEM &DOCTRAN3,L570T326W50H22,%&type46%, GetselectAll 9 1 ,,	
+	LABE -left &bavvr,L15T357W90H20,%&type08%,
+	EDIT. -vcenter &Drvder,L105T354W290H20,%&dirCur%,,
+	LIST &LISTA,L406T354W85H20,%&type13%, Getfilespath ,%&type19%,0x100
+	LIST LISflei,L499T354W65H20,%&type54%,,%&type55%,0x100
+	ITEM  &Selectory,L570T353W50H23,%&type09%, GetsavedFiles &Drvder ,
+	ITEM &AddDrive,L405T382W70H24,%&type51%, GetAddDriveinf ,
+	ITEM &RemDrive,L478T382W70H24,%&type52%, GetRemoveinf ,
+	ITEM &DToinstall,L551T382W70H24,%&type53%, Getpathile ,
+	IMAG RefreshDev,L560T6W22H22,#2,GetpathFile "0" "0" 100,
+	ENVI @&AddDrive.Visible=0
+	GetSwitchPanel 1
+	ENVI @Groupnim.MSG=_0x0233::&wp,&lp, GetDropFile "%&wp%" "%&lp%" &DrvFolder &Drvder
+	ENVI @ContentDiskinfo.MSG=0x0204::&wp,&lp, IFEX $%ContentDiskinfo.enable%=1, TEAM TIPS -| GetPartition
+	ENVI @ContentDiskinfo.MSG=0x02A3:TIPS -
+	ENVI @&Drvder.MSG=0x02A1: Mouse_In_TIPS &Drvder "%&boxrtlection%"
+	ENVI @&Drvder.MSG=0x02A3: TIPS -
+	ENVI @&MSGSho.enable=0
+	ENVI @&DrvFolder.MSG=_0x0203::&wp,&lp, CAPTURE_PATH &DrvFolder
+	ENVI @&Drvder.MSG=_0x0203::&wp,&lp, GetsavedFiles &Drvder
+	ENVI @&DrvFolder.MSG=0x02A1: Mouse_In_TIPS &DrvFolder "%&boxselection%"
+	ENVI @&DrvFolder.MSG=0x02A3: TIPS -
+	ENVI @&SearchDisk.MSG=0x02A1: Mouse_In_TIPS &SearchDisk "%&Searchthis%"
+	ENVI @&SearchDisk.MSG=0x02A3: TIPS -
+	ENVI @&SkipDevice.MSG=0x02A1: Mouse_In_TIPS &SkipDevice "%&Skipcard%"
+	ENVI @&SkipDevice.MSG=0x02A3: TIPS -
+	ENVI id=-1000000
+	SET &id1=-1000000
+	SET &HwndBox=0
+	SET$#  &RC=*40 0
+	ENVI @&BackGrt.ID=?;&LIST2_ID
+	ENVI @this.MSG=command#%&LIST2_ID%#0x7002::&wp,&lp, SET HwndBox=%&lp%
+	ENVI @this.MSG=command#%&LIST2_ID%#0x7001::&wp,&lp, FIND #%&lp%<>%id%, Getpanand %&lp%
+	ENVI @&BackGrt.MSG=0x0008: TEAM SET HwndBox=0| ENVI id=-100002| ENVI @T1=0| TIPS *
+	TIME -t:0 T1,100000, IFEX #[ %HwndBox%<>0 & %id%>0 ], GetONTBox
+	THREAD*$  TEAM WAIT 500| WAIT  -freemem
+_END
+_SUB CAPTUREAR,L%&Right%T%&High%W520H132,Drvindex    安装驱动工具         v7  23.10.2501      - %&Bitos%,,,#-:,, %&Scalr%
+	HKEY$ Alt+k,CALL Getkillall
+	ENVI &Dteptpa.Check=1
+	LABE LABEINFO,L0T0W0H0,,,
+	ENVI @LABEINFO.ID=?&Winld
+	ENVI @LABEINFO.MSG=0x000C::&&wp,&lpdws, GetSETTEXTLText %&lpdws%
+	FIND $%&Winhide%<>-hide, PBAR ShowProgress,L15T13W400H16,-1
+	CHEK &SkipDevice,L0T0W0H0,,,,
+	CHEK &SearchDisk,L0T0W0H0,,,,
+	EDIT.| OutputShow,L1T1W1H1,,,0x68
+	LABE -left Toinstall,L-1T1W0H0,,
+	ENVI &TEMAD=0
+	FIND $[ "%&Parameter%"="-Audio" | "%&Parameter%"="-Net" | "%&Parameter%"="-Display" | "%&Parameter%"="-Print" ], ENVI &TEMAD=1
+	FIND $[ "%&Parameter%"="-b" | "%&Parameter%"="-t" | "%&Parameter%"="-h" | "%&Parameter%"="-y" ],
+	{*
+		FIND $%&DrvFolder%=,ENVI &DrvFolder=%&dirCur%
+		ENVI &TEMAD=2
+	}
+	FIND $%&Parameter%=-add, ENVI &TEMAD=3
+	IFEX #%&TEMAD%=0, KILL *%&__PID%
+	IFEX #%&TEMAD%=1, TIME -t:1 ExitTimer,1, GetHWID_TEM
+	IFEX #%&TEMAD%=2, TIME -t:1 ExitTimer,1, GetSetupIn
+	IFEX #%&TEMAD%=3, TIME -t:1 ExitTimer,1, GetSetupIn
+_END
+_SUB GetdevBackups,L%&Right%T%&High%W520H132,Drvindex    安装驱动工具         v7  23.10.2501      - %&Bitos%,,,#-:,, %&Scalr%
+	HKEY$ Alt+k,CALL Getkillall
+	LABE -left &backsear,L-1T0W0H0,,
+	LABE LABEINFO,L0T0W0H0,,,
+	ENVI @LABEINFO.ID=?&Winld
+	ENVI @LABEINFO.MSG=0x000C::&&wp,&lpdws, GetSETTEXTLText %&lpdws%
+	TEAM SET &net1=0| SET &aut1=0| SET &dis1=0| SET &sys1=0| SET &wfi1=0
+    FOEX * %&nlv%,&lw,
+    {*
+    	FIND $%&lw%=-Net, SET &net1=1
+    	FIND $%&lw%=-MEDIA, SET &aut1=1
+    	FIND $%&lw%=-Display, SET &dis1=1
+    	FIND $%&lw%=-System, SET &sys1=1
+    	FIND $%&lw%=-WIFI,SET &wfi1=1
+    }
+    CHEK &BackPass,L0T0W0H0,,,%&wfi1%
+	CHEK &NetAll,L-1T1W0H0,,,%&net1%
+	CHEK &AuoAll,L-1T1W0H0,,,%&aut1%
+	CHEK &DipAll,L-1T1W0H0,,,%&dis1%
+	CHEK &SysAll,L-1T1W0H0,,,%&sys1%
+	ENVI &Dteptpa.Check=0
+	MSTR * &&al1,&&al2,&&al3,&&al4=<1*>&nlv
+	ENVI &&BacPath=%&al1%
+	ENVI &BackGrt=%&al2%
+	FIND $%&al3%<>-hide,
+	{*
+		LPOS * &Astn=-mx,1,&al3
+		FIND #%&Astn%=0, SET &Bacbility=-mx1
+		FIND #%&Astn%>0, SET &Bacbility=%&al3%
+	}
+	FIND $%&al3%=-hide, SET &Winhide=-hide
+	FIND $%&al4%=-hide, SET &Winhide=-hide
+	FIND $%&Winhide%<>-hide, PBAR ShowProgress,L15T13W400H16,-1
+	TABL -sl:%&SL% -sc:%&SC% -cksz:%&hoa% -font:10:::0xF5F5F5:0.5:::::%&glc%  ContentDiskinfo,L15T40W605H278,395/10:%&type01%%&SC%120/6:%&type02%%&SC%72/5:%&type03%,,0x4004C0
+	ENVI @ContentDiskinfo.Visible=0
+	TIME -t:1 kupsTimer,1, TEAM GetpathFile| Getpathile| GetTheWin
+_END
+_SUB GetManually
+	ENVI @Getdevtools.Visible=?&UIshow
+	FIND #%&UIshow%=1,
+	{*
+		IFEX $%&Indeks.Check%=1, GetIndexID! GetSetupIn
+	}!
+	{*
+		SCRN -win &Rigt,&B
+		SCRN -desk &a,&Hih
+		CALC &Right=%&Rigt% - 450 * %&Hcd% #0
+		CALC &High=%&Hih% - 90 * %&Hcd% #0
+		CALL @CAPTUREAR
+	}
+_END
+_SUB GetSetupIn
+	MDIR %&Pathfiles%
+	FIND #%&UIshow%=0, ENVI @ShowProgress=-1;
+	TEAM ENVI @OutputShow=| ENVI ::PB=0| ENVI ::AR=0| ENVI slsd=| ENVI &DispID=
+	TEAM ENVI &HWIDS=| ENVI &IS=0| ENVI &HWIDR=| ENVI ::Jha=0| ENVI ::KS=0|ENVI KS=0| ENVI &ISTR=0| ENVI ::Installfailed=11| SET ::Drvins1=| ENVI &tzl=0
+	FIND $%&Parameter%=-t, ENVI @&SkipDevice.Check=1
+	FIND $%&Parameter%=-y, ENVI @&SearchDisk.Check=1
+	FIND $%&Parameter%=-h, TEAM ENVI @&SearchDisk.Check=1| ENVI @&SkipDevice.Check=1
+	IFEX $%&SearchDisk.Check%=1, GetcabPath! Getwrongdll
+	DEVI listdev:&qtDisp *DevID:c:"PCI\CC_0300""PCI\CC_0301""PCI\CC_0302""PCI\CC_0380" *inst
+	IFEX $%&SkipDevice.Check%=1, SET &DispID=%&qtDisp%
+	EnableClose 0
+	DEVI *extract #100,,%&Pathfiles%
+	TEAM UISet 0| EnableClose 0| DATE ::KSecr uptime| TIME TiCount,100, GetOnTimer
+	GetHWID_Export &HWIDS
+	FIND $"%&HWIDS%"="", ENVI @OutputShow=%&CXJG%
+	ENVI @ShowProgress=-1
+	MSTR * &&Acv=<#>&Drvins1
+	FIND $%Toinstall%=执行, ENVI @Toinstall=0
+	ENVI @OutputShow=%OutputShow%%&NL%%&NL%扫描：%&tzl% , 成功安装：%&Acv% , 耗时：%Toinstall%
+	FIND *&logfile<>, WRIT-UNICODE %&logfile%,$+,%OutputShow%
+	ENVI @TiCount.*del=
+	WAIT  -freemem
+	GetWlanid
+	TEAM UISet 1| EnableClose 1| ENVI @Toinstall=%&type10%
+	IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+	Getigfxcui
+	FIND #%&UIshow%=0, GetTheWin
+_END
+_SUB Getwrongdll
+	IFEX %&Pathfiles%\Sevenz.dll,!
+	{
+		IFEX %&Pathfiles%\,! MDIR %&Pathfiles%
+		DEVI *extract #102,,%&Pathfiles%
+	}
+_END
+_SUB GetHWID_Export
+	STRL &Cousa=%&DrvFolder%
+	IFEX #%&Cousa%=3, FDRV &DrvFolder=%&DrvFolder%
+	IFEX %&DrvFolder%\,!
+	{*
+		FEXT &dxt=%&DrvFolder%
+		FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! FDIR &DrvFolder=%&DrvFolder%
+	}
+	SET ::DuplicateFile=
+	SET ::Repeating=
+	SET ::lpwlanContent=
+	SET ::lplanContent=
+	FIND *&Drivepass<>, ENVI &Secret=%&Drivepass%
+	DEVI listdev:&BthID *DevID:c:"USB\Class_E0&SubClass_01&Prot_01" *inst
+	DEVI listdev:&Netid *DevID:c:"PCI\CC_0200""PCI\CC_0280""USB\Class_FF&SubClass_FF&Prot_FF" *inst
+	DEVI listdev:&AudioID *DevID:c:"*FUNC_01" *inst
+	SET &HIDINFO=
+	DEVI *STATUS:&HWIDMSG:+:
+	CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&HWIDMSG
+	FORX *NL &HWIDMSG,&lists,
+	{*
+		MSTR * -rq++ &dwlpsid,&ErrorCode,&FullID=<1><3><6>&lists
+		MSTR * -delims:\ &SVSI,&Hardwaresid=<1><2>&FullID
+		FIND $[ %&rei%=0 & %&SVSI%=PCI ],
+		{*
+			LPOS * &&iPOS=%&Hardwaresid%,1,&qtDisp
+			IFEX #%&iPOS%>0,
+			{*
+				REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\Driver,&Dversa
+				REGI  --init $HKLM\SYSTEM\%&CurControl%\Control\Class\%&Dversa%\InfPath,&InfPt
+				REGI  --init *$HKLM\SYSTEM\%&CurControl%\Control\Class\%&Dversa%\IncludedInfs,&IncludedInfs
+				FIND $[ %&InfPt%=display.inf | %&IncludedInfs%=basicdisplay.inf ], SET &ErrorCode=1
+			}
+		}
+		IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ], SET &ErrorCode=1
+		IFEX #%&ErrorCode%=0x1802000,
+		{*
+			REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\ClassGUID,&Codeinf
+			FIND $%&Codeinf%=, SET &ErrorCode=1
+		}
+		FIND $%&SVSI%=USBPRINT,
+		{*
+			IFEX %&Sot%\System32\spoolsv.exe,
+			{*
+				REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\Driver,&Deinf
+				MSTR * -trimp++ -delims:\ &Deinf=<1>&Deinf
+				FIND $"%&Deinf%"<>"{4D36E979-E325-11CE-BFC1-08002BE10318}", SET &ErrorCode=1
+			}
+		}
+		IFEX #%&ErrorCode%<>1, EXIT -
+		ENVI< ::Installfailed=%&FullID%%&NL%
+		LPOS * &iPOS=\,2,&FullID
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&FullID
+		LPOS * &iPOS=&,2,&Hardware
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&Hardware
+		LPOS * &iPOS=%&FullID%,1,&AudioID
+		IFEX [ #%&iPOS%>0 & "%&Sot%\System32\audiosrv.dll ], ENVI &iPOS=0
+		IFEX #%&iPOS%>0, EXIT -
+		SET &Nethwid=0
+		IFEX $%&WinVr%>6.1,
+		{*
+			LPOS * &iPOS=%&FullID%,1,&Netid
+			IFEX #%&iPOS%>0,
+			{*
+				SET &Nethwid=1
+				IFEX [ "%&Sot%\System32\NetSetupApi.dll" & "%&Sot%\System32\NetSetupSvc.dll" ], ENVI &iPOS=0
+				IFEX [ #10>%&WinVr% & "%&Sot%\System32\NetSetupApi.dll" ], ENVI &iPOS=0
+			}
+		}
+		IFEX #%&iPOS%>0, EXIT -
+		LPOS * &iPOS=%&FullID%,1,&BthID
+		IFEX [ #%&iPOS%>0 & "%&Sot%\System32\BluetoothApis.dll" ], ENVI &iPOS=0
+		IFEX #%&iPOS%>0, EXIT -
+		REGI  --init *$HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\CompatibleIDs,&CompID
+		MSTR * &CompatibleID=<-1>&CompID
+		CALC #&Jha=%&Jha% + 1
+		CALC #PB= 100 / %&Jha%
+		FIND #%&Nethwid%=1, ENVI> &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%"%&NL%! ENVI< &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%"%&NL%
+	}
+	FORX *NL &HIDINFO,&QDINFO,
+	{*
+		FIND  $%&QDINFO%=, EXIT -
+		CALC &tzl=%&tzl% + 1
+		IFEX $%&SearchDisk.Check%=1, THREAD*$  CALL GetDrvINST  %&QDINFO%! GetZIP_Export  %&QDINFO%
+	}
+	TIME TiCountme,1100, GetOTimer
+	WAIT -thread
+	ENVI @TiCountme.*del=
+	FIND $%&HIDINFO%=, EXIT _SUB! TEAM ^ENVI @ShowProgress=100;%%&anzwc[1]%%： 100 %| ENVI-ret %~1=1
+	TEAM ENVI ::PB=0| ENVI ::AR=0|ENVI &Jha=0
+	ENVI &HIDINFO=
+	FIND $%&Drvins1%=, EXIT _SUB
+	IFEX #%&Srtie%>0, WAIT 800
+	GetRescan
+	DEVI *STATUS:&HWIDMSG:+:
+	CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&HWIDMSG
+	FORX *NL &HWIDMSG,&lists,
+	{*
+		MSTR * -rq++ &dwlpsid,&ErrorCode,&FullID=<1><3><6>&lists
+		MSTR * -delims:\ &SVSI,&Hardwaresid=<1><2>&FullID
+		IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+		IFEX #%&ErrorCode%=0x1802000,
+		{*
+			REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\ClassGUID,&Codeinf
+			FIND $%&Codeinf%=, SET &ErrorCode=1
+		}
+		FIND $%&SVSI%=USBPRINT,
+		{*
+			IFEX %&Sot%\System32\spoolsv.exe,
+			{*
+				REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\Driver,&Deinf
+				MSTR * -trimp++ -delims:\ &Deinf=<1>&Deinf
+				FIND $"%&Deinf%"<>"{4D36E979-E325-11CE-BFC1-08002BE10318}", SET &ErrorCode=1
+			}
+		}
+		IFEX #%&ErrorCode%<>1, EXIT -
+		LPOS * &iPOS=\,2,&FullID
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&FullID
+		LPOS * &iPOS=&,2,&Hardware
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&Hardware
+		LPOS * &iPOS=%&FullID%,1,&Installfailed
+		ENVI< ::Installfailed=%&FullID%%&NL%
+		IFEX #%&iPOS%>0,EXIT -
+		SET &Nethwid=0
+		IFEX $%&WinVr%>6.1,
+		{*
+			LPOS * &iPOS=%&FullID%,1,&Netid
+			IFEX #%&iPOS%>0,
+			{*
+				SET &Nethwid=1
+				IFEX [ #%&WinVr%>6 & "%&Sot%\System32\NetSetupApi.dll" & "%&Sot%\System32\NetSetupSvc.dll" ], ENVI &iPOS=0
+				IFEX [ #10>%&WinVr% & "%&Sot%\System32\NetSetupApi.dll" ], ENVI &iPOS=0
+			}
+		}
+		IFEX #%&iPOS%>0, EXIT -
+		LPOS * &iPOS=%&FullID%,1,&BthID
+		IFEX [ #%&iPOS%>0 & "%&Sot%\System32\BluetoothApis.dll" ], ENVI &iPOS=0
+		IFEX #%&iPOS%>0,EXIT -
+		REGI  --init *$HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\CompatibleIDs,&CompID
+		MSTR * &CompatibleID=<-1>&CompID
+		CALC #&Jha=%&Jha% + 1
+		CALC #PB= 100 / %&Jha%
+		FIND #%&Nethwid%=1, ENVI> &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%"%&NL%! ENVI< &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%"%&NL%
+	}
+	FORX *NL &HIDINFO,&QDINFO,
+	{*
+		FIND  $%&QDINFO%=, EXIT -
+		CALC &tzl=%&tzl% + 1
+		IFEX $%&SearchDisk.Check%=1, THREAD*$  CALL GetDrvINST   %&QDINFO%! GetZIP_Export  %&QDINFO%
+	}
+	TIME TiCountme,1100, GetOTimer
+	WAIT -thread
+	ENVI @TiCountme.*del=
+	FIND $%&HIDINFO%=, EXIT _SUB! ^ENVI @ShowProgress=100;%%&anzwc[2]%%： 100 %
+	TEAM ENVI ::PB=0| ENVI ::AR=0|ENVI &Jha=0
+	ENVI &HIDINFO=
+	FIND $%&Drvins1%=, EXIT _SUB
+	IFEX #%&Srtie%>0, WAIT 800
+	GetRescan
+	DEVI *STATUS:&HWIDMSG:+:
+	CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&HWIDMSG
+	FORX *NL &HWIDMSG,&lists,
+	{*
+		MSTR * -rq++ &dwlpsid,&ErrorCode,&FullID=<1><3><6>&lists
+		MSTR *  -delims:\ &SVSI,&Hardwaresid=<1><2>&FullID
+		IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+		IFEX #%&ErrorCode%=0x1802000,
+		{*
+			REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\ClassGUID,&Codeinf
+			FIND $%&Codeinf%=, SET &ErrorCode=1
+		}
+		FIND $%&SVSI%=USBPRINT,
+		{*
+			IFEX %&Sot%\System32\spoolsv.exe,
+			{*
+				REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\Driver,&Deinf
+				MSTR * -trimp++ -delims:\ &Deinf=<1>&Deinf
+				FIND $"%&Deinf%"<>"{4D36E979-E325-11CE-BFC1-08002BE10318}", SET &ErrorCode=1
+			}
+		}
+		IFEX #%&ErrorCode%<>1, EXIT -
+		LPOS * &iPOS=\,2,&FullID
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&FullID
+		LPOS * &iPOS=&,2,&Hardware
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&Hardware
+		LPOS * &iPOS=%&FullID%,1,&Installfailed
+		IFEX #%&iPOS%>0,EXIT -
+		IFEX $%&WinVr%>6.1,
+		{*
+			LPOS * &iPOS=%&FullID%,1,&Netid
+			IFEX #%&iPOS%>0,
+			{*
+				IFEX [ #%&WinVr%>6 & "%&Sot%\System32\NetSetupApi.dll" & "%&Sot%\System32\NetSetupSvc.dll" ], ENVI &iPOS=0
+				IFEX [ #10>%&WinVr% & "%&Sot%\System32\NetSetupApi.dll" ], ENVI &iPOS=0
+			}
+		}
+		IFEX #%&iPOS%>0, EXIT -
+		LPOS * &iPOS=%&FullID%,1,&BthID
+		IFEX [ #%&iPOS%>0 & "%&Sot%\System32\BluetoothApis.dll" ], ENVI &iPOS=0
+		IFEX #%&iPOS%>0,EXIT -
+		REGI  --init *$HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\CompatibleIDs,&CompID
+		MSTR * &CompatibleID=<-1>&CompID
+		CALC #&Jha=%&Jha% + 1
+		CALC #PB= 100 / %&Jha%
+		ENVI< &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%"%&NL%
+	}
+	FORX *NL &HIDINFO,&QDINFO,
+	{*
+		FIND  $%&QDINFO%=, EXIT -
+		CALC &tzl=%&tzl% + 1
+		IFEX $%&SearchDisk.Check%=1, THREAD*$  CALL GetDrvINST   %&QDINFO%! GetZIP_Export  %&QDINFO%
+	}
+	TIME TiCountme,1100, GetOTimer
+	WAIT -thread
+	ENVI @TiCountme.*del=
+	FIND $%&HIDINFO%=, EXIT _SUB! ^ENVI @ShowProgress=100;%%&anzwc[3]%%： 100%
+_END
+_SUB GetHWID_TEM
+	MDIR %&Pathfiles%
+	SET ::Repeating=
+	SET ::lpwlanContent=
+	SET ::lplanContent=
+	TEAM ENVI &HIDINFO=| ENVI @ShowProgress=-1;| ENVI ::PB=0| ENVI ::AR=0|ENVI &Jha=0| SET ::DuplicateFile=
+	FIND $%&Parameter%=-Print, TEAM ENVI &CompatibleS=E979-E3| DEVI listdev:&HWIDinst *DevID:c:USB* *inst
+	FIND $%&Parameter%=-Display, TEAM ENVI &CompatibleS=E968-E3| DEVI listdev:&HWIDinst *DevID:c:"PCI\CC_0300""PCI\CC_0380""CC_0302" *inst
+	FIND $%&Parameter%=-Audio,TEAM ENVI &CompatibleS=E96C-E3| DEVI listdev:&HWIDinst *DevID:c:"*FUNC_01" *inst
+	FIND $%&Parameter%=-Net, TEAM ENVI &CompatibleS=E972-E3| DEVI listdev:&HWIDinst *DevID:c:"PCI\CC_0200""PCI\CC_0280""USB\Class_FF" *inst
+	FIND $%&DrvFolder%=, 
+	{*
+		GetcabPath
+	}!
+	{*
+		FEXT &dxt=%&DrvFolder%
+		FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! FDIR &DrvFolder=%&DrvFolder%
+	}
+	DEVI *extract #100,,%&Pathfiles%
+	DEVI *STATUS:&HWIDMSG:+:
+	CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&HWIDMSG
+	FORX *NL &HWIDMSG,&lists,
+	{*
+		MSTR * -rq++ &dwlpsid,&ErrorCode,&FullID=<1><3><6>&lists
+		LPOS * &iPOS=%&FullID%,1,&HWIDinst
+		FIND #%&iPOS%=0, EXIT -
+		IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+		IFEX #%&ErrorCode%=0x1802000,
+		{*
+			REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\ClassGUID,&Codeinf
+			FIND $%&Codeinf%=, SET &ErrorCode=1
+		}
+		IFEX #%&ErrorCode%<>1, EXIT -
+		LPOS * &iPOS=\,2,&FullID
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&FullID
+		LPOS * &iPOS=&,2,&Hardware
+		CALC #&iPOS=%&iPOS% - 1
+		MSTR * &Hardware=0,%&iPOS%,&Hardware
+		REGI  --init *$HKLM\SYSTEM\%&CurControl%\Enum\%&FullID%\CompatibleIDs,&CompID
+		MSTR * &CompatibleID=<-1>&CompID
+		CALC #&Jha=%&Jha% + 1
+		CALC #PB= 100 / %&Jha%
+		ENVI< &HIDINFO="%&dwlpsid%" "%&Hardware%" "%&FullID%" "%&CompatibleID%" "%&CompatibleS%"%&NL%
+	}
+	FIND $[ "%&HIDINFO%"<>"" & "%&DrvFolder%"<>"" ], Getwrongdll
+	FORX *NL &HIDINFO,&QDINFO,
+	{*
+		FIND $%&QDINFO%=, EXIT -
+		FIND $%&DrvFolder%=, THREAD*$  CALL GetDrvINST %&QDINFO%! GetZIP_Export %&QDINFO%
+	}
+	FIND $%&Winhide%<>-hide, TIME TiCountme,1100, GetOTimer
+	WAIT -thread
+	FIND $%&Winhide%<>-hide, ENVI @TiCountme.*del=
+	FIND $%&HIDINFO%<>, ENVI @ShowProgress=100;%&anzwc%： 100 %
+	ENVI @ShowProgress=-1
+	WAIT  -freemem
+	GetWlanid
+	FIND *&logfile<>, WRIT-UNICODE %&logfile%,$+,%&OutputShow%%&NL%%&NL%
+	IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+	Getigfxcui
+	GetTheWin
+_END
+_SUB GetOTimer
+	CALC &Tious=%ShowProgress% + 1
+	ENVI @ShowProgress=%&Tious%;%&zanz%： %&Tious%
+	FIND #%ShowProgress%>=90, ENVI @TiCountme.*del=
+_END
+_SUB GetZIP_Export
+	SET &one=%~1
+	SET &two=%~2
+	SET &three=%~3
+	SET &four=%~4
+	SET &fouS=%~5
+	ENVI &Til=1
+	CALC #kS= %kS% + 1
+	IFEX %&DrvFolder%\,
+	{*
+		FIND $%&DuplicateFile%=,
+		{*
+			SET< ::DuplicateFile=1
+			IFEX [ "%&dirCur%\Network\wlan10%&MyBit%.index" & "%&dirCur%\Network\wlan10%&MyBit%.7z" ],
+			{*
+				GETF# "%&dirCur%\Network\wlan10%&MyBit%.index",0#*,&&wlanContent
+				CODE *jm  &wlanContent,>,-4,4,
+				CODE *jm  &wlanContent,^,0x20D12893,
+				CODE *jm  &wlanContent,+,-0x31353634,
+				SET-tow ::lpwlanContent=&wlanContent
+			}
+			IFEX [ "%&dirCur%\Network\lan10%&MyBit%.index" & "%&dirCur%\Network\lan10%&MyBit%.7z" ],
+			{*
+				GETF# "%&dirCur%\Network\lan10%&MyBit%.index",0#*,&&lanContent
+				CODE *jm  &lanContent,>,-4,4,
+				CODE *jm  &lanContent,^,0x20D12893,
+				CODE *jm  &lanContent,+,-0x31353634,
+				SET-tow ::lplanContent=&lanContent
+			}
+			FORX /S %&DrvFolder%\*,&zipFile,,
+			{*
+				FEXT &dxt=%&zipFile%
+				FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! EXIT -
+				FDIR &FilePath=%&zipFile%
+				NAME &OutputFilePath=%&zipFile%
+				IFEX %&FilePath%\%&OutputFilePath%.index, EXIT -
+				SET &WinPath=
+				FIND $[ %&dxt%=wim | %&dxt%=esd ],
+				{*
+					GETF# %&zipFile%,0x50#8,&ImageIn
+					FIND #%&ImageIn?int64%>0,
+					{*
+						SET &WinPath=*.inf -xr!*Windows\WinSxS -xr!*Windows\INF
+					}
+				}
+				FIND $%&WinPath%=, SET &WinPath=*.inf
+				THREAD*$  CALL GetExtractor x "%&zipFile%" -p"%&Secret%" -y -r -o"%&Pathfiles%\InfFiles\%&OutputFilePath%" %&WinPath% -hide
+			}
+			WAIT -thread
+		}
+		THREAD*$  CALL GetZIPINST "%&one%" "%&two%" "%&three%" "%&four%" %&fouS%
+	}!
+	{*
+		FIND $%&DuplicateFile%=,
+		{*
+			SET< ::DuplicateFile=1
+			FORX %&DrvFolder%,&zipFile,,
+			{*
+				FDIR &FilePath=%&zipFile%
+				NAME &OutputFilePath=%&zipFile%
+				IFEX %&FilePath%\%&OutputFilePath%.index, EXIT -
+				SET &WinPath=
+				FEXT &dxt=%&zipFile%
+				FIND $[ %&dxt%=wim | %&dxt%=esd ],
+				{*
+					GETF# %&zipFile%,0x50#8,&ImageIn
+					FIND #%&ImageIn?int64%>0,
+					{*
+						SET &WinPath=*.inf -xr!*Windows\WinSxS -xr!*Windows\INF
+					}
+				}
+				FIND $%&WinPath%=, SET &WinPath=*.inf
+				THREAD*$ CALL GetExtractor x "%&zipFile%" -p"%&Secret%" -y -r -o"%&Pathfiles%\InfFiles\%&OutputFilePath%" %&WinPath% -hide
+			}
+			WAIT -thread
+		}
+		THREAD*$  CALL Get7ZINST "%&one%" "%&two%" "%&three%" "%&four%" %&fouS%
+	}
+_END
+_SUB GetDrvINST
+	MSTR -delims:\ &SUOID=<1>%~3
+	SET &Astr=0
+	SET &GetID=%~3
+	SET &ComID=%~4
+	CALC #kS= %kS% + 1
+	ENVI @ShowProgress=%kS%;%&zanz%： %kS% %
+	LPOS * &Astrs=%~2,1,&DispID
+	IFEX #%&Astrs%>0,
+	{*
+		GetClassID "%&GetID%"
+		ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&nl%%&Hardid%：   %~1%&NL%%&DSPHL%。%&NL%
+		CALC #AR= %PB% + %AR%
+		ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+		EXIT _SUB
+	}
+	MSTR -delims:\ &ComPath=<2>%~4
+	GetDriverID "%&ComPath%"
+	FIND $%~5<>, SET &lpfier=%~5
+	FIND $%&SUOID%=USBPRINT, TEAM SET &STNID=PECI| SET &lpfier=E979-E3
+	FIND $[ %&ComID%=USB\Class_FF | %&ComID%=PCI\CC_0200 | %&ComID%=PCI\CC_0280 ],
+	{*
+		SET &ids=%~2
+	}!
+	{*
+		MSTR -delims:\ &hidsa,&hidsb=<1><2>%~2
+		FIND $%&hidsb%=, SET &hidsb=%&hidsa%
+		SET &ids=%&hidsb%
+	}
+	FORX *NL &Filters,&Driveletter,
+	{
+		FORX /S %&Driveletter%\Windows\System32\DriverStore\FileRepository\*.inf,&&InfPath,,
+		{*
+			WAIT 0.1
+			GETF "%&InfPath%",0#2,&&All
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#7000,&&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",0#7000,&&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#3500,&&AllContent| SET-tow &AllContent=&AllContent
+			SED -ni -ex &Astr=?,%&lpfier%,,&AllContent
+			FIND #1>%&Astr%, EXIT -
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#700000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",0#700000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#350000,&&AllContent| SET-tow &AllContent=&AllContent
+			CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&AllContent
+			CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&ids
+			FIND #1>%&Astr%, EXIT -
+			DEVI *update:"%~1:%&InfPath%"
+			DEVI *STATUS:&state:%~3
+			MSTR * &ErrorCode=<3>&state
+			IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+			IFEX #%&ErrorCode%=0x1802000,
+			{*
+				REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+				FIND $%&GUDrive%=, SET &ErrorCode=1
+			}
+			IFEX #%&ErrorCode%=1, EXIT -
+			GetClassID "%&GetID%"
+			NAME -ext &InfName=%&InfPath%
+			MSTR * -delims:\ &Volsrt=<-1>&Driveletter
+			^ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Infos%：  %%&partitions[%&Volsrt%]%%\*\%&InfName%%&Version%%&NL%%&installfully%%&NL%
+			CALC #AR= %PB% + %AR% - 1
+			ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+			SET< ::Drvins1= 1 
+			EXIT _SUB
+		}
+	}
+	FIND $[ %&STNID%<>PECI & "%&ComID%"<>"" ],
+	{
+		SET-tom &ComIDS=&ComID
+		STRL &Tont=%&ComID%
+		CALC #&Tonts=%&Tont%*2
+		FORX *NL &Filters,&Driveletter,
+		{
+			FORX /S %&Driveletter%\Windows\System32\DriverStore\FileRepository\*.inf,&InfPath,,
+			{*
+				WAIT 0.1
+				GETF "%&InfPath%",0#2,&All
+				FIND $[ "%&All%"="0xFE 0xFF" | "%&All%"="0xFF 0xFE" ], GETF -find "%&InfPath%",0#200000#%&Tonts%##1,&Astr,*&ComID! GETF -find "%&InfPath%",0#100000#%&Tont%##1,&Astr,*&ComIDS
+				FIND #1>%&Astr%, EXIT -
+				DEVI *update:"%~1:%&InfPath%"
+				DEVI *STATUS:&state:%~3
+				MSTR * &ErrorCode=<3>&state
+				IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+				IFEX #%&ErrorCode%=0x1802000,
+				{*
+					REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+					FIND $%&GUDrive%=, SET &ErrorCode=1
+				}
+				IFEX #%&ErrorCode%=1, EXIT -
+				GetClassID "%&GetID%"
+				NAME -ext &InfName=%&InfPath%
+				MSTR * -delims:\ &Volsrt=<-1>&Driveletter
+				ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Infos%：  %%&partitions[%&Volsrt%]%%\*\%&InfName%%&Version%%&NL%%&installfully%%&NL%
+				CALC #AR= %PB% + %AR% - 1
+				ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+				SET< ::Drvins1= 1
+				EXIT _SUB
+			}
+		}
+	}
+	GetClassID "%&GetID%"
+	ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&InstallNo%%&NL%
+	CALC #AR= %PB% + %AR% -1
+	ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+_END
+_SUB GetZIPINST
+	MSTR -delims:\ &SUOID=<1>%~1
+	SET &NTANtr=NTAMD64
+	SET &Astr=0
+	SET &GetID=%~3
+	SET &ComID=%~4
+	CALC #kS= %kS% + 1
+	SET &AllContent=
+	SET &All=
+	SET &InfPath=
+	SET &ids=
+	SET &Contentname=
+	LPOS &&ils=&,3,%~3
+	CALC #&ils=%&ils% - 1
+	MSTR &idlst=0,%&ils%,%~3
+	ENVI @ShowProgress=%kS%;%&zanz%： %kS% %
+	LPOS * &Astrs=%~2,1,&DispID
+	IFEX #%&Astrs%>0,
+	{*
+		GetClassID "%&GetID%"
+		ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&nl%%&Hardid%：   %~1%&NL%%&DSPHL%。%&NL%
+		CALC #AR= %PB% + %AR%
+		ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+		EXIT _SUB
+	}
+	MSTR -trimp++ -delims:\ &&ComPath=<2>%~4
+	GetDriverID "%&ComPath%"
+	FIND $%~5<>, SET &lpfier=%~5
+	FIND $%&SUOID%=USBPRINT, TEAM SET &STNID=PECI| SET &lpfier=E979-E3
+	FIND $[ %&ComID%=USB\Class_FF | %&ComID%=PCI\CC_0200 | %&ComID%=PCI\CC_0280 ],
+	{*
+		SET &ids=%~2
+		SET &passen=
+		FIND $%&ComID%=PCI\CC_0200,
+		{*
+			FORX %&dirCur%\Network\lan10%&MyBit%.index,&&lindex,1,
+			{*
+				NAME &Format=%&lindex%
+				SET &passen=B8145C598467011229285B1B78EC9067AE3CB2EC058D7F815B91AB3741D1C9F155589AC2B60E016B45E6B45746F60CBEE435
+				SET &Contentname=%&lplanContent%
+				
+			}
+		}!
+		{*
+			FORX %&dirCur%\Network\wlan10%&MyBit%.index,&&lindex,1,
+			{*
+				NAME &Format=%&lindex%
+				SET &passen=A9B2208205DA6D10BDE7BC0602407DDB2CF021F356F4A3F3F32B5E49C0CC369660C072B2474D2D4B999C83D1E73CE499D2BA
+				SET &Contentname=%&lpwlanContent%
+			}
+		}
+		FIND *&Contentname<>,
+		{
+			FORX * 1 2 ,&&Tc,
+			{
+				FIND #%&Tc%=1, SET &idlsl=%&idlst%
+				FIND #%&Tc%=2, SET &idlsl=%&ids%
+				CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&Contentname,*&idlsl
+				FIND #1>%&Astr%, EXIT -
+				FORX *NL &Contentname,&&Single,
+				{*
+					WAIT 0.1
+					CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&Single,*&idlsl
+					FIND #1>%&Astr%, EXIT -
+					FIND $%&Bitos%=64Bit, CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&Single,*&NTANtr
+					FIND #1>%&Astr%, EXIT -
+					MSTR * -trimp++ -delims:| &&InfName=<1>&Single
+					RPOS* * &&iPOS=\,1,&InfName
+					MSTR * &ExtractPath=0,%&iPOS%,&InfName
+					IFEX #%&iPOS%=0,SET &ExtractPath=
+					NAME -ext &InfsName=%&InfName%
+					GetExtractor x "%&dirCur%\Network\%&Format%.7z" -p%&passen% -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+					DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+					DEVI *STATUS:&state:%~3
+					MSTR * &ErrorCode=<3>&state
+					IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+					IFEX #%&ErrorCode%=0x1802000,
+					{*
+						REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+						FIND $%&GUDrive%=, SET &ErrorCode=1
+					}
+					IFEX #%&ErrorCode%=1, EXIT -
+					GetClassID "%&GetID%"
+					ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&dirCur%\Network\%&Format%.7z%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+					CALC #AR= %PB% + %AR% - 1
+					ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+					SET< ::Drvins1= 1
+					EXIT _SUB
+				}
+			}
+		}
+	}!
+	{*
+		MSTR -delims:\ &hidsa,&hidsb=<1*>%~2
+		FIND $%&hidsb%=, SET &hidsb=%&hidsa%
+		SET  &ids=%&hidsb%
+	}
+	FORX /S %&DrvFolder%\*.index,&&IndexFile,,
+	{
+		WAIT 0.1
+		GETF "%&IndexFile%",0#2,&&All
+		FIND $"%&All%"="0xFE 0xFF", GETF# "%&IndexFile%",1#*,&&AllContent
+		FIND $"%&All%"="0xFF 0xFE", GETF# "%&IndexFile%",0#*,&&AllContent
+		FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&IndexFile%",0#*,&&AllContent| SET-tow &AllContent=&AllContent
+		FORX * 1 2 3,&&Tc,
+		{
+			FIND #%&Tc%=1, SET &idlsl=%&idlst%
+			FIND #%&Tc%=2, SET &idlsl=%&ids%
+			FIND #%&Tc%=3, SET &idlsl=%~4
+			CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&idlsl
+			FIND #1>%&Astr%, EXIT -
+			FORX * 7z cab zip rar wim esd iso ,&&Format,
+			{*
+				FDIR &FilePath=%&IndexFile%
+				NAME &FileInfo=%&IndexFile%
+				IFEX %&FilePath%\%&FileInfo%.%&Format%,! EXIT -
+				FORX *NL &AllContent,&&Single,
+				{*
+					WAIT 0.1
+					CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&Single,*&idlsl
+					FIND #1>%&Astr%, EXIT -
+					FIND $%&Bitos%=64Bit, CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&Single,*&NTANtr
+					FIND #1>%&Astr%, EXIT -
+					MSTR * -trimp++ -delims:| &InfName=<1>&Single
+					RPOS* * &&iPOS=\,1,&InfName
+					MSTR * &ExtractPath=0,%&iPOS%,&InfName
+					IFEX #%&iPOS%=0,SET &ExtractPath=
+					NAME -ext &InfsName=%&InfName%
+					GetExtractor x "%&FilePath%\%&FileInfo%.%&Format%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+					DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+					DEVI *STATUS:&state:%~3
+					MSTR * &ErrorCode=<3>&state
+					IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+					IFEX #%&ErrorCode%=0x1802000,
+					{*
+						REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+						FIND $%&GUDrive%=, SET &ErrorCode=1
+					}
+					IFEX #%&ErrorCode%=1, EXIT -
+					GetClassID "%&GetID%"
+					ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&FilePath%\%&FileInfo%.%&Format%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+					CALC #AR= %PB% + %AR% - 1
+					ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+					SET< ::Drvins1= 1
+					EXIT _SUB
+				}
+			}
+		}
+	}
+	FORX /S %&DrvFolder%\*.*,&&zipFiles,,
+	{
+		FEXT &dxt=%&zipFiles%
+		FIND $%&dxt%=inf,
+		{*
+			WAIT 0.1
+			GETF "%&zipFiles%",0#2,&All
+			FIND $"%&All%"="0xFE 0xFF",GETF# "%&zipFiles%",1#7000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE",GETF# "%&zipFiles%",2#7000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&zipFiles%",0#3500,&AllContent| SET-tow &AllContent=&AllContent
+			SED -ni -ex &Astr=?,%&lpfier%,,&AllContent
+			FIND #%&Astr%>0,
+			{*
+				FIND $"%&All%"="0xFE 0xFF",GETF# "%&zipFiles%",1#700000,&AllContent
+				FIND $"%&All%"="0xFF 0xFE",GETF# "%&zipFiles%",2#700000,&AllContent
+				FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ],TEAM GETF# "%&zipFiles%",0#350000,&AllContent| SET-tow &AllContent=&AllContent
+				CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&AllContent
+				CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&ids
+				FIND #%&Astr%>0,
+				{*
+					FIND $%&Bitos%=64Bit, CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&NTANtr! SET &Astr=2
+					FIND #%&Astr%>0,
+					{*
+						DEVI *update:"%~1:%&zipFiles%"
+						DEVI *STATUS:&state:%~3
+						MSTR * &ErrorCode=<3>&state
+						IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+						IFEX #%&ErrorCode%=0x1802000,
+						{*
+							REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+							FIND $%&GUDrive%=, SET &ErrorCode=1
+						}
+						IFEX #%&ErrorCode%<>1,
+						{
+							GetClassID "%&GetID%"
+							ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：  %~1%&NL%%&Infos%：  %&ZipFiles%%&Version%%&NL%%&installfully%%&NL%
+							CALC #AR= %PB% + %AR% - 1
+							ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+							SET< ::Drvins1= 1
+							EXIT _SUB
+						}
+					}
+				}
+			}
+		}
+		FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! EXIT -
+		FDIR &FilePath=%&ZipFiles%
+		NAME &FileInfo=%&ZipFiles%
+		IFEX %&FilePath%\%&FileInfo%.index, EXIT -
+		FORX /S %&Pathfiles%\InfFiles\%&FileInfo%\*.inf,&&InfPath,,
+		{*
+			WAIT 0.1
+			GETF "%&InfPath%",0#2,&All
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#7000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#7000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#3500,&AllContent| SET-tow &AllContent=&AllContent
+			SED -ni -ex &&Astr=?,%&lpfier%,,&AllContent
+			FIND #1>%&Astr%,EXIT -
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#700000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#700000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#350000,&AllContent| SET-tow &AllContent=&AllContent
+			CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&AllContent
+			CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&ids
+			FIND #1>%&Astr%, EXIT -
+			FIND $%&Bitos%=64Bit, CALL $--qd --ret:&&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&NTANtr
+			FIND #1>%&Astr%, EXIT -
+			STRL &iLEN="%&Pathfiles%\InfFiles\%&FileInfo%"
+			MSTR * &InfName=%&iLEN%,0,&InfPath
+			RPOS* * &&iPOS=\,1,&InfName
+			MSTR * &ExtractPath=0,%&iPOS%,&InfName
+			IFEX #%&iPOS%=0,SET &ExtractPath=
+			NAME -ext &InfsName=%&InfName%
+			GetExtractor x "%&ZipFiles%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+			DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+			DEVI *STATUS:&state:%~3
+			MSTR * &ErrorCode=<3>&state
+			IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+			IFEX #%&ErrorCode%=0x1802000,
+			{*
+				REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+				FIND $%&GUDrive%=, SET &ErrorCode=1
+			}
+			IFEX #%&ErrorCode%=1, EXIT -
+			GetClassID "%&GetID%"
+			ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&ZipFiles%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+			CALC #AR= %PB% + %AR% - 1
+			ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+			SET< ::Drvins1= 1
+			EXIT _SUB
+		}
+	}
+	FIND $[ %&STNID%<>PECI & "%&ComID%"<>"" ],
+	{
+		SET-tom &ComIDS=&ComID
+		STRL &Tont=%&ComID%
+		CALC #&Tonts=%&Tont%*2
+		FORX /S %&DrvFolder%\*,&&ZipFiles,,
+		{
+			FEXT &dxt=%&zipFiles%
+			FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! EXIT -
+			NAME &FileInfo=%&ZipFiles%
+			FDIR &FilePath=%&ZipFiles%
+			IFEX %&FilePath%\%&FileInfo%.index,EXIT -
+			FORX /S %&Pathfiles%\InfFiles\%&FileInfo%\*.inf,&&InfPath,,
+			{*
+				WAIT 0.1
+				GETF "%&InfPath%",0#2,&All
+				FIND $[ "%&All%"="0xFE 0xFF" | "%&All%"="0xFF 0xFE" ], GETF -find "%&InfPath%",0#200000#%&Tonts%##1,&Astr,*&ComID! GETF -find "%&InfPath%",0#100000#%&Tont%##1,&Astr,*&ComIDS
+				FIND #1>%&Astr%, EXIT -
+				FIND $%&Bitos%=64Bit,
+				{*
+					FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#200000,&AllContent
+					FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#200000,&AllContent
+					FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",2#100000,&AllContent| SET-tow &AllContent=&AllContent
+					SED -ni -ex &Astr=?,%&NTANtr%,,&AllContent
+				}
+				FIND #1>%&Astr%, EXIT -
+				STRL &iLEN="%&Pathfiles%\InfFiles\%&FileInfo%"
+				MSTR * &InfName=%&iLEN%,0,&InfPath
+				RPOS* * &&iPOS=\,1,&InfName
+				MSTR * &ExtractPath=0,%&iPOS%,&InfName
+				IFEX #%&iPOS%=0,SET &ExtractPath=
+				NAME -ext &InfsName=%&InfName%
+				GetExtractor x "%&ZipFiles%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+				DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+				DEVI *STATUS:&state:%~3
+				MSTR * &ErrorCode=<3>&state
+				IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+				IFEX #%&ErrorCode%=0x1802000,
+				{*
+					REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+					FIND $%&GUDrive%=, SET &ErrorCode=1
+				}
+				IFEX #%&ErrorCode%=1, EXIT -
+				GetClassID "%&GetID%"
+				ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&ZipFiles%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+				CALC #AR= %PB% + %AR% - 1
+				ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+				SET< ::Drvins1= 1
+				EXIT _SUB
+			}
+		}
+	}
+	GetClassID "%&GetID%"
+	ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&InstallNo%%&NL%
+	CALC #AR= %PB% + %AR% - 1
+	ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+_END
+_SUB Get7ZINST
+	MSTR -delims:\ &SUOID=<1>%~1
+	SET &Astr=0
+	SET &NTANtr=NTAMD64
+	SET &GetID=%~3
+	SET &ComID=%~4
+	CALC #kS= %kS% + 1
+	SET &AllContent=
+	SET &All=
+	SET &InfPath=
+	ENVI @ShowProgress=%kS%;%&zanz%： %kS% %
+	LPOS * &Astrs=%~2,1,&DispID
+	IFEX #%&Astrs%>0,
+	{*
+		GetClassID "%&GetID%"
+		ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&nl%%&Hardid%：   %~1%&NL%%&DSPHL%。%&NL%
+		CALC #AR= %PB% + %AR%
+		ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+		EXIT _SUB
+	}
+	MSTR -delims:\ &ComPath=<2>%~4
+	GetDriverID "%&ComPath%"
+	FIND $%~5<>, SET &lpfier=%~5
+	FIND $%&SUOID%=USBPRINT, TEAM SET &STNID=PECI| SET &lpfier=E979-E3
+	FIND $[ %&ComID%=USB\Class_FF | %&ComID%=PCI\CC_0200 | %&ComID%=PCI\CC_0280 ],
+	{*
+		SET  &ids=%~2
+	}!
+	{*
+		MSTR -delims:\ &hidsa,&hidsb=<1*>%~2
+		FIND $%&hidsb%=, SET &hidsb=%&hidsa%
+		SET  &ids=%&hidsb%
+	}
+	FORX %&DrvFolder%,&&ZIPInfo,,
+	{*
+		WAIT 0.1
+		FDIR &FilePath=%&ZIPInfo%
+		NAME &FileInfo=%&ZIPInfo%
+		IFEX %&FilePath%\%&FileInfo%.index,! EXIT -
+		SET &IndexFile=%&FilePath%\%&FileInfo%.index
+		GETF "%&IndexFile%",0#2,&All
+		FIND $"%&All%"="0xFE 0xFF", GETF# "%&IndexFile%",1#*,&AllContent
+		FIND $"%&All%"="0xFF 0xFE", GETF# "%&IndexFile%",0#*,&AllContent
+		FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&IndexFile%",0#*,&AllContent| SET-tow &AllContent=&AllContent
+		FORX * 1 2 3,&&Tc,
+		{
+			FIND #%&Tc%=1, SET &idlsl=%&idlst%
+			FIND #%&Tc%=2, SET &idlsl=%&ids%
+			FIND #%&Tc%=3, SET &idlsl=%~4
+			CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&idlsl
+			FIND #1>%&Astr%, EXIT -
+			FORX *NL &AllContent,&&Single,
+			{*
+				WAIT 0.1
+				CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&Single,*&idlsl
+				FIND #1>%&Astr%, EXIT -
+				FIND $%&Bitos%=64Bit, CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&Single,*&NTANtr
+				FIND #1>%&Astr%, EXIT -
+				MSTR * -trimp++ -delims:| &InfName=<1>&Single
+				LPOS * &iPOS=\,0,&InfName
+				MSTR * &ExtractPath=0,%&iPOS%,&InfName
+				IFEX #%&iPOS%=0,SET &ExtractPath=
+				NAME -ext &InfsName=%&InfName%
+				GetExtractor x "%&ZIPInfo%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+				DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+				DEVI *STATUS:&state:%~3
+				MSTR * &ErrorCode=<3>&state
+				IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+				IFEX #%&ErrorCode%=0x1802000,
+				{*
+					REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+					FIND $%&GUDrive%=, SET &ErrorCode=1
+				}
+				IFEX #%&ErrorCode%=1, EXIT -
+				GetClassID "%&GetID%"
+				ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&ZIPInfo%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+				CALC #AR= %PB% + %AR% - 1
+				ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+				SET< ::Drvins1= 1
+				EXIT _SUB
+			}
+		}
+	}
+	FORX %&DrvFolder%,&&ZIPInfo,,
+	{*
+		FDIR &FilePath=%&ZIPInfo%
+		NAME &FileInfo=%&ZIPInfo%
+		IFEX %&FilePath%\%&FileInfo%.index,EXIT -
+		FORX /S %&Pathfiles%\InfFiles\%&FileInfo%\*.inf,&&InfPath,,
+		{*
+			WAIT 0.1
+			GETF "%&InfPath%",0#2,&All
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#7000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#7000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#3500,&AllContent| SET-tow &AllContent=&AllContent
+			SED -ni -ex &Astr=?,%&lpfier%,,&AllContent
+			FIND #1>%&Astr%, EXIT -
+			FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#700000,&AllContent
+			FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#700000,&AllContent
+			FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#350000,&AllContent| SET-tow &AllContent=&AllContent
+			CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&AllContent
+			CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&ids
+			FIND #1>%&Astr%,EXIT -
+			FIND $%&Bitos%=64Bit, CALL $--qd --ret:&Astr *%&Shlwapi%,StrStrW,*&AllContent,*&NTANtr
+			FIND #1>%&Astr%, EXIT -
+			STRL &iLEN="%&Pathfiles%\InfFiles\%&FileInfo%"
+			MSTR * &InfName=%&iLEN%,0,&InfPath
+			RPOS* * &&iPOS=\,1,&InfName
+			MSTR * &ExtractPath=0,%&iPOS%,&InfName
+			IFEX #%&iPOS%=0,SET &ExtractPath=
+			NAME -ext &InfsName=%&InfName%
+			GetExtractor x "%&ZIPInfo%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+			DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+			DEVI *STATUS:&state:%~3
+			MSTR * &ErrorCode=<3>&state
+			IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+			IFEX #%&ErrorCode%=0x1802000,
+			{*
+				REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+				FIND $%&GUDrive%=, SET &ErrorCode=1
+			}
+			IFEX #%&ErrorCode%=1, EXIT -
+			GetClassID "%&GetID%"
+			ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&ZIPInfo%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+			CALC #AR= %PB% + %AR% - 1
+			ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+			SET< ::Drvins1= 1
+			EXIT _SUB
+		}
+	}
+	FIND $[ %&STNID%<>PECI & "%&ComID%"<>"" ],
+	{
+		SET-tom &ComIDS=&ComID
+		STRL &Tont=%&ComID%
+		CALC #&Tonts=%&Tont%*2
+		FORX %&DrvFolder%,&&ZIPInfo,,
+		{*
+			FDIR &FilePath=%&ZIPInfo%
+			NAME &FileInfo=%&ZIPInfo%
+			IFEX %&FilePath%\%&FileInfo%.index,EXIT -
+			FORX /S %&Pathfiles%\InfFiles\%&FileInfo%\*.inf,&&InfPath,,
+			{
+				WAIT 0.1
+				GETF "%&InfPath%",0#2,&All
+				FIND $[ "%&All%"="0xFE 0xFF" | "%&All%"="0xFF 0xFE" ],GETF -find "%&InfPath%",0#200000#%&Tonts%##1,&Astr,*&ComID! GETF -find "%&InfPath%",0#100000#%&Tont%##1,&Astr,*&ComIDS
+				FIND #1>%&Astr%, EXIT -
+				FIND $%&Bitos%=64Bit,
+				{*
+					FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#200000,&AllContent
+					FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#200000,&AllContent
+					FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#100000,&AllContent| SET-tow &AllContent=&AllContent
+					SED -ni -ex &Astr=?,%&NTANtr%,,&AllContent
+				}
+				FIND #1>%&Astr%,EXIT -
+				STRL &iLEN="%&Pathfiles%\InfFiles\%&FileInfo%"
+				MSTR * &InfName=%&iLEN%,0,&InfPath
+				RPOS* * &&iPOS=\,1,&InfName
+				MSTR * &ExtractPath=0,%&iPOS%,&InfName
+				IFEX #%&iPOS%=0,SET &ExtractPath=
+				NAME -ext &InfsName=%&InfName%
+				GetExtractor x "%&ZIPInfo%" -p"%&Secret%" -y -o"%&Pathfiles%" "%&ExtractPath%*" -hide
+				DEVI *update:"%~1:%&Pathfiles%\%&InfName%"
+				DEVI *STATUS:&state:%~3
+				MSTR * &ErrorCode=<3>&state
+				IFEX #[ %&ErrorCode%=0x1806000 | %&ErrorCode%=0x1802400 | %&ErrorCode%=0x1806400 ],SET &ErrorCode=1
+				IFEX #%&ErrorCode%=0x1802000,
+				{*
+					REGI --qk --init $HKLM\SYSTEM\%&CurControl%\Enum\%~3\ClassGUID,&GUDrive
+					FIND $%&GUDrive%=, SET &ErrorCode=1
+				}
+				IFEX #%&ErrorCode%=1, EXIT -
+				GetClassID "%&GetID%"
+				ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&Yasbao%：   %&ZIPInfo%%&NL%%&Infos%：  %&InfsName%%&Version%%&NL%%&installfully%%&NL%
+				CALC #AR= %PB% + %AR% - 1
+				ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+				SET< ::Drvins1= 1
+				EXIT _SUB
+			}
+		}
+	}
+	GetClassID "%&GetID%"
+	ENVI @OutputShow=%OutputShow%%&NL%%&DeviceID%： %&DeviceName%%&NL%%&Hardid%：   %~1%&NL%%&InstallNo%%&NL%
+	CALC #AR= %PB% + %AR% - 1
+	ENVI @ShowProgress=%AR%;%&zanz%： %AR% %
+_END
+_SUB GetDriverID *
+	ENVI &STNID=
+	FIND $%~1=Class_FF,TEAM ENVI &lpfier=C| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=FUNC_01, TEAM ENVI &lpfier=E96C-E3| EXIT _SUB
+	FIND $%~1=CC_0300, TEAM ENVI &lpfier=E968-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0302, TEAM ENVI &lpfier=E968-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0380, TEAM ENVI &lpfier=E968-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0200, TEAM ENVI &lpfier=E972-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0280, TEAM ENVI &lpfier=E972-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0403, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0780, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0880, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0108, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_1180, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0500, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0580, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0600, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0601, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0604, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0C03, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0C05, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	FIND $%~1=CC_0C80, TEAM ENVI &lpfier=E97D-E3| ENVI &STNID=PECI| EXIT _SUB
+	ENVI &lpfier=C
+	ENVI &STNID=PECI
+	EXIT _SUB
+_END
+_SUB GetExtractor
+	FIND #%&Til%=0, SET &Til=1
+	SET &Ide=%&Til% %&Winld% %&Pathfiles% %*
+	BASE* %&Ide%,&masd
+	EXEC -hide -wait "%&MyName%" -s l %&masd%
+	CALC &lcv=%&lzl% + 1
+	SET ::lzl=%&lcv%
+	ENVI @&backsear=压缩 %&lzc% 个文件，完成 %&lcv%
+_END
+_SUB GetSETTEXTLText
+    SET &Vsi=
+    SET-mkfixdummy &&Vsi=%~1
+    THREAD*$  CALL GetTextmsg %&Vsi%
+_END
+_SUB GetTextmsg
+    SET &Art=%~1
+    SET &Alz=%~2
+    CALC &Astr=100 / %&lzc% * %&Alz% / 100 #1
+	SET ::Hrogr[%&Art%]=%&Astr%
+	SET &Ter=0
+	FORX * %&dwx%,&ay, ^SET< &Ter= + %%Hrogr[%&ay%]%%
+	CALC &Tar=%&Ter% #1
+	IFEX $%&Tar%>%&ShowProgress%, ENVI @ShowProgress=%&Tar%;%&Tar% %
+_END
+_SUB GetClassID *
+	ENVI &DeviceID=
+	REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%~1\DeviceDesc,&Equi
+	REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%~1\ClassGUID,&DriveID
+	REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%~1\Driver,&der
+	REGI  --init $HKLM\SYSTEM\%&CurControl%\Control\Class\%&der%\DriverVersion,&DVer
+	FIND $%&DVer%<>, ENVI &Version=    %&Vn%：%&DVer%
+	MSTR * -trimp++ -delims:; &DeviceName=<2>&Equi
+	FIND $%&DeviceName%=,ENVI &DeviceName=%&Equi%
+	FIND $%&DeviceName%=,TEAM ENVI &DeviceName=%&Ud%
+	FIND $%&DriveID%=,TEAM ENVI &DeviceID=%&Ote%| EXIT _SUB
+	MSTR * -delims:- &Devic1,&Devic2,&Devic3=<1*>&DriveID
+	MSTR * -trimp++ &ClasDesc=<1>&DriveGUID[%&Devic1%-%&Devic2%-%&Devic3%]
+	FIND $%&ClasDesc%=,
+	{*
+		REGI  --init $HKLM\SYSTEM\%&CurControl%\Control\Class\%&DriveID%\ClassDesc,&ClasDesc
+		MSTR * -delims:; &ClasDesc=<2>&ClasDesc
+		FIND $%&ClasDesc%=, REGI  --init $HKLM\SYSTEM\%&CurControl%\Control\Class\%&DriveID%\Class,&ClasDesc
+	}
+	ENVI &DeviceID=%&ClasDesc%
+	EXIT _SUB
+_END
+_SUB WiphlpID
+	ENVI-ret %~1=
+	IFEX %&Sot%\System32\iphlpapi.dll,! EXIT _SUB
+	FIND $%&Vere%=x64, TEAM SET &ax1=448| SET &ax2=420| SET &ax3=12! TEAM SET &ax1=432| SET &ax2=416| SET &ax3=8
+	FORX * 1 2 3 4 5 6 7,&Prec,
+	{*
+		SET &Wlanss=0
+		SET$ &Netlssa=*0
+		SET$ &Las=0
+		CALL $--qd --ret:&&zx  iphlpapi.dll,GetAdaptersInfo,*&Netlssa,*&Las
+		SET?short &Las=&Lsn
+		SET$ &Netlssa=*%&Lsn%
+		CALL $--qd --ret:&&zx  iphlpapi.dll,GetAdaptersInfo,*&Netlssa,*&Las
+		SET &Type=0
+		SET-addr &Tcz=&Netlssa
+		LOOP #%&Lsn%>0,
+		{*
+			SET?long &Netlssa=&Nype:(%&Type%)
+			SET?char &Netlssa=&NetTay:(%&Type%+%&ax2%)
+			IFEX #%&NetTay%=71,
+			{*
+				SET-make &NetworkGuid=&Netlssa@(%&Type%+%&ax3%)
+				SET-tow &NetworkGuid=&NetworkGuid
+				SED -ni -ex &Ast=?,%&NetworkGuid%,,&Netinstid
+				FIND #%&Ast%>0,
+				{*
+					SET-make &Ipv4Metric=&Netlssa@(%&Type%+%&ax1%);48
+					SET-tow &Ipv4Metric=&Ipv4Metric
+					FIND $%&Ipv4Metric%=0.0.0.0, TEAM ENVI-ret %~1=Wlan| EXIT _SUB
+					IFEX $%&Ipv4Metric%>0, CALC #&Wlanss=%&Wlanss% + 1
+				}
+			}
+			FIND #%&Nype%=0, EXIT LOOP
+			CALC &Type=%&Nype% - %&Tcz% #0
+		}
+		IFEX #%&Wlanss%>=%~2, EXIT _SUB! WAIT 300
+	}
+	ENVI-ret %~1=Wlan
+_END
+_SUB GetWlanid
+	DEVI listdev:&HWlass *devclass:Net *DevID:c:"PCI\CC_0280""USB\Class_FF" *inst
+	FIND $%&HWlass%=, EXIT _SUB
+	SET &Hisds=0
+	ENVI &Netinstid=
+	FORX *NL &HWlass,&lPass,
+	{*
+		REGI  --init $HKLM\SYSTEM\%&CurControl%\Enum\%&lPass%\Driver,&Driverid
+		REGI  --init .HKLM\SYSTEM\%&CurControl%\Control\Class\%&Driverid%\NetCfgInstanceId,&InstanceId
+		ENVI< &Netinstid= %&InstanceId%%&NL%
+		CALC #&Hisds=%&Hisds% + 1
+	}
+	FIND #%&Hisds%=0, EXIT _SUB
+	WiphlpID &HWIDnet "%&Hisds%"
+	FIND $%&HWIDnet%=, EXIT _SUB
+	SET ::AutoKey=
+	SET ::AutoWiss=
+	SET ::Signal=
+	SET ::Forces=
+	SET ::Forcenio=
+	SET &KeyFolde=
+	SET &Wifimame=
+	SET &Autowlan=
+	SET &Repeats=
+	SET &Ano=0
+	FDRV &Dsr=%&Sot%
+	RAND &CurRa
+	ENVI &TurPath=%&Pathfiles%\%&CurRa%
+	MDIR %&TurPath%
+	ADSL-wlan 0,,?query,&SLANW
+	FIND $%&SLANW%<>,
+	{
+		MSTR * &Tasid=<3>&SLANW
+		IFEX #%&Tasid%<>1,
+		{
+			IFEX %&Pathfiles%\WView.exe,!  WAIT 1000
+			FORX %&dirCur%\Custom\*.ini,&My,,LOAD "%&My%"
+		}
+	}
+	IFEX %&Pathfiles%\WView.exe,
+	{*
+		SET &Antsi=0
+		FORX * %&Grvice%,&&Pzv, FIND %&Pzv%, TEAM SET &Antsi=1| EXIT FORX
+		IFEX #%&Antsi%=1, EXIT _SUB
+		FORX @\ProgramData\Microsoft\Wlansvc\Profiles,&Packa,,
+		{*
+			FDRV &Tas=%&Packa%
+			FIND $%&Tas%=%&Dsr%, EXIT -
+			FORX /S %&Tas%\ProgramData\Microsoft\Wlansvc\Profiles\*.xml,&faces,,
+			{*
+				READ-UTF8 "%&faces%",**,&xmlKey
+				LPOS * &&Astr=keyMaterial>,1,&xmlKey
+				IFEX #%&Astr%>0, EXIT -
+				LPOS * ,&&stv=name>,1,&xmlKey
+				READ  -*,%&stv%,&Assid,&xmlKey
+				MSTR * -trimp++ -delims:> &Assid=<2>&Assid
+				MSTR * -trimp++ -delims:< &Assid=<1>&Assid
+				FIND $%&Assid%<>, SET< &Autowlan=%&Assid%,,%&Hisds%%&NL%
+			}
+			IFEX [ #%&Ano%=0 & %&Pathfiles%\WView.exe ],
+			{*
+				SET &Ano=1
+				IFEX %&Pathfiles%\WIFI.exe,! CMPS -u %&Pathfiles%\WView.exe %&Pathfiles%\WIFI.exe
+			}
+			IFEX %&Pathfiles%\WIFI.exe,! EXIT _SUB
+			IFEX %&TurPath%\Wsy.txt, CALL $--qd --ret:&&zx Kernel32.dll,DeleteFileW,$\\?\%&TurPath%\Wsy.txt
+			SITE ?,&WifiVer=FVER,%&Tas%\Windows\System32\kernel32.dll
+			IFEX #%&WifiVer%=0, SET &WifiVer=10
+			SET &AllKey=
+			IFEX $%&WifiVer%>6.1,
+			{*
+				EXEC -hide =%&Pathfiles%\WIFI.exe /LoadFrom 2 /ExternalWinDir "%&Tas%\Windows" /WlansvcFolder "%&Packa%" /export "%&TurPath%\Wsy.txt"
+				READ-UTF8 "%&TurPath%\Wsy.txt",**,&AllKey
+				FORX *NL &AllKey,&KeyName,
+				{*
+					FIND $%&KeyName%=, EXIT -
+					SED -ex &Keysame=0,%,%%%%,&KeyName
+					MSTR* * &Assid,&AKeys=<1><6>&Keysame
+					LPOS * &&Aster=%&Assid%-%&AKeys%,1,&Repeats
+					IFEX #%&Aster%>0, EXIT -
+					SET< &Repeats=%&Assid%-%&AKeys%%&NL%
+					SET< &KeyFolde=%&KeyName%%&NL%
+					SET< &Autowlan=%&Assid%,%&AKeys%,%&Hisds%%&NL%
+				}
+			}!
+			{*
+				EXEC -hide =%&Pathfiles%\WIFI.exe /LoadFrom 2 /ExternalWinDir "%&Tas%\Windows" /WlansvcFolder "%&Packa%" /scomma "%&TurPath%\Wsy.txt"
+				READ-UTF8 "%&TurPath%\Wsy.txt",**,&AllKey
+				FORX *NL &AllKey,&KeyName,
+				{*
+					FIND $%&KeyName%=, EXIT -
+					SED -ex &Keysame=0,%,%%%%,&KeyName
+					MSTR * -trimp++ -delims:, &Assid,&AKeys,&WPSK,&ATS,&ESS=<1><4><7><8><9>&Keysame
+					LPOS * &&Aster=%&Assid%-%&AKeys%,1,&Repeats
+					IFEX #%&Aster%>0, EXIT -
+					SET< &Repeats=%&Assid%-%&AKeys%%&NL%
+					SET< &KeyFolde=%&Assid%	%&ESS%	%&WPSK%	%&ATS%	passPhrase	%&AKeys%%&NL%
+					SET< &Autowlan=%&Assid%,%&AKeys%,%&Hisds%%&NL%
+				}
+			}
+		}
+		FIND $%&KeyFolde%<>,
+		{
+			FIND $%&Bitos%=32Bit, WAIT 1500! WAIT 500
+			WRIT-UTF8 *nobom %&TurPath%\AutoWifi.txt,$+0,%&KeyFolde%
+			EXEC -hide =%&Pathfiles%\WIFI.exe /import "%&TurPath%\AutoWifi.txt"
+			FIND $%&Autowlan%<>,
+			{
+				FIND $%&Bitos%=32Bit, WAIT 1500! WAIT 500
+			}
+		}
+		FORX *NL &Autowlan,&lan,
+		{*
+			FIND $%&lan%=, EXIT -
+			MSTR * -trimp++ -delims:, &la1,&la2,&la3=<1*>&lan
+			GetWlancon "%&la1%" "%&la2%" "%&la3%"
+		}
+		WRIT %&TurPath%\AutoWifi.ini,$+0,%&AutoWiss%%&nl%%&Signal%%&NL%%&Forces%%&NL%%&Forcenio%
+		LOAD "%&TurPath%\AutoWifi.ini"
+	}
+_END
+_SUB GetWlancon
+	SET &Hti=%~3
+	SET &Lon=%~1
+	LOOP #%&Hti%>0,
+	{*
+		CALC #&Hti=%&Hti% - 1
+		ADSL-wlan %&Hti%,,?list,&Wlansccl
+		MSTR * &Tasid=<3>&Wlansccl
+		IFEX #%&Tasid%=1, EXIT -
+		SET &Asted=0
+		SET &Ter=0
+		SET &Tla=0
+		FORX *NL &Wlansccl,&HHBUS,
+		{*
+			MSTR* * &BUS,&Enter,&Ain=<1><3><13>&HHBUS
+			FIND *&BUS=&Lon,
+			{*
+				IFEX #%&Ain%=8, SET &Tla=1
+				IFEX #%&Enter%=2, TEAM SET &Asted=2| SET &Ter=1| EXIT FORX
+				IFEX #%&Enter%=3, TEAM SET &Asted=0| SET &Ter=1| EXIT FORX
+				SET &Asted=1
+				EXIT FORX
+			}
+		}
+		IFEX #%&Asted%>0,
+		{*
+			IFEX #%&Asted%=2,
+			{*
+				IFEX #%&Tla%=1, SET< ::Forcenio=ADSL-wlan -start  %~1,%~2,,%&Hti%%&NL%! SET< ::Forces=ADSL-wlan -start  %~1,%~2,,%&Hti%%&NL%
+			}
+			IFEX #%&Asted%=1,
+			{*
+				FIND #%&Tla%=1, SET< ::Signal=ADSL-wlan -start  %~1,%~2,,%&Hti%%&NL%! SET> ::Signal=ADSL-wlan -start  %~1,%~2,,%&Hti%%&NL%
+			}
+		}
+		IFEX #%&Ter%=0, SET> ::AutoWiss=ADSL-wlan %~1,%~2,,%&Hti%%&NL%
+	}
+_END
+_SUB GetIndexID
+	Getwrongdll
+	MDIR %&Pathfiles%
+	ENVI ::HHG=
+	ENVI @OutputShow=
+	ENVI &Infthe=
+	STRL &Cousa=%&DrvFolder%
+	IFEX #%&Cousa%=3, FDRV &DrvFolder=%&DrvFolder%
+	ENVI @OutputShow=%OutputShow%%&Creatingindex%...%&NL%
+	ENVI &ISTR=0
+	DATE ::KSecr uptime
+	TIME TiCount,100, GetOnTimer
+	UISet 0
+	IFEX %&DrvFolder%\,
+	{*
+		FORX * 7z cab zip rar wim esd iso ,&&Fmats,
+		{*
+			FORX /S %&DrvFolder%\*.%&Fmats%,&zipFilev,, THREAD*$  CALL GetCreateIndex "%&zipFilev%"
+		}
+	}!
+	{*
+		THREAD*$  CALL GetCreateIndex "%&DrvFolder%"
+	}
+	WAIT -thread
+	ENVI @TiCount.*del=
+	UISet 1
+	FIND $%&HHG%=,ENVI @OutputShow=%OutputShow%%&NL%%&noindex%%&NL%! ENVI @OutputShow=%OutputShow%%&NL%%&Allindex%%&NL%
+	IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+_END
+_SUB GetCreateIndex
+	SET &zipFile=%~1
+	FDIR &FilePath=%&zipFile%
+	NAME &FileInfo=%&zipFile%
+	GetExtractor x "%&zipFile%" -p"%&Secret%" -y -r -o"%&Pathfiles%\InfFiles\%&FileInfo%" *.inf -hide
+	SET &IndexFile=%&Pathfiles%\%&FileInfo%.index
+	STRL &iLEN="%&Pathfiles%\InfFiles\%&FileInfo%"
+	IFEX %&IndexFile%, WRIT-ANSI *c %&IndexFile%,$-,
+	FORX /S %&Pathfiles%\InfFiles\%&FileInfo%\*.inf,&&InfPath,,
+	{*
+		WAIT 0.1
+		TEAM SET &NT=| SET &Class=| SET &DevHWID=| SET &Devir=|SET &DevHMID=
+		MSTR * &AllPath=%&iLEN%,0,&&InfPath
+		WRIT-ANSI *-nl %&IndexFile%,$+,%&AllPath%|
+		GETF "%&InfPath%",0#2,&&All
+		FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#*,&&AllContent
+		FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#*,&&AllContent
+		FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#*,&&AllContent| SET-tow &AllContent=&AllContent
+		SED -ni -ex &&UF16=?1,AddReg ,,&AllContent
+		FIND #50>%&UF16%,
+		{*
+			SED -ni -ex &&UF16=?1,CopyFiles,,&AllContent
+			FIND #50>%&UF16%,SET &UF16=50000
+		}
+		FIND $"%&All%"="0xFE 0xFF", GETF# "%&InfPath%",1#(%&UF16%*2),&&AllContent
+		FIND $"%&All%"="0xFF 0xFE", GETF# "%&InfPath%",2#(%&UF16%*2),&&AllContent
+		FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&InfPath%",0#%&UF16%,&&AllContent| SET-tow &AllContent=&AllContent
+		CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&AllContent
+		FORX *NL &AllContent,&&lists,
+		{*
+			WAIT 0.01
+			LSTR * &Astr=1,&lists
+			FIND $%&Astr%=;,EXIT -
+			FIND *&DevHWID=,
+			{*
+				SED -ex &&iPOS=?,{NTAMD64}|{NTX86},,&lists
+				IFEX #%&iPOS%>0,
+				{*
+					LPOS * &&iPOS=,,1,&lists
+					IFEX #%&iPOS%>0,
+					{*
+						MSTR * -trimp++ -delims:, &NT=<2->&lists
+						WRIT-ANSI *-nl %&IndexFile%,$+, %&NT% ,
+					}
+				}
+			}
+			MSTR * -trimp++ -delims:, &&DevHWID,&&DevHMID=<2><3>&lists
+			FIND *&DevHWID=, EXIT -
+			LPOS * &&Astr=\,1,&DevHWID
+			FIND #1>%&Astr%, EXIT -
+			MSTR * -trimp++ -delims:; &DevHWID=<1>&DevHWID
+			CALL $--qd --ret:&&Asr *%&Shlwapi%,StrStrW,*&Devir,$%&DevHWID%
+			FIND #%&Asr%>0, EXIT -
+			FIND *&DevHMID<>, LPOS * &&Astr=\,1,&DevHMID
+			FIND #1>%&Astr%, SET &DevHMID=
+			SET< &Devir= "%&DevHWID%" %&DevHMID%
+		}
+		WRIT-ANSI *-nl %&IndexFile%,$+, %&Devir%%&NL%
+		FIND $%&Infthe%=, ENVI< Infthe=%&InfPath%%&nl%
+	}
+	FIND $%&Infthe%<>,
+	{
+		ENVI @OutputShow=%OutputShow%%&FilePath%\%&FileInfo%.index %&Indexi%%&NL%
+		ENVI ::HHG=%Infthe%
+	}
+	FILE %&Pathfiles%\%&FileInfo%.index=>%&FilePath%
+_END
+_SUB GetpathFile
+	FIND #%&verdll%=0, EXIT _SUB
+	FIND $%&BackGrt%=,ENVI @&BackGrt.isel=1
+	FIND $%&BackGrt%=, EXIT _SUB
+	FIND $[ %&BackGrt%=%&DGR% & %~2=1 ], EXIT _SUB
+	IFEX [ %&BackGrt%\Windows\System32\config\SYSTEM & %&BackGrt%\Windows\System32\config\SOFTWARE ],! EXIT _SUB
+	EnableClose 0
+	UISep 0
+	SET &HWHID=
+	SET ::counts=0
+	SET &UIOnt=
+	SET &FileDescr=FileDescription
+	SET &Company=CompanyName
+	SET &Product=ProductName
+	FIND $%&BackGrt%<>%&Dri%, ENVI @&AddDrive.Enable=1! ENVI @&AddDrive.Enable=0
+	IFEX %&BackGrt%\Windows\System32\ntoskrnl.exe, SET &ntkrnl=ntoskrnl.exe! SET &ntkrnl=Shell32.dll
+	SITE ?&Syter=FVER,%&BackGrt%\Windows\System32\%&ntkrnl%
+	SET &FileRep=%&BackGrt%\Windows\System32\DriverStore\FileRepository
+	IFEX $[ %&Syter%<6.2 & %&Syter%>5.2 ],
+	{*
+		IFEX %&BackGrt%\Windows\System32\DriverStore\infstor.dat, TEAM GETF# %&BackGrt%\Windows\System32\DriverStore\infstor.dat,0#4,&qwstor| SET?int &qwstor=&lstor
+		IFEX %&BackGrt%\Windows\System32\DriverStore\infpub.dat, TEAM GETF# %&BackGrt%\Windows\System32\DriverStore\infpub.dat,0#4,&qwpub| SET?int &qwpub=&pub
+		IFEX #[ %&lstor%>2056 & %&pub%>2056 ],
+		{*
+			SET &Rsitory=0
+			FIND $%&BackGrt%=%&Dri%,
+			{*
+				SET &lpdris=SYSTEM
+			}!
+			{*
+				SET &lpfiles=%&BackGrt%\Windows\System32\config\SYSTEM
+				SET &lpdris={bf1a281b-ad7b-4476-ac95-f47682990ce7}%&BackGrt%/Windows/System32/config/SYSTEM
+				CALL $--qd --ret:&Refig Kernel32.dll,CreateFileW,*&lpfiles,#0x80000000,#0x00000003,#0,#3,#0,#0
+				IFEX #%&Refig%>0, TEAM CALL $--qd --ret:&&ls Kernel32.dll,CloseHandle,#%&Refig%| SET &Rsitory=1| HIVE -quick %&lpdris%,%&lpfiles%
+			}
+			SET &Dataven=
+			REGI --init --ak HKLM\%&lpdris%\,&Curret
+			FORX *NL &Curret,&&Tur,
+			{*
+				LPOS * &&Azs=ControlSet,1,&Tur
+				FIND #%&Azs%=0, EXIT -
+				REGI --init --ak HKLM\%&lpdris%\%&Tur%\Enum\,&Dataven
+				FIND *&Dataven<>, TEAM SET &Controls=%&Tur%| EXIT FORX
+			}
+			FORX *NL &Dataven,&dvc,
+			{*
+				REGI  --init  --ak HKLM\%&lpdris%\%&Controls%\Enum\%&dvc%\,&&Dinos
+				FORX *NL &Dinos,&Dcvrt,
+				{*
+					REGI  --init  --ak HKLM\%&lpdris%\%&Controls%\Enum\%&dvc%\%&Dcvrt%\,&&Tpsid
+					FORX *NL &Tpsid,&Hvl,
+					{*
+						REGI  --init   .HKLM\%&lpdris%\%&Controls%\Enum\%&dvc%\%&Dcvrt%\%&Hvl%\Driver,&&Drivers
+						FIND $%&Drivers%=, EXIT -
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\InfPath,&&dwPath
+						FIND $%&dwPath%=, EXIT -
+						FIND #%&PriveAll.Check%=0, LPOS * &Astr=oem,1,&dwPath
+						FIND #[ %&PriveAll.Check%=0 & %&Astr%=0 ], EXIT -
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\DriverDesc,&&dwDesc
+						LPOS * &Astr=%&dwPath%|%&dwDesc%,1,&dwhwid[%&dwPath%]
+						FIND #%&Astr%>0, EXIT -
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\MatchingDeviceId,&&MatceId
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\DriverDateData,&&DateTime
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\DriverVersion,&&DriVersion
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&Drivers%\ProviderName,&&Providerinfo
+						MSTR * -delims:\ &&Gerss=<1>&Drivers
+						CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&MatceId
+						REGI  --init .HKLM\%&lpdris%\%&Controls%\Enum\%&dvc%\%&Dcvrt%\%&Hvl%\ConfigFlags,&&ags
+						^SET< &dwhwid[%&dwPath%]=%&dwPath%|%&dwDesc%|%&MatceId%|%&DateTime%|%&DriVersion%|%&Providerinfo%|%&Gerss%|%&ags%%&NL%
+					}
+				}
+			}
+			GETF# %&BackGrt%\Windows\System32\DriverStore\infstor.dat,2056#(%&lstor% - 1890),&lpinftsor
+			GETF# %&BackGrt%\Windows\System32\DriverStore\infpub.dat,0#%&pub%,&lqinfpub
+			SET-addr &qwcvl=&lpinftsor
+			SET &Ctasy=
+			SET &ComID=trings]
+			SET-tom &ComIDS=&ComID
+			LOOP #%&lstor%>%&Ctasy%,
+			{*
+				CALC #&Ctasy=%&Ctasy% + %&Srr%*2 + 78
+				SET?char &lpinftsor=&nvl:%&Ctasy%
+				FIND #[ 2>%&nvl% | %&nvl%=0xFF ], CALC #&Ctasy=%&Ctasy% + 2
+				SET-mkdummy &Gpath=&lpinftsor@%&Ctasy%
+				STRL * &Srr=&Gpath
+				SET?int &lpinftsor=&Tparty:(%&Ctasy%+%&Srr%*2+22)
+				FIND #%&Tparty%=0, EXIT -
+				FIND #[ %&PriveAll.Check%=0 & %&Tparty%<>32 ], EXIT -
+				SET?int &lpinftsor=&oemist:(%&Ctasy%+%&Srr%*2+10)
+				SET-mkdummy &OemPath=&lqinfpub@(%&oemist%+20)
+				SIZE &iSize=%&FileRep%\%&Gpath%
+				FIND #%&iSize%=0, EXIT -
+				SET?shorts &lpinftsor=&lpinftime1:(%&Ctasy%+%&Srr%*2+56)
+				SET?shorts &lpinftsor=&lpinftime2:(%&Ctasy%+%&Srr%*2+54)
+				SET?shorts &lpinftsor=&lpinftime3:(%&Ctasy%+%&Srr%*2+52)
+				SET?shorts &lpinftsor=&lpinftime4:(%&Ctasy%+%&Srr%*2+50)
+				SET &Wdmay=%&lpinftime1%.%&lpinftime2%.%&lpinftime3%.%&lpinftime4%
+				CALC &&Drtim=%&Ctasy% + %&Srr% * 2 + 38 + %&qwcvl%
+				SET#$ &lpTime=*32 0   
+				CALL $--qd --bool --ret:&&zx Kernel32.dll,FileTimeToSystemTime,#%&Drtim%,*&lpTime
+				FIND #%&iSize%<1048576, TEAM CALC &iiSize=%&iSize% / 1024 #2| SET &iSize=%&iiSize% KB
+				FIND #[ %&iSize%>1048575 & %&iSize%<1073741824 ], TEAM CALC &iiSize=%&iSize% / 1048576 #2| SET &iSize=%&iiSize% MB
+				FIND #%&iSize%>1073741823, TEAM CALC &iiSize=%&iSize% / 1073741824 #2| SET &iSize=%&iiSize% GB
+				SET &Hatss=0
+				FORX *NL &dwhwid[%&OemPath%],&&dphwid,
+				{*
+					GETF &lpinftsor,(%&Ctasy%+%&Srr%*2+38)#8,&Tmist
+					MSTR * -delims:| &dpw1,&DescName,&hdlpc,&datlpc,&Descver,&Proide,&guddi,&Ass=<1*>&dphwid
+					FIND $[ "%&dpw1%"="%&OemPath%" & "%&datlpc%"="%&Tmist%" & "%&Descver%"="%&Wdmay%" ],! EXIT -
+					SET &Hatss=1
+					MSTR * -delims:- &Devic1,&Devic2,&Devic3=<1*>&guddi
+					^SET &DevicNa=%%&DriveGUID[%&Devic1%-%&Devic2%-%&Devic3%]%%
+					FIND $%&DevicNa%=,
+					{*
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&guddi%\ClassDesc,&DevicNa
+						MSTR * -trimp++ -delims:; &DevicNa=<2>&DevicNa
+						FIND $%&DevicNa%=,
+						{*
+							REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&guddi%\,&DevicNa
+							FIND $%&DevicNa%=, SET &DevicNa=Unknown
+						}
+					}
+					REGI  --init  *$HKLM\%&lpdris%\%&Controls%\Control\Class\%&guddi%\IconPath,&Icons
+					MSTR * -trimp++ -delims:, &Icon1,&Icon2=<1*>&Icons
+					MSTR * -delims:\ &Icon1=<-1>&Icon1
+					MSTR * -delims:- &Icon2=<2>&Icon2
+					^SET< &HWHID["%&Devic1%-%&Devic2%-%&Devic3%"]=%&DevicNa%|%&Proide%|%&Wdmay%|%&lpTime?shorts:0%-%&lpTime?shorts:2%-%&lpTime?shorts:6%|%&iSize%|%&Gpath%|%&BackGrt%\Windows\System32\%&Icon1%#%&Icon2%|%&OemPath%|%&hdlpc%|%&DescName%|%&Ass%%&nl%
+					SET &SDevic=%&Devic1%-%&Devic2%-%&Devic3%
+					GETF -find &UIOnt,0####1,&Asrt,*&SDevic
+					FIND $%&Asrt%=-1, SET< &UIOnt="%&Devic1%-%&Devic2%-%&Devic3%"%&NL%
+				}
+				FIND #%&Hatss%=1, EXIT -
+				LPOS * &iaosp=.inf_,0,&Gpath
+				CALC #&iaosp=%&iaosp%+3
+				MSTR * &InfName=0,%&iaosp%,&Gpath
+				GETF "%&FileRep%\%&Gpath%\%&InfName%",0#2,&All
+				FIND $"%&All%"="0xFE 0xFF", GETF# "%&FileRep%\%&Gpath%\%&InfName%",1#7000,&AllContent
+				FIND $"%&All%"="0xFF 0xFE", GETF# "%&FileRep%\%&Gpath%\%&InfName%",0#7000,&AllContent
+				FIND $[ "%&All%"<>"0xFE 0xFF" & "%&All%"<>"0xFF 0xFE" ], TEAM GETF# "%&FileRep%\%&Gpath%\%&InfName%",0#3500,&AllContent| SET-tow &AllContent=&AllContent
+				LPOS * ,&Astr=ClassGuid,1,&AllContent
+				READ -*,%&Astr%,&lines,&AllContent
+				MSTR * -trimp++ -rq++ -delims:= &lines=<2>&lines
+				MSTR * -trimp++ -delims:; &lines=<1>&lines
+				MSTR * -delims:- &Devic1,&Devic2,&Devic3=<1*>&lines
+				^SET &DevicNa=%%&DriveGUID[%&Devic1%-%&Devic2%-%&Devic3%]%%
+				FIND $%&DevicNa%=,
+				{*
+					REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&lines%\ClassDesc,&DevicNa
+					MSTR * -trimp++ -delims:; &DevicNa=<2>&DevicNa
+					FIND $%&DevicNa%=,
+					{*
+						REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&lines%\,&DevicNa
+						FIND $%&DevicNa%=, SET &DevicNa=Unknown
+					}
+				}
+				REGI  --init  *$HKLM\%&lpdris%\%&Controls%\Control\Class\%&lines%\IconPath,&Icons
+				MSTR * -trimp++ -delims:, &Icon1,&Icon2=<1*>&Icons
+				MSTR * -delims:\ &Icon1=<-1>&Icon1
+				MSTR * -delims:- &Icon2=<2>&Icon2
+				FORX %&FileRep%\%&Gpath%\*.sys,&lptstrFilename,1,
+				{*
+					SET$#  &lpBuf=*4096 0
+					CALL $--qd  --ret:&Bufszie  *%&verdll%,GetFileVersionInfoW,*&lptstrFilename,#0,#4096,*&lpBuf
+					FIND #1>%&Bufszie%, EXIT FORX
+					GETF -find &lpBuf,0####1,&Srt,*&Company
+					FIND #%&Srt%>0, TEAM SET-make &dwCompany=&lpBuf@(%&Srt%+26)| MSTR * -trim &dwCompany=&dwCompany
+					GETF -find &lpBuf,0####1,&Sry,*&FileDescr
+					FIND #%&Sry%>0,
+					{*
+						SET-make &dwFileDescr=&lpBuf@(%&Sry%+34)
+						MSTR * -trim &dwFileDescr=&dwFileDescr
+					}! 
+					{*
+						GETF -find &lpBuf,0####1,&Sry,*&Product
+						FIND #%&Sry%>0,TEAM SET-make &dwFileDescr=&lpBuf@(%&Sry%+26)| MSTR * -trim &dwFileDescr=&dwFileDescr
+					}
+				}
+				FIND $%&dwCompany%=,
+				{*
+					LPOS * ,&Apstr=Provider,1,&AllContent
+					READ  -*,%&Apstr%,&pline,&AllContent
+					MSTR * -trimp++ -rq++ -delims:= &pline=<2>&pline
+					MSTR * -trimp++ -delims:% &plinea,&pline=<1*>&pline
+					FIND $%&pline%=, SET &pline=%&plinea%
+					MSTR * -trimp++ -delims:; &pline=<1>&pline
+					FIND $[ "%&All%"="0xFE 0xFF" | "%&All%"="0xFF 0xFE" ]
+					{*
+						GETF -find "%&FileRep%\%&Gpath%\%&InfName%",0####1,*<-1>&Astr,*&ComID
+						FIND #%&Astr%>0, GETF# "%&FileRep%\%&Gpath%\%&InfName%",%&Astr%#*,&AllContent
+					}!
+					{*
+						GETF -find "%&FileRep%\%&Gpath%\%&InfName%",0####1,*<-1>&Astr,*&ComIDS
+						FIND #%&Astr%>0, TEAM GETF# "%&FileRep%\%&Gpath%\%&InfName%",%&Astr%#*,&AllContent| SET-tow &AllContent=&AllContent
+					}
+					LPOS * ,&Astst=%&pline%,1,&AllContent
+					FIND #%&Astst%>0,
+					{*
+						READ  -*,%&Astst%,&Proidex,&AllContent
+						MSTR * -trimp++ -rq++ -delims:= &Proidx,&dwCompany=<1><2>&Proidex
+						FIND $%&Proidx%<>%&pline%, CALL GetInfopro &AllContent &dwCompany "%&pline%"
+					}
+					FIND $%&dwCompany%=, SET &dwCompany=%&pline%
+				}
+				FIND $%&dwFileDescr%=,
+				{*
+					REGI  --init  .HKLM\%&lpdris%\%&Controls%\Control\Class\%&lines%\,&dwFileDescr
+					FIND $%&dwFileDescr%=, SET &dwFileDescr=Unknown
+				}
+				FIND $%&dwCompany%=, SET &dwCompany=Unknown
+				^SET< &HWHID["%&Devic1%-%&Devic2%-%&Devic3%"]=%&DevicNa%|%&dwCompany%|%&Wdmay%|%&lpTime?shorts:0%-%&lpTime?shorts:2%-%&lpTime?shorts:6%|%&iSize%|%&Gpath%|%&BackGrt%\Windows\System32\%&Icon1%#%&Icon2%|%&OemPath%||%&dwFileDescr%%&nl%
+				SET &SDevic=%&Devic1%-%&Devic2%-%&Devic3%
+				GETF -find &UIOnt,0####1,&Asrt,*&SDevic
+				FIND $%&Asrt%=-1, SET< &UIOnt="%&Devic1%-%&Devic2%-%&Devic3%"%&NL%
+				SET &dwCompany=
+				SET &dwFileDescr=
+			}
+			IFEX #%&Rsitory%=1, HIVE %&lpdris%
+		}
+	}
+	IFEX $%&Syter%>6.1,
+	{*
+		TEAM SET &crt=0| SET &sit=0| SET &drt=0
+		FORX * SYSTEM DRIVERS ,&SRStore,
+		{*
+			SET &Drivereid=
+			FIND $%&BackGrt%=%&Dri%,
+			{*
+				SET &Store=SYSTEM
+				FIND $%&SRStore%=SYSTEM,TEAM SET &lpdris=SYSTEM| REGI  --init --ak HKLM\SYSTEM\DriverDatabase\DriverPackages\,&Drivereid
+				FIND $%&SRStore%=DRIVERS,
+				{*
+					SET &lpdris=DRIVERS
+					REGI  --init --ak HKLM\DRIVERS\DriverDatabase\DriverPackages\,&Drivereid
+					FIND $%&Drivereid%=,
+					{*
+						SET &lpfiles=%&BackGrt%\Windows\System32\config\DRIVERS
+						CALL $--qd --ret:&Refig Kernel32.dll,CreateFileW,*&lpfiles,#0x80000000,#0x00000003,#0,#3,#0,#0
+						CALL $--qd --ret:&&ls Kernel32.dll,CloseHandle,#%&Refig%
+						IFEX #%&Refig%>0,
+						{*
+							HIVE -quick DRIVERS,%&BackGrt%\Windows\System32\config\DRIVERS
+							REGI  --init --ak HKLM\DRIVERS\DriverDatabase\DriverPackages\,&Drivereid
+							SET &crt=1
+						}
+					}
+				}
+			}!
+			{*
+				SET &Store={bf1a281b-ad7b-4476-ac95-f47682990ce7}%&BackGrt%/Windows/System32/config/SYSTEM
+				IFEX %&BackGrt%\Windows\System32\config\%&SRStore%,
+				{*
+					SET &lpfiles=%&BackGrt%\Windows\System32\config\%&SRStore%
+					SET &lpdris={bf1a281b-ad7b-4476-ac95-f47682990ce7}%&BackGrt%/Windows/System32/config/%&SRStore%
+					CALL $--qd --ret:&Refig Kernel32.dll,CreateFileW,*&lpfiles,#0x80000000,#0x00000003,#0,#3,#0,#0
+					CALL $--qd --ret:&&zx Kernel32.dll,CloseHandle,#%&Refig%
+					IFEX #%&Refig%>0,
+					{*
+						HIVE -quick %&lpdris%,%&lpfiles%
+						REGI  --init --ak HKLM\%&lpdris%\DriverDatabase\DriverPackages\,&Drivereid
+						FIND $%&SRStore%=SYSTEM, SET &sit=1! SET &drt=1
+					}!
+					{*
+						REGI  --init --ak HKLM\%&lpdris%\DriverDatabase\DriverPackages\,&Drivereid
+					}
+				}
+			}
+			FIND $%&SRStore%=SYSTEM,
+			{*
+				SET &Dataven=
+				REGI --init --ak HKLM\%&lpdris%\,&Curret
+				FORX *NL &Curret,&&Tur,
+				{*
+					LPOS * &&Azs=ControlSet,1,&Tur
+					FIND #%&Azs%=0, EXIT -
+					REGI --init --ak HKLM\%&lpdris%\%&Tur%\Enum\,&Dataven
+					FIND *&Dataven<>, TEAM SET &Control=%&Tur%| EXIT FORX
+				}
+				FORX *NL &Dataven,&dvc,
+				{*
+					REGI  --init  --ak HKLM\%&Store%\%&Control%\Enum\%&dvc%\,&Dinos
+					FORX *NL &Dinos,&Dcvrt,
+					{*
+						REGI  --init  --ak HKLM\%&Store%\%&Control%\Enum\%&dvc%\%&Dcvrt%\,&Tpsid
+						FORX *NL &Tpsid,&Hvl,
+						{*
+							REGI  --init   .HKLM\%&Store%\%&Control%\Enum\%&dvc%\%&Dcvrt%\%&Hvl%\Driver,&Drivers
+							FIND $%&Drivers%=, EXIT -
+							REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Drivers%\InfPath,&dwPath
+							FIND $%&dwPath%=, EXIT -
+							FIND #%&PriveAll.Check%=0, LPOS * &Astr=oem,1,&dwPath
+							FIND #[ %&PriveAll.Check%=0 & %&Astr%=0 ], EXIT -
+							REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Drivers%\DriverDesc,&dwDesc
+							LPOS * &Astr=%&dwPath%|%&dwDesc%,1,&dwhwid[%&dwPath%]
+							FIND #%&Astr%>0, EXIT -
+							REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Drivers%\MatchingDeviceId,&MatceId
+							REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Drivers%\DriverDateData,&DateTime
+							REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Drivers%\DriverVersion,&DriVersion
+							CALL $--qd --ret:&&zx *%&Userapi%,CharUpperW,*&MatceId
+							REGI  --init   .HKLM\%&Store%\%&Control%\Enum\%&dvc%\%&Dcvrt%\%&Hvl%\ConfigFlags,&ags
+							^SET< &dwhwid[%&dwPath%]=%&dwPath%|%&dwDesc%|%&MatceId%|%&DateTime%|%&DriVersion%|%&ags%%&NL%
+						}
+					}
+				}
+			}
+			FORX *NL &Drivereid,&Drves,
+			{*
+				REGI  --init  .HKLM\%&lpdris%\DriverDatabase\DriverPackages\%&Drves%\Version,&Hersions
+				SET$# &Hersion=%&Hersions%
+				SET?int &Hersion=&Tparty
+				FIND #[ %&PriveAll.Check%=0 & %&Tparty%<>655104 ], EXIT -
+				SIZE &iSize=%&FileRep%\%&Drves%
+				FIND #%&iSize%=0, EXIT -
+				REGI  --init  .HKLM\%&lpdris%\DriverDatabase\DriverPackages\%&Drves%\InfName,&InfName
+				REGI  --init  .HKLM\%&lpdris%\DriverDatabase\DriverPackages\%&Drves%\,&OemPath
+				REGI  --init  .HKLM\%&lpdris%\DriverDatabase\DriverPackages\%&Drves%\Provider,&Proide
+				SET-mkfixdummy &lpsz=&Hersion@8
+				SET$# &Guidus=*96 0
+				CALL $--qd --ret:&&le *%&Oleapi%,StringFromGUID2,*&lpsz,*&Guidus,#96
+				SET &Tcsymdw=%&Hersion?shorts:38%.%&Hersion?shorts:36%.%&Hersion?shorts:34%.%&Hersion?shorts:32%
+				MSTR * -delims:- &GUIDA,&GUIDB,&GUIDC=<1*>&Guidus
+				SET-mkfixdummy &Hsion=&Hersion@24
+				SET#$ &lpTime=*32 0
+				CALL $--qd --bool --ret:&&zx Kernel32.dll,FileTimeToSystemTime,*&Hsion,*&lpTime
+				FIND #%&iSize%<1048576, TEAM CALC &iSize=%&iSize% / 1024 #2| SET &iSize=%&iSize% KB
+				FIND #[ %&iSize%>1048575 & %&iSize%<1073741824 ], TEAM CALC &iSize=%&iSize% / 1048576 #2| SET &iSize=%&iSize% MB
+				FIND #%&iSize%>1073741823, TEAM CALC &iSize=%&iSize% / 1073741824 #2| SET &iSize=%&iSize% GB
+				REGI  --init  *$HKLM\%&Store%\%&Control%\Control\Class\%&Guidus%\IconPath,&Icons
+				MSTR * -trimp++ -delims:, &Icon1,&Icon2=<1*>&Icons
+				MSTR * -delims:\ &Icon1=<-1>&Icon1
+				MSTR * -delims:- &Icon2=<2>&Icon2
+				^SET &DevicNa=%%&DriveGUID[%&GUIDA%-%&GUIDB%-%&GUIDC%]%%
+				SET &Hatss=0
+				FIND $%&DevicNa%=,
+				{*
+					REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Guidus%\ClassDesc,&DevicNa
+					MSTR * -trimp++ -delims:; &DevicNa=<2->&DevicNa
+					FIND $%&DevicNa%=, REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Guidus%\Class,&DevicNa
+					FIND $%&DevicNa%=,  SET &DevicNa=Unknown
+				}
+				GETF &Hersion,24#8,&Astvx
+				FORX *NL &dwhwid[%&OemPath%],&dphwid,
+				{*
+					MSTR * -rq++ -delims:| &dpw1,&DescName,&hdlpc,&datlpc,&Descver,&Guidd=<1*>&dphwid
+					FIND $[ %&dpw1%<>%&OemPath% | "%&datlpc%"<>"%&Astvx%" | %&Descver%<>%&Tcsymdw% ], EXIT -
+					^SET< &HWHID["%&GUIDA%-%&GUIDB%-%&GUIDC%"]=%&DevicNa%|%&Proide%|%&Tcsymdw%|%&lpTime?shorts:0%-%&lpTime?shorts:2%-%&lpTime?shorts:6%|%&iSize%|%&Drves%|%&BackGrt%\Windows\System32\%&Icon1%#%&Icon2%|%&OemPath%|%&hdlpc%|%&DescName%|%&Guidd%|%&InfName%%&NL%
+					SET &SDevic=%&GUIDA%-%&GUIDB%-%&GUIDC%
+					GETF -find &UIOnt,0####1,&Asrt,*&SDevic
+					FIND $%&Asrt%=-1, SET<  &UIOnt="%&GUIDA%-%&GUIDB%-%&GUIDC%"%&NL%
+					SET &Hatss=1
+				}
+				FIND #%&Hatss%=1, EXIT -
+				FORX %&FileRep%\%&Drves%\*.sys,&lptstrFilename,1,
+				{*
+					SET$#  &lpBuf=*4096 0
+					CALL $--qd  --ret:&Bufszie  *%&verdll%,GetFileVersionInfoW,*&lptstrFilename,#0,#4096,*&lpBuf
+					FIND #1>%&Bufszie%,EXIT FORX
+					GETF -find &lpBuf,0####1,&Srt,*&FileDescr
+					FIND #%&Srt%>0,
+					{*
+						SET-mkdummy &dwFileDescr=&lpBuf@(%&Srt%+34)
+						MSTR * -trim &dwFileDescr=&dwFileDescr
+					}! 
+					{*
+						GETF -find &lpBuf,0####1,&Srt,*&Product
+						FIND #%&Srt%>0,TEAM SET-mkdummy &dwFileDescr=&lpBuf@(%&Srt%+26)| MSTR * -trim &dwFileDescr=&dwFileDescr
+					}
+				}
+				FIND $%&dwFileDescr%=, REGI  --init  .HKLM\%&Store%\%&Control%\Control\Class\%&Guidus%\Class,&dwFileDescr
+				FIND $%&dwFileDescr%=, SET &dwFileDescr=Unknown
+				^SET< &HWHID["%&GUIDA%-%&GUIDB%-%&GUIDC%"]=%&DevicNa%|%&Proide%|%&Tcsymdw%|%&lpTime?shorts:0%-%&lpTime?shorts:2%-%&lpTime?shorts:6%|%&iSize%|%&Drves%|%&BackGrt%\Windows\System32\%&Icon1%#%&Icon2%|%&OemPath%||%&dwFileDescr%||%&InfName%%&NL%
+				SET &SDevic=%&GUIDA%-%&GUIDB%-%&GUIDC%
+				GETF -find &UIOnt,0####1,&Asrt,*&SDevic
+				FIND $%&Asrt%=-1, SET<  &UIOnt="%&GUIDA%-%&GUIDB%-%&GUIDC%"%&NL%
+				SET &dwFileDescr=
+			}
+		}
+		IFEX #%&crt%=1, HIVE DRIVERS
+		IFEX #%&sit%=1, HIVE {bf1a281b-ad7b-4476-ac95-f47682990ce7}%&BackGrt%/Windows/System32/config/SYSTEM
+		IFEX #%&drt%=1, HIVE {bf1a281b-ad7b-4476-ac95-f47682990ce7}%&BackGrt%/Windows/System32/config/DRIVERS
+	}
+	EnableClose 1
+	SET &DiskMatent=
+	SET &Anb=0
+	FORX *NL &UIOnt,&Tonts,
+	{*
+		FORX *NL &HWHID[%&Tonts%],&HMatent,
+		{*
+			CALC #&Anb=%&Anb%+1
+			MSTR * -delims:| &Sid2,&Sid3,&Sid4,&Sid5,&Sid6,&Sid7,&Sid8,&Sid9,&Sid31,&Sid32,&Sid33,&Sid52=<1*>&HMatent
+			SET< &DiskMatent=*P:W%&ics%H%&ics%|%&Sid8%|IconGroup%&NLa%%&Sid2%%&NL%%&Sid32%%&SC%%&Sid4%%&nl%%&Sid5%%&SC%%&Sid6%%&SL%
+			^SET ::INF0IDS[%&Anb%]=%&Sid7%|%&Sid2%|%&Sid3%|%&Sid4%|%&Sid5%|%&Sid6%|%&Sid9%|%&Sid31%|%&Sid32%|%&Sid33%|%&Sid52%
+		}
+	}
+	UISep 1
+	ENVI @&backsear=搜索到 %&Anb% 个驱动设备
+	ENVI @ContentDiskinfo.Val=*:l%SL%c%SC%:1*#;%&DiskMatent%
+	ENVI-ret %1=%&BackGrt%
+	SET ::Asupo=%&BackGrt%
+	SET ::counts=%&Anb%
+	FIND #[ %&NetAll.Check%=1 | %&AuoAll.Check%=1 | %&DipAll.Check%=1 | %&SysAll.Check%=1 ], SET &Vt=11! SET &Vt=9
+	GetselectAll %&Vt% "" 3
+	WAIT  -freemem
+_END
+_SUB GetInfopro
+	FORX *NL %1,&Hvi,
+	{*
+		MSTR * -trimp++ -rq++  -delims:= &Proida,&Proidb=<1><2>&Hvi
+		FIND $%~3=%&Proida%, TEAM ENVI-ret %~2=%&Proidb%| EXIT _SUB
+	}
+	ENVI-ret %~2=
+_END
+_SUB GetPartition
+	ENVI @ContentDiskinfo.Sel=?.&dwCol
+	MSTR * -delims:| &qwInfo1,&qwInfo2,&qwInfo3,&qwInfo4,&qwInfo5,&qwInfo6,&qwInfo7,&qwInfo8,&qwInfo9=<1*>&INF0IDS[%&dwCol%]
+	FIND $%&qwInfo6%=, EXIT _SUB
+	FIND $%&qwInfo8%=,SET &qwpcd=! SET &qwpcd=硬件ID：%&tab%%&qwInfo8%%&nl%
+	CALL Mouse_In_TIPS ContentDiskinfo "%&qwpcd%设备描述：%&tab%%&qwInfo9%%&nl%类别标识：%&tab%%&qwInfo2%%&nl%%&lplier%%&TAB%%&qwInfo3%%&NL%驱动版本：%&TAB%%&qwInfo4%%&NL%发布日期：%&tab%%&qwInfo5%%&nl%OEM名称：%&tab%%&qwInfo7%%&nl%%&Fileth%%&TAB%%&BackGrt%\Windows\System32\DriverStore\FileRepository\%&qwInfo1%%&NL%驱动大小：%&tab%%&qwInfo6%"
+_END
+_SUB GetselectAll
+	SET &lpa=0
+	LOOP #%&counts%>%&lpa%,
+	{*
+		CALC #&lpa=%&lpa%+1
+		FIND #%~1>10,
+		{*
+			MSTR * -delims:| &qwsysinfo=<2>&INF0IDS[%&lpa%]
+			ENVI @ContentDiskinfo.Check=%&lpa%;0
+			FIND #%&NetAll.Check%=1, FIND $[ %&qwsysinfo%=网络适配器 | %&qwsysinfo%=Net ], ENVI @ContentDiskinfo.Check=%&lpa%;1
+			FIND #%&AuoAll.Check%=1, FIND $[ "%&qwsysinfo%"="声音、视频和游戏控制器" | %&qwsysinfo%=MEDIA ], ENVI @ContentDiskinfo.Check=%&lpa%;1
+			FIND #%&DipAll.Check%=1, FIND $[ %&qwsysinfo%=显示适配器 | "%&qwsysinfo%"="Display adapters" | %&qwsysinfo%=Display ], ENVI @ContentDiskinfo.Check=%&lpa%;1
+			FIND #%&SysAll.Check%=1, FIND $[ %&qwsysinfo%=系统设备 | %&qwsysinfo%=System ], ENVI @ContentDiskinfo.Check=%&lpa%;1
+		}!
+		{
+			FIND #%~1=9,
+			{*
+				MSTR * -delims:| &qwtase,&qwtass=<8><10>&INF0IDS[%&lpa%]
+				FIND $%&qwtase%=,
+				{
+					ENVI @ContentDiskinfo.Check=%&lpa%;0
+				}!
+				{
+					FIND #%&qwtass%>0, ENVI @ContentDiskinfo.Check=%&lpa%;0! ENVI @ContentDiskinfo.Check=%&lpa%;1
+				}
+			}!
+			{
+				ENVI @ContentDiskinfo.Check=%&lpa%;%1
+			}
+		}
+	}
+	FIND $%~3=,TEAM ENVI @&NetAll.Check=0| ENVI @&AuoAll.Check=0| ENVI @&DipAll.Check=0| ENVI @&SysAll.Check=0
+_END
+_SUB GetAddDriveinf
+	FIND $%&BackGrt%=%&Dri%, EXIT _SUB
+	SET &PszAddPath=
+	SET &htcwu=打开 INF 文件时出现问题
+	SET &alling=正在安装第
+	BROW  &PszAddPath,*%&dirCur%,请选择驱动所在文件夹,,0x2880000
+	FIND $%&PszAddPath%=, EXIT _SUB
+	IFEX "%&PszAddPath%",! EXIT _SUB
+	MSTR * -delims:\ &PszAddPath1,&PszAddPath2=<1><-1>&PszAddPath
+	FIND $%&PszAddPath2%=, SET &PszAddPath=%&PszAddPath1%
+	SET &Dismall=
+	SET ::Astinf=0
+	SET &temtt=%&Sot%\System32
+	IFEX [ %&temtt%\dism.exe & %&temtt%\dismapi.dll & %&temtt%\DISM\dismcore.dll & %&temtt%\DISM\dismcoreps.dll & %&temtt%\DISM\dismprov.dll & %&temtt%\DISM\folderprovider.dll & %&temtt%\DISM\logprovider.dll ],
+	{*
+		SET &Dismall=%&temtt%\dism.exe
+	}!
+	{*
+		SET &temtf=%&BackGrt%\Windows\System32
+		IFEX [ %&temtf%\dism.exe & %&temtf%\dismapi.dll & %&temtf%\DISM\dismcore.dll & %&temtf%\DISM\dismcoreps.dll & %&temtf%\DISM\dismprov.dll & %&temtf%\DISM\folderprovider.dll & %&temtf%\DISM\logprovider.dll ], SET &Dismall=%&temtf%\dism.exe
+	}
+	UISep 0
+	FIND $%&Dismall%<>,
+	{*
+		DATE ::KSecr uptime
+		TIME TiCount,100, GetDOnTimer 1 a
+		TEAM SET &Pv=0| SET &PID=0| SET &yts=0| SET &hts=0
+		SET &Daddsg=
+		SET &HHBUS=0
+		EXEC* -pid:&PID -cmd::1000:ImagexAdd -hide &Daddsg=%&Dismall% /image:%&BackGrt% /Add-Driver /Driver:"%&PszAddPath%" /recurse /ForceUnsigned
+		SET PID=0
+		ENVI @TiCount.*del=
+		SED -ni -ex &Astis=?,The specified image is currently being serviced by another DISM operation,,&Daddsg
+		FIND #%&Astis%>0,
+		{
+			MESS=-top+icon1 %&Daddsg% @温馨提示
+		}!
+		{
+			FIND $%&Astinf%<>0,
+			{
+				ENVI @&PriveAll.Check=0
+				GetpathFile "0" "0" 100
+				ENVI @ShowProgress=100;100 %
+				GETF -find &Daddsg,0####1,*&Tasrt,*&htcwu
+				GETF -find &Daddsg,0####1,*&Hasrt,*&alling
+				FIND #%&Hasrt%>0, MSTR * &hts=<#>&Hasrt
+				FIND #%&Tasrt%>0, MSTR * &yts=<#>&Tasrt
+				MESS=-top+icon2 操作成功，其中成功%&hts%个，不适用%&yts%个，更多信息请参考%&nl%"%Dri%\Windows\Logs\DISM\dism.log" @温馨提示
+			}
+		}
+	}
+	UISep 1
+	WAIT  -freemem
+	ENVI @&AddDrive=%&type51%
+_END
+_SUB GetRemoveinf
+	ENVI @ContentDiskinfo.Check=?*&qwCol
+	FIND $%&qwCol%=, EXIT _SUB
+	MESS=-top+icon1 删除驱动会使设备停止运行，此操作不可逆，您是否确定需要执行。 @温馨提示 #YN
+	FIND $%&YESNO%=NO, EXIT _SUB
+	SET &driverinfo=
+	SET ::AstRed=0
+	SET ::Astinf=0
+	SET &Nst=0
+	UISep 0
+	FIND $%&BackGrt%=%&Dri%,
+	{*
+		DATE ::KSecr uptime
+		TIME TiCount,100, GetDOnTimer 1 r
+		SET ::Strfy=0
+		FORX * %&qwCol%,&qwpat,
+		{*
+			MSTR * -rq++ -delims:| &FilesName,&lpInfo,&HardwareID,&InfFileName=<1><7><8><11>&INF0IDS[%&qwpat%]
+			LPOS * &Str1=%&HardwareID%,1,&driverinfo
+			FIND #%&Str1%>0, EXIT -
+			SET< &driverinfo="%&lpInfo%"|%&FilesName%\%&InfFileName%|"%&HardwareID%"%&nl%
+			CALC &Nst=%&Nst% + 1
+		}
+		ENVI @&backsear=删除 %&Nst% 个驱动，
+		FORX *NL &driverinfo,&&qwdrinfo,
+		{*
+			MSTR * -rq++ -delims:| &&lpInfo,&&InfFileName,&&HardwareID=<1><2><3>&qwdrinfo
+			THREAD*$ GetRemovedriv "%&lpInfo%" "%&BackGrt%\Windows\System32\DriverStore\FileRepository\%&InfFileName%"  "%&HardwareID%"
+		}
+		WAIT -thread
+		ENVI @TiCount.*del=
+		GetRescan
+		FIND $%&Astinf%<>0,
+		{*
+			GetpathFile "0" "0" 100
+			ENVI @ShowProgress=100;100 %
+			MESS=-top+icon 操作成功。@温馨提示
+		}
+	}!
+	{*
+		FORX * %&qwCol%,&qwpat,
+		{*
+			MSTR * -delims:| &lpInfo=<7>&INF0IDS[%&qwpat%]
+			LPOS * &Str1=/driver:%&lpInfo%,1,&driverinfo
+			FIND #%&Str1%>0, EXIT -
+			SET< &driverinfo= /driver:%&lpInfo%
+			CALC &Nst=%&Nst% + 1
+		}
+		ENVI @&backsear=删除 %&Nst% 个驱动，
+		SET &Dismall=
+		SET &temtt=%&Sot%\System32
+		IFEX [ %&temtt%\dism.exe & %&temtt%\dismapi.dll & %&temtt%\DISM\dismcore.dll & %&temtt%\DISM\dismcoreps.dll & %&temtt%\DISM\dismprov.dll & %&temtt%\DISM\folderprovider.dll & %&temtt%\DISM\logprovider.dll ],
+		{*
+			SET &Dismall=%&temtt%\dism.exe
+		}!
+		{*
+			SET &temtf=%&BackGrt%\Windows\System32
+			IFEX [ %&temtf%\dism.exe & %&temtf%\dismapi.dll & %&temtf%\DISM\dismcore.dll & %&temtf%\DISM\dismcoreps.dll & %&temtf%\DISM\dismprov.dll & %&temtf%\DISM\folderprovider.dll & %&temtf%\DISM\logprovider.dll ], SET &Dismall=%&temtf%\dism.exe
+		}
+		FIND $%&Dismall%<>,
+		{*
+			DATE ::KSecr uptime
+			TIME TiCount,100, GetDOnTimer 1 r
+			TEAM SET &Pv=0| SET &PID=0
+			EXEC* -pid:&PID -cmd::1000:ImagexRem  -hide &Reminfo=%&Dismall%  /image:%&BackGrt%\ /Remove-Driver %&driverinfo%
+			SET PID=0
+			ENVI @TiCount.*del=
+			SED -ni -ex &Astis=?,The specified image is currently being serviced by another DISM operation,,&Reminfo
+			FIND #%&Astis%>0,
+			{
+				MESS=-top+icon1 %&Reminfo% @温馨提示
+			}!
+			{
+				FIND $%&Astinf%<>0,
+				{
+					GetpathFile "0" "0" 100
+					ENVI @ShowProgress=100;100 %
+					MESS=-top+icon 操作成功。@温馨提示
+				}
+			}
+		}
+	}
+	UISep 1
+	WAIT  -freemem
+	ENVI @&RemDrive=%&type52%
+_END
+_SUB ImagexRem
+	LPOS * ,&Astrv=正在删除第,0,&Reminfo
+	FIND #%&Astrv%>0, 
+	{*
+		READ -*,%&Astrv%,&drine,&Reminfo
+		MSTR * &Stra1,&Strb1<2><4>&drine
+		IFEX #%&Strb1%>0, CALC &Pv=100 / %&Strb1% * %&Stra1% #1
+		FIND #[ %&Pv%>39 & %&Pv%<95 ], ENVI @ShowProgress=%&Pv%;%&Pv% %
+		SET< ::Astinf=%&Astrv%
+		ENVI @&backsear=删除 %&Strb1% 个驱动，完成 %&Stra1%
+	}
+_END
+_SUB ImagexAdd
+	LPOS * ,&Astrv=正在安装第,0,&Daddsg
+	FIND #%&Astrv%>0, 
+	{*
+		READ -*,%&Astrv%,&drine,&Daddsg
+		MSTR * &Stra1,&Strb1=<2><4>&drine
+		IFEX #%&Strb1%>0, CALC &Pv=100 / %&Strb1% * %&Stra1% #1
+		FIND #[ %&Pv%>39 & %&Pv%<95 ], ENVI @ShowProgress=%&Pv%;%&Pv% %
+		SET< ::Astinf=%&Astrv%
+		ENVI @&backsear=导入 %&Strb1% 个驱动，完成 %&Stra1%
+	}
+_END
+_SUB GetRemovedriv
+	SET &NameoemInf=%~1
+	CALL $--qd --bool --ret:&Red  Setupapi.dll,SetupUninstallOEMInfW,*&NameoemInf,#0x0001,#0
+	SET &FileNameInf=%~2
+	FIND $%&FileNameInf%<>,
+	{*
+		SET$ &NeedReboot=*8
+		CALL $--qd --bool --ret:&Rea Newdev.dll,DiUninstallDriverW,#0,*&FileNameInf,#0,*&NeedReboot
+	}
+	FIND $%~3<>, DEVI  *remove:+:%~3
+	CALC ::Strfy=%&Strfy%+1
+	CALC &Pv=100 / %&Nst% * %&Strfy% - 1 #1
+	FIND #[ %&Pv%>39 & %&Pv%<95 ], ENVI @ShowProgress=%&Pv%;%&Pv% %
+	IFEX #[ %&Red%>0 | %&Rea%>0 ], SET< ::Astinf=%&Red% %&Rea%
+	ENVI @&backsear=删除 %&Nst% 个驱动，完成 %&Strfy%
+	EXIT _SUB
+_END
+_SUB Getpathile
+	MDIR %&Pathfiles%
+	SET &qwast=
+	SET ::lzc=1
+	UISep 0
+	EnableClose 0
+	ENVI @&Dteptpa.enable=0
+	ENVI @&Dteptpg.enable=0
+	DATE *space0 &SyDate
+	MSTR * &Dat1,&Dat2,&Dat3,&Dat4,&Dat5,&Dat6=<1*>&SyDate
+	SET &SyDate=%&Dat1%.%&Dat2%.%&Dat3%.%&Dat4%.%&Dat5%.%&Dat6%
+	MSTR * -delims:: &qwdvr1=<1>&BackGrt
+	^SET &bitxl=%%&Boxhwnd[%&BackGrt%]%%
+	MSTR * &bitxl=<-1>&bitxl
+	FIND $%&BackGrt%=%&Dri%,
+	{*
+		SET &Sotver=%&WinVr%
+	}!
+	{*
+		IFEX %&BackGrt%\Windows\System32\ntoskrnl.exe, SET &SATUSRoot=%&BackGrt%\Windows\System32\ntoskrnl.exe! SET &SATUSRoot=%&BackGrt%\Windows\System32\ntkrnlpa.exe
+		SITE ?,&Sotver=FVER,%&SATUSRoot%
+	}
+	IFEX $%&BackPass.Check%=1, THREAD*$  CALL GetWireless
+	ENVI @ContentDiskinfo.Check=?*&qwCol
+	FIND $%&qwCol%=,
+	{*
+		WAIT -thread
+		IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+		UISep 1
+		EnableClose 1
+		ENVI @&Dteptpa.enable=1
+		ENVI @&Dteptpg.enable=1
+		EXIT _SUB
+	}
+	SET &PwICV=
+	SET &Hgd={/}|{\\}|{:}|{*}|{?}|{"}|{>}|{<}|{,}|{ }
+	SET &lst=%LISflei.isel%
+	SET &ser=%&LISTA.isel%
+	FIND $%&BacPath%<>,SET &ser=3
+	IFEX #%&ser%>1,
+	{
+		FIND #%&ser%=2, SET &mx=-mx0 -mmt%&qwPro%
+		FIND #%&ser%=3, SET &mx=-mx1 -mmt%&qwPro%
+		FIND #%&ser%=4, SET &mx=-mx3 -mmt%&qwPro%
+		FIND #%&ser%=5, SET &mx=-mx5 -mmt%&qwPro%
+		FIND #%&ser%=6, SET &mx=-mx7 -mmt%&qwPro%
+		FIND #%&ser%=7, SET &mx=-mx9 -mmt%&qwPro%
+		FEXT &hdExt=%&Drvder%
+		LPOS &iPos=%&hdExt%,0,7z zip
+		IFEX #%&iPos%>0,
+		{*
+			SET &Drpath=%&Drvder%
+		}!
+		{*
+			IFEX %&Drvder%\,SET &Drpath=%&Drvder%\DrvIndex_%&qwdvr1%.%&Sotver%_%&bitxl%_%&SyDate%.7z! SET &Drpath=%&Drvder%.7z
+		}
+		FDIR &HPatr=%&Drpath%
+		SET @&Drvder=%&HPatr%
+		Getwrongdll
+		FIND *&BFDrivepass=,SET &Pass=! SET &Pass=-p%&BFDrivepass%
+		FIND $%&BacPath%<>,
+		{*
+			SET &lst=1
+			MSTR * -rq &Drpath=&BacPath
+			SET &mx=%&Bacbility% -mmt%&qwPro%
+		}
+		SET ::lzl=0
+		DATE ::KSecr uptime
+		FIND $%&BacPath%=, TIME TiCount,100, GetDOnTimer
+		IFEX #%&lst%=1,
+		{*
+			SET ::dwx= 1
+			FORX * %&qwCol%,&qwpat,
+			{*
+				MSTR * -delims:| &qwInfs=<1>&INF0IDS[%&qwpat%]
+				LPOS * &&Asret=%&qwInfs%,1,&qwast
+				FIND #%&Asret%>0, EXIT -
+				SET< &qwast= "%&BackGrt%\Windows\System32\DriverStore\FileRepository\%&qwInfs%" 
+			}
+			SET &Til=1
+			ENVI @&backsear=压缩 %&Til% 个文件，
+			^SET ::Hrogr[1]=0
+			CALL GetExtractor a "%&Drpath%" %&qwast% %&Pass% -xr!%&BackGrt%\Windows\System32\DriverStore\FileRepository\*.PNF %&mx% -hide
+		}!
+		{*
+			DATE  *h *bsys &on utc
+			SET &lwl=1
+			SET &qwl=
+			SET &lsc=0
+			SET ::dwx=
+			FORX * %&qwCol%,&qwpat,
+			{*
+				MSTR * -delims:| &qwInfs,&PwInf2,&PwInf3,&PwInf4=<1><2><3><9>&INF0IDS[%&qwpat%]
+				FIND #%&lst%=2, SED -ex &Tmpfiles=0,%&Hgd%,_,&PwInf2
+				FIND #%&lst%=3, SED -ex &Tmpfiles=0,%&Hgd%,_,&PwInf3
+				FIND #%&lst%=4, SED -ex &Tmpfiles=0,%&Hgd%,_,&PwInf4
+				LPOS * &&Asais=%&qwInfs%,1,&qwast
+				FIND $%&Asais%>0, EXIT -
+				LPOS * &&Asr=%&Tmpfiles%,1,&qwl
+				FIND $%&Asr%=0,
+				{*
+					CALC &lsc=%&lsc% + 1
+					SET< ::dwx= %&lsc%
+					^SET ::Hrogr[%&lsc%]=0
+					SET< &qwl=%&Tmpfiles%%&nl%
+				}
+				^SET< &qwfile[%&Tmpfiles%]= "%&BackGrt%\Windows\System32\DriverStore\FileRepository\%&qwInfs%"
+				SET< &qwast=%&qwInfs%%&nl%
+			}
+			SET ::lzc=%&lsc%
+			SET &Til=1
+			ENVI @&backsear=压缩 %&lzc% 个文件，
+			FORX *NL &qwl,&oems,
+			{*
+				FIND *&oems=, EXIT -
+				^SET &PathPro=%%&qwfile[%&oems%]%%
+				THREAD*$ CALL GetExtractor a "%&Drvder%\DrvIndex_%&qwdvr1%.%&Sotver%_%&bitxl%_%&SyDate%\%&oems%.7z" %&PathPro%  %&Pass% -xr!%&BackGrt%\Windows\System32\DriverStore\FileRepository\*.PNF %&mx% -hide
+				CALC &Til=%&Til% + 1
+			}
+			WAIT -thread
+		}
+		FIND $%&BacPath%=, ENVI @TiCount.*del=
+		ENVI @ShowProgress=100;100 %
+		IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+	}
+	IFEX #%&ser%=1,
+	{*
+		DATE ::KSecr uptime
+		TIME TiCount,100, GetDOnTimer
+		MSTR * &lsc=<#>&qwCol
+		SET ::His=0
+		CALC &lsr=100 / %&lsc% #1
+		SET &lcz=0
+		SET &insts=%&Drvder%\DrvIndex_%&qwdvr1%.%&Sotver%_%&bitxl%_%&SyDate%
+		FORX * %&qwCol%,&qwpat,
+		{*
+			MSTR * -delims:| &qwInfs,&PwInf2,&PwInf3,&PwInf4=<1><2><3><9>&INF0IDS[%&qwpat%]
+			LPOS * &&Asais=%&qwInfs%,1,&qwast
+			FIND #%&Asret%>0, EXIT -
+			FIND #%&lst%>1,
+			{*
+				FIND #%&lst%=2, SET &Tmpfiles=%&PwInf2%
+				FIND #%&lst%=3, SET &Tmpfiles=%&PwInf3%
+				FIND #%&lst%=4, SET &Tmpfiles=%&PwInf4%
+				SED &Tmpfiles=0,%&Hgd%,_,%&Tmpfiles%
+				SET &insts=%&Drvder%\DrvIndex_%&qwdvr1%.%&Sotver%_%&bitxl%_%&SyDate%\%&Tmpfiles%
+			}
+			CALC &lcz=%&lcz% + 1
+			SET< &qwast=%&insts%|%&qwInfs%%&nl%
+		}
+		SET ::lcs=%&lcz%
+		ENVI @&backsear=导出 %&lcs% 个驱动，
+		FORX *NL &qwast,&&qwstr,
+		{*
+			MSTR * -delims:| &swInf1,&swInf2=<1><2>&qwstr
+			IFEX %&swInf1%\,! MDIR %&swInf1%
+			THREAD*$ CALL Getexportfolder "%&swInf1%" "%&BackGrt%\Windows\System32\DriverStore\FileRepository\%&swInf2%"
+		}
+		WAIT -thread
+		FORX /S:2 %&Drvder%\DrvIndex_%&qwdvr1%.%&Sotver%_%&bitxl%_%&SyDate%\*.PNF,&&pnfinfo,, CALL $--qd --ret:&&zx Kernel32.dll,DeleteFileW,$\\?\%&pnfinfo%
+		ENVI @TiCount.*del=
+		ENVI @ShowProgress=100;100 %
+	}
+	WAIT -thread
+	WAIT  -freemem
+	UISep 1
+	EnableClose 1
+	ENVI @&Dteptpa.enable=1
+	ENVI @&Dteptpg.enable=1
+	ENVI @&DToinstall=%&type53%
+_END
+_SUB Getfilespath
+	IFEX #%&LISTA.isel%=1,
+	{
+		IFEX %&Drvder%\,!
+		{
+			FDIR &asPath=%&Drvder%
+			IFEX %&asPath%\, ENVI @&Drvder=%&asPath%
+			IFEX %&Drvder%\,!
+			{
+				FDIR &asPath=%&Drvder%
+				IFEX %&asPath%\, ENVI @&Drvder=%&asPath%
+			}
+		}
+		ENVI @&BFDrivepass.enable=0
+	}!
+	{
+		ENVI @&BFDrivepass.enable=1
+	}
+_END
+_SUB GetsavedFiles
+	SET &PszWimPath=
+	IFEX #%&LISTA.isel%>1,
+	{*
+		FIND $%&BackGrt%=%&Dri%,
+		{*
+			SET &Sotver=%&WinVr%
+		}!
+		{*
+			IFEX %&BackGrt%\Windows\System32\ntoskrnl.exe, SET &SATUSRoot=%&BackGrt%\Windows\System32\ntoskrnl.exe! SET &SATUSRoot=%&BackGrt%\Windows\System32\ntkrnlpa.exe
+			SITE ?,&Sotver=FVER,%&SATUSRoot%
+		}
+		DATE *space0 &SyDate
+		MSTR * &Dat1,&Dat2,&Dat3,&Dat4,&Dat5,&Dat6=<1*>&SyDate
+		SET &SyDate=%&Dat1%.%&Dat2%.%&Dat3%.%&Dat4%.%&Dat5%.%&Dat6%
+		MSTR * -delims:: &Badrv=<1>&BackGrt
+		SET &insts=DrvIndex_%&Badrv%.%&Sotver%_%&bitxl%_%&SyDate%.7z
+		BROW  &PszWimPath,&%&insts%,请选择保存的文件,支持的格式(*.7z;*.zip)|*.7z;*.zip,0x80000
+	}
+	IFEX #%&LISTA.isel%=1,
+	{*
+		BROW  &PszWimPath,*,请选择保存的文件夹,,0x2880000
+		MSTR * -delims:\ &lpfes1,&lpfes2=<-1><-2>&PszWimPath
+		FIND $%&lpfes1%=, SET &PszWimPath=%&lpfes2%
+	}
+	FIND $%&PszWimPath%=, EXIT _SUB
+	SET @%1=%&PszWimPath%
+_END
+_SUB Getexportfolder
+	FILE  %~2=>%~1
+	CALC ::His=%&His%+1
+	CALC &Par=%&lsr% * %&His% #1
+	ENVI @ShowProgress=%Par%;%&Par% %
+	ENVI @&backsear=导出 %&lcs% 个驱动，完成 %&His%
+_END
+_SUB UISep
+	ENVI @ShowProgress=-1
+	ENVI @&bavvr.enable=%1
+	ENVI @&BackPass.enable=%1
+	ENVI @&Selectory.enable=%1
+	ENVI @&LISTA.enable=%1
+	ENVI @LISflei.enable=%1
+	ENVI @&Drvder.enable=%1
+	ENVI @&DOCTRAN1.enable=%1
+	ENVI @&DOCTRAN2.enable=%1
+	ENVI @&DOCTRAN3.enable=%1
+	ENVI @&BackGrt.enable=%1
+	ENVI @&BackGrt.enable=%1
+	ENVI @ContentDiskinfo.enable=%1
+	ENVI @&DToinstall.enable=%1
+	FIND #%&AddDrive.enable%=1, ENVI @&AddDrive.enable=%1
+	ENVI @&backsear.enable=%1
+	ENVI @&PriveAll.enable=%1
+	ENVI @&NetAll.enable=%1
+	ENVI @&AuoAll.enable=%1
+	ENVI @&DipAll.enable=%1
+	ENVI @&SysAll.enable=%1
+	ENVI @&Passimes.Visible=%1
+	ENVI @&BFDrivepass.Visible=%1
+	ENVI @RefreshDev.Visible=%1
+	FIND #%&PriveAll.Check%=1, ENVI @&RemDrive.enable=0! ENVI @&RemDrive.enable=%1
+_END
+_SUB GetWireless
+	SET ::ASDSSID=
+	SET &wllaID=
+	SET &Wless=
+	ENVI &Antsi=0
+	SET &Dllnte=IFMON.DLL%&NL%RASMONTR.DLL%&NL%AUTHFWCFG.DLL%&NL%DHCPCMONITOR.DLL%&NL%DOT3CFG.DLL%&NL%FWCFG.DLL%&NL%HNETMON.DLL%&NL%NETIOHLP.DLL%&NL%PEERDISTSH.DLL%&NL%NETTRACE.DLL%&NL%NSHHTTP.DLL%&NL%NSHIPSEC.DLL%&NL%NSHWFP.DLL%&NL%P2PNETSH.DLL%&NL%WCNNETSH.DLL%&NL%WLANCFG.DLL%&NL%WWANCFG.DLL
+	ENVI @&BackGrt.QUERY=;&dwdsc
+	FORX * %&Grvice%,&Pzv, FIND %&Pzv%, TEAM ENVI &Antsi=1| EXIT FORX
+	IFEX %&dirCur%\Custom\Wireless.%&qwdvr1%.%&Sotver%.ini, READ-UTF8 "%&dirCur%\Custom\Wireless.%&qwdvr1%.%&Sotver%.ini",**,&Wless
+	FORX *NL &dwdsc,&Tas, 
+	{*
+		FIND $%&Tas%=, EXIT -
+		FORX /S %&Tas%\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces\*.xml,&facein,1,*
+		FIND $%&facein%=, EXIT -
+		FIND $%&Tas%=%&Dri%, SET &Aos=1! SET &Aos=2
+		SET &Sattr=1
+		ENVI &Wnget=0
+		FIND $[ "%&Tas%"="%&Dri%" & "%&rei%"<>"0" ], SET &Sattr=0
+		IFEX #[ %&Sattr%=1 & %&Antsi%=0 ], 
+		{*
+			SET &AllKey=
+			SET &Aoffs=0
+			MDIR %&Pathfiles%\Pathfiles
+			DEVI *extract #100,,%&Pathfiles%\Pathfiles
+			IFEX %&Pathfiles%\Pathfiles\Wsid.txt, CALL $--qd --ret:&&zx Kernel32.dll,DeleteFileW,$%&Pathfiles%\Pathfiles\Wsid.txt
+			IFEX [ #%&Aoffs%=0 & %&Pathfiles%\Pathfiles\WView.exe ],
+			{*
+				SET &Aoffs=1
+				IFEX %&Pathfiles%\Pathfiles\WIFI.exe,! CMPS -u %&Pathfiles%\Pathfiles\WView.exe %&Pathfiles%\Pathfiles\WIFI.exe
+			}
+			IFEX %&Pathfiles%\Pathfiles\WIFI.exe, EXEC -hide =%&Pathfiles%\Pathfiles\WIFI.exe /LoadFrom %&Aos% /ExternalWinDir "%&Tas%\Windows" /WlansvcFolder "%&Tas%\ProgramData\Microsoft\Wlansvc\Profiles" /export "%&Pathfiles%\Pathfiles\Wsid.txt"
+			IFEX %&Pathfiles%\Pathfiles\Wsid.txt, READ-UTF8 "%&Pathfiles%\Pathfiles\Wsid.txt",**,&AllKey
+			FORX *NL &AllKey,&KeyName,
+			{*
+				FIND $%&KeyName%=, EXIT -
+				MSTR* * &Assid,&AKeys=<1><6>&KeyName
+				FIND $%&AKeys%=, EXIT -
+				FIND $"%&Tas%"="%&Dri%", ENVI< &Wnget=1
+				LPOS * &Aster=%&KeyName%,1,&wllaID
+				FIND #%&Aster%>0, EXIT -
+				SET< &wllaID=%&KeyName%%&NL%
+				BASE %&Assid%,&SSID
+				BASE %&AKeys%,&PSWD
+				SET &Hlans=ADSL-wlan %&SSID%,%&PSWD%
+				LPOS * &Aster=%&Hlans%,1,&Wless
+				FIND #%&Aster%>0, EXIT -
+				LPOS * &srt=%&Hlans%,1,&ASDSSID
+				FIND #%&srt%>0, EXIT -
+				SET< ::ASDSSID=ADSL-wlan %&SSID%,%&PSWD%%&NL%
+			}
+		}
+		FIND $[ "%&Tas%"="%&Dri%" & "%&Wnget%"="0" ], 
+		{*
+			IFEX #%&rei%=0, SET &dwdc=%&Dri%! SED -ex &dwdc=0,%&Dri%,,&dwdsc
+			SET &Grentr=0
+			FORX *NL &dwdc,&Gni,
+			{*
+				FIND $%&Gni%=, EXIT -
+				ENVI &dwlla=1
+				FORX *NL &Dllnte,&Gdlls, IFEX %&Gni%\Windows\System32\%&Gdlls%,! TEAM ENVI &dwlla=0| EXIT FORX
+				IFEX #%&dwlla%=0, EXIT -
+				SET &Bbf=DLL 不能被加载
+				EXEC*  -hide &Shlan=%&Gni%\Windows\System32\netsh.exe wlan show profiles
+				LPOS * &Ksa=%&Bbf%,1,&Shlan
+				IFEX #%&Ksa%>0, EXIT FORX
+				THREAD*$ CALL GetPhyTypes
+				FORX *NL &Shlan,&Wsh,
+				{*
+					MSTR * -trimp++ -delims:: &Assid=<2>&Wsh
+					FIND $%&Assid%=, EXIT -
+					THREAD*$ CALL GetPhyTypes "%&Assid%" "%&Gni%"
+				}
+				WAIT -thread
+				IFEX #%&Grentr%=1, EXIT FORX
+			}
+		}
+	}
+	FIND $%&ASDSSID%=,!
+	{
+		MDIR %&dirCur%\Custom
+		WRIT %&dirCur%\Custom\Wireless.%&qwdvr1%.%&Sotver%.ini,$+0,%&ASDSSID%
+	}
+_END
+_SUB GetPhyTypes
+	EXEC*  -hide &Any=%~2\Windows\System32\netsh.exe wlan show profiles %~1 key=clear
+	FORX * 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ,&Tvlcs,
+	{*
+		LPOS * ,&Ast=关键内容,%&Tvlcs%,&Any
+		LPOS * ,&srt=Key Content,%&Tvlcs%,&Any
+		FIND #[ %&Ast%=0 & %&srt%=0 ], EXIT FORX
+		ENVI &Grentr=1
+		FIND #%&Ast%>0, SET &Astr=%&Ast%
+		FIND #%&srt%>0, SET &Astr=%&srt%
+		READ  -*,%&Astr%,&AKeys,&Any
+		MSTR * -trimp++ -delims:: &AKeys=<2>&AKeys
+		BASE %&Assid%,&SSID
+		BASE %&AKeys%,&PSWD
+		SET &Hlans=ADSL-wlan %&SSID%,%&PSWD%
+		LPOS * &Aster=%&Hlans%,1,&Wless
+		FIND #%&Aster%>0, EXIT -
+		LPOS * &Gsrtn=%&Hlans%,1,&ASDSSID
+		FIND #%&Gsrtn%>0, EXIT -
+		SET< ::ASDSSID=ADSL-wlan %&SSID%,%&PSWD%%&NL%
+	}
+_END
+_SUB GetIndexInfo
+	FIND $%&Indeks.Check%=1,
+	{
+		ENVI @&SearchDisk.enable=0
+		ENVI @&SkipDevice.enable=0
+		ENVI @&Drivepass.enable=0
+		ENVI @OutputShow=
+		IFEX #%&SYSlanguage%=936,
+		{
+			ENVI @OutputShow=%OutputShow%%&Indexs1%%&Indexs2%
+		}!
+		{
+			ENVI @OutputShow=%OutputShow%%&Indexs1%%&Indexs2%%&Indexs3%
+		}
+	}!
+	{
+		ENVI @OutputShow=
+		ENVI @&SearchDisk.enable=1
+		ENVI @&SkipDevice.enable=1
+		ENVI @&Drivepass.enable=1
+	}
+_END
+_SUB GetcabPath *
+	ENVI &Filters=
+	ENVI &FilterDrive=
+	PART  list volume ,&AllDrive
+	FORX *NL &AllDrive,&volall,
+	{*
+		MSTR * &volss=<1>&volall
+		ENVI ?&Verss,3=PEBIT,%&volss%\Windows\System32
+		FIND $[ %&Bitos%=32Bit & %&Verss%<>x86 ], EXIT -
+		FIND $[ %&Bitos%=64Bit & %&Verss%<>x64 ], EXIT -
+		IFEX %&volss%\Windows\System32\DriverStore\FileRepository\,
+		{*
+			SET$# &idstt=*16 0
+			SET$# &KK=*8
+			CALL  $--qd Kernel32.dll,GetVolumePathNamesForVolumeNameW,$%&volss%\,*&idstt,#16,*&KK
+			FIND $"%&Dri%\"="%&idstt%", EXIT -
+			MSTR * -delims:\ &Volstr=<-1>&volss
+			FIND $%&idstt%=,
+			{*
+				CALL $--qd --ret:&Rey Kernel32.dll,CreateFileW,*&volss,#0,#3,#0,#3,#0,#0
+				SET$# &Csk=*16 0
+				SET$#  &cbBytes=*8 0
+				CALL $--qd --ret:&&zx Kernel32.dll,DeviceIoControl,#%&Rey%,#2953344,#0,#0,*&Csk,#12,*&cbBytes,#0
+				SET?char &Csk=&dik:4
+				SET?char &Csk=&dif:8
+				CALC #&dik=%&dik%
+				CALC #&dif=%&dif%
+				CALL $--qd --ret:&&zx Kernel32.dll,CloseHandle,#%&Rey%
+				^ENVI &partitions[%&Volstr%]=%&dik%#%&dif%
+			}!
+			{*
+				MSTR * -delims:\ &idstt=<1>&idstt
+				^ENVI &partitions[%&Volstr%]=%&idstt%
+			}
+			ENVI< &FilterDrive=%&volss%%&NL%
+		}
+	}
+	MSTR * &Rsd=<#>&FilterDrive
+	SET &VolumeNames=%&FilterDrive%
+	IFEX #%&Rsd%>1,
+	{*
+		MSTR * &RV=<1>&FilterDrive
+		ENVI ?,&VEA=FVER,%&RV%\Windows\explorer.exe
+		FORX *NL &FilterDrive,&FR,
+		{*
+			ENVI ?,&VE=FVER,%&FR%\Windows\explorer.exe
+			IFEX $%&VEA%>%&VE%, EXIT -
+			SET &VolumeDrive=
+			FORX *NL &VolumeNames,&PaDrive,
+			{*
+				FIND $%&PaDrive%=, EXIT -
+				FIND $%&PaDrive%=%&FR%, EXIT -
+				SET< &VolumeDrive=%&PaDrive%%&NL%
+			}
+			ENVI &VolumeNames=%&FR%%&NL%%&VolumeDrive%
+		}
+	}
+	ENVI &Filters=%&VolumeNames%
+_END
+_SUB CAPTURE_PATH
+	BROW &REPATH,*,%&driveFolder%,,0x2880000
+	FIND $%&REPATH%<>,
+	{
+		IFEX %&REPATH%\,!
+		{
+			FEXT &dxt=%&REPATH%
+			FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! EXIT _SUB 
+		}
+		ENVI @&SearchDisk.Check=0
+		ENVI @%1=%&REPATH%
+		FIND #%&SearchDisk.Check%=0, ENVI @&Drivepass.enable=1! ENVI @&Drivepass.enable=0
+	}
+_END
+_SUB GetDropFile *
+	ENVI ?&F1,&FS=DROPFILE,%~1
+	FIND $%~3=&DrvFolder,
+	{*
+		IFEX %&F1%\,!
+		{*
+			FEXT &dxt=%&F1%
+			FIND $[ %&dxt%=7z | %&dxt%=cab | %&dxt%=zip | %&dxt%=rar | %&dxt%=wim | %&dxt%=esd | %&dxt%=iso ],! FDIR &F1=%&F1%
+		}
+		ENVI @&SearchDisk.Check=0
+		IFEX #%&DrvFolder.Visible%=1, TEAM ENVI @&SearchDisk.Check=0| ENVI @%~3=%&F1%! ENVI @%~4=%&F1%
+		FIND #%&SearchDisk.Check%=0, ENVI @&Drivepass.enable=1! ENVI @&Drivepass.enable=0
+	}
+_END
+_SUB UISet
+	ENVI @ShowProgress=-1
+	ENVI @OutputShow.enable=%1
+	ENVI @&Dteptpa.enable=%1
+	ENVI @&Dteptpg.enable=%1
+	ENVI @&aafos.enable=%1
+	ENVI @&Indeks.enable=%1
+	ENVI @Toinstall.enable=%1
+	ENVI @&DrvFolder.enable=%1
+	ENVI @&Passimes.Visible=%1
+	ENVI @&Drivepass.Visible=%1
+	ENVI @SelectDirectory.enable=%1
+	IFEX $%&Indeks.Check%=1, TEAM ENVI @&SearchDisk.enable=0| ENVI @&SkipDevice.enable=0! TEAM ENVI @&SearchDisk.enable=%1| ENVI @&SkipDevice.enable=%1
+_END
+_SUB GetSwitchPanel
+	^IFEX #%~1=1, TEAM ENVI &Cx=0| ENVI &CI=1! TEAM ENVI &Cx=1| ENVI &CI=0
+	ENVI @&Drivepass.Visible=%&CI%
+	ENVI @&aafos.Visible=%&CI%
+	ENVI @&DrvFolder.Visible=%&CI%
+	ENVI @SelectDirectory.Visible=%&CI%
+	ENVI @&Indeks.Visible=%&CI%
+	ENVI @&SearchDisk.Visible=%&CI%
+	ENVI @&SkipDevice.Visible=%&CI%
+	ENVI @Toinstall.Visible=%&CI%
+	ENVI @OutputShow.Visible=%&CI%
+	ENVI @ContentDiskinfo.Visible=%&Cx%
+	ENVI @&BFDrivepass.Visible=%&Cx%
+	ENVI @&backsear.Visible=%&Cx%
+	ENVI @&BackPass.Visible=%&Cx%
+	ENVI @&BackGrt.Visible=%&Cx%
+	ENVI @&RemDrive.Visible=%&Cx%
+	ENVI @&PriveAll.Visible=%&Cx%
+	ENVI @&DOCTRAN1.Visible=%&Cx%
+	ENVI @&DOCTRAN2.Visible=%&Cx%
+	ENVI @&DOCTRAN3.Visible=%&Cx%
+	ENVI @&bavvr.Visible=%&Cx%
+	ENVI @&Drvder.Visible=%&Cx%
+	ENVI @&LISTA.Visible=%&Cx%
+	ENVI @LISflei.Visible=%&Cx%
+	ENVI @&Selectory.Visible=%&Cx%
+	ENVI @&DToinstall.Visible=%&Cx%
+	ENVI @&addDrive.Visible=%&Cx%
+	ENVI @RefreshDev.Visible=%&Cx%
+	ENVI @&NetAll.Visible=%&Cx%
+	ENVI @&AuoAll.Visible=%&Cx%
+	ENVI @&DipAll.Visible=%&Cx%
+	ENVI @&SysAll.Visible=%&Cx%
+	FIND $%&BackGrt%=%&Dri%, ENVI @&addDrive.Enable=0! ENVI @&addDrive.Enable=%&Cx%
+	^IFEX #[ %~1=2 & %~3=1 ], TEAM ENVI-ret %~2=0| THREAD*$  CALL GetpathFile
+_END
+_SUB Mouse_In_TIPS
+	TIPS -
+	ENVI @@Cur=?&CurXM;&CurYM
+	ENVI &ShowHot=%~2
+	TIPS. ,%&ShowHot%,30000,1,@AL%&CurXM%T%&CurYM%
+_END
+_SUB EnableClose
+    IFEX #%1>0, SET &En=0x00000000! SET &En=0x00000001
+    CALL $--ret:&hmenu *%&Userapi%,GetSystemMenu,#%&Windi%,#0
+    CALL $--qd --ret:&&zx *%&Userapi%,EnableMenuItem,#%&hmenu%,#0xF060,#%&En%
+_END
+_SUB GetONTBox
+    ENVI @@SENDMSG=%HwndBox%;0x0198;%id1%;@RC
+    ENVI @@Cur=?@%HwndBox%;;;;;RC;&bIn
+    IFEX #%&bIn%<1,TEAM SET id=-100001| ENVI @T1=0| TIPS -
+_END
+_SUB GetTheWin
+	IFEX %&Pathfiles%\, EXEC -hide =CMD /C rd /s /q "%&Pathfiles%"
+	KILL -force *%&__PID% 
+_END
+_SUB GetOnTimer
+	DATE &CSecr uptime
+	CALC &RecTime=(%&CSecr% - %&KSecr%) / 1000 #1
+	ENVI @Toinstall=%&RecTime%
+_END
+_SUB GetDOnTimer
+	DATE &CSecr uptime
+	CALC &RecTime=(%&CSecr% - %&KSecr%) / 1000 #1
+	FIND $%2=a, ENVI @&AddDrive=%&RecTime%
+	FIND $%2=,  ENVI @&DToinstall=%&RecTime%
+	FIND $%2=r, ENVI @&RemDrive=%&RecTime%
+	FIND #%~1=1,
+	{
+		CALC &gress=%&RecTime% * 8 #0
+		FIND #[ %&gress%<41 & %&Astinf%=0 ], ENVI @ShowProgress=%&gress%;%&gress% %
+	}
+_END
+_SUB Getigfxcui
+	FIND $%&zui%=PE,
+	{
+		REGI HKEY_CLASSES_ROOT\Directory\background\shellex\ContextMenuHandlers\igfxcui\\!
+		REGI HKEY_CLASSES_ROOT\Directory\background\shellex\ContextMenuHandlers\igfxDTCM\\!
+		REGI HKEY_CLASSES_ROOT\Directory\background\shellex\ContextMenuHandlers\ACE\\!
+		REGI HKEY_CLASSES_ROOT\Directory\background\shellex\ContextMenuHandlers\NvCplDesktopContext\\!
+		IFEX X:\Windows\System32\igfxCPL.cpl, FILE X:\Windows\System32\igfxCPL.cpl
+	}
+_END
+_SUB GetRescan
+	SET$# &pdnDevInst=*8 0
+	CALL $--qd --ret:&Success CfgMgr32.dll,CM_Locate_DevNodeW,*&pdnDevInst,#0,#0
+	FIND #%&Success%=0,
+	{*
+		SET?long &pdnDevInst=&pdnDevInst
+		CALL $--qd --ret:&Guidus CfgMgr32.dll,CM_Reenumerate_DevNode,#%&pdnDevInst%,#0
+	}
+_END
+_SUB Gethelpes,W710H500,Drvindex  驱动安装工具  ,TEAM ENVI @Getdevtools.visible=1| KILL \,#1,,, %&Scalr%
+	ENVI @Getdevtools.visible=0
+	ENVI @Getdevtools.POS=?X2:Y2
+	ENVI @Gethelpes.POS=%X2%:%Y2%:::4
+	LABE -left -nf &Sourtime1,L10T10W700H500,,,
+	LABE -left AEncrypt,L605T112W80H26,%&Encrypts%, TEAM ENVI @Getdevtools.Visible=0| CALL @Getcryptinfo,0x0000FF,11
+	IFEX #%&SYSlanguage%=936,CALL HelpClosewy! CALL HelpCloseay
+_END
+_SUB Getkillall
+	FIND  --wid*@ &Allst,Drvindex    安装驱动工具         v
+	KILL drvinst
+	FORX *NL &Allst,&STALL,
+	{*
+		MSTR * &killall=<6>&STALL
+		FIND #%&__PID%=%&killall%, EXIT -
+		KILL *%&killall%
+	}
+	KILL *%&__PID% 
+_END
+_SUB Getpanand
+	ENVI @&BackGrt.query=%&lp%;&s
+	FIND *&s=, EXIT _SUB
+	^SET &Sx=%%&Boxhwnd[%&s%]%%
+	ENVI @@Cur=?&CurX;&CurY
+	ENVI @T1=500
+	ENVI id=%1
+	^CALC &id1=%1 - 1
+	TIPS.  ,%&Sx%,50000,1,@AL%&CurX%T%&CurY%
+_END
+_SUB Getcryptinfo,W560H340,AES Encrypt,,#1,,, %&Scalr%
+	ENVI @this.bkcolor=0xFAEBD7FA
+	GROU Group22,L8T2W539H276,,,
+	GROU Group22,L15T16W526H106,输入要加密的内容：,,0x0
+	MEMO|. Envepass,L22T35W508H80,,,0x20
+	LABE -vcenter -ncmd Numberlim,L15T124W290H20,字符串的字符数限定在256以内(不能含 % " 字符),
+	ITEM -pcenter Fncrwm,L320T132W90H30,复制到粘贴板, Getenboard ,
+	ITEM -pcenter AEncrwm,L450T132W90H30,随机生成, Getencryp Envepass ,
+	GROU Group23,L15T164W526H106,加密结果将在这里显示：,,0x0
+	MEMO|. Fnctransla,L22T182W508H80,,,0x8
+	LABE -left -vcenter -ncmd Nillustrate,L15T283W520H20,,,0x8B0000
+	ENVI @Fncrwm.Enable=0
+	FIND #%&Dteptpa.Check%=1,ENVI @Envepass=%&Drivepass%! ENVI @Envepass=%&BFDrivepass%
+	ENVI @Envepass.ID=?;&&ID1
+	ENVI @this.MSG=_COMMAND#%&ID1%#0x0300::&&wp,&&lp, GetWMCHANGE
+	ENVI @Nillustrate=此加密只适用于本程序使用，生成后的密文可作为代替原来压缩包的明文密码。
+	FIND *Envepass=, ENVI @AEncrwm.Enable=0
+_END
+_SUB GetWMCHANGE
+	ENVI @Fnctransla=
+	STRL * -8 &hsi=Envepass
+	FIND #%&hsi%=0,
+	{
+		ENVI @AEncrwm.Enable=0
+	}!
+	{
+		CALL $--qd --ret:&&Ast *%&Shlwapi%,StrStrW,*Envepass,*&NL
+		FIND #%&Ast%>0, TEAM ENVI @AEncrwm.Enable=0| EXIT _SUB
+		CALL $--qd --ret:&&Ast *%&Shlwapi%,StrStrW,*Envepass,*&lls
+		FIND #%&Ast%>0, TEAM ENVI @AEncrwm.Enable=0| EXIT _SUB
+		CALL $--qd --ret:&&Ast *%&Shlwapi%,StrStrW,*Envepass,*&lsl
+		FIND #%&Ast%>0, TEAM ENVI @AEncrwm.Enable=0| EXIT _SUB
+		FIND #%&hsi%>256, TEAM ENVI @Numberlim=字符串的字符数限定在256以内| ENVI @AEncrwm.Enable=0! ENVI @AEncrwm.Enable=1
+	}
+	FIND #%Fncrwm.Enable%=1, ENVI @Fncrwm.Enable=0
+_END
+_SUB Getenboard
+	ENVI^ Clipboard=原始内容：%&nl%%Envepass%%&nl%%&nl%加密后编码：%&nl%%Fnctransla%
+	ENVI @Fncrwm.Enable=0
+_END
+_SUB Getencryp
+	ENVI @Fnctransla=
+	MSTR * -rq &&alsty=%~1
+	STRL * -8 &hst=&alsty
+	FIND #%&hst%=0, EXIT _SUB
+	calc &vzl=(16 - %&hst% % 16) + %&hst%
+	ENVI @Fncrwm.Enable=1
+	ENVI-tom  &Dnase=&alsty
+	SET &hlz=0
+	LOOP #500>%&hlz%,
+	{*
+		MSTR &las=1,4,%RANDOM%
+		ENVI &lxy=E37%&las%F38C74728
+		ENVI &vlx=62A47%&las%8C52C12
+		ENVI-tom &Alxy=&lxy
+		ENVI-tom &Avlx=&vlx
+		TEAM ENVI &lxy=| ENVI &vlx=
+		ENVI$# &lpout=*%&vzl% 0
+		CALL $--qd --ret:&&eai  #,%&Enc%,#2,#1,*&Dnase,*&Alxy,*&Avlx,*&lpout
+		GETF -bin &lpout,0#%&eai%,&&lot
+		SED -ex &lut=0,{ 0x}|{0x},,&lot
+		TEAM ENVI &lot=| ENVI &lpout=
+		ENVI$# &dwput=%&lut%
+		ENVI#$ &dwOut=*%&vzl% 0
+		CALL $--qd --ret:&&wly #,%&Dec%,#2,#0,*&dwput,*&Alxy,*&Avlx,*&dwOut
+		TEAM ENVI &dwput=| ENVI &Alxy=| ENVI &Avlx=
+		FIND #%&eai%=%&wly%,
+		{*
+			FIND *&Dnase=&dwOut,
+			{*
+				ENVI &Jis=%&las%%&lut%
+				CODE *jm  &Jis,#,12,1,0,8
+				ENVI @Fnctransla=%&Jis%
+				TEAM ENVI &lut=| ENVI &las=| ENVI &Dnase=| ENVI &dwOut=| ENVI &Jis=| EXIT LOOP
+			}
+			TEAM ENVI &lut=| ENVI &las=
+		}
+		ENVI &dwOut=
+		CALC &hlz=1 + %&hlz%
+	}
+_END
+_SUB HelpCloseay
+	ENVI &VL1=Usage method：%&nl%
+	\To load the driver compressed package, you need to put the compressed package in the current directory of the %&nl%
+	\program，Or create a new folder in the current directory and put the drive package into the new folder，%&nl%
+	\Multi level folder paths are supported，Start the program to perform the installation，Automatic search loading。%&nl%
+	\Support compressed package format type：7z cab zip rar wim esd iso %&nl%
+	\"√" Tick："Search for drive options on your hard drive"，Match the drivers under the search multi system and %&nl%
+	\    install them into the current system，The driver package in the current directory will not be loaded, 	%&nl%    Support hidden partition offline system。%&nl%
+	\"√" Tick："Ignore the install graphics driver option"，That is, the driver will not be installed %&nl%
+	\    when a matching graphics card driver is searched，（Not including graphics card）。%&nl%%&nl%
+	\Automatic operation parameters：%&nl%Support compressed packets with password decryption，Example: Current directory %&nl%
+	\Drvindex.exe -b ,123456   123456For password Drvindex.exe -b D:\Drivers.7z,123456   123456For password，%&nl%
+	\The AES encryption algorithm of this program can be used to calculate mutation encoding, which is used to%&nl%
+	\encrypt the password of compressed packets and replace the original plaintext password to ensure user data security.%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -b 	By default,the driver compressed package under the current directory will automatically match the installed%&nl%
+	\	driver。Customizable directory path  Example：EXEC Drvindex.exe -b D:\Drivers Or  EXEC Drvindex.exe -b%&nl%	
+	\	Note that there are spaces in the path and double quotes are required%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -t	Ignore installing graphics driver；Searching for the driver package in the current directory %&nl%
+	\	will automatically match the installed driver（Not including graphics card）。%&nl%
+	\	Customizable directory path。Example：EXEC Drvindex.exe -t D:\Drivers  Or   EXEC Drvindex.exe -t %&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -y	Search for drives on your hard drive；Search for all available %&nl%	drives under the local hard disk offline system and install them to the current system；%&nl%
+	\	Example：EXEC Drvindex.exe -y%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -h	Search for drives on your hard drive + Ignore installing graphics driver；Search local hard disk offline %&nl%
+	\	system All available drivers are matched and installed to the current system（Not including graphics card）%&nl%
+	\	Example：EXEC Drvindex.exe -h%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\Shortcut key for terminating program Alt+K%&nl%
+	\Automatic exit after operation。							Thank：%&nl%
+	\											Fir     @Fir%&nl%
+	\											Saury   @Anson4%&nl%
+	\Lightning	QQ: 1358909368								Xiaoyue @xiaojinglf%&nl%
+	\QQ group: 	1067888280							 	Xiang  @szwp%&nl%
+	ENVI @&Sourtime1=%&VL1%
+_END
+_SUB HelpClosewy
+	ENVI &VL2=使用方法：%&nl%
+	\加载驱动压缩包需将压缩包放至程序当前目录下，或在当前目录下新建文件夹并将驱动压缩包放到新建的文件夹里面，%&NL%
+	\多级文件夹路径，启动程序执行安装，自动搜索加载。支持压缩包格式：7z cab zip rar wim esd iso %&nl%
+	\√" 勾选："搜索硬盘中的驱动选项"，将搜索多系统下的驱动进行匹配安装到当前系统中，将不加载当前目录下的驱动包，%&NL%    支持隐藏分区离线系统。%&NL%
+	\√" 勾选："忽略安装显卡驱动选项"，即搜索匹配到显卡驱动时也不会安装此驱动，（不包含显卡）。%&NL%%&nl%
+	\动运行参数：%&nl%支持压缩包带密码解密，示例: 当前目录 Drvindex.exe -b ,123456    123456为密码 %&nl%
+	\Drvindex.exe -b D:\Drivers.7z,123456  路径有空格需加双引号，Drvindex.exe -b "D:\D rv.7z,123456"%&nl%
+	\可使用本程序 AES加密 算法计算变异编码，用于加密压缩包的密码，代替原始明文密码使用，以确保用户数据安全。%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -b	默认搜索当前目录下的驱动压缩包将自动匹配安装驱动。可自定义目录路径%&nl%
+	\	示例：EXEC Drvindex.exe -b D:\Drivers  或   EXEC Drvindex.exe -b     注意路径有空格需要加双引号%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -t	忽略安装显卡驱动；搜索当前目录下的驱动压缩包将自动匹配安装驱动（不包含显卡）。%&nl%
+	\	可自定义目录路径。示例：EXEC Drvindex.exe -t D:\Drivers  或   EXEC Drvindex.exe -t %&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -y	搜索硬盘中的驱动；搜索本机硬盘离线系统下所有可用驱动匹配安装到当前系统；%&nl%
+	\	示例：EXEC Drvindex.exe -y%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -h	搜索硬盘中的驱动 + 忽略安装显卡驱动；搜索本机硬盘离线系统下%&nl%
+	\	所有可用驱动匹配安装到当前系统（不包含显卡）；示例：EXEC Drvindex.exe -h%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\ -a	备份驱动, 压缩文件路径+备份的分区。-mx1 指定压缩率（013579）9最高，可忽略压缩率，默认-mx1极速压缩。%&nl%
+	\	备份分类: 网卡驱动、声卡驱动 显卡驱动、系统设备驱动，-Net 、-MEDIA 、-Display 、-System%&nl%
+	\	示例：Drvindex.exe -a ?:\archive.7z C: -mx1 或 Drvindex.exe -a ?:\archive.7z C: -mx1 -Net -Display%&nl%
+	\-----------------------------------------------------------------------------------------------------------------%&nl%
+	\终止程序快捷键 Alt+K%&nl%
+	\完成操作自动退出。									感谢：%&nl%
+	\											杉     @Fir%&nl%
+	\											晓月   @xiaojinglf%&nl%
+	\											秋刀鱼 @Anson4%&nl%
+	\Lightning	QQ: 1358909368							    	相     @szwp%&nl%		QQ群: 1067888280
+	ENVI @&Sourtime1=%&VL2%
+_END

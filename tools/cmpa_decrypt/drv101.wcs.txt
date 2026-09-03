@@ -1,0 +1,19 @@
+﻿#!PECMD
+ENVI^ EnviMode=1
+SET &al=%*
+FIND $%~1=-s,
+{
+	MSTR * &al=<2->&al
+	LOAD #202 %&al%
+}!
+{
+	CALL $--bool --qd --ret:&DPI_Aware User32.dll,SetProcessDPIAware
+	CALL $--qd --ret:&Gpixelsx User32.dll,GetDpiForSystem
+	IFEX #%&Gpixelsx%<1,
+	{*
+		CALL $--qd --ret:&DC User32.dll,GetDC,#0
+		CALL $--qd --ret:&Gpixelsx Gdi32.dll,GetDeviceCaps,#%&DC%,#88
+		CALL $--qd --ret:&c Kernel32.dll,CloseHandle,#%&DC%
+	}
+	LOAD #203 %&al%
+}

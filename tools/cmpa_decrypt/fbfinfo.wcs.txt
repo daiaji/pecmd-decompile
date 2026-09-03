@@ -1,0 +1,101 @@
+﻿#!PECMD
+ENVI^ EnviMode=1
+ENVI$ &NL=0d 0a
+FIND $%~1=l,
+{
+	FIND $%~2=, EXIT File
+	BASE* -u %~2,&&lpdest
+	MSTR * &&charx,&&chart,&&char2,&&char3,&&char4,&&char5,&&char6,&&char7,&&char8,&&char9,&&chara,&&charb,&&charv=<1*>&lpdest
+	IFEX %&char2%\Sevenz.dll,! EXIT File
+	FIND $%&char6%=, SHUT -force
+	FIND #%&chart%=0, SHUT -force
+	CALL $--ret:&&zipll ,-LoadLibrary,^%&char2%\Sevenz.dll
+	FIND $%&char3%=a,
+	{
+		MSTR * &nzl=<4->&lpdest
+		SET-tom &nzl=&nzl
+		Getzipdecomss &nzl %&chart%
+	}
+	FIND $%&char3%=x,
+	{
+		MSTR * &&Astr=3,0,&char5
+		SET &dep=%&Astr%
+		FIND *&Astr<>, Getdeaesno &dep &Astr
+		SET &nzl=%&char3% %&char4% -p%&dep% %&char6% %&char7% %&char8% %&char9% %&charb% %&charv% %&chara%
+		SET-tom &szCmdLine=&nzl
+		CALL $--qd --ret:&&zx *%&zipll%,SevenZip,#0,*&szCmdLine,#0,#0
+		ENVI &szCmdLine=
+		ENVI &nzl=
+		ENVI &dep=
+	}
+	WAIT  -freemem
+	KILL *%&__PID%
+}
+_SUB Getzipdecomss,*
+	SET-def ::wmzip=
+	SET ::lpsrc=
+	SET ::Art=%~2
+	TIME &Timeradd,100, GetWMProc
+	ENVI^ WndProc1,&&dwAddr
+	CALL $--qd --ret:&&zx *%&zipll%,SevenZipSetOwnerWindowEx,#0,#%&dwAddr%
+	CALL $--qd --ret:&&zl *%&zipll%,SevenZip,#0,*%~1,#0,#0
+	ENVI @@SENDMSG=%&Art%;0x000C;0;$%&charx% 100
+	EXIT _SUB
+_END
+_SUB OnWndProc1
+	FIND $%~4>0,
+	{*
+		SET ::wmzip=%4
+		ENVI^ WndProc1=0
+	}
+	EXIT= 1
+_END
+_SUB GetWMProc
+	FIND #%&wmzip%=0, EXIT _SUB
+	SET-make &Gzips=%&wmzip%;8
+	CALC &&percent=%&Gzips?long:4% / %&Gzips?long:0% * 100 #1
+	FIND #%&percent%>%&lpsrc%,
+	{
+		FIND #%&percent%=100, ENVI @Timeradd.*del=
+		FIND #100>%&percent%, ENVI @@SENDMSG=%&Art%;0x000C;0;$%&charx% %&percent%
+		SET ::lpsrc=%&percent%
+	}
+_END
+_SUB Getdeaesno
+	MSTR * -rq &&alsts=%~2
+	STRL * -8 &&let=&alsts
+	FIND #36>%&let%, EXIT _SUB
+	CODE *jm  &alsts,#,12,1,0,8
+	MSTR * &&lac=1,4,&alsts
+	MSTR * &&Stl=5,0,&alsts
+	CALC &&Ast=%&let% % 16
+	FIND #%&Ast%<>4, EXIT _SUB
+	CALL $--m --ret:&aes &&r,-LoadLibrary,*#104
+	CALL $--ret:&Enc ,-GetProcAddress,*%&aes%,AESEncrypt
+	CALL $--ret:&Dec ,-GetProcAddress,*%&aes%,AESDecrypt
+	FIND #%&Enc%=0, EXIT _SUB
+	ENVI &&lxy=E37%&lac%F38C74728
+	ENVI &&vlx=62A47%&lac%8C52C12
+	ENVI-tom &&Alxy=&lxy
+	ENVI-tom &&Avlx=&vlx
+	TEAM ENVI &lxy=| ENVI &vlx=
+	CALC &&vzl=(%&let% - 4) / 2
+	ENVI#$ &&dwOut=*%&vzl% 0
+	ENVI#$ &&dwput=%&Stl%
+	CALL $--qd --ret:&&hfy #,%&Dec%,#2,#0,*&dwput,*&Alxy,*&Avlx,*&dwOut
+	ENVI-tow &&Outry=&dwOut
+	ENVI-tom &&input=&Outry
+	ENVI$# &&lpout=*%&vzl% 0
+	CALL $--qd --ret:&&ai  #,%&Enc%,#2,#1,*&input,*&Alxy,*&Avlx,*&lpout
+	FIND #[ %&ai%>15 & 81920>%&ai% ],
+	{*
+		GETF &lpout,0#%&ai%,&&lpout
+		SED -ex &&lpout=0,{ 0x}|{0x},,&lpout
+		FIND *&Stl=&lpout,
+		{*
+			ENVI-ret %~1="%&Outry%"
+		}
+		TEAM ENVI &lpout=| ENVI &input=
+	}
+	TEAM ENVI &Alxy=|ENVI &Avlx=| ENVI &dwput=| ENVI &Outry=| ENVI &dwOut=
+_END
