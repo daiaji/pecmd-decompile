@@ -106,3 +106,5 @@
 [msvc] 产物缺失 vars_val.txt (用例可能失败)
 [msvc] 产物缺失 vars_val.txt (用例可能失败)
 [msvc] 产物缺失 vars_val.txt (用例可能失败)
+[msvc] 产物缺失 vars_val.txt (用例可能失败)
+[msvc] 产物缺失 vars_val.txt (用例可能失败)

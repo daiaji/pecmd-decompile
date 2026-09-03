@@ -196,6 +196,63 @@ def run_exe(label, exe_path, backend, case_id, dst, out_dir, timeout_s,
     print(f"[{label}] {tag} → {result_dir} (exit={exit_code})")
 
 
+def _diskpart(script):
+    """diskpart /s 脚本执行 (R27-c VHD 夹具)。"""
+    dp = os.path.join(os.environ.get("TEMP", r"C:\Temp"), "dp_r27.txt")
+    with open(dp, "w", newline="\r\n") as f:
+        f.write(script + "\n")
+    r = subprocess.run(["diskpart", "/s", dp], capture_output=True, text=True,
+                       timeout=120)
+    return r.returncode
+
+
+def setup_vhd(pectest_root):
+    """创建+attach 100MB 固定 VHD, 返回 {"path","num"}; 失败返回 None。
+    磁盘号用 Get-Disk 按 VHD 路径定位 (不猜号 — 猜号有误触实体盘风险)。"""
+    vhd_dir = os.path.join(pectest_root, "vhd_fixture")
+    os.makedirs(vhd_dir, exist_ok=True)
+    vhd_path = os.path.join(vhd_dir, "part_case.vhdx")
+    rc = _diskpart(
+        f'create vdisk file="{vhd_path}" maximum=100 type=fixed\n'
+        f'select vdisk file="{vhd_path}"\nattach vdisk\n')
+    if rc != 0:
+        return None
+    r = subprocess.run(
+        ["powershell", "-NoProfile", "-Command",
+         f'(Get-Disk | Where-Object Location -like "*part_case.vhdx*").Number'],
+        capture_output=True, text=True, timeout=60)
+    nums = [t.strip() for t in (r.stdout or "").split() if t.strip().isdigit()]
+    if not nums:
+        _diskpart(f'select vdisk file="{vhd_path}"\ndetach vdisk\n')
+        if os.path.exists(vhd_path):
+            os.remove(vhd_path)
+        return None
+    return {"path": vhd_path, "num": nums[-1]}
+
+
+def inject_vhd_disk(dst, num, label):
+    """main.pecmd 模板变量 @VHDDISK@ -> 实际磁盘号 (每后端独立 VHD, 号可不同)。"""
+    mp = os.path.join(dst, "main.pecmd")
+    with open(mp, "r", encoding="utf-8") as f:
+        body = f.read()
+    body = body.replace("@VHDDISK@", str(num))
+    with open(mp, "w", encoding="utf-8", newline="") as f:
+        f.write(body)
+    print(f"[vhd] {label}: disk {num} 注入 @VHDDISK@")
+
+
+def teardown_vhd(vhd_ctx):
+    """detach + 删除 VHD (夹具一次性, 用完即毁)。"""
+    try:
+        _diskpart(f'select vdisk file="{vhd_ctx["path"]}"\ndetach vdisk\n')
+    finally:
+        try:
+            if os.path.exists(vhd_ctx["path"]):
+                os.remove(vhd_ctx["path"])
+        except OSError:
+            pass
+
+
 def run_case(args, case_id):
     case_src = os.path.join(CASES_ROOT, case_id)
     manifest = load_manifest(case_id)
@@ -217,15 +274,31 @@ def run_case(args, case_id):
     if all(not os.path.isfile(exe) for _, exe, _ in targets):
         fail(f"无可用 EXE: {args.orig_exe} / {args.msvc_exe}")
 
-    notes_by_label = {label: [] for label, _, _ in targets}
-    for label, exe, backend in targets:
-        if not os.path.isfile(exe):
-            print(f"WARN: [{label}] 跳过 (产物不存在): {exe}", file=sys.stderr)
-            continue
-        dst = deploy(case_id, case_src, args.pectest_root)
-        out_dir = make_epilogue(dst, case_id, manifest, args.pectest_root, backend)
-        run_exe(label, exe, backend, case_id, dst, out_dir, timeout_s,
-                args.pectest_root, notes_by_label[label])
+    # R27-c: VHD 夹具 (manifest {"vhd": true}) — PART 语料专用。
+    # 每后端独立创建/attach 一个 100MB 固定 VHD, 探测磁盘号后把 main.pecmd 里的
+    # @VHDDISK@ 替换为实际磁盘号; 运行结束 detach+删除。全程只触碰本 VHD 文件,
+    # 不存在触碰实体盘的路径 (PART-on-VHD 安全边界, analysis/r27_part_vhd.md)。
+    vhd_ctx = None
+    if manifest.get("vhd"):
+        vhd_ctx = setup_vhd(args.pectest_root)
+        if vhd_ctx is None:
+            fail(f"[{case_id}] VHD 夹具创建失败 (需管理员 diskpart)")
+
+    try:
+        notes_by_label = {label: [] for label, _, _ in targets}
+        for label, exe, backend in targets:
+            if not os.path.isfile(exe):
+                print(f"WARN: [{label}] 跳过 (产物不存在): {exe}", file=sys.stderr)
+                continue
+            dst = deploy(case_id, case_src, args.pectest_root)
+            if vhd_ctx is not None:
+                inject_vhd_disk(dst, vhd_ctx["num"], label)
+            out_dir = make_epilogue(dst, case_id, manifest, args.pectest_root, backend)
+            run_exe(label, exe, backend, case_id, dst, out_dir, timeout_s,
+                    args.pectest_root, notes_by_label[label])
+    finally:
+        if vhd_ctx is not None:
+            teardown_vhd(vhd_ctx)
 
 
 def record_golden(case_id):

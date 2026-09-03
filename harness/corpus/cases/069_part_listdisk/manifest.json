@@ -1,0 +1,17 @@
+{
+  "id": "069_part_listdisk",
+  "slug": "part_list_disk_all",
+  "cmds": [
+    "PART"
+  ],
+  "vars": [
+    "A",
+    "DONE"
+  ],
+  "vars_val": true,
+  "vhd": true,
+  "timeout_s": 90,
+  "flaky": true,
+  "gui": false,
+  "notes": "PART list disk (无 hdN — hdN 词边界 bug 见 D-28 候选): 输出全盘号列表 (空格分隔, 含当次 VHD); orig/msvc 同机同环境独立跑, 列表应一致; 环境盘变动敏感 (flaky 注记)"
+}

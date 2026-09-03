@@ -1,0 +1,17 @@
+{
+  "id": "070_part_listpart",
+  "slug": "part_list_part_hd_vhd_raw",
+  "cmds": [
+    "PART"
+  ],
+  "vars": [
+    "A",
+    "DONE"
+  ],
+  "vars_val": true,
+  "vhd": true,
+  "timeout_s": 90,
+  "flaky": false,
+  "gui": false,
+  "notes": "PART list part hd@VHDDISK@ 于全新 RAW VHD (0 分区) — 输出确定性空态值级锁定; 与 071 写案 (init/clean) 形成写入前后对照"
+}

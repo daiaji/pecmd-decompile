@@ -1,0 +1,3 @@
+ENVI A=x
+PART list part hd@VHDDISK@,A
+ENVI DONE=yes

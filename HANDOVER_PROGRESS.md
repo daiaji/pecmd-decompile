@@ -1494,3 +1494,33 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
   **7. SHOW TODO** / **3. PART** ✅ (R26-i)。
 - 未动: 9. 语料扩展 (GETF 随件已定; FORX-L/NL/PART 建议同批, PART 须虚机)。
 - compat reverse-map.md E/F 段 PART 两行已同步真体化 (本轮随 pecmd_compat 提交)。
+
+---
+
+## R27-a · FORX-L/NL 语料补齐（2026-09-03, 66/66 含值级判定）
+
+> 队列项 9 首批。动因: Lua 对齐评估指出 FORX 三引擎中 /L 与 NL 无对拍案 (行为证据空白)。
+
+### 新语料
+- **067_forx_lnum**: /L 数值迭代值级锁定。方言定案 — 三元组为**同一逗号段内空格分隔**
+  `FORX /L 起始 步长 终值,循环变量,命令串` (dc:108341 三次连续 WideStrToDouble),
+  负步长反向迭代; 逗号分隔三数字 → 0x80070057 (探测期实证, 未入 golden)。
+- **068_forx_nl**: /NL: /delims: /v 五变体矩阵值级锁定 (含"零迭代+exit=2"这类
+  失败形态的锁定 — 原版行为即规格)。
+
+### 连带修复 (语料实证抓出)
+1. **i28b delims: 分支移植偏差**: dc:107934 NL: 置 `uVar33=6`; dc:107957-107958
+   delims: 直接 goto 共享尾**不置** → 两者 opts 不同 (0xE vs 0xA), VarLookup 仅前者。
+   i28b 曾将两者都写成 `opts=6|10` — 已归正 (`opts = opts | 10U`)。
+2. **diff_case.py 假绿盲区封堵**: vars_val.txt (U-2 值级回捞) 纳入 verdict —
+   双方存在时值必须一致, 否则 FAIL。此前"变量存在但值不同"不进判定。
+
+### 方言新知 (Lua 对齐直接可用)
+- /L 与 /NL:/delims: 语义**不对称**: delims: 源=第一段字面 (不查变量);
+  /NL:/v 走 VarLookup → **ENVI 全局变量不可作 NL 迭代源** (表隔离, 零迭代+错误码)。
+  "NL 遍历脚本内变量内容"的可达路径待下轮以 _SUB/TEAM 上下文扩案验证。
+
+### 回归
+- 全量 66/66 零失败 (067/068 值级 PASS; 065 存量 vars_val 同值不翻红)。
+- @d858eb0。队列项 9 剩余: FORX 默认引擎深路径 (glob/s/O:N/size 族)、
+  PART 行为案 (须虚机)、NL 变量源可达路径。
