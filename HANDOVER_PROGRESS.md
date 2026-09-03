@@ -1623,3 +1623,37 @@ UnquoteString / AssignString / ExpandDrivePathAlloc(桩) / ExecCommandLine(PART 
 - EXEC `=` 前导语义未定案 (DEC-EXEC-1 容忍跳过), 待语料裁决。
 - 反编译侧未动; 语料 68/68 状态不变; pecmd_compat 旧方案 (implementation-plan-lua,
   "不实现 PECMD 语法" 路线) 与本对齐线并存不冲突 — 见 HANDOVER 本节声明。
+
+## R28-b/c/d · 引擎三族落地（2026-09-03, pecmd-lua @dc4ebad+94b8545 / harness 19e2984+f58d8ef+6f2ac6b）
+
+> Lua 对齐线推进: ENVI/TEAM → 条件/CALC → 字符串/杂项。lua 后端 56/68。
+
+### 引擎能力 (pecmd-lua)
+- ENVI/SET 赋值 + TEAM 段序列 (**039 实证: 段执行时重新展开** — 推翻初版假设)
+- CALC 递归下降表达式器: 0x 十六进制/实除 (9/2=4.5)/除零 R=0+错误码 16/括号/
+  字符串前缀+长度定序 (StrCmpNI 语义); 词法器 take 按 token.at 推进 (空白漂移 bug)
+- FIND/IFEX 执行体: 11 算子/kind 头字符 $| 互换/组合条件整体交表达式器/
+  A 段前导 spec 吞噬 (--s 恒假=018 形态)/act1 内字面 '!' 分切 act2 (036 修订)/
+  无分隔符静默 no-op/假分支 "ELSE …"=未知命令返 2 (U-1)/假且无 ELSE 静默 0
+- **行返回码 sticky 模型** (DEC-LINE-1): 退出码=最后非零行返回码 — 043 exit=2、
+  027 exit=16、探针 0x80070057 (2147942487) 全部 sticky 通道实证
+- 字符串族方言 (DEC-DIALECT-1, 值级 golden 实证): LSTR/RSTR `=`形态=首逗号后原文;
+  STRL/SSTR/RPOS/SED 逗号形态=E_INVALIDARG 通道 (识别但参数无效, 与未知命令→2
+  分离); PATH rc0/USER rc1/LOGS 建日志文件
+- C shim 增: find_file/drive_exists/proc_match (探测三原语) + write_file
+
+### 夹具级发现 (harness 6f2ac6b)
+- **vars_val 尾声 FD 重定向陷阱**: `echo X=N>"f"` 中"分隔符后单数字结尾"的值
+  (R=7/R=0) 被 cmd 解析为 FD N 重定向 → 0 字节产物。双方同伤=绿门假盲区
+  (026/027 曾以存在级绿多年)。修=重定向前置 `>"f" echo X`, 字节不变。
+- 值级重录 22+6 案 golden; msvc 值级体检 22/22 一致 (参考实现健康佐证)。
+
+### 语料状态
+- 值级 vars_val: 001-004/013-018/026-028/031-036/043/049/050/062/063/067/068 (+053 缺失留 HASH 轮)
+- lua 后端 56/68: 剩 _SUB/CALL(5)+REGI(2)+GETF(1)+FORX(2)+PART(2) — 后续轮次
+- msvc 全量不变; VHD 纪律维持 (069/070 夹具无伤未重录, 残留盘检查清零)
+
+### 遗留
+- EXEC `=` 前导语义 (DEC-EXEC-1)、未知命令裸外部程序形态 (chunk 002 隐藏功能)
+- LSTR/RSTR 逗号形态文档语义 vs 二进制 E_INVALIDARG 的 divergences 登记
+- 055 SED exit=0x80070057 / 066 USER exit=1 的语义面 (仅钉 rc)
