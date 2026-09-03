@@ -1,10 +1,17 @@
 {
   "id": "040_lstr_overrun",
   "slug": "lstr_overrun_truncate",
-  "cmds": ["LSTR", "ENVI"],
-  "vars": ["S", "R"],
+  "cmds": [
+    "LSTR",
+    "ENVI"
+  ],
+  "vars": [
+    "S",
+    "R"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "LSTR 越界截断: start=1 len=99 源串仅3字符 (029 正常域); msvc 侧待 R1 写回链修复后才有意义, 先录 orig golden"
+  "notes": "LSTR 越界截断: start=1 len=99 源串仅3字符 (029 正常域); msvc 侧待 R1 写回链修复后才有意义, 先录 orig golden (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }

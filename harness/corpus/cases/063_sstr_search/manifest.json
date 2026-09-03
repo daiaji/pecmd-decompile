@@ -1,10 +1,19 @@
 {
   "id": "063_sstr_search",
   "slug": "sstr_substring_search",
-  "cmds": ["SSTR", "FIND", "ENVI"],
-  "vars": ["P", "%P%", "R", "%R%", "BODY_DONE"],
+  "cmds": [
+    "SSTR",
+    "FIND",
+    "ENVI"
+  ],
+  "vars": [
+    "P",
+    "R",
+    "BODY_DONE"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "SSTR 首案: 子串搜索探针 (矩阵§5无行项; 1-based 位置假设 cd→3)"
+  "notes": "SSTR 首案: 子串搜索探针 (矩阵§5无行项; 1-based 位置假设 cd→3) (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }

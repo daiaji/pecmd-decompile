@@ -9,5 +9,6 @@
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "正例: 子串提取(观察参数语义)"
+  "notes": "正例: 子串提取(观察参数语义) (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }

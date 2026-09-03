@@ -1,10 +1,19 @@
 {
   "id": "049_rstr_right",
   "slug": "rstr_right_substring",
-  "cmds": ["RSTR", "FIND", "ENVI"],
-  "vars": ["R", "%R%", "F", "%F%", "BODY_DONE"],
+  "cmds": [
+    "RSTR",
+    "FIND",
+    "ENVI"
+  ],
+  "vars": [
+    "R",
+    "F",
+    "BODY_DONE"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "RSTR 首案: 右侧截取, 形式镜像已实证的 LSTR(029); 写回组(R1已修) msvc 可比前提具备"
+  "notes": "RSTR 首案: 右侧截取, 形式镜像已实证的 LSTR(029); 写回组(R1已修) msvc 可比前提具备 (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }

@@ -1,1 +1,1 @@
-CASE=062_strl_len|L|%L%|R|%R%|BODY_DONE
+CASE=062_strl_len|L|R|BODY_DONE

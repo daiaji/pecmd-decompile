@@ -1,10 +1,19 @@
 {
   "id": "050_rpos_replace",
   "slug": "rpos_var_search_replace",
-  "cmds": ["RPOS", "FIND", "ENVI"],
-  "vars": ["T", "%T%", "F", "%F%", "BODY_DONE"],
+  "cmds": [
+    "RPOS",
+    "FIND",
+    "ENVI"
+  ],
+  "vars": [
+    "T",
+    "F",
+    "BODY_DONE"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "RPOS 首案: 变量内串替换探针 (VarSearchReplace core_b3r_h4; SetVarCore 占位关联仅涉 msvc 侧, orig 录制不受阻)"
+  "notes": "RPOS 首案: 变量内串替换探针 (VarSearchReplace core_b3r_h4; SetVarCore 占位关联仅涉 msvc 侧, orig 录制不受阻) (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }

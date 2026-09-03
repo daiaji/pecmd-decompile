@@ -1,10 +1,19 @@
 {
   "id": "062_strl_len",
   "slug": "strl_string_length",
-  "cmds": ["STRL", "FIND", "ENVI"],
-  "vars": ["L", "%L%", "R", "%R%", "BODY_DONE"],
+  "cmds": [
+    "STRL",
+    "FIND",
+    "ENVI"
+  ],
+  "vars": [
+    "L",
+    "R",
+    "BODY_DONE"
+  ],
   "timeout_s": 60,
   "flaky": false,
   "gui": false,
-  "notes": "STRL 首案: 字符串长度探针 (矩阵§5无行项、§4.2宿主归属证其存在; LSTR 同族 h3 文件)"
+  "notes": "STRL 首案: 字符串长度探针 (矩阵§5无行项、§4.2宿主归属证其存在; LSTR 同族 h3 文件) (R28-d 值级升级 + vars 名清理: 去方言探针 %R% 字面量)",
+  "vars_val": true
 }
