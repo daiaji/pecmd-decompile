@@ -56,6 +56,15 @@ def diff_files(golden, result, masks):
 
 def verdict_for(case_id, backend="win_real"):
     gdir = os.path.join(GOLDEN_ROOT, backend, case_id)
+    # R28-a: golden 真值单一来源 = golden/win_real (原版录制); 其余后端 (msvc/lua/...)
+    # 缺专属 golden 目录时回退 win_real golden, 结果登记 golden_fallback 备查。
+    # (杜绝按后端复制 golden — 副本漂移会制造假真值, 违背单一裁判纪律 §6.7)
+    golden_fallback = None
+    if backend != "win_real" and not os.path.isdir(gdir):
+        fb = os.path.join(GOLDEN_ROOT, "win_real", case_id)
+        if os.path.isdir(fb):
+            gdir = fb
+            golden_fallback = "win_real"
     rdir = os.path.join(RESULTS_ROOT, backend, case_id)
     manifest = os.path.join(HARNESS, "corpus", "cases", case_id, "manifest.json")
     cmds = []
@@ -71,6 +80,8 @@ def verdict_for(case_id, backend="win_real"):
                "exit": {"exp": None, "got": None}, "vars": {"same": True, "diff": []},
                "fs": {"same": True, "added": [], "removed": [], "changed": []},
                "reg": {"same": True}, "verdict": "PASS", "flaky_pool": False}
+    if golden_fallback:
+        verdict["golden_fallback"] = golden_fallback
 
     # exit
     if os.path.exists(os.path.join(gdir, "exit.txt")) and os.path.exists(os.path.join(rdir, "exit.txt")):

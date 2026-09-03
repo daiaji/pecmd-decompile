@@ -5,11 +5,14 @@
 双跑:
     原版 EXE → results/win_real_orig/<case>/   (真值参考; golden 录制唯一来源)
     编译产物 → results/win_real/<case>/        (被测方; = diff_case.py 默认后端)
+R28-a Lua 后端 (pecmd-lua 对齐线, docs/lua_alignment_guide.md §4):
+    lua_pecmd.exe → results/win_real_lua/<case>/   (golden vs lua, diff_case --backend win_real_lua)
 
 用法 (Windows 原生 Python ≥3.8):
     python harness/runners/run_case.py 001_envi_smoke                  # 双跑
     python harness/runners/run_case.py 001_envi_smoke --exe orig       # 仅原版
     python harness/runners/run_case.py 001_envi_smoke --exe msvc       # 仅编译产物
+    python harness/runners/run_case.py 001_envi_smoke --exe lua        # 仅 Lua 后端
     python harness/runners/run_case.py --all                           # 全语料逐条双跑
     python harness/runners/run_case.py 001_envi_smoke --exe orig --record-golden
 
@@ -30,6 +33,7 @@ GOLDEN_ROOT = os.path.join(HARNESS, "golden")
 
 BACKEND_MSVC = "win_real"        # 被测方后端名 (= diff_case.py 默认后端)
 BACKEND_ORIG = "win_real_orig"   # 原版 EXE 后端名 (真值来源)
+BACKEND_LUA = "win_real_lua"     # Lua 引擎后端名 (pecmd-lua 对齐线, R28-a)
 
 ARTIFACTS = ("vars.txt", "done.txt", "vars_val.txt")  # 尾声产物 (epilogue 写出到 <pectest_root>\out\); vars_val.txt = R24f-c 变量值回捞 (U-2), 仅 manifest.vars 非空时存在
 
@@ -274,11 +278,15 @@ def run_case(args, case_id):
         targets.append(("orig", args.orig_exe, BACKEND_ORIG))
     if args.exe in ("both", "msvc"):
         targets.append(("msvc", args.msvc_exe, BACKEND_MSVC))
+    if args.exe == "lua":
+        targets.append(("lua", args.lua_exe, BACKEND_LUA))
 
-    # 显式 --exe msvc 时缺产物视为硬错误; both 下允许跳过 (P0 产出前为常态)
+    # 显式 --exe msvc/--exe lua 时缺产物视为硬错误; both 下允许跳过 (P0 产出前为常态)
     for label, exe, _ in targets:
-        if label == "msvc" and args.exe == "msvc" and not os.path.isfile(exe):
-            fail(f"编译产物不存在: {exe} (先运行 bash tools/build_msvc.sh)")
+        if label in ("msvc", "lua") and args.exe == label and not os.path.isfile(exe):
+            fail(f"编译产物不存在: {exe}" +
+                 (" (先运行 pecmd-lua/tools/build_lua_msvc.py 并部署)" if label == "lua"
+                  else " (先运行 bash tools/build_msvc.sh)"))
     if all(not os.path.isfile(exe) for _, exe, _ in targets):
         fail(f"无可用 EXE: {args.orig_exe} / {args.msvc_exe}")
 
@@ -332,8 +340,8 @@ def main():
     ap.add_argument("case_id", nargs="?", default="",
                     help="用例 ID, 如 001_envi_smoke (--all 时可省略)")
     ap.add_argument("--all", action="store_true", help="全语料逐条执行")
-    ap.add_argument("--exe", choices=["both", "orig", "msvc"], default="both",
-                    help="驱动哪些 EXE (默认 both 双跑)")
+    ap.add_argument("--exe", choices=["both", "orig", "msvc", "lua"], default="both",
+                    help="驱动哪些 EXE (默认 both 双跑; lua = Lua 引擎后端单跑)")
     ap.add_argument("--timeout", type=int, default=None,
                     help="覆盖 manifest.timeout_s")
     ap.add_argument("--record-golden", action="store_true",
@@ -344,6 +352,8 @@ def main():
                     help="原版 EXE 路径 (默认 <pectest-root>\\PECMD.EXE)")
     ap.add_argument("--msvc-exe", default="",
                     help="编译产物路径 (默认 <pectest-root>\\pecmd_msvc.exe)")
+    ap.add_argument("--lua-exe", default="",
+                    help="Lua 引擎路径 (默认 <pectest-root>\\lua_pecmd.exe)")
     args = ap.parse_args()
 
     if os.name != "nt":
@@ -353,6 +363,8 @@ def main():
         args.orig_exe = os.path.join(args.pectest_root, "PECMD.EXE")
     if not args.msvc_exe:
         args.msvc_exe = os.path.join(args.pectest_root, "pecmd_msvc.exe")
+    if not args.lua_exe:
+        args.lua_exe = os.path.join(args.pectest_root, "lua_pecmd.exe")
 
     cases = list_cases() if args.all else [args.case_id]
     if not cases or not cases[0]:
